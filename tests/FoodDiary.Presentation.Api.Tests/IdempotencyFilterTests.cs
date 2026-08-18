@@ -87,6 +87,58 @@ public sealed class IdempotencyFilterTests {
     }
 
     [Fact]
+    public async Task OnActionExecutionAsync_CreatedAtAction_DoesNotUseRequestHostForCachedLocation() {
+        IUrlHelper urlHelper = Substitute.For<IUrlHelper>();
+        urlHelper.Action(Arg.Any<UrlActionContext>()).Returns("/api/v1/items/1");
+        var store = new RecordingIdempotencyStore();
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/items", "relative-location", "user-relative");
+        httpContext.Request.Scheme = "https";
+        httpContext.Request.Host = new HostString("attacker.example");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+        var createdAtAction = new CreatedAtActionResult("Get", "Items", new { id = 1 }, new { id = 1 }) {
+            DeclaredType = typeof(object),
+            UrlHelper = urlHelper,
+        };
+        createdAtAction.ContentTypes.Add("application/vnd.fooddiary.test+json");
+        var executedContext = new ActionExecutedContext(context, [], new object()) {
+            Result = createdAtAction,
+        };
+
+        await filter.OnActionExecutionAsync(context, () => Task.FromResult(executedContext));
+
+        urlHelper.Received(1).Action(Arg.Is<UrlActionContext>(urlContext =>
+            urlContext.Protocol == null && urlContext.Host == null));
+        CreatedResult normalizedResult = Assert.IsType<CreatedResult>(executedContext.Result);
+        Assert.Multiple(
+            () => Assert.Equal("/api/v1/items/1", store.LastLocation),
+            () => Assert.Equal("/api/v1/items/1", normalizedResult.Location),
+            () => Assert.Equal(typeof(object), normalizedResult.DeclaredType),
+            () => Assert.Contains(
+                "application/vnd.fooddiary.test+json",
+                normalizedResult.ContentTypes,
+                StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_UsesConfiguredMvcJsonOptionsForReplayBody() {
+        var store = new RecordingIdempotencyStore();
+        var jsonOptions = new Microsoft.AspNetCore.Mvc.JsonOptions();
+        jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;
+        var filter = new IdempotencyFilter(
+            store,
+            mvcJsonOptions: Microsoft.Extensions.Options.Options.Create(jsonOptions));
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/items", "json-options", "user-json-options");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        await filter.OnActionExecutionAsync(context, () => Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+            Result = new ObjectResult(new { PascalCase = true }) { StatusCode = StatusCodes.Status200OK },
+        }));
+
+        Assert.Equal("{\"PascalCase\":true}", store.LastBody);
+    }
+
+    [Fact]
     public async Task OnActionExecutionAsync_WhenStoreMisses_ExecutesNextAndCompletesReservation() {
         var store = new InMemoryIdempotencyStore(TimeProvider.System);
         var filter = new IdempotencyFilter(store);
@@ -437,21 +489,19 @@ public sealed class IdempotencyFilterTests {
     }
 
     [Fact]
-    public async Task OnActionExecutionAsync_WhenCompletionFails_ReleasesReservationAndPreservesCompletionException() {
+    public async Task OnActionExecutionAsync_WhenCompletionFails_LeavesReservationLockedAndReturnsActionResult() {
         var store = new RecordingIdempotencyStore(throwOnComplete: true);
         var filter = new IdempotencyFilter(store);
         DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-completion-failure", "throw-user");
         ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
 
-        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            filter.OnActionExecutionAsync(context, () => Task.FromResult(new ActionExecutedContext(context, [], new object()) {
-                Result = new StatusCodeResult(StatusCodes.Status202Accepted),
-            })));
+        await filter.OnActionExecutionAsync(context, () => Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+            Result = new StatusCodeResult(StatusCodes.Status202Accepted),
+        }));
 
         Assert.Multiple(
-            () => Assert.Equal("completion failed", exception.Message),
             () => Assert.Equal(1, store.CompleteCalls),
-            () => Assert.Equal(1, store.ReleaseCalls));
+            () => Assert.Equal(0, store.ReleaseCalls));
     }
 
     [Fact]
@@ -726,6 +776,7 @@ public sealed class IdempotencyFilterTests {
         public int CompleteCalls { get; private set; }
         public int ReleaseCalls { get; private set; }
         public string? LastReservedKey { get; private set; }
+        public string? LastBody { get; private set; }
         public string? LastLocation { get; private set; }
         public bool CompletionTokenWasCanceled { get; private set; }
 
@@ -752,6 +803,7 @@ public sealed class IdempotencyFilterTests {
             TimeSpan responseTtl,
             CancellationToken cancellationToken = default) {
             CompleteCalls++;
+            LastBody = body;
             LastLocation = location;
             CompletionTokenWasCanceled = cancellationToken.IsCancellationRequested;
             if (throwOnComplete) {

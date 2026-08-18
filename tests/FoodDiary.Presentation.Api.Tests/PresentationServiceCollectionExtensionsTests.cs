@@ -7,12 +7,14 @@ using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using System.Reflection;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -124,7 +126,7 @@ public sealed class PresentationServiceCollectionExtensionsTests {
     }
 
     [Fact]
-    public void MapPresentationApi_MapsEmailVerificationHub() {
+    public void MapPresentationApi_MapsHubsAndClosesConnectionsWhenAuthenticationExpires() {
         WebApplicationBuilder builder = WebApplication.CreateBuilder();
         builder.Services.AddCors(options => options.AddPolicy("TestCors", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
         builder.Services.AddAuthorization();
@@ -144,6 +146,17 @@ public sealed class PresentationServiceCollectionExtensionsTests {
 
         Assert.Contains(endpoints, endpoint => string.Equals(endpoint.RoutePattern.RawText, "/hubs/email-verification", StringComparison.Ordinal));
         Assert.Contains(endpoints, endpoint => string.Equals(endpoint.RoutePattern.RawText, "/hubs/email-verification/negotiate", StringComparison.Ordinal));
+        Assert.Contains(endpoints, endpoint => string.Equals(endpoint.RoutePattern.RawText, "/hubs/notifications", StringComparison.Ordinal));
+
+        MethodInfo configureLifetime = typeof(PresentationApplicationBuilderExtensions).GetMethod(
+            "ConfigureHubAuthenticationLifetime",
+            BindingFlags.NonPublic | BindingFlags.Static)
+            ?? throw new InvalidOperationException("Hub authentication lifetime configuration was not found.");
+        var options = new HttpConnectionDispatcherOptions();
+
+        configureLifetime.Invoke(null, [options]);
+
+        Assert.True(options.CloseOnAuthenticationExpiration);
     }
 
     [ExcludeFromCodeCoverage]

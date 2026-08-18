@@ -40,6 +40,26 @@ public sealed class LogsControllerTests {
     }
 
     [Fact]
+    public async Task Create_WithNonFastingTelemetry_LogsWithoutDispatchingMediatorCommand() {
+        var logger = new RecordingLogger();
+        int sentRequests = 0;
+        ISender sender = SubstituteSender.Create(Result.Success(), _ => sentRequests++);
+        LogsController controller = CreateController(logger, sender);
+        var request = new ClientTelemetryLogHttpRequest(
+            Category: "http_request",
+            Name: "api.request",
+            Level: "info",
+            Timestamp: DateTime.UtcNow.ToString("O"));
+
+        IActionResult result = await controller.Create(request);
+
+        Assert.Multiple(
+            () => Assert.IsType<NoContentResult>(result),
+            () => Assert.Equal(0, sentRequests),
+            () => Assert.Equal(LogLevel.Information, logger.LogLevel));
+    }
+
+    [Fact]
     public async Task Create_WithSensitivePayload_DoesNotLogRawValues() {
         var logger = new RecordingLogger();
         LogsController controller = CreateController(logger, SubstituteSender.Create(Result.Success()));
@@ -147,18 +167,18 @@ public sealed class LogsControllerTests {
     [Fact]
     public async Task Processor_WithCanceledRequest_DoesNotAwaitApplicationResult() {
         var logger = new RecordingLogger();
-        var processor = new ClientTelemetryHttpProcessor(logger);
+        var processor = new ClientTelemetryHttpProcessor(SubstituteSender.Create(Result.Success()), logger);
         ClientTelemetryLogHttpRequest request = new(
             "http_request", "api.request", "info", DateTime.UtcNow.ToString("O"));
         using var cts = new CancellationTokenSource();
         await cts.CancelAsync();
 
         await Assert.ThrowsAsync<OperationCanceledException>(() =>
-            processor.ProcessAsync(request, Task.FromResult(Result.Success()), cts.Token));
+            processor.ProcessAsync(request, cts.Token));
     }
 
     private static LogsController CreateController(RecordingLogger logger, ISender sender) =>
-        new(sender, new ClientTelemetryHttpProcessor(logger)) {
+        new(sender, new ClientTelemetryHttpProcessor(sender, logger)) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),
             },

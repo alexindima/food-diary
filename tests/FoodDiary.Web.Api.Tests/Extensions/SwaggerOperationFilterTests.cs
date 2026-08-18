@@ -1,4 +1,6 @@
 using System.Reflection;
+using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Web.Api.Swagger;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -118,6 +120,43 @@ public sealed class SwaggerOperationFilterTests {
         Assert.Equal("Error", description);
     }
 
+    [Fact]
+    public void PresentationTransportFilter_RemovesCurrentUserParameter() {
+        var filter = new PresentationTransportOperationFilter();
+        var operation = new OpenApiOperation {
+            Parameters = [
+                new OpenApiParameter { Name = "userId", In = ParameterLocation.Query },
+                new OpenApiParameter { Name = "page", In = ParameterLocation.Query },
+            ],
+        };
+
+        filter.Apply(operation, CreateContext(nameof(TestController.CurrentUserBound)));
+
+        OpenApiParameter parameter = Assert.IsType<OpenApiParameter>(Assert.Single(operation.Parameters!));
+        Assert.Equal("page", parameter.Name);
+    }
+
+    [Theory]
+    [InlineData(nameof(TestController.OptionalIdempotency), false)]
+    [InlineData(nameof(TestController.RequiredIdempotency), true)]
+    public void PresentationTransportFilter_DocumentsIdempotencyContract(string methodName, bool required) {
+        var filter = new PresentationTransportOperationFilter();
+        var operation = new OpenApiOperation { Responses = [] };
+
+        filter.Apply(operation, CreateContext(methodName));
+
+        OpenApiParameter parameter = Assert.IsType<OpenApiParameter>(Assert.Single(operation.Parameters!));
+        OpenApiSchema schema = Assert.IsType<OpenApiSchema>(parameter.Schema);
+        Assert.Multiple(
+            () => Assert.Equal("Idempotency-Key", parameter.Name),
+            () => Assert.Equal(ParameterLocation.Header, parameter.In),
+            () => Assert.Equal(required, parameter.Required),
+            () => Assert.Equal(1, schema.MinLength),
+            () => Assert.Equal(128, schema.MaxLength),
+            () => Assert.True(operation.Responses.ContainsKey("400")),
+            () => Assert.True(operation.Responses.ContainsKey("409")));
+    }
+
     private static OperationFilterContext CreateContext(string methodName) {
         MethodInfo methodInfo = typeof(TestController).GetMethod(methodName)!;
         var apiDescription = new ApiDescription {
@@ -166,5 +205,13 @@ public sealed class SwaggerOperationFilterTests {
         public OkResult PolicyOnly() => Ok();
 
         public OkResult Unclassified() => Ok();
+
+        public IActionResult CurrentUserBound([FromCurrentUser] Guid userId, int page) => Ok(new { userId, page });
+
+        [EnableIdempotency]
+        public OkResult OptionalIdempotency() => Ok();
+
+        [EnableIdempotency(requireKey: true)]
+        public OkResult RequiredIdempotency() => Ok();
     }
 }

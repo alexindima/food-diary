@@ -1,5 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace FoodDiary.Presentation.Api.Features.Auth.Requests;
 
 public sealed record AdminSsoExchangeHttpRequest(
-    string Code
+    [Required, MaxLength(512)] string Code
 );

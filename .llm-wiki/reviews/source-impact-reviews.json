@@ -178,21 +178,21 @@
     {
       "pageId": "workflow-api-compatibility",
       "pagePath": ".llm-wiki/workflows/api-compatibility.md",
-      "pageSha256": "e4d03f5ab9a2c80c857c2aa064ee82dfe7bc9fab9a91fee0fd1e3392e79a0e92",
+      "pageSha256": "cd98e594f87b4a55e4b30f289d286334704562d489f085767fc62d58a25721d1",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
-          "sha256": "28735b17565ab6890a7d09bb81bca864eeea49a7607b31d78b72fb96b478bacb"
+          "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "sha256": "b717489ad311ab282eb4add303510c73583035398d7246d46eb4f226a1beb7ce"
         },
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "d0da373803b4dd7ed2b01b45454af81c1ba34442af18fcb17ce9db2014606595"
+          "sha256": "38d02ed0ca15aeb32638dd80b74ac2faa36ad3c2632897918f9d07f56381c968"
         }
       ],
-      "reason": "Reviewed API compatibility parser hardening: record bodies no longer leak local variables into serialized DTO properties, UTF-8 compiled extraction now matches the fallback scanner for Unicode identifiers, regression tests and all 27 focused Wiki smoke groups pass, and the only real HTTP delta remains nine additive documented 413 responses.",
+      "reason": "OpenAPI snapshots were regenerated; semantic current-user and idempotency assertions plus all six Swagger contract tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "644098a15d63f3351badc1b97d2327aafde14e0d",
-      "reviewedAtUtc": "2026-08-18T01:17:33.3623824Z"
+      "gitHead": "e6582f07846100ce7c87c6b494a786d9b1e1ac20",
+      "reviewedAtUtc": "2026-08-18T09:41:47.7244467Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -220,13 +220,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "05fc118bac8e9b341f142bd7df3a58663d999e45b0a4edfb57d0072ddf92a3d3"
+          "sha256": "01759558a0b85e331d838789b52c9d11b5b5f844fad8f84d6504da293a7181f7"
         }
       ],
-      "reason": "Reviewed intentional OpenAPI 413 additions for bounded AI, bulk recommendation, admin import, meal, and recipe JSON payloads; focused and full contract snapshots were regenerated and verified without update mode.",
+      "reason": "OpenAPI snapshots were regenerated; semantic current-user and idempotency assertions plus all six Swagger contract tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "644098a15d63f3351badc1b97d2327aafde14e0d",
-      "reviewedAtUtc": "2026-08-18T01:05:35.8432960Z"
+      "gitHead": "e6582f07846100ce7c87c6b494a786d9b1e1ac20",
+      "reviewedAtUtc": "2026-08-18T09:41:48.4111126Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -792,13 +792,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "97fcb74462c4373a2a511f51f4848ba2a67798e80e1f622ab1ea233c432fcfa7"
+          "sha256": "c3b5090c26dd7e528edb8cba0c97a03cac3bf7f8e6fdc1576fc932ce4bcf9dee"
         }
       ],
-      "reason": "Reviewed intentional OpenAPI 413 additions for bounded AI, bulk recommendation, admin import, meal, and recipe JSON payloads; focused and full contract snapshots were regenerated and verified without update mode.",
+      "reason": "Token-bearing auth responses are no-store; refresh-token idempotency caching was removed; SignalR closes at authentication expiry; security contract and integration tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "644098a15d63f3351badc1b97d2327aafde14e0d",
-      "reviewedAtUtc": "2026-08-18T01:05:36.1715969Z"
+      "gitHead": "e6582f07846100ce7c87c6b494a786d9b1e1ac20",
+      "reviewedAtUtc": "2026-08-18T09:42:00.1568419Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -853,13 +853,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f034c62c132a19bf924691aa2cdbd7dfa5b4a145039ee3c57e3e887d37a9a8cf"
+          "sha256": "bab2979e4432905e883bba867ce05281403183bd431d9b64c9381f4a8ba5e578"
         }
       ],
-      "reason": "Reviewed intentional OpenAPI 413 additions for bounded AI, bulk recommendation, admin import, meal, and recipe JSON payloads; focused and full contract snapshots were regenerated and verified without update mode.",
+      "reason": "Full Web API integration suite passed 129 of 129; Presentation suite passed 734 of 734; final coverage is 93.25 percent lines and 88.98 percent branches, with IdempotencyFilter at 244 of 244 lines.",
       "baseRef": "HEAD",
-      "gitHead": "644098a15d63f3351badc1b97d2327aafde14e0d",
-      "reviewedAtUtc": "2026-08-18T01:05:36.6498659Z"
+      "gitHead": "e6582f07846100ce7c87c6b494a786d9b1e1ac20",
+      "reviewedAtUtc": "2026-08-18T09:49:48.3584023Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1228,13 +1228,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "ffe47abee344266c508702c682b6fda5d133a3753a4f9f68d7d1bc3d1fa58a7a"
+          "sha256": "f3579be33f25e7db75779617b2ce7f44475d6c3d28d80fadb9880c974d1af6f7"
         }
       ],
-      "reason": "Reviewed intentional OpenAPI 413 additions for bounded AI, bulk recommendation, admin import, meal, and recipe JSON payloads; focused and full contract snapshots were regenerated and verified without update mode.",
+      "reason": "Repository catalog and affected generated indexes were regenerated from the current 50-path change set and reviewed against scoped guides.",
       "baseRef": "HEAD",
-      "gitHead": "644098a15d63f3351badc1b97d2327aafde14e0d",
-      "reviewedAtUtc": "2026-08-18T01:05:36.9704531Z"
+      "gitHead": "e6582f07846100ce7c87c6b494a786d9b1e1ac20",
+      "reviewedAtUtc": "2026-08-18T09:42:01.1714423Z"
     },
     {
       "pageId": "workflow.review-diff",

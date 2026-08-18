@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.ComponentModel.DataAnnotations;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
@@ -7,9 +8,14 @@ using FoodDiary.Presentation.Api.Features.Ai;
 using FoodDiary.Presentation.Api.Features.Dietologist;
 using FoodDiary.Presentation.Api.Features.Meals;
 using FoodDiary.Presentation.Api.Features.Auth;
+using FoodDiary.Presentation.Api.Features.Auth.Requests;
+using FoodDiary.Presentation.Api.Features.Billing;
 using FoodDiary.Presentation.Api.Features.Images;
+using FoodDiary.Presentation.Api.Features.Export;
 using FoodDiary.Presentation.Api.Features.Logs;
 using FoodDiary.Presentation.Api.Features.Marketing;
+using FoodDiary.Presentation.Api.Features.MealPlans;
+using FoodDiary.Presentation.Api.Features.Notifications;
 using FoodDiary.Presentation.Api.Features.Products;
 using FoodDiary.Presentation.Api.Features.Recipes;
 using FoodDiary.Presentation.Api.Policies;
@@ -144,6 +150,39 @@ public sealed class ControllerSecurityContractTests {
     }
 
     [Fact]
+    public void AuthenticationRequestStrings_HaveExplicitTransportLengthConstraints() {
+        Type[] requestTypes = [
+            typeof(AdminSsoExchangeHttpRequest),
+            typeof(ConfirmPasswordResetHttpRequest),
+            typeof(GoogleLoginHttpRequest),
+            typeof(LoginHttpRequest),
+            typeof(RefreshTokenHttpRequest),
+            typeof(RegisterHttpRequest),
+            typeof(RequestPasswordResetHttpRequest),
+            typeof(ResendEmailVerificationHttpRequest),
+            typeof(RestoreAccountHttpRequest),
+            typeof(TelegramAuthHttpRequest),
+            typeof(TelegramLoginWidgetHttpRequest),
+            typeof(VerifyEmailHttpRequest),
+        ];
+        var nullability = new NullabilityInfoContext();
+
+        foreach (ParameterInfo parameter in requestTypes
+            .SelectMany(static type => Assert.Single(type.GetConstructors()).GetParameters())
+            .Where(static parameter => parameter.ParameterType == typeof(string))) {
+            Assert.NotNull(parameter.GetCustomAttribute<MaxLengthAttribute>());
+            if (nullability.Create(parameter).ReadState == NullabilityState.NotNull) {
+                Assert.NotNull(parameter.GetCustomAttribute<RequiredAttribute>());
+            }
+        }
+
+        Assert.NotNull(Assert.Single(typeof(TelegramBotAuthHttpRequest).GetConstructors())
+            .GetParameters()
+            .Single(static parameter => string.Equals(parameter.Name, "TelegramUserId", StringComparison.Ordinal))
+            .GetCustomAttribute<RangeAttribute>());
+    }
+
+    [Fact]
     public void ImagesController_Actions_RequireCurrentUserBinding() {
         AssertHasFromCurrentUserParameter(typeof(ImagesController), nameof(ImagesController.GetUploadUrl));
         AssertHasFromCurrentUserParameter(typeof(ImagesController), nameof(ImagesController.Delete));
@@ -196,13 +235,42 @@ public sealed class ControllerSecurityContractTests {
 
     [Fact]
     public void CriticalWriteActions_OptIntoExplicitIdempotencyPolicy() {
-        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(AuthSessionController), nameof(AuthSessionController.Refresh));
+        Assert.DoesNotContain(
+            GetAction(typeof(AuthSessionController), nameof(AuthSessionController.Refresh)).GetCustomAttributes(inherit: true),
+            static attribute => attribute is EnableIdempotencyAttribute);
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ProductsController), nameof(ProductsController.Create));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ProductsController), nameof(ProductsController.Duplicate));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(RecipesController), nameof(RecipesController.Create));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(RecipesController), nameof(RecipesController.Duplicate));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(MealsController), nameof(MealsController.Create));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ImagesController), nameof(ImagesController.GetUploadUrl));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(BillingController), nameof(BillingController.StartPremiumTrial));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(BillingController), nameof(BillingController.CreateCheckoutSession));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(BillingController), nameof(BillingController.CreatePortalSession));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(BulkRecommendationsController), nameof(BulkRecommendationsController.Create));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(AdminEmailTemplatesController), nameof(AdminEmailTemplatesController.SendTest));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(NotificationsController), nameof(NotificationsController.ScheduleTestNotification));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(MealPlansController), nameof(MealPlansController.Adopt));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(MealPlansController), nameof(MealPlansController.GenerateShoppingList));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(DietologistClientsController), nameof(DietologistClientsController.CreateRecommendation));
+    }
+
+    [Fact]
+    public void SensitiveResponseControllers_DisableClientAndProxyCaching() {
+        Type[] controllerTypes = [
+            typeof(AuthSessionController),
+            typeof(AuthPasswordController),
+            typeof(AuthTelegramController),
+            typeof(AdminSsoController),
+            typeof(ExportController),
+        ];
+
+        Assert.All(controllerTypes, static controllerType => {
+            ResponseCacheAttribute attribute = AssertSingleAttribute<ResponseCacheAttribute>(controllerType);
+
+            Assert.True(attribute.NoStore);
+            Assert.Equal(ResponseCacheLocation.None, attribute.Location);
+        });
     }
 
     private static void AssertActionRateLimit(Type controllerType, string actionName, string expectedPolicyName) {

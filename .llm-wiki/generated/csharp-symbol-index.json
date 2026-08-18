@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3328,
-    "symbols": 3337,
+    "sourceFiles": 3329,
+    "symbols": 3338,
     "interfaceImplementationLinks": 233,
     "dependencyInjectionRegistrations": 234,
     "kinds": {
-      "class": 1711,
+      "class": 1712,
       "enum": 56,
       "interface": 413,
       "record": 1041,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 61,
-      "Other": 1248,
+      "Other": 1249,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -17790,7 +17790,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationApplicationBuilderExtensions.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "PresentationServiceCollectionExtensions",
@@ -17867,7 +17867,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Admin/AdminEmailTemplatesController.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "AdminLessonsController",
@@ -18490,14 +18490,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs",
-      "line": 19
+      "line": 20
     },
     {
       "name": "AuthPasswordController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthPasswordController.cs",
-      "line": 22
+      "line": 23
     },
     {
       "name": "AuthRequestLimits",
@@ -18511,14 +18511,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
-      "line": 23
+      "line": 24
     },
     {
       "name": "AuthTelegramController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthTelegramController.cs",
-      "line": 23
+      "line": 24
     },
     {
       "name": "AuthHttpMappings",
@@ -18539,91 +18539,91 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/AdminSsoExchangeHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "ConfirmPasswordResetHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/ConfirmPasswordResetHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "GoogleLoginHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/GoogleLoginHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "LoginHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/LoginHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "RefreshTokenHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/RefreshTokenHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "RegisterHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/RegisterHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "RequestPasswordResetHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/RequestPasswordResetHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "ResendEmailVerificationHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/ResendEmailVerificationHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "RestoreAccountHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/RestoreAccountHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "TelegramAuthHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/TelegramAuthHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "TelegramBotAuthHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/TelegramBotAuthHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "TelegramLoginWidgetHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/TelegramLoginWidgetHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "VerifyEmailHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/VerifyEmailHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "AdminSsoStartHttpResponse",
@@ -18644,7 +18644,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Billing/BillingController.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "BillingWebhookController",
@@ -19036,7 +19036,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistClientsController.cs",
-      "line": 21
+      "line": 22
     },
     {
       "name": "DietologistClientTasksController",
@@ -19323,7 +19323,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Export/ExportController.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "ExportHttpMappings",
@@ -19750,14 +19750,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Features/Logs/ClientTelemetryHttpProcessor.cs",
-      "line": 6
+      "line": 9
     },
     {
       "name": "LogsController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Logs/LogsController.cs",
-      "line": 22
+      "line": 21
     },
     {
       "name": "LogsHttpMappings",
@@ -19827,7 +19827,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/MealPlans/MealPlansController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "MealPlanDayHttpResponse",
@@ -19995,7 +19995,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Notifications/NotificationsController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "RemoveWebPushSubscriptionHttpRequest",
@@ -21038,7 +21038,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
-      "line": 16
+      "line": 18
     },
     {
       "name": "IdempotencyRequestContext",
@@ -21514,7 +21514,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Options/RateLimiterOptionsSetup.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "Program",
@@ -21543,6 +21543,13 @@
       "role": "Other",
       "path": "FoodDiary.Web.Api/Services/WearableTokenProtector.cs",
       "line": 5
+    },
+    {
+      "name": "PresentationTransportOperationFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Web.Api/Swagger/PresentationTransportOperationFilter.cs",
+      "line": 10
     },
     {
       "name": "StandardErrorResponsesOperationFilter",

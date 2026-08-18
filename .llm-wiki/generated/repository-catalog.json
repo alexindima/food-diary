@@ -3716,17 +3716,17 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/email-templates",
-            "line": 18
+            "line": 19
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/admin/email-templates/{key:maxlength(64)}/{locale:maxlength(10)}",
-            "line": 23
+            "line": 24
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/admin/email-templates/test",
-            "line": 32
+            "line": 33
           }
         ]
       },
@@ -3931,12 +3931,12 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/admin-sso/start",
-            "line": 21
+            "line": 22
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/admin-sso/exchange",
-            "line": 27
+            "line": 28
           }
         ]
       },
@@ -3948,12 +3948,12 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/password-reset/request",
-            "line": 24
+            "line": 25
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/password-reset/confirm",
-            "line": 31
+            "line": 32
           }
         ]
       },
@@ -3965,27 +3965,27 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/register",
-            "line": 25
+            "line": 26
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/login",
-            "line": 35
+            "line": 36
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/google",
-            "line": 44
+            "line": 45
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/google/link",
-            "line": 55
+            "line": 56
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/refresh",
-            "line": 66
+            "line": 67
           },
           {
             "verb": "POST",
@@ -4012,22 +4012,22 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/verify",
-            "line": 25
+            "line": 26
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/login-widget",
-            "line": 36
+            "line": 37
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/link",
-            "line": 47
+            "line": 48
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/bot/auth",
-            "line": 57
+            "line": 58
           }
         ]
       },
@@ -4039,22 +4039,22 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/billing/overview",
-            "line": 18
+            "line": 19
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/billing/trial",
-            "line": 24
+            "line": 25
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/billing/checkout-session",
-            "line": 31
+            "line": 33
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/billing/portal-session",
-            "line": 41
+            "line": 44
           }
         ]
       },
@@ -4239,27 +4239,27 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dietologist/clients",
-            "line": 22
+            "line": 23
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}",
-            "line": 27
+            "line": 28
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/dashboard",
-            "line": 33
+            "line": 34
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/goals",
-            "line": 44
+            "line": 45
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/recommendations",
-            "line": 50
+            "line": 51
           },
           {
             "verb": "GET",
@@ -4448,17 +4448,17 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/export/diary",
-            "line": 14
+            "line": 15
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/export/cycle",
-            "line": 26
+            "line": 27
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/export/cycle/sensitive",
-            "line": 35
+            "line": 36
           }
         ]
       },
@@ -4737,7 +4737,7 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/logs",
-            "line": 25
+            "line": 24
           }
         ]
       },
@@ -4766,22 +4766,22 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/meal-plans",
-            "line": 15
+            "line": 16
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/meal-plans/{id:guid}",
-            "line": 22
+            "line": 23
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/meal-plans/{id:guid}/adopt",
-            "line": 29
+            "line": 30
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/meal-plans/{id:guid}/shopping-list",
-            "line": 36
+            "line": 38
           }
         ]
       },
@@ -4862,37 +4862,37 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/notifications",
-            "line": 15
+            "line": 16
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/notifications/unread-count",
-            "line": 20
+            "line": 21
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/notifications/{notificationId:guid}/read",
-            "line": 25
+            "line": 26
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/notifications/read-all",
-            "line": 31
+            "line": 32
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/notifications/test/schedule",
-            "line": 36
+            "line": 37
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/notifications/preferences",
-            "line": 43
+            "line": 45
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/notifications/preferences",
-            "line": 49
+            "line": 51
           }
         ]
       },

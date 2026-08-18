@@ -1,16 +1,20 @@
+using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
+using FoodDiary.Presentation.Api.Features.Logs.Mappings;
+using FoodDiary.Mediator;
 using FoodDiary.Results;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Presentation.Api.Features.Logs;
 
-public sealed class ClientTelemetryHttpProcessor(ILogger<LogsController> logger) {
+public sealed class ClientTelemetryHttpProcessor(ISender sender, ILogger<LogsController> logger) {
     public async Task<Result> ProcessAsync(
         ClientTelemetryLogHttpRequest request,
-        Task<Result> resultTask,
         CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
-        Result result = await resultTask.ConfigureAwait(false);
+        Result result = IsFastingTelemetry(request)
+            ? await sender.Send(request.ToFastingTelemetryCommand(), cancellationToken).ConfigureAwait(false)
+            : Result.Success();
         LogLevel logLevel = request.Level.ToLowerInvariant() switch {
             "error" => LogLevel.Warning,
             "warning" => LogLevel.Warning,
@@ -45,6 +49,10 @@ public sealed class ClientTelemetryHttpProcessor(ILogger<LogsController> logger)
             NormalizeForLog(request.BuildVersion, 64));
         return result;
     }
+
+    private static bool IsFastingTelemetry(ClientTelemetryLogHttpRequest request) =>
+        string.Equals(request.Category, "user_action", StringComparison.Ordinal) &&
+        FastingTelemetryEventNames.IsSupported(request.Name);
 
     private static string? NormalizeForLog(string? value, int maxLength) {
         if (string.IsNullOrWhiteSpace(value)) {

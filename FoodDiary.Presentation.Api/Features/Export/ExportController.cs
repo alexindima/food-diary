@@ -10,6 +10,7 @@ namespace FoodDiary.Presentation.Api.Features.Export;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/export")]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public sealed class ExportController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("diary")]
     [ProducesResponseType(StatusCodes.Status200OK)]

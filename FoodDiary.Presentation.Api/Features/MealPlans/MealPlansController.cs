@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.MealPlans.Mappings;
 using FoodDiary.Presentation.Api.Features.MealPlans.Responses;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Responses;
@@ -28,6 +29,7 @@ public sealed class MealPlansController(ISender mediator) : AuthorizedController
 
     [HttpPost("{id:guid}/adopt")]
     [ProducesResponseType<MealPlanHttpResponse>(StatusCodes.Status201Created)]
+    [EnableIdempotency]
     public Task<IActionResult> Adopt(
         [FromCurrentUser] Guid userId,
         Guid id) =>
@@ -35,6 +37,7 @@ public sealed class MealPlansController(ISender mediator) : AuthorizedController
 
     [HttpPost("{id:guid}/shopping-list")]
     [ProducesResponseType<ShoppingListHttpResponse>(StatusCodes.Status201Created)]
+    [EnableIdempotency]
     public Task<IActionResult> GenerateShoppingList(
         [FromCurrentUser] Guid userId,
         Guid id) =>

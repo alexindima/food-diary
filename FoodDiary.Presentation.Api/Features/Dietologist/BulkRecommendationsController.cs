@@ -23,6 +23,7 @@ public sealed class BulkRecommendationsController(ISender mediator) : Authorized
     [ProducesResponseType<BulkRecommendationResultHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
+    [EnableIdempotency]
     public Task<IActionResult> Create(
         [FromCurrentUser] Guid userId,
         [FromBody] BulkCreateRecommendationsHttpRequest request) =>

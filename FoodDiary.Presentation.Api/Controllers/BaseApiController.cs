@@ -38,7 +38,7 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         IRequest<Result<TResponse>> request,
         Func<TResponse, THttpResponse> map) {
         Result<TResponse> result = await Send(request);
-        return result.ToCreatedActionResult(this, map);
+        return result.ToCreatedResult(this, map);
     }
 
     protected async Task<IActionResult> HandleAccepted<TResponse, THttpResponse>(
@@ -53,7 +53,7 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         return result.ToNoContentActionResult(this);
     }
 
-    private async Task<IActionResult> HandleNoContent(Task<Result> resultTask) {
+    protected async Task<IActionResult> HandleNoContent(Task<Result> resultTask) {
         Result result = await resultTask;
         return result.ToNoContentActionResult(this);
     }

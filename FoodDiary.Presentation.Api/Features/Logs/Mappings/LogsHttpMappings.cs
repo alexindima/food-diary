@@ -5,7 +5,7 @@ namespace FoodDiary.Presentation.Api.Features.Logs.Mappings;
 
 public static class LogsHttpMappings {
     extension(ClientTelemetryLogHttpRequest request) {
-        public RecordFastingTelemetryCommand ToCommand() {
+        public RecordFastingTelemetryCommand ToFastingTelemetryCommand() {
             return new RecordFastingTelemetryCommand(
                 request.Category,
                 request.Name,

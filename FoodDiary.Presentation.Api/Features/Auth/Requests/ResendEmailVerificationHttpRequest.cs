@@ -1,5 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace FoodDiary.Presentation.Api.Features.Auth.Requests;
 
 public sealed record ResendEmailVerificationHttpRequest(
-    string? ClientOrigin = null
+    [MaxLength(2048)] string? ClientOrigin = null
 );

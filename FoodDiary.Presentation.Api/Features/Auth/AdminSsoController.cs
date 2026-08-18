@@ -16,6 +16,7 @@ namespace FoodDiary.Presentation.Api.Features.Auth;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/auth/admin-sso")]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public sealed class AdminSsoController(ISender mediator) : BaseApiController(mediator) {
     [Authorize(Roles = PresentationRoleNames.Admin)]
     [HttpPost("start")]

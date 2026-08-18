@@ -1,5 +1,6 @@
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
 using FoodDiary.Presentation.Api.Features.Dashboard.Mappings;
 using FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
@@ -50,14 +51,13 @@ public sealed class DietologistClientsController(ISender mediator, TimeProvider 
     [HttpPost("{clientUserId:guid}/recommendations")]
     [ProducesResponseType<RecommendationHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [EnableIdempotency]
     public Task<IActionResult> CreateRecommendation(
         Guid clientUserId,
         [FromCurrentUser] Guid userId,
         [FromBody] CreateRecommendationHttpRequest request) =>
         HandleCreated(
             request.ToCommand(userId, clientUserId),
-            nameof(CreateRecommendation),
-            static value => new { id = value.Id },
             static value => value.ToHttpResponse());
 
     [HttpGet("{clientUserId:guid}/recommendations")]

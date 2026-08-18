@@ -4,7 +4,7 @@ using FoodDiary.Web.Api.Extensions;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(options => {
-    options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10 MB
+    options.Limits.MaxRequestBodySize = 1024 * 1024; // 1 MB by default; larger endpoints opt in explicitly.
 });
 
 builder.Services.AddApiServices(builder.Configuration, builder.Environment);

@@ -20,6 +20,7 @@ namespace FoodDiary.Presentation.Api.Features.Auth;
 [RequestSizeLimit(AuthRequestLimits.MaxPayloadBytes)]
 [RejectOversizedRequest(AuthRequestLimits.MaxPayloadBytes)]
 [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public sealed class AuthSessionController(ISender mediator) : BaseApiController(mediator) {
     [AllowAnonymous]
     [HttpPost("register")]
@@ -64,7 +65,6 @@ public sealed class AuthSessionController(ISender mediator) : BaseApiController(
 
     [AllowAnonymous]
     [HttpPost("refresh")]
-    [EnableIdempotency]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]

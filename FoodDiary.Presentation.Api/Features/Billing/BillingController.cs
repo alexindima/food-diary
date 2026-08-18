@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Billing.Mappings;
 using FoodDiary.Presentation.Api.Features.Billing.Requests;
 using FoodDiary.Presentation.Api.Features.Billing.Responses;
@@ -25,6 +26,7 @@ public sealed class BillingController(ISender mediator) : AuthorizedController(m
     [ProducesResponseType<BillingOverviewHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     [BlockImpersonatedAccess]
+    [EnableIdempotency]
     public Task<IActionResult> StartPremiumTrial([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToStartPremiumTrialCommand(), static value => value.ToHttpResponse());
 
@@ -33,6 +35,7 @@ public sealed class BillingController(ISender mediator) : AuthorizedController(m
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     [BlockImpersonatedAccess]
+    [EnableIdempotency]
     public Task<IActionResult> CreateCheckoutSession(
         [FromCurrentUser] Guid userId,
         [FromBody] CreateCheckoutSessionHttpRequest request) =>
@@ -42,6 +45,7 @@ public sealed class BillingController(ISender mediator) : AuthorizedController(m
     [ProducesResponseType<PortalSessionHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [BlockImpersonatedAccess]
+    [EnableIdempotency]
     public Task<IActionResult> CreatePortalSession([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToPortalSessionCommand(), static value => value.ToHttpResponse());
 }

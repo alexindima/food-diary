@@ -792,56 +792,56 @@
       "name": "Token",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/ConfirmPasswordResetHttpRequest.cs",
-      "line": 5
+      "line": 7
     },
     {
       "category": "credential",
       "name": "NewPassword",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/ConfirmPasswordResetHttpRequest.cs",
-      "line": 6
+      "line": 8
     },
     {
       "category": "credential",
       "name": "Credential",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/GoogleLoginHttpRequest.cs",
-      "line": 4
+      "line": 6
     },
     {
       "category": "credential",
       "name": "Password",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/LoginHttpRequest.cs",
-      "line": 5
+      "line": 7
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/RefreshTokenHttpRequest.cs",
-      "line": 4
+      "line": 6
     },
     {
       "category": "credential",
       "name": "Password",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/RegisterHttpRequest.cs",
-      "line": 5
+      "line": 7
     },
     {
       "category": "credential",
       "name": "Password",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/RestoreAccountHttpRequest.cs",
-      "line": 5
+      "line": 7
     },
     {
       "category": "credential",
       "name": "Token",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/VerifyEmailHttpRequest.cs",
-      "line": 5
+      "line": 7
     },
     {
       "category": "credential",
@@ -7988,35 +7988,35 @@
       "name": "Email",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/LoginHttpRequest.cs",
-      "line": 4
+      "line": 6
     },
     {
       "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/RegisterHttpRequest.cs",
-      "line": 4
+      "line": 6
     },
     {
       "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/RequestPasswordResetHttpRequest.cs",
-      "line": 4
+      "line": 6
     },
     {
       "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/RestoreAccountHttpRequest.cs",
-      "line": 4
+      "line": 6
     },
     {
       "category": "identity",
       "name": "TelegramUserId",
       "type": "long",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/TelegramBotAuthHttpRequest.cs",
-      "line": 3
+      "line": 5
     },
     {
       "category": "identity",

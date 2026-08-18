@@ -1,6 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
-using FoodDiary.Presentation.Api.Features.Logs.Mappings;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
@@ -30,5 +29,5 @@ public sealed class LogsController(ISender sender, ClientTelemetryHttpProcessor 
     [ProducesResponseType(typeof(ApiErrorHttpResponse), StatusCodes.Status413PayloadTooLarge)]
     [ProducesResponseType(typeof(ApiErrorHttpResponse), StatusCodes.Status429TooManyRequests)]
     public Task<IActionResult> Create([FromBody] ClientTelemetryLogHttpRequest request) =>
-        HandleNoContent(request.ToCommand(), result => processor.ProcessAsync(request, result, HttpContext.RequestAborted));
+        HandleNoContent(processor.ProcessAsync(request, HttpContext.RequestAborted));
 }

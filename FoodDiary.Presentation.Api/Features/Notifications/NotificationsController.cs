@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Notifications.Mappings;
 using FoodDiary.Presentation.Api.Features.Notifications.Requests;
 using FoodDiary.Presentation.Api.Features.Notifications.Responses;
@@ -35,6 +36,7 @@ public sealed class NotificationsController(ISender mediator) : AuthorizedContro
 
     [HttpPost("test/schedule")]
     [ProducesResponseType<ScheduledNotificationHttpResponse>(StatusCodes.Status202Accepted)]
+    [EnableIdempotency]
     public Task<IActionResult> ScheduleTestNotification(
         [FromCurrentUser] Guid userId,
         [FromBody] ScheduleTestNotificationHttpRequest request) =>

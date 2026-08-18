@@ -6,6 +6,9 @@ namespace FoodDiary.Web.Api.Services;
 
 public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMultiplexer) : IIdempotencyStore {
     private const string KeyPrefix = "fooddiary:idempotency:";
+    private const int CompletedState = 1;
+    private const int ActiveLockState = 2;
+    private const int AcquiredState = 3;
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     public async Task<IdempotencyReservation> ReserveAsync(
@@ -17,41 +20,103 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
         IDatabase database = connectionMultiplexer.GetDatabase();
         RedisKey responseKey = BuildResponseKey(key);
         RedisKey lockKey = BuildLockKey(key);
-
-        IdempotencyReservation? completed = await TryReadCompletedAsync(
-            database,
-            responseKey,
-            requestHash,
-            cancellationToken).ConfigureAwait(false);
-        if (completed is not null) {
-            return completed;
-        }
-
         string ownerToken = Guid.NewGuid().ToString("N");
         string lockValue = BuildLockValue(requestHash, ownerToken);
-        if (await database.StringSetAsync(lockKey, lockValue, processingTtl, When.NotExists).ConfigureAwait(false)) {
+        const string script = """
+            local response = redis.call('GET', KEYS[1])
+            if response then return {1, response} end
+
+            local activeLock = redis.call('GET', KEYS[2])
+            if activeLock then return {2, activeLock} end
+
+            redis.call('SET', KEYS[2], ARGV[1], 'PX', ARGV[2])
+            return {3, ''}
+            """;
+
+        for (int attempt = 0; attempt < 2; attempt++) {
+            cancellationToken.ThrowIfCancellationRequested();
+            RedisResult result = await database.ScriptEvaluateAsync(
+                script,
+                [responseKey, lockKey],
+                [
+                    lockValue,
+                    Math.Max(1L, (long)processingTtl.TotalMilliseconds)
+                        .ToString(System.Globalization.CultureInfo.InvariantCulture),
+                ]).WaitAsync(cancellationToken).ConfigureAwait(false);
+            IdempotencyReservation? reservation = ParseReservation(
+                result,
+                requestHash,
+                ownerToken,
+                out string? corruptResponse);
+            if (reservation is not null) {
+                return reservation;
+            }
+
+            await DeleteCorruptResponseAsync(
+                database,
+                responseKey,
+                corruptResponse!,
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        throw new InvalidOperationException("The cached idempotency response could not be read.");
+    }
+
+    private static IdempotencyReservation? ParseReservation(
+        RedisResult result,
+        string requestHash,
+        string ownerToken,
+        out string? corruptResponse) {
+        var values = (RedisResult[])result!;
+        int state = (int)values[0];
+        string storedValue = values[1].ToString();
+        corruptResponse = null;
+
+        if (state == AcquiredState) {
             return new IdempotencyReservation(IdempotencyReservationStatus.Acquired, OwnerToken: ownerToken);
         }
 
-        completed = await TryReadCompletedAsync(database, responseKey, requestHash, cancellationToken).ConfigureAwait(false);
-        if (completed is not null) {
-            return completed;
+        if (state == ActiveLockState) {
+            return HasRequestHash(storedValue, requestHash)
+                ? new IdempotencyReservation(IdempotencyReservationStatus.InProgress)
+                : new IdempotencyReservation(IdempotencyReservationStatus.Conflict);
         }
 
-        RedisValue activeLock = await database.StringGetAsync(lockKey).ConfigureAwait(false);
-        if (activeLock.HasValue &&
-            !HasRequestHash(activeLock.ToString(), requestHash)) {
+        if (state != CompletedState) {
+            throw new InvalidOperationException(
+                $"Unexpected Redis idempotency reservation state: {state.ToString(System.Globalization.CultureInfo.InvariantCulture)}.");
+        }
+
+        CompletedEntry? entry = TryDeserialize(storedValue);
+        if (entry is null) {
+            corruptResponse = storedValue;
+            return null;
+        }
+
+        if (!string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal)) {
             return new IdempotencyReservation(IdempotencyReservationStatus.Conflict);
         }
 
-        return activeLock.HasValue
-            ? new IdempotencyReservation(IdempotencyReservationStatus.InProgress)
-            : await TryAcquireAfterExpiredLockAsync(
-                database,
-                lockKey,
-                requestHash,
-                processingTtl,
-                cancellationToken).ConfigureAwait(false);
+        return new IdempotencyReservation(
+            IdempotencyReservationStatus.Replay,
+            entry.StatusCode,
+            entry.Body,
+            entry.Location);
+    }
+
+    private static async Task DeleteCorruptResponseAsync(
+        IDatabase database,
+        RedisKey responseKey,
+        string corruptResponse,
+        CancellationToken cancellationToken) {
+        const string script = """
+            if redis.call('GET', KEYS[1]) ~= ARGV[1] then return 0 end
+            return redis.call('DEL', KEYS[1])
+            """;
+        await database.ScriptEvaluateAsync(
+            script,
+            [responseKey],
+            [corruptResponse]).WaitAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task CompleteAsync(
@@ -80,7 +145,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
                 BuildLockValue(requestHash, ownerToken),
                 JsonSerializer.Serialize(entry, JsonOptions),
                 ((long)responseTtl.TotalMilliseconds).ToString(System.Globalization.CultureInfo.InvariantCulture),
-            ]).ConfigureAwait(false);
+            ]).WaitAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task ReleaseAsync(
@@ -96,51 +161,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
         await connectionMultiplexer.GetDatabase().ScriptEvaluateAsync(
             script,
             [BuildLockKey(key)],
-            [BuildLockValue(requestHash, ownerToken)]).ConfigureAwait(false);
-    }
-
-    private static async Task<IdempotencyReservation?> TryReadCompletedAsync(
-        IDatabase database,
-        RedisKey responseKey,
-        string requestHash,
-        CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
-        RedisValue cached = await database.StringGetAsync(responseKey).ConfigureAwait(false);
-        if (!cached.HasValue) {
-            return null;
-        }
-
-        CompletedEntry? entry = TryDeserialize(cached.ToString());
-        if (entry is not null) {
-            return !string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal)
-                ? new IdempotencyReservation(IdempotencyReservationStatus.Conflict)
-                : new IdempotencyReservation(
-                    IdempotencyReservationStatus.Replay,
-                    entry.StatusCode,
-                    entry.Body,
-                    entry.Location);
-        }
-
-        await database.KeyDeleteAsync(responseKey).ConfigureAwait(false);
-        return null;
-
-    }
-
-    private static async Task<IdempotencyReservation> TryAcquireAfterExpiredLockAsync(
-        IDatabase database,
-        RedisKey lockKey,
-        string requestHash,
-        TimeSpan processingTtl,
-        CancellationToken cancellationToken) {
-        cancellationToken.ThrowIfCancellationRequested();
-        string ownerToken = Guid.NewGuid().ToString("N");
-        return await database.StringSetAsync(
-            lockKey,
-            BuildLockValue(requestHash, ownerToken),
-            processingTtl,
-            When.NotExists).ConfigureAwait(false)
-            ? new IdempotencyReservation(IdempotencyReservationStatus.Acquired, OwnerToken: ownerToken)
-            : new IdempotencyReservation(IdempotencyReservationStatus.InProgress);
+            [BuildLockValue(requestHash, ownerToken)]).WaitAsync(cancellationToken).ConfigureAwait(false);
     }
 
     private static CompletedEntry? TryDeserialize(string value) {

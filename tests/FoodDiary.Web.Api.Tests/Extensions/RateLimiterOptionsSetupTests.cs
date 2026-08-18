@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 namespace FoodDiary.Web.Api.Tests.Extensions;
 
@@ -84,6 +85,24 @@ public sealed class RateLimiterOptionsSetupTests {
         Assert.NotNull(partition);
     }
 
+    [Fact]
+    public async Task Configure_OnRejected_WritesRetryAfterMetadata() {
+        var options = new RateLimiterOptions();
+        new RateLimiterOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiRateLimitingOptions())).Configure(options);
+        var httpContext = new DefaultHttpContext();
+        httpContext.Response.Body = new MemoryStream();
+        var context = new OnRejectedContext {
+            HttpContext = httpContext,
+            Lease = new RetryAfterLease(TimeSpan.FromMilliseconds(1200)),
+        };
+
+        await options.OnRejected!(context, CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(StatusCodes.Status429TooManyRequests, httpContext.Response.StatusCode),
+            () => Assert.Equal("2", httpContext.Response.Headers.RetryAfter));
+    }
+
     private static string InvokeGetPartitionKey(HttpContext httpContext) {
         MethodInfo? method = typeof(RateLimiterOptionsSetup).GetMethod(
             "GetPartitionKey",
@@ -121,5 +140,22 @@ public sealed class RateLimiterOptionsSetupTests {
         }
 
         return delegates;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RetryAfterLease(TimeSpan retryAfter) : RateLimitLease {
+        public override bool IsAcquired => false;
+
+        public override IEnumerable<string> MetadataNames => [MetadataName.RetryAfter.Name];
+
+        public override bool TryGetMetadata(string metadataName, out object? metadata) {
+            if (string.Equals(metadataName, MetadataName.RetryAfter.Name, StringComparison.Ordinal)) {
+                metadata = retryAfter;
+                return true;
+            }
+
+            metadata = null;
+            return false;
+        }
     }
 }

@@ -19,6 +19,7 @@ namespace FoodDiary.Presentation.Api.Features.Auth;
 [RequestSizeLimit(AuthRequestLimits.MaxPayloadBytes)]
 [RejectOversizedRequest(AuthRequestLimits.MaxPayloadBytes)]
 [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public sealed class AuthPasswordController(ISender mediator) : BaseApiController(mediator) {
     [AllowAnonymous]
     [HttpPost("request")]

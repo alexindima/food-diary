@@ -131,6 +131,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
             $"/api/v1/dietologist/clients/{clientUser.UserId}/recommendations",
             new CreateRecommendationHttpRequest("Add more protein at breakfast."));
         await AssertStatusCodeAsync(HttpStatusCode.Created, recommendationResponse);
+        Assert.Null(recommendationResponse.Headers.Location);
         RecommendationPayload? recommendation = await recommendationResponse.Content.ReadFromJsonAsync<RecommendationPayload>(JsonOptions);
         Assert.NotNull(recommendation);
 

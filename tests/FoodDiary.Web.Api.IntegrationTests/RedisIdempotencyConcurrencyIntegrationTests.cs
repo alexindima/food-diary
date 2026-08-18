@@ -10,6 +10,45 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class RedisIdempotencyConcurrencyIntegrationTests {
     [RequiresDockerFact]
+    public async Task ReserveAsync_ConcurrentCallers_AcquireExactlyOneLeaseAndThenReplay() {
+        await using RedisContainer container = new RedisBuilder("redis:7-alpine").Build();
+        await container.StartAsync().ConfigureAwait(false);
+        ConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(
+            $"{container.GetConnectionString()},abortConnect=false").ConfigureAwait(false);
+        await using ConfiguredAsyncDisposable connectionDisposal = connection.ConfigureAwait(false);
+        var store = new RedisIdempotencyStore(connection);
+        var responseTtl = TimeSpan.FromMinutes(1);
+        var processingTtl = TimeSpan.FromSeconds(10);
+
+        IdempotencyReservation[] reservations = await Task.WhenAll(Enumerable.Range(0, 32).Select(_ =>
+            store.ReserveAsync("atomic-reservation", "same-hash", responseTtl, processingTtl))).ConfigureAwait(false);
+        IdempotencyReservation owner = Assert.Single(
+            reservations,
+            static reservation => reservation.Status == IdempotencyReservationStatus.Acquired);
+        Assert.All(
+            reservations.Where(reservation => !ReferenceEquals(reservation, owner)),
+            static reservation => Assert.Equal(IdempotencyReservationStatus.InProgress, reservation.Status));
+
+        await store.CompleteAsync(
+            "atomic-reservation",
+            "same-hash",
+            owner.OwnerToken!,
+            StatusCodes.Status201Created,
+            """{"id":1}""",
+            "/api/v1/items/1",
+            responseTtl).ConfigureAwait(false);
+
+        IdempotencyReservation[] replays = await Task.WhenAll(Enumerable.Range(0, 16).Select(_ =>
+            store.ReserveAsync("atomic-reservation", "same-hash", responseTtl, processingTtl))).ConfigureAwait(false);
+
+        Assert.All(replays, static replay => {
+            Assert.Equal(IdempotencyReservationStatus.Replay, replay.Status);
+            Assert.Equal(StatusCodes.Status201Created, replay.StatusCode);
+            Assert.Equal("/api/v1/items/1", replay.Location);
+        });
+    }
+
+    [RequiresDockerFact]
     public async Task CompleteAsync_WhenLeaseWasReacquired_RejectsStaleOwnerCompletion() {
         await using RedisContainer container = new RedisBuilder("redis:7-alpine").Build();
         await container.StartAsync().ConfigureAwait(false);

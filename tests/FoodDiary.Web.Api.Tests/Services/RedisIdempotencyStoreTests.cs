@@ -12,8 +12,9 @@ public sealed class RedisIdempotencyStoreTests {
     [Fact]
     public async Task ReserveAsync_WhenCompletedResponseMatches_ReturnsReplay() {
         IDatabase database = Substitute.For<IDatabase>();
-        database.StringGetAsync(ResponseKey("request-1"), CommandFlags.None)
-            .Returns("""{"requestHash":"hash-1","statusCode":201,"body":"created"}""");
+        ConfigureReservationResult(
+            database,
+            CompletedResult("""{"requestHash":"hash-1","statusCode":201,"body":"created"}"""));
         RedisIdempotencyStore store = CreateStore(database);
 
         IdempotencyReservation reservation = await store.ReserveAsync(
@@ -27,18 +28,14 @@ public sealed class RedisIdempotencyStoreTests {
             () => Assert.Equal(IdempotencyReservationStatus.Replay, reservation.Status),
             () => Assert.Equal(201, reservation.StatusCode),
             () => Assert.Equal("created", reservation.Body));
-        await database.DidNotReceive().StringSetAsync(
-            Arg.Any<RedisKey>(),
-            Arg.Any<RedisValue>(),
-            Arg.Any<TimeSpan?>(),
-            Arg.Any<When>());
     }
 
     [Fact]
     public async Task ReserveAsync_WhenCompletedResponseHasDifferentHash_ReturnsConflict() {
         IDatabase database = Substitute.For<IDatabase>();
-        database.StringGetAsync(ResponseKey("request-2"), CommandFlags.None)
-            .Returns("""{"requestHash":"other-hash","statusCode":200,"body":null}""");
+        ConfigureReservationResult(
+            database,
+            CompletedResult("""{"requestHash":"other-hash","statusCode":200,"body":null}"""));
         RedisIdempotencyStore store = CreateStore(database);
 
         IdempotencyReservation reservation = await store.ReserveAsync(
@@ -49,20 +46,12 @@ public sealed class RedisIdempotencyStoreTests {
             CancellationToken.None);
 
         Assert.Equal(IdempotencyReservationStatus.Conflict, reservation.Status);
-        await database.DidNotReceive().StringSetAsync(
-            Arg.Any<RedisKey>(),
-            Arg.Any<RedisValue>(),
-            Arg.Any<TimeSpan?>(),
-            Arg.Any<When>());
     }
 
     [Fact]
     public async Task ReserveAsync_WhenCachedResponseIsInvalid_DeletesItAndAcquiresLock() {
         IDatabase database = Substitute.For<IDatabase>();
-        database.StringGetAsync(ResponseKey("request-3"), CommandFlags.None)
-            .Returns("not-json");
-        database.StringSetAsync(LockKey("request-3"), Arg.Is<RedisValue>(value => value.ToString().StartsWith("hash-3:", StringComparison.Ordinal)), ProcessingTtl, When.NotExists)
-            .Returns(returnThis: true);
+        ConfigureReservationResult(database, CompletedResult("not-json"), AcquiredResult());
         RedisIdempotencyStore store = CreateStore(database);
 
         IdempotencyReservation reservation = await store.ReserveAsync(
@@ -73,18 +62,17 @@ public sealed class RedisIdempotencyStoreTests {
             CancellationToken.None);
 
         Assert.Equal(IdempotencyReservationStatus.Acquired, reservation.Status);
-        await database.Received(1).KeyDeleteAsync(ResponseKey("request-3"), CommandFlags.None);
+        await database.Received(1).ScriptEvaluateAsync(
+            Arg.Is<string>(script => script.Contains("~= ARGV[1]", StringComparison.Ordinal)),
+            Arg.Is<RedisKey[]>(keys => keys != null && Enumerable.SequenceEqual(keys, new[] { ResponseKey("request-3") })),
+            Arg.Is<RedisValue[]>(values => values != null && Enumerable.SequenceEqual(values, new RedisValue[] { "not-json" })),
+            CommandFlags.None);
     }
 
     [Fact]
     public async Task ReserveAsync_WhenDifferentRequestOwnsActiveLock_ReturnsConflict() {
         IDatabase database = Substitute.For<IDatabase>();
-        database.StringSetAsync(LockKey("request-4"), Arg.Is<RedisValue>(value => value.ToString().StartsWith("hash-4:", StringComparison.Ordinal)), ProcessingTtl, When.NotExists)
-            .Returns(returnThis: false);
-        database.StringGetAsync(ResponseKey("request-4"), CommandFlags.None)
-            .Returns(RedisValue.Null);
-        database.StringGetAsync(LockKey("request-4"), CommandFlags.None)
-            .Returns("other-hash");
+        ConfigureReservationResult(database, ActiveLockResult("other-hash:owner"));
         RedisIdempotencyStore store = CreateStore(database);
 
         IdempotencyReservation reservation = await store.ReserveAsync(
@@ -100,12 +88,7 @@ public sealed class RedisIdempotencyStoreTests {
     [Fact]
     public async Task ReserveAsync_WhenSameRequestOwnsActiveLock_ReturnsInProgress() {
         IDatabase database = Substitute.For<IDatabase>();
-        database.StringSetAsync(LockKey("request-5"), Arg.Is<RedisValue>(value => value.ToString().StartsWith("hash-5:", StringComparison.Ordinal)), ProcessingTtl, When.NotExists)
-            .Returns(returnThis: false);
-        database.StringGetAsync(ResponseKey("request-5"), CommandFlags.None)
-            .Returns(RedisValue.Null);
-        database.StringGetAsync(LockKey("request-5"), CommandFlags.None)
-            .Returns("hash-5");
+        ConfigureReservationResult(database, ActiveLockResult("hash-5:owner"));
         RedisIdempotencyStore store = CreateStore(database);
 
         IdempotencyReservation reservation = await store.ReserveAsync(
@@ -119,38 +102,9 @@ public sealed class RedisIdempotencyStoreTests {
     }
 
     [Fact]
-    public async Task ReserveAsync_WhenCompletedResponseAppearsAfterFailedLock_ReturnsReplay() {
+    public async Task ReserveAsync_WhenNoCompletedResponseOrLockExist_AcquiresAtomically() {
         IDatabase database = Substitute.For<IDatabase>();
-        database.StringSetAsync(LockKey("request-replay-after-lock"), Arg.Is<RedisValue>(value => value.ToString().StartsWith("hash-replay:", StringComparison.Ordinal)), ProcessingTtl, When.NotExists)
-            .Returns(returnThis: false);
-        database.StringGetAsync(ResponseKey("request-replay-after-lock"), CommandFlags.None)
-            .Returns(
-                RedisValue.Null,
-                """{"requestHash":"hash-replay","statusCode":202,"body":"accepted"}""");
-        RedisIdempotencyStore store = CreateStore(database);
-
-        IdempotencyReservation reservation = await store.ReserveAsync(
-            "request-replay-after-lock",
-            "hash-replay",
-            ResponseTtl,
-            ProcessingTtl,
-            CancellationToken.None);
-
-        Assert.Multiple(
-            () => Assert.Equal(IdempotencyReservationStatus.Replay, reservation.Status),
-            () => Assert.Equal(202, reservation.StatusCode),
-            () => Assert.Equal("accepted", reservation.Body));
-    }
-
-    [Fact]
-    public async Task ReserveAsync_WhenLockExpiresBetweenAttempts_TriesToAcquireAgain() {
-        IDatabase database = Substitute.For<IDatabase>();
-        database.StringSetAsync(LockKey("request-6"), Arg.Is<RedisValue>(value => value.ToString().StartsWith("hash-6:", StringComparison.Ordinal)), ProcessingTtl, When.NotExists)
-            .Returns(returnThis: false, returnThese: true);
-        database.StringGetAsync(ResponseKey("request-6"), CommandFlags.None)
-            .Returns(RedisValue.Null);
-        database.StringGetAsync(LockKey("request-6"), CommandFlags.None)
-            .Returns(RedisValue.Null);
+        ConfigureReservationResult(database, AcquiredResult());
         RedisIdempotencyStore store = CreateStore(database);
 
         IdempotencyReservation reservation = await store.ReserveAsync(
@@ -160,12 +114,20 @@ public sealed class RedisIdempotencyStoreTests {
             ProcessingTtl,
             CancellationToken.None);
 
-        Assert.Equal(IdempotencyReservationStatus.Acquired, reservation.Status);
-        await database.Received(2).StringSetAsync(
-            LockKey("request-6"),
-            Arg.Is<RedisValue>(value => value.ToString().StartsWith("hash-6:", StringComparison.Ordinal)),
-            ProcessingTtl,
-            When.NotExists);
+        Assert.Multiple(
+            () => Assert.Equal(IdempotencyReservationStatus.Acquired, reservation.Status),
+            () => Assert.NotEmpty(reservation.OwnerToken!));
+        await database.Received(1).ScriptEvaluateAsync(
+            Arg.Is<string>(script =>
+                script.Contains("local response = redis.call('GET', KEYS[1])", StringComparison.Ordinal) &&
+                script.Contains("redis.call('SET', KEYS[2]", StringComparison.Ordinal)),
+            Arg.Is<RedisKey[]>(keys => keys != null && Enumerable.SequenceEqual(
+                keys,
+                new[] { ResponseKey("request-6"), LockKey("request-6") })),
+            Arg.Is<RedisValue[]>(values => values != null &&
+                values[0].ToString().StartsWith("hash-6:", StringComparison.Ordinal) &&
+                values[1] == ((long)ProcessingTtl.TotalMilliseconds).ToString(System.Globalization.CultureInfo.InvariantCulture)),
+            CommandFlags.None);
     }
 
     [Fact]
@@ -234,6 +196,30 @@ public sealed class RedisIdempotencyStoreTests {
             default(RedisValue[])!,
             default);
     }
+
+    private static void ConfigureReservationResult(IDatabase database, params RedisResult[] results) {
+        var queuedResults = new Queue<RedisResult>(results);
+        database.ScriptEvaluateAsync(
+                Arg.Any<string>(),
+                Arg.Any<RedisKey[]>(),
+                Arg.Any<RedisValue[]>(),
+                CommandFlags.None)
+            .Returns(callInfo => Task.FromResult(
+                callInfo.ArgAt<string>(0).Contains("return {3, ''}", StringComparison.Ordinal)
+                    ? queuedResults.Dequeue()
+                    : RedisResult.Create((RedisValue)1)));
+    }
+
+    private static RedisResult CompletedResult(string response) => ReservationResult(1, response);
+
+    private static RedisResult ActiveLockResult(string lockValue) => ReservationResult(2, lockValue);
+
+    private static RedisResult AcquiredResult() => ReservationResult(3, string.Empty);
+
+    private static RedisResult ReservationResult(int state, string value) => RedisResult.Create([
+        RedisResult.Create((RedisValue)state),
+        RedisResult.Create((RedisValue)value),
+    ]);
 
     private static RedisIdempotencyStore CreateStore(IDatabase database) {
         IConnectionMultiplexer connectionMultiplexer = Substitute.For<IConnectionMultiplexer>();

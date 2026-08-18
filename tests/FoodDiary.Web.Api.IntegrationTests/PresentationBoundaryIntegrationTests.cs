@@ -14,7 +14,10 @@ using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
@@ -76,6 +79,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             "/api/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en"));
         firstResponse.EnsureSuccessStatusCode();
+        Assert.True(firstResponse.Headers.CacheControl?.NoStore);
 
         HttpResponseMessage duplicateResponse = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
@@ -111,6 +115,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         ErrorPayload? payload = await lastResponse!.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.TooManyRequests, lastResponse.StatusCode);
+        Assert.NotNull(lastResponse.Headers.RetryAfter);
         Assert.NotNull(payload);
         Assert.Equal("RateLimit.Exceeded", payload.Error);
         Assert.False(string.IsNullOrWhiteSpace(payload.TraceId));
@@ -578,6 +583,56 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.False(json.RootElement.TryGetProperty("security", out _));
         Assert.Equal(JsonValueKind.Array, authorizedSecurityRequirement.ValueKind);
         Assert.Equal(0, anonymousSecurity.GetArrayLength());
+    }
+
+    [Fact]
+    public async Task SwaggerJson_HidesCurrentUserBindingAndDocumentsIdempotencyHeader() {
+        HttpClient client = apiFactory.CreateClient();
+        using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
+        JsonElement paths = json.RootElement.GetProperty("paths");
+
+        JsonElement[] allParameters = [.. paths.EnumerateObject()
+            .SelectMany(static path => path.Value.EnumerateObject())
+            .Where(static operation => operation.Value.ValueKind == JsonValueKind.Object)
+            .SelectMany(static operation => operation.Value.TryGetProperty("parameters", out JsonElement parameters)
+                ? parameters.EnumerateArray()
+                : [])];
+        Assert.DoesNotContain(allParameters, static parameter =>
+            parameter.TryGetProperty("in", out JsonElement location) &&
+            string.Equals(location.GetString(), "query", StringComparison.Ordinal) &&
+            parameter.TryGetProperty("name", out JsonElement name) &&
+            name.GetString() is "userId" or "actorUserId");
+
+        JsonElement productCreate = paths.GetProperty("/api/v{version}/products").GetProperty("post");
+        JsonElement idempotencyParameter = Assert.Single(productCreate.GetProperty("parameters").EnumerateArray(), static parameter =>
+            string.Equals(parameter.GetProperty("name").GetString(), "Idempotency-Key", StringComparison.Ordinal));
+        JsonElement schema = idempotencyParameter.GetProperty("schema");
+
+        Assert.Multiple(
+            () => Assert.Equal("header", idempotencyParameter.GetProperty("in").GetString()),
+            () => Assert.False(idempotencyParameter.TryGetProperty("required", out JsonElement optionalRequired) &&
+                optionalRequired.GetBoolean()),
+            () => Assert.Equal(1, schema.GetProperty("minLength").GetInt32()),
+            () => Assert.Equal(128, schema.GetProperty("maxLength").GetInt32()),
+            () => Assert.True(productCreate.GetProperty("responses").TryGetProperty("400", out _)),
+            () => Assert.True(productCreate.GetProperty("responses").TryGetProperty("409", out _)));
+
+        JsonElement aiCreate = paths.GetProperty("/api/v{version}/ai/food/vision").GetProperty("post");
+        JsonElement requiredIdempotency = Assert.Single(aiCreate.GetProperty("parameters").EnumerateArray(), static parameter =>
+            string.Equals(parameter.GetProperty("name").GetString(), "Idempotency-Key", StringComparison.Ordinal));
+        Assert.True(requiredIdempotency.GetProperty("required").GetBoolean());
+
+        JsonElement refresh = paths.GetProperty("/api/v{version}/auth/refresh").GetProperty("post");
+        Assert.False(refresh.TryGetProperty("parameters", out JsonElement refreshParameters) &&
+            refreshParameters.EnumerateArray().Any(static parameter =>
+                string.Equals(parameter.GetProperty("name").GetString(), "Idempotency-Key", StringComparison.Ordinal)));
+    }
+
+    [Fact]
+    public void Kestrel_DefaultRequestBodyLimit_IsOneMegabyte() {
+        KestrelServerOptions options = apiFactory.Services.GetRequiredService<IOptions<KestrelServerOptions>>().Value;
+
+        Assert.Equal(1024 * 1024, options.Limits.MaxRequestBodySize);
     }
 
     [Fact]

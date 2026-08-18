@@ -47,11 +47,11 @@ public static class ResultExtensions {
                 : ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
         }
 
-        public IActionResult ToCreatedActionResult<TResponse>(
+        public IActionResult ToCreatedResult<TResponse>(
             ControllerBase controller,
             Func<T, TResponse> map) {
             return result.IsSuccess
-                ? controller.Created(string.Empty, map(result.Value))
+                ? new CreatedResult(location: (string?)null, value: map(result.Value))
                 : ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
         }
 

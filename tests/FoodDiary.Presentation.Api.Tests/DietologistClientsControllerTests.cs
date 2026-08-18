@@ -130,10 +130,11 @@ public sealed class DietologistClientsControllerTests {
 
         IActionResult result = await controller.CreateRecommendation(clientUserId, userId, request);
 
-        CreatedAtActionResult created = Assert.IsType<CreatedAtActionResult>(result);
+        CreatedResult created = Assert.IsType<CreatedResult>(result);
         RecommendationHttpResponse response = Assert.IsType<RecommendationHttpResponse>(created.Value);
         Assert.Equal(recommendation.Id, response.Id);
-        Assert.Equal(nameof(DietologistClientsController.CreateRecommendation), created.ActionName);
+        Assert.Equal(StatusCodes.Status201Created, created.StatusCode);
+        Assert.Null(created.Location);
         CreateRecommendationCommand command = Assert.IsType<CreateRecommendationCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(clientUserId, command.ClientUserId);

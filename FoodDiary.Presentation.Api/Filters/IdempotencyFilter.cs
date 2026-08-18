@@ -11,19 +11,24 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
+using MvcJsonOptions = Microsoft.AspNetCore.Mvc.JsonOptions;
 
 namespace FoodDiary.Presentation.Api.Filters;
 
 public sealed class IdempotencyFilter(
     IIdempotencyStore idempotencyStore,
-    ILogger<IdempotencyFilter>? logger = null) : IAsyncActionFilter {
+    ILogger<IdempotencyFilter>? logger = null,
+    IOptions<MvcJsonOptions>? mvcJsonOptions = null) : IAsyncActionFilter {
     private const string IdempotencyKeyHeader = "Idempotency-Key";
     private const int MaximumIdempotencyKeyLength = 128;
     private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(24);
     private static readonly TimeSpan ProcessingDuration = TimeSpan.FromMinutes(5);
     private static readonly TimeSpan CompletionTimeout = TimeSpan.FromSeconds(5);
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions RequestHashJsonOptions = new(JsonSerializerDefaults.Web);
     private readonly ILogger<IdempotencyFilter> _logger = logger ?? NullLogger<IdempotencyFilter>.Instance;
+    private readonly JsonSerializerOptions _responseJsonOptions = mvcJsonOptions?.Value.JsonSerializerOptions
+        ?? new JsonSerializerOptions(JsonSerializerDefaults.Web);
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
         EnableIdempotencyAttribute? attribute = context.Filters.OfType<EnableIdempotencyAttribute>().FirstOrDefault();
@@ -100,6 +105,10 @@ public sealed class IdempotencyFilter(
             return;
         }
 
+        if (location is not null) {
+            executedContext.Result = NormalizeLocationResult(executedContext.Result, location);
+        }
+
         try {
             using var completionTimeout = new CancellationTokenSource(CompletionTimeout);
             await idempotencyStore.CompleteAsync(
@@ -111,9 +120,10 @@ public sealed class IdempotencyFilter(
                 location,
                 CacheDuration,
                 completionTimeout.Token).ConfigureAwait(false);
-        } catch {
-            await TryReleaseReservationAsync(cacheKey, requestHash, ownerToken).ConfigureAwait(false);
-            throw;
+        } catch (Exception exception) {
+            _logger.LogError(
+                exception,
+                "Failed to persist a completed idempotent response; the reservation will remain locked until it expires");
         }
     }
 
@@ -163,7 +173,7 @@ public sealed class IdempotencyFilter(
     private static bool IsSuccessfulStatusCode(int statusCode) =>
         statusCode is >= StatusCodes.Status200OK and < StatusCodes.Status300MultipleChoices;
 
-    private static bool TrySerializeResult(
+    private bool TrySerializeResult(
         ActionExecutingContext context,
         IActionResult? result,
         out int statusCode,
@@ -172,7 +182,7 @@ public sealed class IdempotencyFilter(
         switch (result) {
             case ObjectResult objectResult:
                 statusCode = objectResult.StatusCode ?? StatusCodes.Status200OK;
-                body = JsonSerializer.Serialize(objectResult.Value, JsonOptions);
+                body = JsonSerializer.Serialize(objectResult.Value, _responseJsonOptions);
                 location = ResolveLocation(context, objectResult);
                 return true;
             case StatusCodeResult statusCodeResult:
@@ -226,9 +236,7 @@ public sealed class IdempotencyFilter(
         ResolveUrlHelper(context, configuredUrlHelper).Action(
             actionName,
             controllerName,
-            routeValues,
-            context.HttpContext.Request.Scheme,
-            context.HttpContext.Request.Host.Value);
+            routeValues);
 
     private static string? ResolveRouteLocation(
         ActionExecutingContext context,
@@ -237,14 +245,38 @@ public sealed class IdempotencyFilter(
         object? routeValues) =>
         ResolveUrlHelper(context, configuredUrlHelper).RouteUrl(
             routeName,
-            routeValues,
-            context.HttpContext.Request.Scheme,
-            context.HttpContext.Request.Host.Value);
+            routeValues);
 
     private static IUrlHelper ResolveUrlHelper(ActionExecutingContext context, IUrlHelper? configuredUrlHelper) =>
         configuredUrlHelper ?? context.HttpContext.RequestServices
             .GetRequiredService<IUrlHelperFactory>()
             .GetUrlHelper(context);
+
+    private static IActionResult? NormalizeLocationResult(IActionResult? result, string location) =>
+        result switch {
+            CreatedAtActionResult createdAtAction => CopyObjectResultMetadata(
+                createdAtAction,
+                new CreatedResult(location, createdAtAction.Value)),
+            CreatedAtRouteResult createdAtRoute => CopyObjectResultMetadata(
+                createdAtRoute,
+                new CreatedResult(location, createdAtRoute.Value)),
+            AcceptedAtActionResult acceptedAtAction => CopyObjectResultMetadata(
+                acceptedAtAction,
+                new AcceptedResult(location, acceptedAtAction.Value)),
+            AcceptedAtRouteResult acceptedAtRoute => CopyObjectResultMetadata(
+                acceptedAtRoute,
+                new AcceptedResult(location, acceptedAtRoute.Value)),
+            _ => result,
+        };
+
+    private static ObjectResult CopyObjectResultMetadata(ObjectResult source, ObjectResult destination) {
+        destination.DeclaredType = source.DeclaredType;
+        foreach (string contentType in source.ContentTypes) {
+            destination.ContentTypes.Add(contentType);
+        }
+
+        return destination;
+    }
 
     private static ObjectResult CreateIdempotencyConflict(ActionExecutingContext context) =>
         new(new ApiErrorHttpResponse(
@@ -315,7 +347,7 @@ public sealed class IdempotencyFilter(
             Path = context.HttpContext.Request.Path.Value ?? string.Empty,
             Query = context.HttpContext.Request.QueryString.Value ?? string.Empty,
             Arguments = payload,
-        }, JsonOptions);
+        }, RequestHashJsonOptions);
         byte[] hash = SHA256.HashData(Encoding.UTF8.GetBytes(serialized));
         return Convert.ToHexString(hash);
     }

@@ -1,5 +1,6 @@
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
@@ -32,6 +33,7 @@ public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiCon
     [HttpPost("test")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [EnableIdempotency]
     public Task<IActionResult> SendTest([FromBody] AdminEmailTemplateTestHttpRequest request) =>
         HandleNoContent(request.ToCommand());
 }

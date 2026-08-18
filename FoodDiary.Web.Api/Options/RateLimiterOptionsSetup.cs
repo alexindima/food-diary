@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Threading.RateLimiting;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Policies;
@@ -16,6 +17,10 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
         options.OnRejected = async (context, cancellationToken) => {
             HttpContext httpContext = context.HttpContext;
             httpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out TimeSpan retryAfter)) {
+                double seconds = Math.Ceiling(retryAfter.TotalSeconds);
+                httpContext.Response.Headers.RetryAfter = Math.Max(1, seconds).ToString(CultureInfo.InvariantCulture);
+            }
             ApiTelemetry.RateLimitRejectionCounter.Add(
                 1,
                 new KeyValuePair<string, object?>("http.request.method", httpContext.Request.Method),

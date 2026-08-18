@@ -292,6 +292,7 @@
             "400",
             "401",
             "403",
+            "409",
             "500"
           ]
         }
@@ -371,15 +372,6 @@
             "403",
             "409",
             "500"
-          ],
-          "QueryParameters": [
-            {
-              "Name": "actorUserId",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "uuid"
-            }
           ]
         }
       ]
@@ -524,15 +516,6 @@
             "403",
             "404",
             "500"
-          ],
-          "QueryParameters": [
-            {
-              "Name": "actorUserId",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "uuid"
-            }
           ]
         }
       ]
@@ -550,15 +533,6 @@
             "403",
             "404",
             "500"
-          ],
-          "QueryParameters": [
-            {
-              "Name": "actorUserId",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "uuid"
-            }
           ]
         }
       ]
@@ -608,15 +582,6 @@
             "401",
             "403",
             "500"
-          ],
-          "QueryParameters": [
-            {
-              "Name": "userId",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "uuid"
-            }
           ]
         }
       ]
@@ -769,15 +734,6 @@
             "413",
             "429",
             "500"
-          ],
-          "QueryParameters": [
-            {
-              "Name": "userId",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "uuid"
-            }
           ]
         }
       ]
@@ -794,15 +750,6 @@
             "401",
             "404",
             "500"
-          ],
-          "QueryParameters": [
-            {
-              "Name": "userId",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "uuid"
-            }
           ]
         }
       ]
@@ -819,15 +766,6 @@
             "401",
             "404",
             "500"
-          ],
-          "QueryParameters": [
-            {
-              "Name": "userId",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "uuid"
-            }
           ]
         }
       ]

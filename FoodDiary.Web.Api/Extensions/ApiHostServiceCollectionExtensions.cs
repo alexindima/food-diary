@@ -49,6 +49,7 @@ public static class ApiHostServiceCollectionExtensions {
                     Version = "v1",
                 });
                 options.OperationFilter<StandardErrorResponsesOperationFilter>();
+                options.OperationFilter<PresentationTransportOperationFilter>();
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
                     Name = "Authorization",
                     Type = SecuritySchemeType.Http,
