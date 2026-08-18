@@ -51,6 +51,8 @@ public static class ApiOptionsServiceCollectionExtensions {
                     "RateLimiting:ClientTelemetry requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .Validate(ApiRateLimitingOptions.HasValidMarketingAttribution,
                     "RateLimiting:MarketingAttribution requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+                .Validate(ApiRateLimitingOptions.HasValidTestDelivery,
+                    "RateLimiting:TestDelivery requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .ValidateOnStart();
             services
                 .AddOptions<ApiOutputCacheOptions>()

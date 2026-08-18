@@ -3602,17 +3602,17 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/achievement-definitions",
-            "line": 18
+            "line": 19
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/admin/achievement-definitions",
-            "line": 24
+            "line": 25
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/admin/achievement-definitions/{id:guid}",
-            "line": 31
+            "line": 33
           }
         ]
       },
@@ -3748,17 +3748,17 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/admin/lessons/import",
-            "line": 32
+            "line": 33
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/admin/lessons/{id:guid}",
-            "line": 41
+            "line": 42
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/admin/lessons/{id:guid}",
-            "line": 48
+            "line": 49
           }
         ]
       },
@@ -4078,7 +4078,7 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/reports",
-            "line": 14
+            "line": 15
           }
         ]
       },
@@ -4171,17 +4171,17 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dashboard",
-            "line": 17
+            "line": 19
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dashboard/advice",
-            "line": 24
+            "line": 26
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/dashboard/test-email",
-            "line": 30
+            "line": 32
           }
         ]
       },
@@ -4276,17 +4276,17 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/tasks",
-            "line": 18
+            "line": 19
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/tasks",
-            "line": 23
+            "line": 24
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/dietologist/clients/tasks/{taskId:guid}/cancel",
-            "line": 35
+            "line": 37
           }
         ]
       },
@@ -4298,27 +4298,27 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/dietologist/invite",
-            "line": 15
+            "line": 16
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/dietologist/relationship",
-            "line": 22
+            "line": 24
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/dietologist/permissions",
-            "line": 28
+            "line": 30
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dietologist/my-dietologist",
-            "line": 34
+            "line": 36
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dietologist/relationship",
-            "line": 39
+            "line": 41
           }
         ]
       },
@@ -4367,22 +4367,22 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/recommendations",
-            "line": 15
+            "line": 16
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/recommendations/{recommendationId:guid}/read",
-            "line": 20
+            "line": 21
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments",
-            "line": 26
+            "line": 27
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments",
-            "line": 34
+            "line": 35
           }
         ]
       },
@@ -4394,22 +4394,22 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates",
-            "line": 18
+            "line": 19
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates",
-            "line": 28
+            "line": 29
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates/{templateId:guid}",
-            "line": 36
+            "line": 38
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates/{templateId:guid}",
-            "line": 45
+            "line": 47
           }
         ]
       },
@@ -4421,22 +4421,22 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/exercises",
-            "line": 14
+            "line": 15
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/exercises",
-            "line": 22
+            "line": 23
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/exercises/{id:guid}",
-            "line": 29
+            "line": 31
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/exercises/{id:guid}",
-            "line": 37
+            "line": 39
           }
         ]
       },
@@ -4823,7 +4823,7 @@
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/meals/{id:guid}",
-            "line": 69
+            "line": 70
           }
         ]
       },
@@ -4862,37 +4862,37 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/notifications",
-            "line": 16
+            "line": 18
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/notifications/unread-count",
-            "line": 21
+            "line": 23
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/notifications/{notificationId:guid}/read",
-            "line": 26
+            "line": 28
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/notifications/read-all",
-            "line": 32
+            "line": 34
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/notifications/test/schedule",
-            "line": 37
+            "line": 39
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/notifications/preferences",
-            "line": 45
+            "line": 49
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/notifications/preferences",
-            "line": 51
+            "line": 55
           }
         ]
       },
@@ -4980,22 +4980,22 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/comments",
-            "line": 15
+            "line": 16
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/comments",
-            "line": 25
+            "line": 26
           },
           {
             "verb": "PATCH",
             "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/comments/{commentId:guid}",
-            "line": 33
+            "line": 35
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/comments/{commentId:guid}",
-            "line": 43
+            "line": 45
           }
         ]
       },
@@ -5083,32 +5083,32 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/shopping-lists/current",
-            "line": 15
+            "line": 16
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/shopping-lists",
-            "line": 20
+            "line": 21
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/shopping-lists/{id:guid}",
-            "line": 25
+            "line": 26
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/shopping-lists",
-            "line": 31
+            "line": 32
           },
           {
             "verb": "PATCH",
             "route": "/api/v{version:apiVersion}/shopping-lists/{id:guid}",
-            "line": 41
+            "line": 43
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/shopping-lists/{id:guid}",
-            "line": 48
+            "line": 50
           }
         ]
       },
@@ -5298,12 +5298,12 @@
           {
             "verb": "GET",
             "route": "/api/version",
-            "line": 16
+            "line": 17
           },
           {
             "verb": "GET",
             "route": "/api/v1/version",
-            "line": 17
+            "line": 18
           }
         ]
       },
@@ -5423,37 +5423,37 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/weight-entries",
-            "line": 15
+            "line": 16
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/weight-entries/latest",
-            "line": 21
+            "line": 22
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/weight-entries/summary",
-            "line": 26
+            "line": 27
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/weight-entries/page-summary",
-            "line": 32
+            "line": 33
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/weight-entries",
-            "line": 40
+            "line": 41
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/weight-entries/{id:guid}",
-            "line": 47
+            "line": 49
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/weight-entries/{id:guid}",
-            "line": 55
+            "line": 57
           }
         ]
       },

@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1045,
     "ambiguousContracts": 3,
-    "consumerEdges": 7249,
+    "consumerEdges": 7259,
     "productionConsumerEdges": 4427,
-    "testConsumerEdges": 2822,
+    "testConsumerEdges": 2832,
     "consumedContracts": 1045,
     "unconsumedContracts": 0
   },
@@ -23948,6 +23948,19 @@
         "FoodDiary.Presentation.Api/Features/Meals/Requests/CreateMealHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateMealHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Meals/Requests/CreateMealHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/MealHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -24223,6 +24236,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Products/ProductsController.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateProductHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Products/Requests/CreateProductHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -24652,6 +24678,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Recipes/RecipesController.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateRecipeHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Recipes/Requests/CreateRecipeHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -79888,7 +79927,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Controllers/BaseApiController.cs",
       "isTest": false,
-      "referenceCount": 9
+      "referenceCount": 8
     },
     {
       "contract": "IRequest",
@@ -80538,7 +80577,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/DietologistNewEndpointsCoverageTests.cs",
       "isTest": true,
-      "referenceCount": 14
+      "referenceCount": 15
     },
     {
       "contract": "IRequest",
@@ -96037,6 +96076,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "MarkRecommendationReadCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Dietologist/Commands/MarkRecommendationRead/MarkRecommendationReadCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/DietologistNewEndpointsCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "MealAiItemHttpRequest",
       "roles": [
         "Request"
@@ -96255,6 +96307,32 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Meals/Responses/MealOverviewHttpResponse.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MealHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Meals/Responses/MealHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MealHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Meals/Responses/MealHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/DashboardHttpMappingsTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -96762,6 +96840,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/Responses/CycleHttpResponse.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MenstrualEpisodeHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CycleHttpMappingsTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -98801,6 +98892,19 @@
         "FoodDiary.Presentation.Api/Features/Products/Responses/ProductHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ProductHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Products/Responses/ProductHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ProductHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -99155,6 +99259,19 @@
       "consumerPath": "FoodDiary.Presentation.Api/Features/Recipes/Responses/RecipeOverviewHttpResponse.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "RecipeHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Recipes/Responses/RecipeHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "RecipeHttpResponse",
@@ -101442,6 +101559,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Meals/MealsController.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RepeatMealHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Meals/Requests/RepeatMealHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {

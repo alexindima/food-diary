@@ -182,17 +182,17 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "b717489ad311ab282eb4add303510c73583035398d7246d46eb4f226a1beb7ce"
+          "sha256": "5f8e224915e485911182d9133b5e394b2aaf6d65e15068612e89c57738e743a0"
         },
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "38d02ed0ca15aeb32638dd80b74ac2faa36ad3c2632897918f9d07f56381c968"
+          "sha256": "be6275b033ffc707620b9698cf8aeb37fc677bda0fedbc794532790e91edafcf"
         }
       ],
-      "reason": "OpenAPI snapshots were regenerated; semantic current-user and idempotency assertions plus all six Swagger contract tests passed.",
+      "reason": "OpenAPI changes are additive 429 responses for two existing test-delivery endpoints; endpoint paths, request bodies, success responses, and authentication contracts remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "e6582f07846100ce7c87c6b494a786d9b1e1ac20",
-      "reviewedAtUtc": "2026-08-18T09:41:47.7244467Z"
+      "gitHead": "a4c68d54367f2d93b4b2f0af80de1a97f653df3f",
+      "reviewedAtUtc": "2026-08-18T10:59:21.7965290Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -220,13 +220,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "01759558a0b85e331d838789b52c9d11b5b5f844fad8f84d6504da293a7181f7"
+          "sha256": "4a18c596c84f2406374bb8e5f3192f74343a81dd97821a81ba06e61e11c1ee36"
         }
       ],
-      "reason": "OpenAPI snapshots were regenerated; semantic current-user and idempotency assertions plus all six Swagger contract tests passed.",
+      "reason": "Reviewed optional Idempotency-Key error responses; the full OpenAPI snapshot was regenerated and all 129 API integration tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "e6582f07846100ce7c87c6b494a786d9b1e1ac20",
-      "reviewedAtUtc": "2026-08-18T09:41:48.4111126Z"
+      "gitHead": "a4c68d54367f2d93b4b2f0af80de1a97f653df3f",
+      "reviewedAtUtc": "2026-08-18T10:27:09.6088693Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -450,14 +450,14 @@
       "pageSha256": "285b7d0005f1b054eda23538c5f17b3dd44d318411cb12f6e7e4146e9db95db9",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1",
-          "sha256": "a2d73a8256a9fcbd88556c76d431637daef8d1016024615d0b66438b4dc728d5"
+          "path": ".llm-wiki/generated/configuration-index.json",
+          "sha256": "bf31863ae1f4d66718f47debb47883b4ffecdead6b5cbe2477d44d372f6cc42c"
         }
       ],
-      "reason": "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
+      "reason": "Configuration and repository navigation indexes were regenerated after adding the bounded TestDelivery limiter and stable user-ID cache variation; ownership and deployment topology remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "684dcb79797815b9e9bf8af888375688ac34fefa",
-      "reviewedAtUtc": "2026-08-12T09:51:49.8572958Z"
+      "gitHead": "a4c68d54367f2d93b4b2f0af80de1a97f653df3f",
+      "reviewedAtUtc": "2026-08-18T10:59:22.3337137Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -792,13 +792,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "c3b5090c26dd7e528edb8cba0c97a03cac3bf7f8e6fdc1576fc932ce4bcf9dee"
+          "sha256": "56c2b97ebd4ecb92e5087e3bfbb77dacea8b3dd0b46286e9e4c4098dff188d8d"
         }
       ],
-      "reason": "Token-bearing auth responses are no-store; refresh-token idempotency caching was removed; SignalR closes at authentication expiry; security contract and integration tests passed.",
+      "reason": "Reviewed response replay boundaries; token, impersonation, temporary-password, webhook, and telemetry endpoints remain excluded from idempotency caching.",
       "baseRef": "HEAD",
-      "gitHead": "e6582f07846100ce7c87c6b494a786d9b1e1ac20",
-      "reviewedAtUtc": "2026-08-18T09:42:00.1568419Z"
+      "gitHead": "a4c68d54367f2d93b4b2f0af80de1a97f653df3f",
+      "reviewedAtUtc": "2026-08-18T10:27:10.2994274Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -853,13 +853,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bab2979e4432905e883bba867ce05281403183bd431d9b64c9381f4a8ba5e578"
+          "sha256": "68ccb1f587b115343a09be6820e38f7f4b965ad416a6411fa53460d0b1bd6aa6"
         }
       ],
-      "reason": "Full Web API integration suite passed 129 of 129; Presentation suite passed 734 of 734; final coverage is 93.25 percent lines and 88.98 percent branches, with IdempotencyFilter at 244 of 244 lines.",
+      "reason": "New unit and integration tests cover limiter registration and partitioning, stable cache identity, unauthenticated cache rejection, endpoint policy metadata, standard 429 errors, and OpenAPI declarations.",
       "baseRef": "HEAD",
-      "gitHead": "e6582f07846100ce7c87c6b494a786d9b1e1ac20",
-      "reviewedAtUtc": "2026-08-18T09:49:48.3584023Z"
+      "gitHead": "a4c68d54367f2d93b4b2f0af80de1a97f653df3f",
+      "reviewedAtUtc": "2026-08-18T10:59:23.1498279Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1228,13 +1228,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "f3579be33f25e7db75779617b2ce7f44475d6c3d28d80fadb9880c974d1af6f7"
+          "sha256": "5d9cb81ce1eab7b92929702cbd6387c3eb3268deed383b0d56a034a0eed1c80f"
         }
       ],
-      "reason": "Repository catalog and affected generated indexes were regenerated from the current 50-path change set and reviewed against scoped guides.",
+      "reason": "Configuration and repository navigation indexes were regenerated after adding the bounded TestDelivery limiter and stable user-ID cache variation; ownership and deployment topology remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "e6582f07846100ce7c87c6b494a786d9b1e1ac20",
-      "reviewedAtUtc": "2026-08-18T09:42:01.1714423Z"
+      "gitHead": "a4c68d54367f2d93b4b2f0af80de1a97f653df3f",
+      "reviewedAtUtc": "2026-08-18T10:59:23.8783905Z"
     },
     {
       "pageId": "workflow.review-diff",

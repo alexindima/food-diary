@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Exercises.Mappings;
 using FoodDiary.Presentation.Api.Features.Exercises.Requests;
 using FoodDiary.Presentation.Api.Features.Exercises.Responses;
@@ -20,6 +21,7 @@ public sealed class ExercisesController(ISender mediator) : AuthorizedController
         HandleOk(userId.ToQuery(dateFrom, dateTo), static value => value.ToHttpResponse());
 
     [HttpPost]
+    [EnableIdempotency]
     [ProducesResponseType<ExerciseEntryHttpResponse>(StatusCodes.Status201Created)]
     public Task<IActionResult> Create(
         [FromCurrentUser] Guid userId,

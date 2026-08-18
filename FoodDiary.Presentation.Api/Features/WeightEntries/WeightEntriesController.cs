@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Responses;
@@ -38,6 +39,7 @@ public sealed class WeightEntriesController(ISender mediator) : AuthorizedContro
         HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
 
     [HttpPost]
+    [EnableIdempotency]
     [ProducesResponseType<WeightEntryHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]

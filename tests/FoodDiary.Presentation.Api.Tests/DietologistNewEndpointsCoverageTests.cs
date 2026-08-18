@@ -5,6 +5,7 @@ using FoodDiary.Application.Dietologist.Commands.ChangeClientTaskStatus;
 using FoodDiary.Application.Dietologist.Commands.CreateClientTask;
 using FoodDiary.Application.Dietologist.Commands.CreateRecommendationComment;
 using FoodDiary.Application.Dietologist.Commands.CreateRecommendationTemplate;
+using FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
 using FoodDiary.Application.Dietologist.Commands.SetAttentionSignalState;
 using FoodDiary.Application.Dietologist.Commands.UpdateRecommendationTemplate;
 using FoodDiary.Application.Dietologist.Models;
@@ -310,6 +311,25 @@ public sealed class DietologistNewEndpointsCoverageTests {
 
         Assert.IsType<RecommendationCommentHttpResponse>(Assert.IsType<CreatedResult>(create).Value);
         Assert.IsType<CreateRecommendationCommentCommand>(createRequest);
+    }
+
+    [Fact]
+    public async Task RecommendationsController_MarkAsRead_SendsCommandAndReturnsNoContent() {
+        var userId = Guid.NewGuid();
+        var recommendationId = Guid.NewGuid();
+        IRequest<Result>? sentRequest = null;
+        RecommendationsController controller = CreateController(
+            new RecommendationsController(SubstituteSender.Create(
+                Result.Success(),
+                request => sentRequest = request)));
+
+        IActionResult result = await controller.MarkAsRead(recommendationId, userId);
+
+        Assert.IsType<NoContentResult>(result);
+        MarkRecommendationReadCommand command = Assert.IsType<MarkRecommendationReadCommand>(sentRequest);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(recommendationId, command.RecommendationId));
     }
 
     [Fact]

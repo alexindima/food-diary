@@ -1,3 +1,4 @@
+using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Policies;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Options;
@@ -14,10 +15,17 @@ public sealed class OutputCacheOptionsSetup(IOptions<ApiOutputCacheOptions> outp
             .SetVaryByQuery("*")
             .Tag("admin-ai-usage"));
         options.AddPolicy(PresentationPolicyNames.UserScopedCachePolicyName, builder => builder
+            .With(static context => HasUserCacheIdentity(context))
             .Cache()
             .Expire(TimeSpan.FromSeconds(settings.UserScoped.ExpirationSeconds))
             .SetVaryByQuery("*")
-            .SetVaryByHeader("Authorization")
+            .VaryByValue(static context => GetUserCacheVaryByValue(context))
             .Tag("user-scoped"));
     }
+
+    private static bool HasUserCacheIdentity(OutputCacheContext context) =>
+        context.HttpContext.User.GetUserGuid().HasValue;
+
+    private static KeyValuePair<string, string> GetUserCacheVaryByValue(HttpContext context) =>
+        new("user-id", context.User.GetUserGuid()?.ToString("D") ?? "missing");
 }

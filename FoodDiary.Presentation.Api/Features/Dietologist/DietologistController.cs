@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
 using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
@@ -13,6 +14,7 @@ namespace FoodDiary.Presentation.Api.Features.Dietologist;
 [Route("api/v{version:apiVersion}/dietologist")]
 public sealed class DietologistController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("invite")]
+    [EnableIdempotency]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]

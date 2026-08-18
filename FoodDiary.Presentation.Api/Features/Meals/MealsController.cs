@@ -57,6 +57,7 @@ public sealed class MealsController(ISender mediator) : AuthorizedController(med
         HandleOk(request.ToCommand(userId, id), static value => value.ToHttpResponse());
 
     [HttpPost("{id:guid}/repeat")]
+    [EnableIdempotency]
     [ProducesResponseType<MealHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> Repeat(Guid id, [FromCurrentUser] Guid userId, [FromBody] RepeatMealHttpRequest request) =>

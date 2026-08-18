@@ -72,7 +72,8 @@ public sealed class RateLimiterOptionsSetupTests {
     [Theory]
     [InlineData(PresentationPolicyNames.ClientTelemetryRateLimitPolicyName)]
     [InlineData(PresentationPolicyNames.MarketingAttributionRateLimitPolicyName)]
-    public void Configure_AnonymousIngestionPolicyFactory_CreatesPartition(string policyName) {
+    [InlineData(PresentationPolicyNames.TestDeliveryRateLimitPolicyName)]
+    public void Configure_DedicatedPolicyFactory_CreatesPartition(string policyName) {
         var options = new RateLimiterOptions();
         new RateLimiterOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiRateLimitingOptions())).Configure(options);
         object policy = FindPolicy(options, policyName);

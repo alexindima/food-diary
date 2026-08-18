@@ -1,5 +1,6 @@
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
@@ -22,6 +23,7 @@ public sealed class AdminAchievementDefinitionsController(ISender mediator) : Ba
             static definitions => definitions.Select(static definition => definition.ToHttpResponse()).ToList());
 
     [HttpPost]
+    [EnableIdempotency]
     [ProducesResponseType<AdminAchievementDefinitionHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]

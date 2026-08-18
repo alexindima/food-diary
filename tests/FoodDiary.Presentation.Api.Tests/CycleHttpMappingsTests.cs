@@ -196,6 +196,7 @@ public sealed class CycleHttpMappingsTests {
         var cycleId = Guid.NewGuid();
         var userId = Guid.NewGuid();
         var bleedingId = Guid.NewGuid();
+        var episodeId = Guid.NewGuid();
         var startDate = new DateOnly(2026, 4, 1);
         var model = new CycleModel(
             cycleId,
@@ -239,7 +240,16 @@ public sealed class CycleHttpMappingsTests {
                 4,
                 1,
                 ["estimated_from_completed_cycles"],
-                "period-v2.0"));
+                "period-v2.0"),
+            MenstrualEpisodes: [
+                new MenstrualEpisodeModel(
+                    episodeId,
+                    cycleId,
+                    startDate,
+                    startDate.AddDays(4),
+                    MenstrualEpisodeStatus.Confirmed,
+                    ExcludedFromPredictions: true),
+            ]);
 
         CycleHttpResponse response = model.ToHttpResponse();
 
@@ -258,6 +268,14 @@ public sealed class CycleHttpMappingsTests {
         Assert.Equal("Medium", response.Predictions.Confidence);
         Assert.Equal(4, response.Predictions.UsedEpisodeCount);
         Assert.Equal(1, response.Predictions.ExcludedEpisodeCount);
+        MenstrualEpisodeHttpResponse episode = Assert.Single(response.MenstrualEpisodes);
+        Assert.Multiple(
+            () => Assert.Equal(episodeId, episode.Id),
+            () => Assert.Equal(cycleId, episode.CycleProfileId),
+            () => Assert.Equal(ToUtcDateTime(startDate), episode.StartDate),
+            () => Assert.Equal(ToUtcDateTime(startDate.AddDays(4)), episode.EndDate),
+            () => Assert.Equal((int)MenstrualEpisodeStatus.Confirmed, episode.Status),
+            () => Assert.True(episode.ExcludedFromPredictions));
     }
 
     [Fact]

@@ -3,10 +3,12 @@ using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Notifications.Mappings;
 using FoodDiary.Presentation.Api.Features.Notifications.Requests;
 using FoodDiary.Presentation.Api.Features.Notifications.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace FoodDiary.Presentation.Api.Features.Notifications;
 
@@ -37,6 +39,8 @@ public sealed class NotificationsController(ISender mediator) : AuthorizedContro
     [HttpPost("test/schedule")]
     [ProducesResponseType<ScheduledNotificationHttpResponse>(StatusCodes.Status202Accepted)]
     [EnableIdempotency]
+    [EnableRateLimiting(PresentationPolicyNames.TestDeliveryRateLimitPolicyName)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     public Task<IActionResult> ScheduleTestNotification(
         [FromCurrentUser] Guid userId,
         [FromBody] ScheduleTestNotificationHttpRequest request) =>

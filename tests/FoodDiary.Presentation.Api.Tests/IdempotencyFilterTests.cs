@@ -389,6 +389,42 @@ public sealed class IdempotencyFilterTests {
     }
 
     [Fact]
+    public async Task StoreOperations_WhenCancellationIsRequested_ThrowWithoutMutatingState() {
+        var store = new InMemoryIdempotencyStore(TimeProvider.System);
+        using var cancellationSource = new CancellationTokenSource();
+        await cancellationSource.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => store.ReserveAsync(
+            "cancelled-key",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1),
+            cancellationToken: cancellationSource.Token));
+        await Assert.ThrowsAsync<OperationCanceledException>(() => store.CompleteAsync(
+            "cancelled-key",
+            "hash",
+            "owner-token",
+            StatusCodes.Status201Created,
+            body: null,
+            location: null,
+            responseTtl: TimeSpan.FromMinutes(10),
+            cancellationToken: cancellationSource.Token));
+        await Assert.ThrowsAsync<OperationCanceledException>(() => store.ReleaseAsync(
+            "cancelled-key",
+            "hash",
+            "owner-token",
+            cancellationToken: cancellationSource.Token));
+
+        IdempotencyReservation reservation = await store.ReserveAsync(
+            "cancelled-key",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1));
+
+        Assert.Equal(IdempotencyReservationStatus.Acquired, reservation.Status);
+    }
+
+    [Fact]
     public async Task OnActionExecutionAsync_WithoutIdempotencyKey_DoesNotReserve() {
         var store = new RecordingIdempotencyStore();
         var filter = new IdempotencyFilter(store);

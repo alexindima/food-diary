@@ -11,6 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Version;
 [AllowAnonymous]
 [Route("api")]
 [ApiExplorerSettings(IgnoreApi = true)]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 [SuppressRequestAccessLog]
 public sealed class VersionController(ISender mediator, IApiVersionInfo versionInfo) : BaseApiController(mediator) {
     [HttpGet("version")]

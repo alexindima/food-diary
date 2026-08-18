@@ -2,6 +2,7 @@ using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Hydration.Models;
+using FoodDiary.Application.Meals.Models;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.WaistEntries.Models;
@@ -12,6 +13,7 @@ using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
+using FoodDiary.Presentation.Api.Features.Meals.Responses;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Presentation.Api.Tests;
@@ -77,6 +79,35 @@ public sealed class DashboardHttpMappingsTests {
         DateTime dateTo = date.AddDays(1).AddTicks(-1);
         var cycleId = Guid.NewGuid();
         var bleedingId = Guid.NewGuid();
+        var mealId = Guid.NewGuid();
+        var meal = new MealModel(
+            mealId,
+            date,
+            "Lunch",
+            "Balanced meal",
+            ImageUrl: null,
+            ImageAssetId: null,
+            TotalCalories: 640,
+            TotalProteins: 42,
+            TotalFats: 18,
+            TotalCarbs: 72,
+            TotalFiber: 9,
+            TotalAlcohol: 0,
+            IsNutritionAutoCalculated: true,
+            ManualCalories: null,
+            ManualProteins: null,
+            ManualFats: null,
+            ManualCarbs: null,
+            ManualFiber: null,
+            ManualAlcohol: null,
+            PreMealSatietyLevel: 2,
+            PostMealSatietyLevel: 7,
+            QualityScore: 85,
+            QualityGrade: "green",
+            IsFavorite: false,
+            FavoriteMealId: null,
+            Items: [],
+            AiSessions: []);
         var model = new DashboardSnapshotModel(
             date,
             dateTo,
@@ -101,7 +132,7 @@ public sealed class DashboardHttpMappingsTests {
                 new WaistPointModel(date, 88.3),
                 new WaistPointModel(date.AddDays(-1), 89.1),
                 DesiredWaistCm: 84),
-            new DashboardMealsModel([], Total: 0),
+            new DashboardMealsModel([meal], Total: 1),
             new HydrationDailyModel(date, TotalMl: 1800, GoalMl: 2500),
             new DailyAdviceModel(Guid.NewGuid(), "ru", "Совет", "hydration", 2),
             CurrentFastingSession: null,
@@ -178,7 +209,12 @@ public sealed class DashboardHttpMappingsTests {
             () => Assert.Equal(25, weeklyPoint.Fiber));
         Assert.Equal(80.5, response.Weight.Latest!.WeightKg);
         Assert.Equal(88.3, response.Waist.Latest!.CircumferenceCm);
-        Assert.Equal(0, response.Meals.Total);
+        MealHttpResponse mappedMeal = Assert.Single(response.Meals.Items);
+        Assert.Multiple(
+            () => Assert.Equal(1, response.Meals.Total),
+            () => Assert.Equal(mealId, mappedMeal.Id),
+            () => Assert.Equal(640, mappedMeal.TotalCalories),
+            () => Assert.Equal("Lunch", mappedMeal.MealType));
         Assert.Equal(1800, response.Hydration!.TotalMl);
         Assert.Equal("Совет", response.Advice!.Value);
         Assert.Single(response.WeightTrend!);

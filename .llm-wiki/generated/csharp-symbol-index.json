@@ -17818,7 +17818,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Admin/AdminAchievementDefinitionsController.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "AdminAcquisitionController",
@@ -18707,7 +18707,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/ContentReports/ContentReportsController.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "ContentReportHttpMappings",
@@ -18917,7 +18917,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs",
-      "line": 16
+      "line": 18
     },
     {
       "name": "DashboardHttpQueryMappings",
@@ -19043,14 +19043,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistClientTasksController.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "DietologistController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "DietologistInvitationsController",
@@ -19078,14 +19078,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "RecommendationTemplatesController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/RecommendationTemplatesController.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "AcceptInvitationHttpRequest",
@@ -19288,7 +19288,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Exercises/ExercisesController.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "ExerciseHttpMappings",
@@ -19995,7 +19995,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Notifications/NotificationsController.cs",
-      "line": 15
+      "line": 17
     },
     {
       "name": "RemoveWebPushSubscriptionHttpRequest",
@@ -20198,7 +20198,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/RecipeComments/RecipeCommentsController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "CreateRecipeCommentHttpRequest",
@@ -20429,7 +20429,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/ShoppingLists/ShoppingListsController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "StatisticsHttpQueryMappings",
@@ -20737,7 +20737,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "WaistEntryHttpMappings",
@@ -21024,7 +21024,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/WeightEntries/WeightEntriesController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "EnableIdempotencyAttribute",
@@ -21472,7 +21472,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 40
+      "line": 47
     },
     {
       "name": "CorsOptionsSetup",
@@ -21507,7 +21507,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Options/OutputCacheOptionsSetup.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "RateLimiterOptionsSetup",

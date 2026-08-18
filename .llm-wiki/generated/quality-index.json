@@ -21016,11 +21016,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Controllers/BaseApiController.cs",
-      "nonBlankLines": 59,
+      "nonBlankLines": 55,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.18
+      "structuralRiskScore": 3.1
     },
     {
       "path": "FoodDiary.Presentation.Api/Controllers/CurrentUserIdModelBinder.cs",
@@ -21088,11 +21088,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Admin/AdminAchievementDefinitionsController.cs",
-      "nonBlankLines": 34,
+      "nonBlankLines": 36,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.68
+      "structuralRiskScore": 2.72
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Admin/AdminAcquisitionController.cs",
@@ -21152,11 +21152,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Admin/AdminLessonsController.cs",
-      "nonBlankLines": 47,
+      "nonBlankLines": 48,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.94
+      "structuralRiskScore": 2.96
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Admin/AdminMailInboxController.cs",
@@ -22104,11 +22104,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/ContentReports/ContentReportsController.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.36
+      "structuralRiskScore": 2.4
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/ContentReports/Mappings/ContentReportHttpMappings.cs",
@@ -22344,11 +22344,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 36,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.62
+      "structuralRiskScore": 2.72
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Dashboard/Mappings/DashboardHttpQueryMappings.cs",
@@ -22480,11 +22480,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistClientTasksController.cs",
-      "nonBlankLines": 36,
+      "nonBlankLines": 38,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.72
+      "structuralRiskScore": 2.76
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistClientsController.cs",
@@ -22496,11 +22496,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistController.cs",
-      "nonBlankLines": 37,
+      "nonBlankLines": 39,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.74
+      "structuralRiskScore": 2.78
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistInvitationsController.cs",
@@ -22528,19 +22528,19 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/RecommendationTemplatesController.cs",
-      "nonBlankLines": 45,
+      "nonBlankLines": 47,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.9
+      "structuralRiskScore": 2.94
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsController.cs",
-      "nonBlankLines": 40,
+      "nonBlankLines": 42,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.8
+      "structuralRiskScore": 2.84
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/Requests/AcceptInvitationHttpRequest.cs",
@@ -22768,11 +22768,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Exercises/ExercisesController.cs",
-      "nonBlankLines": 38,
+      "nonBlankLines": 40,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.76
+      "structuralRiskScore": 2.8
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Exercises/Mappings/ExerciseHttpMappings.cs",
@@ -23448,11 +23448,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Meals/MealsController.cs",
-      "nonBlankLines": 66,
+      "nonBlankLines": 67,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.32
+      "structuralRiskScore": 3.34
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Meals/Requests/CreateMealHttpRequest.cs",
@@ -23576,11 +23576,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Notifications/NotificationsController.cs",
-      "nonBlankLines": 51,
+      "nonBlankLines": 55,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.02
+      "structuralRiskScore": 3.1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Notifications/Requests/RemoveWebPushSubscriptionHttpRequest.cs",
@@ -23808,11 +23808,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/RecipeComments/RecipeCommentsController.cs",
-      "nonBlankLines": 46,
+      "nonBlankLines": 48,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.92
+      "structuralRiskScore": 2.96
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/RecipeComments/Requests/CreateRecipeCommentHttpRequest.cs",
@@ -24072,11 +24072,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/ShoppingLists/ShoppingListsController.cs",
-      "nonBlankLines": 46,
+      "nonBlankLines": 48,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.92
+      "structuralRiskScore": 2.96
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Statistics/Mappings/StatisticsHttpQueryMappings.cs",
@@ -24424,11 +24424,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.46
+      "structuralRiskScore": 2.48
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/WaistEntries/Mappings/WaistEntryHttpMappings.cs",
@@ -24752,11 +24752,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/WeightEntries/WeightEntriesController.cs",
-      "nonBlankLines": 52,
+      "nonBlankLines": 54,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.04
+      "structuralRiskScore": 3.08
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/EnableIdempotencyAttribute.cs",
@@ -24808,11 +24808,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/InMemoryIdempotencyStore.cs",
-      "nonBlankLines": 100,
+      "nonBlankLines": 103,
       "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20
+      "structuralRiskScore": 20.06
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/RejectOversizedRequestAttribute.cs",
@@ -24872,11 +24872,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Policies/PresentationPolicyNames.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.22
     },
     {
       "path": "FoodDiary.Presentation.Api/Policies/PresentationRequestLimits.cs",
@@ -25120,11 +25120,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiOptionsServiceCollectionExtensions.cs",
-      "nonBlankLines": 86,
+      "nonBlankLines": 88,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.72
+      "structuralRiskScore": 1.76
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
@@ -25248,11 +25248,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "nonBlankLines": 35,
+      "nonBlankLines": 40,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.7
+      "structuralRiskScore": 3.8
     },
     {
       "path": "FoodDiary.Web.Api/Options/CorsOptionsSetup.cs",
@@ -25280,19 +25280,19 @@
     },
     {
       "path": "FoodDiary.Web.Api/Options/OutputCacheOptionsSetup.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 0,
+      "nonBlankLines": 27,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
+      "structuralRiskScore": 2.04
     },
     {
       "path": "FoodDiary.Web.Api/Options/RateLimiterOptionsSetup.cs",
-      "nonBlankLines": 62,
+      "nonBlankLines": 64,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.24
+      "structuralRiskScore": 7.28
     },
     {
       "path": "FoodDiary.Web.Api/Program.cs",
@@ -37219,7 +37219,7 @@
       "name": "AdminAchievementDefinitionsController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Admin/AdminAchievementDefinitionsController.cs",
-      "line": 17,
+      "line": 18,
       "testReferenceCount": 1,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs"
@@ -37356,9 +37356,10 @@
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Admin/AdminUserCreationController.cs",
       "line": 17,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs"
+        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ]
     },
     {
@@ -37523,7 +37524,7 @@
       "name": "ContentReportsController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/ContentReports/ContentReportsController.cs",
-      "line": 13,
+      "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/ContentReportRecipeLikeControllerTests.cs"
@@ -37554,9 +37555,10 @@
       "name": "DashboardController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs",
-      "line": 16,
-      "testReferenceCount": 3,
+      "line": 18,
+      "testReferenceCount": 4,
       "testReferences": [
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/DashboardControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
@@ -37576,7 +37578,7 @@
       "name": "DietologistClientTasksController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistClientTasksController.cs",
-      "line": 17,
+      "line": 18,
       "testReferenceCount": 1,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/DietologistNewEndpointsCoverageTests.cs"
@@ -37597,9 +37599,10 @@
       "name": "DietologistController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistController.cs",
-      "line": 14,
-      "testReferenceCount": 1,
+      "line": 15,
+      "testReferenceCount": 2,
       "testReferences": [
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/DietologistControllerTests.cs"
       ]
     },
@@ -37617,7 +37620,7 @@
       "name": "ExercisesController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Exercises/ExercisesController.cs",
-      "line": 13,
+      "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/ExercisesControllerTests.cs"
@@ -37875,9 +37878,10 @@
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Meals/MealsController.cs",
       "line": 16,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs",
         "tests/FoodDiary.Web.Api.IntegrationTests/AuthAndMealsFlowTests.cs"
@@ -37908,7 +37912,7 @@
       "name": "NotificationsController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Notifications/NotificationsController.cs",
-      "line": 15,
+      "line": 17,
       "testReferenceCount": 3,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
@@ -37941,9 +37945,10 @@
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Products/ProductsController.cs",
       "line": 15,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/FavoriteProductsControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
       ]
@@ -37952,7 +37957,7 @@
       "name": "RecipeCommentsController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/RecipeComments/RecipeCommentsController.cs",
-      "line": 14,
+      "line": 15,
       "testReferenceCount": 1,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/RecipeCommentsControllerTests.cs"
@@ -37983,9 +37988,10 @@
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Recipes/RecipesController.cs",
       "line": 16,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/FavoriteRecipesControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs",
         "tests/FoodDiary.Web.Api.IntegrationTests/AuthAndRecipesFlowTests.cs"
@@ -37995,7 +38001,7 @@
       "name": "RecommendationTemplatesController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/RecommendationTemplatesController.cs",
-      "line": 17,
+      "line": 18,
       "testReferenceCount": 1,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/DietologistNewEndpointsCoverageTests.cs"
@@ -38005,7 +38011,7 @@
       "name": "RecommendationsController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsController.cs",
-      "line": 14,
+      "line": 15,
       "testReferenceCount": 2,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
@@ -38016,7 +38022,7 @@
       "name": "ShoppingListsController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/ShoppingLists/ShoppingListsController.cs",
-      "line": 14,
+      "line": 15,
       "testReferenceCount": 1,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs"
@@ -38099,10 +38105,11 @@
       "name": "VersionController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
-      "line": 15,
-      "testReferenceCount": 2,
+      "line": 16,
+      "testReferenceCount": 3,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/VersionControllerTests.cs"
       ]
     },
@@ -38161,7 +38168,7 @@
       "name": "WeightEntriesController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/WeightEntries/WeightEntriesController.cs",
-      "line": 14,
+      "line": 15,
       "testReferenceCount": 1,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs"

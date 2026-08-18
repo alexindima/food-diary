@@ -10,6 +10,7 @@ using FoodDiary.Presentation.Api.Features.Meals;
 using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Billing;
+using FoodDiary.Presentation.Api.Features.Dashboard;
 using FoodDiary.Presentation.Api.Features.Images;
 using FoodDiary.Presentation.Api.Features.Export;
 using FoodDiary.Presentation.Api.Features.Logs;
@@ -18,12 +19,14 @@ using FoodDiary.Presentation.Api.Features.MealPlans;
 using FoodDiary.Presentation.Api.Features.Notifications;
 using FoodDiary.Presentation.Api.Features.Products;
 using FoodDiary.Presentation.Api.Features.Recipes;
+using FoodDiary.Presentation.Api.Features.Version;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -31,6 +34,13 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ControllerSecurityContractTests {
+    [Fact]
+    public void FromCurrentUserAttribute_UsesCustomBindingSource() {
+        var attribute = new FromCurrentUserAttribute();
+
+        Assert.Same(BindingSource.Custom, attribute.BindingSource);
+    }
+
     [Fact]
     public void AiFoodController_RequiresPremiumRole_AndAiRateLimitPolicy() {
         AuthorizeAttribute[] authorizeAttributes = [.. typeof(AiFoodController).GetCustomAttributes<AuthorizeAttribute>(inherit: true)];
@@ -194,6 +204,18 @@ public sealed class ControllerSecurityContractTests {
     }
 
     [Fact]
+    public void TestDeliveryActions_UseDedicatedRateLimitPolicy() {
+        AssertActionRateLimit(
+            typeof(DashboardController),
+            nameof(DashboardController.SendTestEmail),
+            PresentationPolicyNames.TestDeliveryRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(NotificationsController),
+            nameof(NotificationsController.ScheduleTestNotification),
+            PresentationPolicyNames.TestDeliveryRateLimitPolicyName);
+    }
+
+    [Fact]
     public void AnonymousIngestionControllers_UseDedicatedRateLimitsAndRequestSizeLimits() {
         AssertControllerRateLimit(typeof(LogsController), PresentationPolicyNames.ClientTelemetryRateLimitPolicyName);
         AssertControllerRateLimit(typeof(MarketingAttributionController), PresentationPolicyNames.MarketingAttributionRateLimitPolicyName);
@@ -243,6 +265,7 @@ public sealed class ControllerSecurityContractTests {
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(RecipesController), nameof(RecipesController.Create));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(RecipesController), nameof(RecipesController.Duplicate));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(MealsController), nameof(MealsController.Create));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(MealsController), nameof(MealsController.Repeat));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ImagesController), nameof(ImagesController.GetUploadUrl));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(BillingController), nameof(BillingController.StartPremiumTrial));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(BillingController), nameof(BillingController.CreateCheckoutSession));
@@ -253,16 +276,42 @@ public sealed class ControllerSecurityContractTests {
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(MealPlansController), nameof(MealPlansController.Adopt));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(MealPlansController), nameof(MealPlansController.GenerateShoppingList));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(DietologistClientsController), nameof(DietologistClientsController.CreateRecommendation));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(DashboardController), nameof(DashboardController.SendTestEmail));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(DietologistController), nameof(DietologistController.Invite));
+        Assert.DoesNotContain(
+            GetAction(typeof(AdminUserCreationController), nameof(AdminUserCreationController.CreateUser)).GetCustomAttributes(inherit: true),
+            static attribute => attribute is EnableIdempotencyAttribute);
     }
 
     [Fact]
-    public void SensitiveResponseControllers_DisableClientAndProxyCaching() {
+    public void NonSensitiveCreatedWriteActions_OptIntoExplicitIdempotencyPolicy() {
+        MethodInfo sensitiveAdminUserCreation = GetAction(
+            typeof(AdminUserCreationController),
+            nameof(AdminUserCreationController.CreateUser));
+        string[] missingActions = [.. typeof(BaseApiController).Assembly
+            .GetTypes()
+            .Where(static type => !type.IsAbstract && typeof(ControllerBase).IsAssignableFrom(type))
+            .SelectMany(static type => type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly))
+            .Where(static method => method.GetCustomAttributes<HttpPostAttribute>(inherit: true).Any())
+            .Where(static method => method.GetCustomAttributes<ProducesResponseTypeAttribute>(inherit: true)
+                .Any(static attribute => attribute.StatusCode == StatusCodes.Status201Created))
+            .Where(method => method != sensitiveAdminUserCreation)
+            .Where(static method => method.GetCustomAttribute<EnableIdempotencyAttribute>(inherit: true) is null)
+            .Select(static method => $"{method.DeclaringType?.FullName}.{method.Name}")
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(missingActions);
+    }
+
+    [Fact]
+    public void SensitiveAndDeploymentMetadataControllers_DisableClientAndProxyCaching() {
         Type[] controllerTypes = [
             typeof(AuthSessionController),
             typeof(AuthPasswordController),
             typeof(AuthTelegramController),
             typeof(AdminSsoController),
             typeof(ExportController),
+            typeof(VersionController),
         ];
 
         Assert.All(controllerTypes, static controllerType => {

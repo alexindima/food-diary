@@ -3,7 +3,7 @@
   "summary": {
     "optionTypes": 54,
     "configurationFiles": 7,
-    "configurationKeys": 214,
+    "configurationKeys": 217,
     "environmentVariables": 171
   },
   "optionTypes": [
@@ -84,6 +84,7 @@
         "MarketingAttribution",
         "PermitLimit",
         "QueueLimit",
+        "TestDelivery",
         "Webhook",
         "WindowSeconds"
       ],
@@ -763,6 +764,9 @@
         "RateLimiting:MarketingAttribution:PermitLimit",
         "RateLimiting:MarketingAttribution:QueueLimit",
         "RateLimiting:MarketingAttribution:WindowSeconds",
+        "RateLimiting:TestDelivery:PermitLimit",
+        "RateLimiting:TestDelivery:QueueLimit",
+        "RateLimiting:TestDelivery:WindowSeconds",
         "RateLimiting:Webhook:PermitLimit",
         "RateLimiting:Webhook:QueueLimit",
         "RateLimiting:Webhook:WindowSeconds",

@@ -1,6 +1,7 @@
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
 using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
@@ -26,6 +27,7 @@ public sealed class RecommendationTemplatesController(ISender mediator) : Author
             static value => value.Select(template => template.ToHttpResponse()).ToList());
 
     [HttpPost]
+    [EnableIdempotency]
     [ProducesResponseType<RecommendationTemplateHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> Create(

@@ -24,6 +24,7 @@ public sealed class AdminLessonsController(ISender mediator) : BaseApiController
             value.Select(static item => item.ToLessonHttpResponse()).ToList());
 
     [HttpPost]
+    [EnableIdempotency]
     [ProducesResponseType<AdminLessonHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> Create([FromBody] AdminLessonCreateHttpRequest request) =>

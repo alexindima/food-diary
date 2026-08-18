@@ -10,6 +10,7 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
         TimeSpan responseTtl,
         TimeSpan processingTtl,
         CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
 
         lock (_syncRoot) {
@@ -48,6 +49,7 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
         string? location,
         TimeSpan responseTtl,
         CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
 
         lock (_syncRoot) {
@@ -72,6 +74,7 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
         string requestHash,
         string ownerToken,
         CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
         lock (_syncRoot) {
             if (_entries.TryGetValue(key, out Entry? entry) &&
                 !entry.Completed &&

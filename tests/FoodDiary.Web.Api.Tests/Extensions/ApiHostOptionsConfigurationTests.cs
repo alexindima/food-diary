@@ -37,6 +37,8 @@ public sealed class ApiHostOptionsConfigurationTests {
                 ["RateLimiting:ClientTelemetry:WindowSeconds"] = "121",
                 ["RateLimiting:MarketingAttribution:PermitLimit"] = "31",
                 ["RateLimiting:MarketingAttribution:WindowSeconds"] = "91",
+                ["RateLimiting:TestDelivery:PermitLimit"] = "4",
+                ["RateLimiting:TestDelivery:WindowSeconds"] = "92",
                 ["OutputCache:AdminAiUsage:ExpirationSeconds"] = "30",
             })
             .Build();
@@ -66,6 +68,8 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Equal(121, rateLimiting.ClientTelemetry.WindowSeconds);
         Assert.Equal(31, rateLimiting.MarketingAttribution.PermitLimit);
         Assert.Equal(91, rateLimiting.MarketingAttribution.WindowSeconds);
+        Assert.Equal(4, rateLimiting.TestDelivery.PermitLimit);
+        Assert.Equal(92, rateLimiting.TestDelivery.WindowSeconds);
         Assert.Equal(30, outputCache.AdminAiUsage.ExpirationSeconds);
         Assert.Equal(2, forwardedHeadersOptions.ForwardLimit);
         Assert.True(forwardedHeadersOptions.ForwardedHeaders.HasFlag(ForwardedHeaders.XForwardedHost));
@@ -128,6 +132,57 @@ public sealed class ApiHostOptionsConfigurationTests {
         bool valid = ApiOutputCacheOptions.HasValidUserScoped(options);
 
         Assert.Equal(expected, valid);
+    }
+
+    [Theory]
+    [InlineData(1, 60, 0, true)]
+    [InlineData(0, 60, 0, false)]
+    [InlineData(1, 0, 0, false)]
+    [InlineData(1, 60, -1, false)]
+    public void ApiRateLimitingOptions_HasValidTestDelivery_ReturnsExpectedResult(
+        int permitLimit,
+        int windowSeconds,
+        int queueLimit,
+        bool expected) {
+        var options = new ApiRateLimitingOptions {
+            TestDelivery = new ApiRateLimitingOptions.FixedWindowPolicyOptions {
+                PermitLimit = permitLimit,
+                WindowSeconds = windowSeconds,
+                QueueLimit = queueLimit,
+            },
+        };
+
+        bool valid = ApiRateLimitingOptions.HasValidTestDelivery(options);
+
+        Assert.Equal(expected, valid);
+    }
+
+    [Fact]
+    public void AddApiServices_WithInvalidTestDeliveryRateLimit_FailsOptionsValidation() {
+        var services = new ServiceCollection();
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
+                ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
+                ["Jwt:Issuer"] = "FoodDiaryApi",
+                ["Jwt:Audience"] = "FoodDiaryClient",
+                ["Jwt:ExpirationMinutes"] = "60",
+                ["Jwt:RefreshTokenExpirationDays"] = "7",
+                ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
+                ["TelegramBot:ApiSecret"] = "",
+                ["Cors:Origins:0"] = "http://localhost:4200",
+                ["RateLimiting:TestDelivery:PermitLimit"] = "0",
+            })
+            .Build();
+
+        services.AddLogging();
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddApiServices(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        OptionsValidationException exception = Assert.Throws<OptionsValidationException>(
+            () => provider.GetRequiredService<IOptions<ApiRateLimitingOptions>>().Value);
+        Assert.Contains("RateLimiting:TestDelivery", exception.Message, StringComparison.Ordinal);
     }
 
     [Fact]

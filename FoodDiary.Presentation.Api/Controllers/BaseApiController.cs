@@ -58,11 +58,6 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         return result.ToNoContentActionResult(this);
     }
 
-    protected Task<IActionResult> HandleNoContent(
-        IRequest<Result> request,
-        Func<Task<Result>, Task<Result>> processResult) =>
-        HandleNoContent(processResult(Send(request)));
-
     protected async Task<IActionResult> HandleFile(IRequest<Result<FileExportResult>> request) {
         Result<FileExportResult> result = await Send(request);
         return result.ToFileActionResult(this);

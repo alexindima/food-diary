@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Mappings;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Responses;
@@ -29,6 +30,7 @@ public sealed class ShoppingListsController(ISender mediator) : AuthorizedContro
         HandleOk(id.ToGetByIdQuery(userId), static value => value.ToHttpResponse());
 
     [HttpPost]
+    [EnableIdempotency]
     [ProducesResponseType<ShoppingListHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateShoppingListHttpRequest request) =>
@@ -51,4 +53,3 @@ public sealed class ShoppingListsController(ISender mediator) : AuthorizedContro
     public Task<IActionResult> Delete(Guid id, [FromCurrentUser] Guid userId) =>
         HandleNoContent(id.ToDeleteCommand(userId));
 }
-

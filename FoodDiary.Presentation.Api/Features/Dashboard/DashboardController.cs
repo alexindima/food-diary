@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Dashboard.Mappings;
 using FoodDiary.Presentation.Api.Features.Dashboard.Requests;
 using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
@@ -8,6 +9,7 @@ using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace FoodDiary.Presentation.Api.Features.Dashboard;
 
@@ -28,8 +30,11 @@ public sealed class DashboardController(ISender mediator) : AuthorizedController
         HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
 
     [HttpPost("test-email")]
+    [EnableIdempotency]
+    [EnableRateLimiting(PresentationPolicyNames.TestDeliveryRateLimitPolicyName)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     public Task<IActionResult> SendTestEmail([FromCurrentUser] Guid userId) =>
         HandleNoContent(userId.ToTestEmailCommand());
 }

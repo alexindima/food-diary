@@ -1,6 +1,7 @@
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
 using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
@@ -21,6 +22,7 @@ public sealed class DietologistClientTasksController(ISender mediator) : Authori
         HandleOk(clientUserId.ToClientTasksQuery(userId), static value => value.Select(task => task.ToHttpResponse()).ToList());
 
     [HttpPost("{clientUserId:guid}/tasks")]
+    [EnableIdempotency]
     [ProducesResponseType<ClientTaskHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]

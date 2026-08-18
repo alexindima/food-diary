@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.RecipeComments.Mappings;
 using FoodDiary.Presentation.Api.Features.RecipeComments.Requests;
 using FoodDiary.Presentation.Api.Features.RecipeComments.Responses;
@@ -23,6 +24,7 @@ public sealed class RecipeCommentsController(ISender mediator) : AuthorizedContr
             static value => value.ToHttpResponse());
 
     [HttpPost]
+    [EnableIdempotency]
     [ProducesResponseType<RecipeCommentHttpResponse>(StatusCodes.Status201Created)]
     public Task<IActionResult> Create(
         [FromCurrentUser] Guid userId,

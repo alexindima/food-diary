@@ -122,6 +122,33 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task TestDeliveryRateLimit_IsPartitionedByAuthenticatedUser() {
+        await using WebApplicationFactory<Program> limitedFactory = testAuthFactory.WithWebHostBuilder(builder => {
+            builder.ConfigureAppConfiguration((_, configBuilder) => {
+                configBuilder.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                    ["RateLimiting:TestDelivery:PermitLimit"] = "1",
+                    ["RateLimiting:TestDelivery:WindowSeconds"] = "60",
+                });
+            });
+        });
+        HttpClient firstUserClient = CreateTestUserClient(limitedFactory, Guid.NewGuid());
+        HttpClient secondUserClient = CreateTestUserClient(limitedFactory, Guid.NewGuid());
+
+        HttpResponseMessage firstUserInitial = await firstUserClient.PostAsync("/api/v1/dashboard/test-email", content: null);
+        HttpResponseMessage secondUserInitial = await secondUserClient.PostAsync("/api/v1/dashboard/test-email", content: null);
+        HttpResponseMessage firstUserLimited = await firstUserClient.PostAsync("/api/v1/dashboard/test-email", content: null);
+        ErrorPayload? payload = await firstUserLimited.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Multiple(
+            () => Assert.NotEqual(HttpStatusCode.TooManyRequests, firstUserInitial.StatusCode),
+            () => Assert.NotEqual(HttpStatusCode.TooManyRequests, secondUserInitial.StatusCode),
+            () => Assert.Equal(HttpStatusCode.TooManyRequests, firstUserLimited.StatusCode),
+            () => Assert.NotNull(firstUserLimited.Headers.RetryAfter),
+            () => Assert.Equal("RateLimit.Exceeded", payload?.Error),
+            () => Assert.False(string.IsNullOrWhiteSpace(payload?.TraceId)));
+    }
+
+    [Fact]
     public async Task TelegramBotAuth_WithoutConfiguredSecret_ReturnsInternalServerErrorContractWithTraceId() {
         HttpClient client = apiFactory.CreateClient();
 
@@ -534,6 +561,8 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal("Development", payload.Environment);
         Assert.False(string.IsNullOrWhiteSpace(payload.ApplicationVersion));
         Assert.True(payload.StartedAtUtc > DateTimeOffset.MinValue);
+        Assert.NotNull(response.Headers.CacheControl);
+        Assert.True(response.Headers.CacheControl.NoStore);
     }
 
     [Fact]
@@ -626,6 +655,12 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.False(refresh.TryGetProperty("parameters", out JsonElement refreshParameters) &&
             refreshParameters.EnumerateArray().Any(static parameter =>
                 string.Equals(parameter.GetProperty("name").GetString(), "Idempotency-Key", StringComparison.Ordinal)));
+
+        JsonElement dashboardTestEmail = paths.GetProperty("/api/v{version}/dashboard/test-email").GetProperty("post");
+        JsonElement scheduledTestNotification = paths.GetProperty("/api/v{version}/notifications/test/schedule").GetProperty("post");
+        Assert.Multiple(
+            () => Assert.True(dashboardTestEmail.GetProperty("responses").TryGetProperty("429", out _)),
+            () => Assert.True(scheduledTestNotification.GetProperty("responses").TryGetProperty("429", out _)));
     }
 
     [Fact]
@@ -717,6 +752,13 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.NotNull(payload);
         Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
         return payload.AccessToken;
+    }
+
+    private static HttpClient CreateTestUserClient(WebApplicationFactory<Program> factory, Guid userId) {
+        HttpClient client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, userId.ToString("D"));
+        return client;
     }
 
     private static string BuildFocusedOpenApiSnapshot(JsonElement root) {

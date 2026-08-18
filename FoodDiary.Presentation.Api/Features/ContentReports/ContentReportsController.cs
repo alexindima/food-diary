@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.ContentReports.Mappings;
 using FoodDiary.Presentation.Api.Features.ContentReports.Requests;
 using FoodDiary.Presentation.Api.Features.ContentReports.Responses;
@@ -12,6 +13,7 @@ namespace FoodDiary.Presentation.Api.Features.ContentReports;
 [Route("api/v{version:apiVersion}/reports")]
 public sealed class ContentReportsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost]
+    [EnableIdempotency]
     [ProducesResponseType<ContentReportHttpResponse>(StatusCodes.Status201Created)]
     public Task<IActionResult> Create(
         [FromCurrentUser] Guid userId,
