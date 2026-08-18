@@ -83,6 +83,22 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
             ]).ConfigureAwait(false);
     }
 
+    public async Task ReleaseAsync(
+        string key,
+        string requestHash,
+        string ownerToken,
+        CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
+        const string script = """
+            if redis.call('GET', KEYS[1]) ~= ARGV[1] then return 0 end
+            return redis.call('DEL', KEYS[1])
+            """;
+        await connectionMultiplexer.GetDatabase().ScriptEvaluateAsync(
+            script,
+            [BuildLockKey(key)],
+            [BuildLockValue(requestHash, ownerToken)]).ConfigureAwait(false);
+    }
+
     private static async Task<IdempotencyReservation?> TryReadCompletedAsync(
         IDatabase database,
         RedisKey responseKey,

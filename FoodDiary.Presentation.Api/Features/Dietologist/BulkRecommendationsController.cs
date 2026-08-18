@@ -1,9 +1,11 @@
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
 using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,8 +18,11 @@ namespace FoodDiary.Presentation.Api.Features.Dietologist;
 [Route("api/v{version:apiVersion}/dietologist/recommendations/bulk")]
 public sealed class BulkRecommendationsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost]
+    [RequestSizeLimit(PresentationRequestLimits.BulkRecommendationsPayloadBytes)]
+    [RejectOversizedRequest(PresentationRequestLimits.BulkRecommendationsPayloadBytes)]
     [ProducesResponseType<BulkRecommendationResultHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
     public Task<IActionResult> Create(
         [FromCurrentUser] Guid userId,
         [FromBody] BulkCreateRecommendationsHttpRequest request) =>

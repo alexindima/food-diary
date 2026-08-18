@@ -52,7 +52,7 @@ public sealed class BuildWorkflowGuardrailTests {
             () => Assert.Contains("Remove-StaleSessionDirectories", launcher, StringComparison.Ordinal),
             () => Assert.Contains(".session.lock", launcher, StringComparison.Ordinal),
             () => Assert.Contains("[IO.FileShare]::None", launcher, StringComparison.Ordinal),
-            () => Assert.Contains("^[0-9a-fA-F]{32}$", launcher, StringComparison.Ordinal));
+            () => Assert.Contains("^(?:[0-9a-fA-F]{32}|[0-9a-f]{64})$", launcher, StringComparison.Ordinal));
     }
 
     private static int CountOccurrences(string source, string value) =>

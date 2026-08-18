@@ -29,9 +29,7 @@ public class CommonAbstractionsTests {
 
     [Fact]
     public void ApplicationLayer_UsesCentralErrorCatalog_ExceptValidationBehavior() {
-        string applicationRoot = Path.GetFullPath(Path.Combine(
-            AppContext.BaseDirectory,
-            "..", "..", "..", "..", "..", "FoodDiary.Application.Runtime"));
+        string applicationRoot = ResolveApplicationRoot();
         var allowedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
             Path.Combine(applicationRoot, "Common", "Abstractions", "Result", "Errors.cs"),
             Path.Combine(applicationRoot, "Common", "Behaviors", "ValidationBehavior.cs"),
@@ -62,9 +60,7 @@ public class CommonAbstractionsTests {
 
     [Fact]
     public void ApplicationLayer_StringErrorCodes_UseKnownCatalogCodes() {
-        string applicationRoot = Path.GetFullPath(Path.Combine(
-            AppContext.BaseDirectory,
-            "..", "..", "..", "..", "..", "FoodDiary.Application.Runtime"));
+        string applicationRoot = ResolveApplicationRoot();
         var allowedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
             Path.Combine(applicationRoot, "Common", "Abstractions", "Result", "Errors.cs"),
             Path.Combine(applicationRoot, "Common", "Abstractions", "Result", "ErrorKindResolver.cs"),
@@ -82,6 +78,20 @@ public class CommonAbstractionsTests {
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
+    }
+
+    private static string ResolveApplicationRoot() {
+        DirectoryInfo? directory = new(AppContext.BaseDirectory);
+        while (directory is not null) {
+            if (File.Exists(Path.Combine(directory.FullName, "FoodDiary.slnx"))) {
+                return Path.Combine(directory.FullName, "FoodDiary.Application.Runtime");
+            }
+
+            directory = directory.Parent;
+        }
+
+        throw new DirectoryNotFoundException(
+            $"Could not locate the repository root from '{AppContext.BaseDirectory}'.");
     }
 
     [Fact]

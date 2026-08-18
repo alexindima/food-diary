@@ -17,4 +17,10 @@ public interface IIdempotencyStore {
         string? location,
         TimeSpan responseTtl,
         CancellationToken cancellationToken = default);
+
+    Task ReleaseAsync(
+        string key,
+        string requestHash,
+        string ownerToken,
+        CancellationToken cancellationToken = default);
 }

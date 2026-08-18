@@ -37,6 +37,10 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             responseTtl,
             currentOwnerProcessingTtl).ConfigureAwait(false);
 
+        await store.ReleaseAsync(
+            "concurrent-request",
+            "same-hash",
+            staleOwner.OwnerToken!).ConfigureAwait(false);
         await store.CompleteAsync(
             "concurrent-request",
             "same-hash",
@@ -74,6 +78,23 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             () => Assert.Equal("/api/v1/items/current", replay.Location),
             () => Assert.Contains("current", replay.Body, StringComparison.Ordinal),
             () => Assert.DoesNotContain("stale", replay.Body, StringComparison.Ordinal));
+
+        IdempotencyReservation releasedOwner = await store.ReserveAsync(
+            "released-request",
+            "released-hash",
+            responseTtl,
+            currentOwnerProcessingTtl).ConfigureAwait(false);
+        await store.ReleaseAsync(
+            "released-request",
+            "released-hash",
+            releasedOwner.OwnerToken!).ConfigureAwait(false);
+        IdempotencyReservation reacquiredOwner = await store.ReserveAsync(
+            "released-request",
+            "released-hash",
+            responseTtl,
+            currentOwnerProcessingTtl).ConfigureAwait(false);
+
+        Assert.Equal(IdempotencyReservationStatus.Acquired, reacquiredOwner.Status);
     }
 
     private static async Task WaitUntilAsync(Func<Task<bool>> condition, TimeSpan timeout) {

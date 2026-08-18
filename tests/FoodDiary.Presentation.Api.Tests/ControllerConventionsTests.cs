@@ -346,8 +346,19 @@ public sealed class ControllerConventionsTests {
             .Select(static path => CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path));
     }
 
-    private static string GetPresentationRoot() =>
-        Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "FoodDiary.Presentation.Api"));
+    private static string GetPresentationRoot() {
+        DirectoryInfo? directory = new(AppContext.BaseDirectory);
+        while (directory is not null) {
+            string solutionPath = Path.Combine(directory.FullName, "FoodDiary.slnx");
+            if (File.Exists(solutionPath)) {
+                return Path.Combine(directory.FullName, "FoodDiary.Presentation.Api");
+            }
+
+            directory = directory.Parent;
+        }
+
+        throw new InvalidOperationException("Repository root was not found from the test output directory.");
+    }
 
     private static bool ReferencesApplicationTypes(SyntaxTree tree) {
         SyntaxNode root = tree.GetRoot();

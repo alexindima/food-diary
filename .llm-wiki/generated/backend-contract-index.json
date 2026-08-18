@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1045,
     "ambiguousContracts": 3,
-    "consumerEdges": 7233,
-    "productionConsumerEdges": 4424,
+    "consumerEdges": 7234,
+    "productionConsumerEdges": 4425,
     "testConsumerEdges": 2809,
     "consumedContracts": 1045,
     "unconsumedContracts": 0
@@ -22025,6 +22025,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Logs/Mappings/LogsHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ClientTelemetryLogHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Logs/Requests/ClientTelemetryLogHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Logs/Requests/ClientTelemetryLogHttpRequestValidation.cs",
       "isTest": false,
       "referenceCount": 1
     },

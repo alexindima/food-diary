@@ -1,6 +1,10 @@
+using System.Text;
 using System.Text.Json;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
+
+Console.InputEncoding = Encoding.UTF8;
+Console.OutputEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
 bool buildBackendIndex = args is ["--backend-index"];
 if (!buildBackendIndex && args is not ["--stdin"]) {

@@ -1,8 +1,10 @@
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
@@ -28,8 +30,11 @@ public sealed class AdminLessonsController(ISender mediator) : BaseApiController
         HandleCreated(request.ToCreateCommand(), static value => value.ToLessonHttpResponse());
 
     [HttpPost("import")]
+    [RequestSizeLimit(PresentationRequestLimits.AdminImportPayloadBytes)]
+    [RejectOversizedRequest(PresentationRequestLimits.AdminImportPayloadBytes)]
     [ProducesResponseType<AdminLessonsImportHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
     public Task<IActionResult> Import([FromBody] AdminLessonsImportHttpRequest request) =>
         HandleOk(request.ToImportCommand(), static value => value.ToLessonsImportHttpResponse());
 

@@ -177,18 +177,18 @@
       "pageSha256": "e4d03f5ab9a2c80c857c2aa064ee82dfe7bc9fab9a91fee0fd1e3392e79a0e92",
       "sources": [
         {
-          "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "b8f31f1dc82ff9b891f759530e2fa2e10ab47b38102d7efcd9ff659bb11f2e00"
+          "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
+          "sha256": "28735b17565ab6890a7d09bb81bca864eeea49a7607b31d78b72fb96b478bacb"
         },
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "ade28db2a07bb2cc7ad9863955a207e6628fa936f282dbcdd1e78b2e4b2a217d"
+          "sha256": "d0da373803b4dd7ed2b01b45454af81c1ba34442af18fcb17ce9db2014606595"
         }
       ],
-      "reason": "Reviewed additive auth 413/OpenAPI security changes and final-status presentation telemetry semantics against updated snapshots, integration tests, and observability documentation.",
+      "reason": "Reviewed API compatibility parser hardening: record bodies no longer leak local variables into serialized DTO properties, UTF-8 compiled extraction now matches the fallback scanner for Unicode identifiers, regression tests and all 27 focused Wiki smoke groups pass, and the only real HTTP delta remains nine additive documented 413 responses.",
       "baseRef": "HEAD",
-      "gitHead": "5984bab1518618b086a668cc201c1c8f6294a5ba",
-      "reviewedAtUtc": "2026-08-17T23:37:33.4030864Z"
+      "gitHead": "644098a15d63f3351badc1b97d2327aafde14e0d",
+      "reviewedAtUtc": "2026-08-18T01:17:33.3623824Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -216,13 +216,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "d71e89361f5e0a409ce534b2e3cfe9d4a7a28eca29c6185d08625cf026cd2421"
+          "sha256": "05fc118bac8e9b341f142bd7df3a58663d999e45b0a4edfb57d0072ddf92a3d3"
         }
       ],
-      "reason": "Reviewed additive auth 413/OpenAPI security changes and final-status presentation telemetry semantics against updated snapshots, integration tests, and observability documentation.",
+      "reason": "Reviewed intentional OpenAPI 413 additions for bounded AI, bulk recommendation, admin import, meal, and recipe JSON payloads; focused and full contract snapshots were regenerated and verified without update mode.",
       "baseRef": "HEAD",
-      "gitHead": "5984bab1518618b086a668cc201c1c8f6294a5ba",
-      "reviewedAtUtc": "2026-08-17T23:37:33.8492528Z"
+      "gitHead": "644098a15d63f3351badc1b97d2327aafde14e0d",
+      "reviewedAtUtc": "2026-08-18T01:05:35.8432960Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -776,13 +776,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "14e609ae8df77854a6e2197cadbb459840d4f79b65b570bdc7ad7a0b1dd490f4"
+          "sha256": "97fcb74462c4373a2a511f51f4848ba2a67798e80e1f622ab1ea233c432fcfa7"
         }
       ],
-      "reason": "Reviewed additive auth 413/OpenAPI security changes and final-status presentation telemetry semantics against updated snapshots, integration tests, and observability documentation.",
+      "reason": "Reviewed intentional OpenAPI 413 additions for bounded AI, bulk recommendation, admin import, meal, and recipe JSON payloads; focused and full contract snapshots were regenerated and verified without update mode.",
       "baseRef": "HEAD",
-      "gitHead": "5984bab1518618b086a668cc201c1c8f6294a5ba",
-      "reviewedAtUtc": "2026-08-17T23:37:34.4553203Z"
+      "gitHead": "644098a15d63f3351badc1b97d2327aafde14e0d",
+      "reviewedAtUtc": "2026-08-18T01:05:36.1715969Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -837,13 +837,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "408a50b4610a4b26c373853c0c2c4613409fc6758b52f0fab6d98ea13e93a855"
+          "sha256": "f034c62c132a19bf924691aa2cdbd7dfa5b4a145039ee3c57e3e887d37a9a8cf"
         }
       ],
-      "reason": "Reviewed additive auth 413/OpenAPI security changes and final-status presentation telemetry semantics against updated snapshots, integration tests, and observability documentation.",
+      "reason": "Reviewed intentional OpenAPI 413 additions for bounded AI, bulk recommendation, admin import, meal, and recipe JSON payloads; focused and full contract snapshots were regenerated and verified without update mode.",
       "baseRef": "HEAD",
-      "gitHead": "5984bab1518618b086a668cc201c1c8f6294a5ba",
-      "reviewedAtUtc": "2026-08-17T23:37:34.8762074Z"
+      "gitHead": "644098a15d63f3351badc1b97d2327aafde14e0d",
+      "reviewedAtUtc": "2026-08-18T01:05:36.6498659Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1232,13 +1232,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "53980e5bce3e576350e6f2608bc71d764b5f22930562c2ebdd92503305d22b04"
+          "sha256": "ffe47abee344266c508702c682b6fda5d133a3753a4f9f68d7d1bc3d1fa58a7a"
         }
       ],
-      "reason": "Reviewed additive auth 413/OpenAPI security changes and final-status presentation telemetry semantics against updated snapshots, integration tests, and observability documentation.",
+      "reason": "Reviewed intentional OpenAPI 413 additions for bounded AI, bulk recommendation, admin import, meal, and recipe JSON payloads; focused and full contract snapshots were regenerated and verified without update mode.",
       "baseRef": "HEAD",
-      "gitHead": "5984bab1518618b086a668cc201c1c8f6294a5ba",
-      "reviewedAtUtc": "2026-08-17T23:37:35.2333988Z"
+      "gitHead": "644098a15d63f3351badc1b97d2327aafde14e0d",
+      "reviewedAtUtc": "2026-08-18T01:05:36.9704531Z"
     },
     {
       "pageId": "workflow.review-diff",

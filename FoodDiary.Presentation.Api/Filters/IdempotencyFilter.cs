@@ -1,22 +1,29 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using FoodDiary.Presentation.Api.Responses;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Presentation.Api.Filters;
 
-public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsyncActionFilter {
+public sealed class IdempotencyFilter(
+    IIdempotencyStore idempotencyStore,
+    ILogger<IdempotencyFilter>? logger = null) : IAsyncActionFilter {
     private const string IdempotencyKeyHeader = "Idempotency-Key";
     private const int MaximumIdempotencyKeyLength = 128;
     private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(24);
     private static readonly TimeSpan ProcessingDuration = TimeSpan.FromMinutes(5);
     private static readonly TimeSpan CompletionTimeout = TimeSpan.FromSeconds(5);
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private readonly ILogger<IdempotencyFilter> _logger = logger ?? NullLogger<IdempotencyFilter>.Instance;
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
         EnableIdempotencyAttribute? attribute = context.Filters.OfType<EnableIdempotencyAttribute>().FirstOrDefault();
@@ -59,13 +66,55 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
             return;
         }
 
-        ActionExecutedContext executedContext = await next().ConfigureAwait(false);
-        await CacheExecutedResponseAsync(
+        await ExecuteAndFinalizeAsync(
             context,
-            executedContext,
+            next,
             cacheKey,
             requestHash,
             reservation.OwnerToken!).ConfigureAwait(false);
+    }
+
+    private async Task ExecuteAndFinalizeAsync(
+        ActionExecutingContext context,
+        ActionExecutionDelegate next,
+        string cacheKey,
+        string requestHash,
+        string ownerToken) {
+        ActionExecutedContext executedContext;
+        try {
+            executedContext = await next().ConfigureAwait(false);
+        } catch {
+            await TryReleaseReservationAsync(cacheKey, requestHash, ownerToken).ConfigureAwait(false);
+            throw;
+        }
+
+        if (executedContext.Exception is not null ||
+            !TrySerializeResult(
+                context,
+                executedContext.Result,
+                out int statusCode,
+                out string? body,
+                out string? location) ||
+            !IsSuccessfulStatusCode(statusCode)) {
+            await TryReleaseReservationAsync(cacheKey, requestHash, ownerToken).ConfigureAwait(false);
+            return;
+        }
+
+        try {
+            using var completionTimeout = new CancellationTokenSource(CompletionTimeout);
+            await idempotencyStore.CompleteAsync(
+                cacheKey,
+                requestHash,
+                ownerToken,
+                statusCode,
+                body,
+                location,
+                CacheDuration,
+                completionTimeout.Token).ConfigureAwait(false);
+        } catch {
+            await TryReleaseReservationAsync(cacheKey, requestHash, ownerToken).ConfigureAwait(false);
+            throw;
+        }
     }
 
     private static bool TryApplyReservation(ActionExecutingContext context, IdempotencyReservation reservation) {
@@ -98,33 +147,21 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
         return true;
     }
 
-    private async Task CacheExecutedResponseAsync(
-        ActionExecutingContext context,
-        ActionExecutedContext executedContext,
-        string cacheKey,
-        string requestHash,
-        string ownerToken) {
-        if (executedContext.Exception is not null ||
-            !TrySerializeResult(
-                context,
-                executedContext.Result,
-                out int statusCode,
-                out string? body,
-                out string? location)) {
-            return;
+    private async Task TryReleaseReservationAsync(string cacheKey, string requestHash, string ownerToken) {
+        try {
+            using var releaseTimeout = new CancellationTokenSource(CompletionTimeout);
+            await idempotencyStore.ReleaseAsync(
+                cacheKey,
+                requestHash,
+                ownerToken,
+                releaseTimeout.Token).ConfigureAwait(false);
+        } catch (Exception exception) {
+            _logger.LogWarning(exception, "Failed to release an incomplete idempotency reservation");
         }
-
-        using var completionTimeout = new CancellationTokenSource(CompletionTimeout);
-        await idempotencyStore.CompleteAsync(
-            cacheKey,
-            requestHash,
-            ownerToken,
-            statusCode,
-            body,
-            location,
-            CacheDuration,
-            completionTimeout.Token).ConfigureAwait(false);
     }
+
+    private static bool IsSuccessfulStatusCode(int statusCode) =>
+        statusCode is >= StatusCodes.Status200OK and < StatusCodes.Status300MultipleChoices;
 
     private static bool TrySerializeResult(
         ActionExecutingContext context,
@@ -256,10 +293,19 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
     }
 
     private static string ComputeCacheKey(ActionExecutingContext context, string idempotencyKey) {
-        string userId = context.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "anonymous";
+        string userId = ResolveIdempotencyScope(context.HttpContext);
         string path = context.HttpContext.Request.Path.Value ?? "";
         byte[] hash = SHA256.HashData(Encoding.UTF8.GetBytes($"{userId}\n{path}\n{idempotencyKey}"));
         return Convert.ToHexString(hash);
+    }
+
+    private static string ResolveIdempotencyScope(HttpContext context) {
+        if (context.User.Identity?.IsAuthenticated != true) {
+            return "anonymous";
+        }
+
+        Guid userId = context.User.GetUserGuid() ?? throw new CurrentUserUnavailableException();
+        return userId.ToString("D");
     }
 
     private static string ComputeRequestHash(ActionExecutingContext context) {

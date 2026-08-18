@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Meals.Mappings;
 using FoodDiary.Presentation.Api.Features.Meals.Requests;
 using FoodDiary.Presentation.Api.Features.Meals.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
@@ -33,8 +34,11 @@ public sealed class MealsController(ISender mediator) : AuthorizedController(med
 
     [HttpPost]
     [EnableIdempotency]
+    [RequestSizeLimit(PresentationRequestLimits.RichWritePayloadBytes)]
+    [RejectOversizedRequest(PresentationRequestLimits.RichWritePayloadBytes)]
     [ProducesResponseType<MealHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
     public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateMealHttpRequest request) =>
         HandleCreated(
             request.ToCommand(userId),
@@ -43,9 +47,12 @@ public sealed class MealsController(ISender mediator) : AuthorizedController(med
             static value => value.ToHttpResponse());
 
     [HttpPatch("{id:guid}")]
+    [RequestSizeLimit(PresentationRequestLimits.RichWritePayloadBytes)]
+    [RejectOversizedRequest(PresentationRequestLimits.RichWritePayloadBytes)]
     [ProducesResponseType<MealHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
     public Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateMealHttpRequest request) =>
         HandleOk(request.ToCommand(userId, id), static value => value.ToHttpResponse());
 

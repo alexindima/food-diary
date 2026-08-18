@@ -67,6 +67,23 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
         return Task.CompletedTask;
     }
 
+    public Task ReleaseAsync(
+        string key,
+        string requestHash,
+        string ownerToken,
+        CancellationToken cancellationToken = default) {
+        lock (_syncRoot) {
+            if (_entries.TryGetValue(key, out Entry? entry) &&
+                !entry.Completed &&
+                string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal) &&
+                string.Equals(entry.OwnerToken, ownerToken, StringComparison.Ordinal)) {
+                _entries.Remove(key);
+            }
+        }
+
+        return Task.CompletedTask;
+    }
+
     private void RemoveExpiredEntries(DateTime nowUtc) {
         string[] expiredKeys = [.. _entries
             .Where(entry => entry.Value.ExpiresAtUtc <= nowUtc)

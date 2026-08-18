@@ -3738,27 +3738,27 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/lessons",
-            "line": 18
+            "line": 20
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/admin/lessons",
-            "line": 24
+            "line": 26
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/admin/lessons/import",
-            "line": 30
+            "line": 32
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/admin/lessons/{id:guid}",
-            "line": 36
+            "line": 41
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/admin/lessons/{id:guid}",
-            "line": 43
+            "line": 48
           }
         ]
       },
@@ -3897,17 +3897,17 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/ai/food/vision",
-            "line": 22
+            "line": 25
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/ai/food/text",
-            "line": 31
+            "line": 34
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/ai/food/nutrition",
-            "line": 40
+            "line": 43
           }
         ]
       },
@@ -4193,7 +4193,7 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/dietologist/recommendations/bulk",
-            "line": 18
+            "line": 20
           }
         ]
       },
@@ -4793,37 +4793,37 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/meals/overview",
-            "line": 16
+            "line": 17
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/meals",
-            "line": 22
+            "line": 23
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/meals/{id:guid}",
-            "line": 28
+            "line": 29
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/meals",
-            "line": 34
+            "line": 35
           },
           {
             "verb": "PATCH",
             "route": "/api/v{version:apiVersion}/meals/{id:guid}",
-            "line": 45
+            "line": 49
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/meals/{id:guid}/repeat",
-            "line": 52
+            "line": 59
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/meals/{id:guid}",
-            "line": 62
+            "line": 69
           }
         ]
       },
@@ -5036,42 +5036,42 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/recipes",
-            "line": 16
+            "line": 17
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/recipes/overview",
-            "line": 22
+            "line": 23
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/recipes/recent",
-            "line": 28
+            "line": 29
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/recipes/{id:guid}",
-            "line": 34
+            "line": 35
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/recipes",
-            "line": 40
+            "line": 41
           },
           {
             "verb": "PATCH",
             "route": "/api/v{version:apiVersion}/recipes/{id:guid}",
-            "line": 52
+            "line": 56
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/recipes/{id:guid}",
-            "line": 60
+            "line": 67
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/recipes/{id:guid}/duplicate",
-            "line": 66
+            "line": 73
           }
         ]
       },

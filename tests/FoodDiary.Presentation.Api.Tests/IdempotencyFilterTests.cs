@@ -1,5 +1,8 @@
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using FoodDiary.Presentation.Api.Filters;
+using FoodDiary.Presentation.Api.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -102,6 +105,37 @@ public sealed class IdempotencyFilterTests {
 
         Assert.True(nextCalled);
         Assert.Null(context.Result);
+    }
+
+    [Theory]
+    [InlineData(StatusCodes.Status400BadRequest)]
+    [InlineData(StatusCodes.Status500InternalServerError)]
+    [InlineData(StatusCodes.Status502BadGateway)]
+    public async Task OnActionExecutionAsync_WithUnsuccessfulResponse_ReleasesReservationForRetry(int statusCode) {
+        var store = new InMemoryIdempotencyStore(TimeProvider.System);
+        var filter = new IdempotencyFilter(store);
+        int actionCalls = 0;
+
+        async Task ExecuteAsync(int responseStatusCode) {
+            DefaultHttpContext httpContext = CreateHttpContext(
+                "POST",
+                "/api/v1/ai/food/text",
+                "retry-after-failure",
+                "retry-user");
+            ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+            await filter.OnActionExecutionAsync(context, () => {
+                actionCalls++;
+                return Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+                    Result = new ObjectResult(new { attempt = actionCalls }) { StatusCode = responseStatusCode },
+                });
+            });
+        }
+
+        await ExecuteAsync(statusCode);
+        await ExecuteAsync(StatusCodes.Status201Created);
+        await ExecuteAsync(StatusCodes.Status201Created);
+
+        Assert.Equal(2, actionCalls);
     }
 
     [Fact]
@@ -219,6 +253,60 @@ public sealed class IdempotencyFilterTests {
     }
 
     [Fact]
+    public async Task StoreReleaseAsync_DeletesOnlyTheOwnedIncompleteReservation() {
+        var store = new InMemoryIdempotencyStore(TimeProvider.System);
+        IdempotencyReservation first = await store.ReserveAsync(
+            "key-owned-release",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1));
+
+        await store.ReleaseAsync("key-owned-release", "hash", "stale-owner");
+        IdempotencyReservation stillInProgress = await store.ReserveAsync(
+            "key-owned-release",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1));
+        await store.ReleaseAsync("key-owned-release", "hash", first.OwnerToken!);
+        IdempotencyReservation reacquired = await store.ReserveAsync(
+            "key-owned-release",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1));
+
+        Assert.Multiple(
+            () => Assert.Equal(IdempotencyReservationStatus.InProgress, stillInProgress.Status),
+            () => Assert.Equal(IdempotencyReservationStatus.Acquired, reacquired.Status));
+    }
+
+    [Fact]
+    public async Task StoreReleaseAsync_DoesNotDeleteACompletedResponse() {
+        var store = new InMemoryIdempotencyStore(TimeProvider.System);
+        IdempotencyReservation reservation = await store.ReserveAsync(
+            "key-completed-release",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1));
+        await store.CompleteAsync(
+            "key-completed-release",
+            "hash",
+            reservation.OwnerToken!,
+            StatusCodes.Status201Created,
+            "{\"id\":1}",
+            location: null,
+            responseTtl: TimeSpan.FromMinutes(10));
+
+        await store.ReleaseAsync("key-completed-release", "hash", reservation.OwnerToken!);
+        IdempotencyReservation replay = await store.ReserveAsync(
+            "key-completed-release",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1));
+
+        Assert.Equal(IdempotencyReservationStatus.Replay, replay.Status);
+    }
+
+    [Fact]
     public async Task StoreReserveAsync_WhenCompletedReservationExpires_AllowsNewReservation() {
         var timeProvider = new MutableTimeProvider(new DateTime(2026, 7, 8, 10, 0, 0, DateTimeKind.Utc));
         var store = new InMemoryIdempotencyStore(timeProvider);
@@ -283,7 +371,7 @@ public sealed class IdempotencyFilterTests {
     }
 
     [Fact]
-    public async Task OnActionExecutionAsync_WhenActionReturnsNonObjectResult_DoesNotCompleteReservation() {
+    public async Task OnActionExecutionAsync_WhenActionReturnsNonObjectResult_ReleasesReservation() {
         var store = new RecordingIdempotencyStore();
         var filter = new IdempotencyFilter(store);
         DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-non-object", userId: "user-000");
@@ -293,12 +381,14 @@ public sealed class IdempotencyFilterTests {
             Result = new EmptyResult(),
         }));
 
-        Assert.Equal(1, store.ReserveCalls);
-        Assert.Equal(0, store.CompleteCalls);
+        Assert.Multiple(
+            () => Assert.Equal(1, store.ReserveCalls),
+            () => Assert.Equal(0, store.CompleteCalls),
+            () => Assert.Equal(1, store.ReleaseCalls));
     }
 
     [Fact]
-    public async Task OnActionExecutionAsync_WhenActionThrows_DoesNotCompleteReservation() {
+    public async Task OnActionExecutionAsync_WhenActionReturnsException_ReleasesReservation() {
         var store = new RecordingIdempotencyStore();
         var filter = new IdempotencyFilter(store);
         DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-exception", userId: "user-000");
@@ -309,8 +399,59 @@ public sealed class IdempotencyFilterTests {
             Result = new ObjectResult(new { ignored = true }),
         }));
 
-        Assert.Equal(1, store.ReserveCalls);
-        Assert.Equal(0, store.CompleteCalls);
+        Assert.Multiple(
+            () => Assert.Equal(1, store.ReserveCalls),
+            () => Assert.Equal(0, store.CompleteCalls),
+            () => Assert.Equal(1, store.ReleaseCalls));
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WhenActionDelegateThrows_ReleasesReservationAndPreservesException() {
+        var store = new RecordingIdempotencyStore();
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-thrown-exception", "throw-user");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            filter.OnActionExecutionAsync(context, () => throw new InvalidOperationException("original action failure")));
+
+        Assert.Multiple(
+            () => Assert.Equal("original action failure", exception.Message),
+            () => Assert.Equal(1, store.ReleaseCalls),
+            () => Assert.Equal(0, store.CompleteCalls));
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WhenReleaseFails_PreservesTheActionException() {
+        var store = new RecordingIdempotencyStore(throwOnRelease: true);
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-release-failure", "throw-user");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            filter.OnActionExecutionAsync(context, () => throw new InvalidOperationException("original action failure")));
+
+        Assert.Multiple(
+            () => Assert.Equal("original action failure", exception.Message),
+            () => Assert.Equal(1, store.ReleaseCalls));
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WhenCompletionFails_ReleasesReservationAndPreservesCompletionException() {
+        var store = new RecordingIdempotencyStore(throwOnComplete: true);
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-completion-failure", "throw-user");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            filter.OnActionExecutionAsync(context, () => Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+                Result = new StatusCodeResult(StatusCodes.Status202Accepted),
+            })));
+
+        Assert.Multiple(
+            () => Assert.Equal("completion failed", exception.Message),
+            () => Assert.Equal(1, store.CompleteCalls),
+            () => Assert.Equal(1, store.ReleaseCalls));
     }
 
     [Fact]
@@ -351,7 +492,89 @@ public sealed class IdempotencyFilterTests {
         Assert.Multiple(
             () => Assert.NotNull(store.LastReservedKey),
             () => Assert.DoesNotContain(externalKey, store.LastReservedKey!, StringComparison.Ordinal),
-            () => Assert.Equal(64, store.LastReservedKey!.Length));
+            () => Assert.Equal(64, store.LastReservedKey!.Length),
+            () => Assert.Equal(1, store.CompleteCalls),
+            () => Assert.Equal(0, store.ReleaseCalls));
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WithSameKeyForDifferentUsers_DoesNotReplayAcrossUsers() {
+        var store = new InMemoryIdempotencyStore(TimeProvider.System);
+        var filter = new IdempotencyFilter(store);
+        int actionCalls = 0;
+
+        async Task ExecuteAsync(string userId) {
+            DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "shared-key", userId);
+            ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+            await filter.OnActionExecutionAsync(context, () => {
+                actionCalls++;
+                return Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+                    Result = new ObjectResult(new { userId }) { StatusCode = StatusCodes.Status201Created },
+                });
+            });
+        }
+
+        await ExecuteAsync("first-user");
+        await ExecuteAsync("second-user");
+
+        Assert.Equal(2, actionCalls);
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WithAnonymousPrincipal_PreservesAnonymousReplay() {
+        var store = new InMemoryIdempotencyStore(TimeProvider.System);
+        var filter = new IdempotencyFilter(store);
+        int actionCalls = 0;
+
+        async Task ExecuteAsync() {
+            DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/public", "anonymous-key", userId: null);
+            ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+            await filter.OnActionExecutionAsync(context, () => {
+                actionCalls++;
+                return Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+                    Result = new StatusCodeResult(StatusCodes.Status202Accepted),
+                });
+            });
+        }
+
+        await ExecuteAsync();
+        await ExecuteAsync();
+
+        Assert.Equal(1, actionCalls);
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WithSubjectClaim_UsesAuthenticatedUserScope() {
+        var userId = Guid.NewGuid();
+        DefaultHttpContext firstHttpContext = CreateHttpContext("POST", "/api/v1/products", "subject-key", userId: null);
+        firstHttpContext.User = new ClaimsPrincipal(new ClaimsIdentity([new Claim("sub", userId.ToString())], "test"));
+        var store = new InMemoryIdempotencyStore(TimeProvider.System);
+        var filter = new IdempotencyFilter(store);
+        ActionExecutingContext firstContext = CreateActionExecutingContext(firstHttpContext, new EnableIdempotencyAttribute());
+        await filter.OnActionExecutionAsync(firstContext, () => Task.FromResult(new ActionExecutedContext(firstContext, [], new object()) {
+            Result = new ObjectResult(new { id = userId }) { StatusCode = StatusCodes.Status201Created },
+        }));
+
+        DefaultHttpContext replayHttpContext = CreateHttpContext("POST", "/api/v1/products", "subject-key", userId: null);
+        replayHttpContext.User = new ClaimsPrincipal(new ClaimsIdentity([new Claim("sub", userId.ToString())], "test"));
+        ActionExecutingContext replayContext = CreateActionExecutingContext(replayHttpContext, new EnableIdempotencyAttribute());
+        await filter.OnActionExecutionAsync(replayContext, () => throw new InvalidOperationException("Authenticated subject must replay."));
+
+        Assert.IsType<ContentResult>(replayContext.Result);
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WithAuthenticatedPrincipalWithoutValidUserId_FailsClosedBeforeReservation() {
+        var store = new RecordingIdempotencyStore();
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "invalid-user-key", userId: null);
+        httpContext.User = new ClaimsPrincipal(new ClaimsIdentity([new Claim("sub", "not-a-guid")], "test"));
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        await Assert.ThrowsAsync<CurrentUserUnavailableException>(() =>
+            filter.OnActionExecutionAsync(context, () => throw new InvalidOperationException("Action must not execute.")));
+
+        Assert.Equal(0, store.ReserveCalls);
     }
 
     [Fact]
@@ -415,12 +638,19 @@ public sealed class IdempotencyFilterTests {
         }
 
         if (!string.IsNullOrWhiteSpace(userId)) {
+            string claimValue = CreateStableUserId(userId).ToString();
             httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(
-                [new Claim(ClaimTypes.NameIdentifier, userId)],
+                [new Claim(ClaimTypes.NameIdentifier, claimValue)],
                 authenticationType: "test"));
         }
 
         return httpContext;
+    }
+
+    private static Guid CreateStableUserId(string value) {
+        Span<byte> guidBytes = stackalloc byte[16];
+        SHA256.HashData(Encoding.UTF8.GetBytes(value)).AsSpan(0, guidBytes.Length).CopyTo(guidBytes);
+        return new Guid(guidBytes);
     }
 
     private static async Task AssertCachedLocationAsync(ObjectResult result, string expectedLocation) {
@@ -479,12 +709,22 @@ public sealed class IdempotencyFilterTests {
             TimeSpan responseTtl,
             CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
+
+        public Task ReleaseAsync(
+            string key,
+            string requestHash,
+            string ownerToken,
+            CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingIdempotencyStore : IIdempotencyStore {
+    private sealed class RecordingIdempotencyStore(
+        bool throwOnComplete = false,
+        bool throwOnRelease = false) : IIdempotencyStore {
         public int ReserveCalls { get; private set; }
         public int CompleteCalls { get; private set; }
+        public int ReleaseCalls { get; private set; }
         public string? LastReservedKey { get; private set; }
         public string? LastLocation { get; private set; }
         public bool CompletionTokenWasCanceled { get; private set; }
@@ -514,6 +754,23 @@ public sealed class IdempotencyFilterTests {
             CompleteCalls++;
             LastLocation = location;
             CompletionTokenWasCanceled = cancellationToken.IsCancellationRequested;
+            if (throwOnComplete) {
+                throw new InvalidOperationException("completion failed");
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task ReleaseAsync(
+            string key,
+            string requestHash,
+            string ownerToken,
+            CancellationToken cancellationToken = default) {
+            ReleaseCalls++;
+            if (throwOnRelease) {
+                throw new InvalidOperationException("release failed");
+            }
+
             return Task.CompletedTask;
         }
     }

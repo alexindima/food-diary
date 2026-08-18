@@ -70,8 +70,21 @@ Expectations:
 - clients may send `Idempotency-Key` for these paths
 - the backend must keep returning the cached successful response for the same `(user, path, key)` tuple
 - replay must preserve the original status code, JSON body, and `Location` header for created or accepted resources; adding another replayed header requires an explicit allow-list review
+- only completed `2xx` responses are finalized and cached; validation failures, server/provider failures, action exceptions, and unsupported result shapes release the current reservation so a legitimate retry can run immediately
+- releasing or completing a reservation must atomically match its request hash and owner token, so a stale request cannot modify a newer reservation
+- authenticated requests are scoped by the normalized application user identifier (including supported `nameidentifier`/`sub` claims) and fail closed when that identifier is unavailable; unauthenticated requests retain the explicit anonymous scope
 - idempotency is now opt-in at the presentation layer through `EnableIdempotencyAttribute`; it is no longer a blanket policy for every POST action
 - changes to global idempotency behavior should be reviewed like other contract changes, not treated as an invisible infrastructure detail
+
+## Request Payload Limits
+
+The host-wide request body limit is only a final safety net. Endpoints that accept expensive, nested, bulk, or provider-bound JSON payloads must also declare a narrower presentation-layer limit with all three contract elements:
+
+- `RequestSizeLimitAttribute` for the server-side body reader
+- `RejectOversizedRequestAttribute` for an early `Content-Length` rejection with the standard API error body
+- `ProducesApiErrorResponse(413)` so OpenAPI clients see the intentional contract
+
+Shared limits belong in `PresentationRequestLimits`; endpoint-specific limits may remain beside the endpoint when they are part of a dedicated processor contract. Raising a limit requires checking validator bounds, memory/CPU amplification, provider limits, and the OpenAPI snapshot change.
 
 Generated OpenAPI security is operation-scoped: actions classified with
 `[Authorize]` declare the Bearer requirement, while actions explicitly marked

@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3326,
-    "symbols": 3335,
+    "sourceFiles": 3328,
+    "symbols": 3337,
     "interfaceImplementationLinks": 233,
     "dependencyInjectionRegistrations": 234,
     "kinds": {
-      "class": 1709,
+      "class": 1711,
       "enum": 56,
       "interface": 413,
       "record": 1041,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 61,
-      "Other": 1246,
+      "Other": 1248,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -17874,7 +17874,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Admin/AdminLessonsController.cs",
-      "line": 17
+      "line": 19
     },
     {
       "name": "AdminMailInboxController",
@@ -18406,7 +18406,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Ai/AiFoodController.cs",
-      "line": 21
+      "line": 24
     },
     {
       "name": "AiUsageController",
@@ -19015,7 +19015,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/BulkRecommendationsController.cs",
-      "line": 17
+      "line": 19
     },
     {
       "name": "ClientTasksController",
@@ -19771,6 +19771,13 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Logs/Requests/ClientTelemetryLogHttpRequest.cs",
+      "line": 5
+    },
+    {
+      "name": "ClientTelemetryLogHttpRequestValidation",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Features/Logs/Requests/ClientTelemetryLogHttpRequestValidation.cs",
       "line": 7
     },
     {
@@ -19876,7 +19883,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Meals/MealsController.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "CreateMealHttpRequest",
@@ -20268,7 +20275,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Recipes/RecipesController.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "CreateRecipeHttpRequest",
@@ -21031,7 +21038,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
-      "line": 12
+      "line": 16
     },
     {
       "name": "IdempotencyRequestContext",
@@ -21122,6 +21129,13 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Policies/PresentationPolicyNames.cs",
+      "line": 2
+    },
+    {
+      "name": "PresentationRequestLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Policies/PresentationRequestLimits.cs",
       "line": 2
     },
     {

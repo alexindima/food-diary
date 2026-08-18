@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Admin;
 using FoodDiary.Presentation.Api.Features.Ai;
+using FoodDiary.Presentation.Api.Features.Dietologist;
 using FoodDiary.Presentation.Api.Features.Meals;
 using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Images;
@@ -46,6 +47,35 @@ public sealed class ControllerSecurityContractTests {
         AssertRequiresIdempotencyKey(nameof(AiFoodController.AnalyzeFood));
         AssertRequiresIdempotencyKey(nameof(AiFoodController.ParseFoodText));
         AssertRequiresIdempotencyKey(nameof(AiFoodController.CalculateNutrition));
+    }
+
+    [Fact]
+    public void AbuseProneJsonEndpoints_UseDedicatedRequestLimits() {
+        AssertControllerRequestLimits(typeof(AiFoodController), PresentationRequestLimits.AiPayloadBytes);
+        AssertActionRequestLimits(
+            typeof(BulkRecommendationsController),
+            nameof(BulkRecommendationsController.Create),
+            PresentationRequestLimits.BulkRecommendationsPayloadBytes);
+        AssertActionRequestLimits(
+            typeof(AdminLessonsController),
+            nameof(AdminLessonsController.Import),
+            PresentationRequestLimits.AdminImportPayloadBytes);
+        AssertActionRequestLimits(
+            typeof(MealsController),
+            nameof(MealsController.Create),
+            PresentationRequestLimits.RichWritePayloadBytes);
+        AssertActionRequestLimits(
+            typeof(MealsController),
+            nameof(MealsController.Update),
+            PresentationRequestLimits.RichWritePayloadBytes);
+        AssertActionRequestLimits(
+            typeof(RecipesController),
+            nameof(RecipesController.Create),
+            PresentationRequestLimits.RichWritePayloadBytes);
+        AssertActionRequestLimits(
+            typeof(RecipesController),
+            nameof(RecipesController.Update),
+            PresentationRequestLimits.RichWritePayloadBytes);
     }
 
     [Fact]

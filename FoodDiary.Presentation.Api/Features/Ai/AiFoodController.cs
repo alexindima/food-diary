@@ -18,6 +18,9 @@ namespace FoodDiary.Presentation.Api.Features.Ai;
 [Route("api/v{version:apiVersion}/ai/food")]
 [Authorize(Roles = PresentationRoleNames.Premium)]
 [EnableRateLimiting(PresentationPolicyNames.AiRateLimitPolicyName)]
+[RequestSizeLimit(PresentationRequestLimits.AiPayloadBytes)]
+[RejectOversizedRequest(PresentationRequestLimits.AiPayloadBytes)]
+[ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
 public sealed class AiFoodController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("vision")]
     [EnableIdempotency(requireKey: true)]

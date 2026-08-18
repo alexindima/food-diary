@@ -147,8 +147,14 @@ public sealed class ContainerSupplyChainGuardrailTests {
                 .Select(path => Path.GetFileName(path)[..^".packages.lock.json".Length])
                 .Order(StringComparer.Ordinal),
         ];
+        string[] expectedLockNames = [.. projectNames
+            .Concat([
+                "LlmWiki.ContractReferenceExtractor",
+                "LlmWiki.RoslynExtractor",
+            ])
+            .Order(StringComparer.Ordinal)];
 
-        Assert.Equal(projectNames, lockNames);
+        Assert.Equal(expectedLockNames, lockNames);
     }
 
     [Fact]

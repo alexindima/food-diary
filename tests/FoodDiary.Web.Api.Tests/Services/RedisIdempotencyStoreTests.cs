@@ -195,6 +195,46 @@ public sealed class RedisIdempotencyStoreTests {
             CommandFlags.None);
     }
 
+    [Fact]
+    public async Task ReleaseAsync_DeletesOnlyTheOwnedLock() {
+        IDatabase database = Substitute.For<IDatabase>();
+        RedisIdempotencyStore store = CreateStore(database);
+
+        await store.ReleaseAsync(
+            "request-release",
+            "hash-release",
+            "owner-release",
+            CancellationToken.None);
+
+        await database.Received(1).ScriptEvaluateAsync(
+            Arg.Is<string>(script => script.Contains("redis.call('DEL', KEYS[1])", StringComparison.Ordinal)),
+            Arg.Is<RedisKey[]>(keys => keys != null &&
+                Enumerable.SequenceEqual(keys, new[] { LockKey("request-release") })),
+            Arg.Is<RedisValue[]>(values => values != null &&
+                Enumerable.SequenceEqual(values, new RedisValue[] { "hash-release:owner-release" })),
+            CommandFlags.None);
+    }
+
+    [Fact]
+    public async Task ReleaseAsync_WithCancelledToken_DoesNotAccessRedis() {
+        IDatabase database = Substitute.For<IDatabase>();
+        RedisIdempotencyStore store = CreateStore(database);
+        using var cancellation = new CancellationTokenSource();
+        await cancellation.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => store.ReleaseAsync(
+            "request-release",
+            "hash-release",
+            "owner-release",
+            cancellation.Token));
+
+        await database.DidNotReceiveWithAnyArgs().ScriptEvaluateAsync(
+            default(string)!,
+            default(RedisKey[])!,
+            default(RedisValue[])!,
+            default);
+    }
+
     private static RedisIdempotencyStore CreateStore(IDatabase database) {
         IConnectionMultiplexer connectionMultiplexer = Substitute.For<IConnectionMultiplexer>();
         connectionMultiplexer.GetDatabase(Arg.Any<int>(), Arg.Any<object?>()).Returns(database);

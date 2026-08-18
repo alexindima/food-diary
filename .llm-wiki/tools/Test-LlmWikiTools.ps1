@@ -482,6 +482,33 @@ $httpDtoCompatibility = & (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps
     -Format Json | ConvertFrom-Json
 Assert-Wiki (@($httpDtoCompatibility.changes.kind) -contains 'added-http-dto-property') 'API compatibility did not classify an optional HTTP DTO property as additive.'
 Assert-Wiki (@($httpDtoCompatibility.changes.kind) -contains 'added-required-http-dto-property') 'API compatibility did not classify a required HTTP DTO property as breaking.'
+
+$baseHttpDtoWithValidationBody = @'
+public sealed record ExampleHttpRequest(
+    string Name,
+    string? Details = null) : IValidatableObject {
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) {
+        List<ValidationResult> failures = [];
+        return failures;
+    }
+}
+'@
+$currentHttpDtoWithValidationBody = @'
+public sealed record ExampleHttpRequest(
+    string Name,
+    string? Details = null) : IValidatableObject {
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => [];
+}
+'@
+$httpDtoBodyCompatibility = & (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps1') `
+    -BaseSnapshotContent $baseEndpointContract `
+    -CurrentSnapshotContent $baseEndpointContract `
+    -BaseHttpDtoContent $baseHttpDtoWithValidationBody `
+    -CurrentHttpDtoContent $currentHttpDtoWithValidationBody `
+    -HttpDtoPath 'Synthetic/ExampleHttpRequest.cs' `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($httpDtoBodyCompatibility.changes).Count -eq 0) 'API compatibility treated a record-body local variable as a serialized HTTP DTO property.'
+
 $apiCompatibilityToolText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps1') -Raw
 Assert-Wiki ($apiCompatibilityToolText -match 'Http\(\?:Model\|Request\|Response\)') 'API compatibility discovery does not include HTTP request and response DTO files.'
 

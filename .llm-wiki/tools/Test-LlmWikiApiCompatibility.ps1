@@ -170,7 +170,7 @@ function Get-HttpDtoProperties {
     if ([string]::IsNullOrWhiteSpace($Content)) { return $records }
     foreach ($recordMatch in [regex]::Matches(
         $Content,
-        '(?ms)\brecord\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*\((?<body>.*?)\)\s*;')) {
+        '(?ms)\brecord\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*\((?<body>.*?)\)\s*(?:;|:|\{)')) {
         $properties = [ordered]@{}
         foreach ($parameterMatch in [regex]::Matches(
             $recordMatch.Groups['body'].Value,
