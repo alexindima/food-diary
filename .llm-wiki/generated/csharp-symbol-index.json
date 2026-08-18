@@ -17391,7 +17391,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 54
+      "line": 58
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -26474,7 +26474,7 @@
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 46
+      "line": 50
     },
     {
       "service": "INotificationPusher",
