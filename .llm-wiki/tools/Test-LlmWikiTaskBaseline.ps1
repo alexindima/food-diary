@@ -4,15 +4,14 @@ param()
 $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
-$fixtureRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/task-baseline-fixture'
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'task-baseline'
 
 function Assert-Baseline([bool]$Condition, [string]$Message) {
     if (-not $Condition) { throw $Message }
 }
 
 try {
-    if (Test-Path -LiteralPath $fixtureRoot) { Remove-Item -LiteralPath $fixtureRoot -Recurse -Force }
-    New-Item -ItemType Directory -Path $fixtureRoot -Force | Out-Null
     & git -C $fixtureRoot init --quiet
     if ($LASTEXITCODE -ne 0) { throw 'Unable to initialize task-baseline fixture.' }
     [System.IO.File]::WriteAllText((Join-Path $fixtureRoot 'existing.txt'), 'committed')

@@ -3,7 +3,8 @@ param()
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $wikiRoot = Join-Path $repositoryRoot '.llm-wiki'
-$sandbox = Join-Path $repositoryRoot ".artifacts/llm-wiki/knowledge-isolation-$([guid]::NewGuid().ToString('N'))"
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$sandbox = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'knowledge-isolation'
 $previous = $env:LLM_WIKI_TEST_KNOWLEDGE_ROOT
 $registries = @('learning-promotions.json', 'learning-experiments.json', 'eval-promotions.json', 'learning-health.json')
 try {

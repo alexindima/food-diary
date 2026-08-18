@@ -126,6 +126,8 @@ param(
     [string[]]$CoverageScope,
     [string]$Reason,
     [string]$ReviewReason,
+    [string[]]$ReviewAreaReason,
+    [switch]$AllowSharedReviewReason,
     [string]$Symptom,
     [string]$RepairAttemptId,
     [string]$RepairCandidateId,
@@ -2328,20 +2330,51 @@ switch ($Command) {
         if ($pageReviewIds.Count -gt 1) { Write-Host "Grouped source-impact review recorded for $($pageReviewIds.Count) pages with one shared rationale." }
     }
     'review-affected' {
-        if ([string]::IsNullOrWhiteSpace($Reason)) { throw 'review-affected requires -Reason describing the shared source review.' }
+        if ([string]::IsNullOrWhiteSpace($Reason) -and @($ReviewAreaReason | Where-Object { $_ }).Count -eq 0) {
+            throw 'review-affected requires -ReviewAreaReason <area=reason[]> or an explicitly allowed shared -Reason.'
+        }
         $impactArguments = @{ BaseRef = $BaseRef; Format = 'Json' }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $impactArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $impactArguments.ChangedPath = $ChangedPath }
         $impact = & (Join-Path $toolsRoot 'Get-LlmWikiImpact.ps1') @impactArguments | ConvertFrom-Json
         $pending = @($impact.impacts | Where-Object { -not $_.Reviewed -and [string]::IsNullOrWhiteSpace([string]$_.GeneratedBy) })
-        foreach ($item in $pending) { Write-Host " - $($item.Id): $($item.Path) <- $($item.ChangedSources -join ', ')" }
+        function Get-ReviewArea([object]$Item) {
+            $identity = "$($Item.Id) $($Item.Path)".ToLowerInvariant()
+            if ($identity -match 'api|contract|backend') { return 'api-compatibility' }
+            if ($identity -match 'privacy|sensitive|security') { return 'privacy-security' }
+            if ($identity -match 'quality|review|test|evidence|adaptive|developer|verification|task|implementation|release-readiness|code-graph|index-pipeline') { return 'quality-workflow' }
+            return 'documentation'
+        }
+        $reasonByArea = @{}
+        foreach ($entry in @($ReviewAreaReason | Where-Object { $_ })) {
+            $separator = $entry.IndexOf('=')
+            if ($separator -lt 1 -or $separator -eq ($entry.Length - 1)) { throw "Invalid -ReviewAreaReason '$entry'; expected area=reason." }
+            $reasonByArea[$entry.Substring(0, $separator).Trim().ToLowerInvariant()] = $entry.Substring($separator + 1).Trim()
+        }
+        $areas = @($pending | ForEach-Object { Get-ReviewArea $_ } | Sort-Object -Unique)
+        if (-not [string]::IsNullOrWhiteSpace($Reason) -and $areas.Count -gt 1 -and -not $AllowSharedReviewReason) {
+            throw "The pending reviews span multiple areas ($($areas -join ', ')). Supply -ReviewAreaReason area=reason for each area, or explicitly add -AllowSharedReviewReason."
+        }
+        foreach ($areaGroup in @($pending | Group-Object { Get-ReviewArea $_ } | Sort-Object Name)) {
+            Write-Host " [$($areaGroup.Name)]"
+            foreach ($item in $areaGroup.Group) { Write-Host "  - $($item.Id): $($item.Path) <- $($item.ChangedSources -join ', ')" }
+        }
         foreach ($item in $pending) {
-            $reviewArguments = @{ Id = [string]$item.Id; Reason = $Reason; BaseRef = $BaseRef }
+            $reviewArea = Get-ReviewArea $item
+            $itemReason = if ($reasonByArea.ContainsKey(([string]$item.Id).ToLowerInvariant())) {
+                [string]$reasonByArea[([string]$item.Id).ToLowerInvariant()]
+            } elseif ($reasonByArea.ContainsKey($reviewArea)) {
+                [string]$reasonByArea[$reviewArea]
+            } else {
+                $Reason
+            }
+            if ([string]::IsNullOrWhiteSpace($itemReason)) { throw "No review reason was supplied for area '$reviewArea' (page $($item.Id))." }
+            $reviewArguments = @{ Id = [string]$item.Id; Reason = $itemReason; BaseRef = $BaseRef }
             if ($PSBoundParameters.ContainsKey('HeadRef')) { $reviewArguments.HeadRef = $HeadRef }
             if ($PSBoundParameters.ContainsKey('ChangedPath')) { $reviewArguments.ChangedPath = $ChangedPath }
             Invoke-WikiTool 'Add-LlmWikiSourceReview.ps1' $reviewArguments
         }
-        Write-Host "Affected reviews: recorded=$($pending.Count), already-reviewed=$([int]$impact.impactCount - $pending.Count). The shared rationale was explicitly supplied for the current impact set only."
+        Write-Host "Affected reviews: recorded=$($pending.Count), areas=$($areas.Count), already-reviewed=$([int]$impact.impactCount - $pending.Count)."
     }
     'ownership' {
         $ownershipArguments = @{ BaseRef = $BaseRef; Format = $Format }

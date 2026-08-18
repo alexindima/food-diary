@@ -59,17 +59,20 @@ The receipt stores the page and changed-source SHA-256 hashes. Freshness accepts
 it only while those hashes still match; a later source or page edit
 automatically requires a new review.
 
-When every pending page shares one evidence-based rationale, review only the
-current affected set in one call:
+Review the current affected set with reasons grouped by review area:
 
 ```powershell
 ./.llm-wiki/wiki.ps1 review-affected `
-  -Reason "Dietologist ownership moved without changing the documented contract."
+  -ReviewAreaReason "api-compatibility=OpenAPI and consumers were checked." `
+  -ReviewAreaReason "privacy-security=No sensitive-data boundary changed."
 ```
 
-The command recomputes the current impact set and records the supplied rationale
-only for still-pending pages. Pass an ID array to `review` when different pages
-need different explanations.
+The command recomputes the current impact set, prints pending pages by area, and
+records the applicable rationale only for still-pending pages. A single
+`-Reason` spanning multiple areas is rejected unless
+`-AllowSharedReviewReason` is supplied explicitly. Page IDs may also be used as
+the left side of `-ReviewAreaReason`; pass an ID array to `review` when pages need
+fully separate handling.
 
 The receipt ledger is append-only review evidence. Adding a receipt records a
 decision; it does not by itself change the review workflow documented here.

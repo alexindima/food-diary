@@ -61,9 +61,11 @@ function Invoke-LlmWikiGitPathList {
     $process.StartInfo = $startInfo
     try {
         if (-not $process.Start()) { throw "$FailureMessage Git did not start." }
-        $stdout = $process.StandardOutput.ReadToEnd()
-        $stderr = $process.StandardError.ReadToEnd()
+        $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+        $stderrTask = $process.StandardError.ReadToEndAsync()
         $process.WaitForExit()
+        $stdout = [string]$stdoutTask.GetAwaiter().GetResult()
+        $stderr = [string]$stderrTask.GetAwaiter().GetResult()
         if ($process.ExitCode -ne 0) {
             $detail = $stderr.Trim()
             throw "$FailureMessage Exit code $($process.ExitCode).$(if ($detail) { " $detail" })"

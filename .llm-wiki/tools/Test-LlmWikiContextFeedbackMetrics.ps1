@@ -3,7 +3,8 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$fixtureRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/context-feedback-smoke-$([guid]::NewGuid().ToString('N'))"
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'context-feedback'
 $previousRoot = $env:LLM_WIKI_TEST_CONTEXT_FEEDBACK_ROOT
 
 function Get-Hash([object]$Value) {

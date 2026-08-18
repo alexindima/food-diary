@@ -11,7 +11,8 @@ $planCommand = 'dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Applicat
 $planReceiptPath = Join-Path $receiptRoot "$(Get-LlmWikiSha256 (Normalize-LlmWikiVerificationCommand $planCommand)).json"
 $importCommand = 'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj'
 $importReceiptPath = Join-Path $receiptRoot "$(Get-LlmWikiSha256 (Normalize-LlmWikiVerificationCommand $importCommand)).json"
-$workspace = '.artifacts/llm-wiki/tasks/verification-receipt-import-test'
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$workspace = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'verification-receipts'
 $absoluteWorkspace = Join-Path $repositoryRoot $workspace
 
 try {

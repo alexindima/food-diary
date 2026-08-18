@@ -52,7 +52,8 @@ if (Test-Path -LiteralPath $recipesProject -PathType Leaf) {
 }
 
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$fixtureRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/extraction-readiness-$PID"
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'extraction-readiness'
 $fixturePath = Join-Path $fixtureRoot 'DashboardLeak.cs'
 try {
     $null = New-Item -ItemType Directory -Path $fixtureRoot -Force

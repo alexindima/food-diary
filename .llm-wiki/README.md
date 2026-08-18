@@ -235,6 +235,10 @@ The unified developer entrypoint is:
 ./.llm-wiki/wiki.ps1 task-similarity-reuse -WorkspacePath .artifacts/llm-wiki/tasks/<target> -SourceWorkspacePath .artifacts/llm-wiki/tasks/<source> -DryRun
 ```
 
+API compatibility reports schema-breaking/additive changes separately from
+behavioral restrictions such as a newly introduced `413` request-size limit.
+HTTP DTO fallback analysis is Roslyn-based rather than regex-based.
+
 `lint` is the fast deterministic page gate. It enforces the front matter
 contract, unique ids, normalized and existing sources, generated-page
 provenance, local link targets and anchors, and high-confidence credential

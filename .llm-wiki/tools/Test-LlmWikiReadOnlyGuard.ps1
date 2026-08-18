@@ -2,8 +2,10 @@
 param()
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$fixtureTool = Join-Path $repositoryRoot '.artifacts/llm-wiki/read-only-guard-fixture.ps1'
-$nestedFixtureTool = Join-Path $repositoryRoot '.artifacts/llm-wiki/read-only-guard-nested-fixture.ps1'
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'read-only-guard'
+$fixtureTool = Join-Path $fixtureRoot 'read-only-guard-fixture.ps1'
+$nestedFixtureTool = Join-Path $fixtureRoot 'read-only-guard-nested-fixture.ps1'
 $sentinel = Join-Path $repositoryRoot '.llm-wiki/generated/read-only-guard-smoke.tmp'
 $worktreeSentinel = Join-Path $repositoryRoot 'read-only-guard-worktree-smoke.tmp'
 try {
@@ -37,5 +39,6 @@ try {
     Remove-Item -LiteralPath $nestedFixtureTool -Force -ErrorAction SilentlyContinue
     Remove-Item -LiteralPath $sentinel -Force -ErrorAction SilentlyContinue
     Remove-Item -LiteralPath $worktreeSentinel -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $fixtureRoot -Recurse -Force -ErrorAction SilentlyContinue
 }
 Write-Host 'LLM Wiki read-only guard regression passed: protected writes and pre-existing worktree changes are rejected and restored.'

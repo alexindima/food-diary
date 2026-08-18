@@ -44,6 +44,12 @@ try {
     }
 } finally {
     $lockStream.Dispose()
+    try {
+        Remove-Item -LiteralPath $lockPath -Force -ErrorAction Stop
+    } catch [IO.IOException] {
+        # Another extractor may have acquired the lock between Dispose and cleanup.
+        # That owner will remove the marker when its build section completes.
+    }
 }
 
 $payload = if ($BuildBackendIndex) {

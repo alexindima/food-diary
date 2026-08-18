@@ -3,19 +3,20 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 $testPath = 'tests/FoodDiary.Application.Tests/Authentication/UserAgentParserTests.cs'
 $generatedPath = '.llm-wiki/generated/quality-index.json'
-$tempRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/test-only-governance'
-$manifestPath = '.artifacts/llm-wiki/test-only-governance/change-manifest.json'
-$acceptancePath = '.artifacts/llm-wiki/test-only-governance/acceptance-matrix.json'
+$tempRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'test-only-governance'
+$tempRootRelative = $tempRoot.Substring($repositoryRoot.Length + 1).Replace('\', '/')
+$manifestPath = "$tempRootRelative/change-manifest.json"
+$acceptancePath = "$tempRootRelative/acceptance-matrix.json"
 
 function Assert-TestOnly([bool]$Condition, [string]$Message) {
     if (-not $Condition) { throw $Message }
 }
 
-if (Test-Path -LiteralPath $tempRoot) { Remove-Item -LiteralPath $tempRoot -Recurse -Force }
-$null = New-Item -ItemType Directory -Path $tempRoot -Force
 try {
+    Write-Host 'Test-only governance [1/4]: initialize manifest.'
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeManifest.ps1') init `
         -Path $manifestPath `
         -Objective 'Add authentication parser coverage without production changes.' `
@@ -25,6 +26,7 @@ try {
     Assert-TestOnly (@($manifest.scope.plannedPaths) -contains $testPath) 'The allowed test delta was not planned automatically.'
     Assert-TestOnly (@($manifest.scope.plannedPaths) -notcontains $generatedPath) 'Derived Wiki output leaked into planned product scope.'
 
+    Write-Host 'Test-only governance [2/4]: initialize acceptance.'
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiAcceptanceMatrix.ps1') init `
         -Path $acceptancePath `
         -Objective 'Add authentication parser coverage without production changes.' `
@@ -37,6 +39,7 @@ try {
         Assert-TestOnly (@($criterion.mapping.changedPaths) -notcontains $generatedPath) "Criterion $($criterion.id) was linked to derived Wiki output."
     }
 
+    Write-Host 'Test-only governance [3/4]: assess test-only policy.'
     $testOnlyPolicy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') `
         -ChangedPath @(
             'tests/FoodDiary.Application.Tests/Authentication/UserAgentParserTests.cs',
@@ -48,6 +51,7 @@ try {
     Assert-TestOnly (@($testOnlyRuleIds | Where-Object { $_ -ne 'llm-wiki' }).Count -eq 0) 'Test-only authentication coverage triggered production change-policy rules.'
     Assert-TestOnly (@($testOnlyPolicy.reviewObligations).Count -eq 0) 'Test-only coverage triggered production review obligations.'
 
+    Write-Host 'Test-only governance [4/4]: assess production control.'
     $productionPolicy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') `
         -ChangedPath 'FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs' `
         -Format Json | ConvertFrom-Json

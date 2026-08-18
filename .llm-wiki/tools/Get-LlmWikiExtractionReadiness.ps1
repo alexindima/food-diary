@@ -201,7 +201,8 @@ $projections = @($productionLeaks | Where-Object { (@($_.usedProperties).Count -
 } })
 $compileProbeResult = [pscustomobject]@{ requested = [bool]$CompileProbe; passed = $null; exitCode = $null; projectPath = $null; diagnostics = @() }
 if ($CompileProbe) {
-    $probeRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/extraction-probe/$($Module.ToLowerInvariant())-$PID-$([Guid]::NewGuid().ToString('N'))"
+    $probeBase = if (-not [string]::IsNullOrWhiteSpace($env:LLM_WIKI_SMOKE_SANDBOX)) { $env:LLM_WIKI_SMOKE_SANDBOX } else { Join-Path $repositoryRoot '.artifacts/llm-wiki/extraction-probe' }
+    $probeRoot = Join-Path $probeBase "$($Module.ToLowerInvariant())-$PID-$([Guid]::NewGuid().ToString('N'))"
     $probeProject = Join-Path $probeRoot "FoodDiary.Application.$Module.Probe.csproj"
     $null = New-Item -ItemType Directory -Path $probeRoot -Force
     try {
@@ -222,6 +223,7 @@ if ($CompileProbe) {
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
     <AssemblyName>FoodDiary.Application.$Module.Probe</AssemblyName>
   </PropertyGroup>
   <ItemGroup>

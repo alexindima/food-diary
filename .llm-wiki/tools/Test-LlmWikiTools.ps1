@@ -360,6 +360,22 @@ Assert-Wiki ($endpointCompatibility.snapshotFormat -eq 'endpoint-contract') 'API
 Assert-Wiki ($endpointCompatibility.additiveCount -eq 1) 'API compatibility did not classify an added endpoint-contract path as additive.'
 Assert-Wiki (@($endpointCompatibility.changes.kind) -contains 'added-path') 'API compatibility did not report the added endpoint-contract path.'
 
+$requestLimitContract = @{
+    OpenApi = '3.0.4'
+    Endpoints = @(
+        @{ Path = '/api/v{version}/existing'; Operations = @(
+            @{ Method = 'get'; HasRequestBody = $false; ResponseCodes = @('200', '413') }
+        ) }
+    )
+} | ConvertTo-Json -Depth 8
+$requestLimitCompatibility = & (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps1') `
+    -BaseSnapshotContent $baseEndpointContract `
+    -CurrentSnapshotContent $requestLimitContract `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki ($requestLimitCompatibility.breakingCount -eq 0) 'A request-size restriction was incorrectly classified as schema-breaking.'
+Assert-Wiki ($requestLimitCompatibility.behavioralRestrictionCount -eq 1) 'A new 413 response was not classified as a behavioral restriction.'
+Assert-Wiki (@($requestLimitCompatibility.behavioralRestrictions.kind) -contains 'added-request-size-restriction') 'API compatibility omitted the request-size restriction detail.'
+
 $baseEndpointSchemaContract = @{
     OpenApi = '3.0.4'
     Endpoints = @()
@@ -511,6 +527,7 @@ Assert-Wiki (@($httpDtoBodyCompatibility.changes).Count -eq 0) 'API compatibilit
 
 $apiCompatibilityToolText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps1') -Raw
 Assert-Wiki ($apiCompatibilityToolText -match 'Http\(\?:Model\|Request\|Response\)') 'API compatibility discovery does not include HTTP request and response DTO files.'
+Assert-Wiki ($apiCompatibilityToolText -notmatch '\[regex\]::Matches') 'API compatibility still parses C# HTTP DTO declarations with regular expressions.'
 
 $taskContractPath = '.artifacts/llm-wiki/tool-smoke-task-contract.json'
 $absoluteTaskContractPath = Join-Path (Split-Path -Parent $wikiRoot) $taskContractPath

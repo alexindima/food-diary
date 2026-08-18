@@ -38,13 +38,16 @@ function Add-Change {
         [string]$Severity,
         [string]$Kind,
         [string]$Location,
-        [string]$Description
+        [string]$Description,
+        [ValidateSet('structural', 'behavioral')]
+        [string]$Dimension = 'structural'
     )
     $List.Add([pscustomobject]@{
         severity = $Severity
         kind = $Kind
         location = $Location
         description = $Description
+        dimension = $Dimension
     })
 }
 
@@ -164,29 +167,25 @@ function Compare-PayloadKeySets {
 }
 
 function Get-HttpDtoProperties {
-    param([string]$Content)
+    param([string]$Content, [string]$Path)
 
-    $records = [ordered]@{}
-    if ([string]::IsNullOrWhiteSpace($Content)) { return $records }
-    foreach ($recordMatch in [regex]::Matches(
-        $Content,
-        '(?ms)\brecord\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*\((?<body>.*?)\)\s*(?:;|:|\{)')) {
-        $properties = [ordered]@{}
-        foreach ($parameterMatch in [regex]::Matches(
-            $recordMatch.Groups['body'].Value,
-            '(?m)^\s*(?<type>[A-Za-z_][A-Za-z0-9_.?<>,\[\]]*)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)(?:\s*=\s*(?<default>[^,\r\n]+))?\s*,?\s*$')) {
-            $propertyName = $parameterMatch.Groups['name'].Value
-            $serializedName = $propertyName.Substring(0, 1).ToLowerInvariant() + $propertyName.Substring(1)
-            $type = $parameterMatch.Groups['type'].Value
-            $hasDefault = $parameterMatch.Groups['default'].Success
-            $properties[$serializedName] = [pscustomobject]@{
-                type = $type
-                optional = $type.EndsWith('?') -or $hasDefault
-            }
-        }
-        $records[$recordMatch.Groups['name'].Value] = [pscustomobject]$properties
+    if ([string]::IsNullOrWhiteSpace($Content)) { return [pscustomobject]@{} }
+    $project = Join-Path $PSScriptRoot 'roslyn-extractor/LlmWiki.RoslynExtractor.csproj'
+    $program = Join-Path $PSScriptRoot 'roslyn-extractor/Program.cs'
+    $extractorDll = Join-Path $PSScriptRoot 'roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll'
+    if (-not (Test-Path -LiteralPath $extractorDll -PathType Leaf) -or
+        (Get-Item -LiteralPath $project).LastWriteTimeUtc -gt (Get-Item -LiteralPath $extractorDll).LastWriteTimeUtc -or
+        (Get-Item -LiteralPath $program).LastWriteTimeUtc -gt (Get-Item -LiteralPath $extractorDll).LastWriteTimeUtc) {
+        & dotnet build $project -c Release --nologo --verbosity quiet | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw "Unable to build the Roslyn HTTP DTO extractor (exit $LASTEXITCODE)." }
     }
-    return [pscustomobject]$records
+    $inputJson = [pscustomobject]@{
+        sources = @([pscustomobject]@{ id = 'source'; path = $Path; content = $Content })
+    } | ConvertTo-Json -Depth 5 -Compress
+    $extractorOutput = $inputJson | & dotnet $extractorDll --http-dto-stdin
+    if ($LASTEXITCODE -ne 0) { throw "Roslyn HTTP DTO extraction failed for '$Path' with exit code $LASTEXITCODE." }
+    $result = ($extractorOutput -join [Environment]::NewLine) | ConvertFrom-Json
+    return $result.source
 }
 
 function Compare-HttpDtoContent {
@@ -197,8 +196,8 @@ function Compare-HttpDtoContent {
         [System.Collections.Generic.List[object]]$Changes
     )
 
-    $beforeRecords = Get-HttpDtoProperties $BeforeContent
-    $afterRecords = Get-HttpDtoProperties $AfterContent
+    $beforeRecords = Get-HttpDtoProperties $BeforeContent $Path
+    $afterRecords = Get-HttpDtoProperties $AfterContent $Path
     foreach ($beforeRecord in Get-Properties $beforeRecords) {
         $afterRecord = Get-Properties $afterRecords | Where-Object Name -eq $beforeRecord.Name | Select-Object -First 1
         if ($null -eq $afterRecord) {
@@ -334,7 +333,11 @@ foreach ($pathProperty in Get-Properties $before.paths) {
                     Where-Object Name -eq $responseProperty.Name
             ).Count -gt 0
             if (-not $wasPresent) {
-                Add-Change $changes 'additive' 'added-response' "$($method.ToUpperInvariant()) $path" "Documented response '$($responseProperty.Name)' was added."
+                if ([string]$responseProperty.Name -eq '413') {
+                    Add-Change $changes 'behavioral-restriction' 'added-request-size-restriction' "$($method.ToUpperInvariant()) $path" "Documented response '413' was added; the schema is additive, but previously accepted request sizes may now be rejected." 'behavioral'
+                } else {
+                    Add-Change $changes 'additive' 'added-response' "$($method.ToUpperInvariant()) $path" "Documented response '$($responseProperty.Name)' was added."
+                }
             }
         }
     }
@@ -465,6 +468,7 @@ if ($compareHttpDtos) {
 
 $breakingChanges = @($changes | Where-Object severity -eq 'breaking')
 $additiveChanges = @($changes | Where-Object severity -eq 'additive')
+$behavioralRestrictions = @($changes | Where-Object severity -eq 'behavioral-restriction')
 $result = [pscustomobject]@{
     baseRef = $BaseRef
     snapshotPath = $SnapshotPath
@@ -473,15 +477,25 @@ $result = [pscustomobject]@{
     httpDtoPaths = @($httpDtoPaths)
     breakingCount = $breakingChanges.Count
     additiveCount = $additiveChanges.Count
+    behavioralRestrictionCount = $behavioralRestrictions.Count
     breakingChanges = $breakingChanges
     additiveChanges = $additiveChanges
+    behavioralRestrictions = $behavioralRestrictions
+    structuralCompatibility = [pscustomobject]@{
+        breakingCount = $breakingChanges.Count
+        additiveCount = $additiveChanges.Count
+    }
+    behavioralCompatibility = [pscustomobject]@{
+        restrictionCount = $behavioralRestrictions.Count
+        status = $(if ($behavioralRestrictions.Count -gt 0) { 'review-required' } else { 'compatible' })
+    }
     changes = @($changes)
 }
 
 if ($Format -eq 'Json') {
     $result | ConvertTo-Json -Depth 8
 } else {
-    Write-Host "API compatibility: $($result.breakingCount) breaking, $($result.additiveCount) additive change(s)."
+    Write-Host "API compatibility: $($result.breakingCount) structural breaking, $($result.additiveCount) structural additive, $($result.behavioralRestrictionCount) behavioral restriction(s)."
     foreach ($change in $changes) {
         Write-Host " - [$($change.severity)] $($change.kind): $($change.location) - $($change.description)"
     }

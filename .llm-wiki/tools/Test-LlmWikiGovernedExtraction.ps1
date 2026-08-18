@@ -30,7 +30,8 @@ foreach ($requiredPath in @(
     if ($requiredPath -notin @($plan.paths)) { throw "Extraction planning omitted required boundary path: $requiredPath" }
 }
 
-$workspace = ".artifacts/llm-wiki/tasks/extraction-criteria-$([Guid]::NewGuid().ToString('N'))"
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$workspace = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'governed-extraction'
 $absoluteWorkspace = Join-Path $repositoryRoot $workspace
 $changedPath = 'FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj'
 $compound = 'Dashboard is extracted and isolated, composition roots remain compatible, and existing behavior stays unchanged.'

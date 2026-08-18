@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('build', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query')]
+    [ValidateSet('build', 'build-plan', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query')]
     [string]$Action = 'status',
     [string]$Query,
     [ValidateSet('modules', 'contracts', 'risks', 'tests')]
@@ -21,7 +21,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $scriptPath = Join-Path $PSScriptRoot 'code-graph.mjs'
-if ($Action -notin @('build', 'status') -and -not $SkipRefresh) {
+if ($Action -notin @('build', 'build-plan', 'status') -and -not $SkipRefresh) {
     $refreshOutput = & node $scriptPath build
     if ($LASTEXITCODE -ne 0) { throw "Code graph incremental refresh failed with exit code $LASTEXITCODE." }
 }
@@ -43,6 +43,7 @@ if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 12; return }
 
 switch ($Action) {
     'build' { Write-Host "Code graph: $($result.files) files, $($result.symbols) symbols; scanned=$($result.scanned), updated=$($result.updated), unchanged=$($result.unchanged), removed=$($result.removed), $($result.durationMs)ms." }
+    'build-plan' { Write-Host "Code graph build plan: reason=$($result.reason); candidates=$($result.candidateFiles); estimated=$($result.estimatedSeconds)s." }
     'status' { Write-Host "Code graph: $($result.files) files, $($result.symbols) symbols, $($result.tokens) file-token edges, $($result.typedEdges) typed edges; parser=$($result.parserVersion)." }
     'symbol' { foreach ($item in @($result.symbols)) { Write-Host "$($item.name) [$($item.kind)] $($item.path):$($item.line)" } }
     'consumers' {

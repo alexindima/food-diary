@@ -3,10 +3,11 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 $workspaceName = "telemetry-regression-$([guid]::NewGuid().ToString('N'))"
-$workspacePath = ".artifacts/llm-wiki/tasks/$workspaceName"
+$workspacePath = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name $workspaceName
 $absoluteWorkspace = Join-Path $repositoryRoot $workspacePath
-$registryPath = Join-Path $repositoryRoot ".artifacts/llm-wiki/$workspaceName.json"
+$registryPath = Join-Path (Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot) "$workspaceName.json"
 $previousRegistryPath = $env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH
 $statusBefore = @(git -C $repositoryRoot status --short)
 

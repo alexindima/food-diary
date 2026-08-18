@@ -6,15 +6,15 @@ Set-StrictMode -Version Latest
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 
-$testRootRelative = ".artifacts/llm-wiki/tests/index-fingerprint-$([Guid]::NewGuid().ToString('N'))"
-$testRoot = Join-Path $repositoryRoot $testRootRelative
+$testRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'index-fingerprint'
+$testRootRelative = $testRoot.Substring($repositoryRoot.Length + 1).Replace('\', '/')
 $firstRelative = "$testRootRelative/данные-a.txt"
 $secondRelative = "$testRootRelative/b.txt"
 $firstPath = Join-Path $repositoryRoot $firstRelative
 $secondPath = Join-Path $repositoryRoot $secondRelative
 try {
-    $null = New-Item -ItemType Directory -Path $testRoot -Force
     [IO.File]::WriteAllText($firstPath, 'alpha', [Text.UTF8Encoding]::new($false))
     [IO.File]::WriteAllText($secondPath, 'bravo', [Text.UTF8Encoding]::new($false))
 

@@ -78,4 +78,22 @@ if ($apiDimension.status -ne 'fail' -or @($apiDimension.issues).Count -ne 1) {
     throw 'Release readiness did not normalize a legacy API result without breakingChanges.'
 }
 
+$behavioralApiResult = [pscustomobject]@{
+    breakingCount = 0
+    additiveCount = 0
+    behavioralRestrictions = @([pscustomobject]@{ severity = 'behavioral-restriction'; kind = 'added-request-size-restriction'; location = '/limited'; description = 'fixture' })
+    changes = @()
+}
+$behavioralReadiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiReleaseReadiness.ps1') `
+    -PacketInput $legacyApiPacket `
+    -ApiCompatibilityInput $behavioralApiResult `
+    -ManifestPath '.artifacts/llm-wiki/nonexistent-legacy-manifest.json' `
+    -AcceptancePath '.artifacts/llm-wiki/nonexistent-legacy-acceptance.json' `
+    -EvidencePath '.artifacts/llm-wiki/nonexistent-legacy-evidence.json' `
+    -Format Json | ConvertFrom-Json
+$behavioralDimension = @($behavioralReadiness.dimensions | Where-Object id -eq 'api-compatibility')[0]
+if ($behavioralDimension.status -ne 'warning' -or @($behavioralDimension.issues).Count -ne 1) {
+    throw 'Release readiness did not keep behavioral API restrictions distinct from schema-breaking changes.'
+}
+
 Write-Host 'LLM Wiki implementation-plan tests passed.'

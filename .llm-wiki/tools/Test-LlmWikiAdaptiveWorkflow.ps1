@@ -7,6 +7,9 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$smokeSandboxRoot = Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot
+$smokeSandboxRelative = $smokeSandboxRoot.Substring($repositoryRoot.Length + 1).Replace('\', '/')
 $failures = [Collections.Generic.List[string]]::new()
 function Assert-Adaptive([bool]$Condition, [string]$Message) {
     if (-not $Condition) { $script:failures.Add($Message) }
@@ -268,7 +271,7 @@ Assert-Adaptive ($ungrounded.confidence -eq 'low') 'Ungrounded intent did not ex
 }
 if ($Group -in @('All', 'Experience')) {
 $workspaceReuseName = ".workspace-reuse-$([Guid]::NewGuid().ToString('N'))"
-$workspaceReusePath = ".artifacts/llm-wiki/tasks/$workspaceReuseName"
+$workspaceReusePath = "$smokeSandboxRelative/$workspaceReuseName"
 $workspaceReuseAbsolute = Join-Path $repositoryRoot $workspaceReusePath
 try {
     New-Item -ItemType Directory -Path $workspaceReuseAbsolute -Force | Out-Null
@@ -349,7 +352,7 @@ Assert-Adaptive (@(Get-AdaptiveIds $qa.cases) -notcontains 'QA-MOBILE') 'Backend
 
 $experience = & (Join-Path $PSScriptRoot 'Get-LlmWikiExperience.ps1') `
     -Action next `
-    -WorkspacePath ".artifacts/llm-wiki/tasks/adaptive-experience-$([Guid]::NewGuid().ToString('N'))" `
+    -WorkspacePath "$smokeSandboxRelative/adaptive-experience-$([Guid]::NewGuid().ToString('N'))" `
     -Objective 'Improve photo annotation visibility with clearer SVG connectors.' `
     -ProposedPath $visualPaths `
     -Format Json | ConvertFrom-Json
@@ -357,12 +360,12 @@ Assert-Adaptive (-not [string]::IsNullOrWhiteSpace([string]$experience.nextActio
 Assert-Adaptive ($experience.ceremonyBudget.label -eq 'visual-focused') 'Compact experience omitted the routed ceremony budget.'
 
 $metrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkflowMetrics.ps1') `
-    -TasksPath '.artifacts/llm-wiki/no-such-task-root' `
+    -TasksPath "$smokeSandboxRelative/no-such-task-root" `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($metrics.schemaVersion -eq 2 -and $metrics.workspaceCount -eq 0 -and $null -ne $metrics.adaptive) 'Workflow metrics did not handle an empty task history or expose adaptive runs.'
 
 $workspaceName = "adaptive-smoke-$([Guid]::NewGuid().ToString('N'))"
-$workspace = ".artifacts/llm-wiki/tasks/$workspaceName"
+$workspace = "$smokeSandboxRelative/$workspaceName"
 $absoluteWorkspace = Join-Path $repositoryRoot $workspace
 try {
     New-Item -ItemType Directory -Path $absoluteWorkspace -Force | Out-Null
@@ -393,7 +396,7 @@ try {
 }
 
 $deliveryWorkspaceName = "delivery-smoke-$([Guid]::NewGuid().ToString('N'))"
-$deliveryWorkspace = ".artifacts/llm-wiki/tasks/$deliveryWorkspaceName"
+$deliveryWorkspace = "$smokeSandboxRelative/$deliveryWorkspaceName"
 $deliveryAbsolute = Join-Path $repositoryRoot $deliveryWorkspace
 try {
     New-Item -ItemType Directory -Path $deliveryAbsolute -Force | Out-Null

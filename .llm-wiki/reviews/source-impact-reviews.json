@@ -143,33 +143,37 @@
     {
       "pageId": "workflow-adaptive-development",
       "pagePath": ".llm-wiki/workflows/adaptive-development.md",
-      "pageSha256": "623b527d5eca7164ab6562bb12a0c728d6a710315430d7fc64e56dfd603f464f",
+      "pageSha256": "5296f4e8c912e36ad1347e6bbbc19adfced3c9f88a31c92870a18e2697fa33ac",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1",
-          "sha256": "5813c67eead1c5b6f53ee097147b63ce8f17f99e67481df0eaf3c120da7d7415"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fccd33248a1915fec7ccaff75af761984a6ecac683b0d942853a9503e630da8d"
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "a5b40892417dab0c445f20c0103b7b0677abe63af828b872222c2ba92611d7a2"
+          "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
+          "sha256": "8031f598674daa723700b67ce0375c672262cac78a92902060b9b3b4cae5e5de"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
-          "sha256": "a4523d43ec4e76a312a4a09843d808003ebf36c23dfd3e2059b7a82f16ea62b6"
+          "sha256": "d6f575219184e2d7933385aab438750defa92727f02381a959559653f2450f8b"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
-          "sha256": "d0f69ef34e8ba1420758a842278283c91f6b4818ea19a4978969f1244db203ab"
+          "path": ".llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1",
+          "sha256": "0ac15b8bd09ae2d037355fc704f41a4920a2a502a227927b4cd0cd2cd9deb5cb"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
+          "sha256": "0213e3646dfd6140673bd100e15b81daa9f02601bb4cb9a515840ea5d61bb9e2"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTaskBaseline.ps1",
+          "sha256": "7cd911e84cc329289862c8e99547388af41eaacd105ae8e622f93f1da33e74c7"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiVerificationCache.ps1",
+          "sha256": "14368cd8775a1a55b6fd10e34dd797faa814a815b48e66af6434ceee985fc41f"
         }
       ],
-      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
+      "reason": "Contract-reference extractor regression passed after lifecycle cleanup; build locks are now removed after the exclusive build section and concurrent ownership remains protected.",
       "baseRef": "HEAD",
-      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
-      "reviewedAtUtc": "2026-08-17T21:19:40.9359850Z"
+      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
+      "reviewedAtUtc": "2026-08-18T02:22:53.3766728Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -264,14 +268,22 @@
       "pageSha256": "4c34b64a9f6da77827e3ec2f7060afcf8ac7f38611e9a743026a45daa0c2f3cd",
       "sources": [
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "f2cd4881b55a326d70cc3d72467a9386179220b48faea7cbdaede07a2748c56c"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
+          "sha256": "2b610bfde7bde1d83955125633717f81b352940fc74c73e8e73fd6c13290fdd7"
+        },
+        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "13eb1f8ad944ce5566599b76b214b8a89d97454d8387db11d3114b15a0887590"
+          "sha256": "76173d37ab1ef7a280ddb730c5a651ca305a1df7d335fdc87bed116bef8952c1"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "The final review-area variable fix and reachable documentation classification passed strict-affected plus facade-contract smoke; all 28 uncached groups remain green.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:29.8929582Z"
+      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
+      "reviewedAtUtc": "2026-08-18T02:19:10.7754320Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -333,17 +345,17 @@
     {
       "pageId": "workflow-context-security",
       "pagePath": ".llm-wiki/workflows/context-security.md",
-      "pageSha256": "b1772ca6e2b1bc91074242feec33660475b32799725366e180a3238cbd6a081c",
+      "pageSha256": "893ec0218c13b7b7c053c337c5bf42d475f1143bf06f472905cb285f239b7395",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextSecurity.ps1",
-          "sha256": "ab70485ef9ba6669de54c8bd73f3f9c5189de65b6271992b3846fa86cd8851b9"
+          "path": ".llm-wiki/tools/Test-LlmWikiWorkflowRecovery.ps1",
+          "sha256": "45a818f253fafe665dd545b5657b4142ae6ca3820435d874c51949dbb05c8824"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Context-security behavior remains covered by workflow recovery smoke; fixture isolation changes do not alter sensitive-data classification or handling.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:48.8289852Z"
+      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
+      "reviewedAtUtc": "2026-08-18T02:17:16.2779551Z"
     },
     {
       "pageId": "workflow-context-strategy-outcome-learning",
@@ -571,13 +583,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-          "sha256": "2887a79408806f808f9605dd75c442385936f836888614d188e3aec79c9f4188"
+          "sha256": "f8994ec4e824400b47bebeef6a2d20b33f39f56753fb5631b1f26850b24c664e"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
+          "sha256": "20e065f6e0a1e5aa5f3ad1f86f9dc8ec102e4698dfb8fee73a0a12c6ce651994"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "Contract-reference extractor regression passed after lifecycle cleanup; build locks are now removed after the exclusive build section and concurrent ownership remains protected.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:32.5929753Z"
+      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
+      "reviewedAtUtc": "2026-08-18T02:22:53.6429459Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -852,25 +868,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-          "sha256": "92ddf5b26866baf3787917c1b525547448a64dc7d34a75aacf67c45014c48f84"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "17f3fb3c9ff435af9715dcb28c21f5f169e17f5b41d66441ba4c7d05dd42c832"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-          "sha256": "63736caed0e5a9a47a99be097c93ab3f428702d95796f1c565a41d67317e9d1c"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "3fe3cc9e722f43fb132157c89a2ef14edefe9135ae7934af8cdb5c1e23ed635c"
+          "sha256": "678532e518c52e61fbbfd5b2d182ea913ef650928ac63e6d71edaa142ce74bd3"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "All 28 uncached affected-smoke groups passed, including governed delivery, focused test selection, verification receipts, and facade contracts.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:35.1198498Z"
+      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
+      "reviewedAtUtc": "2026-08-18T02:17:16.9765505Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -878,30 +882,14 @@
       "pageSha256": "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "17f3fb3c9ff435af9715dcb28c21f5f169e17f5b41d66441ba4c7d05dd42c832"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "c4e02543040cc86c01a0c69a4723da3cf37840748f28aef59ae8cfbc68612fe2"
-        },
-        {
           "path": ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-          "sha256": "2887a79408806f808f9605dd75c442385936f836888614d188e3aec79c9f4188"
+          "sha256": "f8994ec4e824400b47bebeef6a2d20b33f39f56753fb5631b1f26850b24c664e"
         }
       ],
-      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
+      "reason": "Requirement-intelligence behavior is unchanged; the governed Authentication regression now only derives its disposable workspace from the shared smoke sandbox helper.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:28:10.5524332Z"
+      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
+      "reviewedAtUtc": "2026-08-18T02:23:12.1253328Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -910,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-          "sha256": "92ddf5b26866baf3787917c1b525547448a64dc7d34a75aacf67c45014c48f84"
+          "sha256": "678532e518c52e61fbbfd5b2d182ea913ef650928ac63e6d71edaa142ce74bd3"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "All 28 uncached affected-smoke groups passed, including governed delivery, focused test selection, verification receipts, and facade contracts.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:35.8214969Z"
+      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
+      "reviewedAtUtc": "2026-08-18T02:17:17.3086974Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1035,13 +1023,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "13eb1f8ad944ce5566599b76b214b8a89d97454d8387db11d3114b15a0887590"
+          "sha256": "76173d37ab1ef7a280ddb730c5a651ca305a1df7d335fdc87bed116bef8952c1"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "The final review-area variable fix and reachable documentation classification passed strict-affected plus facade-contract smoke; all 28 uncached groups remain green.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:36.9045005Z"
+      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
+      "reviewedAtUtc": "2026-08-18T02:19:11.1225753Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1069,17 +1057,25 @@
     {
       "pageId": "workflow-task-workspace",
       "pagePath": ".llm-wiki/workflows/task-workspace.md",
-      "pageSha256": "f87df1e5212521c9e920fd7bcea428c7ea79b68a5fd08213641a6862777077d6",
+      "pageSha256": "a8ae24482a03c1b60dded0be60c6d262106c7eeb20511caf3127b4ed8b9525f8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "7c0fdec7ec4d406b437cb1c45d1a0e3b5cea7835a2100780ae811f7e6e5c5b30"
+          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+          "sha256": "678532e518c52e61fbbfd5b2d182ea913ef650928ac63e6d71edaa142ce74bd3"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
+          "sha256": "f8994ec4e824400b47bebeef6a2d20b33f39f56753fb5631b1f26850b24c664e"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
+          "sha256": "c21809c2eb9368f5e694b3d19653508ad5ab5d4a3b64d33a2333940a5f15e5db"
         }
       ],
-      "reason": "Acceptance-matrix initialization now treats missing or empty required-check collections as empty while preserving all mapping, validation, and proof-of-change rules.",
+      "reason": "Governed task fixture isolation preserves direct task-workspace constraints and the implementation/governed-delivery smoke groups passed.",
       "baseRef": "HEAD",
-      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
-      "reviewedAtUtc": "2026-08-17T12:23:50.1953566Z"
+      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
+      "reviewedAtUtc": "2026-08-18T02:23:12.4747904Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1140,14 +1136,14 @@
       "pageSha256": "9cc76f52e65dc93eb463ced774f1826e3433f33fb3ac620b0a5c280a106fd88d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
-          "sha256": "126b0f518b04d6681d571546a4e3afcbbbdddc9beb6b6f59e57be4f85bed0e7c"
+          "path": ".llm-wiki/tools/Test-LlmWikiOperationalTelemetry.ps1",
+          "sha256": "84c4378acceed0ac7e38f82f59cf98cdef7947fbc15c744a920439fc49695659"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "All 28 uncached affected-smoke groups passed, including governed delivery, focused test selection, verification receipts, and facade contracts.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:37.5185624Z"
+      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
+      "reviewedAtUtc": "2026-08-18T02:17:18.4552892Z"
     },
     {
       "pageId": "workflow.change-policy",

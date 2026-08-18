@@ -208,7 +208,8 @@ $unreviewed = @($impacts | Where-Object { -not $_.Reviewed })
 if ($FailOnUnreviewed -and $unreviewed.Count -gt 0) {
     Write-Host ''
     Write-Host 'Update affected pages, set them stale, or record the current pending set in one command:'
-    Write-Host "  ./.llm-wiki/wiki.ps1 review-affected -Reason '<shared evidence-based rationale>'"
+    Write-Host "  ./.llm-wiki/wiki.ps1 review-affected -ReviewAreaReason '<area>=<evidence-based rationale>'"
+    Write-Host 'A shared -Reason across multiple areas requires -AllowSharedReviewReason.'
     Write-Host 'Use wiki.ps1 review -Id <page-id[]> -Reason <reason> when pages need different rationales.'
     exit 1
 }

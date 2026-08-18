@@ -4,7 +4,8 @@ param()
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $workspaceName = "workflow-recovery-$([guid]::NewGuid().ToString('N'))"
-$workspacePath = ".artifacts/llm-wiki/tasks/$workspaceName"
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$workspacePath = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name $workspaceName
 $absoluteWorkspace = Join-Path $repositoryRoot $workspacePath
 $receiptPath = Join-Path $absoluteWorkspace 'context-security.json'
 

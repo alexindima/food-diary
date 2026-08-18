@@ -4,9 +4,9 @@ param()
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiIndexTiming.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$fixtureRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/index-timing-test-$([guid]::NewGuid().ToString('N'))"
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'index-timing'
 try {
-    $null = New-Item -ItemType Directory -Path $fixtureRoot -Force
     & git -C $fixtureRoot init --quiet
     if ($LASTEXITCODE -ne 0) { throw 'Unable to initialize index timing fixture.' }
     foreach ($duration in @(10, 20, 30, 40, 50, 60)) {

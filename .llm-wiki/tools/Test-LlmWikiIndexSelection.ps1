@@ -3,6 +3,7 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 $pipelinePath = Join-Path $PSScriptRoot 'Invoke-LlmWikiIndexPipeline.ps1'
 
 function Get-IndexPlan([string[]]$ChangedPath, [switch]$RequiredOnly) {
@@ -41,7 +42,7 @@ foreach ($unexpectedTool in @(
     Assert-Plan ($csharpTestPlan -notmatch [regex]::Escape($unexpectedTool)) "C# test-only change selected unrelated index: $unexpectedTool"
 }
 
-$changedPathFile = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-selection-staged-paths.txt'
+$changedPathFile = Join-Path (Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot) 'index-selection-staged-paths.txt'
 $null = New-Item -ItemType Directory -Path (Split-Path -Parent $changedPathFile) -Force
 try {
     [IO.File]::WriteAllLines($changedPathFile, @(

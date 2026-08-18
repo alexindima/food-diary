@@ -3,7 +3,8 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$sandbox = Join-Path $repositoryRoot ".artifacts/llm-wiki/learning-promotion-migration-$([guid]::NewGuid().ToString('N'))"
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$sandbox = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'learning-promotion-migration'
 $registryPath = Join-Path $sandbox 'learning-promotions.json'
 $previousRoot = $env:LLM_WIKI_TEST_KNOWLEDGE_ROOT
 

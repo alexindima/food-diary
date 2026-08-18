@@ -3,8 +3,8 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$workspaceName = ".authentication-start-$([guid]::NewGuid().ToString('N'))"
-$workspacePath = ".artifacts/llm-wiki/tasks/$workspaceName"
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$workspacePath = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'authentication-start'
 $workspaceAbsolute = Join-Path $repositoryRoot $workspacePath
 $paths = @(
     'FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs'

@@ -5,7 +5,8 @@ $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
 $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = Split-Path -Parent $wikiRoot
-$workspace = '.artifacts/llm-wiki/tasks/governed-delivery-regression'
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$workspace = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'governed-delivery'
 $absoluteWorkspace = Join-Path $repositoryRoot $workspace
 $productPath = 'FoodDiary.Application/Fasting/Commands/FastingCommand.cs'
 $generatedPath = '.llm-wiki/generated/quality-index.json'

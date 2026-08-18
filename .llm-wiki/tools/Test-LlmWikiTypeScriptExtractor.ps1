@@ -3,10 +3,9 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$fixtureRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/typescript-extractor-test'
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'typescript-extractor'
 $fixturePath = Join-Path $fixtureRoot 'sample.component.ts'
-if (Test-Path -LiteralPath $fixtureRoot) { Remove-Item -LiteralPath $fixtureRoot -Recurse -Force }
-$null = New-Item -ItemType Directory -Path $fixtureRoot -Force
 try {
     @'
 import { Component, inject } from '@angular/core';
@@ -21,7 +20,7 @@ export class SummaryComponent {
   load() { return this.http.get('/api/summary'); }
 }
 '@ | Set-Content -LiteralPath $fixturePath -Encoding UTF8
-    $relativePath = '.artifacts/llm-wiki/typescript-extractor-test/sample.component.ts'
+    $relativePath = $fixturePath.Substring($repositoryRoot.Length + 1).Replace('\', '/')
     $result = '{"paths":["' + $relativePath + '"]}' | node (Join-Path $PSScriptRoot 'typescript-extractor.mjs') | ConvertFrom-Json
     $symbolNames = @($result.symbols | ForEach-Object { [string]$_.name })
     foreach ($expected in @('Summary', 'routes', 'SummaryComponent', 'load')) {

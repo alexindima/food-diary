@@ -3,6 +3,18 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+if (args.Length == 1 && args[0] == "--http-dto-stdin") {
+    HttpDtoInput input = JsonSerializer.Deserialize<HttpDtoInput>(Console.In.ReadToEnd(), new JsonSerializerOptions {
+        PropertyNameCaseInsensitive = true,
+    }) ?? new HttpDtoInput([]);
+    var dtoOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    Console.WriteLine(JsonSerializer.Serialize(input.Sources.ToDictionary(
+        source => source.Id,
+        source => ExtractHttpDtos(source.Path, source.Content),
+        StringComparer.Ordinal), dtoOptions));
+    return 0;
+}
+
 string[] paths;
 string[] contextPaths;
 bool semantic = true;
@@ -186,6 +198,46 @@ static bool LooksLikeQualifiedName(string value) {
 }
 
 static bool IsMediatorHandler(string name) => name is "IRequestHandler" or "ICommandHandler" or "IQueryHandler" or "INotificationHandler";
+
+static IReadOnlyDictionary<string, IReadOnlyDictionary<string, HttpDtoProperty>> ExtractHttpDtos(string path, string content) {
+    SyntaxNode root = CSharpSyntaxTree.ParseText(content, path: path).GetRoot();
+    var records = new Dictionary<string, IReadOnlyDictionary<string, HttpDtoProperty>>(StringComparer.Ordinal);
+    foreach (TypeDeclarationSyntax declaration in root.DescendantNodes().OfType<TypeDeclarationSyntax>()) {
+        var properties = new Dictionary<string, HttpDtoProperty>(StringComparer.Ordinal);
+        if (declaration is RecordDeclarationSyntax { ParameterList: not null } record) {
+            foreach (ParameterSyntax parameter in record.ParameterList.Parameters) {
+                if (parameter.Type is null) continue;
+                properties[SerializedName(parameter.Identifier.ValueText, parameter.AttributeLists)] = new HttpDtoProperty(
+                    parameter.Type.ToString(),
+                    parameter.Type is NullableTypeSyntax || parameter.Default is not null);
+            }
+        }
+        foreach (PropertyDeclarationSyntax property in declaration.Members.OfType<PropertyDeclarationSyntax>()) {
+            if (!property.Modifiers.Any(SyntaxKind.PublicKeyword)) continue;
+            bool optional = property.Type is NullableTypeSyntax
+                || property.Initializer is not null
+                || !property.Modifiers.Any(SyntaxKind.RequiredKeyword);
+            properties[SerializedName(property.Identifier.ValueText, property.AttributeLists)] = new HttpDtoProperty(
+                property.Type.ToString(), optional);
+        }
+        records[declaration.Identifier.ValueText] = properties;
+    }
+    return records;
+}
+
+static string SerializedName(string name, SyntaxList<AttributeListSyntax> attributes) {
+    AttributeSyntax? jsonName = attributes
+        .SelectMany(list => list.Attributes)
+        .FirstOrDefault(attribute => attribute.Name.ToString() is "JsonPropertyName" or "JsonPropertyNameAttribute"
+            || attribute.Name.ToString().EndsWith(".JsonPropertyName", StringComparison.Ordinal)
+            || attribute.Name.ToString().EndsWith(".JsonPropertyNameAttribute", StringComparison.Ordinal));
+    if (jsonName?.ArgumentList?.Arguments.FirstOrDefault()?.Expression is LiteralExpressionSyntax literal
+        && literal.IsKind(SyntaxKind.StringLiteralExpression)) {
+        return literal.Token.ValueText;
+    }
+    return string.IsNullOrEmpty(name) ? name : char.ToLowerInvariant(name[0]) + name[1..];
+}
+
 static string? InvocationName(ExpressionSyntax expression) => expression switch {
     IdentifierNameSyntax identifier => identifier.Identifier.ValueText,
     GenericNameSyntax generic => generic.Identifier.ValueText,
@@ -228,3 +280,6 @@ static void AddNamedStringArgument(List<GraphEdge> edges, string kind, Invocatio
 sealed record ExtractionResult(string Path, IReadOnlyList<GraphSymbol> Symbols, IReadOnlyList<string> Tokens, IReadOnlyList<GraphEdge> Edges);
 sealed record GraphSymbol(string Kind, string Name, int Line, string? SymbolId = null);
 sealed record GraphEdge(string Kind, string Target, int Line, string Evidence, string Confidence, string? TargetId = null);
+sealed record HttpDtoInput(IReadOnlyList<HttpDtoSource> Sources);
+sealed record HttpDtoSource(string Id, string Path, string Content);
+sealed record HttpDtoProperty(string Type, bool Optional);

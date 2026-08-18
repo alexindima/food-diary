@@ -93,6 +93,18 @@ The default concurrency is four processes and can be changed for constrained env
 ./.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check -MaxConcurrency 4
 ```
 
+Focused smoke routing is declared in
+`.llm-wiki/policies/affected-smoke-catalog.psd1`. The catalog owns path patterns,
+priorities, parallel-safety, graph dependencies, and dominance rules. Its
+regression verifies that every tracked Wiki tool maps to a smoke group and that
+every non-fallback group has an execution handler.
+
+Parallel smoke gives every worker a run-local fixture sandbox and validates that
+the final Git status matches the pre-run status. On failure it writes a
+cancellation receipt, allows a grace interval, then terminates remaining process
+trees. Code-graph prewarm reports its cache-miss reason, duration estimate,
+heartbeat, timeout, and diagnostic log path before worker fan-out.
+
 The forecast uses the rolling median from the last five successful local runs
 of each generator and calculates the staged parallel critical path rather than
 summing every generator. Timings are machine-local under `.git/llm-wiki`; when

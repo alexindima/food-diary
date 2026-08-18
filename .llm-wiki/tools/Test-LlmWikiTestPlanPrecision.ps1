@@ -3,6 +3,7 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$tool = Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1'
 $changedPaths = @(
     'FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommand.cs'
     'FoodDiary.Domain/Entities/Tracking/MenstrualEpisode.cs'
@@ -41,3 +42,21 @@ if ($null -eq $focusedFrontend -or $focusedFrontend.status -ne 'satisfied' -or
 }
 
 Write-Host "LLM Wiki test-plan precision passed: $($ids.Count) unique command IDs, $($cycleTests.Count) cycle-focused tests."
+
+$idempotencyPlan = & $tool `
+    -Intent 'Harden billing renewal idempotency and retry behavior' `
+    -ProposedPath 'FoodDiary.Application.Billing/Services/BillingRenewalService.cs' `
+    -NoBaseline `
+    -Format Json | ConvertFrom-Json
+if (@($idempotencyPlan.focusedTestFiles) -notcontains 'tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.RenewalAndAccessServiceTests.cs') {
+    throw 'Planned idempotency work did not select the symbol-adjacent renewal tests.'
+}
+$rootPlan = & $tool `
+    -Intent 'Replace fixed repository root parent traversal' `
+    -ProposedPath '.llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1' `
+    -NoBaseline `
+    -Format Json | ConvertFrom-Json
+if (@($rootPlan.repositoryAntipatterns | Where-Object id -eq 'fixed-parent-repository-root').Count -lt 2) {
+    throw 'Test plan did not discover repeated fixed-depth repository-root traversal.'
+}
+Write-Host 'LLM Wiki test-plan semantic selection passed: planned symbols, idempotency tests, neighboring tests, and repeated antipatterns are visible.'

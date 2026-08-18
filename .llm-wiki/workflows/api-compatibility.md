@@ -35,6 +35,12 @@ documented responses, and component schemas are additive. It is a
 focused compatibility gate, not a substitute for integration tests or review of
 schema semantics, authorization, error shapes, and status-code behavior.
 
+Structural and behavioral compatibility are reported separately. For example,
+adding a documented `413` response is not schema-breaking, but it is marked as
+a `behavioral-restriction` because request sizes accepted by the previous
+version may now be rejected. Such restrictions require an explicit behavior and
+rollout review even when `-FailOnBreaking` remains green.
+
 For authentication-provider linking, review the anonymous login operation and
 the authenticated linking operation together. A new linking route may be
 additive while newly documented `409` outcomes still require frontend handling
@@ -50,3 +56,6 @@ primary-constructor properties. Nullable or defaulted
 additions are additive; required additions, removals, requiredness changes, and
 type changes are breaking. DTO findings include their source path as
 provenance and complement rather than replace runtime serialization snapshots.
+DTO declarations are parsed by the repository Roslyn extractor, including
+attribute-based serialized names; method locals and comments cannot become
+false HTTP properties.

@@ -66,9 +66,12 @@ $directTests = [System.Collections.Generic.HashSet[string]]::new([System.StringC
 $plannedDirectoryTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $siblingTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $consumerTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+$behavioralIntentTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+$neighborTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+$repositoryAntipatterns = [System.Collections.Generic.List[object]]::new()
 $directConsumerProjects = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $changedTestFiles = @(
-    $diff.changedPaths |
+    $effectivePaths |
         Where-Object { $_ -match '\.cs$' -and $_ -match '(^|/)tests/' -or $_ -match '\.(spec|test)\.ts$' } |
         Sort-Object -Unique
 )
@@ -89,7 +92,7 @@ foreach ($proposedDirectory in @($ProposedPath)) {
     }
 }
 
-foreach ($changedPath in @($diff.changedPaths | Where-Object {
+foreach ($changedPath in @($effectivePaths | Where-Object {
     $_ -match '^FoodDiary\.Web\.Client/.+\.(ts|html|scss)$' -and
     $_ -notmatch '\.(spec|test)\.ts$'
 })) {
@@ -117,7 +120,7 @@ if (Test-Path -LiteralPath $frontendContractPath) {
     }
 }
 
-$changedTypeNames = @($diff.changedPaths | Where-Object { $_ -match '\.(cs|ts)$' } | ForEach-Object {
+$changedTypeNames = @($effectivePaths | Where-Object { $_ -match '\.(cs|ts)$' } | ForEach-Object {
     $changedSourcePath = Join-Path $repositoryRoot $_
     if (Test-Path -LiteralPath $changedSourcePath -PathType Leaf) {
         $sourceText = [IO.File]::ReadAllText($changedSourcePath)
@@ -127,7 +130,10 @@ $changedTypeNames = @($diff.changedPaths | Where-Object { $_ -match '\.(cs|ts)$'
                 '(?m)^(?:export\s+)?const\s+([A-Za-z_$][\w$]*)'
             )
         } else {
-            @('(?m)^\s*(?:public\s+|internal\s+|protected\s+|private\s+|sealed\s+|abstract\s+|static\s+|partial\s+)*(?:class|interface|record|struct|enum)\s+([A-Za-z_][\w]*)')
+            @(
+                '(?m)^\s*(?:public\s+|internal\s+|protected\s+|private\s+|sealed\s+|abstract\s+|static\s+|partial\s+)*(?:class|interface|record|struct|enum)\s+([A-Za-z_][\w]*)'
+                '(?m)^\s*(?:public\s+|internal\s+|protected\s+|private\s+)(?:static\s+|virtual\s+|override\s+|abstract\s+|async\s+)*(?:[A-Za-z_][\w.<>?\[\],]*\s+)+([A-Za-z_][\w]*)\s*\('
+            )
         }
         foreach ($pattern in $patterns) {
             foreach ($match in [regex]::Matches($sourceText, $pattern)) {
@@ -184,6 +190,31 @@ if ($changedTypeNames.Count -gt 0) {
         }
     }
 }
+if (-not [string]::IsNullOrWhiteSpace($Intent) -and $Intent -match '(?i)idempoten|duplicate|retry|replay|deduplic') {
+    $behaviorAffinity = @($effectivePaths | ForEach-Object {
+        [regex]::Matches(([string]$_).ToLowerInvariant(), '[a-z0-9]+') | ForEach-Object Value
+    } | Where-Object { $_.Length -ge 5 -and $_ -notin @('fooddiary', 'application', 'infrastructure', 'presentation', 'services') } | Sort-Object -Unique)
+    foreach ($testRoot in @('tests', 'MailRelay/tests', 'MailInbox/tests')) {
+        $absoluteTestRoot = Join-Path $repositoryRoot $testRoot
+        if (-not (Test-Path -LiteralPath $absoluteTestRoot -PathType Container)) { continue }
+        foreach ($testFile in Get-ChildItem -LiteralPath $absoluteTestRoot -Recurse -File -Filter '*.cs' -ErrorAction SilentlyContinue) {
+            $relative = $testFile.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
+            $content = [IO.File]::ReadAllText($testFile.FullName)
+            if ($content -notmatch '(?i)idempoten|duplicate|retry|replay|deduplic') { continue }
+            if ($behaviorAffinity.Count -eq 0 -or @($behaviorAffinity | Where-Object { $relative.ToLowerInvariant().Contains($_) }).Count -gt 0) {
+                $null = $behavioralIntentTests.Add($relative)
+            }
+        }
+    }
+}
+foreach ($directTest in @($directTests)) {
+    $directory = Split-Path -Parent (Join-Path $repositoryRoot $directTest)
+    if (-not (Test-Path -LiteralPath $directory -PathType Container)) { continue }
+    foreach ($neighbor in Get-ChildItem -LiteralPath $directory -File -ErrorAction SilentlyContinue | Where-Object { $_.Extension -eq '.cs' -or $_.Name -match '\.(?:spec|test)\.ts$' } | Select-Object -First 4) {
+        $relative = $neighbor.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
+        if ($relative -cne $directTest) { $null = $neighborTests.Add($relative) }
+    }
+}
 foreach ($path in @($directTests | Sort-Object)) { $null = $discoveredTests.Add($path) }
 foreach ($path in @($diff.focusedTests)) { $null = $discoveredTests.Add($path) }
 
@@ -215,6 +246,8 @@ $affineDirectTests = @($directTests | Where-Object {
         @($changedFrontendFeatureRoots | Where-Object { $testPath.StartsWith("$_/", [StringComparison]::OrdinalIgnoreCase) }).Count -gt 0
 } | Sort-Object)
 Add-RankedTests $affineDirectTests 90 'references-changed-symbol-in-feature-boundary'
+Add-RankedTests @($behavioralIntentTests | Sort-Object) 85 'behavioral-intent-and-scope-affinity'
+Add-RankedTests @($neighborTests | Sort-Object) 70 'neighboring-test-class'
 $scopeAffinityTokens = @($effectivePaths | ForEach-Object {
     [regex]::Matches(([string]$_).ToLowerInvariant(), '[a-z0-9]+') | ForEach-Object Value
 } | Where-Object { $_.Length -ge 5 -and $_ -notin @('fooddiary', 'application', 'client', 'features', 'tests', 'integration') } | Sort-Object -Unique)
@@ -231,6 +264,34 @@ function Add-Scenario {
     if (@($scenarios | Where-Object id -eq $Id).Count -eq 0) {
         $scenarios.Add([pscustomobject]@{ id = $Id; description = $Description; evidence = $Evidence })
     }
+}
+
+$fixedParentPattern = 'Join-Path\s+\$PSScriptRoot\s+[''\"](?:\.\.[\\/])+\.\.'
+$fixedParentTriggered = -not [string]::IsNullOrWhiteSpace($Intent) -and $Intent -match '(?i)repository root|repo root|parent traversal|fixed.*\.\.'
+if (-not $fixedParentTriggered) {
+    foreach ($path in @($effectivePaths | Where-Object { $_ -match '\.ps1$' })) {
+        $absolute = Join-Path $repositoryRoot $path
+        if ((Test-Path -LiteralPath $absolute -PathType Leaf) -and [IO.File]::ReadAllText($absolute) -match $fixedParentPattern) {
+            $fixedParentTriggered = $true
+            break
+        }
+    }
+}
+if ($fixedParentTriggered) {
+    foreach ($candidate in Get-ChildItem -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools') -File -Filter '*.ps1') {
+        $lineNumber = 0
+        foreach ($line in Get-Content -LiteralPath $candidate.FullName) {
+            $lineNumber++
+            if ($line -notmatch $fixedParentPattern) { continue }
+            $repositoryAntipatterns.Add([pscustomobject]@{
+                id = 'fixed-parent-repository-root'
+                path = $candidate.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
+                line = $lineNumber
+                evidence = $line.Trim()
+            })
+        }
+    }
+    Add-Scenario 'repository-root-resolution-antipattern' 'Review every fixed-depth parent traversal in the affected tool family and replace brittle root discovery with a verified resolver.' 'Repository antipattern matches plus focused Wiki smoke'
 }
 
 if ('Backend' -in $scopes) {
@@ -525,7 +586,11 @@ $result = [pscustomobject]@{
     }
     scenarios = @($scenarios)
     reviewObligations = @($policy.reviewObligations)
-    warnings = @($(if ($NoBaseline) { 'API compatibility baseline unavailable; provide baseRevision to enable compatibility checks.' }))
+    repositoryAntipatterns = @($repositoryAntipatterns)
+    warnings = @(
+        $(if ($NoBaseline) { 'API compatibility baseline unavailable; provide baseRevision to enable compatibility checks.' })
+        $(if ($repositoryAntipatterns.Count -gt 1) { "Repeated repository antipattern found in $($repositoryAntipatterns.Count) locations; review all matches, not only the changed file." })
+    )
 }
 
 $resultOutput = if ($Compact) {
@@ -537,6 +602,7 @@ $resultOutput = if ($Compact) {
         focusedTests = $result.focusedTestDetails
         commands = $result.commands
         scenarios = @($result.scenarios | Select-Object id, description)
+        repositoryAntipatterns = $result.repositoryAntipatterns
         reviewObligationIds = @($result.reviewObligations | ForEach-Object { if ($_.PSObject.Properties['id']) { $_.id } } | Where-Object { $_ })
         warnings = $result.warnings
     }
@@ -569,3 +635,8 @@ foreach ($priority in @('required', 'recommended', 'full-regression', 'contextua
 Write-Host ''
 Write-Host 'Scenarios:'
 foreach ($scenario in $result.scenarios) { Write-Host " - $($scenario.id): $($scenario.description) Evidence: $($scenario.evidence)." }
+if (@($result.repositoryAntipatterns).Count -gt 0) {
+    Write-Host ''
+    Write-Host 'Related repository antipatterns:'
+    foreach ($match in $result.repositoryAntipatterns) { Write-Host " - $($match.id): $($match.path):$($match.line)" }
+}

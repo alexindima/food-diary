@@ -37,9 +37,41 @@ if ($combinedAdaptiveGroups -notcontains 'adaptive-evals' -or
 
 $parallelRunner = Join-Path $PSScriptRoot 'Invoke-LlmWikiParallelSmoke.ps1'
 $parallelRunnerText = Get-Content -LiteralPath $parallelRunner -Raw
+$plannerText = Get-Content -LiteralPath $planner -Raw
+$repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$catalog = Import-PowerShellDataFile -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/policies/affected-smoke-catalog.psd1')
+if ($plannerText -match 'elseif \(\$path -match ''\^\\\.llm-wiki') {
+    throw 'Affected-smoke routing regressed to an imperative regex chain instead of the declarative catalog.'
+}
+$unmappedTools = @(
+    & git -C $repositoryRoot ls-files '.llm-wiki/tools/*' |
+        Where-Object { $_ -match '\.(?:ps1|mjs)$' } |
+        Where-Object {
+            $toolPath = $_.Replace('\', '/')
+            @($catalog.Groups | Where-Object {
+                @($_.Patterns | Where-Object { $toolPath -match $_ }).Count -gt 0
+            }).Count -eq 0
+        }
+)
+if ($unmappedTools.Count -gt 0) {
+    throw "Affected-smoke catalog leaves Wiki tools without a test group: $($unmappedTools -join ', ')."
+}
+foreach ($catalogGroup in @($catalog.Groups | Where-Object { -not ($_.ContainsKey('Fallback') -and [bool]$_.Fallback) })) {
+    if ($plannerText -notmatch "'$([regex]::Escape([string]$catalogGroup.Id))'\s*\{") {
+        throw "Affected-smoke catalog group '$($catalogGroup.Id)' has no execution handler."
+    }
+}
 if (-not $parallelRunnerText.Contains('Parallel affected smoke aggregate cache hit') -or
     -not $parallelRunnerText.Contains("-Stage 'affected smoke'")) {
     throw 'Parallel smoke does not short-circuit an unchanged complete group set with one aggregate fingerprint.'
+}
+foreach ($observabilityContract in @('Code graph prewarm still running', 'CodeGraphTimeoutSeconds', 'graphPlan.reason', 'Diagnostic log', 'LLM_WIKI_SMOKE_SANDBOX', 'Request-SmokeCancellation', 'polluted the worktree')) {
+    if (-not $parallelRunnerText.Contains($observabilityContract)) {
+        throw "Parallel smoke omitted observability/isolation contract '$observabilityContract'."
+    }
+}
+if ($parallelRunnerText -notmatch "ContainsKey\('RequestedGroup'\).*ChangedPath = @\(\)") {
+    throw 'Forced smoke groups still perform an unnecessary full Git diff before planning.'
 }
 $fullFocusedPlan = & $parallelRunner -AllGroups -Plan -Format Json | ConvertFrom-Json
 if (@($fullFocusedPlan.groups) -contains 'full-tools' -or @($fullFocusedPlan.groups) -contains 'tool-contract') {

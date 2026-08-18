@@ -109,8 +109,14 @@ if ($facadeText -notmatch 'VerifyAfterUpdate' -or $facadeText -notmatch 'Update 
 if ($facadeText -notmatch 'Stale task baseline' -or $facadeText -notmatch '-Action Close') {
     throw 'Facade does not retire stale task baselines with observable age and session context.'
 }
-if ($facadeText -notmatch "'review-affected'" -or $facadeText -notmatch 'The shared rationale was explicitly supplied for the current impact set only') {
-    throw 'Facade does not expose one explicit rationale for the current pending source-impact set.'
+if ($facadeText -notmatch "'review-affected'" -or $facadeText -notmatch 'AllowSharedReviewReason' -or $facadeText -notmatch 'ReviewAreaReason') {
+    throw 'Facade does not group affected reviews by area or require explicit permission for a cross-area rationale.'
+}
+if ($facadeText -match '\$area\s*=\s*Get-ReviewArea') {
+    throw 'review-affected reuses the validated facade -Area parameter as a local review-area variable.'
+}
+if ($facadeText -match "developer\|workflow'\) \{ return 'quality-workflow'") {
+    throw 'review-affected classifies every workflow page as quality and makes the documentation area unreachable.'
 }
 if ($facadeText -notmatch "ValidateSet\('All', 'Backend', 'Frontend'\)" -or $verifyBody -notmatch 'Area = \$Area') {
     throw 'Wiki verify does not expose independently diagnosable Backend and Frontend areas.'

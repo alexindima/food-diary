@@ -4,6 +4,7 @@ param()
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 $canonicalPath = Join-Path $wikiRoot 'knowledge/memories.json'
 $canonicalHash = (Get-FileHash -LiteralPath $canonicalPath -Algorithm SHA256).Hash
 $canonicalRegistry = Get-Content -LiteralPath $canonicalPath -Raw | ConvertFrom-Json
@@ -12,7 +13,7 @@ if ($smokeEntries.Count -gt 0) {
     throw "Canonical durable-memory registry contains $($smokeEntries.Count) smoke test artifact(s)."
 }
 
-$sandboxDirectory = Join-Path $repositoryRoot '.artifacts/llm-wiki/memory-isolation-smoke'
+$sandboxDirectory = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'memory-isolation'
 $sandboxPath = Join-Path $sandboxDirectory 'memories.json'
 $previousOverride = $env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH
 function Get-TestEventHash([object]$Event) {

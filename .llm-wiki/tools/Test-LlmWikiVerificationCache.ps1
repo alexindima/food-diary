@@ -4,7 +4,8 @@ param()
 $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
-$fixtureRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/verification-cache-fixture'
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'verification-cache'
 
 function Assert-Cache([bool]$Condition, [string]$Message) { if (-not $Condition) { throw $Message } }
 
@@ -18,8 +19,6 @@ Assert-Cache ($verificationCacheText -match "rev-parse', 'HEAD'" -and $verificat
     $verificationCacheText -match 'ChangedPath') 'Verification cache fingerprint omits repository, metadata, environment, or scope inputs.'
 
 try {
-    if (Test-Path -LiteralPath $fixtureRoot) { Remove-Item -LiteralPath $fixtureRoot -Recurse -Force }
-    New-Item -ItemType Directory -Path $fixtureRoot -Force | Out-Null
     & git -C $fixtureRoot init --quiet
     [IO.File]::WriteAllText((Join-Path $fixtureRoot 'source.txt'), 'baseline')
     & git -C $fixtureRoot add source.txt

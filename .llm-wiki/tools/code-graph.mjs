@@ -31,7 +31,7 @@ function withBuildLock(callback) {
         let owner;
         try { owner = JSON.parse(readFileSync(ownerPath, 'utf8')); } catch { owner = undefined; }
         const ownerAlive = Number.isInteger(owner?.pid) && isProcessAlive(owner.pid);
-        const staleWithoutLiveOwner = !ownerAlive && Date.now() - statSync(lockPath).mtimeMs > staleMs;
+        const staleWithoutLiveOwner = !ownerAlive && (Number.isInteger(owner?.pid) || Date.now() - statSync(lockPath).mtimeMs > staleMs);
         if (staleWithoutLiveOwner) {
           rmSync(lockPath, { recursive: true, force: true });
           continue;
@@ -412,6 +412,39 @@ function build(database, force = false) {
   };
 }
 
+function buildPlan(database, force = false) {
+  const storedParserVersion = database.prepare("SELECT value FROM metadata WHERE key='parser_version'").get()?.value;
+  const parserChanged = storedParserVersion !== parserVersion;
+  const knownPaths = new Set(gitPaths().filter((path) => existsSync(resolve(repositoryRoot, path))));
+  const existing = new Map(database.prepare('SELECT path, size, mtime_ms FROM files').all().map((item) => [item.path, item]));
+  let candidateFiles = 0;
+  for (const path of knownPaths) {
+    const prior = existing.get(path);
+    const stat = statSync(resolve(repositoryRoot, path));
+    if (force || parserChanged || !prior || prior.size !== stat.size || Math.abs(prior.mtime_ms - stat.mtimeMs) >= 0.001) candidateFiles += 1;
+  }
+  const removedFiles = [...existing.keys()].filter((path) => !knownPaths.has(path)).length;
+  const reason = force
+    ? 'forced rebuild'
+    : parserChanged
+      ? `parser version changed (${storedParserVersion ?? 'missing'} -> ${parserVersion})`
+      : existing.size === 0
+        ? 'code graph database is empty'
+        : candidateFiles > 0 || removedFiles > 0
+          ? `${candidateFiles} changed/new and ${removedFiles} removed graph input(s)`
+          : 'cache valid; metadata refresh only';
+  return {
+    action: 'build-plan',
+    databasePath: database.filename ?? defaultDatabasePath,
+    cacheMiss: force || parserChanged || existing.size === 0 || candidateFiles > 0 || removedFiles > 0,
+    reason,
+    candidateFiles,
+    removedFiles,
+    totalFiles: knownPaths.size,
+    estimatedSeconds: Math.max(2, Math.round((candidateFiles * 0.12 + (parserChanged ? 20 : 0)) * 10) / 10),
+  };
+}
+
 function queryDocuments(database, category, query, limit) {
   if (category === 'tests') {
     const terms = `%${query}%`;
@@ -657,6 +690,7 @@ try {
     database = openDatabase(databasePath);
   }
   if (action === 'build') { /* result was produced while holding the build lock */ }
+  else if (action === 'build-plan') result = buildPlan(database, options.force === 'true');
   else if (action === 'symbol') result = { query: options.query ?? '', symbols: findSymbols(database, options.query ?? '', Number(options.limit ?? 20)) };
   else if (action === 'consumers') result = consumers(database, options.query ?? '', Number(options.limit ?? 50));
   else if (action === 'impact') result = impact(database, (options.path ?? '').split(';').filter(Boolean), Number(options.limit ?? 100));

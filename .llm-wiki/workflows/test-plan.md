@@ -53,10 +53,17 @@ changed behavior.
 
 Focused tests are ranked by evidence: explicitly changed tests first, then a
 changed production file's sibling spec, specs belonging to direct selector
-consumers, tests that directly reference changed symbols, and finally broad
-downstream context. JSON includes
+consumers, tests that directly reference changed types or methods, behavior-
+specific tests selected from intent such as idempotency/retry/replay, neighboring
+test classes, and finally broad downstream context. Planned paths receive the
+same symbol analysis as already changed paths. JSON includes
 `focusedTestDetails` with the rank reason. Use `-Compact` to retain actionable
 tests, commands, and scenarios while reducing context volume.
+
+When a changed or planned Wiki tool uses a known repository antipattern, the
+planner searches the whole tool family and returns every match in
+`repositoryAntipatterns`. This prevents a fix from stopping after the first
+duplicate fixed-depth repository-root traversal.
 
 Each focused test also carries an execution priority: `required` for changed
 tests and direct siblings, `recommended` for direct component consumers and

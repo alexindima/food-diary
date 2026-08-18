@@ -5,8 +5,9 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
-$fixtureRootRelative = ".artifacts/llm-wiki/tests/contract-reference-$([Guid]::NewGuid().ToString('N'))"
-$fixtureRoot = Join-Path $repositoryRoot $fixtureRootRelative
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'contract-reference'
+$fixtureRootRelative = $fixtureRoot.Substring($repositoryRoot.Length + 1).Replace('\', '/')
 $definitionRelative = "$fixtureRootRelative/Definition.cs"
 $consumerRelative = "$fixtureRootRelative/Consumer.cs"
 $definitionPath = Join-Path $repositoryRoot $definitionRelative

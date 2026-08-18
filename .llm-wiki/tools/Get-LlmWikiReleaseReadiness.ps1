@@ -96,8 +96,17 @@ if (-not $apiScope) {
     } else {
         @()
     }
+    $behavioralRestrictions = if ($api.PSObject.Properties['behavioralRestrictions']) {
+        @($api.behavioralRestrictions)
+    } elseif ($api.PSObject.Properties['changes']) {
+        @($api.changes | Where-Object severity -eq 'behavioral-restriction')
+    } else {
+        @()
+    }
     if ($api.breakingCount -gt 0) {
         Add-Dimension 'api-compatibility' 15 'fail' "$($api.breakingCount) breaking API change(s) detected." $breakingChanges
+    } elseif ($behavioralRestrictions.Count -gt 0) {
+        Add-Dimension 'api-compatibility' 15 'warning' "$($behavioralRestrictions.Count) behavioral API restriction(s) require explicit review; no schema-breaking change was detected." $behavioralRestrictions
     } else {
         Add-Dimension 'api-compatibility' 15 'pass' 'No breaking API snapshot change was detected.'
     }

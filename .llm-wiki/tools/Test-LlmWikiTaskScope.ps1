@@ -3,7 +3,8 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$workspacePath = ".artifacts/llm-wiki/tasks/task-scope-$([Guid]::NewGuid().ToString('N'))"
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$workspacePath = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'task-scope'
 $absoluteWorkspacePath = Join-Path $repositoryRoot $workspacePath
 $plannedPaths = @('FoodDiary.Application/Users', 'tests/FoodDiary.Application.Tests/Users')
 $changedPaths = @(
