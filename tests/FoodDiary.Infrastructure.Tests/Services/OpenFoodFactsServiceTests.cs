@@ -4,6 +4,7 @@ using System.Net;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
@@ -264,6 +265,20 @@ public sealed class OpenFoodFactsServiceTests {
     }
 
     [Fact]
+    public async Task SearchAsync_WhenTransportFails_DoesNotLogRawQuery() {
+        string query = $"private-food-query-{Guid.NewGuid():N}";
+        var logger = new RecordingLogger<OpenFoodFactsService>();
+        OpenFoodFactsService service = CreateService(
+            new ThrowingHttpMessageHandler(new HttpRequestException("network error")),
+            logger);
+
+        await service.SearchAsync(query);
+
+        Assert.DoesNotContain(logger.Messages, message => message.Contains(query, StringComparison.Ordinal));
+        Assert.Contains(logger.Messages, message => message.Contains($"QueryLength={query.Length}", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task SearchAsync_WhenTransportFailsWithStaleCache_ReturnsCachedResult() {
         string query = $"stale-{Guid.NewGuid():N}";
         const string json = """
@@ -353,6 +368,25 @@ public sealed class OpenFoodFactsServiceTests {
     }
 
     [Fact]
+    public async Task SearchAsync_WhenConcurrentCacheMissesAreIdentical_SendsOneProviderRequest() {
+        const string json = """{"products":[{"code":"111","product_name":"Milk","nutriments":{}}]}""";
+        var handler = new BlockingCountingHttpMessageHandler(json);
+        OpenFoodFactsService service = CreateService(handler);
+        string query = $"concurrent-{Guid.NewGuid():N}";
+
+        Task<IReadOnlyList<OpenFoodFactsProductModel>> first = service.SearchAsync(query);
+        await handler.RequestStarted.Task;
+        Task<IReadOnlyList<OpenFoodFactsProductModel>> second = service.SearchAsync(query);
+        handler.ReleaseResponse();
+        await Task.WhenAll(first, second);
+
+        Assert.Multiple(
+            () => Assert.Equal(1, handler.RequestCount),
+            () => Assert.Single(first.Result),
+            () => Assert.Single(second.Result));
+    }
+
+    [Fact]
     public async Task SearchAsync_ClampsLimitBeforeCallingApi() {
         var handler = new RecordingHttpMessageHandler("""{"products": []}""");
         OpenFoodFactsService service = CreateService(handler);
@@ -383,6 +417,34 @@ public sealed class OpenFoodFactsServiceTests {
         }
 
         Assert.InRange(OpenFoodFactsService.SearchCacheEntryCount, 1, OpenFoodFactsService.MaxSearchCacheEntries);
+        Assert.InRange(OpenFoodFactsService.SearchCacheSizeBytes, 0, OpenFoodFactsService.MaxSearchCacheSizeBytes);
+    }
+
+    [Fact]
+    public async Task SearchAsync_WhenCacheByteBudgetIsExceeded_EvictsOldEntries() {
+        string largeProductName = new('x', 700_000);
+        string json = System.Text.Json.JsonSerializer.Serialize(new {
+            products = new[] {
+                new {
+                    code = "111",
+                    product_name = largeProductName,
+                    nutriments = new { },
+                },
+            },
+        });
+        OpenFoodFactsService service = CreateServiceWithTimeProvider(
+            new SuccessHttpMessageHandler(json),
+            new IncrementingTimeProvider());
+        string queryPrefix = Guid.NewGuid().ToString("N");
+        const int requestedEntryCount = 25;
+
+        for (int index = 0; index < requestedEntryCount; index++) {
+            await service.SearchAsync(string.Create(CultureInfo.InvariantCulture, $"{queryPrefix}-{index}"));
+        }
+
+        Assert.Multiple(
+            () => Assert.InRange(OpenFoodFactsService.SearchCacheSizeBytes, 1, OpenFoodFactsService.MaxSearchCacheSizeBytes),
+            () => Assert.True(OpenFoodFactsService.SearchCacheEntryCount < requestedEntryCount));
     }
 
     [Theory]
@@ -427,12 +489,25 @@ public sealed class OpenFoodFactsServiceTests {
         Assert.Equal("http_error", outcome);
     }
 
-    private static OpenFoodFactsService CreateService(HttpMessageHandler handler) {
+    private static OpenFoodFactsService CreateService(
+        HttpMessageHandler handler,
+        ILogger<OpenFoodFactsService>? logger = null) {
         var httpClient = new HttpClient(handler);
         return new OpenFoodFactsService(
             httpClient,
             Microsoft.Extensions.Options.Options.Create(new OpenFoodFactsApiOptions()),
             FixedTime,
+            logger ?? NullLogger<OpenFoodFactsService>.Instance);
+    }
+
+    private static OpenFoodFactsService CreateServiceWithTimeProvider(
+        HttpMessageHandler handler,
+        TimeProvider timeProvider) {
+        var httpClient = new HttpClient(handler);
+        return new OpenFoodFactsService(
+            httpClient,
+            Microsoft.Extensions.Options.Options.Create(new OpenFoodFactsApiOptions()),
+            timeProvider,
             NullLogger<OpenFoodFactsService>.Instance);
     }
 
@@ -445,7 +520,8 @@ public sealed class OpenFoodFactsServiceTests {
         object cached = cache.GetType().GetMethod("get_Item")!.Invoke(cache, [cacheKey])!;
         Type cachedType = cached.GetType();
         object products = cachedType.GetProperty("Products")!.GetValue(cached)!;
-        object stale = Activator.CreateInstance(cachedType, FixedNow - age, products)!;
+        object sizeBytes = cachedType.GetProperty("SizeBytes")!.GetValue(cached)!;
+        object stale = Activator.CreateInstance(cachedType, FixedNow - age, products, sizeBytes)!;
         cache.GetType().GetMethod("set_Item")!.Invoke(cache, [cacheKey, stale]);
     }
 
@@ -462,6 +538,14 @@ public sealed class OpenFoodFactsServiceTests {
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider : TimeProvider {
         public override DateTimeOffset GetUtcNow() => FixedNow;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class IncrementingTimeProvider : TimeProvider {
+        private long _offsetTicks;
+
+        public override DateTimeOffset GetUtcNow() =>
+            FixedNow.AddTicks(Interlocked.Increment(ref _offsetTicks));
     }
 
     private static MeterListener CreateExternalProviderListener(
@@ -542,6 +626,43 @@ public sealed class OpenFoodFactsServiceTests {
                 Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
             });
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class BlockingCountingHttpMessageHandler(string json) : HttpMessageHandler {
+        private readonly TaskCompletionSource _release = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public TaskCompletionSource RequestStarted { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public int RequestCount { get; private set; }
+
+        public void ReleaseResponse() => _release.TrySetResult();
+
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken) {
+            RequestCount++;
+            RequestStarted.TrySetResult();
+            await _release.Task.WaitAsync(cancellationToken);
+            return new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
+            };
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingLogger<T> : ILogger<T> {
+        public List<string> Messages { get; } = [];
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter) =>
+            Messages.Add(formatter(state, exception));
     }
 
     [ExcludeFromCodeCoverage]

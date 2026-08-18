@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Results;
 
 namespace FoodDiary.Application.Abstractions.Wearables.Common;
 
@@ -16,7 +17,7 @@ public interface IWearableClient {
         string refreshToken,
         CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyList<WearableDataPoint>> FetchDailyDataAsync(
+    Task<Result<IReadOnlyList<WearableDataPoint>>> FetchDailyDataAsync(
         string accessToken,
         DateTime date,
         CancellationToken cancellationToken = default);

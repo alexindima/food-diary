@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 
 namespace FoodDiary.Application.Fasting.Queries.GetFastingHistory;
 
@@ -14,9 +15,9 @@ public sealed class GetFastingHistoryQueryValidator : AbstractValidator<GetFasti
             .WithMessage("Unable to identify user");
 
         RuleFor(x => x.Page)
-            .GreaterThan(0)
+            .InclusiveBetween(PaginationPolicy.DefaultPage, PaginationPolicy.MaxPageNumber)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("Page must be greater than zero.");
+            .WithMessage($"Page must be between {PaginationPolicy.DefaultPage} and {PaginationPolicy.MaxPageNumber}.");
 
         RuleFor(x => x.Limit)
             .InclusiveBetween(1, 50)

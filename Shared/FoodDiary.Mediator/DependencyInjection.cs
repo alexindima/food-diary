@@ -35,19 +35,40 @@ public static class DependencyInjection {
             services.TryAddEnumerable(ServiceDescriptor.Transient(typeof(IPipelineBehavior<,>), behaviorType));
         }
 
+        ValidateSingleHandlerRegistrations(services);
+
         return services;
     }
 
     private static void RegisterMediatorHandlers(this IServiceCollection services, Assembly assembly) {
         Type[] implementationTypes = [.. assembly
             .GetTypes()
-            .Where(static type => type is { IsAbstract: false, IsInterface: false })];
+            .Where(static type => type is { IsAbstract: false, IsInterface: false })
+            .OrderBy(static type => type.FullName, StringComparer.Ordinal)];
 
         foreach (Type implementationType in implementationTypes) {
-            foreach (Type serviceType in implementationType.GetInterfaces().Where(IsMediatorHandler)) {
+            foreach (Type serviceType in implementationType
+                .GetInterfaces()
+                .Where(IsMediatorHandler)
+                .OrderBy(static type => type.FullName, StringComparer.Ordinal)) {
                 services.TryAddEnumerable(ServiceDescriptor.Transient(serviceType, implementationType));
             }
         }
+    }
+
+    private static void ValidateSingleHandlerRegistrations(IServiceCollection services) {
+        IGrouping<Type, ServiceDescriptor>? duplicateRegistration = services
+            .Where(static descriptor => !descriptor.IsKeyedService)
+            .Where(static descriptor => IsSingleHandler(descriptor.ServiceType))
+            .GroupBy(static descriptor => descriptor.ServiceType)
+            .FirstOrDefault(static group => group.Skip(1).Any());
+
+        if (duplicateRegistration is null) {
+            return;
+        }
+
+        throw new InvalidOperationException(
+            $"Mediator handler contract {duplicateRegistration.Key} has multiple registrations.");
     }
 
     private static bool IsMediatorHandler(Type interfaceType) {
@@ -58,6 +79,16 @@ public static class DependencyInjection {
         Type genericDefinition = interfaceType.GetGenericTypeDefinition();
         return genericDefinition == typeof(IRequestHandler<,>) ||
             genericDefinition == typeof(INotificationHandler<>) ||
+            genericDefinition == typeof(IStreamRequestHandler<,>);
+    }
+
+    private static bool IsSingleHandler(Type serviceType) {
+        if (!serviceType.IsGenericType) {
+            return false;
+        }
+
+        Type genericDefinition = serviceType.GetGenericTypeDefinition();
+        return genericDefinition == typeof(IRequestHandler<,>) ||
             genericDefinition == typeof(IStreamRequestHandler<,>);
     }
 }

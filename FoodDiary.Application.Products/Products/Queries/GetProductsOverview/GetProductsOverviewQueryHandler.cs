@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
@@ -95,8 +96,8 @@ public sealed class GetProductsOverviewQueryHandler(
 
         return new ProductOverviewOptions(
             userId,
-            Math.Max(query.Page, 1),
-            Math.Max(query.Limit, 1),
+            PaginationPolicy.NormalizePage(query.Page),
+            PaginationPolicy.NormalizePageSize(query.Limit, defaultPageSize: 1),
             Math.Clamp(query.RecentLimit, 1, 50),
             Math.Clamp(query.FavoriteLimit, 1, 50),
             productTypes is { Length: > 0 } ? productTypes : null,

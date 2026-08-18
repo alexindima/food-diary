@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 
 namespace FoodDiary.Application.Products.Products.Queries.GetProducts;
 
@@ -14,13 +15,13 @@ public sealed class GetProductsQueryValidator : AbstractValidator<GetProductsQue
             .WithMessage("Unable to identify user");
 
         RuleFor(x => x.Page)
-            .GreaterThan(0)
+            .InclusiveBetween(PaginationPolicy.DefaultPage, PaginationPolicy.MaxPageNumber)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("page must be greater than 0");
+            .WithMessage($"page must be between {PaginationPolicy.DefaultPage} and {PaginationPolicy.MaxPageNumber}");
 
         RuleFor(x => x.Limit)
-            .GreaterThan(0)
+            .InclusiveBetween(1, PaginationPolicy.MaxPageSize)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("limit must be greater than 0");
+            .WithMessage($"limit must be between 1 and {PaginationPolicy.MaxPageSize}");
     }
 }

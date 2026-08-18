@@ -19,8 +19,8 @@ public sealed class AdminAuditReadService(
         int limit,
         string? search,
         CancellationToken cancellationToken) {
-        int normalizedPage = page <= 0 ? 1 : page;
-        int normalizedLimit = limit is > 0 and <= 100 ? limit : 20;
+        int normalizedPage = PaginationPolicy.NormalizePage(page);
+        int normalizedLimit = PaginationPolicy.NormalizePageSizeOrDefault(limit);
         (IReadOnlyList<AdminImpersonationSessionReadModel> items, int totalItems) =
             await impersonationSessionRepository.GetPagedAsync(normalizedPage, normalizedLimit, search, cancellationToken).ConfigureAwait(false);
         int totalPages = (int)Math.Ceiling(totalItems / (double)normalizedLimit);

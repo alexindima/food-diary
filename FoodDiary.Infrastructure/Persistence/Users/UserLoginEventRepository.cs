@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -19,8 +20,8 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
         Guid? userId,
         string? search,
         CancellationToken cancellationToken = default) {
-        int pageNumber = Math.Max(page, 1);
-        int pageSize = Math.Clamp(limit, 1, 100);
+        int pageNumber = PaginationPolicy.NormalizePage(page);
+        int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
 
         var query =
             from loginEvent in context.UserLoginEvents.AsNoTracking()

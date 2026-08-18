@@ -74,6 +74,13 @@ public class WeightEntriesValidatorTests {
     }
 
     [Fact]
+    public async Task GetWeightEntries_WithLimitAboveSupportedBound_HasError() {
+        TestValidationResult<GetWeightEntriesQuery> result = await new GetWeightEntriesQueryValidator().TestValidateAsync(
+            new GetWeightEntriesQuery(Guid.NewGuid(), DateFrom: null, DateTo: null, 1_001, Descending: false));
+        result.ShouldHaveValidationErrorFor(c => c.Limit);
+    }
+
+    [Fact]
     public async Task GetWeightEntries_WithInvertedDates_HasError() {
         TestValidationResult<GetWeightEntriesQuery> result = await new GetWeightEntriesQueryValidator().TestValidateAsync(
             new GetWeightEntriesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-7), Limit: null, Descending: false));

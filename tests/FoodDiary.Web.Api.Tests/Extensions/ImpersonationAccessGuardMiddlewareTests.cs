@@ -5,6 +5,7 @@ using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Web.Api.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.Extensions.Logging;
@@ -82,7 +83,107 @@ public sealed class ImpersonationAccessGuardMiddlewareTests {
         Assert.True(nextCalled);
     }
 
-    private static DefaultHttpContext CreateContext(bool hasProtectedEndpoint, bool isImpersonated) {
+    [Theory]
+    [InlineData("POST")]
+    [InlineData("PUT")]
+    [InlineData("PATCH")]
+    [InlineData("DELETE")]
+    [InlineData("PROPFIND")]
+    public async Task InvokeAsync_WithAuthorizedUnsafeEndpointAndImpersonatedUser_ReturnsForbidden(string method) {
+        DefaultHttpContext context = CreateContext(
+            hasProtectedEndpoint: false,
+            isImpersonated: true,
+            endpointMetadata: [new AuthorizeAttribute()]);
+        context.Request.Method = method;
+        bool nextCalled = false;
+        var middleware = new ImpersonationAccessGuardMiddleware(_ => {
+            nextCalled = true;
+            return Task.CompletedTask;
+        }, NullLogger<ImpersonationAccessGuardMiddleware>.Instance);
+
+        await middleware.InvokeAsync(context);
+
+        Assert.Multiple(
+            () => Assert.False(nextCalled),
+            () => Assert.Equal(StatusCodes.Status403Forbidden, context.Response.StatusCode));
+    }
+
+    [Fact]
+    public async Task InvokeAsync_WithAuthorizedUnsafeEndpointAndRegularUser_CallsNext() {
+        DefaultHttpContext context = CreateContext(
+            hasProtectedEndpoint: false,
+            isImpersonated: false,
+            endpointMetadata: [new AuthorizeAttribute()]);
+        bool nextCalled = false;
+        var middleware = new ImpersonationAccessGuardMiddleware(_ => {
+            nextCalled = true;
+            return Task.CompletedTask;
+        }, NullLogger<ImpersonationAccessGuardMiddleware>.Instance);
+
+        await middleware.InvokeAsync(context);
+
+        Assert.True(nextCalled);
+    }
+
+    [Theory]
+    [InlineData("GET")]
+    [InlineData("HEAD")]
+    [InlineData("OPTIONS")]
+    [InlineData("TRACE")]
+    public async Task InvokeAsync_WithAuthorizedSafeEndpointAndImpersonatedUser_CallsNext(string method) {
+        DefaultHttpContext context = CreateContext(
+            hasProtectedEndpoint: false,
+            isImpersonated: true,
+            endpointMetadata: [new AuthorizeAttribute()]);
+        context.Request.Method = method;
+        bool nextCalled = false;
+        var middleware = new ImpersonationAccessGuardMiddleware(_ => {
+            nextCalled = true;
+            return Task.CompletedTask;
+        }, NullLogger<ImpersonationAccessGuardMiddleware>.Instance);
+
+        await middleware.InvokeAsync(context);
+
+        Assert.True(nextCalled);
+    }
+
+    [Theory]
+    [InlineData(typeof(AllowAnonymousAttribute))]
+    [InlineData(typeof(AllowImpersonatedAccessAttribute))]
+    public async Task InvokeAsync_WithExplicitlyAllowedUnsafeEndpointAndImpersonatedUser_CallsNext(Type metadataType) {
+        object metadata = Activator.CreateInstance(metadataType)!;
+        DefaultHttpContext context = CreateContext(
+            hasProtectedEndpoint: false,
+            isImpersonated: true,
+            endpointMetadata: [new AuthorizeAttribute(), metadata]);
+        bool nextCalled = false;
+        var middleware = new ImpersonationAccessGuardMiddleware(_ => {
+            nextCalled = true;
+            return Task.CompletedTask;
+        }, NullLogger<ImpersonationAccessGuardMiddleware>.Instance);
+
+        await middleware.InvokeAsync(context);
+
+        Assert.True(nextCalled);
+    }
+
+    [Fact]
+    public async Task InvokeAsync_WithExplicitlyProtectedSafeEndpointAndImpersonatedUser_ReturnsForbidden() {
+        DefaultHttpContext context = CreateContext(hasProtectedEndpoint: true, isImpersonated: true);
+        context.Request.Method = HttpMethods.Get;
+        var middleware = new ImpersonationAccessGuardMiddleware(
+            _ => Task.CompletedTask,
+            NullLogger<ImpersonationAccessGuardMiddleware>.Instance);
+
+        await middleware.InvokeAsync(context);
+
+        Assert.Equal(StatusCodes.Status403Forbidden, context.Response.StatusCode);
+    }
+
+    private static DefaultHttpContext CreateContext(
+        bool hasProtectedEndpoint,
+        bool isImpersonated,
+        params object[] endpointMetadata) {
         var context = new DefaultHttpContext {
             Response = {
                 Body = new MemoryStream(),
@@ -104,12 +205,15 @@ public sealed class ImpersonationAccessGuardMiddlewareTests {
 
         context.User = new ClaimsPrincipal(new ClaimsIdentity(claims, "test"));
 
-        if (hasProtectedEndpoint) {
+        if (hasProtectedEndpoint || endpointMetadata.Length > 0) {
+            object[] metadata = hasProtectedEndpoint
+                ? [new BlockImpersonatedAccessAttribute(), .. endpointMetadata]
+                : endpointMetadata;
             context.SetEndpoint(new RouteEndpoint(
                 _ => Task.CompletedTask,
                 RoutePatternFactory.Parse("/api/v1/users/{userId}/password"),
                 order: 0,
-                new EndpointMetadataCollection(new BlockImpersonatedAccessAttribute()),
+                new EndpointMetadataCollection(metadata),
                 "protected"));
         }
 

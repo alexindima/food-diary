@@ -3,6 +3,7 @@ using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminUsers;
 
@@ -11,8 +12,8 @@ public sealed class GetAdminUsersQueryHandler(IAdminUserReadService userReadServ
     public async Task<Result<PagedResponse<AdminUserModel>>> Handle(
         GetAdminUsersQuery query,
         CancellationToken cancellationToken) {
-        int page = query.Page <= 0 ? 1 : query.Page;
-        int limit = query.Limit is > 0 and <= 100 ? query.Limit : 20;
+        int page = PaginationPolicy.NormalizePage(query.Page);
+        int limit = PaginationPolicy.NormalizePageSizeOrDefault(query.Limit);
 
         (IReadOnlyList<AdminUserModel> items, int totalItems) = await userReadService.GetPagedAsync(query.Search, page, limit, query.Status, cancellationToken).ConfigureAwait(false);
         int totalPages = (int)Math.Ceiling(totalItems / (double)limit);

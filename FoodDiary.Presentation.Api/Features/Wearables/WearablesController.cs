@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.Wearables.Requests;
 using FoodDiary.Presentation.Api.Features.Wearables.Responses;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
@@ -22,12 +23,14 @@ public sealed class WearablesController(ISender mediator) : AuthorizedController
 
     [HttpGet("{provider}/auth-url")]
     [ProducesResponseType<WearableAuthUrlHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetAuthUrl([FromCurrentUser] Guid userId, string provider, [FromQuery] string state) =>
         HandleOk(WearableHttpMappings.ToAuthUrlQuery(userId, provider, state),
             static url => new WearableAuthUrlHttpResponse(url));
 
     [HttpPost("{provider}/connect")]
     [ProducesResponseType<WearableConnectionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [BlockImpersonatedAccess]
     [EnableRateLimiting(PresentationPolicyNames.WearableRateLimitPolicyName)]
     public Task<IActionResult> Connect(
@@ -38,6 +41,8 @@ public sealed class WearablesController(ISender mediator) : AuthorizedController
 
     [HttpDelete("{provider}/disconnect")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [BlockImpersonatedAccess]
     public Task<IActionResult> Disconnect(
         [FromCurrentUser] Guid userId,
@@ -46,6 +51,8 @@ public sealed class WearablesController(ISender mediator) : AuthorizedController
 
     [HttpPost("{provider}/sync")]
     [ProducesResponseType<WearableDailySummaryHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [BlockImpersonatedAccess]
     [EnableRateLimiting(PresentationPolicyNames.WearableRateLimitPolicyName)]
     [EnableIdempotency(requireKey: true)]

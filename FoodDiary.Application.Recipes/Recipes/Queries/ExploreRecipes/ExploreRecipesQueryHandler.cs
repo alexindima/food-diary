@@ -16,8 +16,8 @@ public sealed class ExploreRecipesQueryHandler(IRecipeOverviewReadService recipe
     public async Task<Result<PagedResponse<RecipeModel>>> Handle(
         ExploreRecipesQuery query,
         CancellationToken cancellationToken) {
-        int pageNumber = Math.Max(query.Page, 1);
-        int pageSize = Math.Max(query.Limit, 1);
+        int pageNumber = PaginationPolicy.NormalizePage(query.Page);
+        int pageSize = PaginationPolicy.NormalizePageSize(query.Limit, defaultPageSize: 1, maxPageSize: 50);
 
         Result<UserId> currentUserIdResult = ResolveCurrentUserId(query);
         if (currentUserIdResult.IsFailure) {

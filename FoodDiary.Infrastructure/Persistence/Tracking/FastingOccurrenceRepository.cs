@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Abstractions.Fasting.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -145,8 +146,8 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context) : IF
         DateTime? to = null,
         FastingOccurrenceStatus? status = null,
         CancellationToken cancellationToken = default) {
-        int normalizedPage = Math.Max(page, 1);
-        int normalizedLimit = Math.Max(limit, 1);
+        int normalizedPage = PaginationPolicy.NormalizePage(page);
+        int normalizedLimit = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1, maxPageSize: 50);
         IQueryable<FastingOccurrence> query = BuildByUserQuery(userId, from, to, status);
         int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         List<FastingOccurrence> items = await query
@@ -166,8 +167,8 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context) : IF
         DateTime? to = null,
         FastingOccurrenceStatus? status = null,
         CancellationToken cancellationToken = default) {
-        int normalizedPage = Math.Max(page, 1);
-        int normalizedLimit = Math.Max(limit, 1);
+        int normalizedPage = PaginationPolicy.NormalizePage(page);
+        int normalizedLimit = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1, maxPageSize: 50);
         IQueryable<FastingOccurrence> query = BuildByUserQuery(userId, from, to, status);
         int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         List<FastingOccurrenceReadModel> items = await query

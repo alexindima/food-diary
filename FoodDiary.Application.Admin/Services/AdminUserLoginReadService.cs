@@ -4,6 +4,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 
 namespace FoodDiary.Application.Admin.Services;
 
@@ -14,8 +15,8 @@ public sealed class AdminUserLoginReadService(IAuthenticationLoginEventReadServi
         Guid? userId,
         string? search,
         CancellationToken cancellationToken) {
-        int normalizedPage = page <= 0 ? 1 : page;
-        int normalizedLimit = limit is > 0 and <= 100 ? limit : 20;
+        int normalizedPage = PaginationPolicy.NormalizePage(page);
+        int normalizedLimit = PaginationPolicy.NormalizePageSizeOrDefault(limit);
         (IReadOnlyList<UserLoginEventReadModel> items, int totalItems) =
             await readService.GetEventsAsync(normalizedPage, normalizedLimit, userId, search, cancellationToken).ConfigureAwait(false);
         AdminUserLoginEventModel[] models = [.. items.Select(ToModel)];

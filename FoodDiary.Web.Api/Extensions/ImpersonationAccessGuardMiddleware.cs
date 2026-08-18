@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Results;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FoodDiary.Web.Api.Extensions;
 
@@ -12,8 +13,7 @@ public sealed class ImpersonationAccessGuardMiddleware(
     ILogger<ImpersonationAccessGuardMiddleware> logger) {
     public async Task InvokeAsync(HttpContext context) {
         Endpoint? endpoint = context.GetEndpoint();
-        if (endpoint?.Metadata.GetMetadata<BlockImpersonatedAccessAttribute>() is null ||
-            !IsImpersonated(context.User)) {
+        if (!IsImpersonated(context.User) || !MustBlock(context.Request.Method, endpoint)) {
             await next(context).ConfigureAwait(false);
             return;
         }
@@ -36,4 +36,28 @@ public sealed class ImpersonationAccessGuardMiddleware(
         user.HasClaim(claim =>
             string.Equals(claim.Type, JwtImpersonationClaimNames.IsImpersonation, StringComparison.Ordinal) &&
             string.Equals(claim.Value, "true", StringComparison.OrdinalIgnoreCase));
+
+    private static bool MustBlock(string method, Endpoint? endpoint) {
+        if (endpoint is null) {
+            return false;
+        }
+
+        if (endpoint.Metadata.GetMetadata<BlockImpersonatedAccessAttribute>() is not null) {
+            return true;
+        }
+
+        if (IsSafeMethod(method) ||
+            endpoint.Metadata.GetMetadata<IAllowAnonymous>() is not null ||
+            endpoint.Metadata.GetMetadata<AllowImpersonatedAccessAttribute>() is not null) {
+            return false;
+        }
+
+        return endpoint.Metadata.GetOrderedMetadata<IAuthorizeData>().Count > 0;
+    }
+
+    private static bool IsSafeMethod(string method) =>
+        HttpMethods.IsGet(method) ||
+        HttpMethods.IsHead(method) ||
+        HttpMethods.IsOptions(method) ||
+        HttpMethods.IsTrace(method);
 }

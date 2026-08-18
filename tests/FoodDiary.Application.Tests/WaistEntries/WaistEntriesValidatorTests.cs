@@ -74,6 +74,13 @@ public class WaistEntriesValidatorTests {
     }
 
     [Fact]
+    public async Task GetWaistEntries_WithLimitAboveSupportedBound_HasError() {
+        TestValidationResult<GetWaistEntriesQuery> result = await new GetWaistEntriesQueryValidator().TestValidateAsync(
+            new GetWaistEntriesQuery(Guid.NewGuid(), DateFrom: null, DateTo: null, 1_001, Descending: false));
+        result.ShouldHaveValidationErrorFor(c => c.Limit);
+    }
+
+    [Fact]
     public async Task GetWaistEntries_WithInvertedDates_HasError() {
         TestValidationResult<GetWaistEntriesQuery> result = await new GetWaistEntriesQueryValidator().TestValidateAsync(
             new GetWaistEntriesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-7), Limit: null, Descending: false));

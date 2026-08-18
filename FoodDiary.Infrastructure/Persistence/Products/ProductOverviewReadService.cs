@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -18,8 +19,8 @@ internal sealed class ProductOverviewReadService(FoodDiaryDbContext context) : I
         int limit,
         ProductQueryFilters filters,
         CancellationToken cancellationToken = default) {
-        int pageNumber = Math.Max(page, 1);
-        int pageSize = Math.Max(limit, 1);
+        int pageNumber = PaginationPolicy.NormalizePage(page);
+        int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
 
         IQueryable<Product> query = ApplyFilters(CreateBaseQuery(userId, includePublic), filters);
 

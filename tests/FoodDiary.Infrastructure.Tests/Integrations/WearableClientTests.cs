@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Wearables;
+using FoodDiary.Results;
 using Microsoft.Extensions.Logging.Abstractions;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
@@ -38,6 +39,19 @@ public sealed class WearableClientTests {
     [Fact]
     public async Task FitbitExchangeCodeAsync_WhenTokenResponseIsNull_ReturnsNull() {
         FitbitClient client = CreateFitbitClient(new RecordingHttpMessageHandler(_ => JsonResponse("null")));
+
+        WearableTokenResult? result = await client.ExchangeCodeAsync("code", CancellationToken.None);
+
+        Assert.Null(result);
+    }
+
+    [Theory]
+    [InlineData("{\"access_token\":\"\",\"refresh_token\":\"refresh\",\"user_id\":\"fitbit-user\",\"expires_in\":3600}")]
+    [InlineData("{\"access_token\":\"access\",\"refresh_token\":\"\",\"user_id\":\"fitbit-user\",\"expires_in\":3600}")]
+    [InlineData("{\"access_token\":\"access\",\"refresh_token\":\"refresh\",\"user_id\":\"\",\"expires_in\":3600}")]
+    [InlineData("{\"access_token\":\"access\",\"refresh_token\":\"refresh\",\"user_id\":\"fitbit-user\",\"expires_in\":0}")]
+    public async Task FitbitExchangeCodeAsync_WhenTokenResponseIsInvalid_ReturnsNull(string responseJson) {
+        FitbitClient client = CreateFitbitClient(new RecordingHttpMessageHandler(_ => JsonResponse(responseJson)));
 
         WearableTokenResult? result = await client.ExchangeCodeAsync("code", CancellationToken.None);
 
@@ -138,13 +152,14 @@ public sealed class WearableClientTests {
         });
         FitbitClient client = CreateFitbitClient(handler);
 
-        IReadOnlyList<WearableDataPoint> result = await client.FetchDailyDataAsync(
+        Result<IReadOnlyList<WearableDataPoint>> result = await client.FetchDailyDataAsync(
             "access",
             new DateTime(2026, 4, 6),
             CancellationToken.None);
 
+        Assert.True(result.IsSuccess);
         Assert.Collection(
-            result,
+            result.Value,
             point => Assert.Equal((WearableDataType.Steps, 1000d), (point.DataType, point.Value)),
             point => Assert.Equal((WearableDataType.CaloriesBurned, 500d), (point.DataType, point.Value)),
             point => Assert.Equal((WearableDataType.ActiveMinutes, 25d), (point.DataType, point.Value)),
@@ -153,16 +168,49 @@ public sealed class WearableClientTests {
     }
 
     [Fact]
-    public async Task FitbitFetchDailyDataAsync_WhenRequestFails_ReturnsEmpty() {
+    public async Task FitbitFetchDailyDataAsync_WhenRequestFails_ReturnsFailure() {
         FitbitClient client = CreateFitbitClient(
             new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.InternalServerError)));
 
-        IReadOnlyList<WearableDataPoint> result = await client.FetchDailyDataAsync(
+        Result<IReadOnlyList<WearableDataPoint>> result = await client.FetchDailyDataAsync(
             "access",
             DateTime.UtcNow,
             CancellationToken.None);
 
-        Assert.Empty(result);
+        Assert.True(result.IsFailure);
+        Assert.Equal("Wearable.SyncFailed", result.Error.Code);
+        Assert.Equal(ErrorKind.ExternalFailure, result.Error.Kind);
+    }
+
+    [Fact]
+    public async Task FitbitFetchDailyDataAsync_WhenLaterRequestFails_DiscardsPartialData() {
+        var handler = new RecordingHttpMessageHandler(
+            _ => JsonResponse("""{"summary":{"steps":1000,"caloriesOut":500}}"""),
+            _ => new HttpResponseMessage(HttpStatusCode.InternalServerError));
+        FitbitClient client = CreateFitbitClient(handler);
+
+        Result<IReadOnlyList<WearableDataPoint>> result = await client.FetchDailyDataAsync(
+            "access",
+            DateTime.UtcNow,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Wearable.SyncFailed", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task FitbitFetchDailyDataAsync_WhenPayloadHasUnexpectedValueType_ReturnsFailure() {
+        FitbitClient client = CreateFitbitClient(
+            new RecordingHttpMessageHandler(
+                _ => JsonResponse("""{"summary":{"steps":"not-a-number"}}""")));
+
+        Result<IReadOnlyList<WearableDataPoint>> result = await client.FetchDailyDataAsync(
+            "access",
+            DateTime.UtcNow,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Wearable.SyncFailed", result.Error.Code);
     }
 
     private static FitbitClient CreateFitbitClient(HttpMessageHandler handler, string clientId = "fitbit-client") {

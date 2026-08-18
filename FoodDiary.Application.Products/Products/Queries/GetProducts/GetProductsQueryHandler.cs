@@ -7,6 +7,7 @@ using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Products.Products.Mappings;
 using FoodDiary.Application.Products.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -19,8 +20,8 @@ public sealed class GetProductsQueryHandler(
     public async Task<Result<PagedResponse<ProductModel>>> Handle(
         GetProductsQuery query,
         CancellationToken cancellationToken) {
-        int pageNumber = Math.Max(query.Page, 1);
-        int pageSize = Math.Max(query.Limit, 1);
+        int pageNumber = PaginationPolicy.NormalizePage(query.Page);
+        int pageSize = PaginationPolicy.NormalizePageSize(query.Limit, defaultPageSize: 1);
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,

@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Billing;
 
 namespace FoodDiary.Application.Admin.Services;
@@ -14,8 +15,8 @@ internal static class AdminBillingQueryFilters {
         DateTime? fromUtc,
         DateTime? toUtc) =>
         new(
-            page <= 0 ? 1 : page,
-            limit is > 0 and <= 100 ? limit : 20,
+            PaginationPolicy.NormalizePage(page),
+            PaginationPolicy.NormalizePageSizeOrDefault(limit),
             NormalizeProvider(provider),
             NormalizeInvariant(status),
             NormalizeInvariant(kind),

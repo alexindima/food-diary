@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.Abstractions.RecipeComments.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,8 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRec
 
     public async Task<(IReadOnlyList<RecipeComment> Items, int Total)> GetPagedByRecipeAsync(
         RecipeId recipeId, int page, int limit, CancellationToken cancellationToken = default) {
+        int pageNumber = PaginationPolicy.NormalizePage(page);
+        int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
         IQueryable<RecipeComment> query = context.RecipeComments
             .AsNoTracking()
             .Include(c => c.User)
@@ -39,8 +42,8 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRec
 
         List<RecipeComment> items = await query
             .OrderByDescending(c => c.CreatedOnUtc)
-            .Skip((page - 1) * limit)
-            .Take(limit)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, total);
@@ -51,6 +54,8 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRec
         int page,
         int limit,
         CancellationToken cancellationToken = default) {
+        int pageNumber = PaginationPolicy.NormalizePage(page);
+        int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
         IQueryable<RecipeComment> query = context.RecipeComments
             .AsNoTracking()
             .Where(c => c.RecipeId == recipeId);
@@ -59,8 +64,8 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRec
 
         List<RecipeCommentReadModel> items = await query
             .OrderByDescending(c => c.CreatedOnUtc)
-            .Skip((page - 1) * limit)
-            .Take(limit)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .Select(c => new RecipeCommentReadModel(
                 c.Id.Value,
                 c.RecipeId.Value,

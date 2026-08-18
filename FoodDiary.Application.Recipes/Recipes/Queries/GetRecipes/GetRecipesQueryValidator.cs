@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 
 namespace FoodDiary.Application.Recipes.Recipes.Queries.GetRecipes;
 
@@ -11,13 +12,13 @@ public sealed class GetRecipesQueryValidator : AbstractValidator<GetRecipesQuery
             .WithErrorCode("Authentication.InvalidToken");
 
         RuleFor(x => x.Page)
-            .GreaterThan(0)
+            .InclusiveBetween(PaginationPolicy.DefaultPage, PaginationPolicy.MaxPageNumber)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("Page must be greater than zero");
+            .WithMessage($"Page must be between {PaginationPolicy.DefaultPage} and {PaginationPolicy.MaxPageNumber}");
 
         RuleFor(x => x.Limit)
-            .GreaterThan(0)
+            .InclusiveBetween(1, PaginationPolicy.MaxPageSize)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("Limit must be greater than zero");
+            .WithMessage($"Limit must be between 1 and {PaginationPolicy.MaxPageSize}");
     }
 }

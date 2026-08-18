@@ -154,7 +154,7 @@ internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMedia
             IServiceProvider provider,
             CancellationToken cancellationToken) {
             var typedRequest = (TRequest)request;
-            IRequestHandler<TRequest, TResponse> handler = provider.GetRequiredService<IRequestHandler<TRequest, TResponse>>();
+            IRequestHandler<TRequest, TResponse> handler = GetSingleHandler<IRequestHandler<TRequest, TResponse>>(provider);
             RequestHandlerDelegate<TResponse> handlerDelegate = token => handler.Handle(typedRequest, token);
 
             foreach (IPipelineBehavior<TRequest, TResponse> behavior in provider
@@ -182,7 +182,7 @@ internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMedia
             IServiceProvider provider,
             [EnumeratorCancellation] CancellationToken cancellationToken) {
             IStreamRequestHandler<TRequest, TResponse> handler =
-                provider.GetRequiredService<IStreamRequestHandler<TRequest, TResponse>>();
+                GetSingleHandler<IStreamRequestHandler<TRequest, TResponse>>(provider);
 
             await foreach (TResponse response in handler
                 .Handle((TRequest)request, cancellationToken)
@@ -210,5 +210,15 @@ internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMedia
                 provider.GetServices<INotificationHandler<TNotification>>();
             return PublishObjectToHandlers<TNotification>(handlers, notification, cancellationToken);
         }
+    }
+
+    private static THandler GetSingleHandler<THandler>(IServiceProvider provider) {
+        THandler[] handlers = [.. provider.GetServices<THandler>()];
+
+        return handlers.Length switch {
+            0 => throw new InvalidOperationException($"No mediator handler is registered for {typeof(THandler)}."),
+            1 => handlers[0],
+            _ => throw new InvalidOperationException($"Multiple mediator handlers are registered for {typeof(THandler)}."),
+        };
     }
 }

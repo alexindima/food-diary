@@ -1,5 +1,6 @@
 using System.Globalization;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi;
@@ -10,6 +11,9 @@ namespace FoodDiary.Web.Api.Swagger;
 public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
     public void Apply(OpenApiOperation operation, OperationFilterContext context) {
         AddApiErrorResponse(operation, context, StatusCodes.Status500InternalServerError);
+        if (operation.RequestBody is not null) {
+            AddApiErrorResponse(operation, context, StatusCodes.Status413PayloadTooLarge);
+        }
 
         if (context.ApiDescription.ActionDescriptor is not ControllerActionDescriptor controllerAction) {
             return;
@@ -40,7 +44,13 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
 
         AddApiErrorResponse(operation, context, StatusCodes.Status401Unauthorized);
 
-        if (authorizeAttributes.Any(static attribute =>
+        bool blocksImpersonatedAccess =
+            actionAttributes.OfType<BlockImpersonatedAccessAttribute>().Any() ||
+            controllerAttributes.OfType<BlockImpersonatedAccessAttribute>().Any() ||
+            (IsUnsafeMethod(context.ApiDescription.HttpMethod) &&
+             !actionAttributes.OfType<AllowImpersonatedAccessAttribute>().Any());
+        if (blocksImpersonatedAccess ||
+            authorizeAttributes.Any(static attribute =>
                 !string.IsNullOrWhiteSpace(attribute.Roles) ||
                 !string.IsNullOrWhiteSpace(attribute.Policy))) {
             AddApiErrorResponse(operation, context, StatusCodes.Status403Forbidden);
@@ -69,7 +79,15 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
         statusCode switch {
             StatusCodes.Status401Unauthorized => "Unauthorized",
             StatusCodes.Status403Forbidden => "Forbidden",
+            StatusCodes.Status413PayloadTooLarge => "Payload Too Large",
             StatusCodes.Status500InternalServerError => "Internal Server Error",
             _ => "Error",
         };
+
+    private static bool IsUnsafeMethod(string? method) =>
+        method is not null &&
+        !HttpMethods.IsGet(method) &&
+        !HttpMethods.IsHead(method) &&
+        !HttpMethods.IsOptions(method) &&
+        !HttpMethods.IsTrace(method);
 }

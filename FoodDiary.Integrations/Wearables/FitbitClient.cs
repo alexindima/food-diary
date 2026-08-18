@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -8,6 +9,7 @@ using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Integrations.Http;
 using FoodDiary.Integrations.Options;
+using FoodDiary.Results;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -61,7 +63,8 @@ internal sealed class FitbitClient(
                 BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
                 BoundedHttpContentReader.DefaultReadTimeout,
                 cancellationToken).ConfigureAwait(false);
-            if (token is null) {
+            if (!IsValidTokenResponse(token)) {
+                logger.LogWarning("Fitbit token exchange returned an invalid token response.");
                 return null;
             }
 
@@ -102,7 +105,8 @@ internal sealed class FitbitClient(
                 BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
                 BoundedHttpContentReader.DefaultReadTimeout,
                 cancellationToken).ConfigureAwait(false);
-            if (token is null) {
+            if (!IsValidTokenResponse(token)) {
+                logger.LogWarning("Fitbit token refresh returned an invalid token response.");
                 return null;
             }
 
@@ -119,7 +123,7 @@ internal sealed class FitbitClient(
         }
     }
 
-    public async Task<IReadOnlyList<WearableDataPoint>> FetchDailyDataAsync(
+    public async Task<Result<IReadOnlyList<WearableDataPoint>>> FetchDailyDataAsync(
         string accessToken, DateTime date, CancellationToken cancellationToken = default) {
         string dateStr = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         var results = new List<WearableDataPoint>();
@@ -166,12 +170,20 @@ internal sealed class FitbitClient(
             }
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;
-        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
+        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException or InvalidOperationException or FormatException or OverflowException) {
             logger.LogWarning(ex, "Fitbit data fetch failed for {Date}", dateStr);
+            return Result.Failure<IReadOnlyList<WearableDataPoint>>(WearableErrors.SyncFailed(Provider.ToString()));
         }
 
-        return results;
+        return Result.Success<IReadOnlyList<WearableDataPoint>>(results);
     }
+
+    private static bool IsValidTokenResponse([NotNullWhen(true)] FitbitTokenResponse? token) =>
+        token is not null &&
+        !string.IsNullOrWhiteSpace(token.AccessToken) &&
+        !string.IsNullOrWhiteSpace(token.RefreshToken) &&
+        !string.IsNullOrWhiteSpace(token.UserId) &&
+        token.ExpiresIn > 0;
 
     private async Task<JsonElement> GetJsonAsync(
         string url,

@@ -96,6 +96,21 @@ public partial class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task GetProductsQueryHandler_WithExtremePaging_ClampsBeforeCreatingResponse() {
+        var user = User.Create("products-extreme-page@example.com", "hash");
+        var handler = new GetProductsQueryHandler(new OverviewProductReadService(), new StubUserRepository(user));
+
+        Result<PagedResponse<ProductModel>> result = await handler.Handle(
+            new GetProductsQuery(user.Id.Value, int.MaxValue, int.MaxValue, Search: null, IncludePublic: true),
+            CancellationToken.None);
+
+        PagedResponse<ProductModel> response = ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(10_000, response.Page),
+            () => Assert.Equal(100, response.Limit));
+    }
+
+    [Fact]
     public async Task GetProductByIdQueryHandler_WithEmptyProductId_ReturnsValidationFailure() {
         var handler = new GetProductByIdQueryHandler(new OverviewProductReadService(), new StubUserRepository(User.Create("user@example.com", "hash")));
 

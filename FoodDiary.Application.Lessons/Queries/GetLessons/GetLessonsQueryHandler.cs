@@ -6,6 +6,7 @@ using FoodDiary.Application.Lessons.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Lessons.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 
 namespace FoodDiary.Application.Lessons.Queries.GetLessons;
 
@@ -38,8 +39,8 @@ public sealed class GetLessonsQueryHandler(
                 difficultyFilter,
                 query.Search,
                 sort,
-                query.Page,
-                query.PageSize,
+                PaginationPolicy.NormalizePage(query.Page),
+                PaginationPolicy.NormalizePageSize(query.PageSize),
                 cancellationToken)
             .ConfigureAwait(false);
 

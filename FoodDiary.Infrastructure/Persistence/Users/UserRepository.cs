@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -72,8 +73,8 @@ public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository
         int limit,
         UserAccountStatusFilter status,
         CancellationToken cancellationToken = default) {
-        int pageNumber = Math.Max(page, 1);
-        int pageSize = Math.Max(limit, 1);
+        int pageNumber = PaginationPolicy.NormalizePage(page);
+        int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
         IQueryable<User> filteredQuery = context.Users.AsNoTracking();
 
         filteredQuery = status switch {

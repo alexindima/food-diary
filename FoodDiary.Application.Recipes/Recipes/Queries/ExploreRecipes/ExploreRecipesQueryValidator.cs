@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 
 namespace FoodDiary.Application.Recipes.Recipes.Queries.ExploreRecipes;
 
@@ -7,9 +8,9 @@ public sealed class ExploreRecipesQueryValidator : AbstractValidator<ExploreReci
 
     public ExploreRecipesQueryValidator() {
         RuleFor(x => x.Page)
-            .GreaterThanOrEqualTo(1)
+            .InclusiveBetween(PaginationPolicy.DefaultPage, PaginationPolicy.MaxPageNumber)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("Page must be at least 1.");
+            .WithMessage($"Page must be between {PaginationPolicy.DefaultPage} and {PaginationPolicy.MaxPageNumber}.");
 
         RuleFor(x => x.Limit)
             .InclusiveBetween(1, 50)

@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.Abstractions.ContentReports.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -37,6 +38,8 @@ internal sealed class ContentReportRepository(FoodDiaryDbContext context)
         int page,
         int limit,
         CancellationToken cancellationToken = default) {
+        int pageNumber = PaginationPolicy.NormalizePage(page);
+        int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
         IQueryable<ContentReport> query = context.ContentReports.AsNoTracking();
 
         if (status.HasValue) {
@@ -47,8 +50,8 @@ internal sealed class ContentReportRepository(FoodDiaryDbContext context)
 
         List<ContentReportAdminReadModel> items = await query
             .OrderByDescending(r => r.CreatedOnUtc)
-            .Skip((page - 1) * limit)
-            .Take(limit)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .Select(r => new ContentReportAdminReadModel(
                 r.Id.Value,
                 r.UserId.Value,

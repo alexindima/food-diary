@@ -12,5 +12,9 @@ public sealed class GetRecentProductsQueryValidator : AbstractValidator<GetRecen
             .Must(userId => userId is not null && userId.Value != Guid.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
+
+        RuleFor(x => x.Limit)
+            .InclusiveBetween(1, 50)
+            .WithErrorCode("Validation.Invalid");
     }
 }

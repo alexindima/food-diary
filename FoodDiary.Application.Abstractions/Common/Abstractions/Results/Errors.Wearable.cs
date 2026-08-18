@@ -14,6 +14,8 @@ public static partial class Errors {
 
         public static Error AuthFailed(string provider) => WearableErrors.AuthFailed(provider);
 
+        public static Error SyncFailed(string provider) => WearableErrors.SyncFailed(provider);
+
         public static Error InvalidState => WearableErrors.InvalidState;
     }
 }

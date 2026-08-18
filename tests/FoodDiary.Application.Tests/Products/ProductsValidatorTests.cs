@@ -196,6 +196,16 @@ public class ProductsValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.Limit);
     }
 
+    [Fact]
+    public async Task GetProducts_WithPagingAboveSupportedBounds_HasErrors() {
+        TestValidationResult<GetProductsQuery> result = await new GetProductsQueryValidator().TestValidateAsync(
+            new GetProductsQuery(Guid.NewGuid(), 10_001, 101, Search: null, IncludePublic: false));
+
+        Assert.Multiple(
+            () => result.ShouldHaveValidationErrorFor(c => c.Page),
+            () => result.ShouldHaveValidationErrorFor(c => c.Limit));
+    }
+
     // â”€â”€ GetProductsWithRecent â”€â”€
 
     [Fact]
@@ -205,6 +215,25 @@ public class ProductsValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
+    [Fact]
+    public async Task GetProductsOverview_WithPagingAboveSupportedBounds_HasErrors() {
+        TestValidationResult<GetProductsOverviewQuery> result = await new GetProductsOverviewQueryValidator().TestValidateAsync(
+            new GetProductsOverviewQuery(
+                Guid.NewGuid(),
+                10_001,
+                101,
+                Search: null,
+                IncludePublic: false,
+                RecentLimit: 51,
+                FavoriteLimit: 51));
+
+        Assert.Multiple(
+            () => result.ShouldHaveValidationErrorFor(c => c.Page),
+            () => result.ShouldHaveValidationErrorFor(c => c.Limit),
+            () => result.ShouldHaveValidationErrorFor(c => c.RecentLimit),
+            () => result.ShouldHaveValidationErrorFor(c => c.FavoriteLimit));
+    }
+
     // â”€â”€ GetRecentProducts â”€â”€
 
     [Fact]
@@ -212,6 +241,13 @@ public class ProductsValidatorTests {
         TestValidationResult<GetRecentProductsQuery> result = await new GetRecentProductsQueryValidator().TestValidateAsync(
             new GetRecentProductsQuery(UserId: null, 10, IncludePublic: false));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public async Task GetRecentProducts_WithLimitAboveSupportedBound_HasError() {
+        TestValidationResult<GetRecentProductsQuery> result = await new GetRecentProductsQueryValidator().TestValidateAsync(
+            new GetRecentProductsQuery(Guid.NewGuid(), 51, IncludePublic: false));
+        result.ShouldHaveValidationErrorFor(c => c.Limit);
     }
 
     // UpdateProduct

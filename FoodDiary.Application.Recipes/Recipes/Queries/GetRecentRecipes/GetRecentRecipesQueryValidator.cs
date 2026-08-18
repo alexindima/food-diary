@@ -12,5 +12,9 @@ public sealed class GetRecentRecipesQueryValidator : AbstractValidator<GetRecent
             .Must(id => id is not null && id.Value != Guid.Empty)
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
+
+        RuleFor(x => x.Limit)
+            .InclusiveBetween(1, 50)
+            .WithErrorCode("Validation.Invalid");
     }
 }

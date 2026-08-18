@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 
 namespace FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightEntries;
 
@@ -14,10 +15,10 @@ public sealed class GetWeightEntriesQueryValidator : AbstractValidator<GetWeight
             .WithMessage("Unable to identify user");
 
         RuleFor(x => x.Limit)
-            .GreaterThan(0)
+            .InclusiveBetween(1, PaginationPolicy.MaxCollectionSize)
             .When(x => x.Limit.HasValue)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("Limit must be greater than zero.");
+            .WithMessage($"Limit must be between 1 and {PaginationPolicy.MaxCollectionSize}.");
 
         RuleFor(x => x)
             .Must(x => !x.DateFrom.HasValue || !x.DateTo.HasValue || x.DateFrom.Value <= x.DateTo.Value)

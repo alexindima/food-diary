@@ -1,6 +1,7 @@
 using System.Reflection;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
+using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Web.Api.Swagger;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -44,6 +45,54 @@ public sealed class SwaggerOperationFilterTests {
         Assert.True(operation.Responses["401"].Content!.ContainsKey("application/json"));
         OpenApiSecurityRequirement requirement = Assert.Single(operation.Security!);
         Assert.IsType<OpenApiSecuritySchemeReference>(Assert.Single(requirement.Keys));
+    }
+
+    [Fact]
+    public void Apply_ForAuthorizedUnsafeAction_AddsImpersonationForbiddenResponse() {
+        var filter = new StandardErrorResponsesOperationFilter();
+        var operation = new OpenApiOperation { Responses = [] };
+
+        filter.Apply(operation, CreateContext(nameof(TestController.Authorized), HttpMethods.Post));
+
+        Assert.True(operation.Responses.ContainsKey("403"));
+    }
+
+    [Fact]
+    public void Apply_ForExplicitlyAllowedImpersonatedUnsafeAction_DoesNotAddImpersonationForbiddenResponse() {
+        var filter = new StandardErrorResponsesOperationFilter();
+        var operation = new OpenApiOperation { Responses = [] };
+
+        filter.Apply(operation, CreateContext(nameof(TestController.ImpersonationAllowed), HttpMethods.Post));
+
+        Assert.False(operation.Responses.ContainsKey("403"));
+    }
+
+    [Fact]
+    public void Apply_ForExplicitlyBlockedSafeAction_AddsImpersonationForbiddenResponse() {
+        var filter = new StandardErrorResponsesOperationFilter();
+        var operation = new OpenApiOperation { Responses = [] };
+
+        filter.Apply(operation, CreateContext(nameof(TestController.ImpersonationBlocked), HttpMethods.Get));
+
+        Assert.True(operation.Responses.ContainsKey("403"));
+    }
+
+    [Theory]
+    [InlineData(nameof(TestController.Anonymous))]
+    [InlineData(nameof(TestController.Authorized))]
+    public void Apply_ForRequestBody_AddsPayloadTooLargeResponse(string methodName) {
+        var filter = new StandardErrorResponsesOperationFilter();
+        var operation = new OpenApiOperation {
+            RequestBody = new OpenApiRequestBody(),
+            Responses = [],
+        };
+
+        filter.Apply(operation, CreateContext(methodName, HttpMethods.Post));
+
+        Assert.Multiple(
+            () => Assert.True(operation.Responses.ContainsKey("413")),
+            () => Assert.Equal("Payload Too Large", operation.Responses["413"].Description),
+            () => Assert.True(operation.Responses["413"].Content!.ContainsKey("application/json")));
     }
 
     [Fact]
@@ -157,25 +206,27 @@ public sealed class SwaggerOperationFilterTests {
             () => Assert.True(operation.Responses.ContainsKey("409")));
     }
 
-    private static OperationFilterContext CreateContext(string methodName) {
+    private static OperationFilterContext CreateContext(string methodName, string? httpMethod = null) {
         MethodInfo methodInfo = typeof(TestController).GetMethod(methodName)!;
-        var apiDescription = new ApiDescription {
-            ActionDescriptor = new ControllerActionDescriptor {
-                MethodInfo = methodInfo,
-                ControllerTypeInfo = System.Reflection.IntrospectionExtensions.GetTypeInfo(typeof(TestController)),
-            },
+        var actionDescriptor = new ControllerActionDescriptor {
+            MethodInfo = methodInfo,
+            ControllerTypeInfo = System.Reflection.IntrospectionExtensions.GetTypeInfo(typeof(TestController)),
         };
 
-        return CreateContext(apiDescription.ActionDescriptor, methodInfo);
+        return CreateContext(actionDescriptor, methodInfo, httpMethod);
     }
 
     private static OperationFilterContext CreateContext(ActionDescriptor actionDescriptor) {
         MethodInfo methodInfo = typeof(TestController).GetMethod(nameof(TestController.Authorized))!;
-        return CreateContext(actionDescriptor, methodInfo);
+        return CreateContext(actionDescriptor, methodInfo, httpMethod: null);
     }
 
-    private static OperationFilterContext CreateContext(ActionDescriptor actionDescriptor, System.Reflection.MethodInfo methodInfo) {
+    private static OperationFilterContext CreateContext(
+        ActionDescriptor actionDescriptor,
+        System.Reflection.MethodInfo methodInfo,
+        string? httpMethod) {
         var apiDescription = new ApiDescription {
+            HttpMethod = httpMethod,
             ActionDescriptor = actionDescriptor,
         };
         var schemaGenerator = new SchemaGenerator(
@@ -197,6 +248,14 @@ public sealed class SwaggerOperationFilterTests {
 
         [Authorize]
         public OkResult Authorized() => Ok();
+
+        [Authorize]
+        [AllowImpersonatedAccess]
+        public OkResult ImpersonationAllowed() => Ok();
+
+        [Authorize]
+        [BlockImpersonatedAccess]
+        public OkResult ImpersonationBlocked() => Ok();
 
         [Authorize(Roles = "Admin")]
         public OkResult AdminOnly() => Ok();

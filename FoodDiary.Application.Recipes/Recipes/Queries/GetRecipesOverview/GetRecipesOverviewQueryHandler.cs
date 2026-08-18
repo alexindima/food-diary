@@ -9,6 +9,7 @@ using FoodDiary.Application.Recipes.Recipes.Models;
 using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Recipes.Recipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Recipes.Queries.GetRecipesOverview;
@@ -86,8 +87,8 @@ public sealed class GetRecipesOverviewQueryHandler(
     private static RecipeOverviewOptions CreateOptions(GetRecipesOverviewQuery query, UserId userId) =>
         new(
             userId,
-            Math.Max(query.Page, 1),
-            Math.Max(query.Limit, 1),
+            PaginationPolicy.NormalizePage(query.Page),
+            PaginationPolicy.NormalizePageSize(query.Limit, defaultPageSize: 1),
             Math.Clamp(query.RecentLimit, 1, 50),
             Math.Clamp(query.FavoriteLimit, 1, 50),
             new RecipeQueryFilters(

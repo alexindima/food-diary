@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.BodyMetrics.Common;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Models;
@@ -35,7 +36,7 @@ public sealed class GetWeightEntriesQueryHandler(
             userId,
             normalizedFrom,
             normalizedTo,
-            query.Limit,
+            PaginationPolicy.NormalizeCollectionLimit(query.Limit),
             query.Descending,
             cancellationToken).ConfigureAwait(false);
 

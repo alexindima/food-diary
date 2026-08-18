@@ -33,6 +33,7 @@ public sealed class DietologistClientsController(ISender mediator, TimeProvider 
 
     [HttpGet("{clientUserId:guid}/dashboard")]
     [ProducesResponseType<DashboardSnapshotHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> GetClientDashboard(
         Guid clientUserId,

@@ -62,11 +62,16 @@ public sealed class SyncWearableDataCommandHandler(
         }
 
         string accessToken = tokenProtector.Unprotect(connection.AccessToken);
-        IReadOnlyList<WearableDataPoint> dataPoints = await client.FetchDailyDataAsync(accessToken, command.Date, cancellationToken).ConfigureAwait(false);
+        Result<IReadOnlyList<WearableDataPoint>> dataResult = await client
+            .FetchDailyDataAsync(accessToken, command.Date, cancellationToken)
+            .ConfigureAwait(false);
+        if (dataResult.IsFailure) {
+            return Result.Failure<WearableDailySummaryModel>(dataResult.Error);
+        }
 
         ProtectLegacyTokens(connection, accessToken);
 
-        await StoreDataPointsAsync(userIdResult.Value, provider, command.Date, dataPoints, cancellationToken).ConfigureAwait(false);
+        await StoreDataPointsAsync(userIdResult.Value, provider, command.Date, dataResult.Value, cancellationToken).ConfigureAwait(false);
 
         connection.MarkSynced();
         await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);

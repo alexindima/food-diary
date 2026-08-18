@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3341,
-    "symbols": 3350,
+    "sourceFiles": 3343,
+    "symbols": 3352,
     "interfaceImplementationLinks": 233,
     "dependencyInjectionRegistrations": 234,
     "kinds": {
-      "class": 1723,
+      "class": 1725,
       "enum": 56,
       "interface": 414,
       "record": 1041,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 60,
-      "Other": 1254,
+      "Other": 1256,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -1537,6 +1537,13 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Validation/DietologistRequiredIdParser.cs",
       "line": 5
+    },
+    {
+      "name": "PaginationPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Common/Validation/PaginationPolicy.cs",
+      "line": 2
     },
     {
       "name": "SharedEnumValueParser",
@@ -4280,7 +4287,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableClient.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "IWearableConnectionReadRepository",
@@ -5134,7 +5141,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Admin/Queries/GetAdminContentReports/GetAdminContentReportsQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetAdminDashboardSummaryQuery",
@@ -5302,7 +5309,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Admin/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "GetCollaborationAuditQuery",
@@ -5337,7 +5344,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Admin/Services/AdminBillingQueryFilters.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "AdminBillingReadService",
@@ -5365,7 +5372,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Application.Admin/Services/AdminUserLoginReadService.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "AdminUserReadService",
@@ -5918,14 +5925,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetWaistEntriesQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "GetWaistHistoryPageSummaryQuery",
@@ -6079,14 +6086,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetWeightEntriesQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "GetWeightHistoryPageSummaryQuery",
@@ -8193,14 +8200,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetFastingHistoryQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "GetFastingInsightsQuery",
@@ -9684,14 +9691,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "GetLessonsQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "LessonAdministrationReadService",
@@ -10538,7 +10545,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Meals/Queries/GetMeals/GetMealsQueryHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "GetMealsOverviewQuery",
@@ -10552,7 +10559,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Meals/Queries/GetMealsOverview/GetMealsOverviewQueryHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "GetMealsOverviewQueryValidator",
@@ -11378,14 +11385,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQueryHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "GetProductsQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "GetProductsOverviewQuery",
@@ -11399,14 +11406,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "GetProductsOverviewQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "GetRecentProductsQuery",
@@ -11560,7 +11567,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "RecipeCommentReadService",
@@ -11868,7 +11875,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "GetRecentRecipesQuery",
@@ -11924,14 +11931,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "GetRecipesQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "GetRecipesOverviewQuery",
@@ -11945,14 +11952,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "GetRecipesOverviewQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "RecentRecipeReadService",
@@ -15431,7 +15438,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "AdminUserRoleAuditRepository",
@@ -16173,7 +16180,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/ContentReports/ContentReportRepository.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "StronglyTypedIdConverters",
@@ -16334,7 +16341,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "DashboardReadService",
@@ -16579,7 +16586,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Meals/MealRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "NotificationRepository",
@@ -16684,7 +16691,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "ProductRepository",
@@ -16705,7 +16712,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "RecipeLikeRepository",
@@ -16719,7 +16726,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "RecipeRepository",
@@ -16803,7 +16810,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Tracking/FastingOccurrenceRepository.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "FastingPlanRepository",
@@ -16894,14 +16901,14 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "UserRepository",
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "UserRoleCatalogService",
@@ -17496,7 +17503,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "line": 15
+      "line": 17
     },
     {
       "name": "Program",
@@ -20933,7 +20940,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "WeeklyCheckInHttpMappings",
@@ -21258,6 +21265,13 @@
       "line": 6
     },
     {
+      "name": "AllowImpersonatedAccessAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Security/AllowImpersonatedAccessAttribute.cs",
+      "line": 4
+    },
+    {
       "name": "BlockImpersonatedAccessAttribute",
       "kind": "class",
       "role": "Other",
@@ -21444,7 +21458,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ImpersonationAccessGuardMiddleware.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "RequestObservabilityMiddleware",
@@ -21633,7 +21647,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Swagger/StandardErrorResponsesOperationFilter.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "IInboundMailStore",

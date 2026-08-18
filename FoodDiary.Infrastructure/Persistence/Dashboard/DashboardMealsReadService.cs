@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,8 +25,8 @@ internal sealed class DashboardMealsReadService(FoodDiaryDbContext context) : ID
                 Errors.Validation.Invalid(nameof(dateFrom), "DateFrom must be earlier than DateTo"));
         }
 
-        int pageNumber = Math.Max(page, 1);
-        int pageSize = Math.Clamp(limit, 1, 100);
+        int pageNumber = PaginationPolicy.NormalizePage(page);
+        int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
         DateTime normalizedFrom = NormalizeUtcInstant(dateFrom);
         DateTime normalizedTo = NormalizeUtcInstant(dateTo);
         IQueryable<DashboardMealProjection> filteredMeals = CreateFilteredMealsQuery(userId, normalizedFrom, normalizedTo);

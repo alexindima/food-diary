@@ -22,4 +22,12 @@ public class LessonsValidatorTests {
 
         result.ShouldNotHaveAnyValidationErrors();
     }
+
+    [Fact]
+    public async Task Validate_WithPageAboveSupportedBound_HasError() {
+        var query = new GetLessonsQuery(Guid.NewGuid(), "en", Category: null, Page: 10_001);
+        TestValidationResult<GetLessonsQuery> result = await _validator.TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(q => q.Page);
+    }
 }

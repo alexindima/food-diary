@@ -4274,17 +4274,17 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/goals",
-            "line": 45
+            "line": 46
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/recommendations",
-            "line": 51
+            "line": 52
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/recommendations",
-            "line": 63
+            "line": 64
           }
         ]
       },
@@ -5377,32 +5377,32 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/wearables/connections",
-            "line": 18
+            "line": 19
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/wearables/{provider}/auth-url",
-            "line": 23
+            "line": 24
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/wearables/{provider}/connect",
-            "line": 29
+            "line": 31
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/wearables/{provider}/disconnect",
-            "line": 39
+            "line": 42
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/wearables/{provider}/sync",
-            "line": 47
+            "line": 52
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/wearables/daily-summary",
-            "line": 58
+            "line": 65
           }
         ]
       },

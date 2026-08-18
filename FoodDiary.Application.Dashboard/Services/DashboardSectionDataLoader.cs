@@ -26,9 +26,8 @@ internal sealed class DashboardSectionDataLoader(
     IFastingReadService fastingReadService,
     IExerciseEntryReadService exerciseEntryReadService,
     IDashboardReadService dashboardReadService) : IDashboardSectionDataLoader {
-    private const int DefaultPage = 1;
+    internal const int MaxPeriodDays = 366;
     private const int DefaultPageSize = 10;
-    private const int MaxPageSize = 100;
     private const int DefaultTrendDays = 7;
     private const int MaxTrendDays = 31;
 
@@ -52,6 +51,14 @@ internal sealed class DashboardSectionDataLoader(
                 Errors.Validation.Invalid(nameof(request.DateTo), "DateTo must be later than or equal to Date."));
         }
 
+        int periodDays = (dayEndStart.Date - dayStart.Date).Days + 1;
+        if (periodDays > MaxPeriodDays) {
+            return Result.Failure<DashboardBuildContext>(
+                Errors.Validation.Invalid(
+                    nameof(request.DateTo),
+                    $"Dashboard period must not exceed {MaxPeriodDays} days."));
+        }
+
         UserId userId = userIdResult.Value;
         Result<DashboardUserContextModel> userResult = await dashboardUserContextService.GetAccessibleDashboardUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
@@ -64,10 +71,10 @@ internal sealed class DashboardSectionDataLoader(
             dayStart,
             dayEndStart,
             dayEndStart.AddDays(1).AddTicks(-1),
-            Math.Max(1, (dayEndStart.Date - dayStart.Date).Days + 1),
+            periodDays,
             string.IsNullOrWhiteSpace(request.Locale) ? "en" : request.Locale,
-            request.Page <= 0 ? DefaultPage : request.Page,
-            request.PageSize <= 0 ? DefaultPageSize : Math.Min(request.PageSize, MaxPageSize),
+            PaginationPolicy.NormalizePage(request.Page),
+            PaginationPolicy.NormalizePageSize(request.PageSize, DefaultPageSize),
             trendDays,
             dayStart.AddDays(-(trendDays - 1)),
             request.Sections ?? DashboardSnapshotSections.All,

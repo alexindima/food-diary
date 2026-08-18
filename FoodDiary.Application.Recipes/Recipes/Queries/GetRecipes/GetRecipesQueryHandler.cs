@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Recipes.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Recipes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -15,8 +16,8 @@ public sealed class GetRecipesQueryHandler(
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipesQuery, Result<PagedResponse<RecipeModel>>> {
     public async Task<Result<PagedResponse<RecipeModel>>> Handle(GetRecipesQuery query, CancellationToken cancellationToken) {
-        int pageNumber = Math.Max(query.Page, 1);
-        int pageSize = Math.Max(query.Limit, 1);
+        int pageNumber = PaginationPolicy.NormalizePage(query.Page);
+        int pageSize = PaginationPolicy.NormalizePageSize(query.Limit, defaultPageSize: 1);
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,

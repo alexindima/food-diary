@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Admin;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,8 +18,8 @@ public sealed class AdminImpersonationSessionRepository(FoodDiaryDbContext conte
         int limit,
         string? search,
         CancellationToken cancellationToken = default) {
-        int pageNumber = Math.Max(page, 1);
-        int pageSize = Math.Clamp(limit, 1, 100);
+        int pageNumber = PaginationPolicy.NormalizePage(page);
+        int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
 
         var query =
             from session in context.AdminImpersonationSessions.AsNoTracking()

@@ -795,6 +795,29 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task SwaggerJson_AllRequestBodyOperations_DocumentPayloadTooLarge() {
+        HttpClient client = apiFactory.CreateClient();
+        HttpResponseMessage response = await client.GetAsync("/swagger/v1/swagger.json");
+        response.EnsureSuccessStatusCode();
+
+        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        JsonElement paths = json.RootElement.GetProperty("paths");
+        var missingResponses = new List<string>();
+
+        foreach (JsonProperty path in paths.EnumerateObject()) {
+            foreach (JsonProperty operation in path.Value.EnumerateObject()) {
+                if (operation.Value.TryGetProperty("requestBody", out _) &&
+                    (!operation.Value.TryGetProperty("responses", out JsonElement responses) ||
+                     !responses.TryGetProperty("413", out _))) {
+                    missingResponses.Add($"{operation.Name.ToUpperInvariant()} {path.Name}");
+                }
+            }
+        }
+
+        Assert.Empty(missingResponses);
+    }
+
+    [Fact]
     public async Task EmailVerificationHub_Negotiate_RequiresAuthentication() {
         HttpClient client = apiFactory.CreateClient();
 

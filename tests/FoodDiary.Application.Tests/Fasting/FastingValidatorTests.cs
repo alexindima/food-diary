@@ -182,6 +182,17 @@ public class FastingValidatorTests {
     }
 
     [Fact]
+    public async Task GetFastingHistory_WithPageAboveSupportedBound_HasError() {
+        var validator = new GetFastingHistoryQueryValidator();
+        DateTime from = DateTime.UtcNow.AddDays(-7);
+        DateTime to = DateTime.UtcNow;
+        TestValidationResult<GetFastingHistoryQuery> result = await validator.TestValidateAsync(
+            new GetFastingHistoryQuery(Guid.NewGuid(), from, to, 10_001, 10));
+
+        result.ShouldHaveValidationErrorFor(x => x.Page);
+    }
+
+    [Fact]
     public async Task UpdateCurrentFastingCheckIn_WithNullUserId_HasInvalidTokenError() {
         var validator = new UpdateCurrentFastingCheckInCommandValidator();
         TestValidationResult<UpdateCurrentFastingCheckInCommand> result = await validator.TestValidateAsync(

@@ -2,6 +2,7 @@ namespace FoodDiary.Integrations.Options;
 
 public sealed class S3Options {
     public const string SectionName = "S3";
+    public const long MaximumUploadSizeBytes = 50 * 1024 * 1024;
 
     /// <summary>
     /// AWS access key ID.
@@ -38,7 +39,8 @@ public sealed class S3Options {
     /// </summary>
     public long MaxUploadSizeBytes { get; init; } = 20 * 1024 * 1024; // 20 MB
 
-    public static bool HasValidMaxUploadSize(S3Options options) => options.MaxUploadSizeBytes > 0;
+    public static bool HasValidMaxUploadSize(S3Options options) =>
+        options.MaxUploadSizeBytes is > 0 and <= MaximumUploadSizeBytes;
 
     public static bool IsEmptyOrComplete(S3Options options) {
         bool anyConfigured = !string.IsNullOrWhiteSpace(options.AccessKeyId) ||

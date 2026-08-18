@@ -403,6 +403,21 @@ public partial class RecipesFeatureTests {
     }
 
     [Fact]
+    public async Task GetRecipesQueryHandler_WithExtremePaging_ClampsBeforeCreatingResponse() {
+        var user = User.Create("recipes-extreme-page@example.com", "hash");
+        var handler = new GetRecipesQueryHandler(new OverviewRecipeReadService(), new StubUserRepository(user));
+
+        Result<PagedResponse<RecipeModel>> result = await handler.Handle(
+            new GetRecipesQuery(user.Id.Value, int.MaxValue, int.MaxValue, Search: null, IncludePublic: true),
+            CancellationToken.None);
+
+        PagedResponse<RecipeModel> response = ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(10_000, response.Page),
+            () => Assert.Equal(100, response.Limit));
+    }
+
+    [Fact]
     public async Task GetRecipesQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetRecipesQueryHandler(
             new OverviewRecipeReadService(),

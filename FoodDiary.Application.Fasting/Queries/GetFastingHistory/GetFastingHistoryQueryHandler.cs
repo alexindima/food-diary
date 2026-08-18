@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Fasting.Queries.GetFastingHistory;
@@ -25,8 +26,8 @@ public sealed class GetFastingHistoryQueryHandler(
         UserId userId = userIdResult.Value;
         return Result.Success(await fastingAnalyticsService.GetHistoryAsync(
             userId,
-            query.Page,
-            query.Limit,
+            PaginationPolicy.NormalizePage(query.Page),
+            PaginationPolicy.NormalizePageSize(query.Limit, defaultPageSize: 1, maxPageSize: 50),
             NormalizeUtc(query.From),
             NormalizeUtc(query.To),
             cancellationToken).ConfigureAwait(false));

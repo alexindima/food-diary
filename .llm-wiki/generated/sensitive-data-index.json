@@ -680,7 +680,7 @@
       "name": "SecretAccessKey",
       "type": "string",
       "path": "FoodDiary.Integrations/Options/S3Options.cs",
-      "line": 14
+      "line": 15
     },
     {
       "category": "credential",
@@ -722,14 +722,14 @@
       "name": "AccessToken",
       "type": "string",
       "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "line": 197
+      "line": 209
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string",
       "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "line": 200
+      "line": 212
     },
     {
       "category": "credential",
@@ -2003,14 +2003,14 @@
       "name": "BaseAmount",
       "type": "double",
       "path": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 179
+      "line": 180
     },
     {
       "category": "financial",
       "name": "DefaultPortionAmount",
       "type": "double",
       "path": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 180
+      "line": 181
     },
     {
       "category": "financial",
@@ -4446,21 +4446,21 @@
       "name": "CaloriesFrom",
       "type": "double?",
       "path": "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-      "line": 30
+      "line": 31
     },
     {
       "category": "health",
       "name": "CaloriesTo",
       "type": "double?",
       "path": "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-      "line": 31
+      "line": 32
     },
     {
       "category": "health",
       "name": "CaloriesTo",
       "type": "CaloriesFrom,",
       "path": "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-      "line": 34
+      "line": 35
     },
     {
       "category": "health",
@@ -5909,35 +5909,35 @@
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 181
+      "line": 182
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double?",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 329
+      "line": 330
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 335
+      "line": 336
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 336
+      "line": 337
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double?",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 348
+      "line": 349
     },
     {
       "category": "health",
@@ -9710,56 +9710,56 @@
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 175
+      "line": 176
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 176
+      "line": 177
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 177
+      "line": 178
     },
     {
       "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 322
+      "line": 323
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 324
+      "line": 325
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 325
+      "line": 326
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 268
+      "line": 328
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 285
+      "line": 345
     },
     {
       "category": "privateContent",

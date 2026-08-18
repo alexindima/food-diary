@@ -29,6 +29,13 @@ public class ExploreRecipesQueryValidatorTests {
     }
 
     [Fact]
+    public async Task Validate_WithPageAboveSupportedBound_HasError() {
+        var query = new ExploreRecipesQuery(Guid.NewGuid(), 10_001, 10, Search: null, Category: null, MaxPrepTime: null, "newest");
+        TestValidationResult<ExploreRecipesQuery> result = await _validator.TestValidateAsync(query);
+        result.ShouldHaveValidationErrorFor(q => q.Page);
+    }
+
+    [Fact]
     public async Task Validate_WithInvalidSortBy_HasError() {
         var query = new ExploreRecipesQuery(Guid.NewGuid(), 1, 10, Search: null, Category: null, MaxPrepTime: null, "invalid");
         TestValidationResult<ExploreRecipesQuery> result = await _validator.TestValidateAsync(query);

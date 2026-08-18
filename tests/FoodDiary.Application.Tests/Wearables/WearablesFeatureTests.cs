@@ -388,6 +388,34 @@ public class WearablesFeatureTests {
     }
 
     [Fact]
+    public async Task SyncWearableData_WhenProviderFails_DoesNotPersistOrMarkSynced() {
+        var userId = UserId.New();
+        var connection = WearableConnection.Create(
+            userId, WearableProvider.Fitbit, "ext", "access", "refresh", DateTime.UtcNow.AddHours(1));
+        var connectionRepository = new InMemoryWearableConnectionRepository();
+        connectionRepository.Seed(connection);
+        var syncRepository = new InMemoryWearableSyncRepository();
+        var client = new StubWearableClient(WearableProvider.Fitbit, tokenResult: null) {
+            DataError = WearableErrors.SyncFailed("Fitbit"),
+        };
+        var handler = new SyncWearableDataCommandHandler(
+            [client], connectionRepository, syncRepository, CreateCurrentUserAccessService(), CreateTokenProtector());
+
+        Result<WearableDailySummaryModel> result = await handler.Handle(
+            new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Wearable.SyncFailed", result.Error.Code),
+            () => Assert.Equal(ErrorKind.ExternalFailure, result.Error.Kind),
+            () => Assert.Equal(0, syncRepository.AddedCount),
+            () => Assert.Equal(0, syncRepository.UpdatedCount),
+            () => Assert.Null(connection.LastSyncedAtUtc),
+            () => Assert.False(connectionRepository.UpdateCalled));
+    }
+
+    [Fact]
     public async Task SyncWearableData_WithInvalidUserId_ReturnsInvalidToken() {
         var handler = new SyncWearableDataCommandHandler(
             [],
@@ -590,6 +618,7 @@ public class WearablesFeatureTests {
         public WearableProvider Provider => provider;
         public WearableTokenResult? RefreshTokenResult { get; init; } = new("new-access", "new-refresh", "ext", DateTime.UtcNow.AddHours(1));
         public IReadOnlyList<WearableDataPoint> DataPoints { get; init; } = [];
+        public Error? DataError { get; init; }
         public int ExchangeCodeCallCount { get; private set; }
 
         public string GetAuthorizationUrl(string state) => $"https://auth.example.com?state={state}";
@@ -599,8 +628,10 @@ public class WearablesFeatureTests {
         }
         public Task<WearableTokenResult?> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default) =>
             Task.FromResult(RefreshTokenResult);
-        public Task<IReadOnlyList<WearableDataPoint>> FetchDailyDataAsync(string accessToken, DateTime date, CancellationToken cancellationToken = default) =>
-            Task.FromResult(DataPoints);
+        public Task<Result<IReadOnlyList<WearableDataPoint>>> FetchDailyDataAsync(string accessToken, DateTime date, CancellationToken cancellationToken = default) =>
+            Task.FromResult(DataError is null
+                ? Result.Success(DataPoints)
+                : Result.Failure<IReadOnlyList<WearableDataPoint>>(DataError));
     }
 
     [ExcludeFromCodeCoverage]

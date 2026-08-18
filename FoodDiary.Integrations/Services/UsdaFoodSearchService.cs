@@ -57,7 +57,7 @@ internal sealed class UsdaFoodSearchService(
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
-            logger.LogWarning(ex, "USDA branded food search failed for query '{Query}'", query);
+            logger.LogWarning(ex, "USDA branded food search failed. QueryLength={QueryLength}", query.Length);
             return [];
         }
     }

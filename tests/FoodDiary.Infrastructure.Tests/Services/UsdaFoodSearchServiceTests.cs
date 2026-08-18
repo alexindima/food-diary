@@ -2,6 +2,7 @@ using System.Net;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
@@ -15,6 +16,20 @@ public sealed class UsdaFoodSearchServiceTests {
         IReadOnlyList<UsdaFoodModel> result = await service.SearchBrandedAsync("milk");
 
         Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task SearchBrandedAsync_WhenRequestFails_DoesNotLogRawQuery() {
+        string query = $"private-food-query-{Guid.NewGuid():N}";
+        var logger = new RecordingLogger<UsdaFoodSearchService>();
+        UsdaFoodSearchService service = CreateService(
+            new ErrorHttpMessageHandler(HttpStatusCode.InternalServerError),
+            logger: logger);
+
+        await service.SearchBrandedAsync(query);
+
+        Assert.DoesNotContain(logger.Messages, message => message.Contains(query, StringComparison.Ordinal));
+        Assert.Contains(logger.Messages, message => message.Contains($"QueryLength={query.Length}", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -131,14 +146,17 @@ public sealed class UsdaFoodSearchServiceTests {
             service.GetFoodDetailAsync(539789, cancellationTokenSource.Token));
     }
 
-    private static UsdaFoodSearchService CreateService(HttpMessageHandler handler, string apiKey = "test-key") {
+    private static UsdaFoodSearchService CreateService(
+        HttpMessageHandler handler,
+        string apiKey = "test-key",
+        ILogger<UsdaFoodSearchService>? logger = null) {
         var httpClient = new HttpClient(handler);
         return new UsdaFoodSearchService(
             httpClient,
             Microsoft.Extensions.Options.Options.Create(new UsdaApiOptions {
                 ApiKey = apiKey,
             }),
-            NullLogger<UsdaFoodSearchService>.Instance);
+            logger ?? NullLogger<UsdaFoodSearchService>.Instance);
     }
 
     [ExcludeFromCodeCoverage]
@@ -175,5 +193,22 @@ public sealed class UsdaFoodSearchServiceTests {
                 Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
             });
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingLogger<T> : ILogger<T> {
+        public List<string> Messages { get; } = [];
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter) =>
+            Messages.Add(formatter(state, exception));
     }
 }

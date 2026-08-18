@@ -57,6 +57,16 @@ public class RecipesAdditionalValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.Limit);
     }
 
+    [Fact]
+    public async Task GetRecipes_WithPagingAboveSupportedBounds_HasErrors() {
+        TestValidationResult<GetRecipesQuery> result = await new GetRecipesQueryValidator().TestValidateAsync(
+            new GetRecipesQuery(Guid.NewGuid(), 10_001, 101, Search: null, IncludePublic: false));
+
+        Assert.Multiple(
+            () => result.ShouldHaveValidationErrorFor(c => c.Page),
+            () => result.ShouldHaveValidationErrorFor(c => c.Limit));
+    }
+
     // â”€â”€ GetRecentRecipes â”€â”€
 
     [Fact]
@@ -66,6 +76,13 @@ public class RecipesAdditionalValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
+    [Fact]
+    public async Task GetRecentRecipes_WithLimitAboveSupportedBound_HasError() {
+        TestValidationResult<GetRecentRecipesQuery> result = await new GetRecentRecipesQueryValidator().TestValidateAsync(
+            new GetRecentRecipesQuery(Guid.NewGuid(), 51, IncludePublic: false));
+        result.ShouldHaveValidationErrorFor(c => c.Limit);
+    }
+
     // â”€â”€ GetRecipesWithRecent â”€â”€
 
     [Fact]
@@ -73,5 +90,24 @@ public class RecipesAdditionalValidatorTests {
         TestValidationResult<GetRecipesOverviewQuery> result = await new GetRecipesOverviewQueryValidator().TestValidateAsync(
             new GetRecipesOverviewQuery(UserId: null, 1, 10, Search: null, IncludePublic: false));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public async Task GetRecipesOverview_WithPagingAboveSupportedBounds_HasErrors() {
+        TestValidationResult<GetRecipesOverviewQuery> result = await new GetRecipesOverviewQueryValidator().TestValidateAsync(
+            new GetRecipesOverviewQuery(
+                Guid.NewGuid(),
+                10_001,
+                101,
+                Search: null,
+                IncludePublic: false,
+                RecentLimit: 51,
+                FavoriteLimit: 51));
+
+        Assert.Multiple(
+            () => result.ShouldHaveValidationErrorFor(c => c.Page),
+            () => result.ShouldHaveValidationErrorFor(c => c.Limit),
+            () => result.ShouldHaveValidationErrorFor(c => c.RecentLimit),
+            () => result.ShouldHaveValidationErrorFor(c => c.FavoriteLimit));
     }
 }

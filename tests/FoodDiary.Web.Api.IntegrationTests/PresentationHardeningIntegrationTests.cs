@@ -33,6 +33,20 @@ public sealed class PresentationHardeningIntegrationTests(TestAuthApiWebApplicat
             () => Assert.Equal("Authentication.ImpersonationActionForbidden", Assert.IsType<ErrorPayload>(error).Error));
     }
 
+    [Fact]
+    public async Task UnannotatedAuthorizedMutation_WithImpersonatedUser_ReturnsForbidden() {
+        HttpClient client = CreateAuthenticatedClient(impersonated: true);
+
+        HttpResponseMessage response = await client.PostAsJsonAsync(
+            "/api/v1/exercises",
+            new CreateExerciseEntryHttpRequest(DateTime.UtcNow, "Running", 30, 100, Name: null, Notes: null));
+        ErrorPayload? error = await response.Content.ReadFromJsonAsync<ErrorPayload>();
+
+        Assert.Multiple(
+            () => Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode),
+            () => Assert.Equal("Authentication.ImpersonationActionForbidden", Assert.IsType<ErrorPayload>(error).Error));
+    }
+
     [Theory]
     [InlineData("POST", "/api/v1/exercises")]
     [InlineData("PUT", "/api/v1/exercises/11111111-1111-1111-1111-111111111111")]

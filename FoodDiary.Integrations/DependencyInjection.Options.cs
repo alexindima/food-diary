@@ -12,7 +12,7 @@ public static partial class DependencyInjection {
             .Validate(S3Options.IsEmptyOrComplete,
                 "S3 configuration must be empty or include AccessKeyId, SecretAccessKey, Bucket, and Region or ServiceUrl.")
             .Validate(S3Options.HasValidMaxUploadSize,
-                "S3:MaxUploadSizeBytes must be greater than zero.")
+                "S3:MaxUploadSizeBytes must be greater than zero and no greater than 50 MiB.")
             .Validate(S3Options.HasValidPublicBaseUrl,
                 "S3:PublicBaseUrl must be an absolute HTTP or HTTPS URL when provided.")
             .Validate(S3Options.HasValidServiceUrl,

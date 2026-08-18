@@ -12,6 +12,8 @@ Rules for `Shared/FoodDiary.Mediator/`.
 - Do not reference ASP.NET, EF Core, provider SDKs, or application/domain projects.
 - Preserve cancellation propagation through mediator APIs.
 - Preserve request pipeline order and sequential notification handler execution.
+- Discover handlers in configured assembly order and ordinal fully-qualified type-name order within each assembly so automatically registered notification execution is deterministic.
+- Reject multiple registrations for the same request or stream handler contract; notification handler contracts intentionally allow multiple registrations.
 - Keep runtime dispatch compatible with explicit interface implementations and handlers that implement multiple mediator interfaces.
 - Stream requests must resolve `IStreamRequestHandler<TRequest, TResponse>` and propagate enumeration cancellation.
 - Validate open pipeline behaviors during registration rather than on first dispatch.

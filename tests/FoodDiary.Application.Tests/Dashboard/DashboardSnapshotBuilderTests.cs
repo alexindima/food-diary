@@ -95,6 +95,37 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [Fact]
+    public async Task BuildAsync_WithPeriodLongerThanOneYear_ReturnsValidationFailure() {
+        var user = User.Create("dashboard-long-range@example.com", "hash");
+        DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
+            new StubSender(),
+            new AccessibleUserContextService(user),
+            new StubWeightEntryRepository(),
+            new StubWaistEntryRepository(),
+            new StubHydrationEntryRepository(),
+            new StubFastingReadService(),
+            new StubExerciseEntryRepository(),
+            NullLogger<DashboardSnapshotBuilder>.Instance);
+        var dateFrom = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc);
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                dateFrom,
+                dateFrom.AddDays(366),
+                "en",
+                7,
+                1,
+                10),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Validation.Invalid", result.Error.Code),
+            () => Assert.Contains("366", result.Error.Message, StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task BuildAsync_WithPositiveTimeZoneOffset_UsesLocalCalendarDayUtcBoundaries() {
         var user = User.Create("dashboard-local-day@example.com", "hash");
         var sender = new ConfigurableDashboardSender();

@@ -49,7 +49,9 @@ public sealed class IntegrationOptionsTests {
     [Theory]
     [InlineData(0, false)]
     [InlineData(1, true)]
-    public void S3Options_HasValidMaxUploadSize_RequiresPositiveValue(long maxUploadSizeBytes, bool expected) {
+    [InlineData(50 * 1024 * 1024, true)]
+    [InlineData((50 * 1024 * 1024) + 1, false)]
+    public void S3Options_HasValidMaxUploadSize_RequiresBoundedPositiveValue(long maxUploadSizeBytes, bool expected) {
         var options = new S3Options { MaxUploadSizeBytes = maxUploadSizeBytes };
 
         Assert.Equal(expected, S3Options.HasValidMaxUploadSize(options));

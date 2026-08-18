@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -71,8 +72,8 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         int limit,
         MealQueryFilters filters,
         CancellationToken cancellationToken = default) {
-        int pageNumber = Math.Max(page, 1);
-        int pageSize = Math.Max(limit, 1);
+        int pageNumber = PaginationPolicy.NormalizePage(page);
+        int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
 
         IQueryable<Meal> filteredQuery = context.Meals
             .AsNoTracking()
@@ -101,8 +102,8 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         int limit,
         MealQueryFilters filters,
         CancellationToken cancellationToken = default) {
-        int pageNumber = Math.Max(page, 1);
-        int pageSize = Math.Max(limit, 1);
+        int pageNumber = PaginationPolicy.NormalizePage(page);
+        int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
 
         IQueryable<Meal> filteredQuery = context.Meals
             .AsNoTracking()

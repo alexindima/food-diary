@@ -23,6 +23,11 @@ public static class WearableErrors {
         $"Authentication with '{provider}' failed.",
         Kind: ErrorKind.Unauthorized);
 
+    public static Error SyncFailed(string provider) => new(
+        "Wearable.SyncFailed",
+        $"Synchronizing data with '{provider}' failed.",
+        Kind: ErrorKind.ExternalFailure);
+
     public static Error InvalidState => new(
         "Wearable.InvalidState",
         "Wearable authentication state is invalid or expired.",

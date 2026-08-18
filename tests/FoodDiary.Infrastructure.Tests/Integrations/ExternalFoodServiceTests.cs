@@ -247,7 +247,8 @@ public sealed class ExternalFoodServiceTests {
         object cached = cache.GetType().GetMethod("get_Item")!.Invoke(cache, [cacheKey])!;
         Type cachedType = cached.GetType();
         object products = cachedType.GetProperty("Products")!.GetValue(cached)!;
-        object stale = Activator.CreateInstance(cachedType, FixedNow - age, products)!;
+        object sizeBytes = cachedType.GetProperty("SizeBytes")!.GetValue(cached)!;
+        object stale = Activator.CreateInstance(cachedType, FixedNow - age, products, sizeBytes)!;
         cache.GetType().GetMethod("set_Item")!.Invoke(cache, [cacheKey, stale]);
     }
 

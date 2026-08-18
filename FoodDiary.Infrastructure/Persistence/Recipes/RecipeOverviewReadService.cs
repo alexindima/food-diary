@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -18,8 +19,8 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
         int limit,
         RecipeQueryFilters filters,
         CancellationToken cancellationToken = default) {
-        int pageNumber = Math.Max(page, 1);
-        int pageSize = Math.Max(limit, 1);
+        int pageNumber = PaginationPolicy.NormalizePage(page);
+        int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
 
         IQueryable<Recipe> query = ApplyFilters(CreateBaseQuery(userId, includePublic), filters);
 
@@ -59,8 +60,8 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
         int? maxPrepTime,
         string sortBy,
         CancellationToken cancellationToken = default) {
-        int pageNumber = Math.Max(page, 1);
-        int pageSize = Math.Max(limit, 1);
+        int pageNumber = PaginationPolicy.NormalizePage(page);
+        int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1, maxPageSize: 50);
 
         IQueryable<Recipe> query = ApplyExploreFilters(
             context.Recipes

@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Meals.Common.Time;
 using FoodDiary.Application.Meals.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Meals.Models;
@@ -27,8 +28,8 @@ public sealed class GetMealsOverviewQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        int sanitizedPage = Math.Max(request.Page, 1);
-        int sanitizedLimit = Math.Clamp(request.Limit, 1, 100);
+        int sanitizedPage = PaginationPolicy.NormalizePage(request.Page);
+        int sanitizedLimit = PaginationPolicy.NormalizePageSize(request.Limit, defaultPageSize: 1);
         int favoriteLimit = Math.Clamp(request.FavoriteLimit, 1, 50);
         DateTime? normalizedFrom = request.DateFrom.HasValue
             ? UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateFrom.Value)

@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Common;
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
@@ -12,9 +13,6 @@ public sealed class GetRecipeCommentsQueryHandler(
     IRecipeCommentReadService commentReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipeCommentsQuery, Result<PagedResponse<RecipeCommentModel>>> {
-    private const int MaxPageNumber = 10_000;
-    private const int MaxPageSize = 100;
-
     public async Task<Result<PagedResponse<RecipeCommentModel>>> Handle(
         GetRecipeCommentsQuery query,
         CancellationToken cancellationToken) {
@@ -26,8 +24,8 @@ public sealed class GetRecipeCommentsQueryHandler(
             return CurrentUserAccessResolver.ToFailure<PagedResponse<RecipeCommentModel>>(userIdResult);
         }
 
-        int pageSize = Math.Clamp(query.Limit, 1, MaxPageSize);
-        int pageNumber = Math.Clamp(query.Page, 1, MaxPageNumber);
+        int pageSize = PaginationPolicy.NormalizePageSize(query.Limit, defaultPageSize: 1);
+        int pageNumber = PaginationPolicy.NormalizePage(query.Page);
         var recipeId = (RecipeId)query.RecipeId;
 
         PagedResponse<RecipeCommentModel> comments = await commentReadService
