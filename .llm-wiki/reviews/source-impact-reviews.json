@@ -182,17 +182,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "5f8e224915e485911182d9133b5e394b2aaf6d65e15068612e89c57738e743a0"
-        },
-        {
-          "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "be6275b033ffc707620b9698cf8aeb37fc677bda0fedbc794532790e91edafcf"
+          "sha256": "f151e5d3b3a2948cd76e0b61df3cf3a661f83b0c07503a7181edc7ee53f88b4c"
         }
       ],
-      "reason": "OpenAPI changes are additive 429 responses for two existing test-delivery endpoints; endpoint paths, request bodies, success responses, and authentication contracts remain unchanged.",
+      "reason": "Authorization failures now emit the already documented ApiErrorHttpResponse for 401 and 403; OpenAPI snapshots are structurally unchanged, api-compat reports zero changes, and JWT plus role integration tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "a4c68d54367f2d93b4b2f0af80de1a97f653df3f",
-      "reviewedAtUtc": "2026-08-18T10:59:21.7965290Z"
+      "gitHead": "33b3aa6e84d029f69a9cb8034375c9e6da6bfb78",
+      "reviewedAtUtc": "2026-08-18T11:46:05.2879955Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -201,17 +197,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "1ba13882ef0de492aa757f2203f11d7cf6033daed36a8bf879bc4f448050fa67"
-        },
-        {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "615afbc2ec056d131bc9afeee66843dd8ade8cdf47696b83af1c4ef83ae987d0"
+          "sha256": "c8401b6407575a55b8b5140dcde5dac7a413ea77be0984ef4f1fa1d662ac7d95"
         }
       ],
-      "reason": "Reviewed against current sources: explicit Presentation references only make existing compile-time dependencies on Application.Abstractions, FoodDiary.Mediator, and FoodDiary.Results visible and preserve the inward dependency rule; the single global action filter owns bounded low-cardinality request telemetry, security decisions remain separate, and focused unit/integration/architecture tests cover the change.",
+      "reason": "Request-aborted operations are recorded as cancelled with status 499 without failure metrics or warning logs, while handled unexpected exceptions reach the bounded request exception counter; focused unit tests cover all new paths.",
       "baseRef": "HEAD",
-      "gitHead": "1750267ba36c6a20435f2d9480466e74fc87ad2f",
-      "reviewedAtUtc": "2026-08-17T22:37:13.3388335Z"
+      "gitHead": "33b3aa6e84d029f69a9cb8034375c9e6da6bfb78",
+      "reviewedAtUtc": "2026-08-18T11:46:05.7743255Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -220,13 +212,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "4a18c596c84f2406374bb8e5f3192f74343a81dd97821a81ba06e61e11c1ee36"
+          "sha256": "aa741311a283412bdbf154dd58970d315cdb6d4bde369eba63cba9f701b6574d"
         }
       ],
-      "reason": "Reviewed optional Idempotency-Key error responses; the full OpenAPI snapshot was regenerated and all 129 API integration tests pass.",
+      "reason": "Authorization failures now emit the already documented ApiErrorHttpResponse for 401 and 403; OpenAPI snapshots are structurally unchanged, api-compat reports zero changes, and JWT plus role integration tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "a4c68d54367f2d93b4b2f0af80de1a97f653df3f",
-      "reviewedAtUtc": "2026-08-18T10:27:09.6088693Z"
+      "gitHead": "33b3aa6e84d029f69a9cb8034375c9e6da6bfb78",
+      "reviewedAtUtc": "2026-08-18T11:46:06.5818546Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -731,13 +723,13 @@
       "sources": [
         {
           "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
-          "sha256": "29e69c8d8d72e8f33655ad5fa27987647712aa696a8c17e5442073bb7347e5ee"
+          "sha256": "e9c70ac8388143f4a786836b1f8c4c09f8ef094e2e6f2cd01a668c7751717b34"
         }
       ],
-      "reason": "Reviewed additive auth 413/OpenAPI security changes and final-status presentation telemetry semantics against updated snapshots, integration tests, and observability documentation.",
+      "reason": "Request-aborted operations are recorded as cancelled with status 499 without failure metrics or warning logs, while handled unexpected exceptions reach the bounded request exception counter; focused unit tests cover all new paths.",
       "baseRef": "HEAD",
-      "gitHead": "5984bab1518618b086a668cc201c1c8f6294a5ba",
-      "reviewedAtUtc": "2026-08-17T23:37:34.1510775Z"
+      "gitHead": "33b3aa6e84d029f69a9cb8034375c9e6da6bfb78",
+      "reviewedAtUtc": "2026-08-18T11:46:07.3289445Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -853,13 +845,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "68ccb1f587b115343a09be6820e38f7f4b965ad416a6411fa53460d0b1bd6aa6"
+          "sha256": "2dd2dc3e5d50d226e9b579b62e834da49c5d8d3b90d519134544aab8dfa602b7"
         }
       ],
-      "reason": "New unit and integration tests cover limiter registration and partitioning, stable cache identity, unauthenticated cache rejection, endpoint policy metadata, standard 429 errors, and OpenAPI declarations.",
+      "reason": "The observability regression suite now also covers cancellation while serializing an already-classified unexpected error, preserving the original error type; the Web.Api test suite passes with 100 percent line and branch coverage for all changed host classes.",
       "baseRef": "HEAD",
-      "gitHead": "a4c68d54367f2d93b4b2f0af80de1a97f653df3f",
-      "reviewedAtUtc": "2026-08-18T10:59:23.1498279Z"
+      "gitHead": "33b3aa6e84d029f69a9cb8034375c9e6da6bfb78",
+      "reviewedAtUtc": "2026-08-18T11:55:56.1767638Z"
     },
     {
       "pageId": "workflow-release-readiness",

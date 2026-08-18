@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.Version;
 using FoodDiary.Web.Api.Build;
 using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
@@ -34,6 +35,7 @@ public static class ApiAuthenticationServiceCollectionExtensions {
                 .Configure<IOptions<JwtOptions>>(ConfigureJwtBearerOptions);
 
             services.AddAuthorization();
+            services.AddSingleton<IAuthorizationMiddlewareResultHandler, ApiAuthorizationMiddlewareResultHandler>();
 
             return services;
         }

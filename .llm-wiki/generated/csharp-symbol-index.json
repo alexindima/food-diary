@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3329,
-    "symbols": 3338,
+    "sourceFiles": 3330,
+    "symbols": 3339,
     "interfaceImplementationLinks": 233,
-    "dependencyInjectionRegistrations": 234,
+    "dependencyInjectionRegistrations": 235,
     "kinds": {
-      "class": 1712,
+      "class": 1713,
       "enum": 56,
       "interface": 413,
       "record": 1041,
@@ -27,7 +27,7 @@
       "Entity": 84,
       "Event": 19,
       "Factory": 9,
-      "Handler": 6,
+      "Handler": 7,
       "LookupRepository": 3,
       "Mapper": 8,
       "Mapping": 4,
@@ -21311,7 +21311,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 12
+      "line": 13
+    },
+    {
+      "name": "ApiAuthorizationMiddlewareResultHandler",
+      "kind": "class",
+      "role": "Handler",
+      "path": "FoodDiary.Web.Api/Extensions/ApiAuthorizationMiddlewareResultHandler.cs",
+      "line": 7
     },
     {
       "name": "ApiCompositionConstants",
@@ -26594,6 +26601,13 @@
       "lifetime": "Scoped",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
       "line": 61
+    },
+    {
+      "service": "IAuthorizationMiddlewareResultHandler",
+      "implementation": "ApiAuthorizationMiddlewareResultHandler",
+      "lifetime": "Singleton",
+      "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
+      "line": 38
     },
     {
       "service": "IWearableTokenProtector",

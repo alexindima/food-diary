@@ -170,8 +170,14 @@ public sealed class PresentationBoundaryIntegrationTests(
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
 
         HttpResponseMessage response = await client.GetAsync("/api/v1/admin/dashboard");
+        ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Multiple(
+            () => Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode),
+            () => Assert.Equal("Authentication.Forbidden", payload.Error),
+            () => Assert.Equal("You do not have permission to access this resource.", payload.Message),
+            () => Assert.False(string.IsNullOrWhiteSpace(payload.TraceId)));
     }
 
     [Fact]
@@ -190,15 +196,24 @@ public sealed class PresentationBoundaryIntegrationTests(
     public async Task AdminAchievementDefinitions_EnforcesAuthenticationAndAdminRole() {
         HttpClient anonymousClient = testAuthFactory.CreateClient();
         HttpResponseMessage anonymous = await anonymousClient.GetAsync("/api/v1/admin/achievement-definitions");
+        ErrorPayload? anonymousPayload = await anonymous.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
         HttpClient userClient = testAuthFactory.CreateClient();
         userClient.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
         userClient.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
         HttpResponseMessage forbidden = await userClient.GetAsync("/api/v1/admin/achievement-definitions");
+        ErrorPayload? forbiddenPayload = await forbidden.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
+        Assert.NotNull(anonymousPayload);
+        Assert.NotNull(forbiddenPayload);
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.Unauthorized, anonymous.StatusCode),
-            () => Assert.Equal(HttpStatusCode.Forbidden, forbidden.StatusCode));
+            () => Assert.Equal("Authentication.Unauthorized", anonymousPayload.Error),
+            () => Assert.Equal("Authentication is required.", anonymousPayload.Message),
+            () => Assert.False(string.IsNullOrWhiteSpace(anonymousPayload.TraceId)),
+            () => Assert.Equal(HttpStatusCode.Forbidden, forbidden.StatusCode),
+            () => Assert.Equal("Authentication.Forbidden", forbiddenPayload.Error),
+            () => Assert.False(string.IsNullOrWhiteSpace(forbiddenPayload.TraceId)));
     }
 
     [Fact]
@@ -708,8 +723,16 @@ public sealed class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
 
         HttpResponseMessage response = await client.PostAsync("/hubs/email-verification/negotiate?negotiateVersion=1", content: null);
+        ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Multiple(
+            () => Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode),
+            () => Assert.Contains(response.Headers.WwwAuthenticate, static header =>
+                string.Equals(header.Scheme, "Bearer", StringComparison.Ordinal)),
+            () => Assert.Equal("Authentication.Unauthorized", payload.Error),
+            () => Assert.Equal("Authentication is required.", payload.Message),
+            () => Assert.False(string.IsNullOrWhiteSpace(payload.TraceId)));
     }
 
     [Fact]

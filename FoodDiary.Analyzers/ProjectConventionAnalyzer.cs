@@ -36,6 +36,7 @@ public sealed class ProjectConventionAnalyzer : DiagnosticAnalyzer {
     private static readonly HashSet<string> FrameworkAsyncHookNames = new(StringComparer.Ordinal) {
         "BindModelAsync",
         "CheckHealthAsync",
+        "HandleAsync",
         "InvokeAsync",
         "OnActionExecutionAsync",
         "OnAuthorizationAsync",

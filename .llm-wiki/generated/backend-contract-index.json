@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1045,
     "ambiguousContracts": 3,
-    "consumerEdges": 7259,
-    "productionConsumerEdges": 4427,
-    "testConsumerEdges": 2832,
+    "consumerEdges": 7261,
+    "productionConsumerEdges": 4428,
+    "testConsumerEdges": 2833,
     "consumedContracts": 1045,
     "unconsumedContracts": 0
   },
@@ -20035,6 +20035,19 @@
         "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Web.Api/Extensions/ApiAuthorizationMiddlewareResultHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs",
       "isTest": false,
       "referenceCount": 4
@@ -20233,6 +20246,19 @@
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/FrontendObservabilityIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "ApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Web.Api.Tests/Extensions/ApiAuthorizationMiddlewareResultHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "ApiErrorHttpResponse",

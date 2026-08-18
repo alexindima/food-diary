@@ -45,6 +45,24 @@ public sealed class ProjectConventionAnalyzerTests {
     }
 
     [Fact]
+    public async Task FrameworkHandleAsyncDoesNotRequireCancellationTokenParameterAsync() {
+        const string source = """
+            using System.Threading.Tasks;
+
+            public sealed class FrameworkHandler {
+                public Task HandleAsync() => Task.CompletedTask;
+            }
+            """;
+
+        Assert.DoesNotContain(
+            await AnalyzeAsync(source),
+            diagnostic => string.Equals(
+                diagnostic.Id,
+                ProjectConventionAnalyzer.CancellationTokenRequiredId,
+                StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task TargetTypedNewInvocationArgumentReportsDiagnosticAsync() {
         const string source = """
             public sealed class Item;

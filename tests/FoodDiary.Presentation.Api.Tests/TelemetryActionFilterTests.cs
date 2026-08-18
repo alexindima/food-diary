@@ -185,6 +185,108 @@ public sealed class TelemetryActionFilterTests {
     }
 
     [Fact]
+    public async Task OnResourceExecutionAsync_WithClientCancellation_RecordsCancelledOutcome() {
+        using var metrics = new PresentationMetricListener();
+        using var activities = new PresentationActivityListener();
+        var logger = new RecordingLogger<TelemetryActionFilter>();
+        var filter = new TelemetryActionFilter(logger);
+        ResourceExecutingContext context = CreateResourceExecutingContext("Get");
+        using var requestCancellation = new CancellationTokenSource();
+        await requestCancellation.CancelAsync();
+        context.HttpContext.RequestAborted = requestCancellation.Token;
+
+        await filter.OnResourceExecutionAsync(context, () => Task.FromResult(
+            new ResourceExecutedContext(context, []) {
+                Exception = new OperationCanceledException(requestCancellation.Token),
+            }));
+
+        MetricMeasurement operation = Assert.Single(metrics.Operations);
+        Activity activity = Assert.Single(activities.Completed);
+        Assert.Multiple(
+            () => Assert.Equal("cancelled", operation.Tags["fooddiary.presentation.outcome"]),
+            () => Assert.Empty(metrics.Failures),
+            () => Assert.Empty(logger.Entries),
+            () => Assert.Equal(ActivityStatusCode.Unset, activity.Status),
+            () => Assert.Null(activity.GetTagItem("error.type")),
+            () => Assert.Equal(StatusCodes.Status499ClientClosedRequest, activity.GetTagItem("http.response.status_code")),
+            () => Assert.False(context.HttpContext.Items.Any()));
+    }
+
+    [Fact]
+    public async Task OnResourceExecutionAsync_WhenClientCancellationIsThrown_RecordsCancelledOutcomeAndRethrows() {
+        using var metrics = new PresentationMetricListener();
+        using var activities = new PresentationActivityListener();
+        var logger = new RecordingLogger<TelemetryActionFilter>();
+        var filter = new TelemetryActionFilter(logger);
+        ResourceExecutingContext context = CreateResourceExecutingContext("Post");
+        using var requestCancellation = new CancellationTokenSource();
+        await requestCancellation.CancelAsync();
+        context.HttpContext.RequestAborted = requestCancellation.Token;
+        var exception = new OperationCanceledException(requestCancellation.Token);
+
+        OperationCanceledException thrown = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+            filter.OnResourceExecutionAsync(
+                context,
+                () => Task.FromException<ResourceExecutedContext>(exception)));
+
+        Assert.Multiple(
+            () => Assert.Same(exception, thrown),
+            () => Assert.Equal("cancelled", Assert.Single(metrics.Operations).Tags["fooddiary.presentation.outcome"]),
+            () => Assert.Empty(metrics.Failures),
+            () => Assert.Empty(logger.Entries),
+            () => Assert.Equal(ActivityStatusCode.Unset, Assert.Single(activities.Completed).Status),
+            () => Assert.False(context.HttpContext.Items.Any()));
+    }
+
+    [Fact]
+    public async Task OnResultExecutionAsync_WithClientCancellation_RecordsCancelledOutcome() {
+        using var metrics = new PresentationMetricListener();
+        using var activities = new PresentationActivityListener();
+        var logger = new RecordingLogger<TelemetryActionFilter>();
+        var filter = new TelemetryActionFilter(logger);
+        ResultExecutingContext context = CreateResultExecutingContext("Get", new OkResult());
+        using var requestCancellation = new CancellationTokenSource();
+        await requestCancellation.CancelAsync();
+        context.HttpContext.RequestAborted = requestCancellation.Token;
+
+        await filter.OnResultExecutionAsync(context, () => Task.FromResult(
+            new ResultExecutedContext(context, [], context.Result, context.Controller) {
+                Exception = new OperationCanceledException(requestCancellation.Token),
+            }));
+
+        Assert.Multiple(
+            () => Assert.Equal("cancelled", Assert.Single(metrics.Operations).Tags["fooddiary.presentation.outcome"]),
+            () => Assert.Empty(metrics.Failures),
+            () => Assert.Empty(logger.Entries),
+            () => Assert.Equal(ActivityStatusCode.Unset, Assert.Single(activities.Completed).Status));
+    }
+
+    [Fact]
+    public async Task OnResultExecutionAsync_WhenClientCancellationIsThrown_RecordsCancelledOutcomeAndRethrows() {
+        using var metrics = new PresentationMetricListener();
+        using var activities = new PresentationActivityListener();
+        var logger = new RecordingLogger<TelemetryActionFilter>();
+        var filter = new TelemetryActionFilter(logger);
+        ResultExecutingContext context = CreateResultExecutingContext("Get", new OkResult());
+        using var requestCancellation = new CancellationTokenSource();
+        await requestCancellation.CancelAsync();
+        context.HttpContext.RequestAborted = requestCancellation.Token;
+        var exception = new OperationCanceledException(requestCancellation.Token);
+
+        OperationCanceledException thrown = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+            filter.OnResultExecutionAsync(
+                context,
+                () => Task.FromException<ResultExecutedContext>(exception)));
+
+        Assert.Multiple(
+            () => Assert.Same(exception, thrown),
+            () => Assert.Equal("cancelled", Assert.Single(metrics.Operations).Tags["fooddiary.presentation.outcome"]),
+            () => Assert.Empty(metrics.Failures),
+            () => Assert.Empty(logger.Entries),
+            () => Assert.Equal(ActivityStatusCode.Unset, Assert.Single(activities.Completed).Status));
+    }
+
+    [Fact]
     public async Task ResourceAndResultFilters_WhenBothRun_RecordOperationOnlyOnce() {
         using var metrics = new PresentationMetricListener();
         using var activities = new PresentationActivityListener();

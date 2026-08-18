@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Web.Api.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -75,6 +76,48 @@ public sealed class ApiExceptionHandlerTests {
         Assert.Equal("trace-id", response.TraceId);
     }
 
+    [Fact]
+    public async Task TryHandleAsync_ForClientCancellation_ReturnsClientClosedWithoutErrorBody() {
+        using var requestCancellation = new CancellationTokenSource();
+        await requestCancellation.CancelAsync();
+        DefaultHttpContext context = CreateHttpContext();
+        context.RequestAborted = requestCancellation.Token;
+        var handler = new ApiExceptionHandler(NullLogger<ApiExceptionHandler>.Instance);
+
+        bool handled = await handler.TryHandleAsync(
+            context,
+            new OperationCanceledException(requestCancellation.Token),
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.True(handled),
+            () => Assert.Equal(StatusCodes.Status499ClientClosedRequest, context.Response.StatusCode),
+            () => Assert.Equal(0, context.Response.Body.Length));
+    }
+
+    [Fact]
+    public async Task TryHandleAsync_ForClientCancellationAfterResponseStarted_PreservesResponseStatus() {
+        using var requestCancellation = new CancellationTokenSource();
+        await requestCancellation.CancelAsync();
+        var responseFeature = new StartedResponseFeature {
+            StatusCode = StatusCodes.Status202Accepted,
+        };
+        var context = new DefaultHttpContext();
+        context.Features.Set<IHttpResponseFeature>(responseFeature);
+        context.RequestAborted = requestCancellation.Token;
+        var handler = new ApiExceptionHandler(NullLogger<ApiExceptionHandler>.Instance);
+
+        bool handled = await handler.TryHandleAsync(
+            context,
+            new OperationCanceledException(requestCancellation.Token),
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.True(handled),
+            () => Assert.Equal(StatusCodes.Status202Accepted, context.Response.StatusCode),
+            () => Assert.Equal(0, responseFeature.Body.Length));
+    }
+
     private static DefaultHttpContext CreateHttpContext() {
         var context = new DefaultHttpContext {
             TraceIdentifier = "trace-id",
@@ -93,5 +136,24 @@ public sealed class ApiExceptionHandlerTests {
 
         Assert.NotNull(response);
         return response!;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StartedResponseFeature : IHttpResponseFeature {
+        public int StatusCode { get; set; } = StatusCodes.Status200OK;
+
+        public string? ReasonPhrase { get; set; }
+
+        public IHeaderDictionary Headers { get; set; } = new HeaderDictionary();
+
+        public Stream Body { get; set; } = new MemoryStream();
+
+        public bool HasStarted => true;
+
+        public void OnStarting(Func<object, Task> callback, object state) {
+        }
+
+        public void OnCompleted(Func<object, Task> callback, object state) {
+        }
     }
 }

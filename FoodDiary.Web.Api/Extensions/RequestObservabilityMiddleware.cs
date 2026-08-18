@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.OutputCaching;
 namespace FoodDiary.Web.Api.Extensions;
 
 public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger<RequestObservabilityMiddleware> logger) {
+    private static readonly object HandledExceptionKey = new();
+
     private sealed record RequestObservation(
         string PathLabel,
         string ScopeLabel);
@@ -21,12 +23,33 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
         try {
             await next(context).ConfigureAwait(false);
         } catch (Exception exception) {
-            ObserveException(activity, request.Method, observation.PathLabel, exception);
+            Exception observedException = TryTakeHandledException(context, out Exception handledException)
+                ? handledException
+                : exception;
+            ObserveException(activity, request.Method, observation.PathLabel, observedException);
             throw;
         } finally {
+            if (TryTakeHandledException(context, out Exception handledException)) {
+                ObserveException(activity, request.Method, observation.PathLabel, handledException);
+            }
+
             stopwatch.Stop();
             ObserveCompletedRequest(context, activity, observation, stopwatch.Elapsed.TotalMilliseconds);
         }
+    }
+
+    internal static void ReportHandledException(HttpContext context, Exception exception) =>
+        context.Items[HandledExceptionKey] = exception;
+
+    private static bool TryTakeHandledException(HttpContext context, out Exception exception) {
+        if (context.Items.TryGetValue(HandledExceptionKey, out object? value) && value is Exception handledException) {
+            context.Items.Remove(HandledExceptionKey);
+            exception = handledException;
+            return true;
+        }
+
+        exception = null!;
+        return false;
     }
 
     private static RequestObservation CreateObservation(HttpContext context) {

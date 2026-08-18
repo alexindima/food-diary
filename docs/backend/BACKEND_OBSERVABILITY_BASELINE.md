@@ -121,6 +121,9 @@ and unhandled exceptions are logged at warning level and mark the presentation
 activity as failed. Security decisions are kept separate from completed request
 operations and use only stable operation and outcome tags. Secrets, request
 values, user identifiers, and exception messages must never be metric tags.
+Requests cancelled after the client disconnects use the `cancelled` outcome and
+HTTP status `499`; they do not increment presentation failure metrics or produce
+warning logs.
 
 ## Added Background Job Signals
 

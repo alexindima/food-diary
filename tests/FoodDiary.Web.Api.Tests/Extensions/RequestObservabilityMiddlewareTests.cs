@@ -511,6 +511,108 @@ string.Equals(instrument.Name, "fooddiary.api.output_cache.events", StringCompar
         Assert.Equal(typeof(InvalidOperationException).FullName, capturedActivity.GetTagItem("error.type"));
     }
 
+    [Fact]
+    public async Task Middleware_WhenInnerExceptionHandlerHandlesFailure_RecordsExceptionMetricAndActivityError() {
+        const string requestPath = "/api/v1/test/handled-exception";
+        long exceptionCount = 0;
+        Activity? capturedActivity = null;
+
+        using var activityListener = new ActivityListener {
+            ShouldListenTo = source => string.Equals(source.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal),
+            Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
+            SampleUsingParentId = static (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllData,
+            ActivityStopped = activity => {
+                if (string.Equals(activity.GetTagItem("url.path")?.ToString(), requestPath, StringComparison.Ordinal)) {
+                    capturedActivity = activity;
+                }
+            },
+        };
+        ActivitySource.AddActivityListener(activityListener);
+
+        using var meterListener = new MeterListener();
+        meterListener.InstrumentPublished = (instrument, listener) => {
+            if (string.Equals(instrument.Meter.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal) &&
+                string.Equals(instrument.Name, "fooddiary.api.request.exceptions", StringComparison.Ordinal)) {
+                listener.EnableMeasurementEvents(instrument);
+            }
+        };
+        meterListener.SetMeasurementEventCallback<long>((_, value, tags, _) => {
+            if (string.Equals(GetTagValue(tags, "url.path"), requestPath, StringComparison.Ordinal)) {
+                exceptionCount += value;
+            }
+        });
+        meterListener.Start();
+
+        var exceptionHandler = new ApiExceptionHandler(NullLogger<ApiExceptionHandler>.Instance);
+        var middleware = new RequestObservabilityMiddleware(
+            next: async context => {
+                await exceptionHandler.TryHandleAsync(
+                    context,
+                    new InvalidOperationException("boom"),
+                    CancellationToken.None);
+            },
+            logger: NullLogger<RequestObservabilityMiddleware>.Instance);
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Method = HttpMethods.Get;
+        httpContext.Request.Path = requestPath;
+        httpContext.Response.Body = new MemoryStream();
+        httpContext.SetEndpoint(CreateRouteEndpoint(requestPath));
+
+        await middleware.InvokeAsync(httpContext);
+
+        Activity activity = Assert.IsType<Activity>(capturedActivity);
+        Assert.Multiple(
+            () => Assert.Equal(StatusCodes.Status500InternalServerError, httpContext.Response.StatusCode),
+            () => Assert.Equal(1, exceptionCount),
+            () => Assert.Equal(ActivityStatusCode.Error, activity.Status),
+            () => Assert.Equal(typeof(InvalidOperationException).FullName, activity.GetTagItem("error.type")));
+    }
+
+    [Fact]
+    public async Task Middleware_WhenHandledErrorResponseWriteIsCancelled_ObservesOriginalException() {
+        const string requestPath = "/api/v1/test/cancelled-error-write";
+        Activity? capturedActivity = null;
+
+        using var activityListener = new ActivityListener {
+            ShouldListenTo = source => string.Equals(source.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal),
+            Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
+            SampleUsingParentId = static (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllData,
+            ActivityStopped = activity => {
+                if (string.Equals(activity.GetTagItem("url.path")?.ToString(), requestPath, StringComparison.Ordinal)) {
+                    capturedActivity = activity;
+                }
+            },
+        };
+        ActivitySource.AddActivityListener(activityListener);
+
+        using var requestCancellation = new CancellationTokenSource();
+        await requestCancellation.CancelAsync();
+        var exceptionHandler = new ApiExceptionHandler(NullLogger<ApiExceptionHandler>.Instance);
+        var middleware = new RequestObservabilityMiddleware(
+            next: async context => {
+                await exceptionHandler.TryHandleAsync(
+                    context,
+                    new InvalidOperationException("boom"),
+                    requestCancellation.Token);
+            },
+            logger: NullLogger<RequestObservabilityMiddleware>.Instance);
+        var httpContext = new DefaultHttpContext {
+            RequestAborted = requestCancellation.Token,
+        };
+        httpContext.Request.Method = HttpMethods.Get;
+        httpContext.Request.Path = requestPath;
+        httpContext.Response.Body = new MemoryStream();
+        httpContext.SetEndpoint(CreateRouteEndpoint(requestPath));
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => middleware.InvokeAsync(httpContext));
+
+        Activity activity = Assert.IsType<Activity>(capturedActivity);
+        Assert.Multiple(
+            () => Assert.Equal(ActivityStatusCode.Error, activity.Status),
+            () => Assert.Equal(typeof(InvalidOperationException).FullName, activity.GetTagItem("error.type")),
+            () => Assert.False(httpContext.Items.Any()));
+    }
+
     private static RouteEndpoint CreateRouteEndpoint(string pattern, params object[] metadata) =>
         new(
             static _ => Task.CompletedTask,

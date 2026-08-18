@@ -12,6 +12,8 @@ public sealed class ApiExceptionHandler(
         Exception exception,
         CancellationToken cancellationToken) {
         switch (exception) {
+            case OperationCanceledException when httpContext.RequestAborted.IsCancellationRequested:
+                return HandleClientCancellation(httpContext);
             case BadHttpRequestException { StatusCode: StatusCodes.Status413PayloadTooLarge }: {
                     httpContext.Response.StatusCode = StatusCodes.Status413PayloadTooLarge;
 
@@ -51,6 +53,7 @@ public sealed class ApiExceptionHandler(
                 }
         }
 
+        RequestObservabilityMiddleware.ReportHandledException(httpContext, exception);
         logger.LogError(exception, "Unhandled exception while processing request {Method} {Path}.",
             httpContext.Request.Method,
             httpContext.Request.Path);
@@ -63,6 +66,18 @@ public sealed class ApiExceptionHandler(
             httpContext.TraceIdentifier);
 
         await httpContext.Response.WriteAsJsonAsync(response, cancellationToken).ConfigureAwait(false);
+        return true;
+    }
+
+    private bool HandleClientCancellation(HttpContext httpContext) {
+        if (!httpContext.Response.HasStarted) {
+            httpContext.Response.StatusCode = StatusCodes.Status499ClientClosedRequest;
+        }
+
+        logger.LogDebug(
+            "Request {Method} {Path} was cancelled by the client.",
+            httpContext.Request.Method,
+            httpContext.Request.Path);
         return true;
     }
 }

@@ -23,12 +23,20 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
         try {
             ResourceExecutedContext executedContext = await next().ConfigureAwait(false);
             Exception? exception = executedContext.ExceptionHandled ? null : executedContext.Exception;
+            if (IsClientCancellation(executedContext.HttpContext, exception)) {
+                CompleteObservation(observation, StatusCodes.Status499ClientClosedRequest, exception: null, isCancelled: true);
+                return;
+            }
+
             CompleteObservation(
                 observation,
                 ResolveStatusCode(
                     executedContext.HttpContext.Response.StatusCode,
                     exception),
                 exception);
+        } catch (OperationCanceledException) when (context.HttpContext.RequestAborted.IsCancellationRequested) {
+            CompleteObservation(observation, StatusCodes.Status499ClientClosedRequest, exception: null, isCancelled: true);
+            throw;
         } catch (Exception exception) {
             CompleteObservation(observation, StatusCodes.Status500InternalServerError, exception);
             throw;
@@ -49,12 +57,20 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
         try {
             ResultExecutedContext executedContext = await next().ConfigureAwait(false);
             Exception? exception = executedContext.ExceptionHandled ? null : executedContext.Exception;
+            if (IsClientCancellation(executedContext.HttpContext, exception)) {
+                CompleteObservation(observation, StatusCodes.Status499ClientClosedRequest, exception: null, isCancelled: true);
+                return;
+            }
+
             CompleteObservation(
                 observation,
                 ResolveStatusCode(
                     executedContext.HttpContext.Response.StatusCode,
                     exception),
                 exception);
+        } catch (OperationCanceledException) when (context.HttpContext.RequestAborted.IsCancellationRequested) {
+            CompleteObservation(observation, StatusCodes.Status499ClientClosedRequest, exception: null, isCancelled: true);
+            throw;
         } catch (Exception exception) {
             CompleteObservation(observation, StatusCodes.Status500InternalServerError, exception);
             throw;
@@ -90,10 +106,11 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
     private void CompleteObservation(
         PresentationOperationObservation observation,
         int statusCode,
-        Exception? exception) {
+        Exception? exception,
+        bool isCancelled = false) {
         observation.Stopwatch.Stop();
         bool isSuccess = exception is null && statusCode < StatusCodes.Status400BadRequest;
-        string outcome = isSuccess ? "success" : "failure";
+        string outcome = ResolveOutcome(isSuccess, isCancelled);
 
         CompleteActivity(
             observation.Activity,
@@ -107,7 +124,7 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
             outcome,
             observation.Stopwatch.Elapsed.TotalMilliseconds);
 
-        if (exception is not null) {
+        if (!isCancelled && exception is not null) {
             observation.Activity?.SetStatus(ActivityStatusCode.Error);
             observation.Activity?.SetTag("error.type", exception.GetType().FullName);
             RecordFailureMetric(
@@ -115,7 +132,7 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
                 observation.ControllerName,
                 observation.OperationName,
                 "UnhandledException");
-        } else if (!isSuccess) {
+        } else if (!isCancelled && !isSuccess) {
             if (statusCode >= StatusCodes.Status500InternalServerError) {
                 observation.Activity?.SetStatus(ActivityStatusCode.Error);
             }
@@ -129,7 +146,7 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
 
         observation.Activity?.Dispose();
 
-        if (!isSuccess) {
+        if (!isSuccess && !isCancelled) {
             logger.Log(
                 ResolveFailureLogLevel(statusCode, exception),
                 "Action {Operation} in {Feature}/{Controller} returned {StatusCode} in {ElapsedMs:F1}ms",
@@ -145,6 +162,17 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
         exception is not null
             ? StatusCodes.Status500InternalServerError
             : responseStatusCode;
+
+    private static bool IsClientCancellation(HttpContext context, Exception? exception) =>
+        exception is OperationCanceledException && context.RequestAborted.IsCancellationRequested;
+
+    private static string ResolveOutcome(bool isSuccess, bool isCancelled) {
+        if (isCancelled) {
+            return "cancelled";
+        }
+
+        return isSuccess ? "success" : "failure";
+    }
 
     private static LogLevel ResolveFailureLogLevel(int statusCode, Exception? exception) =>
         exception is not null || statusCode >= StatusCodes.Status500InternalServerError
