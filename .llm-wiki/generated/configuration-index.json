@@ -3,7 +3,7 @@
   "summary": {
     "optionTypes": 54,
     "configurationFiles": 7,
-    "configurationKeys": 217,
+    "configurationKeys": 221,
     "environmentVariables": 171
   },
   "optionTypes": [
@@ -47,6 +47,7 @@
       "type": "ApiForwardedHeadersOptions",
       "section": "ForwardedHeaders",
       "properties": [
+        "AllowedHosts",
         "ForwardLimit",
         "KnownNetworks",
         "KnownProxies"
@@ -85,6 +86,7 @@
         "PermitLimit",
         "QueueLimit",
         "TestDelivery",
+        "Wearable",
         "Webhook",
         "WindowSeconds"
       ],
@@ -714,6 +716,7 @@
         "Email:FrontendBaseUrl",
         "Email:PasswordResetPath",
         "Email:VerificationPath",
+        "ForwardedHeaders:AllowedHosts",
         "ForwardedHeaders:ForwardLimit",
         "ForwardedHeaders:KnownNetworks",
         "ForwardedHeaders:KnownProxies",
@@ -767,6 +770,9 @@
         "RateLimiting:TestDelivery:PermitLimit",
         "RateLimiting:TestDelivery:QueueLimit",
         "RateLimiting:TestDelivery:WindowSeconds",
+        "RateLimiting:Wearable:PermitLimit",
+        "RateLimiting:Wearable:QueueLimit",
+        "RateLimiting:Wearable:WindowSeconds",
         "RateLimiting:Webhook:PermitLimit",
         "RateLimiting:Webhook:QueueLimit",
         "RateLimiting:Webhook:WindowSeconds",

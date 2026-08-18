@@ -22,6 +22,13 @@ public sealed class EntityAndAggregateRootTests {
     }
 
     [Fact]
+    public void DomainEvent_EventType_AllowsStableOverride() {
+        IDomainEvent domainEvent = new NamedTestDomainEvent(DateTime.UtcNow);
+
+        Assert.Equal("test-event", domainEvent.EventType);
+    }
+
+    [Fact]
     public void Entity_Equals_NullEntity_ReturnsFalse() {
         var entity = TestEntity.WithId(Guid.NewGuid());
 
@@ -84,7 +91,8 @@ public sealed class EntityAndAggregateRootTests {
 
         Assert.False(left.Equals(right));
         Assert.True(left != right);
-        Assert.NotEqual(left.GetHashCode(), right.GetHashCode());
+        Assert.Equal(RuntimeHelpers.GetHashCode(left), left.GetHashCode());
+        Assert.Equal(RuntimeHelpers.GetHashCode(right), right.GetHashCode());
     }
 
     [Fact]
@@ -113,6 +121,20 @@ public sealed class EntityAndAggregateRootTests {
 
         Assert.Equal(RuntimeHelpers.GetHashCode(entity), hashCode);
         Assert.Equal(hashCode, entity.GetHashCode());
+    }
+
+    [Fact]
+    public void Entity_Id_IsInitOnly() {
+        MethodInfo setter = typeof(Entity<Guid>).GetProperty(nameof(Entity<Guid>.Id))!.SetMethod!;
+
+        Assert.Contains(typeof(IsExternalInit), setter.ReturnParameter.GetRequiredCustomModifiers());
+    }
+
+    [Fact]
+    public void Entity_Id_InitializedWithDefaultValue_RemainsTransient() {
+        var entity = TestEntity.Initialized(Guid.Empty);
+
+        Assert.Equal(RuntimeHelpers.GetHashCode(entity), entity.GetHashCode());
     }
 
     [Fact]
@@ -148,14 +170,13 @@ public sealed class EntityAndAggregateRootTests {
     }
 
     [Fact]
-    public void Entity_SetCreated_WithLocalTime_StoresUtcTime() {
+    public void Entity_SetCreated_WithLocalTime_Throws() {
         var entity = TestEntity.WithId(Guid.NewGuid());
         var localTime = new DateTime(2026, 6, 3, 12, 30, 0, DateTimeKind.Local);
 
-        entity.MarkCreated(localTime);
+        ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(() => entity.MarkCreated(localTime));
 
-        Assert.Equal(localTime.ToUniversalTime(), entity.CreatedOnUtc);
-        Assert.Equal(DateTimeKind.Utc, entity.CreatedOnUtc.Kind);
+        Assert.Equal("createdOnUtc", ex.ParamName);
     }
 
     [Fact]
@@ -181,14 +202,13 @@ public sealed class EntityAndAggregateRootTests {
     }
 
     [Fact]
-    public void Entity_SetModified_WithLocalTime_StoresUtcTime() {
+    public void Entity_SetModified_WithLocalTime_Throws() {
         var entity = TestEntity.WithId(Guid.NewGuid());
         var localTime = new DateTime(2026, 6, 3, 12, 30, 0, DateTimeKind.Local);
 
-        entity.MarkModified(localTime);
+        ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(() => entity.MarkModified(localTime));
 
-        Assert.Equal(localTime.ToUniversalTime(), entity.ModifiedOnUtc);
-        Assert.Equal(DateTimeKind.Utc, entity.ModifiedOnUtc?.Kind);
+        Assert.Equal("modifiedOnUtc", ex.ParamName);
     }
 
     [Fact]
@@ -210,6 +230,14 @@ public sealed class EntityAndAggregateRootTests {
 
         IDomainEvent single = Assert.Single(aggregate.DomainEvents);
         Assert.Same(@event, single);
+    }
+
+    [Fact]
+    public void AggregateRoot_RaiseDomainEvent_WithNull_Throws() {
+        var aggregate = TestAggregateRoot.WithId(Guid.NewGuid());
+
+        Assert.Throws<ArgumentNullException>(() => aggregate.AddEvent(null!));
+        Assert.Empty(aggregate.DomainEvents);
     }
 
     [Fact]
@@ -252,6 +280,62 @@ public sealed class EntityAndAggregateRootTests {
         Assert.Equal(DateTimeKind.Utc, value.Kind);
     }
 
+    [Theory]
+    [InlineData(DateTimeKind.Local)]
+    [InlineData(DateTimeKind.Unspecified)]
+    public void DomainTime_EnsureUtc_WithNonUtcKind_Throws(DateTimeKind kind) {
+        var value = new DateTime(2026, 6, 3, 12, 30, 0, kind);
+
+        ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(
+            () => DomainTime.EnsureUtc(value, "value"));
+
+        Assert.Equal("value", ex.ParamName);
+    }
+
+    [Fact]
+    public void DomainTime_EnsureUtc_WithUtcValue_ReturnsSameValue() {
+        var value = new DateTime(2026, 6, 3, 12, 30, 0, DateTimeKind.Utc);
+
+        DateTime result = DomainTime.EnsureUtc(value, "value");
+
+        Assert.Equal(value, result);
+    }
+
+    [Fact]
+    public void DomainTime_Override_UsesScopedProviderAndRestoresPreviousProvider() {
+        var outerTime = new DateTimeOffset(2026, 6, 3, 8, 30, 0, TimeSpan.Zero);
+        DateTimeOffset innerTime = outerTime.AddHours(1);
+        using IDisposable outerScope = DomainTime.Override(new FixedTimeProvider(outerTime));
+        Assert.Equal(outerTime.UtcDateTime, DomainTime.UtcNow);
+
+        IDisposable innerScope = DomainTime.Override(new FixedTimeProvider(innerTime));
+        Assert.Equal(innerTime.UtcDateTime, DomainTime.UtcNow);
+
+        innerScope.Dispose();
+        innerScope.Dispose();
+
+        Assert.Equal(outerTime.UtcDateTime, DomainTime.UtcNow);
+    }
+
+    [Fact]
+    public async Task DomainTime_Override_IsolatedAcrossParallelAsyncFlows() {
+        var firstTime = new DateTimeOffset(2026, 6, 3, 8, 30, 0, TimeSpan.Zero);
+        DateTimeOffset secondTime = firstTime.AddDays(1);
+
+        Task<DateTime> first = Task.Run(() => ReadOverriddenTime(firstTime));
+        Task<DateTime> second = Task.Run(() => ReadOverriddenTime(secondTime));
+
+        DateTime[] results = await Task.WhenAll(first, second);
+
+        Assert.Equal(firstTime.UtcDateTime, results[0]);
+        Assert.Equal(secondTime.UtcDateTime, results[1]);
+    }
+
+    [Fact]
+    public void DomainTime_Override_WithNullProvider_Throws() {
+        Assert.Throws<ArgumentNullException>(() => DomainTime.Override(null!));
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class TestEntity : Entity<Guid> {
         private TestEntity() {
@@ -261,6 +345,8 @@ public sealed class EntityAndAggregateRootTests {
         }
 
         public static TestEntity WithId(Guid id) => new(id);
+
+        public static TestEntity Initialized(Guid id) => new() { Id = id };
 
         public static TestEntity Transient() => new();
 
@@ -315,4 +401,19 @@ public sealed class EntityAndAggregateRootTests {
 
     [ExcludeFromCodeCoverage]
     private sealed record TestDomainEvent(DateTime OccurredOnUtc) : IDomainEvent;
+
+    [ExcludeFromCodeCoverage]
+    private sealed record NamedTestDomainEvent(DateTime OccurredOnUtc) : IDomainEvent {
+        public string EventType => "test-event";
+    }
+
+    private static DateTime ReadOverriddenTime(DateTimeOffset utcNow) {
+        using IDisposable scope = DomainTime.Override(new FixedTimeProvider(utcNow));
+        return DomainTime.UtcNow;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider(DateTimeOffset utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => utcNow;
+    }
 }

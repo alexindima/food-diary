@@ -2,10 +2,13 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Wearables.Mappings;
 using FoodDiary.Presentation.Api.Features.Wearables.Requests;
 using FoodDiary.Presentation.Api.Features.Wearables.Responses;
+using FoodDiary.Presentation.Api.Filters;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace FoodDiary.Presentation.Api.Features.Wearables;
 
@@ -26,6 +29,7 @@ public sealed class WearablesController(ISender mediator) : AuthorizedController
     [HttpPost("{provider}/connect")]
     [ProducesResponseType<WearableConnectionHttpResponse>(StatusCodes.Status200OK)]
     [BlockImpersonatedAccess]
+    [EnableRateLimiting(PresentationPolicyNames.WearableRateLimitPolicyName)]
     public Task<IActionResult> Connect(
         [FromCurrentUser] Guid userId,
         string provider,
@@ -42,6 +46,9 @@ public sealed class WearablesController(ISender mediator) : AuthorizedController
 
     [HttpPost("{provider}/sync")]
     [ProducesResponseType<WearableDailySummaryHttpResponse>(StatusCodes.Status200OK)]
+    [BlockImpersonatedAccess]
+    [EnableRateLimiting(PresentationPolicyNames.WearableRateLimitPolicyName)]
+    [EnableIdempotency(requireKey: true)]
     public Task<IActionResult> Sync(
         [FromCurrentUser] Guid userId,
         string provider,

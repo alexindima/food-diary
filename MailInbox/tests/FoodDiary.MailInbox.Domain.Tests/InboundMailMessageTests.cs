@@ -172,14 +172,14 @@ public sealed class InboundMailMessageTests {
     }
 
     [Fact]
-    public void InboundMailMessageReceivedDomainEvent_NormalizesOccurredOnToUtc() {
+    public void InboundMailMessageReceivedDomainEvent_WithNonUtcOverride_Throws() {
         var id = InboundMailMessageId.New();
         var occurredAt = new DateTime(2026, 4, 26, 13, 0, 0, DateTimeKind.Local);
 
-        var domainEvent = new InboundMailMessageReceivedDomainEvent(id, occurredAt);
+        ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(
+            () => new InboundMailMessageReceivedDomainEvent(id, occurredAt));
 
-        Assert.Equal(id, domainEvent.MessageId);
-        Assert.Equal(DateTimeKind.Utc, domainEvent.OccurredOnUtc.Kind);
+        Assert.Equal("OccurredOnUtcOverride", ex.ParamName);
     }
 
     private static InboundMailMessage CreateMessage() =>

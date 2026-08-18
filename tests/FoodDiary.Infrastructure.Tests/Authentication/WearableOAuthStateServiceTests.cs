@@ -1,9 +1,7 @@
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Authentication;
-using FoodDiary.Infrastructure.Options;
-using System.Text;
-using MsOptions = Microsoft.Extensions.Options.Options;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace FoodDiary.Infrastructure.Tests.Authentication;
 
@@ -17,6 +15,19 @@ public sealed class WearableOAuthStateServiceTests {
         string state = service.CreateState(userId, WearableProvider.Fitbit, "client-state");
 
         Assert.True(service.IsValidState(state, userId, WearableProvider.Fitbit));
+    }
+
+    [Fact]
+    public void CreateState_DoesNotExposeProtectedPayload() {
+        var userId = UserId.New();
+        WearableOAuthStateService service = CreateService();
+
+        string state = service.CreateState(userId, WearableProvider.Fitbit, "client-state");
+
+        Assert.Multiple(
+            () => Assert.DoesNotContain(userId.Value.ToString("D"), state, StringComparison.OrdinalIgnoreCase),
+            () => Assert.DoesNotContain("client-state", state, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("Fitbit", state, StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -37,28 +48,18 @@ public sealed class WearableOAuthStateServiceTests {
     }
 
     [Fact]
-    public void CreateState_WhenSecretKeyInvalid_Throws() {
-        WearableOAuthStateService service = CreateService(secretKey: "");
+    public void IsValidState_WhenProviderDiffers_ReturnsFalse() {
+        var userId = UserId.New();
+        WearableOAuthStateService service = CreateService();
+        string state = service.CreateState(userId, WearableProvider.Fitbit, "client-state");
 
-        InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() =>
-            service.CreateState(UserId.New(), WearableProvider.Fitbit, "client-state"));
-
-        Assert.Contains("SecretKey", ex.Message, StringComparison.OrdinalIgnoreCase);
-    }
-
-    [Fact]
-    public void IsValidState_WhenSecretKeyInvalid_ReturnsFalse() {
-        WearableOAuthStateService service = CreateService(secretKey: "");
-
-        Assert.False(service.IsValidState("state", UserId.New(), WearableProvider.Fitbit));
+        Assert.False(service.IsValidState(state, userId, WearableProvider.GoogleFit));
     }
 
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
-    [InlineData("payloadonly")]
-    [InlineData(".signature")]
-    [InlineData("payload.")]
+    [InlineData("not-protected-state")]
     public void IsValidState_WhenStateShapeInvalid_ReturnsFalse(string state) {
         WearableOAuthStateService service = CreateService();
 
@@ -66,65 +67,39 @@ public sealed class WearableOAuthStateServiceTests {
     }
 
     [Fact]
-    public void IsValidState_WhenSignatureIsNotBase64Url_ReturnsFalse() {
-        WearableOAuthStateService service = CreateService();
+    public void IsValidState_WhenDataProtectionKeyDiffers_ReturnsFalse() {
+        var userId = UserId.New();
+        WearableOAuthStateService issuer = CreateService();
+        string state = issuer.CreateState(userId, WearableProvider.Fitbit, "client-state");
+        WearableOAuthStateService validator = CreateService();
 
-        Assert.False(service.IsValidState("payload.***", UserId.New(), WearableProvider.Fitbit));
-    }
-
-    [Fact]
-    public void IsValidState_WhenPayloadIsNotBase64UrlAfterValidSignature_ReturnsFalse() {
-        WearableOAuthStateService service = CreateService();
-        const string payloadSegment = "***";
-        string signatureSegment = SignStatePayload(service, payloadSegment);
-
-        Assert.False(service.IsValidState($"{payloadSegment}.{signatureSegment}", UserId.New(), WearableProvider.Fitbit));
-    }
-
-    [Fact]
-    public void IsValidState_WhenPayloadJsonInvalidAfterValidSignature_ReturnsFalse() {
-        WearableOAuthStateService service = CreateService();
-        string payloadSegment = Base64UrlEncode(Encoding.UTF8.GetBytes("not-json"));
-        string signatureSegment = SignStatePayload(service, payloadSegment);
-
-        Assert.False(service.IsValidState($"{payloadSegment}.{signatureSegment}", UserId.New(), WearableProvider.Fitbit));
+        Assert.False(validator.IsValidState(state, userId, WearableProvider.Fitbit));
     }
 
     [Fact]
     public void IsValidState_WhenStateExpired_ReturnsFalse() {
         var userId = UserId.New();
-        WearableOAuthStateService issuer = CreateService(new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Utc));
+        var provider = new EphemeralDataProtectionProvider();
+        WearableOAuthStateService issuer = CreateService(
+            new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Utc),
+            provider);
         string state = issuer.CreateState(userId, WearableProvider.Fitbit, "client-state");
-        WearableOAuthStateService validator = CreateService(new DateTime(2026, 5, 31, 0, 11, 0, DateTimeKind.Utc));
+        WearableOAuthStateService validator = CreateService(
+            new DateTime(2026, 5, 31, 0, 11, 0, DateTimeKind.Utc),
+            provider);
 
         Assert.False(validator.IsValidState(state, userId, WearableProvider.Fitbit));
     }
 
-    private static WearableOAuthStateService CreateService(DateTime? utcNow = null, string? secretKey = null) =>
+    private static WearableOAuthStateService CreateService(
+        DateTime? utcNow = null,
+        IDataProtectionProvider? provider = null) =>
         new(
-            MsOptions.Create(new JwtOptions {
-                SecretKey = secretKey ?? "super-secret-key-for-tests-only-123456789",
-                Issuer = "FoodDiary",
-                Audience = "FoodDiaryClients",
-                ExpirationMinutes = 60,
-                RefreshTokenExpirationDays = 7,
-                RememberMeRefreshTokenExpirationDays = 90,
-            }),
-            new StubDateTimeProvider(utcNow ?? new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Utc)));
-
-    private static string SignStatePayload(WearableOAuthStateService service, string payloadSegment) {
-        System.Reflection.MethodInfo signMethod = typeof(WearableOAuthStateService).GetMethod(
-            "Sign",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
-        byte[] signature = (byte[])signMethod.Invoke(service, [payloadSegment])!;
-        return Base64UrlEncode(signature);
-    }
-
-    private static string Base64UrlEncode(byte[] bytes) =>
-        Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+            provider ?? new EphemeralDataProtectionProvider(),
+            new StubTimeProvider(utcNow ?? new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Utc)));
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider(DateTime utcNow) : TimeProvider {
+    private sealed class StubTimeProvider(DateTime utcNow) : TimeProvider {
         public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 }

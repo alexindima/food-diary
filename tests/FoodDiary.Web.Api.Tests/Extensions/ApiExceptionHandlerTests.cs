@@ -4,7 +4,10 @@ using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Web.Api.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Web.Api.Tests.Extensions;
@@ -31,7 +34,8 @@ public sealed class ApiExceptionHandlerTests {
     [Fact]
     public async Task TryHandleAsync_ForConcurrencyException_ReturnsConflictApiError() {
         DefaultHttpContext context = CreateHttpContext();
-        var handler = new ApiExceptionHandler(NullLogger<ApiExceptionHandler>.Instance);
+        var logger = new RecordingLogger<ApiExceptionHandler>();
+        var handler = new ApiExceptionHandler(logger);
 
         bool handled = await handler.TryHandleAsync(context, new DbUpdateConcurrencyException("Conflict"), CancellationToken.None);
 
@@ -41,12 +45,14 @@ public sealed class ApiExceptionHandlerTests {
         Assert.Equal("Concurrency.Conflict", response.Error);
         Assert.Equal("The resource was modified by another request. Please retry.", response.Message);
         Assert.Equal("trace-id", response.TraceId);
+        AssertPrivacySafeLog(context, logger, LogLevel.Warning);
     }
 
     [Fact]
     public async Task TryHandleAsync_ForUnhandledException_ReturnsUnexpectedApiError() {
         DefaultHttpContext context = CreateHttpContext();
-        var handler = new ApiExceptionHandler(NullLogger<ApiExceptionHandler>.Instance);
+        var logger = new RecordingLogger<ApiExceptionHandler>();
+        var handler = new ApiExceptionHandler(logger);
 
         bool handled = await handler.TryHandleAsync(context, new InvalidOperationException("Unexpected"), CancellationToken.None);
 
@@ -56,6 +62,7 @@ public sealed class ApiExceptionHandlerTests {
         Assert.Equal("Server.Unexpected", response.Error);
         Assert.Equal("An unexpected error occurred.", response.Message);
         Assert.Equal("trace-id", response.TraceId);
+        AssertPrivacySafeLog(context, logger, LogLevel.Error);
     }
 
     [Fact]
@@ -82,7 +89,8 @@ public sealed class ApiExceptionHandlerTests {
         await requestCancellation.CancelAsync();
         DefaultHttpContext context = CreateHttpContext();
         context.RequestAborted = requestCancellation.Token;
-        var handler = new ApiExceptionHandler(NullLogger<ApiExceptionHandler>.Instance);
+        var logger = new RecordingLogger<ApiExceptionHandler>();
+        var handler = new ApiExceptionHandler(logger);
 
         bool handled = await handler.TryHandleAsync(
             context,
@@ -93,6 +101,7 @@ public sealed class ApiExceptionHandlerTests {
             () => Assert.True(handled),
             () => Assert.Equal(StatusCodes.Status499ClientClosedRequest, context.Response.StatusCode),
             () => Assert.Equal(0, context.Response.Body.Length));
+        AssertPrivacySafeLog(context, logger, LogLevel.Debug);
     }
 
     [Fact]
@@ -123,9 +132,26 @@ public sealed class ApiExceptionHandlerTests {
             TraceIdentifier = "trace-id",
         };
         context.Request.Method = HttpMethods.Post;
-        context.Request.Path = "/api/test";
+        context.Request.Path = $"/api/v1/users/{Guid.NewGuid():D}/password";
+        context.SetEndpoint(new RouteEndpoint(
+            _ => Task.CompletedTask,
+            RoutePatternFactory.Parse("/api/v1/users/{userId:guid}/password"),
+            order: 0,
+            EndpointMetadataCollection.Empty,
+            "user-password"));
         context.Response.Body = new MemoryStream();
         return context;
+    }
+
+    private static void AssertPrivacySafeLog(
+        DefaultHttpContext context,
+        RecordingLogger<ApiExceptionHandler> logger,
+        LogLevel expectedLevel) {
+        LogEntry entry = Assert.Single(logger.Entries);
+        Assert.Multiple(
+            () => Assert.Equal(expectedLevel, entry.Level),
+            () => Assert.Contains("/api/v1/users/{userId:guid}/password", entry.Message, StringComparison.Ordinal),
+            () => Assert.DoesNotContain(context.Request.Path.Value!, entry.Message, StringComparison.Ordinal));
     }
 
     private static async Task<ApiErrorHttpResponse> ReadResponseAsync(DefaultHttpContext context) {
@@ -154,6 +180,27 @@ public sealed class ApiExceptionHandlerTests {
         }
 
         public void OnCompleted(Func<object, Task> callback, object state) {
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record LogEntry(LogLevel Level, string Message);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingLogger<T> : ILogger<T> {
+        public List<LogEntry> Entries { get; } = [];
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter) {
+            Entries.Add(new LogEntry(logLevel, formatter(state, exception)));
         }
     }
 }

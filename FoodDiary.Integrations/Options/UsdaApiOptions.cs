@@ -5,4 +5,8 @@ public sealed class UsdaApiOptions {
 
     public string ApiKey { get; init; } = string.Empty;
     public string BaseUrl { get; init; } = "https://api.nal.usda.gov/fdc/v1";
+
+    public static bool HasValidBaseUrl(UsdaApiOptions options) =>
+        Uri.TryCreate(options.BaseUrl, UriKind.Absolute, out Uri? uri) &&
+        string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase);
 }

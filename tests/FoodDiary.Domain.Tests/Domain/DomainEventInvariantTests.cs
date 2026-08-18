@@ -6,6 +6,22 @@ namespace FoodDiary.Domain.Tests.Domain;
 
 [ExcludeFromCodeCoverage]
 public sealed class DomainEventInvariantTests {
+    [Theory]
+    [InlineData(DateTimeKind.Local)]
+    [InlineData(DateTimeKind.Unspecified)]
+    public void RecommendationCreatedDomainEvent_WithNonUtcOverride_Throws(DateTimeKind kind) {
+        var occurredOnUtc = new DateTime(2026, 3, 27, 12, 0, 0, kind);
+
+        ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new RecommendationCreatedDomainEvent(
+                RecommendationId.New(),
+                UserId.New(),
+                UserId.New(),
+                occurredOnUtc));
+
+        Assert.Equal("occurredOnUtcOverride", ex.ParamName);
+    }
+
     [Fact]
     public void RecommendationCreatedDomainEvent_WithOverride_UsesOverrideTimestamp() {
         var occurredOnUtc = new DateTime(2026, 3, 27, 12, 0, 0, DateTimeKind.Utc);

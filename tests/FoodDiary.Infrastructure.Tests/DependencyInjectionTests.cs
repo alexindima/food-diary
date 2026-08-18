@@ -137,6 +137,22 @@ public sealed class DependencyInjectionTests {
     }
 
     [Fact]
+    public void AddIntegrations_WithNonPositiveTelegramAuthTtl_FailsOptionsValidation() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["TelegramAuth:BotToken"] = "test-token",
+            ["TelegramAuth:AuthTtlSeconds"] = "0",
+        });
+
+        services.AddIntegrations(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() =>
+            provider.GetRequiredService<IOptions<TelegramAuthOptions>>().Value);
+        Assert.Contains("AuthTtlSeconds", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public void AddIntegrations_RegistersIntegrationServicesAndTypedHttpClients() {
         var services = new ServiceCollection();
         services.AddLogging();

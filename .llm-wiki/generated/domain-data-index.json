@@ -4,7 +4,7 @@
     "domainTypes": 259,
     "entities": 78,
     "valueObjects": 112,
-    "invariants": 398,
+    "invariants": 400,
     "persistenceMappings": 86,
     "indexes": 151,
     "relationships": 100
@@ -4564,10 +4564,24 @@
     },
     {
       "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(domainEvent)",
+      "path": "Shared/FoodDiary.Domain.Primitives/AggregateRoot.cs",
+      "line": 16
+    },
+    {
+      "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
-      "path": "Shared/FoodDiary.Domain.Primitives/Entity.cs",
-      "line": 47
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Timestamp must use DateTimeKind.Utc.\")",
+      "path": "Shared/FoodDiary.Domain.Primitives/DomainTime.cs",
+      "line": 19
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(timeProvider)",
+      "path": "Shared/FoodDiary.Domain.Primitives/DomainTime.cs",
+      "line": 29
     },
     {
       "area": "MailInbox",

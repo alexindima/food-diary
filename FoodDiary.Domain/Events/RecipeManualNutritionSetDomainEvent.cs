@@ -6,7 +6,7 @@ namespace FoodDiary.Domain.Events;
 public sealed record RecipeManualNutritionSetDomainEvent : IDomainEvent {
     public RecipeManualNutritionSetDomainEvent(RecipeId recipeId, DateTime? occurredOnUtcOverride = null) {
         RecipeId = recipeId;
-        OccurredOnUtc = occurredOnUtcOverride ?? DomainTime.UtcNow;
+        OccurredOnUtc = DomainTime.EnsureUtc(occurredOnUtcOverride ?? DomainTime.UtcNow, nameof(occurredOnUtcOverride));
     }
 
     public RecipeId RecipeId { get; }

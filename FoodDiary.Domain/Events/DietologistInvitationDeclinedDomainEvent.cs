@@ -12,7 +12,7 @@ public sealed record DietologistInvitationDeclinedDomainEvent : IDomainEvent {
         InvitationId = invitationId;
         ClientUserId = clientUserId;
         DietologistEmail = dietologistEmail;
-        OccurredOnUtc = occurredOnUtcOverride ?? DomainTime.UtcNow;
+        OccurredOnUtc = DomainTime.EnsureUtc(occurredOnUtcOverride ?? DomainTime.UtcNow, nameof(occurredOnUtcOverride));
     }
 
     public DietologistInvitationId InvitationId { get; }

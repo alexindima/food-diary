@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3330,
-    "symbols": 3339,
+    "sourceFiles": 3333,
+    "symbols": 3342,
     "interfaceImplementationLinks": 233,
-    "dependencyInjectionRegistrations": 235,
+    "dependencyInjectionRegistrations": 234,
     "kinds": {
-      "class": 1713,
+      "class": 1716,
       "enum": 56,
       "interface": 413,
       "record": 1041,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 61,
-      "Other": 1249,
+      "Other": 1250,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -41,7 +41,7 @@
       "Request": 132,
       "Response": 174,
       "Service": 273,
-      "Validator": 188,
+      "Validator": 190,
       "ValueObject": 126,
       "WriteRepository": 46
     }
@@ -12750,7 +12750,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Wearables/DependencyInjection.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ConnectWearableCommand",
@@ -12795,11 +12795,25 @@
       "line": 13
     },
     {
+      "name": "SyncWearableDataCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandValidator.cs",
+      "line": 5
+    },
+    {
       "name": "IWearableReadService",
       "kind": "interface",
       "role": "Service",
       "path": "FoodDiary.Application.Wearables/Wearables/Common/IWearableReadService.cs",
       "line": 5
+    },
+    {
+      "name": "WearableDateRules",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Wearables/Wearables/Common/WearableDateRules.cs",
+      "line": 2
     },
     {
       "name": "WearableProviderParser",
@@ -12849,6 +12863,13 @@
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
       "line": 9
+    },
+    {
+      "name": "GetWearableDailySummaryQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryValidator.cs",
+      "line": 5
     },
     {
       "name": "WearableReadService",
@@ -15053,7 +15074,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Infrastructure/Authentication/WearableOAuthStateService.cs",
-      "line": 12
+      "line": 10
     },
     {
       "name": "DependencyInjection",
@@ -20863,7 +20884,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs",
-      "line": 14
+      "line": 17
     },
     {
       "name": "WeeklyCheckInHttpMappings",
@@ -21339,7 +21360,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiHostServiceCollectionExtensions.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "ApiOptionsServiceCollectionExtensions",
@@ -21479,7 +21500,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 47
+      "line": 54
     },
     {
       "name": "CorsOptionsSetup",
@@ -25802,7 +25823,7 @@
       "implementation": "WearableReadService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Wearables/DependencyInjection.cs",
-      "line": 12
+      "line": 14
     },
     {
       "service": "IWeeklyCheckInUserProfileService",
@@ -26510,13 +26531,6 @@
       "lifetime": "Scoped",
       "path": "FoodDiary.Integrations/DependencyInjection.Mail.cs",
       "line": 28
-    },
-    {
-      "service": "IWebPushClientAdapter",
-      "implementation": "WebPushClientAdapter",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Integrations/DependencyInjection.Notifications.cs",
-      "line": 9
     },
     {
       "service": "IWebPushNotificationSender",

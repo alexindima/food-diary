@@ -4860,7 +4860,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/wearables/api/wearable.service.ts",
-      "line": 10
+      "line": 11
     },
     {
       "name": "WearableConnectionsComponent",

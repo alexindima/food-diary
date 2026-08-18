@@ -156,6 +156,18 @@ public sealed class GoogleTokenValidatorTests {
         Assert.Equal("Authentication.GoogleInvalidToken", result.Error.Code);
     }
 
+    [Fact]
+    public async Task ValidateCredentialAsync_WhenCallerCancels_PropagatesCancellation() {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+        GoogleTokenValidator validator = CreateValidator(
+            "google-client",
+            new ThrowingConfigurationManager(new OperationCanceledException(cancellationTokenSource.Token)));
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            validator.ValidateCredentialAsync("credential", cancellationTokenSource.Token));
+    }
+
     private static T? InvokePrivateStatic<T>(string methodName, params object[] args) {
         System.Reflection.MethodInfo method = typeof(GoogleTokenValidator).GetMethod(
             methodName,

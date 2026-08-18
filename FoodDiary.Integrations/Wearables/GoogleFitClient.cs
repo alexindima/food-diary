@@ -84,6 +84,8 @@ internal sealed class GoogleFitClient(
                 token.RefreshToken,
                 userId,
                 timeProvider.GetUtcNow().UtcDateTime.AddSeconds(token.ExpiresIn));
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            throw;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "Google Fit token exchange failed");
             return null;
@@ -122,6 +124,8 @@ internal sealed class GoogleFitClient(
                 token.RefreshToken ?? refreshToken,
                 string.Empty,
                 timeProvider.GetUtcNow().UtcDateTime.AddSeconds(token.ExpiresIn));
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            throw;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "Google Fit token refresh failed");
             return null;
@@ -131,10 +135,11 @@ internal sealed class GoogleFitClient(
     public async Task<IReadOnlyList<WearableDataPoint>> FetchDailyDataAsync(
         string accessToken, DateTime date, CancellationToken cancellationToken = default) {
         var results = new List<WearableDataPoint>();
-        long startTimeMillis = new DateTimeOffset(date.Date, TimeSpan.Zero).ToUnixTimeMilliseconds();
-        long endTimeMillis = new DateTimeOffset(date.Date.AddDays(1), TimeSpan.Zero).ToUnixTimeMilliseconds();
 
         try {
+            var startDateUtc = DateTime.SpecifyKind(date.Date, DateTimeKind.Utc);
+            long startTimeMillis = new DateTimeOffset(startDateUtc).ToUnixTimeMilliseconds();
+            long endTimeMillis = new DateTimeOffset(startDateUtc.AddDays(1)).ToUnixTimeMilliseconds();
             var aggregateRequest = new {
                 aggregateBy = new[] {
                     new { dataTypeName = "com.google.step_count.delta" },
@@ -166,7 +171,9 @@ internal sealed class GoogleFitClient(
                 BoundedHttpContentReader.DefaultReadTimeout,
                 cancellationToken).ConfigureAwait(false);
             results.AddRange(ParseDailyData(data));
-        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            throw;
+        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException or ArgumentOutOfRangeException) {
             logger.LogWarning(ex, "Google Fit data fetch failed for {Date}", date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
         }
 

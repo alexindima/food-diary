@@ -12,7 +12,7 @@ public sealed record RecommendationCreatedDomainEvent : IDomainEvent {
         RecommendationId = recommendationId;
         DietologistUserId = dietologistUserId;
         ClientUserId = clientUserId;
-        OccurredOnUtc = occurredOnUtcOverride ?? DomainTime.UtcNow;
+        OccurredOnUtc = DomainTime.EnsureUtc(occurredOnUtcOverride ?? DomainTime.UtcNow, nameof(occurredOnUtcOverride));
     }
 
     public RecommendationId RecommendationId { get; }

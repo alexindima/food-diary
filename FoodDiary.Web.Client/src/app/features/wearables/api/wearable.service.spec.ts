@@ -98,6 +98,7 @@ describe('WearableService daily summary', () => {
         const req = httpMock.expectOne(request => request.url === `${BASE_URL}/Fitbit/sync`);
         expect(req.request.method).toBe('POST');
         expect(req.request.params.get('date')).toBe('2026-05-15');
+        expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
         req.flush(SUMMARY);
     });
 

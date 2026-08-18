@@ -126,16 +126,18 @@ public sealed class TelegramAuthValidatorsTests {
         Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
     }
 
-    [Fact]
-    public void ValidateInitData_WithZeroTtl_DoesNotExpirePayload() {
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void ValidateInitData_WithInvalidTtl_ReturnsNotConfigured(int authTtlSeconds) {
         long authDate = new DateTimeOffset(NowUtc.AddDays(-7)).ToUnixTimeSeconds();
         string initData = CreateSignedInitData(authDate);
-        TelegramAuthValidator validator = CreateInitDataValidator(authTtlSeconds: 0);
+        TelegramAuthValidator validator = CreateInitDataValidator(authTtlSeconds);
 
         Result<TelegramInitData> result = validator.ValidateInitData(initData);
 
-        Assert.True(result.IsSuccess);
-        Assert.Equal(42, result.Value.UserId);
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.TelegramNotConfigured", result.Error.Code);
     }
 
     [Fact]
@@ -177,6 +179,20 @@ public sealed class TelegramAuthValidatorsTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramAuthExpired", result.Error.Code);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void ValidateLoginWidget_WithInvalidTtl_ReturnsNotConfigured(int authTtlSeconds) {
+        long authDate = new DateTimeOffset(NowUtc.AddDays(-7)).ToUnixTimeSeconds();
+        TelegramLoginWidgetData data = CreateSignedWidgetData(authDate);
+        TelegramLoginWidgetValidator validator = CreateWidgetValidator(authTtlSeconds);
+
+        Result<TelegramInitData> result = validator.ValidateLoginWidget(data);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.TelegramNotConfigured", result.Error.Code);
     }
 
     [Fact]

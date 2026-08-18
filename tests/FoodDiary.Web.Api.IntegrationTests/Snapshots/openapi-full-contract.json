@@ -5078,7 +5078,9 @@
           "HasRequestBody": false,
           "ResponseCodes": [
             "200",
+            "400",
             "401",
+            "409",
             "500"
           ],
           "QueryParameters": [

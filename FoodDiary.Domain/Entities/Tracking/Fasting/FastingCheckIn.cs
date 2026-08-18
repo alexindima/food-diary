@@ -51,7 +51,7 @@ public sealed class FastingCheckIn : Entity<FastingCheckInId> {
             Notes = NormalizeNotes(notes),
         };
 
-        entity.SetCreated(checkedInAtUtc);
+        entity.SetCreated(entity.CheckedInAtUtc);
         return entity;
     }
 

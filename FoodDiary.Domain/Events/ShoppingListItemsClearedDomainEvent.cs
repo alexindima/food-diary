@@ -10,7 +10,7 @@ public sealed record ShoppingListItemsClearedDomainEvent : IDomainEvent {
         DateTime? occurredOnUtcOverride = null) {
         ShoppingListId = shoppingListId;
         ClearedItemsCount = clearedItemsCount;
-        OccurredOnUtc = occurredOnUtcOverride ?? DomainTime.UtcNow;
+        OccurredOnUtc = DomainTime.EnsureUtc(occurredOnUtcOverride ?? DomainTime.UtcNow, nameof(occurredOnUtcOverride));
     }
 
     public ShoppingListId ShoppingListId { get; }

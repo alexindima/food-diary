@@ -5,7 +5,9 @@ namespace FoodDiary.Integrations.Services;
 internal sealed class WebPushClientAdapter : IWebPushClientAdapter {
     private readonly Func<PushSubscription, string, VapidDetails, CancellationToken, Task> _sendNotificationAsync;
 
-    public WebPushClientAdapter() : this(SendWithWebPushClientAsync) {
+    public WebPushClientAdapter(HttpClient httpClient)
+        : this((subscription, payload, vapidDetails, cancellationToken) =>
+            SendWithWebPushClientAsync(httpClient, subscription, payload, vapidDetails, cancellationToken)) {
     }
 
     internal WebPushClientAdapter(
@@ -21,12 +23,13 @@ internal sealed class WebPushClientAdapter : IWebPushClientAdapter {
         await _sendNotificationAsync(subscription, payload, vapidDetails, cancellationToken).ConfigureAwait(false);
     }
 
-    private static Task SendWithWebPushClientAsync(
+    private static async Task SendWithWebPushClientAsync(
+        HttpClient httpClient,
         PushSubscription subscription,
         string payload,
         VapidDetails vapidDetails,
         CancellationToken cancellationToken) {
-        var client = new WebPushClient();
-        return client.SendNotificationAsync(subscription, payload, vapidDetails, cancellationToken);
+        using var client = new WebPushClient(httpClient);
+        await client.SendNotificationAsync(subscription, payload, vapidDetails, cancellationToken).ConfigureAwait(false);
     }
 }

@@ -1,7 +1,6 @@
 using FoodDiary.Web.Api.Extensions;
 using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,6 +53,7 @@ public sealed class ApiHostOptionsConfigurationTests {
                 ["ForwardedHeaders:ForwardLimit"] = "2",
                 ["ForwardedHeaders:KnownProxies:0"] = "10.0.0.10",
                 ["ForwardedHeaders:KnownNetworks:0"] = "10.0.0.0/24",
+                ["ForwardedHeaders:AllowedHosts:0"] = "fooddiary.club",
                 ["HttpsRedirection:Enabled"] = "true",
                 ["RateLimiting:Auth:PermitLimit"] = "7",
                 ["RateLimiting:Auth:WindowSeconds"] = "90",
@@ -65,6 +65,8 @@ public sealed class ApiHostOptionsConfigurationTests {
                 ["RateLimiting:MarketingAttribution:WindowSeconds"] = "91",
                 ["RateLimiting:TestDelivery:PermitLimit"] = "4",
                 ["RateLimiting:TestDelivery:WindowSeconds"] = "92",
+                ["RateLimiting:Wearable:PermitLimit"] = "8",
+                ["RateLimiting:Wearable:WindowSeconds"] = "93",
                 ["OutputCache:AdminAiUsage:ExpirationSeconds"] = "30",
             })
             .Build();
@@ -85,6 +87,7 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Equal(2, forwardedHeaders.ForwardLimit);
         Assert.Equal(["10.0.0.10"], forwardedHeaders.KnownProxies);
         Assert.Equal(["10.0.0.0/24"], forwardedHeaders.KnownNetworks);
+        Assert.Equal(["fooddiary.club"], forwardedHeaders.AllowedHosts);
         Assert.True(httpsRedirection.Enabled);
         Assert.Equal(7, rateLimiting.Auth.PermitLimit);
         Assert.Equal(90, rateLimiting.Auth.WindowSeconds);
@@ -96,10 +99,13 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Equal(91, rateLimiting.MarketingAttribution.WindowSeconds);
         Assert.Equal(4, rateLimiting.TestDelivery.PermitLimit);
         Assert.Equal(92, rateLimiting.TestDelivery.WindowSeconds);
+        Assert.Equal(8, rateLimiting.Wearable.PermitLimit);
+        Assert.Equal(93, rateLimiting.Wearable.WindowSeconds);
         Assert.Equal(30, outputCache.AdminAiUsage.ExpirationSeconds);
         Assert.Equal(2, forwardedHeadersOptions.ForwardLimit);
         Assert.True(forwardedHeadersOptions.ForwardedHeaders.HasFlag(ForwardedHeaders.XForwardedHost));
         Assert.True(forwardedHeadersOptions.ForwardedHeaders.HasFlag(ForwardedHeaders.XForwardedProto));
+        Assert.Equal(["fooddiary.club"], forwardedHeadersOptions.AllowedHosts);
         Assert.Contains(forwardedHeadersOptions.KnownProxies, ip => string.Equals(ip.ToString(), "10.0.0.10", StringComparison.Ordinal));
         Assert.Contains(forwardedHeadersOptions.KnownIPNetworks, network => string.Equals(network.BaseAddress.ToString(), "10.0.0.0", StringComparison.Ordinal) && network.PrefixLength == 24);
     }
@@ -183,6 +189,45 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Equal(expected, valid);
     }
 
+    [Theory]
+    [InlineData(10, 60, 0, true)]
+    [InlineData(0, 60, 0, false)]
+    [InlineData(10, 0, 0, false)]
+    [InlineData(10, 60, -1, false)]
+    public void ApiRateLimitingOptions_HasValidWearable_ReturnsExpectedResult(
+        int permitLimit,
+        int windowSeconds,
+        int queueLimit,
+        bool expected) {
+        var options = new ApiRateLimitingOptions {
+            Wearable = new ApiRateLimitingOptions.FixedWindowPolicyOptions {
+                PermitLimit = permitLimit,
+                WindowSeconds = windowSeconds,
+                QueueLimit = queueLimit,
+            },
+        };
+
+        bool valid = ApiRateLimitingOptions.HasValidWearable(options);
+
+        Assert.Equal(expected, valid);
+    }
+
+    [Theory]
+    [InlineData("fooddiary.club", true)]
+    [InlineData("localhost", true)]
+    [InlineData("*", false)]
+    [InlineData("", false)]
+    [InlineData(" fooddiary.club", false)]
+    public void ApiForwardedHeadersOptions_HasValidAllowedHosts_ReturnsExpectedResult(
+        string host,
+        bool expected) {
+        var options = new ApiForwardedHeadersOptions { AllowedHosts = [host] };
+
+        bool valid = ApiForwardedHeadersOptions.HasValidAllowedHosts(options);
+
+        Assert.Equal(expected, valid);
+    }
+
     [Fact]
     public void AddApiServices_WithInvalidTestDeliveryRateLimit_FailsOptionsValidation() {
         var services = new ServiceCollection();
@@ -240,36 +285,4 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Contains("OutputCache:UserScoped:ExpirationSeconds", exception.Message, StringComparison.Ordinal);
     }
 
-    [Fact]
-    public void AddApiServices_ConfiguresHttpLoggingOptions() {
-        var services = new ServiceCollection();
-        IConfigurationRoot configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
-                ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
-                ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
-                ["Jwt:Issuer"] = "FoodDiaryApi",
-                ["Jwt:Audience"] = "FoodDiaryClient",
-                ["Jwt:ExpirationMinutes"] = "60",
-                ["Jwt:RefreshTokenExpirationDays"] = "7",
-                ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
-                ["TelegramBot:ApiSecret"] = "",
-                ["Cors:Origins:0"] = "http://localhost:4200",
-            })
-            .Build();
-
-        services.AddLogging();
-        services.AddSingleton<IConfiguration>(configuration);
-        services.AddApiServices(configuration);
-        using ServiceProvider provider = services.BuildServiceProvider();
-
-        HttpLoggingOptions options = provider.GetRequiredService<IOptions<HttpLoggingOptions>>().Value;
-
-        Assert.Equal(
-            HttpLoggingFields.RequestMethod |
-            HttpLoggingFields.RequestPath |
-            HttpLoggingFields.ResponseStatusCode |
-            HttpLoggingFields.Duration,
-            options.LoggingFields);
-        Assert.Contains("X-Correlation-Id", options.RequestHeaders);
-    }
 }

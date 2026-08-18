@@ -6,5 +6,7 @@ namespace FoodDiary.MailInbox.Domain.Events;
 public sealed record InboundMailMessageReceivedDomainEvent(
     InboundMailMessageId MessageId,
     DateTime? OccurredOnUtcOverride = null) : IDomainEvent {
-    public DateTime OccurredOnUtc { get; } = OccurredOnUtcOverride?.ToUniversalTime() ?? DomainTime.UtcNow;
+    public DateTime OccurredOnUtc { get; } = DomainTime.EnsureUtc(
+        OccurredOnUtcOverride ?? DomainTime.UtcNow,
+        nameof(OccurredOnUtcOverride));
 }

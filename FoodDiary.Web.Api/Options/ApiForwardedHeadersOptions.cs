@@ -12,6 +12,8 @@ public sealed class ApiForwardedHeadersOptions {
 
     public string[] KnownNetworks { get; init; } = [];
 
+    public string[] AllowedHosts { get; init; } = [];
+
     public static bool HasValidForwardLimit(ApiForwardedHeadersOptions options) => options.ForwardLimit > 0;
 
     public static bool HasValidKnownProxies(ApiForwardedHeadersOptions options) =>
@@ -19,6 +21,14 @@ public sealed class ApiForwardedHeadersOptions {
 
     public static bool HasValidKnownNetworks(ApiForwardedHeadersOptions options) =>
         options.KnownNetworks.All(IsValidCidrNotation);
+
+    public static bool HasValidAllowedHosts(ApiForwardedHeadersOptions options) =>
+        options.AllowedHosts.Length > 0 &&
+        options.AllowedHosts.All(static host =>
+            !string.IsNullOrWhiteSpace(host) &&
+            !string.Equals(host, "*", StringComparison.Ordinal) &&
+            string.Equals(host, host.Trim(), StringComparison.Ordinal)) &&
+        options.AllowedHosts.Distinct(StringComparer.OrdinalIgnoreCase).Count() == options.AllowedHosts.Length;
 
     private static bool IsValidCidrNotation(string cidr) {
         if (string.IsNullOrWhiteSpace(cidr)) {

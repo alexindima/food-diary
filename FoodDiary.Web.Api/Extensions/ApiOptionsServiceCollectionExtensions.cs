@@ -33,6 +33,8 @@ public static class ApiOptionsServiceCollectionExtensions {
                     "ForwardedHeaders:KnownProxies must contain valid IP addresses.")
                 .Validate(ApiForwardedHeadersOptions.HasValidKnownNetworks,
                     "ForwardedHeaders:KnownNetworks must contain valid CIDR entries.")
+                .Validate(ApiForwardedHeadersOptions.HasValidAllowedHosts,
+                    "ForwardedHeaders:AllowedHosts must contain distinct explicit host names without wildcards.")
                 .ValidateOnStart();
             services
                 .AddOptions<ApiHttpsRedirectionOptions>()
@@ -53,6 +55,8 @@ public static class ApiOptionsServiceCollectionExtensions {
                     "RateLimiting:MarketingAttribution requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .Validate(ApiRateLimitingOptions.HasValidTestDelivery,
                     "RateLimiting:TestDelivery requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+                .Validate(ApiRateLimitingOptions.HasValidWearable,
+                    "RateLimiting:Wearable requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .ValidateOnStart();
             services
                 .AddOptions<ApiOutputCacheOptions>()

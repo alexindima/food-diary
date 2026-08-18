@@ -119,7 +119,7 @@ public sealed class WebPushNotificationSenderTests {
     }
 
     [Fact]
-    public async Task SendAsync_WhenActiveSubscriptionExists_ProcessesAttemptWithoutDeletingSubscriptions() {
+    public async Task SendAsync_WhenCancellationIsRequested_PropagatesCancellation() {
         var user = User.Create("user@example.com", "hash");
         user.UpdatePreferences(new UserPreferenceUpdate(
             PushNotificationsEnabled: true,
@@ -138,7 +138,8 @@ public sealed class WebPushNotificationSenderTests {
         using var cancellationTokenSource = new CancellationTokenSource();
         await cancellationTokenSource.CancelAsync();
 
-        await sender.SendAsync(notification, cancellationTokenSource.Token);
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            sender.SendAsync(notification, cancellationTokenSource.Token));
 
         Assert.Equal(1, subscriptionRepository.GetByUserCalls);
         Assert.Empty(subscriptionRepository.DeletedSubscriptions);

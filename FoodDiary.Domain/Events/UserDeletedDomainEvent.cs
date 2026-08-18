@@ -7,7 +7,7 @@ public sealed record UserDeletedDomainEvent : IDomainEvent {
     public UserDeletedDomainEvent(UserId userId, DateTime deletedAtUtc, DateTime? occurredOnUtcOverride = null) {
         UserId = userId;
         DeletedAtUtc = deletedAtUtc;
-        OccurredOnUtc = occurredOnUtcOverride ?? DomainTime.UtcNow;
+        OccurredOnUtc = DomainTime.EnsureUtc(occurredOnUtcOverride ?? DomainTime.UtcNow, nameof(occurredOnUtcOverride));
     }
 
     public UserId UserId { get; }

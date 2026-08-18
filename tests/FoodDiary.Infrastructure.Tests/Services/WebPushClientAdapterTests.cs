@@ -45,7 +45,8 @@ public sealed class WebPushClientAdapterTests {
 
     [Fact]
     public async Task SendNotificationAsync_WhenCancellationIsRequested_PropagatesCancellation() {
-        var adapter = new WebPushClientAdapter();
+        var adapter = new WebPushClientAdapter((_, _, _, cancellationToken) =>
+            Task.FromCanceled(cancellationToken));
         VapidDetails keys = VapidHelper.GenerateVapidKeys();
         var vapidDetails = new VapidDetails("mailto:test@example.com", keys.PublicKey, keys.PrivateKey);
         var subscription = new PushSubscription("https://push.example.com/subscriptions/test", p256dh: null, auth: null);

@@ -87,7 +87,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.102
 
       - name: Setup Node.js for development MCP tests
         uses: actions/setup-node@v7
@@ -261,7 +261,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.102
 
       - name: Verify Docker availability
         shell: bash
@@ -422,7 +422,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.102
 
       - name: Restore
         shell: bash

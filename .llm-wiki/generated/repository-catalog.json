@@ -1028,6 +1028,14 @@
         ],
         "packageReferences": [
           {
+            "name": "FluentValidation",
+            "version": null
+          },
+          {
+            "name": "FluentValidation.DependencyInjectionExtensions",
+            "version": null
+          },
+          {
             "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
             "version": null
           }
@@ -1151,6 +1159,10 @@
         "packageReferences": [
           {
             "name": "BCrypt.Net-Next",
+            "version": null
+          },
+          {
+            "name": "Microsoft.AspNetCore.DataProtection",
             "version": null
           },
           {
@@ -5357,32 +5369,32 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/wearables/connections",
-            "line": 15
+            "line": 18
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/wearables/{provider}/auth-url",
-            "line": 20
+            "line": 23
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/wearables/{provider}/connect",
-            "line": 26
+            "line": 29
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/wearables/{provider}/disconnect",
-            "line": 35
+            "line": 39
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/wearables/{provider}/sync",
-            "line": 43
+            "line": 47
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/wearables/daily-summary",
-            "line": 51
+            "line": 58
           }
         ]
       },

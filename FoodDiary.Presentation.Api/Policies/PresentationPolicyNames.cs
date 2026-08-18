@@ -7,6 +7,7 @@ public static class PresentationPolicyNames {
     public const string ClientTelemetryRateLimitPolicyName = "PresentationClientTelemetryRateLimit";
     public const string MarketingAttributionRateLimitPolicyName = "PresentationMarketingAttributionRateLimit";
     public const string TestDeliveryRateLimitPolicyName = "PresentationTestDeliveryRateLimit";
+    public const string WearableRateLimitPolicyName = "PresentationWearableRateLimit";
     public const string AdminAiUsageCachePolicyName = "PresentationAdminAiUsageCache";
     public const string UserScopedCachePolicyName = "PresentationUserScopedCache";
 }

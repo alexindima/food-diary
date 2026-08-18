@@ -122,6 +122,16 @@ public sealed class OpenFoodFactsServiceTests {
     }
 
     [Fact]
+    public async Task GetByBarcodeAsync_WhenCallerCancels_PropagatesCancellation() {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+        OpenFoodFactsService service = CreateService(new CanceledHttpMessageHandler());
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            service.GetByBarcodeAsync("4600000000001", cancellationTokenSource.Token));
+    }
+
+    [Fact]
     public async Task GetByBarcodeAsync_EncodesBarcodePathSegment() {
         var handler = new RecordingHttpMessageHandler("""{"status": 0, "product": null}""");
         OpenFoodFactsService service = CreateService(handler);
@@ -353,6 +363,28 @@ public sealed class OpenFoodFactsServiceTests {
         Assert.Contains("page_size=50", handler.LastRequestUri!.Query, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task SearchAsync_WhenCallerCancels_PropagatesCancellation() {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+        OpenFoodFactsService service = CreateService(new CanceledHttpMessageHandler());
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            service.SearchAsync($"cancel-{Guid.NewGuid():N}", cancellationToken: cancellationTokenSource.Token));
+    }
+
+    [Fact]
+    public async Task SearchAsync_WhenCacheCapacityIsExceeded_EvictsOldEntries() {
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler("""{"products": []}"""));
+        string queryPrefix = Guid.NewGuid().ToString("N");
+
+        for (int index = 0; index <= OpenFoodFactsService.MaxSearchCacheEntries; index++) {
+            await service.SearchAsync(string.Create(CultureInfo.InvariantCulture, $"{queryPrefix}-{index}"));
+        }
+
+        Assert.InRange(OpenFoodFactsService.SearchCacheEntryCount, 1, OpenFoodFactsService.MaxSearchCacheEntries);
+    }
+
     [Theory]
     [InlineData("timeout", false, typeof(TaskCanceledException))]
     [InlineData("json_error", false, typeof(System.Text.Json.JsonException))]
@@ -483,6 +515,13 @@ public sealed class OpenFoodFactsServiceTests {
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken) =>
             Task.FromException<HttpResponseMessage>(exception);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CanceledHttpMessageHandler : HttpMessageHandler {
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request, CancellationToken cancellationToken) =>
+            Task.FromCanceled<HttpResponseMessage>(cancellationToken);
     }
 
     [ExcludeFromCodeCoverage]

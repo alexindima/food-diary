@@ -12,6 +12,9 @@ Rules for `Shared/FoodDiary.Domain.Primitives/`.
 - Do not reference ASP.NET, EF Core, provider SDKs, or application/infrastructure projects.
 - Keep public abstractions small and stable; changes here can affect every backend domain module.
 - Keep domain entities auditable through `Entity<TId>` unless a future bounded context explicitly proves it needs a separate primitive.
+- Require `DateTimeKind.Utc` for audit timestamps and domain-event occurrence timestamps; convert external values before they enter these primitives.
+- Keep entity identifiers immutable after initialization so equality and hash codes remain stable.
+- Use `DomainTime.Override(TimeProvider)` only as a disposed scope for deterministic domain execution; do not introduce a process-global mutable clock.
 
 ## Commands
 - Build: `dotnet build Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj`

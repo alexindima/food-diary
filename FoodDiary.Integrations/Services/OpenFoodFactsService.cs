@@ -20,9 +20,11 @@ internal sealed class OpenFoodFactsService(
     private const string ProviderName = "open_food_facts";
     private const string BarcodeLookupOperation = "barcode_lookup";
     private const string SearchOperation = "search";
+    internal const int MaxSearchCacheEntries = 1024;
     private static readonly TimeSpan SearchCacheTtl = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan StaleSearchCacheTtl = TimeSpan.FromHours(6);
     private static readonly ConcurrentDictionary<string, CachedSearchResult> SearchCache = new(StringComparer.Ordinal);
+    private static readonly Lock SearchCacheLock = new();
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) {
         MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
     };
@@ -38,8 +40,9 @@ internal sealed class OpenFoodFactsService(
             string encodedBarcode = Uri.EscapeDataString(barcode.Trim());
             string url = $"{baseUrl}/api/v2/product/{encodedBarcode}?fields=code,product_name,brands,categories,image_url,nutriments";
 
-            HttpResponseMessage response = await httpClient.SendAsync(
-                new HttpRequestMessage(HttpMethod.Get, url),
+            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            using HttpResponseMessage response = await httpClient.SendAsync(
+                request,
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
@@ -74,19 +77,17 @@ internal sealed class OpenFoodFactsService(
             outcome = "empty";
             return null;
 
+        } catch (OperationCanceledException ex) when (cancellationToken.IsCancellationRequested) {
+            outcome = "canceled";
+            errorType = ex.GetType().Name;
+            throw;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             outcome = ResolveFailureOutcome(ex, cancellationToken);
             errorType = ex.GetType().Name;
             logger.LogWarning(ex, "Open Food Facts lookup failed for barcode '{Barcode}'", barcode);
             return null;
         } finally {
-            stopwatch.Stop();
-            IntegrationsTelemetry.RecordExternalProviderRequest(
-                ProviderName,
-                BarcodeLookupOperation,
-                outcome,
-                stopwatch.Elapsed.TotalMilliseconds,
-                errorType);
+            RecordRequestTelemetry(BarcodeLookupOperation, outcome, stopwatch, errorType);
         }
     }
 
@@ -108,8 +109,9 @@ internal sealed class OpenFoodFactsService(
             string encodedQuery = Uri.EscapeDataString(query);
             string url = string.Create(CultureInfo.InvariantCulture, $"{baseUrl}/cgi/search.pl?search_terms={encodedQuery}&page_size={normalizedLimit}&json=1&fields=code,product_name,brands,categories,image_url,nutriments");
 
-            HttpResponseMessage response = await httpClient.SendAsync(
-                new HttpRequestMessage(HttpMethod.Get, url),
+            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            using HttpResponseMessage response = await httpClient.SendAsync(
+                request,
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
@@ -130,8 +132,12 @@ internal sealed class OpenFoodFactsService(
                 outcome = "empty";
             }
 
-            SearchCache[cacheKey] = new CachedSearchResult(timeProvider.GetUtcNow(), products);
+            CacheSearchResult(cacheKey, new CachedSearchResult(timeProvider.GetUtcNow(), products));
             return products;
+        } catch (OperationCanceledException ex) when (cancellationToken.IsCancellationRequested) {
+            outcome = "canceled";
+            errorType = ex.GetType().Name;
+            throw;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             outcome = ResolveFailureOutcome(ex, cancellationToken);
             errorType = ex.GetType().Name;
@@ -144,14 +150,22 @@ internal sealed class OpenFoodFactsService(
             logger.LogWarning(ex, "Open Food Facts text search failed for query '{Query}'", query);
             return [];
         } finally {
-            stopwatch.Stop();
-            IntegrationsTelemetry.RecordExternalProviderRequest(
-                ProviderName,
-                SearchOperation,
-                outcome,
-                stopwatch.Elapsed.TotalMilliseconds,
-                errorType);
+            RecordRequestTelemetry(SearchOperation, outcome, stopwatch, errorType);
         }
+    }
+
+    private static void RecordRequestTelemetry(
+        string operation,
+        string outcome,
+        Stopwatch stopwatch,
+        string? errorType) {
+        stopwatch.Stop();
+        IntegrationsTelemetry.RecordExternalProviderRequest(
+            ProviderName,
+            operation,
+            outcome,
+            stopwatch.Elapsed.TotalMilliseconds,
+            errorType);
     }
 
     private static string ResolveFailureOutcome(Exception exception, CancellationToken cancellationToken) =>
@@ -187,14 +201,33 @@ internal sealed class OpenFoodFactsService(
     private static string GetSearchCacheKey(string query, int limit) =>
         string.Create(CultureInfo.InvariantCulture, $"{query.Trim().ToLowerInvariant()}:{limit}");
 
+    internal static int SearchCacheEntryCount => SearchCache.Count;
+
+    private static void CacheSearchResult(string cacheKey, CachedSearchResult result) {
+        lock (SearchCacheLock) {
+            SearchCache[cacheKey] = result;
+            while (SearchCache.Count > MaxSearchCacheEntries) {
+                KeyValuePair<string, CachedSearchResult> oldest = SearchCache.MinBy(
+                    static entry => entry.Value.CachedAt);
+                SearchCache.TryRemove(oldest.Key, out _);
+            }
+        }
+    }
+
     private bool TryGetCachedSearch(
         string cacheKey,
         TimeSpan maxAge,
         out IReadOnlyList<OpenFoodFactsProductModel> products) {
-        if (SearchCache.TryGetValue(cacheKey, out CachedSearchResult? cached) &&
-            timeProvider.GetUtcNow() - cached.CachedAt <= maxAge) {
-            products = cached.Products;
-            return true;
+        if (SearchCache.TryGetValue(cacheKey, out CachedSearchResult? cached)) {
+            TimeSpan age = timeProvider.GetUtcNow() - cached.CachedAt;
+            if (age <= maxAge) {
+                products = cached.Products;
+                return true;
+            }
+
+            if (age > StaleSearchCacheTtl) {
+                SearchCache.TryRemove(cacheKey, out _);
+            }
         }
 
         products = [];

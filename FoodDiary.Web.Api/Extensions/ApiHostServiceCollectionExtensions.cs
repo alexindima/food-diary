@@ -3,7 +3,6 @@ using FoodDiary.Web.Api.HealthChecks;
 using FoodDiary.Web.Api.Options;
 using FoodDiary.Web.Api.Swagger;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.OpenApi;
 
 namespace FoodDiary.Web.Api.Extensions;
@@ -11,14 +10,6 @@ namespace FoodDiary.Web.Api.Extensions;
 public static class ApiHostServiceCollectionExtensions {
     extension(IServiceCollection services) {
         internal IServiceCollection AddApiHostServices() {
-            services.AddHttpLogging(options => {
-                options.LoggingFields = HttpLoggingFields.RequestMethod |
-                                        HttpLoggingFields.RequestPath |
-                                        HttpLoggingFields.ResponseStatusCode |
-                                        HttpLoggingFields.Duration;
-                options.RequestHeaders.Add("X-Correlation-Id");
-                options.MediaTypeOptions.AddText("application/json");
-            });
             services.AddProblemDetails();
             services.AddExceptionHandler<ApiExceptionHandler>();
             services.AddRateLimiter(static _ => { });

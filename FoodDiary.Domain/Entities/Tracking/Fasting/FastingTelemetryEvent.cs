@@ -77,7 +77,7 @@ public sealed class FastingTelemetryEvent : Entity<FastingTelemetryEventId> {
             HadNotes = hadNotes,
         };
 
-        entity.SetCreated(occurredAtUtc);
+        entity.SetCreated(entity.OccurredAtUtc);
         return entity;
     }
 

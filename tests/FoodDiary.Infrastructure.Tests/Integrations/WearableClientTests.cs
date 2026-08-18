@@ -57,6 +57,16 @@ public sealed class WearableClientTests {
     }
 
     [Fact]
+    public async Task GoogleFitExchangeCodeAsync_WhenCallerCancels_PropagatesCancellation() {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+        GoogleFitClient client = CreateGoogleFitClient(new CanceledHttpMessageHandler());
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            client.ExchangeCodeAsync("code", cancellationTokenSource.Token));
+    }
+
+    [Fact]
     public async Task GoogleFitExchangeCodeAsync_WithValidResponses_ReturnsTokenAndExternalUserId() {
         var handler = new RecordingHttpMessageHandler(request => {
             if (string.Equals(request.RequestUri!.AbsoluteUri, "https://oauth2.googleapis.com/token", StringComparison.Ordinal)) {
@@ -160,6 +170,21 @@ public sealed class WearableClientTests {
     }
 
     [Fact]
+    public async Task GoogleFitFetchDailyDataAsync_WithMaximumDate_ReturnsEmptyWithoutRequest() {
+        var handler = new RecordingHttpMessageHandler(_ => throw new InvalidOperationException("HTTP request was not expected."));
+        GoogleFitClient client = CreateGoogleFitClient(handler);
+
+        IReadOnlyList<WearableDataPoint> result = await client.FetchDailyDataAsync(
+            "access",
+            DateTime.MaxValue,
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Empty(result),
+            () => Assert.Empty(handler.Requests));
+    }
+
+    [Fact]
     public async Task GoogleFitFetchDailyDataAsync_WhenDatasetHasNoPointOrValue_SkipsDataset() {
         var handler = new RecordingHttpMessageHandler(_ => JsonResponse("""
             {
@@ -236,6 +261,16 @@ public sealed class WearableClientTests {
         WearableTokenResult? result = await client.ExchangeCodeAsync("code", CancellationToken.None);
 
         Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task FitbitExchangeCodeAsync_WhenCallerCancels_PropagatesCancellation() {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+        FitbitClient client = CreateFitbitClient(new CanceledHttpMessageHandler());
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            client.ExchangeCodeAsync("code", cancellationTokenSource.Token));
     }
 
     [Fact]
@@ -332,7 +367,7 @@ public sealed class WearableClientTests {
         Assert.Empty(result);
     }
 
-    private static GoogleFitClient CreateGoogleFitClient(RecordingHttpMessageHandler handler, string clientId = "google-client") {
+    private static GoogleFitClient CreateGoogleFitClient(HttpMessageHandler handler, string clientId = "google-client") {
         return new GoogleFitClient(
             new HttpClient(handler),
             MsOptions.Create(new GoogleFitOptions {
@@ -344,7 +379,7 @@ public sealed class WearableClientTests {
             NullLogger<GoogleFitClient>.Instance);
     }
 
-    private static FitbitClient CreateFitbitClient(RecordingHttpMessageHandler handler, string clientId = "fitbit-client") {
+    private static FitbitClient CreateFitbitClient(HttpMessageHandler handler, string clientId = "fitbit-client") {
         return new FitbitClient(
             new HttpClient(handler),
             MsOptions.Create(new FitbitOptions {
@@ -381,5 +416,12 @@ public sealed class WearableClientTests {
                 : _responders.Peek();
             return Task.FromResult(responder(request));
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CanceledHttpMessageHandler : HttpMessageHandler {
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request, CancellationToken cancellationToken) =>
+            Task.FromCanceled<HttpResponseMessage>(cancellationToken);
     }
 }

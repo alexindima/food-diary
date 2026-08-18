@@ -80,6 +80,8 @@ public sealed class WebPushNotificationSender(
                 cancellationToken.ThrowIfCancellationRequested();
                 await webPushClient.SendNotificationAsync(pushSubscription, payload, vapidDetails, cancellationToken).ConfigureAwait(false);
                 deliveredCount++;
+            } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+                throw;
             } catch (WebPushException ex) when (IsExpiredSubscription(ex)) {
                 invalidSubscriptions.Add(subscription);
                 logger.LogInformation(

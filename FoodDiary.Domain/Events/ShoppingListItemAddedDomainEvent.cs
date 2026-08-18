@@ -31,7 +31,7 @@ public sealed record ShoppingListItemAddedDomainEvent : IDomainEvent {
         IsChecked = isChecked;
         CheckedOnUtc = checkedOnUtc;
         SortOrder = sortOrder;
-        OccurredOnUtc = occurredOnUtcOverride ?? DomainTime.UtcNow;
+        OccurredOnUtc = DomainTime.EnsureUtc(occurredOnUtcOverride ?? DomainTime.UtcNow, nameof(occurredOnUtcOverride));
     }
 
     public ShoppingListId ShoppingListId { get; }

@@ -20,6 +20,7 @@ using FoodDiary.Presentation.Api.Features.Notifications;
 using FoodDiary.Presentation.Api.Features.Products;
 using FoodDiary.Presentation.Api.Features.Recipes;
 using FoodDiary.Presentation.Api.Features.Version;
+using FoodDiary.Presentation.Api.Features.Wearables;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
@@ -278,9 +279,29 @@ public sealed class ControllerSecurityContractTests {
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(DietologistClientsController), nameof(DietologistClientsController.CreateRecommendation));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(DashboardController), nameof(DashboardController.SendTestEmail));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(DietologistController), nameof(DietologistController.Invite));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(WearablesController), nameof(WearablesController.Sync));
         Assert.DoesNotContain(
             GetAction(typeof(AdminUserCreationController), nameof(AdminUserCreationController.CreateUser)).GetCustomAttributes(inherit: true),
             static attribute => attribute is EnableIdempotencyAttribute);
+    }
+
+    [Fact]
+    public void WearableProviderMutations_EnforceSensitiveAccessAndResourcePolicies() {
+        AssertHasAttribute<BlockImpersonatedAccessAttribute>(typeof(WearablesController), nameof(WearablesController.Connect));
+        AssertHasAttribute<BlockImpersonatedAccessAttribute>(typeof(WearablesController), nameof(WearablesController.Disconnect));
+        AssertHasAttribute<BlockImpersonatedAccessAttribute>(typeof(WearablesController), nameof(WearablesController.Sync));
+        AssertActionRateLimit(
+            typeof(WearablesController),
+            nameof(WearablesController.Connect),
+            PresentationPolicyNames.WearableRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(WearablesController),
+            nameof(WearablesController.Sync),
+            PresentationPolicyNames.WearableRateLimitPolicyName);
+
+        EnableIdempotencyAttribute idempotency = AssertSingleAttribute<EnableIdempotencyAttribute>(
+            GetAction(typeof(WearablesController), nameof(WearablesController.Sync)));
+        Assert.True(idempotency.RequireKey);
     }
 
     [Fact]

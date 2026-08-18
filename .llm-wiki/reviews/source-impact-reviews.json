@@ -112,14 +112,14 @@
       "pageSha256": "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
       "sources": [
         {
-          "path": "Directory.Build.props",
-          "sha256": "3bdf89ef9e4529d4860c320b02fbbe646d131f339950569be665a374c21da904"
+          "path": "Directory.Packages.props",
+          "sha256": "83f764576e58e6c90ef22b5439f611be1a8ac6460a14e0a787c7b27bd35359f5"
         }
       ],
-      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
+      "reason": "Reviewed central package and project-reference changes: Data Protection and FluentValidation additions are reflected in the regenerated repository catalog.",
       "baseRef": "HEAD",
-      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
-      "reviewedAtUtc": "2026-08-17T15:56:43.0779143Z"
+      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
+      "reviewedAtUtc": "2026-08-18T13:55:08.5820624Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -181,14 +181,14 @@
       "pageSha256": "cd98e594f87b4a55e4b30f289d286334704562d489f085767fc62d58a25721d1",
       "sources": [
         {
-          "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "f151e5d3b3a2948cd76e0b61df3cf3a661f83b0c07503a7181edc7ee53f88b4c"
+          "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+          "sha256": "d95e077b2b402a6b203912dd6c2a570285360eff76a0919f5f777ec990dbf2be"
         }
       ],
-      "reason": "Authorization failures now emit the already documented ApiErrorHttpResponse for 401 and 403; OpenAPI snapshots are structurally unchanged, api-compat reports zero changes, and JWT plus role integration tests pass.",
+      "reason": "Reviewed the regenerated OpenAPI contract: wearable sync adds documented 400 and 409 responses with no structural breaking changes.",
       "baseRef": "HEAD",
-      "gitHead": "33b3aa6e84d029f69a9cb8034375c9e6da6bfb78",
-      "reviewedAtUtc": "2026-08-18T11:46:05.2879955Z"
+      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
+      "reviewedAtUtc": "2026-08-18T13:55:10.5473803Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -212,13 +212,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "aa741311a283412bdbf154dd58970d315cdb6d4bde369eba63cba9f701b6574d"
+          "sha256": "b012541e77dc4582997cd06d6d5d1cbbc3d4b9aac1f8d8c782b7b17ae320973b"
         }
       ],
-      "reason": "Authorization failures now emit the already documented ApiErrorHttpResponse for 401 and 403; OpenAPI snapshots are structurally unchanged, api-compat reports zero changes, and JWT plus role integration tests pass.",
+      "reason": "Reviewed regenerated backend contracts: wearable validation, idempotency responses, and host-boundary changes match the implementation and integration snapshots.",
       "baseRef": "HEAD",
-      "gitHead": "33b3aa6e84d029f69a9cb8034375c9e6da6bfb78",
-      "reviewedAtUtc": "2026-08-18T11:46:06.5818546Z"
+      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
+      "reviewedAtUtc": "2026-08-18T13:55:42.8031024Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -443,13 +443,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "bf31863ae1f4d66718f47debb47883b4ffecdead6b5cbe2477d44d372f6cc42c"
+          "sha256": "0c88ec28dee79b26f56c337e97a98dda5339fd6dc69890ca9433412eee6ab80f"
         }
       ],
-      "reason": "Configuration and repository navigation indexes were regenerated after adding the bounded TestDelivery limiter and stable user-ID cache variation; ownership and deployment topology remain unchanged.",
+      "reason": "Reviewed regenerated configuration and dependency rollout data: new Data Protection and FluentValidation dependencies are version-locked and require no migration.",
       "baseRef": "HEAD",
-      "gitHead": "a4c68d54367f2d93b4b2f0af80de1a97f653df3f",
-      "reviewedAtUtc": "2026-08-18T10:59:22.3337137Z"
+      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
+      "reviewedAtUtc": "2026-08-18T13:55:44.8065016Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -473,13 +473,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "5bda0a85aeb86cfaeb0545eaa221a1de79aea9674835451006c3da3c81e504e5"
+          "sha256": "5e0d23cdae84f595cb0270bd7ac9680574e01243293b9cc0a1b9ec6c8baf4204"
         }
       ],
-      "reason": "Reviewed the regenerated integrated indexes after rebasing backend hardening onto the current master cycle-health changes. The merged source preserves bounded cycle and cycle-export telemetry labels, unmatched-route cardinality protection, backend contract ownership, sensitive-data controls, persistence mappings, and the focused architecture and contract tests for both change sets.",
+      "reason": "Reviewed regenerated domain-data index: domain event timestamps now use the shared UTC time contract without changing persisted domain ownership.",
       "baseRef": "HEAD",
-      "gitHead": "3dbd99082630f4ad534842934b350c783a929004",
-      "reviewedAtUtc": "2026-08-17T09:59:54.7328347Z"
+      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
+      "reviewedAtUtc": "2026-08-18T13:55:46.7576811Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -617,25 +617,17 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "cabf2401a8ec1e8b2afd20c9669754dc8074aaa1222fcf7d842cfa86bd0a2c19",
+      "pageSha256": "e0bcb5f66a740244e70770809493d58e74bd99a10ab7cc27533ad7676aaa5d1a",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-          "sha256": "6c0f1cd23c909e12937af1295298bac36f69f4c0951a8b1203128da650f1592d"
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "0575f817cefdaa0a18958b56fac7aee6162c40d5fef4ec07cd9307b081cfc25d"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "13eb1f8ad944ce5566599b76b214b8a89d97454d8387db11d3114b15a0887590"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "24219117ec06ffcc85219472f89f16239a8cef046da544ffb3067464b201d4ba"
         }
       ],
-      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
+      "reason": "The API hardening adds focused unit, integration, and architecture coverage; the concurrent CI change only pins the existing .NET SDK version and does not alter verification workflow semantics.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:28:08.8596529Z"
+      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
+      "reviewedAtUtc": "2026-08-18T12:52:48.0059404Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -784,13 +776,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "56c2b97ebd4ecb92e5087e3bfbb77dacea8b3dd0b46286e9e4c4098dff188d8d"
+          "sha256": "d31a01a0f8d75b8891826bb8392f7bf54c630de1e632e96318c0578d0d43bc3d"
         }
       ],
-      "reason": "Reviewed response replay boundaries; token, impersonation, temporary-password, webhook, and telemetry endpoints remain excluded from idempotency caching.",
+      "reason": "Reviewed regenerated sensitive-data index: OAuth state is protected, proxy logs avoid query strings, and exception route labels remain bounded.",
       "baseRef": "HEAD",
-      "gitHead": "a4c68d54367f2d93b4b2f0af80de1a97f653df3f",
-      "reviewedAtUtc": "2026-08-18T10:27:10.2994274Z"
+      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
+      "reviewedAtUtc": "2026-08-18T13:55:50.7679390Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -845,13 +837,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2dd2dc3e5d50d226e9b579b62e834da49c5d8d3b90d519134544aab8dfa602b7"
+          "sha256": "185a4ca17d2cee106f07f9a9fa529a78d54a698534a102f43262775a14655fe5"
         }
       ],
-      "reason": "The observability regression suite now also covers cancellation while serializing an already-classified unexpected error, preserving the original error type; the Web.Api test suite passes with 100 percent line and branch coverage for all changed host classes.",
+      "reason": "Reviewed regenerated quality index: new unit, architecture, frontend, and integration tests cover the changed runtime boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "33b3aa6e84d029f69a9cb8034375c9e6da6bfb78",
-      "reviewedAtUtc": "2026-08-18T11:55:56.1767638Z"
+      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
+      "reviewedAtUtc": "2026-08-18T13:55:52.7693159Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -889,14 +881,14 @@
       "pageSha256": "9b6d5d7319915e804b736c3a089e76f843fe5b97955da5c933faf69165102e18",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-          "sha256": "678532e518c52e61fbbfd5b2d182ea913ef650928ac63e6d71edaa142ce74bd3"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "24219117ec06ffcc85219472f89f16239a8cef046da544ffb3067464b201d4ba"
         }
       ],
-      "reason": "All 28 uncached affected-smoke groups passed, including governed delivery, focused test selection, verification receipts, and facade contracts.",
+      "reason": "The API hardening adds focused unit, integration, and architecture coverage; the concurrent CI change only pins the existing .NET SDK version and does not alter verification workflow semantics.",
       "baseRef": "HEAD",
-      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
-      "reviewedAtUtc": "2026-08-18T02:17:17.3086974Z"
+      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
+      "reviewedAtUtc": "2026-08-18T12:52:48.8942264Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -924,13 +916,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d5c2a7b26c329c34ff9a2625bf01c741f2d35fb07d4a5f7b1b477146cf0edc57"
+          "sha256": "824d74f94ee8be13c695a345642405261ec3f3d1abbdea6b4a1b772701e3dbf8"
         }
       ],
-      "reason": "Extract Admin into an isolated orchestration application module",
+      "reason": "Reviewed regenerated runtime topology: API host, Nginx proxy, wearable providers, and Data Protection composition remain correctly layered.",
       "baseRef": "HEAD",
-      "gitHead": "439aae96be11a5ad3d706354e5be3f3a3938fe75",
-      "reviewedAtUtc": "2026-08-13T18:41:20.8485054Z"
+      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
+      "reviewedAtUtc": "2026-08-18T13:55:56.8080521Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1091,17 +1083,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "d217de9308008f0e7164cc50496d60769fc5f2a3ca29c7260e295404d6915c2d"
+          "sha256": "333207bcdc53a9368a81a82636093da33399ba6ddba4f4f4533fd99b6d1de7e5"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "c5b7c7b8172c5dd71a8e1580dfc018fe966d38d936a21f7f0a38dc409d6bb73e"
+          "sha256": "0181b136a57418ce965ca106315f02011659cf7fe43168bc1d0a6b36c40b058b"
         }
       ],
-      "reason": "Reviewed the regenerated frontend contract, frontend navigation, and quality indexes after the Prettier-only source normalization; selectors, routes, contracts, and quality conclusions remain unchanged.",
+      "reason": "Reviewed regenerated frontend and contract indexes: the wearable sync journey remains compatible with the new idempotency and validation requirements.",
       "baseRef": "HEAD",
-      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
-      "reviewedAtUtc": "2026-08-17T04:08:32.0198082Z"
+      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
+      "reviewedAtUtc": "2026-08-18T13:55:58.8436148Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1205,13 +1197,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "d217de9308008f0e7164cc50496d60769fc5f2a3ca29c7260e295404d6915c2d"
+          "sha256": "333207bcdc53a9368a81a82636093da33399ba6ddba4f4f4533fd99b6d1de7e5"
         }
       ],
-      "reason": "Reviewed the regenerated frontend contract, frontend navigation, and quality indexes after the Prettier-only source normalization; selectors, routes, contracts, and quality conclusions remain unchanged.",
+      "reason": "Reviewed regenerated frontend contract index: wearable sync now sends the required UUID idempotency header and its unit test verifies the request.",
       "baseRef": "HEAD",
-      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
-      "reviewedAtUtc": "2026-08-17T04:08:31.2904896Z"
+      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
+      "reviewedAtUtc": "2026-08-18T13:55:48.8440285Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1220,13 +1212,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "5d9cb81ce1eab7b92929702cbd6387c3eb3268deed383b0d56a034a0eed1c80f"
+          "sha256": "c6787fcdc0a3de28ced96d48cf5a45067df961e57f4b9e54a64f9b06f7bf7c67"
         }
       ],
-      "reason": "Configuration and repository navigation indexes were regenerated after adding the bounded TestDelivery limiter and stable user-ID cache variation; ownership and deployment topology remain unchanged.",
+      "reason": "Reviewed regenerated repository catalog query context: changed projects, packages, tests, and runtime configuration are represented consistently.",
       "baseRef": "HEAD",
-      "gitHead": "a4c68d54367f2d93b4b2f0af80de1a97f653df3f",
-      "reviewedAtUtc": "2026-08-18T10:59:23.8783905Z"
+      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
+      "reviewedAtUtc": "2026-08-18T13:55:54.7634028Z"
     },
     {
       "pageId": "workflow.review-diff",

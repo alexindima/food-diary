@@ -70,6 +70,8 @@ internal sealed class FitbitClient(
                 token.RefreshToken,
                 token.UserId,
                 timeProvider.GetUtcNow().UtcDateTime.AddSeconds(token.ExpiresIn));
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            throw;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "Fitbit token exchange failed");
             return null;
@@ -109,6 +111,8 @@ internal sealed class FitbitClient(
                 token.RefreshToken,
                 token.UserId,
                 timeProvider.GetUtcNow().UtcDateTime.AddSeconds(token.ExpiresIn));
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            throw;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "Fitbit token refresh failed");
             return null;
@@ -160,6 +164,8 @@ internal sealed class FitbitClient(
                 sleepSummary.TryGetProperty("totalMinutesAsleep", out JsonElement sleepMinutes)) {
                 results.Add(new WearableDataPoint(WearableDataType.SleepMinutes, sleepMinutes.GetDouble()));
             }
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            throw;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "Fitbit data fetch failed for {Date}", dateStr);
         }

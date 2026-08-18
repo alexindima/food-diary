@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -35,7 +36,8 @@ export class WearableService extends ApiService {
     }
 
     public sync(provider: string, date: string): Observable<WearableDailySummary> {
-        return this.post<WearableDailySummary>(`${provider}/sync`, null, undefined, { date }).pipe(
+        const headers = new HttpHeaders({ 'Idempotency-Key': crypto.randomUUID() });
+        return this.post<WearableDailySummary>(`${provider}/sync`, null, headers, { date }).pipe(
             catchError((error: unknown) => rethrowApiError('Sync wearable data error', error)),
         );
     }

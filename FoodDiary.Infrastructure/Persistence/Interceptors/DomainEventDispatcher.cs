@@ -32,7 +32,7 @@ internal static class DomainEventDispatcher {
                 publishedEvents.Add(domainEvent);
                 logger.LogInformation(
                     "Dispatching domain event: {EventType} at {OccurredOnUtc}",
-                    domainEvent.GetType().Name,
+                    domainEvent.EventType,
                     domainEvent.OccurredOnUtc.ToString("O"));
                 await publisher.PublishAsync(domainEvent, cancellationToken).ConfigureAwait(false);
             }

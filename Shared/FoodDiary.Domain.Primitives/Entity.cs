@@ -8,7 +8,7 @@ public abstract class Entity<TId> : IAuditableEntity, IEquatable<Entity<TId>>
 
     public TId Id {
         get;
-        protected set {
+        protected init {
             field = value;
             _cachedHashCode = IsTransient()
                 ? null
@@ -32,7 +32,7 @@ public abstract class Entity<TId> : IAuditableEntity, IEquatable<Entity<TId>>
     }
 
     protected void SetCreated(DateTime createdOnUtc) {
-        CreatedOnUtc = NormalizeUtc(createdOnUtc, nameof(createdOnUtc));
+        CreatedOnUtc = DomainTime.EnsureUtc(createdOnUtc, nameof(createdOnUtc));
     }
 
     protected void SetModified() {
@@ -40,11 +40,7 @@ public abstract class Entity<TId> : IAuditableEntity, IEquatable<Entity<TId>>
     }
 
     protected void SetModified(DateTime modifiedOnUtc) {
-        ModifiedOnUtc = NormalizeUtc(modifiedOnUtc, nameof(modifiedOnUtc));
-    }
-
-    private static DateTime NormalizeUtc(DateTime value, string paramName) {
-        return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.") : value.ToUniversalTime();
+        ModifiedOnUtc = DomainTime.EnsureUtc(modifiedOnUtc, nameof(modifiedOnUtc));
     }
 
     #region Equality

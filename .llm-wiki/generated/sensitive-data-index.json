@@ -715,28 +715,28 @@
       "name": "AccessToken",
       "type": "string",
       "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "line": 191
+      "line": 197
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string",
       "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "line": 194
+      "line": 200
     },
     {
       "category": "credential",
       "name": "AccessToken",
       "type": "string",
       "path": "FoodDiary.Integrations/Wearables/GoogleFitClient.cs",
-      "line": 236
+      "line": 243
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string?",
       "path": "FoodDiary.Integrations/Wearables/GoogleFitClient.cs",
-      "line": 239
+      "line": 246
     },
     {
       "category": "credential",
@@ -2143,14 +2143,14 @@
       "name": "Amount",
       "type": "double?",
       "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "line": 187
+      "line": 191
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "double?",
       "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "line": 209
+      "line": 213
     },
     {
       "category": "financial",
@@ -5979,7 +5979,7 @@
       "name": "GramWeight",
       "type": "double?",
       "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "line": 212
+      "line": 216
     },
     {
       "category": "health",
@@ -9752,14 +9752,14 @@
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 235
+      "line": 268
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 252
+      "line": 285
     },
     {
       "category": "privateContent",

@@ -14,9 +14,17 @@ public sealed class ForwardedHeadersOptionsSetup(IOptions<ApiForwardedHeadersOpt
                                    ForwardedHeaders.XForwardedHost |
                                    ForwardedHeaders.XForwardedProto;
         options.ForwardLimit = settings.ForwardLimit;
+        options.AllowedHosts.Clear();
+        foreach (string allowedHost in settings.AllowedHosts) {
+            options.AllowedHosts.Add(allowedHost);
+        }
+
+        if (settings.KnownProxies.Length == 0 && settings.KnownNetworks.Length == 0) {
+            return;
+        }
+
         options.KnownProxies.Clear();
         options.KnownIPNetworks.Clear();
-
         foreach (string proxy in settings.KnownProxies) {
             options.KnownProxies.Add(IPAddress.Parse(proxy));
         }

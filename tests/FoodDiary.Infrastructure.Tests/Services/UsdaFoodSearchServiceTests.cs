@@ -18,6 +18,16 @@ public sealed class UsdaFoodSearchServiceTests {
     }
 
     [Fact]
+    public async Task SearchBrandedAsync_WhenCallerCancels_PropagatesCancellation() {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+        UsdaFoodSearchService service = CreateService(new CanceledHttpMessageHandler());
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            service.SearchBrandedAsync("milk", cancellationToken: cancellationTokenSource.Token));
+    }
+
+    [Fact]
     public async Task GetFoodDetailAsync_WhenBrandedFoodFound_ReturnsMappedNutrients() {
         const string json = """
             {
@@ -111,6 +121,16 @@ public sealed class UsdaFoodSearchServiceTests {
         Assert.Null(result);
     }
 
+    [Fact]
+    public async Task GetFoodDetailAsync_WhenCallerCancels_PropagatesCancellation() {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+        UsdaFoodSearchService service = CreateService(new CanceledHttpMessageHandler());
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            service.GetFoodDetailAsync(539789, cancellationTokenSource.Token));
+    }
+
     private static UsdaFoodSearchService CreateService(HttpMessageHandler handler, string apiKey = "test-key") {
         var httpClient = new HttpClient(handler);
         return new UsdaFoodSearchService(
@@ -135,6 +155,13 @@ public sealed class UsdaFoodSearchServiceTests {
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken) =>
             Task.FromResult(new HttpResponseMessage(statusCode));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CanceledHttpMessageHandler : HttpMessageHandler {
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request, CancellationToken cancellationToken) =>
+            Task.FromCanceled<HttpResponseMessage>(cancellationToken);
     }
 
     [ExcludeFromCodeCoverage]

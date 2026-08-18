@@ -65,8 +65,10 @@ Relevant settings:
 - `ForwardedHeaders:ForwardLimit`
 - `ForwardedHeaders:KnownProxies`
 - `ForwardedHeaders:KnownNetworks`
+- `ForwardedHeaders:AllowedHosts`
+- top-level `AllowedHosts`
 
-Defaults are intentionally conservative. The host does not trust arbitrary `X-Forwarded-For` values for rate limiting or request metadata.
+Defaults are intentionally conservative. When both trusted lists are empty, the host preserves ASP.NET Core's loopback-only defaults; any explicit proxy or network configuration replaces those defaults. The host does not trust arbitrary `X-Forwarded-*` values for rate limiting, request metadata, or generated hosts. `ForwardedHeaders:AllowedHosts` constrains trusted forwarded host values, while top-level `AllowedHosts` constrains the original HTTP host.
 
 Example:
 
@@ -74,11 +76,13 @@ Example:
 "ForwardedHeaders": {
   "ForwardLimit": 1,
   "KnownProxies": [ "10.0.0.10" ],
-  "KnownNetworks": [ "10.0.0.0/24" ]
-}
+  "KnownNetworks": [ "10.0.0.0/24" ],
+  "AllowedHosts": [ "fooddiary.club" ]
+},
+"AllowedHosts": "fooddiary.club"
 ```
 
-Only add proxies or networks that are actually under deployment control.
+Only add proxies or networks that are actually under deployment control. The edge proxy must overwrite both `Host` and `X-Forwarded-Host` with the canonical public host before forwarding a request.
 
 ## Notes
 

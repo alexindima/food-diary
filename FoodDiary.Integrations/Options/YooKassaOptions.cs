@@ -21,11 +21,15 @@ public sealed class YooKassaOptions {
     public static bool HasValidCheckoutConfiguration(YooKassaOptions options) =>
         !string.IsNullOrWhiteSpace(options.ShopId) &&
         !string.IsNullOrWhiteSpace(options.SecretKey) &&
-        !string.IsNullOrWhiteSpace(options.ApiBaseUrl) &&
+        HasValidApiBaseUrl(options.ApiBaseUrl) &&
         IsValidAmount(options.PremiumMonthlyAmount) &&
         IsValidAmount(options.PremiumYearlyAmount) &&
         !string.IsNullOrWhiteSpace(options.Currency) &&
         Uri.IsWellFormedUriString(options.ReturnUrl, UriKind.Absolute);
+
+    private static bool HasValidApiBaseUrl(string? value) =>
+        Uri.TryCreate(value, UriKind.Absolute, out Uri? uri) &&
+        string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase);
 
     private static bool IsValidAmount(string? value) =>
         decimal.TryParse(value, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out decimal amount) &&

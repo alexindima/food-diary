@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1045,
     "ambiguousContracts": 3,
-    "consumerEdges": 7261,
-    "productionConsumerEdges": 4428,
-    "testConsumerEdges": 2833,
+    "consumerEdges": 7265,
+    "productionConsumerEdges": 4430,
+    "testConsumerEdges": 2835,
     "consumedContracts": 1045,
     "unconsumedContracts": 0
   },
@@ -39600,9 +39600,35 @@
         "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetWearableDailySummaryQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Wearables/Mappings/WearableHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "GetWearableDailySummaryQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Wearables/WearableDateValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "GetWearableDailySummaryQuery",
@@ -56580,7 +56606,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Primitives.Tests/EntityAndAggregateRootTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "IDomainEvent",
@@ -99804,7 +99830,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainEventInvariantTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "RecommendationCreatedDomainEvent",
@@ -104261,9 +104287,35 @@
         "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "SyncWearableDataCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Wearables/Mappings/WearableHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "SyncWearableDataCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Wearables/WearableDateValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "SyncWearableDataCommand",

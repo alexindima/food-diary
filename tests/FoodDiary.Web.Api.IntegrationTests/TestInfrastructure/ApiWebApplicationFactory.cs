@@ -50,6 +50,8 @@ public sealed class ApiWebApplicationFactory : WebApplicationFactory<Program> {
                 ["RateLimiting:Ai:WindowSeconds"] = "60",
                 ["RateLimiting:TestDelivery:PermitLimit"] = "1000",
                 ["RateLimiting:TestDelivery:WindowSeconds"] = "60",
+                ["RateLimiting:Wearable:PermitLimit"] = "1000",
+                ["RateLimiting:Wearable:WindowSeconds"] = "60",
             });
         });
 

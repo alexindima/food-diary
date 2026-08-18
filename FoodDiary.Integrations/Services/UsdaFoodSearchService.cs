@@ -37,11 +37,11 @@ internal sealed class UsdaFoodSearchService(
                 ["Branded"],
                 limit);
 
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{config.BaseUrl}/foods/search?api_key={config.ApiKey}") {
+            using var request = new HttpRequestMessage(HttpMethod.Post, $"{config.BaseUrl}/foods/search?api_key={config.ApiKey}") {
                 Content = JsonContent.Create(requestBody, options: JsonOptions),
             };
 
-            HttpResponseMessage response = await httpClient.SendAsync(
+            using HttpResponseMessage response = await httpClient.SendAsync(
                 request,
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken).ConfigureAwait(false);
@@ -54,6 +54,8 @@ internal sealed class UsdaFoodSearchService(
 
             return result.Foods
                 .ConvertAll(f => new UsdaFoodModel(f.FdcId, f.Description, f.BrandName ?? f.FoodCategory));
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            throw;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "USDA branded food search failed for query '{Query}'", query);
             return [];
@@ -73,7 +75,7 @@ internal sealed class UsdaFoodSearchService(
             using var request = new HttpRequestMessage(
                 HttpMethod.Get,
                 string.Create(CultureInfo.InvariantCulture, $"{config.BaseUrl}/food/{fdcId}?api_key={config.ApiKey}"));
-            HttpResponseMessage response = await httpClient.SendAsync(
+            using HttpResponseMessage response = await httpClient.SendAsync(
                 request,
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken).ConfigureAwait(false);
@@ -116,6 +118,8 @@ internal sealed class UsdaFoodSearchService(
                 nutrients,
                 portions,
                 HealthScores: null);
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            throw;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "USDA food detail lookup failed for FDC ID {FdcId}", fdcId);
             return null;

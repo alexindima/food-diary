@@ -33,6 +33,11 @@ public sealed class ApiRateLimitingOptions {
         WindowSeconds = 60,
     };
 
+    public FixedWindowPolicyOptions Wearable { get; init; } = new() {
+        PermitLimit = 10,
+        WindowSeconds = 60,
+    };
+
     public static bool HasValidAuth(ApiRateLimitingOptions options) => options.Auth.IsValid();
 
     public static bool HasValidAi(ApiRateLimitingOptions options) => options.Ai.IsValid();
@@ -44,6 +49,8 @@ public sealed class ApiRateLimitingOptions {
     public static bool HasValidMarketingAttribution(ApiRateLimitingOptions options) => options.MarketingAttribution.IsValid();
 
     public static bool HasValidTestDelivery(ApiRateLimitingOptions options) => options.TestDelivery.IsValid();
+
+    public static bool HasValidWearable(ApiRateLimitingOptions options) => options.Wearable.IsValid();
 
     public sealed class FixedWindowPolicyOptions {
         public int PermitLimit { get; init; }

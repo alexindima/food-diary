@@ -12,7 +12,7 @@ public sealed record ShoppingListNameUpdatedDomainEvent : IDomainEvent {
         ShoppingListId = shoppingListId;
         PreviousName = previousName;
         CurrentName = currentName;
-        OccurredOnUtc = occurredOnUtcOverride ?? DomainTime.UtcNow;
+        OccurredOnUtc = DomainTime.EnsureUtc(occurredOnUtcOverride ?? DomainTime.UtcNow, nameof(occurredOnUtcOverride));
     }
 
     public ShoppingListId ShoppingListId { get; }

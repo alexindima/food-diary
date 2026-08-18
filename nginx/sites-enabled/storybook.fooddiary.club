@@ -15,7 +15,7 @@ server {
     }
 
     error_log /var/log/nginx/fooddiary.storybook.error.log;
-    access_log /var/log/nginx/fooddiary.storybook.access.log;
+    access_log /var/log/nginx/fooddiary.storybook.access.log fooddiary_privacy;
 }
 
 server {
@@ -49,5 +49,5 @@ server {
     }
 
     error_log /var/log/nginx/fooddiary.storybook.error.log;
-    access_log /var/log/nginx/fooddiary.storybook.access.log;
+    access_log /var/log/nginx/fooddiary.storybook.access.log fooddiary_privacy;
 }

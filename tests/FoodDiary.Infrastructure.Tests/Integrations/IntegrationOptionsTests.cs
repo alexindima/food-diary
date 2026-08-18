@@ -66,6 +66,37 @@ public sealed class IntegrationOptionsTests {
     }
 
     [Theory]
+    [InlineData("https://api.nal.usda.gov/fdc/v1", true)]
+    [InlineData("http://api.example.com", false)]
+    [InlineData("/relative", false)]
+    public void UsdaApiOptions_HasValidBaseUrl_RequiresAbsoluteHttpsUrl(string baseUrl, bool expected) {
+        var options = new UsdaApiOptions { BaseUrl = baseUrl };
+
+        Assert.Equal(expected, UsdaApiOptions.HasValidBaseUrl(options));
+    }
+
+    [Theory]
+    [InlineData("https://world.openfoodfacts.org", true)]
+    [InlineData("http://openfoodfacts.example.com", false)]
+    [InlineData("not-a-url", false)]
+    public void OpenFoodFactsApiOptions_HasValidBaseUrl_RequiresAbsoluteHttpsUrl(string baseUrl, bool expected) {
+        var options = new OpenFoodFactsApiOptions { BaseUrl = baseUrl };
+
+        Assert.Equal(expected, OpenFoodFactsApiOptions.HasValidBaseUrl(options));
+    }
+
+    [Theory]
+    [InlineData("FoodDiary/1.0", true)]
+    [InlineData("FoodDiary/1.0 (contact@example.com)", true)]
+    [InlineData("", false)]
+    [InlineData("FoodDiary/1.0 (", false)]
+    public void OpenFoodFactsApiOptions_HasValidUserAgent_RequiresValidHttpUserAgent(string userAgent, bool expected) {
+        var options = new OpenFoodFactsApiOptions { UserAgent = userAgent };
+
+        Assert.Equal(expected, OpenFoodFactsApiOptions.HasValidUserAgent(options));
+    }
+
+    [Theory]
     [InlineData(null, true)]
     [InlineData("", true)]
     [InlineData("https://cdn.example.com", true)]
@@ -126,6 +157,24 @@ public sealed class IntegrationOptionsTests {
             PremiumYearlyAmount = yearlyAmount,
             Currency = currency,
             ReturnUrl = returnUrl,
+        };
+
+        Assert.Equal(expected, YooKassaOptions.HasValidCheckoutConfiguration(options));
+    }
+
+    [Theory]
+    [InlineData("https://api.yookassa.ru/v3", true)]
+    [InlineData("http://api.yookassa.test/v3", false)]
+    [InlineData("not-a-url", false)]
+    public void YooKassaOptions_HasValidCheckoutConfiguration_RequiresHttpsApiBaseUrl(string apiBaseUrl, bool expected) {
+        var options = new YooKassaOptions {
+            ShopId = "shop",
+            SecretKey = "secret",
+            ApiBaseUrl = apiBaseUrl,
+            PremiumMonthlyAmount = "199.00",
+            PremiumYearlyAmount = "1990.00",
+            Currency = "RUB",
+            ReturnUrl = "https://example.com/return",
         };
 
         Assert.Equal(expected, YooKassaOptions.HasValidCheckoutConfiguration(options));

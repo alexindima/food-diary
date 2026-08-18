@@ -113,8 +113,71 @@ public sealed class TelemetrySecurityGuardrailTests {
             () => Assert.Contains("public const string UnmatchedRouteLabel = \"unmatched\"", processor, StringComparison.Ordinal));
     }
 
+    [Fact]
+    public void ReverseProxyAccessLogs_DoNotPersistQueryStrings() {
+        string nginxConfiguration = ReadSource("nginx.conf");
+        string logFormat = Assert.Single(
+            nginxConfiguration.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
+            static line => line.StartsWith("log_format fooddiary_privacy ", StringComparison.Ordinal));
+        string[] configurationPaths = [
+            ArchitectureTestPaths.FromRoot("nginx.conf"),
+            .. Directory.GetFiles(ArchitectureTestPaths.FromRoot("nginx", "sites-enabled"), "*", SearchOption.TopDirectoryOnly),
+        ];
+        string[] accessLogs = [.. configurationPaths
+            .SelectMany(File.ReadAllLines)
+            .Select(static line => line.Trim())
+            .Where(static line => line.StartsWith("access_log ", StringComparison.Ordinal))];
+
+        Assert.NotEmpty(accessLogs);
+        Assert.Multiple(
+            () => Assert.Contains("\"$request_method $uri $server_protocol\"", logFormat, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("$request_uri", logFormat, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("$query_string", logFormat, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("$args", logFormat, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("\"$request\"", logFormat, StringComparison.Ordinal),
+            () => Assert.All(accessLogs, static line =>
+                Assert.True(
+                    string.Equals(line, "access_log off;", StringComparison.Ordinal) ||
+                    line.EndsWith(" fooddiary_privacy;", StringComparison.Ordinal),
+                    line)));
+    }
+
+    [Fact]
+    public void PrimaryReverseProxy_RejectsUnknownHostsAndCanonicalizesForwardedHost() {
+        string nginx = ReadSource("nginx/sites-enabled/fooddiary.club");
+
+        Assert.Multiple(
+            () => Assert.Contains("listen 80 default_server;", nginx, StringComparison.Ordinal),
+            () => Assert.Contains("listen 443 ssl default_server;", nginx, StringComparison.Ordinal),
+            () => Assert.Contains("listen 443 quic reuseport default_server;", nginx, StringComparison.Ordinal),
+            () => Assert.Contains("ssl_reject_handshake on;", nginx, StringComparison.Ordinal),
+            () => Assert.Equal(2, CountOccurrences(nginx, "proxy_set_header Host $server_name;")),
+            () => Assert.Equal(2, CountOccurrences(nginx, "proxy_set_header X-Forwarded-Host $server_name;")),
+            () => Assert.DoesNotContain("proxy_set_header Host $host;", nginx, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ApiExceptionLogs_UseBoundedRouteLabels() {
+        string exceptionHandler = ReadSource("FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs");
+
+        Assert.Multiple(
+            () => Assert.Contains("TelemetryPrivacyProcessor.ResolveRouteLabel(httpContext)", exceptionHandler, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("httpContext.Request.Path);", exceptionHandler, StringComparison.Ordinal));
+    }
+
     private static string ReadSource(string path) =>
         File.ReadAllText(ArchitectureTestPaths.FromRoot(path.Split('/')));
+
+    private static int CountOccurrences(string value, string search) {
+        int count = 0;
+        int offset = 0;
+        while ((offset = value.IndexOf(search, offset, StringComparison.Ordinal)) >= 0) {
+            count++;
+            offset += search.Length;
+        }
+
+        return count;
+    }
 
     private static string RelativeLocation(string repositoryRoot, string path, SyntaxNode node) {
         FileLinePositionSpan lineSpan = node.GetLocation().GetLineSpan();

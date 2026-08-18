@@ -84,6 +84,7 @@ Source: `FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Wearables/WearableDateValidatorTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WearablesModuleBoundaryTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WearablesModuleExtractionTests.cs`

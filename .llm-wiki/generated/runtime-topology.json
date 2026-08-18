@@ -3,7 +3,7 @@
   "summary": {
     "composeServices": 19,
     "hostedServices": 10,
-    "httpClients": 12,
+    "httpClients": 13,
     "webhooks": 20,
     "recurringJobRegistrations": 15
   },
@@ -247,6 +247,11 @@
       "contract": "IUsdaFoodSearchService",
       "implementation": "UsdaFoodSearchService",
       "registrationPath": "FoodDiary.Integrations/DependencyInjection.FoodData.cs"
+    },
+    {
+      "contract": "IWebPushClientAdapter",
+      "implementation": "WebPushClientAdapter",
+      "registrationPath": "FoodDiary.Integrations/DependencyInjection.Notifications.cs"
     },
     {
       "contract": null,

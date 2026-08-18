@@ -33,7 +33,10 @@ public static partial class DependencyInjection {
                 "GoogleAuth:ClientId must be empty or a non-whitespace value.")
             .ValidateOnStart();
         services.AddOptions<TelegramAuthOptions>()
-            .Bind(configuration.GetSection(TelegramAuthOptions.SectionName));
+            .Bind(configuration.GetSection(TelegramAuthOptions.SectionName))
+            .Validate(TelegramAuthOptions.HasValidAuthTtl,
+                "TelegramAuth:AuthTtlSeconds must be greater than zero.")
+            .ValidateOnStart();
         services.AddOptions<BillingOptions>()
             .Bind(configuration.GetSection(BillingOptions.SectionName))
             .Validate(static options => !string.IsNullOrWhiteSpace(options.Provider),
@@ -77,8 +80,18 @@ public static partial class DependencyInjection {
                 "WebPush configuration is invalid.")
             .ValidateOnStart();
 
-        services.Configure<UsdaApiOptions>(configuration.GetSection(UsdaApiOptions.SectionName));
-        services.Configure<OpenFoodFactsApiOptions>(configuration.GetSection(OpenFoodFactsApiOptions.SectionName));
+        services.AddOptions<UsdaApiOptions>()
+            .Bind(configuration.GetSection(UsdaApiOptions.SectionName))
+            .Validate(UsdaApiOptions.HasValidBaseUrl,
+                "UsdaApi:BaseUrl must be an absolute HTTPS URL.")
+            .ValidateOnStart();
+        services.AddOptions<OpenFoodFactsApiOptions>()
+            .Bind(configuration.GetSection(OpenFoodFactsApiOptions.SectionName))
+            .Validate(OpenFoodFactsApiOptions.HasValidBaseUrl,
+                "OpenFoodFacts:BaseUrl must be an absolute HTTPS URL.")
+            .Validate(OpenFoodFactsApiOptions.HasValidUserAgent,
+                "OpenFoodFacts:UserAgent must be a valid HTTP User-Agent value.")
+            .ValidateOnStart();
         services.AddOptions<FitbitOptions>()
             .Bind(configuration.GetSection(FitbitOptions.SectionName))
             .Validate(FitbitOptions.IsEmptyOrComplete,

@@ -39,7 +39,7 @@ public sealed class ApiExceptionHandler(
             case DbUpdateConcurrencyException: {
                     logger.LogWarning(exception, "Concurrency conflict while processing request {Method} {Path}.",
                         httpContext.Request.Method,
-                        httpContext.Request.Path);
+                        TelemetryPrivacyProcessor.ResolveRouteLabel(httpContext));
 
                     httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
 
@@ -56,7 +56,7 @@ public sealed class ApiExceptionHandler(
         RequestObservabilityMiddleware.ReportHandledException(httpContext, exception);
         logger.LogError(exception, "Unhandled exception while processing request {Method} {Path}.",
             httpContext.Request.Method,
-            httpContext.Request.Path);
+            TelemetryPrivacyProcessor.ResolveRouteLabel(httpContext));
 
         httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
@@ -77,7 +77,7 @@ public sealed class ApiExceptionHandler(
         logger.LogDebug(
             "Request {Method} {Path} was cancelled by the client.",
             httpContext.Request.Method,
-            httpContext.Request.Path);
+            TelemetryPrivacyProcessor.ResolveRouteLabel(httpContext));
         return true;
     }
 }

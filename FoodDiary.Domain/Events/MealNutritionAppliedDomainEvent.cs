@@ -22,7 +22,7 @@ public sealed record MealNutritionAppliedDomainEvent : IDomainEvent {
         TotalCarbs = totalCarbs;
         TotalFiber = totalFiber;
         TotalAlcohol = totalAlcohol;
-        OccurredOnUtc = occurredOnUtcOverride ?? DomainTime.UtcNow;
+        OccurredOnUtc = DomainTime.EnsureUtc(occurredOnUtcOverride ?? DomainTime.UtcNow, nameof(occurredOnUtcOverride));
     }
 
     public MealId MealId { get; }

@@ -77,6 +77,8 @@ public sealed class GoogleTokenValidator(IOptions<GoogleAuthOptions> options, IL
                 FirstName: GetClaimValue(principal, ClaimTypes.GivenName) ?? GetClaimValue(principal, "given_name"),
                 LastName: GetClaimValue(principal, ClaimTypes.Surname) ?? GetClaimValue(principal, "family_name"),
                 Locale: GetClaimValue(principal, "locale")));
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            throw;
         } catch (Exception ex) when (ex is SecurityTokenException or InvalidOperationException or ArgumentException) {
             logger.LogWarning(ex, "Google credential validation failed.");
             return Result.Failure<GoogleIdentityPayload>(Errors.Authentication.GoogleInvalidToken);
