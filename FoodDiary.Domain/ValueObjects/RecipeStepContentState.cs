@@ -4,14 +4,26 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.ValueObjects;
 
-public readonly record struct RecipeStepContentState(
-    string? Title,
-    string Instruction,
-    string? ImageUrl,
-    ImageAssetId? ImageAssetId) {
+public readonly record struct RecipeStepContentState {
     private const int TitleMaxLength = 256;
     private const int InstructionMaxLength = 4000;
     private const int ImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
+
+    public string? Title { get; }
+    public string Instruction { get; }
+    public string? ImageUrl { get; }
+    public ImageAssetId? ImageAssetId { get; }
+
+    public RecipeStepContentState(
+        string? title,
+        string instruction,
+        string? imageUrl,
+        ImageAssetId? imageAssetId) {
+        Title = NormalizeOptionalText(title, TitleMaxLength, nameof(title));
+        Instruction = NormalizeInstruction(instruction, nameof(instruction));
+        ImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
+        ImageAssetId = imageAssetId;
+    }
 
     public static RecipeStepContentState Create(
         string instruction,

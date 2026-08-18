@@ -795,7 +795,7 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
-    public async Task SwaggerJson_AllRequestBodyOperations_DocumentPayloadTooLarge() {
+    public async Task SwaggerJson_AllRequestBodyOperations_DocumentBadRequestAndPayloadTooLarge() {
         HttpClient client = apiFactory.CreateClient();
         HttpResponseMessage response = await client.GetAsync("/swagger/v1/swagger.json");
         response.EnsureSuccessStatusCode();
@@ -808,8 +808,9 @@ public sealed class PresentationBoundaryIntegrationTests(
             foreach (JsonProperty operation in path.Value.EnumerateObject()) {
                 if (operation.Value.TryGetProperty("requestBody", out _) &&
                     (!operation.Value.TryGetProperty("responses", out JsonElement responses) ||
+                     !responses.TryGetProperty("400", out _) ||
                      !responses.TryGetProperty("413", out _))) {
-                    missingResponses.Add($"{operation.Name.ToUpperInvariant()} {path.Name}");
+                    missingResponses.Add($"{operation.Name.ToUpperInvariant()} {path.Name} must document 400 and 413");
                 }
             }
         }

@@ -6,12 +6,12 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1466,
+    "candidateFields": 1473,
     "credential": 153,
     "identity": 153,
     "health": 663,
-    "financial": 199,
-    "privateContent": 298,
+    "financial": 203,
+    "privateContent": 301,
     "boundaryFiles": 184,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
@@ -414,28 +414,28 @@
       "name": "HasPassword",
       "type": "Password,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 330
+      "line": 341
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "MustChangePassword,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 332
+      "line": 343
     },
     {
       "category": "credential",
       "name": "EmailConfirmationTokenHash",
       "type": "IsEmailConfirmed,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 334
+      "line": 345
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenExpiresAtUtc",
       "type": "PasswordResetTokenHash,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 338
+      "line": 349
     },
     {
       "category": "credential",
@@ -470,14 +470,14 @@
       "name": "AccessToken",
       "type": "string",
       "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 12
+      "line": 13
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "credential",
@@ -722,14 +722,14 @@
       "name": "AccessToken",
       "type": "string",
       "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "line": 209
+      "line": 214
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string",
       "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "line": 212
+      "line": 217
     },
     {
       "category": "credential",
@@ -1730,119 +1730,147 @@
       "name": "BillingSubscriptionId",
       "type": "Guid?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 8
+      "line": 16
     },
     {
       "category": "financial",
       "name": "ExternalPaymentId",
       "type": "string",
       "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 10
-    },
-    {
-      "category": "financial",
-      "name": "ExternalCustomerId",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 11
-    },
-    {
-      "category": "financial",
-      "name": "ExternalSubscriptionId",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 12
-    },
-    {
-      "category": "financial",
-      "name": "ExternalPaymentMethodId",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 13
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "decimal?",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
       "line": 18
     },
     {
       "category": "financial",
-      "name": "Currency",
+      "name": "ExternalCustomerId",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
       "line": 19
     },
     {
       "category": "financial",
+      "name": "ExternalSubscriptionId",
+      "type": "string?",
+      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+      "line": 20
+    },
+    {
+      "category": "financial",
+      "name": "ExternalPaymentMethodId",
+      "type": "string?",
+      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+      "line": 21
+    },
+    {
+      "category": "financial",
+      "name": "Amount",
+      "type": "decimal?",
+      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+      "line": 26
+    },
+    {
+      "category": "financial",
+      "name": "Currency",
+      "type": "string?",
+      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+      "line": 27
+    },
+    {
+      "category": "financial",
       "name": "PayoutCurrency",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 23
+      "line": 31
     },
     {
       "category": "financial",
       "name": "BillingPayment",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 62
+      "line": 78
+    },
+    {
+      "category": "financial",
+      "name": "CurrencyMaxLength",
+      "type": "currency,",
+      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+      "line": 92
+    },
+    {
+      "category": "financial",
+      "name": "CurrencyMaxLength",
+      "type": "payoutCurrency,",
+      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+      "line": 96
+    },
+    {
+      "category": "financial",
+      "name": "CurrencyMaxLength",
+      "type": "currency,",
+      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+      "line": 141
+    },
+    {
+      "category": "financial",
+      "name": "CurrencyMaxLength",
+      "type": "payoutCurrency,",
+      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+      "line": 142
     },
     {
       "category": "financial",
       "name": "ExternalCustomerId",
       "type": "string",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 11
+      "line": 16
     },
     {
       "category": "financial",
       "name": "ExternalSubscriptionId",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 12
+      "line": 17
     },
     {
       "category": "financial",
       "name": "ExternalPaymentMethodId",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 13
+      "line": 18
     },
     {
       "category": "financial",
       "name": "NextBillingAttemptUtc",
       "type": "DateTime?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 23
+      "line": 28
     },
     {
       "category": "financial",
       "name": "PremiumRoleManagedByBilling",
       "type": "bool",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 28
+      "line": 33
     },
     {
       "category": "financial",
       "name": "BillingSubscription",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 43
+      "line": 48
     },
     {
       "category": "financial",
       "name": "BillingWebhookEvent",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 35
+      "line": 40
     },
     {
       "category": "financial",
       "name": "BillingWebhookEvent",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 57
+      "line": 62
     },
     {
       "category": "financial",
@@ -1905,7 +1933,7 @@
       "name": "BaseAmount",
       "type": "BaseUnit,",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 465
+      "line": 471
     },
     {
       "category": "financial",
@@ -1919,7 +1947,7 @@
       "name": "Amount",
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 19
+      "line": 20
     },
     {
       "category": "financial",
@@ -1961,21 +1989,21 @@
       "name": "Amount",
       "type": "double",
       "path": "FoodDiary.Domain/ValueObjects/MealAiItemState.cs",
-      "line": 9
+      "line": 12
     },
     {
       "category": "financial",
       "name": "BaseAmount",
       "type": "double",
       "path": "FoodDiary.Domain/ValueObjects/ProductMeasurementState.cs",
-      "line": 7
+      "line": 9
     },
     {
       "category": "financial",
       "name": "DefaultPortionAmount",
       "type": "double",
       "path": "FoodDiary.Domain/ValueObjects/ProductMeasurementState.cs",
-      "line": 8
+      "line": 10
     },
     {
       "category": "financial",
@@ -4845,7 +4873,7 @@
       "name": "NutritionLesson",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Content/NutritionLesson.cs",
-      "line": 35
+      "line": 38
     },
     {
       "category": "health",
@@ -4901,7 +4929,7 @@
       "name": "TargetCaloriesPerDay",
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/MealPlans/MealPlan.cs",
-      "line": 19
+      "line": 20
     },
     {
       "category": "health",
@@ -4943,21 +4971,21 @@
       "name": "IsNutritionAutoCalculated",
       "type": "Id,",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 204
+      "line": 213
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
       "type": "ImageAssetId,",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 262
+      "line": 271
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "IsNutritionAutoCalculated,",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 285
+      "line": 294
     },
     {
       "category": "health",
@@ -4985,7 +5013,7 @@
       "name": "CaloriesPer100G",
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
-      "line": 9
+      "line": 17
     },
     {
       "category": "health",
@@ -5020,7 +5048,7 @@
       "name": "ManualCalories",
       "type": "IsNutritionAutoCalculated,",
       "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
-      "line": 472
+      "line": 478
     },
     {
       "category": "health",
@@ -5069,21 +5097,21 @@
       "name": "CycleProfileId",
       "type": "CycleProfileId",
       "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 7
+      "line": 13
     },
     {
       "category": "health",
       "name": "CompletedCycleCount",
       "type": "int",
       "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 14
+      "line": 20
     },
     {
       "category": "health",
       "name": "CycleProfile",
       "type": "CycleProfile",
       "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 21
+      "line": 27
     },
     {
       "category": "health",
@@ -5118,21 +5146,21 @@
       "name": "ExerciseType",
       "type": "ExerciseType",
       "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 17
+      "line": 18
     },
     {
       "category": "health",
       "name": "CaloriesBurned",
       "type": "double",
       "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 20
+      "line": 21
     },
     {
       "category": "health",
       "name": "ExerciseEntry",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 40
+      "line": 42
     },
     {
       "category": "health",
@@ -5146,14 +5174,14 @@
       "name": "FastingOccurrence",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "line": 56
+      "line": 58
     },
     {
       "category": "health",
       "name": "FastingOccurrence",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "line": 89
+      "line": 92
     },
     {
       "category": "health",
@@ -5181,14 +5209,14 @@
       "name": "FastingSession",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingSession.cs",
-      "line": 41
+      "line": 43
     },
     {
       "category": "health",
       "name": "FastingTelemetryEvent",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
-      "line": 58
+      "line": 59
     },
     {
       "category": "health",
@@ -5426,98 +5454,98 @@
       "name": "TuesdayCalories",
       "type": "MondayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 208
+      "line": 219
     },
     {
       "category": "health",
       "name": "ThursdayCalories",
       "type": "WednesdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 210
+      "line": 221
     },
     {
       "category": "health",
       "name": "SaturdayCalories",
       "type": "FridayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 212
+      "line": 223
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "DesiredWeightKg,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 225
+      "line": 236
     },
     {
       "category": "health",
       "name": "MondayCalories",
       "type": "CalorieCyclingEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 227
+      "line": 238
     },
     {
       "category": "health",
       "name": "WednesdayCalories",
       "type": "TuesdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 229
+      "line": 240
     },
     {
       "category": "health",
       "name": "FridayCalories",
       "type": "ThursdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 231
+      "line": 242
     },
     {
       "category": "health",
       "name": "SundayCalories",
       "type": "SaturdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 233
+      "line": 244
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "StepGoal,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 257
+      "line": 268
     },
     {
       "category": "health",
       "name": "BirthDate",
       "type": "LastName,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 269
+      "line": 280
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "Gender,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 271
+      "line": 282
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "HeightCm,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 273
+      "line": 284
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "PushNotificationsEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 281
+      "line": 292
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "SocialPushNotificationsEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 283
+      "line": 294
     },
     {
       "category": "health",
@@ -5531,7 +5559,7 @@
       "name": "Calories",
       "type": "double",
       "path": "FoodDiary.Domain/ValueObjects/MealAiItemState.cs",
-      "line": 11
+      "line": 14
     },
     {
       "category": "health",
@@ -5580,14 +5608,14 @@
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "FoodDiary.Domain/ValueObjects/ProductNutrition.cs",
-      "line": 4
+      "line": 7
     },
     {
       "category": "health",
       "name": "Calories",
       "type": "double?",
       "path": "FoodDiary.Domain/ValueObjects/RecipeNutrition.cs",
-      "line": 4
+      "line": 7
     },
     {
       "category": "health",
@@ -5615,7 +5643,7 @@
       "name": "HydrationGoal",
       "type": "double?",
       "path": "FoodDiary.Domain/ValueObjects/UserActivityGoals.cs",
-      "line": 5
+      "line": 8
     },
     {
       "category": "health",
@@ -5888,7 +5916,7 @@
       "name": "TotalCalories",
       "type": "double",
       "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
-      "line": 118
+      "line": 115
     },
     {
       "category": "health",
@@ -7757,7 +7785,7 @@
       "name": "EmailConfirmationSentAtUtc",
       "type": "EmailConfirmationTokenExpiresAtUtc,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 336
+      "line": 347
     },
     {
       "category": "identity",
@@ -9213,63 +9241,63 @@
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 66
+      "line": 69
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 67
+      "line": 70
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 77
+      "line": 80
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 90
+      "line": 93
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "Comment,",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 260
+      "line": 269
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 14
+      "line": 15
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 18
+      "line": 19
     },
     {
       "category": "privateContent",
       "name": "ImageAsset",
       "type": "ImageAsset?",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 21
+      "line": 22
     },
     {
       "category": "privateContent",
       "name": "NotesMaxLength",
       "type": "notes,",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 44
+      "line": 46
     },
     {
       "category": "privateContent",
@@ -9290,7 +9318,14 @@
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
-      "line": 8
+      "line": 16
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrlMaxLength",
+      "type": "imageUrl,",
+      "path": "FoodDiary.Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
+      "line": 75
     },
     {
       "category": "privateContent",
@@ -9318,35 +9353,35 @@
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 100
+      "line": 103
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 101
+      "line": 104
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 175
+      "line": 178
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 291
+      "line": 295
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 478
+      "line": 484
     },
     {
       "category": "privateContent",
@@ -9374,35 +9409,35 @@
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
-      "line": 78
+      "line": 79
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
-      "line": 80
+      "line": 81
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
-      "line": 259
+      "line": 265
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
-      "line": 324
+      "line": 330
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
-      "line": 443
+      "line": 449
     },
     {
       "category": "privateContent",
@@ -9465,21 +9500,28 @@
       "name": "Notes",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 21
+      "line": 22
     },
     {
       "category": "privateContent",
       "name": "NotesMaxLength",
       "type": "notes,",
       "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 48
+      "line": 50
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
+      "line": 115
     },
     {
       "category": "privateContent",
       "name": "NotesMaxLength",
       "type": "notes,",
       "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 97
+      "line": 134
     },
     {
       "category": "privateContent",
@@ -9493,28 +9535,28 @@
       "name": "Notes",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "line": 28
+      "line": 29
     },
     {
       "category": "privateContent",
       "name": "CheckInNotes",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "line": 34
+      "line": 35
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingSession.cs",
-      "line": 22
+      "line": 23
     },
     {
       "category": "privateContent",
       "name": "HadNotes",
       "type": "bool?",
       "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
-      "line": 34
+      "line": 35
     },
     {
       "category": "privateContent",
@@ -9535,7 +9577,7 @@
       "name": "ProfileImageAssetId",
       "type": "ProfileImage,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 275
+      "line": 286
     },
     {
       "category": "privateContent",
@@ -9605,14 +9647,14 @@
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Domain/ValueObjects/RecipeStepContentState.cs",
-      "line": 10
+      "line": 14
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.Domain/ValueObjects/RecipeStepContentState.cs",
-      "line": 11
+      "line": 15
     },
     {
       "category": "privateContent",
@@ -9620,6 +9662,13 @@
       "type": "imageUrl,",
       "path": "FoodDiary.Domain/ValueObjects/RecipeStepContentState.cs",
       "line": 24
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrlMaxLength",
+      "type": "imageUrl,",
+      "path": "FoodDiary.Domain/ValueObjects/RecipeStepContentState.cs",
+      "line": 36
     },
     {
       "category": "privateContent",
@@ -9752,14 +9801,14 @@
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 328
+      "line": 375
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 345
+      "line": 392
     },
     {
       "category": "privateContent",

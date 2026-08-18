@@ -213,7 +213,41 @@ public sealed class WearableClientTests {
         Assert.Equal("Wearable.SyncFailed", result.Error.Code);
     }
 
-    private static FitbitClient CreateFitbitClient(HttpMessageHandler handler, string clientId = "fitbit-client") {
+    [Fact]
+    public async Task FitbitFetchDailyDataAsync_WhenCompositeDeadlineExpires_ReturnsFailure() {
+        var handler = new BlockingHttpMessageHandler();
+        FitbitClient client = CreateFitbitClient(handler, dailyDataOperationTimeout: TimeSpan.FromMilliseconds(50));
+
+        Result<IReadOnlyList<WearableDataPoint>> result = await client.FetchDailyDataAsync(
+            "access",
+            DateTime.UtcNow,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Wearable.SyncFailed", result.Error.Code);
+        Assert.Equal(1, handler.RequestCount);
+    }
+
+    [Fact]
+    public async Task FitbitFetchDailyDataAsync_WhenCallerCancels_PropagatesCancellation() {
+        var handler = new BlockingHttpMessageHandler();
+        FitbitClient client = CreateFitbitClient(handler, dailyDataOperationTimeout: TimeSpan.FromSeconds(5));
+        using var cancellationTokenSource = new CancellationTokenSource();
+
+        Task<Result<IReadOnlyList<WearableDataPoint>>> pending = client.FetchDailyDataAsync(
+            "access",
+            DateTime.UtcNow,
+            cancellationTokenSource.Token);
+        await handler.RequestStarted.Task.WaitAsync(TimeSpan.FromSeconds(1), TimeProvider.System);
+        await cancellationTokenSource.CancelAsync();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => pending);
+    }
+
+    private static FitbitClient CreateFitbitClient(
+        HttpMessageHandler handler,
+        string clientId = "fitbit-client",
+        TimeSpan? dailyDataOperationTimeout = null) {
         return new FitbitClient(
             new HttpClient(handler),
             MsOptions.Create(new FitbitOptions {
@@ -222,7 +256,9 @@ public sealed class WearableClientTests {
                 RedirectUri = "https://app.test/fitbit",
             }),
             FixedTime,
-            NullLogger<FitbitClient>.Instance);
+            NullLogger<FitbitClient>.Instance) {
+            DailyDataOperationTimeout = dailyDataOperationTimeout ?? TimeSpan.FromSeconds(30),
+        };
     }
 
     private static readonly DateTimeOffset FixedNow = new(2026, 7, 1, 8, 0, 0, TimeSpan.Zero);
@@ -258,5 +294,20 @@ public sealed class WearableClientTests {
             HttpRequestMessage request,
             CancellationToken cancellationToken) =>
             Task.FromCanceled<HttpResponseMessage>(cancellationToken);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class BlockingHttpMessageHandler : HttpMessageHandler {
+        public TaskCompletionSource RequestStarted { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public int RequestCount { get; private set; }
+
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken) {
+            RequestCount++;
+            RequestStarted.TrySetResult();
+            await Task.Delay(Timeout.InfiniteTimeSpan, TimeProvider.System, cancellationToken);
+            throw new System.Diagnostics.UnreachableException();
+        }
     }
 }

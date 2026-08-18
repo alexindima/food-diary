@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 
 namespace FoodDiary.Application.Statistics.Queries.GetStatisticsSummary;
 
@@ -13,6 +14,18 @@ public sealed class GetStatisticsSummaryQueryValidator : AbstractValidator<GetSt
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
 
-        RuleFor(x => x.QuantizationDays).GreaterThan(0);
+        RuleFor(x => x.DateFrom)
+            .LessThanOrEqualTo(x => x.DateTo)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("DateFrom must be earlier than or equal to DateTo.");
+
+        RuleFor(x => x.DateTo)
+            .Must((query, dateTo) => TemporalRangePolicy.IsPeriodWithinLimit(query.DateFrom, dateTo))
+            .When(x => x.DateFrom <= x.DateTo)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"The period must not exceed {TemporalRangePolicy.MaxPeriodDays} days.");
+
+        RuleFor(x => x.QuantizationDays)
+            .InclusiveBetween(1, TemporalRangePolicy.MaxQuantizationDays);
     }
 }

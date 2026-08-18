@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -28,6 +29,8 @@ public sealed class ContentReport : AggregateRoot<ContentReportId> {
         if (targetId == Guid.Empty) {
             throw new ArgumentException("TargetId is required.", nameof(targetId));
         }
+
+        DomainGuard.Defined(targetType, nameof(targetType));
 
         string normalizedReason = NormalizeReason(reason);
 

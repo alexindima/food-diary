@@ -1,12 +1,31 @@
+using System.Runtime.InteropServices;
+
 namespace FoodDiary.Domain.ValueObjects;
 
-public readonly record struct ProductNutrition(
-    double CaloriesPerBase,
-    double ProteinsPerBase,
-    double FatsPerBase,
-    double CarbsPerBase,
-    double FiberPerBase,
-    double AlcoholPerBase) {
+[StructLayout(LayoutKind.Auto)]
+public readonly record struct ProductNutrition {
+    public double CaloriesPerBase { get; }
+    public double ProteinsPerBase { get; }
+    public double FatsPerBase { get; }
+    public double CarbsPerBase { get; }
+    public double FiberPerBase { get; }
+    public double AlcoholPerBase { get; }
+
+    public ProductNutrition(
+        double caloriesPerBase,
+        double proteinsPerBase,
+        double fatsPerBase,
+        double carbsPerBase,
+        double fiberPerBase,
+        double alcoholPerBase) {
+        CaloriesPerBase = EnsureNonNegative(caloriesPerBase, nameof(caloriesPerBase));
+        ProteinsPerBase = EnsureNonNegative(proteinsPerBase, nameof(proteinsPerBase));
+        FatsPerBase = EnsureNonNegative(fatsPerBase, nameof(fatsPerBase));
+        CarbsPerBase = EnsureNonNegative(carbsPerBase, nameof(carbsPerBase));
+        FiberPerBase = EnsureNonNegative(fiberPerBase, nameof(fiberPerBase));
+        AlcoholPerBase = EnsureNonNegative(alcoholPerBase, nameof(alcoholPerBase));
+    }
+
     public static ProductNutrition Create(
         double caloriesPerBase,
         double proteinsPerBase,

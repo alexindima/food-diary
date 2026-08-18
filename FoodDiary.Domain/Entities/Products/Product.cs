@@ -82,6 +82,9 @@ public sealed class Product : AggregateRoot<ProductId> {
         ImageAssetId? imageAssetId = null,
         Visibility visibility = Visibility.Public) {
         EnsureUserId(userId);
+        DomainGuard.Defined(baseUnit, nameof(baseUnit));
+        DomainGuard.Defined(productType, nameof(productType));
+        DomainGuard.Defined(visibility, nameof(visibility));
         string normalizedName = NormalizeRequiredName(name);
         double normalizedBaseAmount = NormalizeBaseAmount(baseUnit, baseAmount, nameof(baseAmount));
         double normalizedDefaultPortionAmount = NormalizeDefaultPortionAmount(baseUnit, defaultPortionAmount ?? normalizedBaseAmount, nameof(defaultPortionAmount));
@@ -157,7 +160,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         }
 
         if (productType.HasValue) {
-            state = state with { ProductType = productType.Value };
+            state = state with { ProductType = DomainGuard.Defined(productType.Value, nameof(productType)) };
         }
 
         ApplyIdentityStateIfChanged(state);
@@ -225,6 +228,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         ProductMeasurementState state = GetMeasurementState();
         bool changed = false;
         MeasurementUnit targetUnit = baseUnit ?? state.BaseUnit;
+        DomainGuard.Defined(targetUnit, nameof(baseUnit));
         double targetBaseAmount = state.BaseAmount;
 
         if (baseAmount.HasValue) {
@@ -351,6 +355,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     }
 
     public void ChangeVisibility(Visibility visibility) {
+        DomainGuard.Defined(visibility, nameof(visibility));
         if (Visibility == visibility) {
             return;
         }
@@ -372,9 +377,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     }
 
     private static double RequirePositive(double value, string paramName) {
-        return value <= 0
-            ? throw new ArgumentOutOfRangeException(paramName, "Value must be greater than zero.")
-            : value;
+        return DomainGuard.PositiveFinite(value, paramName);
     }
 
     private static string? NormalizeOptionalText(string? value, int maxLength, string paramName) {
@@ -397,14 +400,17 @@ public sealed class Product : AggregateRoot<ProductId> {
     }
 
     public static double GetMaxDefaultPortionAmount(MeasurementUnit unit) {
+        DomainGuard.Defined(unit, nameof(unit));
         return unit == MeasurementUnit.Pcs ? MaxPieceDefaultPortionAmount : MaxWeightOrVolumeDefaultPortionAmount;
     }
 
     public static double GetMaxCaloriesPerBase(MeasurementUnit unit) {
+        DomainGuard.Defined(unit, nameof(unit));
         return unit == MeasurementUnit.Pcs ? MaxPieceCaloriesPerBase : MaxWeightOrVolumeCaloriesPerBase;
     }
 
     public static double GetMaxNutrientPerBase(MeasurementUnit unit) {
+        DomainGuard.Defined(unit, nameof(unit));
         return unit == MeasurementUnit.Pcs ? MaxPieceNutrientPerBase : MaxWeightOrVolumeNutrientPerBase;
     }
 
@@ -451,7 +457,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     }
 
     private ProductNutrition GetNutrition() {
-        return new ProductNutrition(
+        return ProductNutrition.Create(
             CaloriesPerBase,
             ProteinsPerBase,
             FatsPerBase,

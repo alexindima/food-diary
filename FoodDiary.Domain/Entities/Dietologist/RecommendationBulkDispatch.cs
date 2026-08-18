@@ -17,6 +17,18 @@ public sealed class RecommendationBulkDispatch : Entity<RecommendationBulkDispat
         UserId clientUserId,
         RecommendationId recommendationId,
         string idempotencyKey) {
+        if (dietologistUserId == UserId.Empty) {
+            throw new ArgumentException("Dietologist user id is required.", nameof(dietologistUserId));
+        }
+
+        if (clientUserId == UserId.Empty) {
+            throw new ArgumentException("Client user id is required.", nameof(clientUserId));
+        }
+
+        if (recommendationId == RecommendationId.Empty) {
+            throw new ArgumentException("Recommendation id is required.", nameof(recommendationId));
+        }
+
         if (string.IsNullOrWhiteSpace(idempotencyKey)) {
             throw new ArgumentException("Idempotency key is required.", nameof(idempotencyKey));
         }

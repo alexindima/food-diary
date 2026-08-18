@@ -113,13 +113,13 @@
       "sources": [
         {
           "path": "Directory.Packages.props",
-          "sha256": "83f764576e58e6c90ef22b5439f611be1a8ac6460a14e0a787c7b27bd35359f5"
+          "sha256": "c8b94953359370ada887685d09b33017549039ed7c5edb8cde14371182f1722f"
         }
       ],
-      "reason": "Reviewed central package and project-reference changes: Data Protection and FluentValidation additions are reflected in the regenerated repository catalog.",
+      "reason": "Analyzer package versions and synchronized lockfiles were reviewed; repository catalog semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
-      "reviewedAtUtc": "2026-08-18T13:55:08.5820624Z"
+      "gitHead": "57da385c402997aca9e1bbb654296feb3acf233d",
+      "reviewedAtUtc": "2026-08-18T23:50:10.1150437Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -182,17 +182,17 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "541915c1874769e1059247e430cce9932f2270f5df9d097edd36cd57a9562fba"
+          "sha256": "f57058e7bb50b4f1e10065547c7b161ae768a5bbf8296063fe9c57b535620ccb"
         },
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "1546b644b9890d6028008dca987735fe9bdac44cfb571c199fd9e5ea02c13555"
+          "sha256": "2631eef964d77e1ec8ba323af8a806e7b012112d66dec01a839845c047c2d34d"
         }
       ],
-      "reason": "Reviewed additive OpenAPI response metadata against HEAD: api-compat reports zero structural breaking changes; the reported request-size restrictions document the existing 1 MB Kestrel limit, and the complete API integration suite passes.",
+      "reason": "OpenAPI snapshots and request-body error contracts were reviewed; compatibility scan reports 18 additive and 0 breaking changes.",
       "baseRef": "HEAD",
-      "gitHead": "c3924caf772a0b0603cecab4e9e94be57916a53f",
-      "reviewedAtUtc": "2026-08-18T22:28:34.6915056Z"
+      "gitHead": "57da385c402997aca9e1bbb654296feb3acf233d",
+      "reviewedAtUtc": "2026-08-18T23:50:10.3962621Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -216,13 +216,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "3d0f20d2f1178146c43825f8939287d256a77e12eae89bc82915628d7c058e08"
+          "sha256": "6a5a025cda117472f63b27420162657378491121b7f7dd1eb80c6ecd0b7e339a"
         }
       ],
-      "reason": "Full OpenAPI contract was regenerated from the current host; the intentional exercise 400/404 and billing 502 responses are covered by a passing snapshot test.",
+      "reason": "OpenAPI snapshots and request-body error contracts were reviewed; compatibility scan reports 18 additive and 0 breaking changes.",
       "baseRef": "HEAD",
-      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
-      "reviewedAtUtc": "2026-08-18T21:10:51.1058240Z"
+      "gitHead": "57da385c402997aca9e1bbb654296feb3acf233d",
+      "reviewedAtUtc": "2026-08-18T23:50:10.9640634Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -477,13 +477,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "5e0d23cdae84f595cb0270bd7ac9680574e01243293b9cc0a1b9ec6c8baf4204"
+          "sha256": "f7e1c55dcb5eb9b1222216243eb19514b0fd0fb4975f3dd8de828db42b982260"
         }
       ],
-      "reason": "Reviewed regenerated domain-data index: domain event timestamps now use the shared UTC time contract without changing persisted domain ownership.",
+      "reason": "Generated domain-data and quality indexes were reviewed; invariant, boundary, unit, integration, architecture, and full solution checks cover the changed behavior.",
       "baseRef": "HEAD",
-      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
-      "reviewedAtUtc": "2026-08-18T13:55:46.7576811Z"
+      "gitHead": "57da385c402997aca9e1bbb654296feb3acf233d",
+      "reviewedAtUtc": "2026-08-18T23:50:23.6851286Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -780,17 +780,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "48cb53512baa552a8cb5bb5e01af6ffb5ae6d9979d7f425a92aa01b4b9f67abe"
-        },
-        {
-          "path": "docs/privacy/PRIVACY_RELEASE_CHECKLIST.md",
-          "sha256": "d7ed095eed6a28a430c3e99c2f63694081ccef55968827e090d62a4a2ec23706"
+          "sha256": "8d5473c70c1410a43ff33cb6f33440478c7c8a06568ba9d0b6e7066089e7525a"
         }
       ],
-      "reason": "No new sensitive data collection or persistence was introduced; dietologist relationship and cycle consent mutations now reject impersonation and all nine HTTP cases return 403.",
+      "reason": "Generated sensitive-data index and affected integration boundaries were reviewed; no new credential exposure, logging, or persistence path was introduced.",
       "baseRef": "HEAD",
-      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
-      "reviewedAtUtc": "2026-08-18T21:10:51.5600326Z"
+      "gitHead": "57da385c402997aca9e1bbb654296feb3acf233d",
+      "reviewedAtUtc": "2026-08-18T23:50:24.0445915Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -845,13 +841,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5576c258c5b0a6d8263360d3f054c6d2046a4e288bf879940520c509d4904490"
+          "sha256": "3140c6ea31bfb575e24a4b3481efcba9661f3dc63e0c3f1956d7b060b7816a9e"
         }
       ],
-      "reason": "Focused application, presentation, HTTP hardening, OpenAPI, and all 709 architecture tests passed; generated quality indexes were refreshed from current sources.",
+      "reason": "Generated domain-data and quality indexes were reviewed; invariant, boundary, unit, integration, architecture, and full solution checks cover the changed behavior.",
       "baseRef": "HEAD",
-      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
-      "reviewedAtUtc": "2026-08-18T21:10:52.7679849Z"
+      "gitHead": "57da385c402997aca9e1bbb654296feb3acf233d",
+      "reviewedAtUtc": "2026-08-18T23:50:24.5177543Z"
     },
     {
       "pageId": "workflow-release-readiness",

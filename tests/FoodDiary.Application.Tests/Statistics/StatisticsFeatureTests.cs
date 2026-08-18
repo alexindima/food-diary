@@ -24,12 +24,44 @@ public class StatisticsFeatureTests {
     }
 
     [Fact]
+    public async Task GetStatisticsQueryValidator_WithUnsupportedTemporalRange_Fails() {
+        var validator = new GetStatisticsQueryValidator();
+        var from = new DateTime(2025, 1, 1);
+        var query = new GetStatisticsQuery(Guid.NewGuid(), from, from.AddDays(366), int.MaxValue);
+
+        ValidationResult result = await validator.ValidateAsync(query);
+
+        Assert.Multiple(
+            () => Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(query.DateTo), StringComparison.Ordinal)),
+            () => Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(query.QuantizationDays), StringComparison.Ordinal)));
+    }
+
+    [Fact]
     public async Task GetStatisticsQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
         var user = User.Create("statistics-invalid-date-range@example.com", "hash");
         var handler = new GetStatisticsQueryHandler(new StaticStatisticsReadService([]), CreateCurrentUserAccessService(user));
         var query = new GetStatisticsQuery(user.Id.Value, DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 1);
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Theory]
+    [InlineData(366, 1)]
+    [InlineData(1, 367)]
+    [InlineData(1, int.MaxValue)]
+    public async Task GetStatisticsQueryHandler_WithUnsupportedTemporalRange_ReturnsValidationError(
+        int periodDays,
+        int quantizationDays) {
+        var user = User.Create("statistics-unsupported-range@example.com", "hash");
+        var handler = new GetStatisticsQueryHandler(new StaticStatisticsReadService([]), CreateCurrentUserAccessService(user));
+        var from = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(
+            new GetStatisticsQuery(user.Id.Value, from, from.AddDays(periodDays), quantizationDays),
+            CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);

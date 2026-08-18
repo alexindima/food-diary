@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -50,6 +51,7 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
         string? notes = null) {
         EnsurePlanId(planId);
         EnsureUserId(userId);
+        DomainGuard.Defined(kind, nameof(kind));
         EnsureSequenceNumber(sequenceNumber);
         EnsureTargetHours(targetHours);
 
@@ -82,6 +84,7 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
         string? notes = null) {
         EnsurePlanId(planId);
         EnsureUserId(userId);
+        DomainGuard.Defined(kind, nameof(kind));
         EnsureSequenceNumber(sequenceNumber);
         EnsureTargetHours(targetHours);
 
@@ -291,12 +294,11 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
                 return null;
             case > MaxSymptomsCount:
                 throw new ArgumentOutOfRangeException(nameof(values), $"A maximum of {MaxSymptomsCount} symptoms is allowed.");
-            default: {
-                    string csv = string.Join(',', normalized);
-                    return csv.Length > CheckInSymptomsMaxLength
-                        ? throw new ArgumentOutOfRangeException(nameof(values), $"Symptoms must be at most {CheckInSymptomsMaxLength} characters in total.")
-                        : csv;
-                }
+            default:
+                string csv = string.Join(',', normalized);
+                return csv.Length > CheckInSymptomsMaxLength
+                    ? throw new ArgumentOutOfRangeException(nameof(values), $"Symptoms must be at most {CheckInSymptomsMaxLength} characters in total.")
+                    : csv;
         }
     }
 

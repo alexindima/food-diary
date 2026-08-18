@@ -26,10 +26,12 @@ internal sealed class DashboardSectionDataLoader(
     IFastingReadService fastingReadService,
     IExerciseEntryReadService exerciseEntryReadService,
     IDashboardReadService dashboardReadService) : IDashboardSectionDataLoader {
-    internal const int MaxPeriodDays = 366;
+    internal const int MaxPeriodDays = TemporalRangePolicy.MaxPeriodDays;
     private const int DefaultPageSize = 10;
     private const int DefaultTrendDays = 7;
     private const int MaxTrendDays = 31;
+    private const int MinTimeZoneOffsetMinutes = -840;
+    private const int MaxTimeZoneOffsetMinutes = 840;
 
     public async Task<Result<DashboardBuildContext>> CreateBuildContextAsync(
         DashboardSnapshotRequest request,
@@ -41,22 +43,42 @@ internal sealed class DashboardSectionDataLoader(
             return UserIdParser.ToFailure<DashboardBuildContext>(userIdResult);
         }
 
+        if (request.TimeZoneOffsetMinutes is < MinTimeZoneOffsetMinutes or > MaxTimeZoneOffsetMinutes) {
+            return Result.Failure<DashboardBuildContext>(
+                Errors.Validation.Invalid(
+                    nameof(request.TimeZoneOffsetMinutes),
+                    "Time-zone offset must be between -840 and 840 minutes."));
+        }
+
         TimeSpan timeZoneOffset = request.TimeZoneOffsetMinutes.HasValue
             ? TimeSpan.FromMinutes(request.TimeZoneOffsetMinutes.Value)
             : TimeSpan.Zero;
-        DateTime dayStart = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.Date).Subtract(timeZoneOffset);
-        DateTime dayEndStart = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateTo ?? request.Date).Subtract(timeZoneOffset);
+        DateTime normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.Date);
+        DateTime normalizedDateTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateTo ?? request.Date);
+        if (!TemporalRangePolicy.TrySubtract(normalizedDate, timeZoneOffset, out DateTime dayStart) ||
+            !TemporalRangePolicy.TrySubtract(normalizedDateTo, timeZoneOffset, out DateTime dayEndStart)) {
+            return Result.Failure<DashboardBuildContext>(
+                Errors.Validation.Invalid(nameof(request.Date), "Date and time-zone offset produce an unsupported range."));
+        }
+
         if (dayEndStart < dayStart) {
             return Result.Failure<DashboardBuildContext>(
                 Errors.Validation.Invalid(nameof(request.DateTo), "DateTo must be later than or equal to Date."));
         }
 
-        int periodDays = (dayEndStart.Date - dayStart.Date).Days + 1;
-        if (periodDays > MaxPeriodDays) {
+        if (!TemporalRangePolicy.IsPeriodWithinLimit(dayStart, dayEndStart)) {
             return Result.Failure<DashboardBuildContext>(
                 Errors.Validation.Invalid(
                     nameof(request.DateTo),
                     $"Dashboard period must not exceed {MaxPeriodDays} days."));
+        }
+
+        int periodDays = TemporalRangePolicy.GetInclusiveDayCount(dayStart, dayEndStart);
+        int trendDays = Math.Clamp(request.TrendDays <= 0 ? DefaultTrendDays : request.TrendDays, 1, MaxTrendDays);
+        if (!TemporalRangePolicy.TryAddDays(dayEndStart, 1, out DateTime dayEndExclusive) ||
+            !TemporalRangePolicy.TryAddDays(dayStart, -(trendDays - 1), out DateTime trendStart)) {
+            return Result.Failure<DashboardBuildContext>(
+                Errors.Validation.Invalid(nameof(request.Date), "Date range is too close to the supported DateTime boundary."));
         }
 
         UserId userId = userIdResult.Value;
@@ -65,18 +87,17 @@ internal sealed class DashboardSectionDataLoader(
             return Result.Failure<DashboardBuildContext>(userResult.Error);
         }
 
-        int trendDays = Math.Clamp(request.TrendDays <= 0 ? DefaultTrendDays : request.TrendDays, 1, MaxTrendDays);
         return Result.Success(new DashboardBuildContext(
             userId,
             dayStart,
             dayEndStart,
-            dayEndStart.AddDays(1).AddTicks(-1),
+            dayEndExclusive.AddTicks(-1),
             periodDays,
             string.IsNullOrWhiteSpace(request.Locale) ? "en" : request.Locale,
             PaginationPolicy.NormalizePage(request.Page),
             PaginationPolicy.NormalizePageSize(request.PageSize, DefaultPageSize),
             trendDays,
-            dayStart.AddDays(-(trendDays - 1)),
+            trendStart,
             request.Sections ?? DashboardSnapshotSections.All,
             userResult.Value));
     }

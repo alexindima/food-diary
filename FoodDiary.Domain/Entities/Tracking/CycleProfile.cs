@@ -65,6 +65,12 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         DateTime? consentGrantedAtUtc = null) {
         EnsureUserId(userId);
         EnsureDefined(mode, nameof(mode));
+        if (goal.HasValue) {
+            EnsureDefined(goal.Value, nameof(goal));
+        }
+        if (reproductiveState.HasValue) {
+            EnsureDefined(reproductiveState.Value, nameof(reproductiveState));
+        }
 
         var profile = new CycleProfile(CycleProfileId.New()) {
             UserId = userId,
@@ -130,7 +136,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
     }
 
     public bool HasActiveConsent(CycleConsentPurpose purpose) =>
-        _consents.Any(consent => consent.Purpose == purpose && consent.IsActive);
+        _consents.Exists(consent => consent.Purpose == purpose && consent.IsActive);
 
     public void GrantConsent(CycleConsentPurpose purpose, DateTime grantedAtUtc) {
         EnsureDefined(purpose, nameof(purpose));
@@ -332,10 +338,19 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
             return existing;
         }
 
+        DateOnly? inferredEnd = FindInferredEpisodeEnd(date);
+        DateOnly effectiveEnd = inferredEnd ?? date;
+        bool overlapsConfirmed = _menstrualEpisodes.Exists(episode =>
+            episode.Status == MenstrualEpisodeStatus.Confirmed &&
+            DateRangesOverlap(date, effectiveEnd, episode.StartDate, episode.EndDate ?? episode.StartDate));
+        if (overlapsConfirmed) {
+            throw new ArgumentException("Confirmed menstrual episodes cannot overlap.", nameof(date));
+        }
+
         var episode = MenstrualEpisode.Create(
             Id,
             date,
-            FindInferredEpisodeEnd(date),
+            inferredEnd,
             MenstrualEpisodeStatus.Confirmed);
         _menstrualEpisodes.Add(episode);
         ReconcileMenstrualEpisodes();
@@ -355,7 +370,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         MenstrualEpisode episode = _menstrualEpisodes.FirstOrDefault(item => item.Id == episodeId)
             ?? throw new KeyNotFoundException($"Menstrual episode {episodeId.Value} was not found.");
         DateOnly effectiveEnd = endDate ?? startDate;
-        bool overlapsAnotherConfirmedEpisode = _menstrualEpisodes.Any(item =>
+        bool overlapsAnotherConfirmedEpisode = _menstrualEpisodes.Exists(item =>
             item.Id != episodeId &&
             item.Status == MenstrualEpisodeStatus.Confirmed &&
             startDate <= (item.EndDate ?? item.StartDate) &&
@@ -404,10 +419,14 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
                 end = bleedingDates[index];
             }
 
-            bool overlapsConfirmed = _menstrualEpisodes.Any(episode =>
+            bool overlapsConfirmed = _menstrualEpisodes.Exists(episode =>
                 episode.Status == MenstrualEpisodeStatus.Confirmed &&
-                episode.StartDate >= start.AddDays(-2) &&
-                episode.StartDate <= end.AddDays(2));
+                RangesWithinTolerance(
+                    start,
+                    end,
+                    episode.StartDate,
+                    episode.EndDate ?? episode.StartDate,
+                    toleranceDays: 2));
             if (!overlapsConfirmed) {
                 _menstrualEpisodes.Add(MenstrualEpisode.Create(Id, start, end, MenstrualEpisodeStatus.Inferred));
             }
@@ -470,8 +489,35 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
             _ => CycleTrackingMode.PeriodTracking,
         };
 
-    internal static string? NormalizeNotes(string? value) =>
-        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+    internal static string? NormalizeNotes(string? value) {
+        const int maxLength = 1024;
+        if (string.IsNullOrWhiteSpace(value)) {
+            return null;
+        }
+
+        string normalized = value.Trim();
+        return normalized.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(nameof(value), $"Notes must be at most {maxLength} characters.")
+            : normalized;
+    }
+
+    private static bool DateRangesOverlap(
+        DateOnly leftStart,
+        DateOnly leftEnd,
+        DateOnly rightStart,
+        DateOnly rightEnd) {
+        return leftStart.DayNumber <= rightEnd.DayNumber && leftEnd.DayNumber >= rightStart.DayNumber;
+    }
+
+    private static bool RangesWithinTolerance(
+        DateOnly leftStart,
+        DateOnly leftEnd,
+        DateOnly rightStart,
+        DateOnly rightEnd,
+        int toleranceDays) {
+        return leftStart.DayNumber <= rightEnd.DayNumber + toleranceDays &&
+               leftEnd.DayNumber >= rightStart.DayNumber - toleranceDays;
+    }
 
     internal static int NormalizeIntensity(int value, string paramName) =>
         value is < 0 or > 10 ? throw new ArgumentOutOfRangeException(paramName, "Value must be in range [0, 10].") : value;

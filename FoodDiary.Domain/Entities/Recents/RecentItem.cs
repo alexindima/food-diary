@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -26,6 +27,8 @@ public sealed class RecentItem : Entity<RecentItemId> {
             throw new ArgumentException("ItemId cannot be empty.", nameof(itemId));
         }
 
+        DomainGuard.Defined(itemType, nameof(itemType));
+
         DateTime now = NormalizeUtc(usedAtUtc ?? DomainTime.UtcNow);
 
         var recentItem = new RecentItem {
@@ -44,7 +47,7 @@ public sealed class RecentItem : Entity<RecentItemId> {
     public void Touch(DateTime? usedAtUtc = null) {
         LastUsedAtUtc = NormalizeUtc(usedAtUtc ?? DomainTime.UtcNow);
         if (UsageCount < int.MaxValue) {
-            UsageCount += 1;
+            UsageCount++;
         }
 
         SetModified();

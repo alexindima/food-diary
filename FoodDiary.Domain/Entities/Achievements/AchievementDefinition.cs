@@ -80,13 +80,8 @@ public sealed class AchievementDefinition : Entity<AchievementDefinitionId> {
             throw new ArgumentOutOfRangeException(nameof(metric));
         }
 
-        if (threshold <= 0) {
-            throw new ArgumentOutOfRangeException(nameof(threshold));
-        }
-
-        if (sortOrder < 0) {
-            throw new ArgumentOutOfRangeException(nameof(sortOrder));
-        }
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(threshold);
+        ArgumentOutOfRangeException.ThrowIfNegative(sortOrder);
 
         Category = NormalizeCode(category, CategoryMaxLength, nameof(category));
         Metric = metric;

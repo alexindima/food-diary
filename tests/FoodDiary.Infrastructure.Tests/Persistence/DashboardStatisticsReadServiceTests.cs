@@ -66,6 +66,47 @@ public sealed class DashboardStatisticsReadServiceTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
+    [Fact]
+    public async Task GetStatisticsAsync_AtMaximumInstant_ReturnsSingleBucketWithoutOverflow() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var readService = new DashboardStatisticsReadService(context);
+
+        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
+            Domain.ValueObjects.Ids.UserId.New(),
+            DateTime.MaxValue,
+            DateTime.MaxValue,
+            quantizationDays: 1,
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        DashboardStatisticsBucketReadModel bucket = Assert.Single(result.Value);
+        Assert.Multiple(
+            () => Assert.Equal(DateTime.MaxValue, bucket.DateFrom),
+            () => Assert.Equal(DateTime.MaxValue, bucket.DateTo));
+    }
+
+    [Theory]
+    [InlineData(366, 1)]
+    [InlineData(1, 367)]
+    [InlineData(1, int.MaxValue)]
+    public async Task GetStatisticsAsync_WithUnsupportedTemporalRange_ReturnsValidationFailure(
+        int periodDays,
+        int quantizationDays) {
+        await using FoodDiaryDbContext context = CreateContext();
+        var readService = new DashboardStatisticsReadService(context);
+        var from = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
+            Domain.ValueObjects.Ids.UserId.New(),
+            from,
+            from.AddDays(periodDays),
+            quantizationDays,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
     [Theory]
     [InlineData(DateTimeKind.Utc)]
     [InlineData(DateTimeKind.Local)]

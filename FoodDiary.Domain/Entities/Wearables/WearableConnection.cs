@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -28,6 +29,7 @@ public sealed class WearableConnection : AggregateRoot<WearableConnectionId> {
         string? refreshToken,
         DateTime? tokenExpiresAtUtc) {
         EnsureUserId(userId);
+        DomainGuard.Defined(provider, nameof(provider));
 
         if (string.IsNullOrWhiteSpace(externalUserId)) {
             throw new ArgumentException("External user ID is required.", nameof(externalUserId));

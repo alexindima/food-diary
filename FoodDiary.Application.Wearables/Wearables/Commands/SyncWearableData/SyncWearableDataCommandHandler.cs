@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
@@ -16,7 +17,8 @@ public sealed class SyncWearableDataCommandHandler(
     IWearableConnectionWriteRepository connectionRepository,
     IWearableSyncWriteRepository syncRepository,
     ICurrentUserAccessService currentUserAccessService,
-    IWearableTokenProtector tokenProtector)
+    IWearableTokenProtector tokenProtector,
+    IUnitOfWork unitOfWork)
     : ICommandHandler<SyncWearableDataCommand, Result<WearableDailySummaryModel>> {
     public async Task<Result<WearableDailySummaryModel>> Handle(
         SyncWearableDataCommand command,
@@ -52,13 +54,13 @@ public sealed class SyncWearableDataCommandHandler(
             WearableTokenResult? refreshResult = await client.RefreshTokenAsync(refreshToken, cancellationToken).ConfigureAwait(false);
             if (refreshResult is null) {
                 connection.Deactivate();
-                await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
+                await PersistConnectionAsync(connection, cancellationToken).ConfigureAwait(false);
                 return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.AuthFailed(command.Provider));
             }
             string protectedAccessToken = tokenProtector.Protect(refreshResult.AccessToken);
             string? protectedRefreshToken = refreshResult.RefreshToken is null ? null : tokenProtector.Protect(refreshResult.RefreshToken);
             connection.UpdateTokens(protectedAccessToken, protectedRefreshToken, refreshResult.ExpiresAtUtc);
-            await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
+            await PersistConnectionAsync(connection, cancellationToken).ConfigureAwait(false);
         }
 
         string accessToken = tokenProtector.Unprotect(connection.AccessToken);
@@ -78,6 +80,13 @@ public sealed class SyncWearableDataCommandHandler(
 
         WearableDailySummaryModel summary = await BuildSummaryAsync(userIdResult.Value, command.Date, cancellationToken).ConfigureAwait(false);
         return Result.Success(summary);
+    }
+
+    private async Task PersistConnectionAsync(
+        WearableConnection connection,
+        CancellationToken cancellationToken) {
+        await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
+        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     private void ProtectLegacyTokens(WearableConnection connection, string accessToken) {

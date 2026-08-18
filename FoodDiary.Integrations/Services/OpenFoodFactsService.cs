@@ -1,6 +1,8 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
@@ -22,13 +24,18 @@ internal sealed class OpenFoodFactsService(
     private const string SearchOperation = "search";
     internal const int MaxSearchCacheEntries = 1024;
     internal const long MaxSearchCacheSizeBytes = 16 * 1024 * 1024;
+    internal const int MaxConcurrentSearches = 16;
+    internal const int MaxInFlightSearches = 128;
     private static readonly TimeSpan SearchCacheTtl = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan StaleSearchCacheTtl = TimeSpan.FromHours(6);
     private static readonly TimeSpan SearchOperationTimeout = TimeSpan.FromSeconds(15);
     private static readonly ConcurrentDictionary<string, CachedSearchResult> SearchCache = new(StringComparer.Ordinal);
     private static readonly ConcurrentDictionary<string, Lazy<Task<IReadOnlyList<OpenFoodFactsProductModel>>>> InFlightSearches = new(StringComparer.Ordinal);
+    private static readonly SemaphoreSlim SearchConcurrencyGate = new(MaxConcurrentSearches, MaxConcurrentSearches);
+    private static readonly byte[] SearchCacheKeySecret = RandomNumberGenerator.GetBytes(32);
     private static readonly Lock SearchCacheLock = new();
     private static long _searchCacheSizeBytes;
+    private static int _inFlightSearchCount;
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) {
         MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
     };
@@ -85,7 +92,7 @@ internal sealed class OpenFoodFactsService(
             outcome = "canceled";
             errorType = ex.GetType().Name;
             throw;
-        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
+        } catch (Exception ex) when (ex is HttpRequestException or OperationCanceledException or JsonException or InvalidDataException or TimeoutException) {
             outcome = ResolveFailureOutcome(ex, cancellationToken);
             errorType = ex.GetType().Name;
             logger.LogWarning(ex, "Open Food Facts lookup failed for barcode '{Barcode}'", barcode);
@@ -106,26 +113,46 @@ internal sealed class OpenFoodFactsService(
             return freshProducts;
         }
 
-        Lazy<Task<IReadOnlyList<OpenFoodFactsProductModel>>> pending = InFlightSearches.GetOrAdd(
-            cacheKey,
-            _ => new Lazy<Task<IReadOnlyList<OpenFoodFactsProductModel>>>(
+        while (true) {
+            if (InFlightSearches.TryGetValue(
+                    cacheKey,
+                    out Lazy<Task<IReadOnlyList<OpenFoodFactsProductModel>>>? existing)) {
+                return await existing.Value.WaitAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            int reservedCount = Interlocked.Increment(ref _inFlightSearchCount);
+            if (reservedCount > MaxInFlightSearches) {
+                Interlocked.Decrement(ref _inFlightSearchCount);
+                return await SearchProviderAsync(query, normalizedLimit, cacheKey, cancellationToken).ConfigureAwait(false);
+            }
+
+            var candidate = new Lazy<Task<IReadOnlyList<OpenFoodFactsProductModel>>>(
                 () => SearchProviderAsync(query, normalizedLimit, cacheKey),
-                LazyThreadSafetyMode.ExecutionAndPublication));
-        Task<IReadOnlyList<OpenFoodFactsProductModel>> pendingTask = pending.Value;
-        _ = pendingTask.ContinueWith(
-            static (completedTask, state) => {
-                (string key, Lazy<Task<IReadOnlyList<OpenFoodFactsProductModel>>> expected) =
-                    ((string, Lazy<Task<IReadOnlyList<OpenFoodFactsProductModel>>>))state!;
-                if (InFlightSearches.TryGetValue(key, out Lazy<Task<IReadOnlyList<OpenFoodFactsProductModel>>>? current) &&
-                    ReferenceEquals(current, expected)) {
-                    InFlightSearches.TryRemove(key, out _);
-                }
-            },
-            (cacheKey, pending),
-            CancellationToken.None,
-            TaskContinuationOptions.ExecuteSynchronously,
-            TaskScheduler.Default);
-        return await pendingTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+                LazyThreadSafetyMode.ExecutionAndPublication);
+            if (!InFlightSearches.TryAdd(cacheKey, candidate)) {
+                Interlocked.Decrement(ref _inFlightSearchCount);
+                continue;
+            }
+
+            Task<IReadOnlyList<OpenFoodFactsProductModel>> pendingTask = candidate.Value;
+            _ = pendingTask.ContinueWith(
+                static (completedTask, state) => {
+                    (string key, Lazy<Task<IReadOnlyList<OpenFoodFactsProductModel>>> expected) =
+                        ((string, Lazy<Task<IReadOnlyList<OpenFoodFactsProductModel>>>))state!;
+                    if (InFlightSearches.TryGetValue(
+                            key,
+                            out Lazy<Task<IReadOnlyList<OpenFoodFactsProductModel>>>? current) &&
+                        ReferenceEquals(current, expected) &&
+                        InFlightSearches.TryRemove(key, out _)) {
+                        Interlocked.Decrement(ref _inFlightSearchCount);
+                    }
+                },
+                (cacheKey, candidate),
+                CancellationToken.None,
+                TaskContinuationOptions.ExecuteSynchronously,
+                TaskScheduler.Default);
+            return await pendingTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        }
     }
 
     private async Task<IReadOnlyList<OpenFoodFactsProductModel>> SearchProviderAsync(
@@ -136,9 +163,12 @@ internal sealed class OpenFoodFactsService(
         var stopwatch = Stopwatch.StartNew();
         string outcome = "success";
         string? errorType = null;
+        bool concurrencyLeaseAcquired = false;
         using var operationTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         operationTimeout.CancelAfter(SearchOperationTimeout);
         try {
+            await SearchConcurrencyGate.WaitAsync(operationTimeout.Token).ConfigureAwait(false);
+            concurrencyLeaseAcquired = true;
             string baseUrl = options.Value.BaseUrl.TrimEnd('/');
             string encodedQuery = Uri.EscapeDataString(query);
             string url = string.Create(CultureInfo.InvariantCulture, $"{baseUrl}/cgi/search.pl?search_terms={encodedQuery}&page_size={normalizedLimit}&json=1&fields=code,product_name,brands,categories,image_url,nutriments");
@@ -161,14 +191,18 @@ internal sealed class OpenFoodFactsService(
                 return [];
             }
 
-            List<OpenFoodFactsProductModel> products = MapSearchProducts(result.Products);
+            IReadOnlyList<OpenFoodFactsProductModel> products = MapSearchProducts(result.Products);
             if (products.Count == 0) {
                 outcome = "empty";
             }
 
             CacheSearchResult(cacheKey, products);
             return products;
-        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            outcome = "canceled";
+            errorType = nameof(OperationCanceledException);
+            throw;
+        } catch (Exception ex) when (ex is HttpRequestException or OperationCanceledException or JsonException or InvalidDataException or TimeoutException) {
             outcome = ResolveFailureOutcome(ex, CancellationToken.None);
             errorType = ex.GetType().Name;
             if (TryGetCachedSearch(cacheKey, StaleSearchCacheTtl, out IReadOnlyList<OpenFoodFactsProductModel> staleProducts)) {
@@ -180,6 +214,9 @@ internal sealed class OpenFoodFactsService(
             logger.LogWarning(ex, "Open Food Facts text search failed. QueryLength={QueryLength}", query.Length);
             return [];
         } finally {
+            if (concurrencyLeaseAcquired) {
+                SearchConcurrencyGate.Release();
+            }
             RecordRequestTelemetry(SearchOperation, outcome, stopwatch, errorType);
         }
     }
@@ -200,7 +237,7 @@ internal sealed class OpenFoodFactsService(
 
     private static string ResolveFailureOutcome(Exception exception, CancellationToken cancellationToken) =>
         exception switch {
-            TaskCanceledException => cancellationToken.IsCancellationRequested ? "canceled" : "timeout",
+            OperationCanceledException => cancellationToken.IsCancellationRequested ? "canceled" : "timeout",
             JsonException => "json_error",
             InvalidDataException => "oversized_response",
             TimeoutException => "response_body_timeout",
@@ -209,8 +246,9 @@ internal sealed class OpenFoodFactsService(
             _ => "failure",
         };
 
-    private static List<OpenFoodFactsProductModel> MapSearchProducts(List<OffSearchProduct> products) => [
-        .. products
+    private static IReadOnlyList<OpenFoodFactsProductModel> MapSearchProducts(List<OffSearchProduct> products) {
+        OpenFoodFactsProductModel[] mappedProducts = [
+            .. products
             .Where(p => !string.IsNullOrWhiteSpace(p.ProductName) && !string.IsNullOrWhiteSpace(p.Code))
             .Select(p => new OpenFoodFactsProductModel(
                 p.Code!,
@@ -223,13 +261,19 @@ internal sealed class OpenFoodFactsService(
                 p.Nutriments?.Fat100G,
                 p.Nutriments?.Carbohydrates100G,
                 p.Nutriments?.Fiber100G)),
-    ];
+        ];
+        return Array.AsReadOnly(mappedProducts);
+    }
 
     private static string? NullIfEmpty(string? value) =>
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
-    private static string GetSearchCacheKey(string query, int limit) =>
-        string.Create(CultureInfo.InvariantCulture, $"{query.Trim().ToLowerInvariant()}:{limit}");
+    internal static string GetSearchCacheKey(string query, int limit) {
+        string normalizedQuery = query.Trim().ToLowerInvariant();
+        byte[] queryBytes = Encoding.UTF8.GetBytes(normalizedQuery);
+        byte[] hash = HMACSHA256.HashData(SearchCacheKeySecret, queryBytes);
+        return string.Create(CultureInfo.InvariantCulture, $"{Convert.ToHexString(hash)}:{limit}");
+    }
 
     internal static int SearchCacheEntryCount => SearchCache.Count;
 
@@ -241,13 +285,16 @@ internal sealed class OpenFoodFactsService(
         }
     }
 
+    internal static int InFlightSearchCount => Volatile.Read(ref _inFlightSearchCount);
+
     private void CacheSearchResult(string cacheKey, IReadOnlyList<OpenFoodFactsProductModel> products) {
-        long sizeBytes = JsonSerializer.SerializeToUtf8Bytes(products).LongLength;
+        IReadOnlyList<OpenFoodFactsProductModel> snapshot = Array.AsReadOnly([.. products]);
+        long sizeBytes = JsonSerializer.SerializeToUtf8Bytes(snapshot).LongLength;
         if (sizeBytes > MaxSearchCacheSizeBytes) {
             return;
         }
 
-        var result = new CachedSearchResult(timeProvider.GetUtcNow(), products, sizeBytes);
+        var result = new CachedSearchResult(timeProvider.GetUtcNow(), snapshot, sizeBytes);
         lock (SearchCacheLock) {
             if (SearchCache.TryGetValue(cacheKey, out CachedSearchResult? existing)) {
                 _searchCacheSizeBytes -= existing.SizeBytes;

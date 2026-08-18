@@ -1,4 +1,5 @@
 using System.Globalization;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -69,7 +70,7 @@ public sealed class FastingTelemetryEvent : Entity<FastingTelemetryEventId> {
             FirstReminderHours = NormalizeHours(firstReminderHours, nameof(firstReminderHours)),
             FollowUpReminderHours = NormalizeHours(followUpReminderHours, nameof(followUpReminderHours)),
             PlannedDurationHours = NormalizeHours(plannedDurationHours, nameof(plannedDurationHours)),
-            ActualDurationHours = actualDurationHours,
+            ActualDurationHours = DomainGuard.NonNegativeFinite(actualDurationHours, nameof(actualDurationHours)),
             HungerLevel = NormalizeScale(hungerLevel, nameof(hungerLevel)),
             EnergyLevel = NormalizeScale(energyLevel, nameof(energyLevel)),
             MoodLevel = NormalizeScale(moodLevel, nameof(moodLevel)),

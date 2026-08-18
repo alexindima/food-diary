@@ -1,12 +1,31 @@
+using System.Runtime.InteropServices;
+
 namespace FoodDiary.Domain.ValueObjects;
 
-public readonly record struct UserNutritionGoals(
-    double? DailyCalorieTarget,
-    double? ProteinTarget,
-    double? FatTarget,
-    double? CarbTarget,
-    double? FiberTarget,
-    double? WaterGoal) {
+[StructLayout(LayoutKind.Auto)]
+public readonly record struct UserNutritionGoals {
+    public double? DailyCalorieTarget { get; }
+    public double? ProteinTarget { get; }
+    public double? FatTarget { get; }
+    public double? CarbTarget { get; }
+    public double? FiberTarget { get; }
+    public double? WaterGoal { get; }
+
+    public UserNutritionGoals(
+        double? dailyCalorieTarget,
+        double? proteinTarget,
+        double? fatTarget,
+        double? carbTarget,
+        double? fiberTarget,
+        double? waterGoal) {
+        DailyCalorieTarget = EnsureNonNegative(dailyCalorieTarget, nameof(dailyCalorieTarget));
+        ProteinTarget = EnsureNonNegative(proteinTarget, nameof(proteinTarget));
+        FatTarget = EnsureNonNegative(fatTarget, nameof(fatTarget));
+        CarbTarget = EnsureNonNegative(carbTarget, nameof(carbTarget));
+        FiberTarget = EnsureNonNegative(fiberTarget, nameof(fiberTarget));
+        WaterGoal = EnsureNonNegative(waterGoal, nameof(waterGoal));
+    }
+
     public static UserNutritionGoals Create(
         double? dailyCalorieTarget,
         double? proteinTarget,

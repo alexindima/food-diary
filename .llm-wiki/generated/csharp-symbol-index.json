@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3343,
-    "symbols": 3352,
+    "sourceFiles": 3345,
+    "symbols": 3354,
     "interfaceImplementationLinks": 233,
     "dependencyInjectionRegistrations": 234,
     "kinds": {
-      "class": 1725,
+      "class": 1727,
       "enum": 56,
       "interface": 414,
       "record": 1041,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 60,
-      "Other": 1256,
+      "Other": 1258,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -1551,6 +1551,13 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Validation/SharedEnumValueParser.cs",
       "line": 5
+    },
+    {
+      "name": "TemporalRangePolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Common/Validation/TemporalRangePolicy.cs",
+      "line": 2
     },
     {
       "name": "UserIdParser",
@@ -5946,7 +5953,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "GetWaistSummariesQuery",
@@ -5960,21 +5967,21 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "GetWaistSummariesQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "WaistEntryReadService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Services/WaistEntryReadService.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "CreateWeightEntryCommand",
@@ -6107,7 +6114,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "GetWeightSummariesQuery",
@@ -6121,21 +6128,21 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "GetWeightSummariesQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "WeightEntryReadService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "CreateContentReportCommand",
@@ -10426,7 +10433,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Meals/Common/Time/UtcDateNormalizer.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "EnumFilterParser",
@@ -12099,14 +12106,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "GetStatisticsQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "GetStatisticsSummaryQuery",
@@ -12120,14 +12127,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "GetStatisticsSummaryQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "ITdeeUserProfileService",
@@ -12848,7 +12855,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "SyncWearableDataCommandValidator",
@@ -13334,6 +13341,13 @@
       "line": 2
     },
     {
+      "name": "DomainGuard",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Domain/Common/DomainGuard.cs",
+      "line": 4
+    },
+    {
       "name": "AchievementDefinition",
       "kind": "class",
       "role": "Entity",
@@ -13380,7 +13394,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "BillingPaymentKinds",
@@ -13401,14 +13415,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "BillingWebhookEvent",
       "kind": "class",
       "role": "Event",
       "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "DailyAdvice",
@@ -13429,7 +13443,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Content/NutritionLesson.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "UserLessonProgress",
@@ -13506,7 +13520,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/MealPlans/MealPlan.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "MealPlanDay",
@@ -13520,7 +13534,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/MealPlans/MealPlanMeal.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "Meal",
@@ -13548,7 +13562,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "MealItem",
@@ -13576,7 +13590,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "Product",
@@ -13590,7 +13604,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Recents/RecentItem.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "Recipe",
@@ -13632,7 +13646,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "ShoppingListItemSource",
@@ -13646,7 +13660,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Social/ContentReport.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RecipeLike",
@@ -13681,7 +13695,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 5
+      "line": 7
     },
     {
       "name": "CycleProfile",
@@ -13709,7 +13723,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "FastingCheckIn",
@@ -13723,7 +13737,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "FastingPlan",
@@ -13737,14 +13751,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingSession.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "FastingTelemetryEvent",
       "kind": "class",
       "role": "Event",
       "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "FertilitySignal",
@@ -13856,7 +13870,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Users/User.Credentials.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "User",
@@ -13919,21 +13933,21 @@
       "kind": "class",
       "role": "Event",
       "path": "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "WearableConnection",
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "WearableSyncEntry",
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Wearables/WearableSyncEntry.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "WeeklyGoal",
@@ -14367,7 +14381,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/FoodQualityScore.cs",
-      "line": 4
+      "line": 7
     },
     {
       "name": "GenderCode",
@@ -14388,14 +14402,14 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/HealthAreaScore.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "HealthAreaScores",
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/HealthAreaScores.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "AchievementDefinitionId",
@@ -14892,7 +14906,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/ProductMeasurementState.cs",
-      "line": 4
+      "line": 7
     },
     {
       "name": "ProductMediaState",
@@ -14906,7 +14920,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/ProductNutrition.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "RecipeDetailsState",
@@ -14920,7 +14934,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/RecipeNutrition.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "RecipeNutritionState",
@@ -14969,21 +14983,21 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/UserActivityGoals.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "UserActivityUpdate",
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/UserActivityUpdate.cs",
-      "line": 4
+      "line": 7
     },
     {
       "name": "UserAdminAiQuotaUpdate",
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/UserAdminAiQuotaUpdate.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "UserAdminPreferenceUpdate",
@@ -15004,14 +15018,14 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/UserAiQuotaState.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "UserAiTokenLimitUpdate",
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/UserAiTokenLimitUpdate.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "UserCalorieSchedule",
@@ -15039,7 +15053,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/UserNutritionGoals.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "UserPersonalInfoUpdate",
@@ -16285,7 +16299,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "DashboardFavoriteMealProjection",
@@ -16355,7 +16369,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "AttentionSignalMetricsReadService",
@@ -16838,7 +16852,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Tracking/HydrationEntryRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "MarketingAttributionEventRepository",
@@ -17433,7 +17447,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "RelayEmailTransport",
@@ -21647,7 +21661,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Swagger/StandardErrorResponsesOperationFilter.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "IInboundMailStore",
@@ -26593,7 +26607,7 @@
       "implementation": "ConfigurableBillingProviderGatewayAccessor",
       "lifetime": "Scoped",
       "path": "FoodDiary.Integrations/DependencyInjection.Billing.cs",
-      "line": 27
+      "line": 28
     },
     {
       "service": "IAdminMailInboxReader",

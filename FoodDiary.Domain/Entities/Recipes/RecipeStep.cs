@@ -78,9 +78,9 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
     }
 
     private RecipeStepContentState GetContentState() {
-        return new RecipeStepContentState(
-            Title,
+        return RecipeStepContentState.Create(
             Instruction,
+            Title,
             ImageUrl,
             ImageAssetId);
     }

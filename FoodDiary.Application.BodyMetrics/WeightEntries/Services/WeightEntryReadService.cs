@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.BodyMetrics.WeightEntries.Mappings;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -48,22 +49,8 @@ internal sealed class WeightEntryReadService(IWeightEntryReadModelRepository wei
             dateTo,
             cancellationToken).ConfigureAwait(false);
 
-        return [.. BuildBuckets(dateFrom, dateTo, quantizationDays)
-            .Select(bucket => BuildResponse(bucket.start, bucket.end, entries))];
-    }
-
-    private static IEnumerable<(DateTime start, DateTime end)> BuildBuckets(DateTime from, DateTime to, int step) {
-        DateTime current = from.Date;
-        DateTime end = to.Date;
-        while (current <= end) {
-            DateTime bucketEnd = current.AddDays(step - 1);
-            if (bucketEnd > end) {
-                bucketEnd = end;
-            }
-
-            yield return (current, bucketEnd);
-            current = bucketEnd.AddDays(1);
-        }
+        return [.. TemporalRangePolicy.BuildDateBuckets(dateFrom, dateTo, quantizationDays)
+            .Select(bucket => BuildResponse(bucket.Start, bucket.End, entries))];
     }
 
     private static WeightEntrySummaryModel BuildResponse(

@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1046,
     "ambiguousContracts": 3,
-    "consumerEdges": 7288,
-    "productionConsumerEdges": 4434,
-    "testConsumerEdges": 2854,
+    "consumerEdges": 7291,
+    "productionConsumerEdges": 4435,
+    "testConsumerEdges": 2856,
     "consumedContracts": 1046,
     "unconsumedContracts": 0
   },
@@ -26644,7 +26644,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 12
     },
     {
       "contract": "DashboardSnapshotRequest",
@@ -30063,6 +30063,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/Tracking/FastingTelemetryEventRepository.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FastingTelemetryEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainHardeningInvariantTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -38539,7 +38552,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Statistics/StatisticsFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 10
     },
     {
       "contract": "GetStatisticsQuery",
@@ -38604,7 +38617,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 10
     },
     {
       "contract": "GetStatisticsSummaryQuery",
@@ -39306,7 +39319,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "GetWaistHistoryPageSummaryQuery",
@@ -39449,7 +39462,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 10
     },
     {
       "contract": "GetWaistSummariesQuery",
@@ -40307,7 +40320,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "GetWeightHistoryPageSummaryQuery",
@@ -40450,7 +40463,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 10
     },
     {
       "contract": "GetWeightSummariesQuery",
@@ -54685,7 +54698,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 9
     },
     {
       "contract": "IDashboardStatisticsReadService",
@@ -67568,7 +67581,7 @@
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Domain.Tests/InboundMailMessageTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "InboundMailMessageSummaryHttpResponse",
@@ -71454,7 +71467,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "IOutboxDeadLetterReplayService",
@@ -84894,6 +84907,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
       "isTest": false,
       "referenceCount": 1
@@ -85079,6 +85105,19 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs",
       "isTest": true,
       "referenceCount": 6
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "IUnitOfWork",
@@ -85585,7 +85624,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "IUsdaProductSuggestionReadService",
@@ -91747,7 +91786,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 9
     },
     {
       "contract": "IWaistEntryReadService",
@@ -94074,7 +94113,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 9
     },
     {
       "contract": "IWeightEntryReadService",
@@ -104578,7 +104617,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 11
     },
     {
       "contract": "SyncWearableDataCommand",

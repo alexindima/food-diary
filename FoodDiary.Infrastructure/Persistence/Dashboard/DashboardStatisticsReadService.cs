@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
@@ -20,10 +21,26 @@ internal sealed class DashboardStatisticsReadService(FoodDiaryDbContext context)
                 Errors.Validation.Invalid(nameof(dateFrom), "DateFrom must be earlier than DateTo"));
         }
 
-        int normalizedQuantizationDays = Math.Clamp(quantizationDays <= 0 ? 1 : quantizationDays, 1, 365);
+        if (!TemporalRangePolicy.IsPeriodWithinLimit(dateFrom, dateTo)) {
+            return Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
+                Errors.Validation.Invalid(
+                    nameof(dateTo),
+                    $"The period must not exceed {TemporalRangePolicy.MaxPeriodDays} days."));
+        }
+
+        if (!TemporalRangePolicy.IsQuantizationValid(quantizationDays)) {
+            return Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
+                Errors.Validation.Invalid(
+                    nameof(quantizationDays),
+                    $"Value must be between 1 and {TemporalRangePolicy.MaxQuantizationDays}."));
+        }
+
         DateTime normalizedFrom = NormalizeUtcInstant(dateFrom);
         DateTime normalizedTo = NormalizeUtcInstant(dateTo);
-        List<(DateTime Start, DateTime End)> buckets = BuildBuckets(normalizedFrom, normalizedTo, normalizedQuantizationDays);
+        IReadOnlyList<(DateTime Start, DateTime End)> buckets = TemporalRangePolicy.BuildInstantBuckets(
+            normalizedFrom,
+            normalizedTo,
+            quantizationDays);
 
         List<MealNutritionProjection> meals = await context.Meals
             .AsNoTracking()
@@ -80,26 +97,6 @@ internal sealed class DashboardStatisticsReadService(FoodDiaryDbContext context)
 
     private static double SumCalories(IEnumerable<MealNutritionProjection> meals, MealType mealType) =>
         Math.Round(meals.Where(meal => meal.MealType == mealType).Sum(meal => meal.TotalCalories), 2, MidpointRounding.ToEven);
-
-    private static List<(DateTime Start, DateTime End)> BuildBuckets(
-        DateTime from,
-        DateTime to,
-        int quantizationDays) {
-        var buckets = new List<(DateTime, DateTime)>();
-        DateTime currentStart = from;
-
-        while (currentStart <= to) {
-            DateTime currentEnd = currentStart.AddDays(quantizationDays).AddTicks(-1);
-            if (currentEnd > to) {
-                currentEnd = to;
-            }
-
-            buckets.Add((currentStart, currentEnd));
-            currentStart = currentEnd.AddTicks(1);
-        }
-
-        return buckets;
-    }
 
     private static int GetBucketDayCount(DateTime bucketStart, DateTime bucketEnd) {
         double totalDays = (bucketEnd - bucketStart).TotalDays;

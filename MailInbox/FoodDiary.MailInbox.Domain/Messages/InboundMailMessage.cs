@@ -83,7 +83,7 @@ public sealed class InboundMailMessage : AggregateRoot<InboundMailMessageId> {
             Subject = NullIfWhiteSpace(subject),
             TextBody = textBody,
             HtmlBody = htmlBody,
-            RawMimeBytes = rawMimeBytes,
+            RawMimeBytes = rawMimeBytes.ToArray(),
             Status = InboundMailMessageStatus.Received,
             ReceivedAtUtc = normalizedReceivedAtUtc,
         };

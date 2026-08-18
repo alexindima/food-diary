@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Net;
 using System.Text;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
@@ -243,7 +242,7 @@ public sealed class ExternalFoodServiceTests {
             "SearchCache",
             System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
         object cache = field.GetValue(null)!;
-        string cacheKey = string.Create(CultureInfo.InvariantCulture, $"{query.Trim().ToLowerInvariant()}:{Math.Clamp(limit, 1, 50)}");
+        string cacheKey = OpenFoodFactsService.GetSearchCacheKey(query, Math.Clamp(limit, 1, 50));
         object cached = cache.GetType().GetMethod("get_Item")!.Invoke(cache, [cacheKey])!;
         Type cachedType = cached.GetType();
         object products = cachedType.GetProperty("Products")!.GetValue(cached)!;

@@ -140,8 +140,9 @@ public sealed partial class User {
         string? normalizedUsername = NormalizeOptionalProfileText(username);
         string? normalizedFirstName = NormalizeOptionalProfileText(firstName);
         string? normalizedLastName = NormalizeOptionalProfileText(lastName);
+        DateTime? normalizedBirthDate = NormalizeOptionalUtcDate(birthDate);
 
-        EnsureBirthDateIsNotFuture(birthDate);
+        EnsureBirthDateIsNotFuture(normalizedBirthDate);
         EnsurePositive(weight, nameof(weight));
         EnsurePositive(height, nameof(height));
 
@@ -163,8 +164,8 @@ public sealed partial class User {
             changed = true;
         }
 
-        if (birthDate.HasValue && state.BirthDate != birthDate) {
-            state = state with { BirthDate = birthDate };
+        if (normalizedBirthDate.HasValue && state.BirthDate != normalizedBirthDate) {
+            state = state with { BirthDate = normalizedBirthDate };
             changed = true;
         }
 

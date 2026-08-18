@@ -1,4 +1,5 @@
 using System.Globalization;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -32,6 +33,8 @@ public sealed class NutritionLesson : Entity<NutritionLessonId> {
         LessonDifficulty difficulty,
         int estimatedReadMinutes,
         int sortOrder = 0) {
+        DomainGuard.Defined(category, nameof(category));
+        DomainGuard.Defined(difficulty, nameof(difficulty));
         var lesson = new NutritionLesson {
             Id = NutritionLessonId.New(),
             Title = NormalizeRequired(title, TitleMaxLength, nameof(title)),
@@ -56,6 +59,8 @@ public sealed class NutritionLesson : Entity<NutritionLessonId> {
         LessonDifficulty difficulty,
         int estimatedReadMinutes,
         int sortOrder) {
+        DomainGuard.Defined(category, nameof(category));
+        DomainGuard.Defined(difficulty, nameof(difficulty));
         string newTitle = NormalizeRequired(title, TitleMaxLength, nameof(title));
         string newContent = NormalizeRequired(content, ContentMaxLength, nameof(content));
         string? newSummary = NormalizeOptional(summary, SummaryMaxLength);

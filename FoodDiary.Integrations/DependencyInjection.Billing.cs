@@ -18,7 +18,8 @@ public static partial class DependencyInjection {
             return new StripeClient(apiKey);
         });
         services.AddScoped<IBillingProviderGateway, StripeBillingGateway>();
-        services.AddHttpClient<PaddleBillingGateway>(client => client.Timeout = TimeSpan.FromSeconds(30));
+        services.AddHttpClient<PaddleBillingGateway>(client => client.Timeout = TimeSpan.FromSeconds(30))
+            .RemoveAllLoggers();
         services.AddHttpClient<PaddleNotificationRecoveryService>(client => client.Timeout = TimeSpan.FromSeconds(30));
         services.AddScoped<IBillingProviderGateway>(sp => sp.GetRequiredService<PaddleBillingGateway>());
         services.AddHttpClient<YooKassaBillingGateway>(client => client.Timeout = TimeSpan.FromSeconds(30));

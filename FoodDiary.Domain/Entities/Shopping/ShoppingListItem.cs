@@ -1,4 +1,5 @@
 using System.Globalization;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
@@ -48,6 +49,9 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
         EnsureShoppingListId(shoppingListId);
         EnsureProductId(productId);
         EnsureItemId(id);
+        if (unit.HasValue) {
+            DomainGuard.Defined(unit.Value, nameof(unit));
+        }
         string normalizedName = NormalizeRequiredName(name);
         double? normalizedAmount = NormalizeOptionalAmount(amount, nameof(amount));
         string? normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
@@ -88,20 +92,30 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
         DateTime? checkedOnUtc,
         int sortOrder) {
         EnsureProductId(productId);
-        ProductId = productId;
-        Name = NormalizeRequiredName(name);
-        Amount = NormalizeOptionalAmount(amount, nameof(amount));
-        Unit = unit;
-        Category = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
-        Aisle = NormalizeOptionalText(aisle, CategoryMaxLength, nameof(aisle));
-        Note = NormalizeOptionalText(note, NoteMaxLength, nameof(note));
-        IsChecked = isChecked;
-        CheckedOnUtc = isChecked ? NormalizeCheckedOnUtc(checkedOnUtc) : null;
+        if (unit.HasValue) {
+            DomainGuard.Defined(unit.Value, nameof(unit));
+        }
 
         if (sortOrder < 0) {
             throw new ArgumentOutOfRangeException(nameof(sortOrder), "Sort order must be non-negative.");
         }
 
+        string normalizedName = NormalizeRequiredName(name);
+        double? normalizedAmount = NormalizeOptionalAmount(amount, nameof(amount));
+        string? normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
+        string? normalizedAisle = NormalizeOptionalText(aisle, CategoryMaxLength, nameof(aisle));
+        string? normalizedNote = NormalizeOptionalText(note, NoteMaxLength, nameof(note));
+        DateTime? normalizedCheckedOnUtc = isChecked ? NormalizeCheckedOnUtc(checkedOnUtc) : null;
+
+        ProductId = productId;
+        Name = normalizedName;
+        Amount = normalizedAmount;
+        Unit = unit;
+        Category = normalizedCategory;
+        Aisle = normalizedAisle;
+        Note = normalizedNote;
+        IsChecked = isChecked;
+        CheckedOnUtc = normalizedCheckedOnUtc;
         SortOrder = sortOrder;
         SetModified();
     }

@@ -167,6 +167,17 @@ public sealed partial class User : AggregateRoot<UserId> {
         }
     }
 
+    private static DateTime? NormalizeOptionalUtcDate(DateTime? value) {
+        if (!value.HasValue) {
+            return null;
+        }
+
+        DateTime utcValue = value.Value.Kind == DateTimeKind.Unspecified
+            ? DateTime.SpecifyKind(value.Value, DateTimeKind.Utc)
+            : value.Value.ToUniversalTime();
+        return DateTime.SpecifyKind(utcValue.Date, DateTimeKind.Utc);
+    }
+
     private static void EnsurePositive(double? value, string paramName) {
         if (value.HasValue && (double.IsNaN(value.Value) || double.IsInfinity(value.Value))) {
             throw new ArgumentOutOfRangeException(paramName, "Value must be a finite number.");

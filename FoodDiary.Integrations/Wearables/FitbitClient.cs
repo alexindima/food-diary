@@ -20,10 +20,13 @@ internal sealed class FitbitClient(
     IOptions<FitbitOptions> options,
     TimeProvider timeProvider,
     ILogger<FitbitClient> logger) : IWearableClient {
+    private static readonly TimeSpan DefaultDailyDataOperationTimeout = TimeSpan.FromSeconds(30);
     private static readonly JsonSerializerOptions JsonOptions = new() {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
     };
+
+    internal TimeSpan DailyDataOperationTimeout { get; init; } = DefaultDailyDataOperationTimeout;
 
     public WearableProvider Provider => WearableProvider.Fitbit;
 
@@ -127,11 +130,13 @@ internal sealed class FitbitClient(
         string accessToken, DateTime date, CancellationToken cancellationToken = default) {
         string dateStr = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         var results = new List<WearableDataPoint>();
+        using var operationDeadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        operationDeadline.CancelAfter(DailyDataOperationTimeout);
 
         try {
             // Fetch activity summary (steps, calories, active minutes)
             string activityUrl = $"https://api.fitbit.com/1/user/-/activities/date/{dateStr}.json";
-            JsonElement activityResponse = await GetJsonAsync(activityUrl, accessToken, cancellationToken).ConfigureAwait(false);
+            JsonElement activityResponse = await GetJsonAsync(activityUrl, accessToken, operationDeadline.Token).ConfigureAwait(false);
 
             if (activityResponse.TryGetProperty("summary", out JsonElement summary)) {
                 if (summary.TryGetProperty("steps", out JsonElement steps)) {
@@ -149,7 +154,7 @@ internal sealed class FitbitClient(
 
             // Fetch resting heart rate
             string heartUrl = $"https://api.fitbit.com/1/user/-/activities/heart/date/{dateStr}/1d.json";
-            JsonElement heartResponse = await GetJsonAsync(heartUrl, accessToken, cancellationToken).ConfigureAwait(false);
+            JsonElement heartResponse = await GetJsonAsync(heartUrl, accessToken, operationDeadline.Token).ConfigureAwait(false);
 
             if (heartResponse.TryGetProperty("activities-heart", out JsonElement heartArray) &&
                 heartArray.GetArrayLength() > 0) {
@@ -162,7 +167,7 @@ internal sealed class FitbitClient(
 
             // Fetch sleep
             string sleepUrl = $"https://api.fitbit.com/1.2/user/-/sleep/date/{dateStr}.json";
-            JsonElement sleepResponse = await GetJsonAsync(sleepUrl, accessToken, cancellationToken).ConfigureAwait(false);
+            JsonElement sleepResponse = await GetJsonAsync(sleepUrl, accessToken, operationDeadline.Token).ConfigureAwait(false);
 
             if (sleepResponse.TryGetProperty("summary", out JsonElement sleepSummary) &&
                 sleepSummary.TryGetProperty("totalMinutesAsleep", out JsonElement sleepMinutes)) {

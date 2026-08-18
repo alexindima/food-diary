@@ -28,6 +28,19 @@ public sealed class StatisticsSummaryFeatureTests {
     }
 
     [Fact]
+    public async Task GetStatisticsSummaryQueryValidator_WithExcessivePeriodAndQuantization_Fails() {
+        var validator = new GetStatisticsSummaryQueryValidator();
+        var from = new DateTime(2025, 1, 1);
+        var query = new GetStatisticsSummaryQuery(Guid.NewGuid(), from, from.AddDays(366), int.MaxValue);
+
+        ValidationResult result = await validator.ValidateAsync(query);
+
+        Assert.Multiple(
+            () => Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(query.DateTo), StringComparison.Ordinal)),
+            () => Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(query.QuantizationDays), StringComparison.Ordinal)));
+    }
+
+    [Fact]
     public async Task GetStatisticsSummaryQueryHandler_ReturnsNutritionWeightAndWaist() {
         var user = User.Create("statistics-summary@example.com", "hash");
         var from = new DateTime(2026, 8, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -123,6 +136,27 @@ public sealed class StatisticsSummaryFeatureTests {
 
         ResultAssert.Failure(result, "Validation.Invalid");
         Assert.Contains(nameof(GetStatisticsSummaryQuery.QuantizationDays), result.Error.Details!.Keys, StringComparer.Ordinal);
+    }
+
+    [Theory]
+    [InlineData(366, 1)]
+    [InlineData(1, 367)]
+    [InlineData(1, int.MaxValue)]
+    public async Task GetStatisticsSummaryQueryHandler_WhenTemporalRangeIsUnsupported_ReturnsValidationFailure(
+        int periodDays,
+        int quantizationDays) {
+        var handler = new GetStatisticsSummaryQueryHandler(
+            Substitute.For<IDashboardStatisticsReadService>(),
+            Substitute.For<IWeightEntryReadService>(),
+            Substitute.For<IWaistEntryReadService>(),
+            CreateCurrentUserAccessService());
+        var from = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        Result<StatisticsSummaryModel> result = await handler.Handle(
+            new GetStatisticsSummaryQuery(Guid.NewGuid(), from, from.AddDays(periodDays), quantizationDays),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
     }
 
     [Fact]

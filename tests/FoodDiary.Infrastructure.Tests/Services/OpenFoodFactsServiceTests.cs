@@ -237,6 +237,29 @@ public sealed class OpenFoodFactsServiceTests {
     }
 
     [Fact]
+    public async Task SearchAsync_ReturnsReadOnlyProductSnapshot() {
+        const string json = """{"products":[{"code":"111","product_name":"Milk","nutriments":{}}]}""";
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
+
+        IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync($"immutable-{Guid.NewGuid():N}");
+
+        IList<OpenFoodFactsProductModel> list = Assert.IsAssignableFrom<IList<OpenFoodFactsProductModel>>(result);
+        Assert.True(list.IsReadOnly);
+        Assert.Throws<NotSupportedException>(() => list[0] = result[0]);
+    }
+
+    [Fact]
+    public void GetSearchCacheKey_DoesNotRetainNormalizedQueryText() {
+        string query = $"Private Search {Guid.NewGuid():N}";
+
+        string cacheKey = OpenFoodFactsService.GetSearchCacheKey(query, 10);
+        string equivalentCacheKey = OpenFoodFactsService.GetSearchCacheKey($"  {query.ToUpperInvariant()}  ", 10);
+
+        Assert.Equal(cacheKey, equivalentCacheKey);
+        Assert.DoesNotContain(query.Trim().ToLowerInvariant(), cacheKey, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task SearchAsync_FiltersOutProductsWithNoName() {
         const string json = """
             {
@@ -387,6 +410,34 @@ public sealed class OpenFoodFactsServiceTests {
     }
 
     [Fact]
+    public async Task SearchAsync_WhenManyUniqueRequestsAreInFlight_BoundsSharedStateAndProviderConcurrency() {
+        var handler = new ConcurrencyTrackingHttpMessageHandler(OpenFoodFactsService.MaxConcurrentSearches);
+        OpenFoodFactsService service = CreateService(handler);
+        string queryPrefix = Guid.NewGuid().ToString("N");
+        const int requestCount = OpenFoodFactsService.MaxInFlightSearches + 8;
+
+        Task<IReadOnlyList<OpenFoodFactsProductModel>>[] requests = [
+            .. Enumerable.Range(0, requestCount)
+                .Select(index => service.SearchAsync(
+                    string.Create(CultureInfo.InvariantCulture, $"{queryPrefix}-{index}"))),
+        ];
+        try {
+            await handler.ConcurrencyLimitReached.Task.WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System);
+            Assert.Multiple(
+                () => Assert.InRange(handler.MaxObservedConcurrency, 1, OpenFoodFactsService.MaxConcurrentSearches),
+                () => Assert.InRange(
+                    OpenFoodFactsService.InFlightSearchCount,
+                    1,
+                    OpenFoodFactsService.MaxInFlightSearches));
+        } finally {
+            handler.ReleaseResponses();
+        }
+
+        await Task.WhenAll(requests).WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System);
+        Assert.Equal(0, OpenFoodFactsService.InFlightSearchCount);
+    }
+
+    [Fact]
     public async Task SearchAsync_ClampsLimitBeforeCallingApi() {
         var handler = new RecordingHttpMessageHandler("""{"products": []}""");
         OpenFoodFactsService service = CreateService(handler);
@@ -516,7 +567,7 @@ public sealed class OpenFoodFactsServiceTests {
             "SearchCache",
             System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
         object cache = field.GetValue(null)!;
-        string cacheKey = string.Create(CultureInfo.InvariantCulture, $"{query.Trim().ToLowerInvariant()}:{Math.Clamp(limit, 1, 50)}");
+        string cacheKey = OpenFoodFactsService.GetSearchCacheKey(query, Math.Clamp(limit, 1, 50));
         object cached = cache.GetType().GetMethod("get_Item")!.Invoke(cache, [cacheKey])!;
         Type cachedType = cached.GetType();
         object products = cachedType.GetProperty("Products")!.GetValue(cached)!;
@@ -645,6 +696,49 @@ public sealed class OpenFoodFactsServiceTests {
             return new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
             };
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ConcurrencyTrackingHttpMessageHandler(int expectedConcurrency) : HttpMessageHandler {
+        private readonly TaskCompletionSource _release = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _activeRequests;
+        private int _maxObservedConcurrency;
+
+        public TaskCompletionSource ConcurrencyLimitReached { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public int MaxObservedConcurrency => Volatile.Read(ref _maxObservedConcurrency);
+
+        public void ReleaseResponses() => _release.TrySetResult();
+
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken) {
+            int activeRequests = Interlocked.Increment(ref _activeRequests);
+            UpdateMaxObservedConcurrency(activeRequests);
+            if (activeRequests >= expectedConcurrency) {
+                ConcurrencyLimitReached.TrySetResult();
+            }
+
+            try {
+                await _release.Task.WaitAsync(cancellationToken);
+                return new HttpResponseMessage(HttpStatusCode.OK) {
+                    Content = new StringContent("""{"products":[]}""", System.Text.Encoding.UTF8, "application/json"),
+                };
+            } finally {
+                Interlocked.Decrement(ref _activeRequests);
+            }
+        }
+
+        private void UpdateMaxObservedConcurrency(int activeRequests) {
+            int observed = Volatile.Read(ref _maxObservedConcurrency);
+            while (activeRequests > observed) {
+                int previous = Interlocked.CompareExchange(ref _maxObservedConcurrency, activeRequests, observed);
+                if (previous == observed) {
+                    return;
+                }
+
+                observed = previous;
+            }
         }
     }
 

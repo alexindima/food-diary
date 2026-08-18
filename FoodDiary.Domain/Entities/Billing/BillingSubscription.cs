@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -5,6 +6,10 @@ namespace FoodDiary.Domain.Entities.Billing;
 
 public sealed class BillingSubscription : Entity<Guid> {
     public const string PendingCheckoutStatus = "pending_checkout";
+    private const int ProviderMaxLength = 32;
+    private const int ExternalIdMaxLength = 255;
+    private const int PlanMaxLength = 32;
+    private const int StatusMaxLength = 64;
 
     public UserId UserId { get; private set; }
     public string Provider { get; private set; } = string.Empty;
@@ -44,9 +49,9 @@ public sealed class BillingSubscription : Entity<Guid> {
             Id = Guid.NewGuid(),
             UserId = userId,
             Provider = NormalizeProvider(provider),
-            ExternalCustomerId = NormalizeRequired(externalCustomerId, nameof(externalCustomerId)),
-            ExternalPriceId = NormalizeOptional(externalPriceId),
-            Plan = NormalizeOptional(plan),
+            ExternalCustomerId = NormalizeRequired(externalCustomerId, ExternalIdMaxLength, nameof(externalCustomerId)),
+            ExternalPriceId = NormalizeOptional(externalPriceId, ExternalIdMaxLength, nameof(externalPriceId)),
+            Plan = NormalizeOptional(plan, PlanMaxLength, nameof(plan)),
             Status = PendingCheckoutStatus,
         };
         subscription.SetCreated();
@@ -58,10 +63,15 @@ public sealed class BillingSubscription : Entity<Guid> {
         string externalCustomerId,
         string? externalPriceId,
         string? plan) {
-        Provider = NormalizeProvider(provider);
-        ExternalCustomerId = NormalizeRequired(externalCustomerId, nameof(externalCustomerId));
-        ExternalPriceId = NormalizeOptional(externalPriceId);
-        Plan = NormalizeOptional(plan);
+        string normalizedProvider = NormalizeProvider(provider);
+        string normalizedCustomerId = NormalizeRequired(externalCustomerId, ExternalIdMaxLength, nameof(externalCustomerId));
+        string? normalizedPriceId = NormalizeOptional(externalPriceId, ExternalIdMaxLength, nameof(externalPriceId));
+        string? normalizedPlan = NormalizeOptional(plan, PlanMaxLength, nameof(plan));
+
+        Provider = normalizedProvider;
+        ExternalCustomerId = normalizedCustomerId;
+        ExternalPriceId = normalizedPriceId;
+        Plan = normalizedPlan;
         Status = PendingCheckoutStatus;
         SetModified();
     }
@@ -83,23 +93,41 @@ public sealed class BillingSubscription : Entity<Guid> {
         DateTime syncedAtUtc,
         string? providerMetadataJson = null,
         DateTime? webhookOccurredAtUtc = null) {
-        Provider = NormalizeProvider(provider);
-        ExternalSubscriptionId = NormalizeOptional(externalSubscriptionId);
-        ExternalPaymentMethodId = NormalizeOptional(externalPaymentMethodId);
-        ExternalPriceId = NormalizeOptional(externalPriceId);
-        Plan = NormalizeOptional(plan);
-        Status = NormalizeRequired(status, nameof(status));
-        CurrentPeriodStartUtc = NormalizeOptionalUtc(currentPeriodStartUtc, nameof(currentPeriodStartUtc));
-        CurrentPeriodEndUtc = NormalizeOptionalUtc(currentPeriodEndUtc, nameof(currentPeriodEndUtc));
+        string normalizedProvider = NormalizeProvider(provider);
+        string? normalizedSubscriptionId = NormalizeOptional(externalSubscriptionId, ExternalIdMaxLength, nameof(externalSubscriptionId));
+        string? normalizedPaymentMethodId = NormalizeOptional(externalPaymentMethodId, ExternalIdMaxLength, nameof(externalPaymentMethodId));
+        string? normalizedPriceId = NormalizeOptional(externalPriceId, ExternalIdMaxLength, nameof(externalPriceId));
+        string? normalizedPlan = NormalizeOptional(plan, PlanMaxLength, nameof(plan));
+        string normalizedStatus = NormalizeRequired(status, StatusMaxLength, nameof(status));
+        DateTime? normalizedPeriodStart = NormalizeOptionalUtc(currentPeriodStartUtc, nameof(currentPeriodStartUtc));
+        DateTime? normalizedPeriodEnd = NormalizeOptionalUtc(currentPeriodEndUtc, nameof(currentPeriodEndUtc));
+        EnsureChronologicalRange(normalizedPeriodStart, normalizedPeriodEnd, nameof(currentPeriodStartUtc));
+        DateTime? normalizedCanceledAt = NormalizeOptionalUtc(canceledAtUtc, nameof(canceledAtUtc));
+        DateTime? normalizedTrialStart = NormalizeOptionalUtc(trialStartUtc, nameof(trialStartUtc));
+        DateTime? normalizedTrialEnd = NormalizeOptionalUtc(trialEndUtc, nameof(trialEndUtc));
+        EnsureChronologicalRange(normalizedTrialStart, normalizedTrialEnd, nameof(trialStartUtc));
+        string? normalizedMetadata = NormalizeOptional(providerMetadataJson);
+        string normalizedWebhookEventId = NormalizeRequired(webhookEventId, ExternalIdMaxLength, nameof(webhookEventId));
+        DateTime? normalizedWebhookOccurredAt = NormalizeOptionalUtc(webhookOccurredAtUtc, nameof(webhookOccurredAtUtc));
+        DateTime normalizedSyncedAt = NormalizeRequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
+
+        Provider = normalizedProvider;
+        ExternalSubscriptionId = normalizedSubscriptionId;
+        ExternalPaymentMethodId = normalizedPaymentMethodId;
+        ExternalPriceId = normalizedPriceId;
+        Plan = normalizedPlan;
+        Status = normalizedStatus;
+        CurrentPeriodStartUtc = normalizedPeriodStart;
+        CurrentPeriodEndUtc = normalizedPeriodEnd;
         CancelAtPeriodEnd = cancelAtPeriodEnd;
-        CanceledAtUtc = NormalizeOptionalUtc(canceledAtUtc, nameof(canceledAtUtc));
-        TrialStartUtc = NormalizeOptionalUtc(trialStartUtc, nameof(trialStartUtc));
-        TrialEndUtc = NormalizeOptionalUtc(trialEndUtc, nameof(trialEndUtc));
+        CanceledAtUtc = normalizedCanceledAt;
+        TrialStartUtc = normalizedTrialStart;
+        TrialEndUtc = normalizedTrialEnd;
         NextBillingAttemptUtc = ResolveNextBillingAttemptUtc(Status, CancelAtPeriodEnd, CurrentPeriodEndUtc);
-        ProviderMetadataJson = NormalizeOptional(providerMetadataJson);
-        LastWebhookEventId = NormalizeRequired(webhookEventId, nameof(webhookEventId));
-        LastWebhookOccurredAtUtc = NormalizeOptionalUtc(webhookOccurredAtUtc, nameof(webhookOccurredAtUtc));
-        LastSyncedAtUtc = NormalizeRequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
+        ProviderMetadataJson = normalizedMetadata;
+        LastWebhookEventId = normalizedWebhookEventId;
+        LastWebhookOccurredAtUtc = normalizedWebhookOccurredAt;
+        LastSyncedAtUtc = normalizedSyncedAt;
         SetModified(LastSyncedAtUtc.Value);
     }
 
@@ -118,11 +146,16 @@ public sealed class BillingSubscription : Entity<Guid> {
         string eventId,
         DateTime syncedAtUtc,
         string? providerMetadataJson = null) {
+        DateTime normalizedNextBillingAttempt = NormalizeRequiredUtc(nextBillingAttemptUtc, nameof(nextBillingAttemptUtc));
+        string normalizedEventId = NormalizeRequired(eventId, ExternalIdMaxLength, nameof(eventId));
+        DateTime normalizedSyncedAt = NormalizeRequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
+        string? normalizedMetadata = NormalizeOptional(providerMetadataJson);
+
         Status = "past_due";
-        NextBillingAttemptUtc = NormalizeRequiredUtc(nextBillingAttemptUtc, nameof(nextBillingAttemptUtc));
-        LastWebhookEventId = NormalizeRequired(eventId, nameof(eventId));
-        LastSyncedAtUtc = NormalizeRequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
-        ProviderMetadataJson = NormalizeOptional(providerMetadataJson);
+        NextBillingAttemptUtc = normalizedNextBillingAttempt;
+        LastWebhookEventId = normalizedEventId;
+        LastSyncedAtUtc = normalizedSyncedAt;
+        ProviderMetadataJson = normalizedMetadata;
         SetModified(LastSyncedAtUtc.Value);
     }
 
@@ -130,18 +163,22 @@ public sealed class BillingSubscription : Entity<Guid> {
         string eventId,
         DateTime syncedAtUtc,
         string? providerMetadataJson = null) {
+        DateTime normalizedSyncedAt = NormalizeRequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
+        string normalizedEventId = NormalizeRequired(eventId, ExternalIdMaxLength, nameof(eventId));
+        string? normalizedMetadata = NormalizeOptional(providerMetadataJson);
+
         Status = "canceled";
         CancelAtPeriodEnd = false;
-        CanceledAtUtc = NormalizeRequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
+        CanceledAtUtc = normalizedSyncedAt;
         NextBillingAttemptUtc = null;
-        LastWebhookEventId = NormalizeRequired(eventId, nameof(eventId));
+        LastWebhookEventId = normalizedEventId;
         LastSyncedAtUtc = CanceledAtUtc;
-        ProviderMetadataJson = NormalizeOptional(providerMetadataJson);
+        ProviderMetadataJson = normalizedMetadata;
         SetModified(LastSyncedAtUtc.Value);
     }
 
     private static string NormalizeProvider(string provider) {
-        string normalized = NormalizeRequired(provider, nameof(provider));
+        string normalized = NormalizeRequired(provider, ProviderMaxLength, nameof(provider));
         if (!BillingProviderNames.IsSupported(normalized)) {
             throw new ArgumentException("Unsupported billing provider.", nameof(provider));
         }
@@ -157,10 +194,13 @@ public sealed class BillingSubscription : Entity<Guid> {
         return BillingProviderNames.Stripe;
     }
 
-    private static string NormalizeRequired(string value, string paramName) {
-        return string.IsNullOrWhiteSpace(value)
+    private static string NormalizeRequired(string value, int maxLength, string paramName) {
+        string normalized = string.IsNullOrWhiteSpace(value)
             ? throw new ArgumentException("Value is required.", paramName)
             : value.Trim();
+        return normalized.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
+            : normalized;
     }
 
     private static string? NormalizeOptional(string? value) {
@@ -169,6 +209,13 @@ public sealed class BillingSubscription : Entity<Guid> {
         }
 
         return value.Trim();
+    }
+
+    private static string? NormalizeOptional(string? value, int maxLength, string paramName) {
+        string? normalized = NormalizeOptional(value);
+        return normalized?.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
+            : normalized;
     }
 
     private static DateTime NormalizeRequiredUtc(DateTime value, string paramName) {
@@ -197,5 +244,11 @@ public sealed class BillingSubscription : Entity<Guid> {
             "active" or "trialing" or "past_due" => currentPeriodEndUtc,
             _ => null,
         };
+    }
+
+    private static void EnsureChronologicalRange(DateTime? start, DateTime? end, string paramName) {
+        if (start.HasValue && end.HasValue && start > end) {
+            throw new ArgumentException("Start timestamp cannot be after end timestamp.", paramName);
+        }
     }
 }

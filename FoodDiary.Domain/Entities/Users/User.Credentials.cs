@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities.Users;
@@ -5,12 +6,11 @@ namespace FoodDiary.Domain.Entities.Users;
 public sealed partial class User {
     public void LinkGoogleIdentity(string issuer, string subject) {
         EnsureNotDeleted();
-        GoogleIssuer = string.IsNullOrWhiteSpace(issuer)
-            ? throw new ArgumentException("Google issuer is required.", nameof(issuer))
-            : issuer.Trim();
-        GoogleSubject = string.IsNullOrWhiteSpace(subject)
-            ? throw new ArgumentException("Google subject is required.", nameof(subject))
-            : subject.Trim();
+        string normalizedIssuer = DomainGuard.RequiredText(issuer, 200, nameof(issuer));
+        string normalizedSubject = DomainGuard.RequiredText(subject, 255, nameof(subject));
+
+        GoogleIssuer = normalizedIssuer;
+        GoogleSubject = normalizedSubject;
         SetModified();
     }
 

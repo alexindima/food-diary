@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -36,9 +37,18 @@ public sealed class GetStatisticsSummaryQueryHandler(
                 Errors.Validation.Invalid(nameof(request.DateFrom), "DateFrom must be earlier than DateTo"));
         }
 
-        if (request.QuantizationDays <= 0) {
+        if (!TemporalRangePolicy.IsPeriodWithinLimit(request.DateFrom, request.DateTo)) {
             return Result.Failure<StatisticsSummaryModel>(
-                Errors.Validation.Invalid(nameof(request.QuantizationDays), "Value must be greater than zero."));
+                Errors.Validation.Invalid(
+                    nameof(request.DateTo),
+                    $"The period must not exceed {TemporalRangePolicy.MaxPeriodDays} days."));
+        }
+
+        if (!TemporalRangePolicy.IsQuantizationValid(request.QuantizationDays)) {
+            return Result.Failure<StatisticsSummaryModel>(
+                Errors.Validation.Invalid(
+                    nameof(request.QuantizationDays),
+                    $"Value must be between 1 and {TemporalRangePolicy.MaxQuantizationDays}."));
         }
 
         UserId userId = userIdResult.Value;

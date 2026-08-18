@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Primitives;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -21,6 +22,15 @@ public sealed class MealPlanMeal : Entity<MealPlanMealId> {
         MealType mealType,
         RecipeId recipeId,
         int servings) {
+        if (dayId == MealPlanDayId.Empty) {
+            throw new ArgumentException("Meal plan day id is required.", nameof(dayId));
+        }
+
+        if (recipeId == RecipeId.Empty) {
+            throw new ArgumentException("Recipe id is required.", nameof(recipeId));
+        }
+
+        DomainGuard.Defined(mealType, nameof(mealType));
         if (servings <= 0) {
             throw new ArgumentOutOfRangeException(nameof(servings), "Servings must be positive.");
         }

@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using FoodDiary.MailInbox.Domain.Events;
 using FoodDiary.MailInbox.Domain.Messages;
 using System.Globalization;
@@ -28,7 +29,29 @@ public sealed class InboundMailMessageTests {
         Assert.Equal(InboundMailMessageStatus.Received, message.Status);
         Assert.Equal(receivedAtUtc, message.ReceivedAtUtc);
         Assert.Single(message.DomainEvents);
-        Assert.IsType<InboundMailMessageReceivedDomainEvent>(message.DomainEvents[0]);
+        InboundMailMessageReceivedDomainEvent domainEvent =
+            Assert.IsType<InboundMailMessageReceivedDomainEvent>(message.DomainEvents[0]);
+        Assert.Equal(message.Id, domainEvent.MessageId);
+    }
+
+    [Fact]
+    public void Receive_WhenCallerMutatesRawMimeBytes_KeepsOriginalSnapshot() {
+        byte[] rawMimeBytes = [1, 2, 3];
+        byte[] expectedRawMimeBytes = [.. rawMimeBytes];
+
+        var message = InboundMailMessage.Receive(
+            messageId: null,
+            fromAddress: null,
+            ["admin@fooddiary.club"],
+            subject: null,
+            textBody: null,
+            htmlBody: null,
+            rawMimeBytes,
+            DateTimeOffset.UtcNow);
+
+        rawMimeBytes[0] = 9;
+
+        Assert.Equal(expectedRawMimeBytes, message.RawMimeBytes.ToArray());
     }
 
     [Fact]
@@ -115,6 +138,21 @@ public sealed class InboundMailMessageTests {
     }
 
     [Fact]
+    public void Receive_WhenRawMimeBytesAreEmpty_Throws() {
+        ArgumentException ex = Assert.Throws<ArgumentException>(() => InboundMailMessage.Receive(
+            messageId: null,
+            fromAddress: null,
+            ["admin@fooddiary.club"],
+            subject: null,
+            textBody: null,
+            htmlBody: null,
+            [],
+            DateTimeOffset.UtcNow));
+
+        Assert.Equal("rawMimeBytes", ex.ParamName);
+    }
+
+    [Fact]
     public void Receive_NormalizesReceivedAtToUtcAndNullsWhiteSpaceFields() {
         var receivedAt = new DateTimeOffset(2026, 4, 26, 13, 0, 0, TimeSpan.FromHours(3));
 
@@ -182,6 +220,16 @@ public sealed class InboundMailMessageTests {
         Assert.Equal("OccurredOnUtcOverride", ex.ParamName);
     }
 
+    [Fact]
+    public void InboundMailMessageReceivedDomainEvent_WithoutOverride_UsesDomainUtcNow() {
+        var occurredAtUtc = new DateTimeOffset(2026, 8, 19, 10, 0, 0, TimeSpan.Zero);
+        using IDisposable scope = DomainTime.Override(new FixedTimeProvider(occurredAtUtc));
+
+        var domainEvent = new InboundMailMessageReceivedDomainEvent(InboundMailMessageId.New());
+
+        Assert.Equal(occurredAtUtc.UtcDateTime, domainEvent.OccurredOnUtc);
+    }
+
     private static InboundMailMessage CreateMessage() =>
         InboundMailMessage.Receive(
             messageId: null,
@@ -192,4 +240,9 @@ public sealed class InboundMailMessageTests {
             htmlBody: null,
             "raw",
             DateTimeOffset.UtcNow);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider(DateTimeOffset utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => utcNow;
+    }
 }

@@ -1,9 +1,17 @@
+using System.Globalization;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Billing;
 
 public sealed class BillingPayment : Entity<Guid> {
+    private const int ProviderMaxLength = 32;
+    private const int ExternalIdMaxLength = 255;
+    private const int PlanMaxLength = 32;
+    private const int StatusMaxLength = 64;
+    private const int KindMaxLength = 32;
+    private const int CurrencyMaxLength = 3;
+
     public UserId UserId { get; private set; }
     public Guid? BillingSubscriptionId { get; private set; }
     public string Provider { get; private set; } = string.Empty;
@@ -59,30 +67,38 @@ public sealed class BillingPayment : Entity<Guid> {
             throw new ArgumentException("UserId is required.", nameof(userId));
         }
 
+        if (billingSubscriptionId == Guid.Empty) {
+            throw new ArgumentException("Billing subscription id cannot be empty.", nameof(billingSubscriptionId));
+        }
+
+        DateTime? normalizedPeriodStart = NormalizeOptionalUtc(currentPeriodStartUtc, nameof(currentPeriodStartUtc));
+        DateTime? normalizedPeriodEnd = NormalizeOptionalUtc(currentPeriodEndUtc, nameof(currentPeriodEndUtc));
+        EnsureChronologicalRange(normalizedPeriodStart, normalizedPeriodEnd, nameof(currentPeriodStartUtc));
+
         var payment = new BillingPayment {
             Id = Guid.NewGuid(),
             UserId = userId,
             BillingSubscriptionId = billingSubscriptionId,
             Provider = NormalizeProvider(provider),
-            ExternalPaymentId = NormalizeRequired(externalPaymentId, nameof(externalPaymentId)),
-            ExternalCustomerId = NormalizeOptional(externalCustomerId),
-            ExternalSubscriptionId = NormalizeOptional(externalSubscriptionId),
-            ExternalPaymentMethodId = NormalizeOptional(externalPaymentMethodId),
-            ExternalPriceId = NormalizeOptional(externalPriceId),
-            Plan = NormalizeOptional(plan),
-            Status = NormalizeRequired(status, nameof(status)),
-            Kind = NormalizeRequired(kind, nameof(kind)),
+            ExternalPaymentId = NormalizeRequired(externalPaymentId, ExternalIdMaxLength, nameof(externalPaymentId)),
+            ExternalCustomerId = NormalizeOptional(externalCustomerId, ExternalIdMaxLength, nameof(externalCustomerId)),
+            ExternalSubscriptionId = NormalizeOptional(externalSubscriptionId, ExternalIdMaxLength, nameof(externalSubscriptionId)),
+            ExternalPaymentMethodId = NormalizeOptional(externalPaymentMethodId, ExternalIdMaxLength, nameof(externalPaymentMethodId)),
+            ExternalPriceId = NormalizeOptional(externalPriceId, ExternalIdMaxLength, nameof(externalPriceId)),
+            Plan = NormalizeOptional(plan, PlanMaxLength, nameof(plan)),
+            Status = NormalizeRequired(status, StatusMaxLength, nameof(status)),
+            Kind = NormalizeRequired(kind, KindMaxLength, nameof(kind)),
             Amount = amount,
-            Currency = NormalizeOptional(currency),
+            Currency = NormalizeOptional(currency, CurrencyMaxLength, nameof(currency)),
             Tax = tax,
             Fee = fee,
             Earnings = earnings,
-            PayoutCurrency = NormalizeOptional(payoutCurrency),
+            PayoutCurrency = NormalizeOptional(payoutCurrency, CurrencyMaxLength, nameof(payoutCurrency)),
             PayoutEarnings = payoutEarnings,
             OccurredAtUtc = NormalizeOptionalUtc(occurredAtUtc, nameof(occurredAtUtc)),
-            CurrentPeriodStartUtc = NormalizeOptionalUtc(currentPeriodStartUtc, nameof(currentPeriodStartUtc)),
-            CurrentPeriodEndUtc = NormalizeOptionalUtc(currentPeriodEndUtc, nameof(currentPeriodEndUtc)),
-            WebhookEventId = NormalizeOptional(webhookEventId),
+            CurrentPeriodStartUtc = normalizedPeriodStart,
+            CurrentPeriodEndUtc = normalizedPeriodEnd,
+            WebhookEventId = NormalizeOptional(webhookEventId, ExternalIdMaxLength, nameof(webhookEventId)),
             ProviderMetadataJson = NormalizeOptional(providerMetadataJson),
         };
         payment.SetCreated();
@@ -110,31 +126,52 @@ public sealed class BillingPayment : Entity<Guid> {
         string? payoutCurrency = null,
         decimal? payoutEarnings = null,
         DateTime? occurredAtUtc = null) {
-        BillingSubscriptionId = billingSubscriptionId ?? BillingSubscriptionId;
-        ExternalCustomerId = NormalizeOptional(externalCustomerId) ?? ExternalCustomerId;
-        ExternalSubscriptionId = NormalizeOptional(externalSubscriptionId) ?? ExternalSubscriptionId;
-        ExternalPaymentMethodId = NormalizeOptional(externalPaymentMethodId) ?? ExternalPaymentMethodId;
-        ExternalPriceId = NormalizeOptional(externalPriceId) ?? ExternalPriceId;
-        Plan = NormalizeOptional(plan) ?? Plan;
-        Status = NormalizeRequired(status, nameof(status));
-        Kind = NormalizeRequired(kind, nameof(kind));
+        if (billingSubscriptionId == Guid.Empty) {
+            throw new ArgumentException("Billing subscription id cannot be empty.", nameof(billingSubscriptionId));
+        }
+
+        Guid? normalizedBillingSubscriptionId = billingSubscriptionId ?? BillingSubscriptionId;
+        string? normalizedCustomerId = NormalizeOptional(externalCustomerId, ExternalIdMaxLength, nameof(externalCustomerId)) ?? ExternalCustomerId;
+        string? normalizedSubscriptionId = NormalizeOptional(externalSubscriptionId, ExternalIdMaxLength, nameof(externalSubscriptionId)) ?? ExternalSubscriptionId;
+        string? normalizedPaymentMethodId = NormalizeOptional(externalPaymentMethodId, ExternalIdMaxLength, nameof(externalPaymentMethodId)) ?? ExternalPaymentMethodId;
+        string? normalizedPriceId = NormalizeOptional(externalPriceId, ExternalIdMaxLength, nameof(externalPriceId)) ?? ExternalPriceId;
+        string? normalizedPlan = NormalizeOptional(plan, PlanMaxLength, nameof(plan)) ?? Plan;
+        string normalizedStatus = NormalizeRequired(status, StatusMaxLength, nameof(status));
+        string normalizedKind = NormalizeRequired(kind, KindMaxLength, nameof(kind));
+        string? normalizedCurrency = NormalizeOptional(currency, CurrencyMaxLength, nameof(currency)) ?? Currency;
+        string? normalizedPayoutCurrency = NormalizeOptional(payoutCurrency, CurrencyMaxLength, nameof(payoutCurrency)) ?? PayoutCurrency;
+        DateTime? normalizedOccurredAt = NormalizeOptionalUtc(occurredAtUtc, nameof(occurredAtUtc)) ?? OccurredAtUtc;
+        DateTime? normalizedPeriodStart = NormalizeOptionalUtc(currentPeriodStartUtc, nameof(currentPeriodStartUtc)) ?? CurrentPeriodStartUtc;
+        DateTime? normalizedPeriodEnd = NormalizeOptionalUtc(currentPeriodEndUtc, nameof(currentPeriodEndUtc)) ?? CurrentPeriodEndUtc;
+        EnsureChronologicalRange(normalizedPeriodStart, normalizedPeriodEnd, nameof(currentPeriodStartUtc));
+        string? normalizedWebhookEventId = NormalizeOptional(webhookEventId, ExternalIdMaxLength, nameof(webhookEventId)) ?? WebhookEventId;
+        string? normalizedMetadata = NormalizeOptional(providerMetadataJson) ?? ProviderMetadataJson;
+
+        BillingSubscriptionId = normalizedBillingSubscriptionId;
+        ExternalCustomerId = normalizedCustomerId;
+        ExternalSubscriptionId = normalizedSubscriptionId;
+        ExternalPaymentMethodId = normalizedPaymentMethodId;
+        ExternalPriceId = normalizedPriceId;
+        Plan = normalizedPlan;
+        Status = normalizedStatus;
+        Kind = normalizedKind;
         Amount = amount ?? Amount;
-        Currency = NormalizeOptional(currency) ?? Currency;
+        Currency = normalizedCurrency;
         Tax = tax ?? Tax;
         Fee = fee ?? Fee;
         Earnings = earnings ?? Earnings;
-        PayoutCurrency = NormalizeOptional(payoutCurrency) ?? PayoutCurrency;
+        PayoutCurrency = normalizedPayoutCurrency;
         PayoutEarnings = payoutEarnings ?? PayoutEarnings;
-        OccurredAtUtc = NormalizeOptionalUtc(occurredAtUtc, nameof(occurredAtUtc)) ?? OccurredAtUtc;
-        CurrentPeriodStartUtc = NormalizeOptionalUtc(currentPeriodStartUtc, nameof(currentPeriodStartUtc)) ?? CurrentPeriodStartUtc;
-        CurrentPeriodEndUtc = NormalizeOptionalUtc(currentPeriodEndUtc, nameof(currentPeriodEndUtc)) ?? CurrentPeriodEndUtc;
-        WebhookEventId = NormalizeOptional(webhookEventId) ?? WebhookEventId;
-        ProviderMetadataJson = NormalizeOptional(providerMetadataJson) ?? ProviderMetadataJson;
+        OccurredAtUtc = normalizedOccurredAt;
+        CurrentPeriodStartUtc = normalizedPeriodStart;
+        CurrentPeriodEndUtc = normalizedPeriodEnd;
+        WebhookEventId = normalizedWebhookEventId;
+        ProviderMetadataJson = normalizedMetadata;
         SetModified();
     }
 
     private static string NormalizeProvider(string provider) {
-        string normalized = NormalizeRequired(provider, nameof(provider));
+        string normalized = NormalizeRequired(provider, ProviderMaxLength, nameof(provider));
         if (!BillingProviderNames.IsSupported(normalized)) {
             throw new ArgumentException("Unsupported billing provider.", nameof(provider));
         }
@@ -150,14 +187,24 @@ public sealed class BillingPayment : Entity<Guid> {
         return BillingProviderNames.Stripe;
     }
 
-    private static string NormalizeRequired(string value, string paramName) {
-        return string.IsNullOrWhiteSpace(value)
+    private static string NormalizeRequired(string value, int maxLength, string paramName) {
+        string normalized = string.IsNullOrWhiteSpace(value)
             ? throw new ArgumentException("Value is required.", paramName)
             : value.Trim();
+        return normalized.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
+            : normalized;
     }
 
     private static string? NormalizeOptional(string? value) {
         return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+    }
+
+    private static string? NormalizeOptional(string? value, int maxLength, string paramName) {
+        string? normalized = NormalizeOptional(value);
+        return normalized?.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
+            : normalized;
     }
 
     private static DateTime NormalizeRequiredUtc(DateTime value, string paramName) {
@@ -168,5 +215,11 @@ public sealed class BillingPayment : Entity<Guid> {
         return value.HasValue
             ? NormalizeRequiredUtc(value.Value, paramName)
             : null;
+    }
+
+    private static void EnsureChronologicalRange(DateTime? start, DateTime? end, string paramName) {
+        if (start.HasValue && end.HasValue && start > end) {
+            throw new ArgumentException("Start timestamp cannot be after end timestamp.", paramName);
+        }
     }
 }

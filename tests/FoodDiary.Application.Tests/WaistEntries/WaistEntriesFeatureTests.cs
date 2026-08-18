@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.BodyMetrics.WaistEntries.Commands.CreateWaistEntry;
 using FoodDiary.Application.BodyMetrics.WaistEntries.Commands.DeleteWaistEntry;
 using FoodDiary.Application.BodyMetrics.WaistEntries.Commands.UpdateWaistEntry;
@@ -48,6 +49,19 @@ public class WaistEntriesFeatureTests {
         ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public async Task GetWaistSummariesQueryValidator_WithExcessivePeriodAndQuantization_Fails() {
+        var validator = new GetWaistSummariesQueryValidator();
+        var from = new DateTime(2025, 1, 1);
+        var query = new GetWaistSummariesQuery(Guid.NewGuid(), from, from.AddDays(366), int.MaxValue);
+
+        ValidationResult result = await validator.ValidateAsync(query);
+
+        Assert.Multiple(
+            () => Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(query.DateTo), StringComparison.Ordinal)),
+            () => Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(query.QuantizationDays), StringComparison.Ordinal)));
     }
 
     [Fact]
@@ -139,6 +153,40 @@ public class WaistEntriesFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWaistSummariesQueryHandler_WithExcessivePeriod_ReturnsValidationError() {
+        var user = User.Create("waist-summary-excessive-period@example.com", "hash");
+        var handler = new GetWaistSummariesQueryHandler(
+            new InMemoryWaistEntryRepository(),
+            CreateCurrentUserAccessService(user));
+        var from = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        Result<IReadOnlyList<WaistEntrySummaryModel>> result = await handler.Handle(
+            new GetWaistSummariesQuery(user.Id.Value, from, from.AddDays(366), 1),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWaistSummariesQueryHandler_AtMaximumDate_ReturnsSingleBucketWithoutOverflow() {
+        var user = User.Create("waist-summary-maximum-date@example.com", "hash");
+        var handler = new GetWaistSummariesQueryHandler(
+            new InMemoryWaistEntryRepository(),
+            CreateCurrentUserAccessService(user));
+
+        Result<IReadOnlyList<WaistEntrySummaryModel>> result = await handler.Handle(
+            new GetWaistSummariesQuery(user.Id.Value, DateTime.MaxValue, DateTime.MaxValue, 1),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        WaistEntrySummaryModel bucket = Assert.Single(result.Value);
+        Assert.Multiple(
+            () => Assert.Equal(DateTime.MaxValue.Date, bucket.StartDate),
+            () => Assert.Equal(DateTime.MaxValue.Date, bucket.EndDate));
     }
 
     [Fact]
@@ -689,21 +737,8 @@ public class WaistEntriesFeatureTests {
             int quantizationDays,
             CancellationToken cancellationToken) {
             IReadOnlyList<WaistEntry> entries = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
-            return [.. BuildBuckets(dateFrom, dateTo, quantizationDays).Select(bucket => BuildResponse(bucket.start, bucket.end, entries))];
-        }
-
-        private static IEnumerable<(DateTime start, DateTime end)> BuildBuckets(DateTime from, DateTime to, int step) {
-            DateTime current = from.Date;
-            DateTime end = to.Date;
-            while (current <= end) {
-                DateTime bucketEnd = current.AddDays(step - 1);
-                if (bucketEnd > end) {
-                    bucketEnd = end;
-                }
-
-                yield return (current, bucketEnd);
-                current = bucketEnd.AddDays(1);
-            }
+            return [.. TemporalRangePolicy.BuildDateBuckets(dateFrom, dateTo, quantizationDays)
+                .Select(bucket => BuildResponse(bucket.Start, bucket.End, entries))];
         }
 
         private static WaistEntrySummaryModel BuildResponse(

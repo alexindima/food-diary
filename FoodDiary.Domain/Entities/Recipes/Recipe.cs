@@ -67,6 +67,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         int? cookTime = null,
         Visibility visibility = Visibility.Public) {
         EnsureUserId(userId);
+        DomainGuard.Defined(visibility, nameof(visibility));
 
         var recipe = new Recipe {
             Id = RecipeId.New(),
@@ -90,6 +91,10 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     }
 
     public void Update(RecipeUpdate update) {
+        if (update.Visibility.HasValue) {
+            DomainGuard.Defined(update.Visibility.Value, nameof(update.Visibility));
+        }
+
         bool changed = false;
         changed |= ApplyIdentityUpdates(
             update.Name,
@@ -146,6 +151,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     }
 
     public void ChangeVisibility(Visibility visibility) {
+        DomainGuard.Defined(visibility, nameof(visibility));
         if (Visibility == visibility) {
             return;
         }
@@ -160,7 +166,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         string? title = null,
         string? imageUrl = null,
         ImageAssetId? imageAssetId = null) {
-        if (_steps.Any(step => step.StepNumber == stepNumber)) {
+        if (_steps.Exists(step => step.StepNumber == stepNumber)) {
             throw new ArgumentException("Step number must be unique within recipe.", nameof(stepNumber));
         }
 

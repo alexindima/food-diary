@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -12,6 +13,7 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
     public void Apply(OpenApiOperation operation, OperationFilterContext context) {
         AddApiErrorResponse(operation, context, StatusCodes.Status500InternalServerError);
         if (operation.RequestBody is not null) {
+            AddApiErrorResponse(operation, context, StatusCodes.Status400BadRequest);
             AddApiErrorResponse(operation, context, StatusCodes.Status413PayloadTooLarge);
         }
 
@@ -21,6 +23,10 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
 
         object[] actionAttributes = controllerAction.MethodInfo.GetCustomAttributes(inherit: true);
         object[] controllerAttributes = controllerAction.ControllerTypeInfo.GetCustomAttributes(inherit: true);
+        if (IsRateLimited(actionAttributes, controllerAttributes)) {
+            AddApiErrorResponse(operation, context, StatusCodes.Status429TooManyRequests);
+        }
+
         if (actionAttributes.OfType<AllowAnonymousAttribute>().Any() ||
             controllerAttributes.OfType<AllowAnonymousAttribute>().Any()) {
             operation.Security = [];
@@ -77,12 +83,23 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
 
     private static string GetDescription(int statusCode) =>
         statusCode switch {
+            StatusCodes.Status400BadRequest => "Bad Request",
             StatusCodes.Status401Unauthorized => "Unauthorized",
             StatusCodes.Status403Forbidden => "Forbidden",
             StatusCodes.Status413PayloadTooLarge => "Payload Too Large",
+            StatusCodes.Status429TooManyRequests => "Too Many Requests",
             StatusCodes.Status500InternalServerError => "Internal Server Error",
             _ => "Error",
         };
+
+    private static bool IsRateLimited(object[] actionAttributes, object[] controllerAttributes) {
+        if (actionAttributes.OfType<DisableRateLimitingAttribute>().Any()) {
+            return false;
+        }
+
+        return actionAttributes.OfType<EnableRateLimitingAttribute>().Any() ||
+               controllerAttributes.OfType<EnableRateLimitingAttribute>().Any();
+    }
 
     private static bool IsUnsafeMethod(string? method) =>
         method is not null &&

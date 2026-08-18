@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -80,7 +81,7 @@ public sealed class SwaggerOperationFilterTests {
     [Theory]
     [InlineData(nameof(TestController.Anonymous))]
     [InlineData(nameof(TestController.Authorized))]
-    public void Apply_ForRequestBody_AddsPayloadTooLargeResponse(string methodName) {
+    public void Apply_ForRequestBody_AddsBadRequestAndPayloadTooLargeResponses(string methodName) {
         var filter = new StandardErrorResponsesOperationFilter();
         var operation = new OpenApiOperation {
             RequestBody = new OpenApiRequestBody(),
@@ -90,9 +91,45 @@ public sealed class SwaggerOperationFilterTests {
         filter.Apply(operation, CreateContext(methodName, HttpMethods.Post));
 
         Assert.Multiple(
+            () => Assert.True(operation.Responses.ContainsKey("400")),
+            () => Assert.Equal("Bad Request", operation.Responses["400"].Description),
+            () => Assert.True(operation.Responses["400"].Content!.ContainsKey("application/json")),
             () => Assert.True(operation.Responses.ContainsKey("413")),
             () => Assert.Equal("Payload Too Large", operation.Responses["413"].Description),
             () => Assert.True(operation.Responses["413"].Content!.ContainsKey("application/json")));
+    }
+
+    [Fact]
+    public void Apply_ForRateLimitedAction_AddsTooManyRequestsResponse() {
+        var filter = new StandardErrorResponsesOperationFilter();
+        var operation = new OpenApiOperation { Responses = [] };
+
+        filter.Apply(operation, CreateContext(nameof(TestController.RateLimited)));
+
+        Assert.Multiple(
+            () => Assert.True(operation.Responses.ContainsKey("429")),
+            () => Assert.Equal("Too Many Requests", operation.Responses["429"].Description),
+            () => Assert.True(operation.Responses["429"].Content!.ContainsKey("application/json")));
+    }
+
+    [Fact]
+    public void Apply_ForControllerRateLimit_AddsTooManyRequestsResponse() {
+        var filter = new StandardErrorResponsesOperationFilter();
+        var operation = new OpenApiOperation { Responses = [] };
+
+        filter.Apply(operation, CreateContext(typeof(RateLimitedController), nameof(RateLimitedController.Inherited)));
+
+        Assert.True(operation.Responses.ContainsKey("429"));
+    }
+
+    [Fact]
+    public void Apply_ForDisabledControllerRateLimit_DoesNotAddTooManyRequestsResponse() {
+        var filter = new StandardErrorResponsesOperationFilter();
+        var operation = new OpenApiOperation { Responses = [] };
+
+        filter.Apply(operation, CreateContext(typeof(RateLimitedController), nameof(RateLimitedController.Disabled)));
+
+        Assert.False(operation.Responses.ContainsKey("429"));
     }
 
     [Fact]
@@ -207,10 +244,14 @@ public sealed class SwaggerOperationFilterTests {
     }
 
     private static OperationFilterContext CreateContext(string methodName, string? httpMethod = null) {
-        MethodInfo methodInfo = typeof(TestController).GetMethod(methodName)!;
+        return CreateContext(typeof(TestController), methodName, httpMethod);
+    }
+
+    private static OperationFilterContext CreateContext(Type controllerType, string methodName, string? httpMethod = null) {
+        MethodInfo methodInfo = controllerType.GetMethod(methodName)!;
         var actionDescriptor = new ControllerActionDescriptor {
             MethodInfo = methodInfo,
-            ControllerTypeInfo = System.Reflection.IntrospectionExtensions.GetTypeInfo(typeof(TestController)),
+            ControllerTypeInfo = System.Reflection.IntrospectionExtensions.GetTypeInfo(controllerType),
         };
 
         return CreateContext(actionDescriptor, methodInfo, httpMethod);
@@ -272,5 +313,17 @@ public sealed class SwaggerOperationFilterTests {
 
         [EnableIdempotency(requireKey: true)]
         public OkResult RequiredIdempotency() => Ok();
+
+        [EnableRateLimiting("test")]
+        public OkResult RateLimited() => Ok();
+    }
+
+    [EnableRateLimiting("test")]
+    [ExcludeFromCodeCoverage]
+    private sealed class RateLimitedController : ControllerBase {
+        public OkResult Inherited() => Ok();
+
+        [DisableRateLimiting]
+        public OkResult Disabled() => Ok();
     }
 }

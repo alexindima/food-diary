@@ -18,6 +18,10 @@ public sealed class MealPlanDay : Entity<MealPlanDayId> {
     }
 
     internal static MealPlanDay Create(MealPlanId planId, int dayNumber) {
+        if (planId == MealPlanId.Empty) {
+            throw new ArgumentException("Meal plan id is required.", nameof(planId));
+        }
+
         if (dayNumber is <= 0 or > MaxDayNumber) {
             throw new ArgumentOutOfRangeException(nameof(dayNumber), $"Day number must be between 1 and {MaxDayNumber}.");
         }

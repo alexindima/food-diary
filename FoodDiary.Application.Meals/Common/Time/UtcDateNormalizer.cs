@@ -1,3 +1,5 @@
+using FoodDiary.Application.Abstractions.Common.Validation;
+
 namespace FoodDiary.Application.Meals.Common.Time;
 
 internal static class UtcDateNormalizer {
@@ -15,6 +17,6 @@ internal static class UtcDateNormalizer {
 
     public static DateTime NormalizeDateEndUsingLocalFallback(DateTime value) {
         DateTime utc = value.Kind == DateTimeKind.Utc ? value : value.ToUniversalTime();
-        return DateTime.SpecifyKind(utc.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
+        return DateTime.SpecifyKind(TemporalRangePolicy.GetInclusiveDayEnd(utc), DateTimeKind.Utc);
     }
 }

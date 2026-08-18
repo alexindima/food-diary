@@ -1,8 +1,17 @@
+using System.Runtime.InteropServices;
+
 namespace FoodDiary.Domain.ValueObjects;
 
-public readonly record struct UserActivityGoals(
-    int? StepGoal,
-    double? HydrationGoal) {
+[StructLayout(LayoutKind.Auto)]
+public readonly record struct UserActivityGoals {
+    public int? StepGoal { get; }
+    public double? HydrationGoal { get; }
+
+    public UserActivityGoals(int? stepGoal, double? hydrationGoal) {
+        StepGoal = EnsureNonNegative(stepGoal, nameof(stepGoal));
+        HydrationGoal = EnsureNonNegative(hydrationGoal, nameof(hydrationGoal));
+    }
+
     public static UserActivityGoals Create(int? stepGoal, double? hydrationGoal) {
         return new UserActivityGoals(
             EnsureNonNegative(stepGoal, nameof(stepGoal)),

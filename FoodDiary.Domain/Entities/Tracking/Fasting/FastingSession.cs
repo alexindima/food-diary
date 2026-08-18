@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -36,12 +37,13 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
         DateTime startedAtUtc,
         string? notes = null) {
         EnsureUserId(userId);
+        DomainGuard.Defined(protocol, nameof(protocol));
         EnsureDuration(plannedDurationHours);
 
         var session = new FastingSession {
             Id = FastingSessionId.New(),
             UserId = userId,
-            StartedAtUtc = startedAtUtc,
+            StartedAtUtc = DomainGuard.RequiredUtc(startedAtUtc, nameof(startedAtUtc)),
             InitialPlannedDurationHours = plannedDurationHours,
             AddedDurationHours = 0,
             Protocol = protocol,
@@ -57,7 +59,12 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
             return;
         }
 
-        EndedAtUtc = endedAtUtc;
+        DateTime normalizedEndedAt = DomainGuard.RequiredUtc(endedAtUtc, nameof(endedAtUtc));
+        if (normalizedEndedAt < StartedAtUtc) {
+            throw new ArgumentOutOfRangeException(nameof(endedAtUtc), "End timestamp cannot be before start timestamp.");
+        }
+
+        EndedAtUtc = normalizedEndedAt;
         IsCompleted = true;
         SetModified();
     }
@@ -101,15 +108,17 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
             : FastingSessionStatus.Interrupted;
     }
 
-    public static int GetDefaultDuration(FastingProtocol protocol) => protocol switch {
-        FastingProtocol.Fast16Eat8 => 16,
-        FastingProtocol.Fast18Eat6 => 18,
-        FastingProtocol.Fast20Eat4 => 20,
-        FastingProtocol.Fast24 => 24,
-        FastingProtocol.Fast36 => 36,
-        FastingProtocol.Fast72 => 72,
-        _ => 16,
-    };
+    public static int GetDefaultDuration(FastingProtocol protocol) {
+        return protocol switch {
+            FastingProtocol.Fast16Eat8 => 16,
+            FastingProtocol.Fast18Eat6 => 18,
+            FastingProtocol.Fast20Eat4 => 20,
+            FastingProtocol.Fast24 => 24,
+            FastingProtocol.Fast36 => 36,
+            FastingProtocol.Fast72 => 72,
+            _ => 16,
+        };
+    }
 
     private static bool IsIntermittentProtocol(FastingProtocol protocol) => protocol switch {
         FastingProtocol.Fast16Eat8 => true,

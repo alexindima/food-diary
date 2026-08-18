@@ -1,4 +1,5 @@
 using System.Globalization;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -33,13 +34,14 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
         DietType dietType,
         int durationDays,
         double? targetCaloriesPerDay) {
+        DomainGuard.Defined(dietType, nameof(dietType));
         var plan = new MealPlan {
             Id = MealPlanId.New(),
             Name = NormalizeName(name),
             Description = NormalizeDescription(description),
             DietType = dietType,
             DurationDays = NormalizeDuration(durationDays),
-            TargetCaloriesPerDay = targetCaloriesPerDay,
+            TargetCaloriesPerDay = DomainGuard.PositiveFinite(targetCaloriesPerDay, nameof(targetCaloriesPerDay)),
             IsCurated = true,
             UserId = null,
         };
@@ -58,13 +60,15 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
             throw new ArgumentException("UserId is required.", nameof(userId));
         }
 
+        DomainGuard.Defined(dietType, nameof(dietType));
+
         var plan = new MealPlan {
             Id = MealPlanId.New(),
             Name = NormalizeName(name),
             Description = NormalizeDescription(description),
             DietType = dietType,
             DurationDays = NormalizeDuration(durationDays),
-            TargetCaloriesPerDay = targetCaloriesPerDay,
+            TargetCaloriesPerDay = DomainGuard.PositiveFinite(targetCaloriesPerDay, nameof(targetCaloriesPerDay)),
             IsCurated = false,
             UserId = userId,
         };
@@ -73,7 +77,7 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
     }
 
     public MealPlanDay AddDay(int dayNumber) {
-        if (_days.Any(d => d.DayNumber == dayNumber)) {
+        if (_days.Exists(d => d.DayNumber == dayNumber)) {
             throw new InvalidOperationException(string.Create(CultureInfo.InvariantCulture, $"Day {dayNumber} already exists in this plan."));
         }
 

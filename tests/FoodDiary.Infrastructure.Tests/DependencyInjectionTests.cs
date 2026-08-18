@@ -43,6 +43,7 @@ using FoodDiary.Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -219,6 +220,34 @@ public sealed class DependencyInjectionTests {
         Assert.Contains(openFoodFactsClient.DefaultRequestHeaders.UserAgent, value => string.Equals(value.Product?.Name, "FoodDiaryTests", StringComparison.Ordinal));
         Assert.Equal(TimeSpan.FromSeconds(30), factory.CreateClient(nameof(IWebPushClientAdapter)).Timeout);
         Assert.Equal(TimeSpan.FromSeconds(30), factory.CreateClient(nameof(FitbitClient)).Timeout);
+    }
+
+    [Theory]
+    [InlineData(nameof(IUsdaFoodSearchService))]
+    [InlineData(nameof(IOpenFoodFactsService))]
+    [InlineData(nameof(PaddleBillingGateway))]
+    public async Task AddIntegrations_SensitiveQueryClients_DoNotUseDefaultHttpClientLogging(string clientName) {
+        var services = new ServiceCollection();
+        var loggerProvider = new RecordingLoggerProvider();
+        services.AddLogging(builder => builder
+            .SetMinimumLevel(LogLevel.Trace)
+            .AddProvider(loggerProvider));
+        services.AddSingleton(TimeProvider.System);
+        services.AddIntegrations(CreateValidIntegrationsConfiguration());
+        services.AddHttpClient(clientName)
+            .ConfigurePrimaryHttpMessageHandler(static () => new SuccessfulHttpMessageHandler());
+        await using ServiceProvider provider = services.BuildServiceProvider();
+        IHttpClientFactory factory = provider.GetRequiredService<IHttpClientFactory>();
+        string sensitiveValue = $"sensitive-{Guid.NewGuid():N}";
+
+        using HttpResponseMessage response = await factory
+            .CreateClient(clientName)
+            .GetAsync($"https://example.test/resource?value={sensitiveValue}");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.DoesNotContain(
+            loggerProvider.Messages,
+            message => message.Contains(sensitiveValue, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -1147,5 +1176,40 @@ public sealed class DependencyInjectionTests {
     private sealed class NullPublisher : IPublisher {
         public Task Publish(object notification, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification => Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class SuccessfulHttpMessageHandler : HttpMessageHandler {
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken) =>
+            Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingLoggerProvider : ILoggerProvider {
+        private readonly System.Collections.Concurrent.ConcurrentQueue<string> _messages = new();
+
+        public IReadOnlyCollection<string> Messages => _messages;
+
+        public ILogger CreateLogger(string categoryName) => new RecordingLogger(_messages);
+
+        public void Dispose() {
+        }
+
+        [ExcludeFromCodeCoverage]
+        private sealed class RecordingLogger(System.Collections.Concurrent.ConcurrentQueue<string> messages) : ILogger {
+            public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+            public bool IsEnabled(LogLevel logLevel) => true;
+
+            public void Log<TState>(
+                LogLevel logLevel,
+                EventId eventId,
+                TState state,
+                Exception? exception,
+                Func<TState, Exception?, string> formatter) =>
+                messages.Enqueue(formatter(state, exception));
+        }
     }
 }

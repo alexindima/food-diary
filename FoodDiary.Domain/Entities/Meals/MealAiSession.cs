@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Primitives;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -33,6 +34,7 @@ public sealed class MealAiSession : Entity<MealAiSessionId> {
         DateTime recognizedAtUtc,
         string? notes) {
         EnsureMealId(mealId);
+        DomainGuard.Defined(source, nameof(source));
 
         var session = new MealAiSession {
             Id = MealAiSessionId.New(),

@@ -1,4 +1,5 @@
 using System.Globalization;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -34,6 +35,7 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
         string? name = null,
         string? notes = null) {
         EnsureUserId(userId);
+        DomainGuard.Defined(exerciseType, nameof(exerciseType));
         EnsureDuration(durationMinutes);
         EnsureCalories(caloriesBurned);
 
@@ -60,6 +62,14 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
         string? notes = null,
         bool clearNotes = false,
         DateTime? date = null) {
+        (string? normalizedName, string? normalizedNotes, DateTime? normalizedDate) = ValidateUpdateInputs(
+            exerciseType,
+            durationMinutes,
+            caloriesBurned,
+            name,
+            notes,
+            date);
+
         bool changed = false;
 
         if (exerciseType.HasValue && exerciseType.Value != ExerciseType) {
@@ -67,16 +77,12 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
             changed = true;
         }
 
-        if (durationMinutes.HasValue) {
-            EnsureDuration(durationMinutes.Value);
-            if (durationMinutes.Value != DurationMinutes) {
-                DurationMinutes = durationMinutes.Value;
-                changed = true;
-            }
+        if (durationMinutes.HasValue && durationMinutes.Value != DurationMinutes) {
+            DurationMinutes = durationMinutes.Value;
+            changed = true;
         }
 
         if (caloriesBurned.HasValue) {
-            EnsureCalories(caloriesBurned.Value);
             double rounded = Math.Round(caloriesBurned.Value, 1, MidpointRounding.ToEven);
             if (Math.Abs(rounded - CaloriesBurned) > 0.01) {
                 CaloriesBurned = rounded;
@@ -87,25 +93,46 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
         if (clearName) {
             if (Name is not null) { Name = null; changed = true; }
         } else if (name is not null) {
-            string? normalized = NormalizeOptionalText(name, NameMaxLength, nameof(name));
-            if (!string.Equals(Name, normalized, StringComparison.Ordinal)) { Name = normalized; changed = true; }
+            if (!string.Equals(Name, normalizedName, StringComparison.Ordinal)) { Name = normalizedName; changed = true; }
         }
 
         if (clearNotes) {
             if (Notes is not null) { Notes = null; changed = true; }
         } else if (notes is not null) {
-            string? normalized = NormalizeOptionalText(notes, NotesMaxLength, nameof(notes));
-            if (!string.Equals(Notes, normalized, StringComparison.Ordinal)) { Notes = normalized; changed = true; }
+            if (!string.Equals(Notes, normalizedNotes, StringComparison.Ordinal)) { Notes = normalizedNotes; changed = true; }
         }
 
-        if (date.HasValue) {
-            DateTime normalizedDate = NormalizeDate(date.Value);
-            if (normalizedDate != Date) { Date = normalizedDate; changed = true; }
+        if (normalizedDate is { } nextDate && nextDate != Date) {
+            Date = nextDate;
+            changed = true;
         }
 
         if (changed) {
             SetModified();
         }
+    }
+
+    private static (string? Name, string? Notes, DateTime? Date) ValidateUpdateInputs(
+        ExerciseType? exerciseType,
+        int? durationMinutes,
+        double? caloriesBurned,
+        string? name,
+        string? notes,
+        DateTime? date) {
+        if (exerciseType.HasValue) {
+            DomainGuard.Defined(exerciseType.Value, nameof(exerciseType));
+        }
+        if (durationMinutes.HasValue) {
+            EnsureDuration(durationMinutes.Value);
+        }
+        if (caloriesBurned.HasValue) {
+            EnsureCalories(caloriesBurned.Value);
+        }
+
+        return (
+            name is not null ? NormalizeOptionalText(name, NameMaxLength, nameof(name)) : null,
+            notes is not null ? NormalizeOptionalText(notes, NotesMaxLength, nameof(notes)) : null,
+            date.HasValue ? NormalizeDate(date.Value) : null);
     }
 
     private static DateTime NormalizeDate(DateTime date) {

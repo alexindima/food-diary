@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -35,6 +36,12 @@ public sealed class UserRoleAuditEvent : Entity<Guid> {
         if (actorUserId == UserId.Empty) {
             throw new ArgumentException("Actor user id must not be empty.", nameof(actorUserId));
         }
+
+        if (role.Id == RoleId.Empty) {
+            throw new ArgumentException("Role id must not be empty.", nameof(role));
+        }
+
+        DomainGuard.Defined(action, nameof(action));
 
         var auditEvent = new UserRoleAuditEvent {
             Id = Guid.NewGuid(),

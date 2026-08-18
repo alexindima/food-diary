@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.BodyMetrics.Common;
@@ -60,8 +61,16 @@ public sealed class GetWaistHistoryPageSummaryQueryHandler(
             return Errors.Validation.Invalid(nameof(query.DateFrom), "DateFrom must be earlier than DateTo.");
         }
 
-        if (query.QuantizationDays <= 0) {
-            return Errors.Validation.Invalid(nameof(query.QuantizationDays), "Value must be greater than zero.");
+        if (!TemporalRangePolicy.IsPeriodWithinLimit(query.DateFrom, query.DateTo)) {
+            return Errors.Validation.Invalid(
+                nameof(query.DateTo),
+                $"The period must not exceed {TemporalRangePolicy.MaxPeriodDays} days.");
+        }
+
+        if (!TemporalRangePolicy.IsQuantizationValid(query.QuantizationDays)) {
+            return Errors.Validation.Invalid(
+                nameof(query.QuantizationDays),
+                $"Value must be between 1 and {TemporalRangePolicy.MaxQuantizationDays}.");
         }
 
         return query.EntriesLimit is <= 0 or > 500

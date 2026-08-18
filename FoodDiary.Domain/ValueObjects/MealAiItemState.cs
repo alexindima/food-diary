@@ -3,21 +3,49 @@ using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Domain.ValueObjects;
 
-public readonly record struct MealAiItemState(
-    string NameEn,
-    string? NameLocal,
-    double Amount,
-    string Unit,
-    double Calories,
-    double Proteins,
-    double Fats,
-    double Carbs,
-    double Fiber,
-    double Alcohol,
-    double Confidence,
-    MealAiItemResolution Resolution) {
+public readonly record struct MealAiItemState {
     private const int NameMaxLength = 256;
     private const int UnitMaxLength = 32;
+
+    public string NameEn { get; }
+    public string? NameLocal { get; }
+    public double Amount { get; }
+    public string Unit { get; }
+    public double Calories { get; }
+    public double Proteins { get; }
+    public double Fats { get; }
+    public double Carbs { get; }
+    public double Fiber { get; }
+    public double Alcohol { get; }
+    public double Confidence { get; }
+    public MealAiItemResolution Resolution { get; }
+
+    public MealAiItemState(
+        string nameEn,
+        string? nameLocal,
+        double amount,
+        string unit,
+        double calories,
+        double proteins,
+        double fats,
+        double carbs,
+        double fiber,
+        double alcohol,
+        double confidence,
+        MealAiItemResolution resolution) {
+        NameEn = NormalizeRequiredText(nameEn, NameMaxLength, nameof(nameEn));
+        NameLocal = NormalizeOptionalText(nameLocal, NameMaxLength, nameof(nameLocal));
+        Amount = RequirePositiveFinite(amount, nameof(amount));
+        Unit = NormalizeRequiredText(unit, UnitMaxLength, nameof(unit));
+        Calories = RequireNonNegativeFinite(calories, nameof(calories));
+        Proteins = RequireNonNegativeFinite(proteins, nameof(proteins));
+        Fats = RequireNonNegativeFinite(fats, nameof(fats));
+        Carbs = RequireNonNegativeFinite(carbs, nameof(carbs));
+        Fiber = RequireNonNegativeFinite(fiber, nameof(fiber));
+        Alcohol = RequireNonNegativeFinite(alcohol, nameof(alcohol));
+        Confidence = RequireConfidence(confidence, nameof(confidence));
+        Resolution = NormalizeResolution(resolution);
+    }
 
     public static MealAiItemState Create(
         string nameEn,

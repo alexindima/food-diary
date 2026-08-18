@@ -11,8 +11,8 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
     private static DateTime StartOfUtcDay(DateTime value) =>
         DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
 
-    private static DateTime StartOfNextUtcDay(DateTime value) =>
-        DateTime.SpecifyKind(value.Date.AddDays(1), DateTimeKind.Utc);
+    private static DateTime EndOfUtcDay(DateTime value) =>
+        DateTime.SpecifyKind(TemporalRangePolicy.GetInclusiveDayEnd(value), DateTimeKind.Utc);
 
     private static DateTime NormalizeUtcInstant(DateTime value) =>
         value.Kind switch {
@@ -24,7 +24,7 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
     private static DateTime NormalizeInclusiveEndInstant(DateTime value) {
         DateTime utc = NormalizeUtcInstant(value);
         return utc.TimeOfDay == TimeSpan.Zero
-            ? DateTime.SpecifyKind(utc.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc)
+            ? EndOfUtcDay(utc)
             : utc;
     }
 
@@ -207,10 +207,10 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
         DateTime from = StartOfUtcDay(dateFrom);
-        DateTime toExclusive = StartOfNextUtcDay(dateTo);
+        DateTime toInclusive = EndOfUtcDay(dateTo);
 
         return await IncludeMealGraph(context.Meals.AsNoTracking())
-            .Where(m => m.UserId == userId && m.Date >= from && m.Date < toExclusive)
+            .Where(m => m.UserId == userId && m.Date >= from && m.Date <= toInclusive)
             .OrderBy(m => m.Date)
             .ThenBy(m => m.CreatedOnUtc)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -231,11 +231,11 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
         DateTime from = StartOfUtcDay(dateFrom);
-        DateTime toExclusive = StartOfNextUtcDay(dateTo);
+        DateTime toInclusive = EndOfUtcDay(dateTo);
 
         return await context.Meals
             .AsNoTracking()
-            .Where(m => m.UserId == userId && m.Date >= from && m.Date < toExclusive)
+            .Where(m => m.UserId == userId && m.Date >= from && m.Date <= toInclusive)
             .Select(m => m.Date.Date)
             .Distinct()
             .OrderByDescending(d => d)
@@ -255,14 +255,14 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         DateTime date,
         CancellationToken cancellationToken = default) {
         DateTime from = StartOfUtcDay(date);
-        DateTime toExclusive = StartOfNextUtcDay(date);
+        DateTime toInclusive = EndOfUtcDay(date);
 
         return await context.Meals
             .AsNoTracking()
             .AsSplitQuery()
             .Include(m => m.Items)
             .ThenInclude(i => i.Product)
-            .Where(m => m.UserId == userId && m.Date >= from && m.Date < toExclusive)
+            .Where(m => m.UserId == userId && m.Date >= from && m.Date <= toInclusive)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -271,14 +271,14 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         DateTime date,
         CancellationToken cancellationToken = default) {
         DateTime from = StartOfUtcDay(date);
-        DateTime toExclusive = StartOfNextUtcDay(date);
+        DateTime toInclusive = EndOfUtcDay(date);
 
         return await context.Set<MealItem>()
             .AsNoTracking()
             .Where(item =>
                 item.Meal.UserId == userId &&
                 item.Meal.Date >= from &&
-                item.Meal.Date < toExclusive &&
+                item.Meal.Date <= toInclusive &&
                 item.ProductId != null &&
                 item.Product != null)
             .Select(item => new MealProductNutritionReadModel(

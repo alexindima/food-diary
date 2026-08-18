@@ -1,6 +1,14 @@
+using FoodDiary.Domain.Common;
+
 namespace FoodDiary.Domain.Entities.OpenFoodFacts;
 
 public sealed class OpenFoodFactsProduct {
+    private const int BarcodeMaxLength = 64;
+    private const int NameMaxLength = 512;
+    private const int BrandMaxLength = 512;
+    private const int CategoryMaxLength = 1024;
+    private const int ImageUrlMaxLength = 2048;
+
     public string Barcode { get; private set; } = string.Empty;
     public string Name { get; private set; } = string.Empty;
     public string? Brand { get; private set; }
@@ -31,7 +39,7 @@ public sealed class OpenFoodFactsProduct {
         double? fiberPer100G,
         DateTime syncedAtUtc) {
         var product = new OpenFoodFactsProduct {
-            Barcode = NormalizeRequired(barcode),
+            Barcode = DomainGuard.RequiredText(barcode, BarcodeMaxLength, nameof(barcode)),
             SearchHitCount = 0,
         };
 
@@ -61,30 +69,34 @@ public sealed class OpenFoodFactsProduct {
         double? carbsPer100G,
         double? fiberPer100G,
         DateTime syncedAtUtc) {
-        Name = NormalizeRequired(name);
-        Brand = NormalizeOptional(brand);
-        Category = NormalizeOptional(category);
-        ImageUrl = NormalizeOptional(imageUrl);
-        CaloriesPer100G = caloriesPer100G;
-        ProteinsPer100G = proteinsPer100G;
-        FatsPer100G = fatsPer100G;
-        CarbsPer100G = carbsPer100G;
-        FiberPer100G = fiberPer100G;
-        LastSyncedAtUtc = EnsureUtc(syncedAtUtc);
-        MarkSeen(syncedAtUtc);
+        string normalizedName = DomainGuard.RequiredText(name, NameMaxLength, nameof(name));
+        string? normalizedBrand = DomainGuard.OptionalText(brand, BrandMaxLength, nameof(brand));
+        string? normalizedCategory = DomainGuard.OptionalText(category, CategoryMaxLength, nameof(category));
+        string? normalizedImageUrl = DomainGuard.OptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
+        double? normalizedCalories = DomainGuard.NonNegativeFinite(caloriesPer100G, nameof(caloriesPer100G));
+        double? normalizedProteins = DomainGuard.NonNegativeFinite(proteinsPer100G, nameof(proteinsPer100G));
+        double? normalizedFats = DomainGuard.NonNegativeFinite(fatsPer100G, nameof(fatsPer100G));
+        double? normalizedCarbs = DomainGuard.NonNegativeFinite(carbsPer100G, nameof(carbsPer100G));
+        double? normalizedFiber = DomainGuard.NonNegativeFinite(fiberPer100G, nameof(fiberPer100G));
+        DateTime normalizedSyncedAtUtc = EnsureUtc(syncedAtUtc);
+
+        Name = normalizedName;
+        Brand = normalizedBrand;
+        Category = normalizedCategory;
+        ImageUrl = normalizedImageUrl;
+        CaloriesPer100G = normalizedCalories;
+        ProteinsPer100G = normalizedProteins;
+        FatsPer100G = normalizedFats;
+        CarbsPer100G = normalizedCarbs;
+        FiberPer100G = normalizedFiber;
+        LastSyncedAtUtc = normalizedSyncedAtUtc;
+        MarkSeen(normalizedSyncedAtUtc);
     }
 
     public void MarkSeen(DateTime seenAtUtc) {
         LastSeenAtUtc = EnsureUtc(seenAtUtc);
         SearchHitCount++;
     }
-
-    private static string NormalizeRequired(string value) {
-        return string.IsNullOrWhiteSpace(value) ? throw new ArgumentException("Value is required.", nameof(value)) : value.Trim();
-    }
-
-    private static string? NormalizeOptional(string? value) =>
-        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
     private static DateTime EnsureUtc(DateTime value) =>
         value.Kind == DateTimeKind.Utc ? value : value.ToUniversalTime();

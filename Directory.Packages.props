@@ -5,8 +5,8 @@
 
   <ItemGroup>
     <!-- Analyzers -->
-    <PackageVersion Include="Meziantou.Analyzer" Version="3.0.141" />
-    <PackageVersion Include="Roslynator.Analyzers" Version="4.15.0" />
+    <PackageVersion Include="Meziantou.Analyzer" Version="3.0.165" />
+    <PackageVersion Include="Roslynator.Analyzers" Version="4.16.1" />
 
     <!-- API -->
     <PackageVersion Include="Asp.Versioning.Mvc" Version="10.2.1" />

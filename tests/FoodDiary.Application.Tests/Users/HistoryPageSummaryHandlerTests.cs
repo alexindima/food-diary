@@ -51,6 +51,36 @@ public sealed class HistoryPageSummaryHandlerTests {
         Assert.Equal("Validation.Invalid", waist.Error.Code);
     }
 
+    [Theory]
+    [InlineData(366, 3)]
+    [InlineData(30, 367)]
+    [InlineData(30, int.MaxValue)]
+    public async Task Handlers_WithUnsupportedTemporalRange_ReturnValidationFailures(int periodDays, int quantizationDays) {
+        Result<WeightHistoryPageSummaryModel> weight = await CreateWeightHandler()
+            .Handle(
+                new GetWeightHistoryPageSummaryQuery(
+                    UserId.Value,
+                    DateFrom,
+                    DateFrom.AddDays(periodDays),
+                    quantizationDays,
+                    500),
+                CancellationToken.None);
+        Result<WaistHistoryPageSummaryModel> waist = await CreateWaistHandler()
+            .Handle(
+                new GetWaistHistoryPageSummaryQuery(
+                    UserId.Value,
+                    DateFrom,
+                    DateFrom.AddDays(periodDays),
+                    quantizationDays,
+                    500),
+                CancellationToken.None);
+
+        ResultAssert.Failure(weight);
+        ResultAssert.Failure(waist);
+        Assert.Equal("Validation.Invalid", weight.Error.Code);
+        Assert.Equal("Validation.Invalid", waist.Error.Code);
+    }
+
     [Fact]
     public async Task Handlers_WhenProfileReadFails_ReturnFailureWithoutReadingEntries() {
         IUserProfileReadService profiles = CreateProfiles(fail: true);

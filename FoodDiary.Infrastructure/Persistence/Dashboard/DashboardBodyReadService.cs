@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,10 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
         bool includeWaist,
         bool includeHydration,
         CancellationToken cancellationToken = default) {
-        int normalizedTrendQuantizationDays = Math.Clamp(trendQuantizationDays <= 0 ? 1 : trendQuantizationDays, 1, 365);
+        int normalizedTrendQuantizationDays = Math.Clamp(
+            trendQuantizationDays <= 0 ? 1 : trendQuantizationDays,
+            1,
+            TemporalRangePolicy.MaxQuantizationDays);
         DateTime normalizedDayStart = NormalizeUtcDate(dayStart);
         DateTime normalizedDayEndStart = NormalizeUtcDate(dayEndStart);
         DateTime normalizedTrendStart = NormalizeUtcDate(trendStart);
@@ -106,10 +110,9 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
         DateTime dayStart,
         DateTime dayEndStart,
         CancellationToken cancellationToken) {
-        DateTime dayEndExclusive = dayEndStart.AddTicks(1);
         return await context.HydrationEntries
             .AsNoTracking()
-            .Where(entry => entry.UserId == userId && entry.Timestamp >= dayStart && entry.Timestamp < dayEndExclusive)
+            .Where(entry => entry.UserId == userId && entry.Timestamp >= dayStart && entry.Timestamp <= dayEndStart)
             .SumAsync(entry => entry.AmountMl, cancellationToken).ConfigureAwait(false);
     }
 
@@ -118,7 +121,7 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
         DateTime dateTo,
         int quantizationDays,
         IReadOnlyList<DashboardWeightPointReadModel> entries) =>
-        [.. BuildBuckets(dateFrom, dateTo, quantizationDays)
+        [.. TemporalRangePolicy.BuildDateBuckets(dateFrom, dateTo, quantizationDays)
             .Select(bucket => BuildWeightSummary(bucket.Start, bucket.End, entries))];
 
     private static IReadOnlyList<DashboardWaistSummaryReadModel> BuildWaistTrend(
@@ -126,7 +129,7 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
         DateTime dateTo,
         int quantizationDays,
         IReadOnlyList<DashboardWaistPointReadModel> entries) =>
-        [.. BuildBuckets(dateFrom, dateTo, quantizationDays)
+        [.. TemporalRangePolicy.BuildDateBuckets(dateFrom, dateTo, quantizationDays)
             .Select(bucket => BuildWaistSummary(bucket.Start, bucket.End, entries))];
 
     private static DashboardWeightSummaryReadModel BuildWeightSummary(
@@ -149,20 +152,6 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
             ? 0
             : Math.Round(bucketEntries.Average(entry => entry.CircumferenceCm), 2, MidpointRounding.ToEven);
         return new DashboardWaistSummaryReadModel(start, end, average);
-    }
-
-    private static IEnumerable<(DateTime Start, DateTime End)> BuildBuckets(DateTime from, DateTime to, int step) {
-        DateTime current = from.Date;
-        DateTime end = to.Date;
-        while (current <= end) {
-            DateTime bucketEnd = current.AddDays(step - 1);
-            if (bucketEnd > end) {
-                bucketEnd = end;
-            }
-
-            yield return (current, bucketEnd);
-            current = bucketEnd.AddDays(1);
-        }
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {

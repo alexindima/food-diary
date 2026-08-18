@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.CreateWeightEntry;
 using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.DeleteWeightEntry;
 using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.UpdateWeightEntry;
@@ -48,6 +49,19 @@ public class WeightEntriesFeatureTests {
         ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public async Task GetWeightSummariesQueryValidator_WithExcessivePeriodAndQuantization_Fails() {
+        var validator = new GetWeightSummariesQueryValidator();
+        var from = new DateTime(2025, 1, 1);
+        var query = new GetWeightSummariesQuery(Guid.NewGuid(), from, from.AddDays(366), int.MaxValue);
+
+        ValidationResult result = await validator.ValidateAsync(query);
+
+        Assert.Multiple(
+            () => Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(query.DateTo), StringComparison.Ordinal)),
+            () => Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(query.QuantizationDays), StringComparison.Ordinal)));
     }
 
     [Fact]
@@ -139,6 +153,40 @@ public class WeightEntriesFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWeightSummariesQueryHandler_WithExcessivePeriod_ReturnsValidationError() {
+        var user = User.Create("weight-summary-excessive-period@example.com", "hash");
+        var handler = new GetWeightSummariesQueryHandler(
+            new InMemoryWeightEntryRepository(),
+            CreateCurrentUserAccessService(user));
+        var from = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(
+            new GetWeightSummariesQuery(user.Id.Value, from, from.AddDays(366), 1),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetWeightSummariesQueryHandler_AtMaximumDate_ReturnsSingleBucketWithoutOverflow() {
+        var user = User.Create("weight-summary-maximum-date@example.com", "hash");
+        var handler = new GetWeightSummariesQueryHandler(
+            new InMemoryWeightEntryRepository(),
+            CreateCurrentUserAccessService(user));
+
+        Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(
+            new GetWeightSummariesQuery(user.Id.Value, DateTime.MaxValue, DateTime.MaxValue, 1),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        WeightEntrySummaryModel bucket = Assert.Single(result.Value);
+        Assert.Multiple(
+            () => Assert.Equal(DateTime.MaxValue.Date, bucket.StartDate),
+            () => Assert.Equal(DateTime.MaxValue.Date, bucket.EndDate));
     }
 
     [Fact]
@@ -689,21 +737,8 @@ public class WeightEntriesFeatureTests {
             int quantizationDays,
             CancellationToken cancellationToken) {
             IReadOnlyList<WeightEntry> entries = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
-            return [.. BuildBuckets(dateFrom, dateTo, quantizationDays).Select(bucket => BuildResponse(bucket.start, bucket.end, entries))];
-        }
-
-        private static IEnumerable<(DateTime start, DateTime end)> BuildBuckets(DateTime from, DateTime to, int step) {
-            DateTime current = from.Date;
-            DateTime end = to.Date;
-            while (current <= end) {
-                DateTime bucketEnd = current.AddDays(step - 1);
-                if (bucketEnd > end) {
-                    bucketEnd = end;
-                }
-
-                yield return (current, bucketEnd);
-                current = bucketEnd.AddDays(1);
-            }
+            return [.. TemporalRangePolicy.BuildDateBuckets(dateFrom, dateTo, quantizationDays)
+                .Select(bucket => BuildResponse(bucket.Start, bucket.End, entries))];
         }
 
         private static WeightEntrySummaryModel BuildResponse(

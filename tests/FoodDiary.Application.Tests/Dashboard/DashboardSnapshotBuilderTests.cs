@@ -126,6 +126,70 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [Fact]
+    public async Task BuildAsync_WithMaximumDate_ReturnsValidationFailureInsteadOfOverflowing() {
+        var user = User.Create("dashboard-maximum-date@example.com", "hash");
+        DashboardSnapshotBuilder builder = CreateBuilder(user, new StubSender());
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                DateTime.MaxValue.Date,
+                DateTo: null,
+                "en",
+                7,
+                1,
+                10),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WhenTimeZoneOffsetUnderflows_ReturnsValidationFailure() {
+        var user = User.Create("dashboard-minimum-date@example.com", "hash");
+        DashboardSnapshotBuilder builder = CreateBuilder(user, new StubSender());
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                DateTime.MinValue,
+                DateTo: null,
+                "en",
+                7,
+                1,
+                10,
+                TimeZoneOffsetMinutes: 60),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task BuildAsync_WithOutOfRangeTimeZoneOffset_ReturnsValidationFailureInsteadOfOverflowing() {
+        var user = User.Create("dashboard-invalid-time-zone-offset@example.com", "hash");
+        DashboardSnapshotBuilder builder = CreateBuilder(user, new StubSender());
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                new DateTime(2026, 8, 2, 0, 0, 0, DateTimeKind.Utc),
+                DateTo: null,
+                "en",
+                7,
+                1,
+                10,
+                TimeZoneOffsetMinutes: int.MaxValue),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Validation.Invalid", result.Error.Code),
+            () => Assert.Contains("TimeZoneOffsetMinutes", result.Error.Message, StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task BuildAsync_WithPositiveTimeZoneOffset_UsesLocalCalendarDayUtcBoundaries() {
         var user = User.Create("dashboard-local-day@example.com", "hash");
         var sender = new ConfigurableDashboardSender();

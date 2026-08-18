@@ -55,6 +55,9 @@ public sealed class Meal : AggregateRoot<MealId> {
         int preMealSatietyLevel = 3,
         int postMealSatietyLevel = 3) {
         EnsureUserId(userId);
+        if (mealType.HasValue) {
+            DomainGuard.Defined(mealType.Value, nameof(mealType));
+        }
 
         var meal = new Meal {
             Id = MealId.New(),
@@ -118,6 +121,10 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     public void UpdateMealType(MealType? mealType) {
+        if (mealType.HasValue) {
+            DomainGuard.Defined(mealType.Value, nameof(mealType));
+        }
+
         MealDetailsState state = GetDetailsState();
         if (state.MealType == mealType) {
             return;
@@ -164,11 +171,12 @@ public sealed class Meal : AggregateRoot<MealId> {
         DateTime recognizedAtUtc,
         string? notes,
         IReadOnlyList<MealAiItemData> items) {
+        ArgumentNullException.ThrowIfNull(items);
         var session = MealAiSession.Create(Id, imageAssetId, source, recognizedAtUtc, notes);
-        _aiSessions.Add(session);
         if (items.Count > 0) {
             var createdItems = items
-                .Select(item => MealAiItem.CreateFromState(item.ToState()))
+                .Select(item => MealAiItem.CreateFromState(
+                    (item ?? throw new ArgumentException("AI session item cannot be null.", nameof(items))).ToState()))
                 .ToList();
 
             foreach (MealAiItem item in createdItems) {
@@ -178,6 +186,7 @@ public sealed class Meal : AggregateRoot<MealId> {
             session.AddItems(createdItems);
         }
 
+        _aiSessions.Add(session);
         SetModified();
         return session;
     }
