@@ -691,6 +691,7 @@
     {
       "path": "FoodDiary.Web.Api/appsettings.Development.json",
       "keys": [
+        "Cors:Origins",
         "Email:AllowedFrontendBaseUrls",
         "Email:FrontendBaseUrl"
       ]
@@ -702,7 +703,6 @@
         "Billing:Provider",
         "ConnectionStrings:DefaultConnection",
         "ConnectionStrings:Redis",
-        "Cors:Origins",
         "DataProtection:ApplicationName",
         "DataProtection:KeyRingPath",
         "Database:EnableRetries",

@@ -25216,11 +25216,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Options/ApiCorsOptions.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
+      "nonBlankLines": 35,
+      "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 18.7
     },
     {
       "path": "FoodDiary.Web.Api/Options/ApiDataProtectionOptions.cs",
@@ -25264,11 +25264,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Options/CorsOptionsSetup.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 1,
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.9
+      "structuralRiskScore": 0.34
     },
     {
       "path": "FoodDiary.Web.Api/Options/ForwardedHeadersOptionsSetup.cs",

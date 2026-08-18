@@ -12,6 +12,32 @@ namespace FoodDiary.Web.Api.Tests.Extensions;
 [ExcludeFromCodeCoverage]
 public sealed class ApiHostOptionsConfigurationTests {
     [Fact]
+    public void AddApiServices_WithoutCorsOrigins_FailsOptionsValidation() {
+        var services = new ServiceCollection();
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
+                ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
+                ["Jwt:Issuer"] = "FoodDiaryApi",
+                ["Jwt:Audience"] = "FoodDiaryClient",
+                ["Jwt:ExpirationMinutes"] = "60",
+                ["Jwt:RefreshTokenExpirationDays"] = "7",
+                ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
+                ["TelegramBot:ApiSecret"] = "",
+            })
+            .Build();
+        services.AddLogging();
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddApiServices(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        OptionsValidationException exception = Assert.Throws<OptionsValidationException>(
+            () => provider.GetRequiredService<IOptions<ApiCorsOptions>>().Value);
+
+        Assert.Contains("Cors:Origins", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void AddApiServices_BindsHostOptionsFromConfiguration() {
         var services = new ServiceCollection();
         IConfigurationRoot configuration = new ConfigurationBuilder()

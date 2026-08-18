@@ -22,7 +22,7 @@ public static class ApiOptionsServiceCollectionExtensions {
                 .AddOptions<ApiCorsOptions>()
                 .BindConfiguration(ApiCorsOptions.SectionName)
                 .Validate(ApiCorsOptions.HasValidOrigins,
-                    "Cors:Origins must contain at least one absolute origin URL.")
+                    "Cors:Origins must contain distinct canonical HTTP or HTTPS origins.")
                 .ValidateOnStart();
             services
                 .AddOptions<ApiForwardedHeadersOptions>()

@@ -18,12 +18,12 @@ public sealed class ImpersonationAccessGuardMiddleware(
             return;
         }
 
+        string routeLabel = TelemetryPrivacyProcessor.ResolveRouteLabel(context);
         logger.LogWarning(
-            "Blocked impersonated request to protected action {Method} {Path}. ActorUserId={ActorUserId}, TargetUserId={TargetUserId}.",
+            "Blocked impersonated request to protected action {Method} {Route}. TraceId={TraceId}.",
             context.Request.Method,
-            context.Request.Path,
-            context.User.FindFirstValue(JwtImpersonationClaimNames.ActorUserId),
-            context.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            routeLabel,
+            context.TraceIdentifier);
 
         Error error = Errors.Authentication.ImpersonationActionForbidden;
         context.Response.StatusCode = StatusCodes.Status403Forbidden;
