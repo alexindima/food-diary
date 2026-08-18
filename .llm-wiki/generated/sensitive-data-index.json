@@ -6,8 +6,8 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1466,
-    "credential": 154,
+    "candidateFields": 1468,
+    "credential": 156,
     "identity": 153,
     "health": 663,
     "financial": 199,
@@ -583,6 +583,20 @@
       "type": "int",
       "path": "FoodDiary.Infrastructure/Options/JwtOptions.cs",
       "line": 25
+    },
+    {
+      "category": "credential",
+      "name": "CancellationToken",
+      "type": "Func<FoodDiaryDbContext,",
+      "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
+      "line": 146
+    },
+    {
+      "category": "credential",
+      "name": "CancellationToken",
+      "type": "Func<FoodDiaryDbContext,",
+      "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
+      "line": 166
     },
     {
       "category": "credential",
