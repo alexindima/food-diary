@@ -1,9 +1,11 @@
 using FoodDiary.Application.Runtime;
 using FoodDiary.Application.Billing;
 using FoodDiary.Application.Fasting;
+using FoodDiary.Application.Gamification;
 using FoodDiary.Application.Identity;
 using FoodDiary.Application.Images;
 using FoodDiary.Application.Marketing;
+using FoodDiary.Application.Meals;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Application.Users;
 using FoodDiary.Infrastructure;
@@ -32,6 +34,7 @@ public sealed class DependencyInjectionTests {
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<ImageCleanupJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<BillingRenewalJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<FastingNotificationJob>()),
+            () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<AchievementEvaluationOutboxJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<ImageObjectDeletionOutboxJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<NotificationWebPushOutboxJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<NotificationCleanupJob>()),
@@ -103,9 +106,11 @@ public sealed class DependencyInjectionTests {
         services.AddUsersModule();
         services.AddBillingModule();
         services.AddFastingModule();
+        services.AddGamificationModule();
         services.AddIdentityModule();
         services.AddImagesModule();
         services.AddMarketingModule();
+        services.AddMealsModule();
         services.AddNotificationsModule();
         services.AddInfrastructure(configuration);
         services.AddIntegrations(configuration);
