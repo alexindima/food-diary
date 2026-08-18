@@ -5,5 +5,9 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 
-public sealed record CreateCheckoutSessionCommand(Guid? UserId, string Plan, string? Provider)
+public sealed record CreateCheckoutSessionCommand(
+    Guid? UserId,
+    string Plan,
+    string? Provider,
+    string? IdempotencyKey = null)
     : IRequest<Result<BillingCheckoutSessionModel>>, ITransactionalCommand;

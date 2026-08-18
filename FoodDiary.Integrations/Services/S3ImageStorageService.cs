@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Options;
+using SkiaSharp;
 
 namespace FoodDiary.Integrations.Services;
 
@@ -17,6 +18,7 @@ public sealed class S3ImageStorageService(
         "image/webp",
         "image/gif",
     };
+    private const int MaximumDecodedDimension = 2048;
 
     private readonly S3Options _options = options.Value;
 
@@ -46,7 +48,12 @@ public sealed class S3ImageStorageService(
             string key = $"users/{userId.Value:D}/images/{Guid.NewGuid():N}-{normalizedName}";
 
             DateTime expiresAt = dateTimeProvider.GetUtcNow().UtcDateTime.AddMinutes(15);
-            string uploadUrl = storageClient.GetPreSignedUploadUrl(_options.Bucket, key, contentType, expiresAt);
+            string uploadUrl = storageClient.GetPreSignedUploadUrl(
+                _options.Bucket,
+                key,
+                contentType,
+                fileSizeBytes,
+                expiresAt);
             string fileUrl = BuildPublicUrl(key);
 
             IntegrationsTelemetry.RecordStorageOperation("presign", "success");
@@ -102,11 +109,61 @@ public sealed class S3ImageStorageService(
                     $"Unsupported content type: {info.ContentType ?? "unknown"}.");
             }
 
+            byte[]? content = await storageClient.GetObjectBytesAsync(
+                _options.Bucket,
+                objectKey,
+                _options.MaxUploadSizeBytes,
+                cancellationToken).ConfigureAwait(false);
+            if (content is null) {
+                return new ImageObjectValidationResult(IsValid: false, "not_found", "Image upload has not completed.");
+            }
+
+            if (content.LongLength != info.SizeBytes || !HasValidImageContent(content, info.ContentType)) {
+                return new ImageObjectValidationResult(IsValid: false, "invalid_content",
+                    "Uploaded object content does not match a supported image format.");
+            }
+
             return new ImageObjectValidationResult(IsValid: true);
+        } catch (InvalidDataException ex) {
+            IntegrationsTelemetry.RecordStorageOperation("validate", "validation_error", ex.GetType().Name);
+            return new ImageObjectValidationResult(IsValid: false, "invalid_content",
+                "Uploaded object content does not match a supported image format.");
         } catch (Exception ex) {
             IntegrationsTelemetry.RecordStorageOperation("head", "failure", ex.GetType().Name);
             throw;
         }
+    }
+
+    private static bool HasValidImageContent(byte[] content, string contentType) {
+        using var stream = new SKMemoryStream(content);
+        using var codec = SKCodec.Create(stream);
+        if (codec is null || !ContentTypeMatchesFormat(contentType, codec.EncodedFormat)) {
+            return false;
+        }
+
+        SKImageInfo original = codec.Info;
+        if (original.Width <= 0 || original.Height <= 0) {
+            return false;
+        }
+
+        double scale = Math.Min(1d, MaximumDecodedDimension / (double)Math.Max(original.Width, original.Height));
+        var decoded = new SKImageInfo(
+            Math.Max(1, (int)Math.Round(original.Width * scale, MidpointRounding.AwayFromZero)),
+            Math.Max(1, (int)Math.Round(original.Height * scale, MidpointRounding.AwayFromZero)),
+            SKColorType.Rgba8888,
+            SKAlphaType.Premul);
+        using var bitmap = new SKBitmap(decoded);
+        return codec.GetPixels(decoded, bitmap.GetPixels()) == SKCodecResult.Success;
+    }
+
+    private static bool ContentTypeMatchesFormat(string contentType, SKEncodedImageFormat format) {
+        return format switch {
+            SKEncodedImageFormat.Jpeg => string.Equals(contentType, MediaTypeNames.Image.Jpeg, StringComparison.OrdinalIgnoreCase),
+            SKEncodedImageFormat.Png => string.Equals(contentType, "image/png", StringComparison.OrdinalIgnoreCase),
+            SKEncodedImageFormat.Webp => string.Equals(contentType, "image/webp", StringComparison.OrdinalIgnoreCase),
+            SKEncodedImageFormat.Gif => string.Equals(contentType, "image/gif", StringComparison.OrdinalIgnoreCase),
+            _ => false,
+        };
     }
 
     private static string NormalizeFileName(string fileName) {

@@ -51,6 +51,34 @@ public class ExportValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
+    [Theory]
+    [InlineData(840)]
+    [InlineData(null)]
+    public async Task Validate_WithMaximumDateThatOverflowsDisplayOffset_HasError(int? timeZoneOffsetMinutes) {
+        var query = new ExportDiaryQuery(
+            Guid.NewGuid(),
+            DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc),
+            DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc),
+            TimeZoneOffsetMinutes: timeZoneOffsetMinutes);
+
+        TestValidationResult<ExportDiaryQuery> result = await _validator.TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(q => q.DateFrom);
+    }
+
+    [Fact]
+    public async Task Validate_WithMinimumDateAndNegativeOffset_HasError() {
+        var query = new ExportDiaryQuery(
+            Guid.NewGuid(),
+            DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc),
+            DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc),
+            TimeZoneOffsetMinutes: -840);
+
+        TestValidationResult<ExportDiaryQuery> result = await _validator.TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(q => q.DateFrom);
+    }
+
     [Fact]
     public async Task ValidateCycle_WithNullUserId_HasError() {
         var today = DateOnly.FromDateTime(DateTime.UtcNow);

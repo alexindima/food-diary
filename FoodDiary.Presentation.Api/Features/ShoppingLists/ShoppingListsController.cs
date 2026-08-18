@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.ShoppingLists.Mappings;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,8 +32,11 @@ public sealed class ShoppingListsController(ISender mediator) : AuthorizedContro
 
     [HttpPost]
     [EnableIdempotency]
+    [RequestSizeLimit(PresentationRequestLimits.RichWritePayloadBytes)]
+    [RejectOversizedRequest(PresentationRequestLimits.RichWritePayloadBytes)]
     [ProducesResponseType<ShoppingListHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
     public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateShoppingListHttpRequest request) =>
         HandleCreated(
             request.ToCommand(userId),
@@ -41,9 +45,12 @@ public sealed class ShoppingListsController(ISender mediator) : AuthorizedContro
             static value => value.ToHttpResponse());
 
     [HttpPatch("{id:guid}")]
+    [RequestSizeLimit(PresentationRequestLimits.RichWritePayloadBytes)]
+    [RejectOversizedRequest(PresentationRequestLimits.RichWritePayloadBytes)]
     [ProducesResponseType<ShoppingListHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
     public Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateShoppingListHttpRequest request) =>
         HandleOk(request.ToCommand(userId, id), static value => value.ToHttpResponse());
 

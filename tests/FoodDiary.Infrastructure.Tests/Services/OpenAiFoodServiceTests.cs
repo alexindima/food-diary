@@ -707,11 +707,37 @@ public sealed class OpenAiFoodServiceTests {
         Assert.DoesNotContain("debugPrompt", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-    private static OpenAiFoodClient CreateClient(HttpClient httpClient, OpenAiOptions options) {
+    [Fact]
+    public async Task CalculateNutritionAsync_WhenResponseBodyExceedsOverallDeadline_ReturnsDeadlineFailure() {
+        using var httpClient = new HttpClient(new SequenceHttpMessageHandler(new Queue<HttpResponseMessage>([
+            new(HttpStatusCode.OK) {
+                Content = new StreamContent(new BlockingReadStream()),
+            },
+        ])));
+        OpenAiFoodClient client = CreateClient(
+            httpClient,
+            new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" },
+            TimeSpan.FromMilliseconds(50));
+
+        Result<OpenAiFoodClientResponse<FoodNutritionModel>> result = await client.CalculateNutritionAsync(
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
+            NutritionPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.OpenAiFailed", result.Error.Code);
+        Assert.Contains("deadline expired", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static OpenAiFoodClient CreateClient(
+        HttpClient httpClient,
+        OpenAiOptions options,
+        TimeSpan? overallRequestTimeout = null) {
         return new OpenAiFoodClient(
             httpClient,
             Microsoft.Extensions.Options.Options.Create(options),
-            NullLogger<OpenAiFoodClient>.Instance);
+            NullLogger<OpenAiFoodClient>.Instance,
+            overallRequestTimeout: overallRequestTimeout);
     }
 
     private static HttpResponseMessage CreateVisionSuccessResponse() {
@@ -840,6 +866,34 @@ public sealed class OpenAiFoodServiceTests {
     private sealed class ThrowingHttpMessageHandler(Exception exception) : HttpMessageHandler {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
             Task.FromException<HttpResponseMessage>(exception);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class BlockingReadStream : Stream {
+        public override bool CanRead => true;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => throw new NotSupportedException();
+        public override long Position {
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
+        }
+
+        public override void Flush() {
+        }
+
+        public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+
+        public override async ValueTask<int> ReadAsync(
+            Memory<byte> buffer,
+            CancellationToken cancellationToken = default) {
+            await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+            return 0;
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]

@@ -57,6 +57,73 @@ public partial class ShoppingListsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
+    [Fact]
+    public async Task ShoppingListItemBuilder_WithAmountOverDomainLimit_ReturnsValidationFailure() {
+        Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
+            [new ShoppingListItemInput(Id: null, ProductId: null, Name: "Milk", Amount: 1_000_001d, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: 1)],
+            UserId.New(),
+            new NoopProductLookupService(),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ShoppingListItemBuilder_WithTextOverDomainLimit_ReturnsValidationFailure() {
+        Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
+            [new ShoppingListItemInput(Id: null, ProductId: null, Name: new string('x', 257), Amount: 1, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: 1)],
+            UserId.New(),
+            new NoopProductLookupService(),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Theory]
+    [InlineData("Category")]
+    [InlineData("Aisle")]
+    [InlineData("Note")]
+    public async Task ShoppingListItemBuilder_WithOptionalTextOverDomainLimit_ReturnsValidationFailure(string field) {
+        ShoppingListItemInput item = new(
+            Id: null,
+            ProductId: null,
+            Name: "Milk",
+            Amount: 1,
+            Unit: null,
+            Category: field.Equals("Category", StringComparison.Ordinal) ? new string('x', 129) : null,
+            Aisle: field.Equals("Aisle", StringComparison.Ordinal) ? new string('x', 129) : null,
+            Note: field.Equals("Note", StringComparison.Ordinal) ? new string('x', 513) : null,
+            IsChecked: false,
+            CheckedOnUtc: null,
+            SortOrder: 1);
+
+        Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
+            [item],
+            UserId.New(),
+            new NoopProductLookupService(),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ShoppingListItemBuilder_WithTooManyItems_ReturnsValidationFailureBeforeProductLookup() {
+        ShoppingListItemInput item = new(Id: null, ProductId: null, Name: "Milk", Amount: 1, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: 1);
+        ShoppingListItemInput[] items = [.. Enumerable.Repeat(item, 501)];
+
+        Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
+            items,
+            UserId.New(),
+            CreateThrowingProductLookupService(),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
     [Theory]
     [InlineData(double.NaN)]
     [InlineData(double.PositiveInfinity)]

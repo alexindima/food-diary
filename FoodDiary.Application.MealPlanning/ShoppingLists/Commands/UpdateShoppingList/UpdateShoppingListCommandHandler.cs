@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.MealPlanning.Common.Validation;
 using FoodDiary.Application.MealPlanning.ShoppingLists.Mappings;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
 using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
 using FoodDiary.Application.MealPlanning.ShoppingLists.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -64,6 +65,11 @@ public sealed class UpdateShoppingListCommandHandler(
     private static Result ValidateCommandShape(UpdateShoppingListCommand command) {
         if (string.IsNullOrWhiteSpace(command.Name) && command.Items is null) {
             return Result.Failure(Errors.Validation.Required(nameof(command.Items)));
+        }
+
+        if (command.Name?.Trim().Length > ShoppingListInputLimits.NameMaxLength) {
+            return Result.Failure(
+                Errors.Validation.Invalid(nameof(command.Name), $"Name must be at most {ShoppingListInputLimits.NameMaxLength} characters."));
         }
 
         return Result.Success();

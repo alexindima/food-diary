@@ -9,8 +9,8 @@ namespace FoodDiary.Presentation.Api.Features.Billing.Mappings;
 
 public static class BillingHttpMappings {
     extension(CreateCheckoutSessionHttpRequest request) {
-        public CreateCheckoutSessionCommand ToCommand(Guid userId) =>
-                new(userId, request.Plan, request.Provider);
+        public CreateCheckoutSessionCommand ToCommand(Guid userId, string idempotencyKey) =>
+                new(userId, request.Plan, request.Provider, idempotencyKey);
     }
 
     extension(Guid userId) {

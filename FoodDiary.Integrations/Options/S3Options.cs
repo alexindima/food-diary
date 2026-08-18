@@ -40,13 +40,32 @@ public sealed class S3Options {
 
     public static bool HasValidMaxUploadSize(S3Options options) => options.MaxUploadSizeBytes > 0;
 
+    public static bool IsEmptyOrComplete(S3Options options) {
+        bool anyConfigured = !string.IsNullOrWhiteSpace(options.AccessKeyId) ||
+                             !string.IsNullOrWhiteSpace(options.SecretAccessKey) ||
+                             !string.IsNullOrWhiteSpace(options.Region) ||
+                             !string.IsNullOrWhiteSpace(options.Bucket) ||
+                             !string.IsNullOrWhiteSpace(options.ServiceUrl) ||
+                             !string.IsNullOrWhiteSpace(options.PublicBaseUrl);
+        return !anyConfigured ||
+               (!string.IsNullOrWhiteSpace(options.AccessKeyId) &&
+                !string.IsNullOrWhiteSpace(options.SecretAccessKey) &&
+                !string.IsNullOrWhiteSpace(options.Bucket) &&
+                (!string.IsNullOrWhiteSpace(options.Region) || !string.IsNullOrWhiteSpace(options.ServiceUrl)));
+    }
+
     public static bool HasValidPublicBaseUrl(S3Options options) {
         return string.IsNullOrWhiteSpace(options.PublicBaseUrl) ||
-               Uri.IsWellFormedUriString(options.PublicBaseUrl, UriKind.Absolute);
+               IsHttpUrl(options.PublicBaseUrl);
     }
 
     public static bool HasValidServiceUrl(S3Options options) {
         return string.IsNullOrWhiteSpace(options.ServiceUrl) ||
-               Uri.IsWellFormedUriString(options.ServiceUrl, UriKind.Absolute);
+               IsHttpUrl(options.ServiceUrl);
     }
+
+    private static bool IsHttpUrl(string value) =>
+        Uri.TryCreate(value, UriKind.Absolute, out Uri? uri) &&
+        (string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase) ||
+         string.Equals(uri.Scheme, Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase));
 }

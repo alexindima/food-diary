@@ -476,6 +476,23 @@ public partial class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task GetAdminContentReportsQueryHandler_WithExtremePaging_BoundsLimitAndPreventsOffsetOverflow() {
+        var repository = new CountingContentReportRepository(0);
+        GetAdminContentReportsQueryHandler handler = new(CreateAdminContentReadService(contentReportRepository: repository));
+
+        Result<PagedResponse<AdminContentReportModel>> result = await handler.Handle(
+            new GetAdminContentReportsQuery(Status: null, int.MaxValue, int.MaxValue),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(100, repository.LastLimit),
+            () => Assert.Equal(10_000, repository.LastPage),
+            () => Assert.Equal(repository.LastLimit, result.Value.Limit),
+            () => Assert.Equal(repository.LastPage, result.Value.Page));
+    }
+
+    [Fact]
     public async Task GetAdminEmailTemplatesQueryHandler_ReturnsTemplates() {
         var template = EmailTemplate.Create(
             "verify_email",

@@ -1,25 +1,38 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace FoodDiary.Mediator;
 
+/// <summary>
+/// Registers the FoodDiary mediator and its handlers with dependency injection.
+/// </summary>
 public static class DependencyInjection {
+    /// <summary>
+    /// Adds the mediator services, discovered handlers, and configured pipeline behaviors.
+    /// </summary>
+    /// <param name="services">The service collection to update.</param>
+    /// <param name="configure">The mediator configuration callback.</param>
+    /// <returns>The supplied service collection.</returns>
     public static IServiceCollection AddFoodDiaryMediator(
         this IServiceCollection services,
         Action<MediatorServiceConfiguration> configure) {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configure);
+
         var configuration = new MediatorServiceConfiguration();
         configure(configuration);
 
-        services.AddScoped<IMediator, DefaultMediator>();
-        services.AddScoped<ISender>(static provider => provider.GetRequiredService<IMediator>());
-        services.AddScoped<IPublisher>(static provider => provider.GetRequiredService<IMediator>());
+        services.TryAddScoped<IMediator, DefaultMediator>();
+        services.TryAddScoped<ISender>(static provider => provider.GetRequiredService<IMediator>());
+        services.TryAddScoped<IPublisher>(static provider => provider.GetRequiredService<IMediator>());
 
-        foreach (Assembly assembly in configuration.Assemblies.Distinct()) {
+        foreach (Assembly assembly in configuration.Assemblies) {
             services.RegisterMediatorHandlers(assembly);
         }
 
         foreach (Type behaviorType in configuration.OpenBehaviors) {
-            services.AddTransient(typeof(IPipelineBehavior<,>), behaviorType);
+            services.TryAddEnumerable(ServiceDescriptor.Transient(typeof(IPipelineBehavior<,>), behaviorType));
         }
 
         return services;
@@ -32,7 +45,7 @@ public static class DependencyInjection {
 
         foreach (Type implementationType in implementationTypes) {
             foreach (Type serviceType in implementationType.GetInterfaces().Where(IsMediatorHandler)) {
-                services.AddTransient(serviceType, implementationType);
+                services.TryAddEnumerable(ServiceDescriptor.Transient(serviceType, implementationType));
             }
         }
     }
@@ -44,6 +57,7 @@ public static class DependencyInjection {
 
         Type genericDefinition = interfaceType.GetGenericTypeDefinition();
         return genericDefinition == typeof(IRequestHandler<,>) ||
-            genericDefinition == typeof(INotificationHandler<>);
+            genericDefinition == typeof(INotificationHandler<>) ||
+            genericDefinition == typeof(IStreamRequestHandler<,>);
     }
 }

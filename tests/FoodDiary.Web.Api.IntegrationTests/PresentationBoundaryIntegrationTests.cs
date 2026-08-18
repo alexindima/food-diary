@@ -9,10 +9,12 @@ using FoodDiary.Presentation.Api.Features.Ai.Models;
 using FoodDiary.Presentation.Api.Features.Ai.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Images.Requests;
+using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
 using FoodDiary.Presentation.Api.Features.Users.Requests;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
+using FoodDiary.Presentation.Api.Policies;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
@@ -346,6 +348,80 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.NotNull(payload);
         Assert.Equal("Authentication.ImpersonationActionForbidden", payload.Error);
         Assert.False(string.IsNullOrWhiteSpace(payload.TraceId));
+    }
+
+    [Theory]
+    [InlineData("POST", "/api/v1/auth/google/link")]
+    [InlineData("PUT", "/api/v1/notifications/push/subscription")]
+    [InlineData("DELETE", "/api/v1/notifications/push/subscription")]
+    public async Task DurableIdentityAndNotificationChannelMutations_WithImpersonatedUser_ReturnForbidden(
+        string method,
+        string route) {
+        HttpClient client = testAuthFactory.CreateClient();
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.ImpersonationHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.ImpersonationActorUserIdHeader, Guid.NewGuid().ToString());
+        using var request = new HttpRequestMessage(new HttpMethod(method), route) {
+            Content = JsonContent.Create(new { }),
+        };
+
+        HttpResponseMessage response = await client.SendAsync(request);
+        ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Authentication.ImpersonationActionForbidden", payload.Error);
+    }
+
+    [Fact]
+    public async Task CreateShoppingList_WithNameOverDomainLimit_ReturnsValidationErrorInsteadOfServerError() {
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+        HttpResponseMessage response = await client.PostAsJsonAsync(
+            "/api/v1/shopping-lists",
+            new CreateShoppingListHttpRequest(new string('x', 129)));
+        ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Validation.Invalid", payload.Error);
+    }
+
+    [Fact]
+    public async Task CreateShoppingList_WithPayloadAboveRichWriteLimit_ReturnsPayloadTooLarge() {
+        HttpClient client = testAuthFactory.CreateClient();
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+        using var content = new ByteArrayContent(new byte[PresentationRequestLimits.RichWritePayloadBytes + 1]);
+        content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+        HttpResponseMessage response = await client.PostAsync("/api/v1/shopping-lists", content);
+        ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.RequestEntityTooLarge, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Request.PayloadTooLarge", payload.Error);
+    }
+
+    [Fact]
+    public async Task ExportDiary_WithDateThatOverflowsDisplayOffset_ReturnsValidationErrorInsteadOfServerError() {
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+        string maximumDate = Uri.EscapeDataString("9999-12-31T23:59:59.9999999Z");
+
+        HttpResponseMessage response = await client.GetAsync(
+            $"/api/v1/export/diary?dateFrom={maximumDate}&dateTo={maximumDate}&timeZoneOffsetMinutes=840");
+        ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Validation.Invalid", payload.Error);
     }
 
     [Fact]

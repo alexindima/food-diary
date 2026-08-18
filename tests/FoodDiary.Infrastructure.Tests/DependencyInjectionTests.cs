@@ -196,8 +196,8 @@ public sealed class DependencyInjectionTests {
         Assert.IsType<YooKassaBillingGateway>(scope.ServiceProvider.GetRequiredService<IBillingRecurringProviderGateway>());
 
         IReadOnlyList<IWearableClient> wearableClients = scope.ServiceProvider.GetServices<IWearableClient>().ToList();
-        Assert.Contains(wearableClients, client => client.Provider == WearableProvider.Fitbit);
-        Assert.Contains(wearableClients, client => client.Provider == WearableProvider.GoogleFit);
+        IWearableClient wearableClient = Assert.Single(wearableClients);
+        Assert.Equal(WearableProvider.Fitbit, wearableClient.Provider);
     }
 
     [Fact]
@@ -217,8 +217,8 @@ public sealed class DependencyInjectionTests {
         HttpClient openFoodFactsClient = factory.CreateClient(nameof(IOpenFoodFactsService));
         Assert.Equal(TimeSpan.FromSeconds(10), openFoodFactsClient.Timeout);
         Assert.Contains(openFoodFactsClient.DefaultRequestHeaders.UserAgent, value => string.Equals(value.Product?.Name, "FoodDiaryTests", StringComparison.Ordinal));
+        Assert.Equal(TimeSpan.FromSeconds(30), factory.CreateClient(nameof(IWebPushClientAdapter)).Timeout);
         Assert.Equal(TimeSpan.FromSeconds(30), factory.CreateClient(nameof(FitbitClient)).Timeout);
-        Assert.Equal(TimeSpan.FromSeconds(30), factory.CreateClient(nameof(GoogleFitClient)).Timeout);
     }
 
     [Fact]
@@ -742,9 +742,6 @@ public sealed class DependencyInjectionTests {
             ["Fitbit:ClientId"] = "fitbit-client",
             ["Fitbit:ClientSecret"] = "fitbit-secret",
             ["Fitbit:RedirectUri"] = "https://example.com/fitbit",
-            ["GoogleFit:ClientId"] = "google-fit-client",
-            ["GoogleFit:ClientSecret"] = "google-fit-secret",
-            ["GoogleFit:RedirectUri"] = "https://example.com/google-fit",
         });
     }
 

@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Exercises.Internal;
+using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Exercises.Mappings;
@@ -24,6 +25,17 @@ public sealed class CreateExerciseEntryCommandHandler(
             cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ExerciseEntryModel>(userIdResult);
+        }
+
+        Error? inputError = ExerciseEntryInputValidation.GetError(
+            command.DurationMinutes,
+            command.CaloriesBurned,
+            command.Name,
+            clearName: false,
+            notes: command.Notes,
+            clearNotes: false);
+        if (inputError is not null) {
+            return Result.Failure<ExerciseEntryModel>(inputError);
         }
 
         if (!EnumValueParser.TryParse(command.ExerciseType, out ExerciseType exerciseType)) {

@@ -34,6 +34,7 @@ public sealed class WebPushDeliveryAudienceService(
 
         return [.. subscriptions
             .Except(expired)
+            .Take(WebPushDeliveryLimits.MaximumSubscriptionsPerUser)
             .Select(static subscription => new WebPushDeliverySubscription(
                 subscription.Id.Value,
                 subscription.Endpoint,

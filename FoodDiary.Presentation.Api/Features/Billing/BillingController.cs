@@ -34,18 +34,24 @@ public sealed class BillingController(ISender mediator) : AuthorizedController(m
     [ProducesResponseType<CheckoutSessionHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
     [BlockImpersonatedAccess]
-    [EnableIdempotency]
+    [EnableIdempotency(requireKey: true)]
     public Task<IActionResult> CreateCheckoutSession(
         [FromCurrentUser] Guid userId,
         [FromBody] CreateCheckoutSessionHttpRequest request) =>
-        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
+        HandleOk(request.ToCommand(userId, GetRequestId()), static value => value.ToHttpResponse());
 
     [HttpPost("portal-session")]
     [ProducesResponseType<PortalSessionHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
     [BlockImpersonatedAccess]
     [EnableIdempotency]
     public Task<IActionResult> CreatePortalSession([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToPortalSessionCommand(), static value => value.ToHttpResponse());
+
+    private string GetRequestId() =>
+        IdempotencyRequestContext.GetRequestId(HttpContext) ??
+        throw new InvalidOperationException("Required idempotency context is unavailable.");
 }

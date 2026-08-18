@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
+using SkiaSharp;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
@@ -209,6 +210,61 @@ public sealed class S3ImageStorageServiceTests {
         Assert.True(result.IsValid);
     }
 
+    [Theory]
+    [InlineData("image/jpeg", SKEncodedImageFormat.Jpeg)]
+    [InlineData("image/png", SKEncodedImageFormat.Png)]
+    [InlineData("image/webp", SKEncodedImageFormat.Webp)]
+    public async Task ValidateUploadedObjectAsync_WhenSupportedImageDecodes_ReturnsValid(
+        string contentType,
+        SKEncodedImageFormat format) {
+        byte[] content = CreateImageBytes(format);
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient(
+            new StoredObjectInfo(content.LongLength, contentType),
+            content));
+
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image", CancellationToken.None);
+
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public async Task ValidateUploadedObjectAsync_WhenGifDecodes_ReturnsValid() {
+        byte[] content = Convert.FromBase64String("R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==");
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient(
+            new StoredObjectInfo(content.LongLength, "image/gif"),
+            content));
+
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.gif", CancellationToken.None);
+
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public async Task ValidateUploadedObjectAsync_WhenContentIsNotAnImage_ReturnsInvalidContent() {
+        byte[] content = "not-an-image"u8.ToArray();
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient(
+            new StoredObjectInfo(content.LongLength, "image/png"),
+            content));
+
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.png", CancellationToken.None);
+
+        Assert.False(result.IsValid);
+        Assert.Equal("invalid_content", result.ErrorCode);
+    }
+
+    [Fact]
+    public async Task ValidateUploadedObjectAsync_WhenMimeTypeDoesNotMatchContent_ReturnsInvalidContent() {
+        byte[] content = CreateImageBytes(SKEncodedImageFormat.Png);
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient(
+            new StoredObjectInfo(content.LongLength, "image/jpeg"),
+            content));
+
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.jpg", CancellationToken.None);
+
+        Assert.False(result.IsValid);
+        Assert.Equal("invalid_content", result.ErrorCode);
+    }
+
     [Fact]
     public async Task ValidateUploadedObjectAsync_WhenObjectKeyBlank_ReturnsInvalidKey() {
         S3ImageStorageService service = CreateService(new StubObjectStorageClient());
@@ -279,6 +335,14 @@ public sealed class S3ImageStorageServiceTests {
             new StubDateTimeProvider());
     }
 
+    private static byte[] CreateImageBytes(SKEncodedImageFormat format) {
+        using var bitmap = new SKBitmap(2, 2);
+        bitmap.Erase(SKColors.Green);
+        using var image = SKImage.FromBitmap(bitmap);
+        using SKData data = image.Encode(format, 90);
+        return data.ToArray();
+    }
+
     private static MeterListener CreateInfrastructureListener(
         Action<long, ReadOnlySpan<KeyValuePair<string, object?>>> onOperation) {
         var listener = new MeterListener();
@@ -311,11 +375,16 @@ public sealed class S3ImageStorageServiceTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubObjectStorageClient(StoredObjectInfo? objectInfo = null) : IObjectStorageClient {
+    private sealed class StubObjectStorageClient(
+        StoredObjectInfo? objectInfo = null,
+        byte[]? content = null) : IObjectStorageClient {
+        private readonly byte[] _content = content ?? CreateImageBytes(SKEncodedImageFormat.Png);
+
         public string GetPreSignedUploadUrl(
             string bucketName,
             string key,
             string contentType,
+            long contentLength,
             DateTime expiresAt) =>
             $"https://storage.example.com/{bucketName}/{key}";
 
@@ -323,7 +392,13 @@ public sealed class S3ImageStorageServiceTests {
             Task.CompletedTask;
 
         public Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken) =>
-            Task.FromResult<StoredObjectInfo?>(objectInfo ?? new StoredObjectInfo(1024, "image/webp"));
+            Task.FromResult<StoredObjectInfo?>(objectInfo ?? new StoredObjectInfo(_content.LongLength, "image/png"));
+
+        public Task<byte[]?> GetObjectBytesAsync(
+            string bucketName,
+            string key,
+            long maximumBytes,
+            CancellationToken cancellationToken) => Task.FromResult<byte[]?>(_content);
     }
 
     [ExcludeFromCodeCoverage]
@@ -334,6 +409,7 @@ public sealed class S3ImageStorageServiceTests {
             string bucketName,
             string key,
             string contentType,
+            long contentLength,
             DateTime expiresAt) =>
             $"https://storage.example.com/{bucketName}/{key}";
 
@@ -344,6 +420,12 @@ public sealed class S3ImageStorageServiceTests {
 
         public Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.FromResult<StoredObjectInfo?>(new StoredObjectInfo(1024, "image/webp"));
+
+        public Task<byte[]?> GetObjectBytesAsync(
+            string bucketName,
+            string key,
+            long maximumBytes,
+            CancellationToken cancellationToken) => Task.FromResult<byte[]?>(CreateImageBytes(SKEncodedImageFormat.Webp));
     }
 
     [ExcludeFromCodeCoverage]
@@ -352,6 +434,7 @@ public sealed class S3ImageStorageServiceTests {
             string bucketName,
             string key,
             string contentType,
+            long contentLength,
             DateTime expiresAt) =>
             $"https://storage.example.com/{bucketName}/{key}";
 
@@ -360,6 +443,12 @@ public sealed class S3ImageStorageServiceTests {
 
         public Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.FromResult<StoredObjectInfo?>(null);
+
+        public Task<byte[]?> GetObjectBytesAsync(
+            string bucketName,
+            string key,
+            long maximumBytes,
+            CancellationToken cancellationToken) => Task.FromResult<byte[]?>(null);
     }
 
     [ExcludeFromCodeCoverage]
@@ -368,6 +457,7 @@ public sealed class S3ImageStorageServiceTests {
             string bucketName,
             string key,
             string contentType,
+            long contentLength,
             DateTime expiresAt) => throw exception;
 
         public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) =>
@@ -375,6 +465,12 @@ public sealed class S3ImageStorageServiceTests {
 
         public Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.FromException<StoredObjectInfo?>(exception);
+
+        public Task<byte[]?> GetObjectBytesAsync(
+            string bucketName,
+            string key,
+            long maximumBytes,
+            CancellationToken cancellationToken) => Task.FromException<byte[]?>(exception);
     }
 
     [ExcludeFromCodeCoverage]

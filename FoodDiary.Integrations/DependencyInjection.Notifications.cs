@@ -6,7 +6,11 @@ namespace FoodDiary.Integrations;
 
 public static partial class DependencyInjection {
     private static void AddNotificationIntegrations(this IServiceCollection services) {
-        services.AddHttpClient<IWebPushClientAdapter, WebPushClientAdapter>();
+        services.AddTransient<WebPushEndpointValidationHandler>();
+        services.AddHttpClient<IWebPushClientAdapter, WebPushClientAdapter>(client =>
+                client.Timeout = TimeSpan.FromSeconds(30))
+            .ConfigurePrimaryHttpMessageHandler(WebPushSocketsHttpHandlerFactory.Create)
+            .AddHttpMessageHandler<WebPushEndpointValidationHandler>();
         services.AddScoped<IWebPushNotificationSender, WebPushNotificationSender>();
         services.AddScoped<IWebPushConfigurationProvider, WebPushNotificationSender>();
     }

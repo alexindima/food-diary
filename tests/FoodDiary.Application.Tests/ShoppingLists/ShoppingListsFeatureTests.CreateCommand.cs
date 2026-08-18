@@ -58,6 +58,22 @@ public partial class ShoppingListsFeatureTests {
     }
 
     [Fact]
+    public async Task CreateShoppingListCommandHandler_WithNameOverDomainLimit_ReturnsValidationFailure() {
+        var user = User.Create("shopping-long-name@example.com", "hash");
+        var handler = new CreateShoppingListCommandHandler(
+            new RecordingShoppingListRepository(),
+            CreateThrowingProductLookupService(),
+            CreateCurrentUserAccessService(user));
+
+        Result<ShoppingListModel> result = await handler.Handle(
+            new CreateShoppingListCommand(user.Id.Value, new string('x', 129), []),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
     public async Task CreateShoppingListCommandHandler_WithInaccessibleProduct_ReturnsProductNotAccessible() {
         var user = User.Create("shopping-inaccessible-product@example.com", "hash");
         var handler = new CreateShoppingListCommandHandler(

@@ -58,6 +58,65 @@ public sealed class NotificationsValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
+    [Theory]
+    [InlineData("http://push.example/sub")]
+    [InlineData("https://127.0.0.1/sub")]
+    [InlineData("https://localhost/sub")]
+    [InlineData("https://push.example:8443/sub")]
+    [InlineData("https://user@push.example/sub")]
+    [InlineData("https://push.example/sub#fragment")]
+    public async Task UpsertWebPushSubscription_WithUnsafeEndpoint_HasError(string endpoint) {
+        var validator = new UpsertWebPushSubscriptionCommandValidator();
+
+        TestValidationResult<UpsertWebPushSubscriptionCommand> result = await validator.TestValidateAsync(
+            new UpsertWebPushSubscriptionCommand(
+                Guid.NewGuid(),
+                endpoint,
+                "p256dh",
+                "auth",
+                ExpirationTimeUtc: null,
+                "en",
+                "Browser"));
+
+        result.ShouldHaveValidationErrorFor(command => command.Endpoint);
+    }
+
+    [Fact]
+    public async Task UpsertWebPushSubscription_WithUnspecifiedExpiration_HasError() {
+        var validator = new UpsertWebPushSubscriptionCommandValidator();
+
+        TestValidationResult<UpsertWebPushSubscriptionCommand> result = await validator.TestValidateAsync(
+            new UpsertWebPushSubscriptionCommand(
+                Guid.NewGuid(),
+                "https://push.example/sub",
+                "p256dh",
+                "auth",
+                new DateTime(2026, 8, 19, 12, 0, 0, DateTimeKind.Unspecified),
+                "en",
+                "Browser"));
+
+        result.ShouldHaveValidationErrorFor(command => command.ExpirationTimeUtc);
+    }
+
+    [Theory]
+    [InlineData(DateTimeKind.Utc)]
+    [InlineData(DateTimeKind.Local)]
+    public async Task UpsertWebPushSubscription_WithSpecifiedExpiration_HasNoExpirationError(DateTimeKind kind) {
+        var validator = new UpsertWebPushSubscriptionCommandValidator();
+
+        TestValidationResult<UpsertWebPushSubscriptionCommand> result = await validator.TestValidateAsync(
+            new UpsertWebPushSubscriptionCommand(
+                Guid.NewGuid(),
+                "https://push.example/sub",
+                "p256dh",
+                "auth",
+                new DateTime(2026, 8, 19, 12, 0, 0, kind),
+                "en",
+                "Browser"));
+
+        result.ShouldNotHaveValidationErrorFor(command => command.ExpirationTimeUtc);
+    }
+
     [Fact]
     public async Task UpdateNotificationPreferences_WithInvalidReminderHours_HasErrors() {
         var validator = new UpdateNotificationPreferencesCommandValidator();

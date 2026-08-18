@@ -264,7 +264,12 @@ public sealed class BillingGatewayTests {
         var userId = Guid.NewGuid();
 
         Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
-            new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "yearly", "ctm_123"),
+            new BillingCheckoutSessionRequestModel(
+                userId,
+                "buyer@example.com",
+                "yearly",
+                "ctm_123",
+                "checkout-request-id"),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess, result.Error.Message);
@@ -279,6 +284,7 @@ public sealed class BillingGatewayTests {
         Assert.Equal("1", Assert.Single(handler.LastRequest.Headers.GetValues("Paddle-Version")));
         Assert.Contains("\"customer_id\":\"ctm_123\"", handler.LastRequestBody, StringComparison.Ordinal);
         Assert.Contains("\"price_id\":\"pri_yearly\"", handler.LastRequestBody, StringComparison.Ordinal);
+        Assert.Contains("\"checkout_reference\":\"checkout-request-id\"", handler.LastRequestBody, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -367,7 +373,12 @@ public sealed class BillingGatewayTests {
             }));
 
         Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
-            new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "monthly", ExistingCustomerId: null),
+            new BillingCheckoutSessionRequestModel(
+                userId,
+                "buyer@example.com",
+                "monthly",
+                ExistingCustomerId: null,
+                IdempotencyKey: "checkout-request-id"),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess, result.Error.Message);
@@ -1038,7 +1049,12 @@ public sealed class BillingGatewayTests {
         var userId = Guid.NewGuid();
 
         Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
-            new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "monthly", ExistingCustomerId: null),
+            new BillingCheckoutSessionRequestModel(
+                userId,
+                "buyer@example.com",
+                "monthly",
+                ExistingCustomerId: null,
+                IdempotencyKey: "checkout-request-id"),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1049,6 +1065,7 @@ public sealed class BillingGatewayTests {
         Assert.Equal(HttpMethod.Post, handler.LastRequest.Method);
         Assert.Equal("https://api.yookassa.test/v3/payments", handler.LastRequest.RequestUri?.ToString());
         Assert.True(handler.LastRequest.Headers.Contains("Idempotence-Key"));
+        Assert.Equal("checkout-request-id", handler.LastRequest.Headers.GetValues("Idempotence-Key").Single());
         Assert.Equal("Basic", handler.LastRequest.Headers.Authorization?.Scheme);
         Assert.Contains("\"plan\":\"monthly\"", handler.LastRequestBody, StringComparison.Ordinal);
         Assert.Contains(userId.ToString(), handler.LastRequestBody, StringComparison.Ordinal);
@@ -1973,7 +1990,12 @@ public sealed class BillingGatewayTests {
             StripeBillingGateway gateway = CreateConfiguredStripeGateway(handler);
 
             Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
-                new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "monthly", ExistingCustomerId: null),
+                new BillingCheckoutSessionRequestModel(
+                    userId,
+                    "buyer@example.com",
+                    "monthly",
+                    ExistingCustomerId: null,
+                    IdempotencyKey: "checkout-request-id"),
                 CancellationToken.None).ConfigureAwait(false);
 
             Assert.True(result.IsSuccess, result.Error.Message);
@@ -1985,6 +2007,8 @@ public sealed class BillingGatewayTests {
             Assert.Equal(2, handler.Requests.Count);
             Assert.Equal("https://api.stripe.com/v1/customers", handler.Requests[0].RequestUri?.ToString());
             Assert.Equal("https://api.stripe.com/v1/checkout/sessions", handler.Requests[1].RequestUri?.ToString());
+            Assert.Equal("checkout-request-id:customer", handler.Requests[0].Headers.GetValues("Idempotency-Key").Single());
+            Assert.Equal("checkout-request-id:session", handler.Requests[1].Headers.GetValues("Idempotency-Key").Single());
             Assert.Contains("email=buyer%40example.com", handler.RequestBodies[0], StringComparison.Ordinal);
             Assert.Contains($"metadata[user_id]={Uri.EscapeDataString(userId.ToString())}", handler.RequestBodies[0], StringComparison.Ordinal);
             Assert.Contains("customer=cus_new", handler.RequestBodies[1], StringComparison.Ordinal);

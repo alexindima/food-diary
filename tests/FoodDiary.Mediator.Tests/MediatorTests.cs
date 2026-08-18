@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Mediator.Tests;
@@ -282,12 +284,241 @@ public sealed class MediatorTests {
     }
 
     [Fact]
-    public void CreateStream_ThrowsNotSupportedException() {
+    public async Task Send_WithExplicitInterfaceHandler_SupportsTypedAndObjectDispatch() {
+        await using ServiceProvider provider = CreateProvider(configuration =>
+            configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        ISender sender = provider.GetRequiredService<ISender>();
+
+        string typedResponse = await sender.Send(new ExplicitRequest("typed"));
+        object? objectResponse = await sender.Send((object)new ExplicitRequest("object"));
+
+        Assert.Equal("explicit:typed", typedResponse);
+        Assert.Equal("explicit:object", objectResponse);
+    }
+
+    [Fact]
+    public async Task Send_WithHandlerForMultipleRequestTypes_InvokesMatchingOverload() {
+        await using ServiceProvider provider = CreateProvider(configuration =>
+            configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        ISender sender = provider.GetRequiredService<ISender>();
+
+        string firstResponse = await sender.Send(new FirstMultiRequest());
+        int secondResponse = await sender.Send(new SecondMultiRequest());
+
+        Assert.Equal("first", firstResponse);
+        Assert.Equal(2, secondResponse);
+    }
+
+    [Fact]
+    public async Task Send_WhenHandlerThrowsSynchronously_PropagatesOriginalException() {
+        await using ServiceProvider provider = CreateProvider(configuration =>
+            configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        ISender sender = provider.GetRequiredService<ISender>();
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => sender.Send(new SynchronousFailureRequest()));
+
+        Assert.Equal("synchronous request failure", exception.Message);
+    }
+
+    [Fact]
+    public async Task Send_WithMultipleResponseContracts_ThrowsInvalidOperationException() {
+        await using ServiceProvider provider = CreateProvider(static _ => { });
+        ISender sender = provider.GetRequiredService<ISender>();
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => sender.Send((object)new MultipleResponseRequest()));
+
+        Assert.Contains("multiple response types", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task Publish_WithExplicitInterfaceHandler_SupportsObjectDispatch() {
+        await using ServiceProvider provider = CreateProvider(configuration =>
+            configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        IPublisher publisher = provider.GetRequiredService<IPublisher>();
+        ExplicitNotificationHandler.LastValue = null;
+
+        await publisher.Publish((object)new ExplicitNotification("value"));
+
+        Assert.Equal("value", ExplicitNotificationHandler.LastValue);
+    }
+
+    [Fact]
+    public async Task PublishObject_WhenHandlerThrowsSynchronously_PropagatesOriginalException() {
+        await using ServiceProvider provider = CreateProvider(configuration =>
+            configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        IPublisher publisher = provider.GetRequiredService<IPublisher>();
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => publisher.Publish((object)new SynchronousFailureNotification()));
+
+        Assert.Equal("synchronous notification failure", exception.Message);
+    }
+
+    [Fact]
+    public async Task CreateStream_WithTypedAndObjectRequests_ReturnsHandlerResponses() {
+        await using ServiceProvider provider = CreateProvider(configuration =>
+            configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        ISender sender = provider.GetRequiredService<ISender>();
+        using var cancellationTokenSource = new CancellationTokenSource();
+
+        List<string> typedResponses = [];
+        await foreach (string response in sender.CreateStream(
+            new SampleStreamRequest(2),
+            cancellationTokenSource.Token)) {
+            typedResponses.Add(response);
+        }
+
+        List<object?> objectResponses = [];
+        await foreach (object? response in sender.CreateStream(
+            (object)new SampleStreamRequest(2),
+            cancellationTokenSource.Token)) {
+            objectResponses.Add(response);
+        }
+
+        Assert.Equal(["item-0", "item-1"], typedResponses);
+        Assert.Equal(["item-0", "item-1"], objectResponses);
+        Assert.Equal(cancellationTokenSource.Token, SampleStreamRequestHandler.CapturedToken);
+    }
+
+    [Fact]
+    public async Task CreateStream_WithCancelledToken_PropagatesCancellation() {
+        await using ServiceProvider provider = CreateProvider(configuration =>
+            configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        ISender sender = provider.GetRequiredService<ISender>();
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => {
+            await foreach (string _ in sender.CreateStream(
+                new SampleStreamRequest(1),
+                cancellationTokenSource.Token)) {
+            }
+        });
+    }
+
+    [Fact]
+    public async Task CreateStream_WhenHandlerIsMissing_ThrowsInvalidOperationExceptionOnEnumeration() {
+        await using ServiceProvider provider = CreateProvider(static _ => { });
+        ISender sender = provider.GetRequiredService<ISender>();
+
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => {
+            await foreach (string _ in sender.CreateStream(new SampleStreamRequest(1))) {
+            }
+        });
+    }
+
+    [Fact]
+    public void CreateStream_WithInvalidOrAmbiguousObject_ThrowsInvalidOperationException() {
         using ServiceProvider provider = CreateProvider(static _ => { });
         ISender sender = provider.GetRequiredService<ISender>();
 
-        Assert.Throws<NotSupportedException>(() => sender.CreateStream(new SampleStreamRequest()));
-        Assert.Throws<NotSupportedException>(() => sender.CreateStream((object)new SampleStreamRequest()));
+        InvalidOperationException invalidException = Assert.Throws<InvalidOperationException>(
+            () => sender.CreateStream(new object()));
+        InvalidOperationException ambiguousException = Assert.Throws<InvalidOperationException>(
+            () => sender.CreateStream((object)new MultipleResponseStreamRequest()));
+
+        Assert.Contains("does not implement IStreamRequest<TResponse>", invalidException.Message, StringComparison.Ordinal);
+        Assert.Contains("multiple response types", ambiguousException.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void CreateStream_WithNullRequests_ThrowsArgumentNullException() {
+        using ServiceProvider provider = CreateProvider(static _ => { });
+        ISender sender = provider.GetRequiredService<ISender>();
+
+        Assert.Throws<ArgumentNullException>(() => sender.CreateStream<string>(null!));
+        Assert.Throws<ArgumentNullException>(() => sender.CreateStream(null!));
+    }
+
+    [Fact]
+    public void AddOpenBehavior_WithInvalidOpenGenericType_ThrowsArgumentException() {
+        var configuration = new MediatorServiceConfiguration();
+
+        ArgumentException exception = Assert.Throws<ArgumentException>(
+            () => configuration.AddOpenBehavior(typeof(Dictionary<,>)));
+
+        Assert.Contains("must implement IPipelineBehavior", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AddOpenBehavior_WithReorderedGenericParameters_ThrowsArgumentException() {
+        var configuration = new MediatorServiceConfiguration();
+
+        Assert.Throws<ArgumentException>(() =>
+            configuration.AddOpenBehavior(typeof(ReorderedBehavior<,>)));
+    }
+
+    [Theory]
+    [InlineData(typeof(AbstractBehavior<,>))]
+    [InlineData(typeof(OpenBehaviorInterface<,>))]
+    public void AddOpenBehavior_WithNonConcreteType_ThrowsArgumentException(Type behaviorType) {
+        var configuration = new MediatorServiceConfiguration();
+
+        ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+            configuration.AddOpenBehavior(behaviorType));
+
+        Assert.Contains("must be a concrete class", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void MediatorConfiguration_WithNullArguments_ThrowsArgumentNullException() {
+        var configuration = new MediatorServiceConfiguration();
+
+        Assert.Throws<ArgumentNullException>(() => configuration.RegisterServicesFromAssembly(null!));
+        Assert.Throws<ArgumentNullException>(() => configuration.AddOpenBehavior(null!));
+    }
+
+    [Fact]
+    public void AddFoodDiaryMediator_WithNullArguments_ThrowsArgumentNullException() {
+        IServiceCollection nullServices = null!;
+        var services = new ServiceCollection();
+
+        Assert.Throws<ArgumentNullException>(() => nullServices.AddFoodDiaryMediator(static _ => { }));
+        Assert.Throws<ArgumentNullException>(() => services.AddFoodDiaryMediator(null!));
+    }
+
+    [Fact]
+    public async Task AddFoodDiaryMediator_WithDuplicateConfiguration_DeduplicatesRegistrations() {
+        var services = new ServiceCollection();
+
+        for (int index = 0; index < 2; index++) {
+            services.AddFoodDiaryMediator(configuration => {
+                configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly);
+                configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly);
+                configuration.AddOpenBehavior(typeof(OuterBehavior<,>));
+                configuration.AddOpenBehavior(typeof(OuterBehavior<,>));
+            });
+        }
+
+        Assert.Single(services, static descriptor => descriptor.ServiceType == typeof(IMediator));
+        Assert.Single(services, static descriptor => descriptor.ServiceType == typeof(ISender));
+        Assert.Single(services, static descriptor => descriptor.ServiceType == typeof(IPublisher));
+        Assert.Single(
+            services,
+            static descriptor =>
+                descriptor.ServiceType == typeof(IPipelineBehavior<,>) &&
+                descriptor.ImplementationType == typeof(OuterBehavior<,>));
+
+        await using ServiceProvider provider = services.BuildServiceProvider();
+        BehaviorLog.Entries.Clear();
+        await provider.GetRequiredService<ISender>().Send(new EchoQuery("deduplicated"));
+
+        Assert.Equal(["outer-before", "handler", "outer-after"], BehaviorLog.Entries);
+    }
+
+    [Fact]
+    public void NotificationEnvelope_WithValue_PreservesValueAndRejectsNull() {
+        var envelope = new NotificationEnvelope<string>("value");
+        envelope.Deconstruct(out string deconstructedValue);
+        NotificationEnvelope<string> updatedEnvelope = envelope with { Value = "updated" };
+
+        Assert.Equal("value", envelope.Value);
+        Assert.Equal("value", deconstructedValue);
+        Assert.Equal("updated", updatedEnvelope.Value);
+        Assert.Throws<ArgumentNullException>(() => new NotificationEnvelope<string>(null!));
+        Assert.Throws<ArgumentNullException>(() => envelope with { Value = null! });
     }
 
     private static ServiceProvider CreateProvider(Action<MediatorServiceConfiguration> configure) {
@@ -354,6 +585,48 @@ public sealed class MediatorTests {
             return Task.FromResult(Unit.Value);
         }
     }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record ExplicitRequest(string Value) : IRequest<string>;
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ExplicitRequestHandler : IRequestHandler<ExplicitRequest, string> {
+        Task<string> IRequestHandler<ExplicitRequest, string>.Handle(
+            ExplicitRequest request,
+            CancellationToken cancellationToken) =>
+            Task.FromResult($"explicit:{request.Value}");
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record FirstMultiRequest : IRequest<string>;
+
+    [ExcludeFromCodeCoverage]
+    private sealed record SecondMultiRequest : IRequest<int>;
+
+    [ExcludeFromCodeCoverage]
+    private sealed class MultipleRequestHandler :
+        IRequestHandler<FirstMultiRequest, string>,
+        IRequestHandler<SecondMultiRequest, int> {
+        public Task<string> Handle(FirstMultiRequest request, CancellationToken cancellationToken) =>
+            Task.FromResult("first");
+
+        public Task<int> Handle(SecondMultiRequest request, CancellationToken cancellationToken) =>
+            Task.FromResult(2);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record SynchronousFailureRequest : IRequest<string>;
+
+    [ExcludeFromCodeCoverage]
+    private sealed class SynchronousFailureRequestHandler : IRequestHandler<SynchronousFailureRequest, string> {
+        public Task<string> Handle(
+            SynchronousFailureRequest request,
+            CancellationToken cancellationToken) =>
+            throw new InvalidOperationException("synchronous request failure");
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record MultipleResponseRequest : IRequest<string>, IRequest<int>;
 
     [ExcludeFromCodeCoverage]
     private sealed record CommandRequest(string Value) : ICommandRequest<EchoResponse>;
@@ -434,6 +707,28 @@ public sealed class MediatorTests {
     }
 
     [ExcludeFromCodeCoverage]
+    private sealed class ReorderedBehavior<TResponse, TRequest> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : notnull {
+        public Task<TResponse> Handle(
+            TRequest request,
+            RequestHandlerDelegate<TResponse> next,
+            CancellationToken cancellationToken) =>
+            next(cancellationToken);
+    }
+
+    private interface OpenBehaviorInterface<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : notnull;
+
+    [ExcludeFromCodeCoverage]
+    private abstract class AbstractBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : notnull {
+        public abstract Task<TResponse> Handle(
+            TRequest request,
+            RequestHandlerDelegate<TResponse> next,
+            CancellationToken cancellationToken);
+    }
+
+    [ExcludeFromCodeCoverage]
     private sealed record SampleNotification(string Value) : INotification;
 
     [ExcludeFromCodeCoverage]
@@ -453,6 +748,33 @@ public sealed class MediatorTests {
             NotificationLog.Entries.Add($"second:{notification.Value}");
             return Task.CompletedTask;
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record ExplicitNotification(string Value) : INotification;
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ExplicitNotificationHandler : INotificationHandler<ExplicitNotification> {
+        public static string? LastValue { get; set; }
+
+        Task INotificationHandler<ExplicitNotification>.Handle(
+            ExplicitNotification notification,
+            CancellationToken cancellationToken) {
+            LastValue = notification.Value;
+            return Task.CompletedTask;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record SynchronousFailureNotification : INotification;
+
+    [ExcludeFromCodeCoverage]
+    private sealed class SynchronousFailureNotificationHandler :
+        INotificationHandler<SynchronousFailureNotification> {
+        public Task Handle(
+            SynchronousFailureNotification notification,
+            CancellationToken cancellationToken) =>
+            throw new InvalidOperationException("synchronous notification failure");
     }
 
     [ExcludeFromCodeCoverage]
@@ -538,7 +860,27 @@ public sealed class MediatorTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record SampleStreamRequest : IStreamRequest<string>;
+    private sealed record SampleStreamRequest(int Count) : IStreamRequest<string>;
+
+    [ExcludeFromCodeCoverage]
+    private sealed class SampleStreamRequestHandler : IStreamRequestHandler<SampleStreamRequest, string> {
+        public static CancellationToken CapturedToken { get; private set; }
+
+        public async IAsyncEnumerable<string> Handle(
+            SampleStreamRequest request,
+            [EnumeratorCancellation] CancellationToken cancellationToken) {
+            CapturedToken = cancellationToken;
+
+            for (int index = 0; index < request.Count; index++) {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Yield();
+                yield return $"item-{index.ToString(CultureInfo.InvariantCulture)}";
+            }
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record MultipleResponseStreamRequest : IStreamRequest<string>, IStreamRequest<int>;
 
     [ExcludeFromCodeCoverage]
     private static class BehaviorLog {

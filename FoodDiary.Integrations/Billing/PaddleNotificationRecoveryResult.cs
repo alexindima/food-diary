@@ -1,3 +1,3 @@
 namespace FoodDiary.Integrations.Billing;
 
-public sealed record PaddleNotificationRecoveryResult(int Inspected, int Replayed);
+public sealed record PaddleNotificationRecoveryResult(int Inspected, int Replayed, bool WasLimited = false);

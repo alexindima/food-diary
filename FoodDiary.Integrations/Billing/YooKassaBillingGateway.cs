@@ -44,7 +44,7 @@ public sealed class YooKassaBillingGateway(
                     ["user_id"] = request.UserId.ToString(),
                     ["plan"] = request.Plan,
                 }),
-                idempotenceKey: null,
+                request.IdempotencyKey,
             cancellationToken).ConfigureAwait(false);
         if (paymentResponse.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(paymentResponse.Error);

@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Application.Notifications.Commands.RemoveWebPushSubscription;
 using FoodDiary.Application.Notifications.Commands.ScheduleTestNotification;
 using FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
@@ -159,6 +160,32 @@ public partial class NotificationsFeatureTests {
     }
 
     [Fact]
+    public async Task UpsertWebPushSubscription_WithUnspecifiedExpiration_ReturnsValidationFailureBeforeLookup() {
+        User user = CreateUser();
+        var repository = new InMemoryWebPushSubscriptionRepository();
+        var handler = new UpsertWebPushSubscriptionCommandHandler(
+            repository,
+            CreateCurrentUserAccessService(user),
+            new RecordingAuditLogger());
+
+        Result result = await handler.Handle(
+            new UpsertWebPushSubscriptionCommand(
+                user.Id.Value,
+                "https://push.example.com/new",
+                "p256",
+                "auth",
+                new DateTime(2026, 8, 19, 12, 0, 0, DateTimeKind.Unspecified),
+                "en",
+                "Chrome"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Multiple(
+            () => Assert.Equal(0, repository.EndpointLookupCount),
+            () => Assert.Empty(repository.Subscriptions));
+    }
+
+    [Fact]
     public async Task UpsertWebPushSubscription_WithExistingEndpoint_RefreshesSubscriptionAndWritesAuditLog() {
         User user = CreateUser();
         var subscription = WebPushSubscription.Create(
@@ -194,6 +221,44 @@ public partial class NotificationsFeatureTests {
         Assert.Equal("notifications.push-subscription.refreshed", auditLogger.Action);
         Assert.Contains("endpointHost=push.example.com", auditLogger.Details, StringComparison.Ordinal);
         Assert.Contains("locale=en", auditLogger.Details, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task UpsertWebPushSubscription_WhenLimitReached_EvictsOldestSubscription() {
+        User user = CreateUser();
+        WebPushSubscription[] existing = [.. Enumerable
+            .Range(0, WebPushDeliveryLimits.MaximumSubscriptionsPerUser)
+            .Select(index => {
+                string suffix = index.ToString(CultureInfo.InvariantCulture);
+                return WebPushSubscription.Create(
+                    user.Id,
+                    $"https://push.example.com/existing/{suffix}",
+                    $"p256-{suffix}",
+                    $"auth-{suffix}");
+            })];
+        var repository = new InMemoryWebPushSubscriptionRepository(existing);
+        var handler = new UpsertWebPushSubscriptionCommandHandler(
+            repository,
+            CreateCurrentUserAccessService(user),
+            new RecordingAuditLogger());
+
+        Result result = await handler.Handle(
+            new UpsertWebPushSubscriptionCommand(
+                user.Id.Value,
+                "https://push.example.com/new",
+                "new-p256",
+                "new-auth",
+                ExpirationTimeUtc: null,
+                "en",
+                "Chrome"),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(WebPushDeliveryLimits.MaximumSubscriptionsPerUser, repository.Subscriptions.Count),
+            () => Assert.Contains(repository.Subscriptions, subscription =>
+                string.Equals(subscription.Endpoint, "https://push.example.com/new", StringComparison.Ordinal)),
+            () => Assert.Contains(existing[0].Endpoint, repository.DeletedEndpoints, StringComparer.Ordinal));
     }
 
     [Fact]

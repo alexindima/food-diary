@@ -11,13 +11,22 @@ namespace FoodDiary.Integrations.Billing;
 public sealed class PaddleNotificationRecoveryService(
     HttpClient httpClient,
     IOptions<PaddleOptions> options,
-    TimeProvider? timeProvider = null) {
+    TimeProvider? timeProvider = null,
+    TimeSpan? overallTimeout = null,
+    int maximumReplaysPerRun = 100) {
     private const int MaximumPages = 100;
+    private static readonly TimeSpan DefaultOverallTimeout = TimeSpan.FromMinutes(5);
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) {
         MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
     };
     private readonly PaddleOptions _options = options.Value;
     private readonly TimeProvider _timeProvider = timeProvider ?? TimeProvider.System;
+    private readonly TimeSpan _overallTimeout = overallTimeout is null or { Ticks: > 0 }
+        ? overallTimeout ?? DefaultOverallTimeout
+        : throw new ArgumentOutOfRangeException(nameof(overallTimeout));
+    private readonly int _maximumReplaysPerRun = maximumReplaysPerRun > 0
+        ? maximumReplaysPerRun
+        : throw new ArgumentOutOfRangeException(nameof(maximumReplaysPerRun));
 
     public async Task<PaddleNotificationRecoveryResult> ReplayFailedAsync(
         CancellationToken cancellationToken = default) {
@@ -33,42 +42,51 @@ public sealed class PaddleNotificationRecoveryService(
         int inspected = 0;
         int replayed = 0;
 
-        for (int page = 0; page < MaximumPages && !string.IsNullOrWhiteSpace(next); page++) {
-            using var listRequest = new HttpRequestMessage(HttpMethod.Get, next);
-            using HttpResponseMessage response = await httpClient.SendAsync(
-                listRequest,
-                HttpCompletionOption.ResponseHeadersRead,
-                cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-            ListNotificationsResponse payload = await BoundedHttpContentReader.ReadFromJsonAsync<ListNotificationsResponse>(
-                response.Content,
-                JsonOptions,
-                BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
-                BoundedHttpContentReader.DefaultReadTimeout,
-                cancellationToken).ConfigureAwait(false) ?? throw new JsonException("Paddle notifications response was empty.");
+        using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        deadline.CancelAfter(_overallTimeout);
+        try {
+            for (int page = 0; page < MaximumPages && !string.IsNullOrWhiteSpace(next); page++) {
+                using var listRequest = new HttpRequestMessage(HttpMethod.Get, next);
+                using HttpResponseMessage response = await httpClient.SendAsync(
+                    listRequest,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    deadline.Token).ConfigureAwait(false);
+                response.EnsureSuccessStatusCode();
+                ListNotificationsResponse payload = await BoundedHttpContentReader.ReadFromJsonAsync<ListNotificationsResponse>(
+                    response.Content,
+                    JsonOptions,
+                    BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
+                    BoundedHttpContentReader.DefaultReadTimeout,
+                    deadline.Token).ConfigureAwait(false) ?? throw new JsonException("Paddle notifications response was empty.");
 
-            foreach (NotificationResponse notification in payload.Data) {
-                inspected++;
-                if (!string.Equals(notification.Origin, "event", StringComparison.Ordinal) ||
-                    notification.ReplayedAt is not null) {
-                    continue;
+                foreach (NotificationResponse notification in payload.Data) {
+                    inspected++;
+                    if (!string.Equals(notification.Origin, "event", StringComparison.Ordinal) ||
+                        notification.ReplayedAt is not null) {
+                        continue;
+                    }
+
+                    using var replayRequest = new HttpRequestMessage(
+                        HttpMethod.Post,
+                        $"notifications/{Uri.EscapeDataString(notification.Id)}/replay");
+                    using HttpResponseMessage replayResponse = await httpClient.SendAsync(
+                        replayRequest,
+                        HttpCompletionOption.ResponseHeadersRead,
+                        deadline.Token).ConfigureAwait(false);
+                    replayResponse.EnsureSuccessStatusCode();
+                    replayed++;
+                    if (replayed == _maximumReplaysPerRun) {
+                        return new PaddleNotificationRecoveryResult(inspected, replayed, WasLimited: true);
+                    }
                 }
 
-                using var replayRequest = new HttpRequestMessage(
-                    HttpMethod.Post,
-                    $"notifications/{Uri.EscapeDataString(notification.Id)}/replay");
-                using HttpResponseMessage replayResponse = await httpClient.SendAsync(
-                    replayRequest,
-                    HttpCompletionOption.ResponseHeadersRead,
-                    cancellationToken).ConfigureAwait(false);
-                replayResponse.EnsureSuccessStatusCode();
-                replayed++;
+                next = NormalizeNext(payload.Meta?.Pagination?.Next);
             }
-
-            next = NormalizeNext(payload.Meta?.Pagination?.Next);
+        } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && deadline.IsCancellationRequested) {
+            return new PaddleNotificationRecoveryResult(inspected, replayed, WasLimited: true);
         }
 
-        return new PaddleNotificationRecoveryResult(inspected, replayed);
+        return new PaddleNotificationRecoveryResult(inspected, replayed, WasLimited: !string.IsNullOrWhiteSpace(next));
     }
 
     private void ConfigureClient() {

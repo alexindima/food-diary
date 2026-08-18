@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "optionTypes": 54,
+    "optionTypes": 53,
     "configurationFiles": 7,
     "configurationKeys": 221,
     "environmentVariables": 171
@@ -191,16 +191,6 @@
         "ClientId"
       ],
       "path": "FoodDiary.Integrations/Options/GoogleAuthOptions.cs"
-    },
-    {
-      "type": "GoogleFitOptions",
-      "section": "GoogleFit",
-      "properties": [
-        "ClientId",
-        "ClientSecret",
-        "RedirectUri"
-      ],
-      "path": "FoodDiary.Integrations/Options/GoogleFitOptions.cs"
     },
     {
       "type": "ImageCleanupOptions",

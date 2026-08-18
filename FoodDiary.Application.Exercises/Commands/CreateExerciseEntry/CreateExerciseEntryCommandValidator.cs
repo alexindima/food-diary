@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Exercises.Common;
 
 namespace FoodDiary.Application.Exercises.Commands.CreateExerciseEntry;
 
@@ -10,13 +11,23 @@ public sealed class CreateExerciseEntryCommandValidator : AbstractValidator<Crea
             .WithMessage("User ID is required.");
 
         RuleFor(x => x.DurationMinutes)
-            .GreaterThan(0)
-            .WithErrorCode("Exercise.InvalidDuration")
-            .WithMessage("Duration must be positive.");
+            .Must(ExerciseEntryInputValidation.IsValidDuration)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage(ExerciseEntryInputValidation.DurationErrorMessage);
 
         RuleFor(x => x.CaloriesBurned)
-            .GreaterThanOrEqualTo(0)
-            .WithErrorCode("Exercise.InvalidCalories")
-            .WithMessage("Calories burned must be non-negative.");
+            .Must(ExerciseEntryInputValidation.IsValidCalories)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage(ExerciseEntryInputValidation.CaloriesErrorMessage);
+
+        RuleFor(x => x.Name)
+            .Must(value => ExerciseEntryInputValidation.IsValidOptionalText(value, ExerciseEntryInputValidation.MaxNameLength))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage(ExerciseEntryInputValidation.NameErrorMessage);
+
+        RuleFor(x => x.Notes)
+            .Must(value => ExerciseEntryInputValidation.IsValidOptionalText(value, ExerciseEntryInputValidation.MaxNotesLength))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage(ExerciseEntryInputValidation.NotesErrorMessage);
     }
 }

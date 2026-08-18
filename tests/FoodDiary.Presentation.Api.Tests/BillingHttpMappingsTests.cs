@@ -16,12 +16,13 @@ public sealed class BillingHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new CreateCheckoutSessionHttpRequest("premium", "stripe");
 
-        CreateCheckoutSessionCommand command = request.ToCommand(userId);
+        CreateCheckoutSessionCommand command = request.ToCommand(userId, "request-id");
 
         Assert.Multiple(
             () => Assert.Equal(userId, command.UserId),
             () => Assert.Equal("premium", command.Plan),
-            () => Assert.Equal("stripe", command.Provider));
+            () => Assert.Equal("stripe", command.Provider),
+            () => Assert.Equal("request-id", command.IdempotencyKey));
     }
 
     [Fact]

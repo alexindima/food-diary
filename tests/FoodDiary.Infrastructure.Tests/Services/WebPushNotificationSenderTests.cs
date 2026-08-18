@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
@@ -104,6 +105,46 @@ public sealed class WebPushNotificationSenderTests {
         await sender.SendAsync(notification, CancellationToken.None);
 
         Assert.Equal(1, subscriptionRepository.GetByUserCalls);
+    }
+
+    [Fact]
+    public async Task SendAsync_WhenAudienceExceedsLimit_SendsOnlyMaximumAllowedSubscriptions() {
+        var user = User.Create("bounded-push@example.com", "hash");
+        user.UpdatePreferences(new UserPreferenceUpdate(
+            PushNotificationsEnabled: true,
+            FastingPushNotificationsEnabled: true));
+        WebPushSubscription[] subscriptions = [.. Enumerable
+            .Range(0, WebPushDeliveryLimits.MaximumSubscriptionsPerUser + 2)
+            .Select(index => {
+                string suffix = index.ToString(CultureInfo.InvariantCulture);
+                return WebPushSubscription.Create(
+                    user.Id,
+                    $"https://push.example.com/subscriptions/{suffix}",
+                    $"p256-{suffix}",
+                    $"auth-{suffix}",
+                    FixedNow.AddHours(1));
+            })];
+        var repository = new RecordingSubscriptionRepository(subscriptions);
+        var webPushClient = new StubWebPushClientAdapter();
+        var sender = new WebPushNotificationSender(
+            CreateAudienceService(repository, new SingleUserRepository(user)),
+            new StubNotificationTextRenderer(),
+            Microsoft.Extensions.Options.Options.Create(new WebPushOptions {
+                Enabled = true,
+                Subject = "https://example.com",
+                PublicKey = "public",
+                PrivateKey = "private",
+                DefaultUrl = "/",
+            }),
+            webPushClient,
+            FixedTime,
+            NullLogger<WebPushNotificationSender>.Instance);
+
+        await sender.SendAsync(
+            Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}"),
+            CancellationToken.None);
+
+        Assert.Equal(WebPushDeliveryLimits.MaximumSubscriptionsPerUser, webPushClient.SendCalls);
     }
 
     [Fact]
@@ -532,14 +573,16 @@ public sealed class WebPushNotificationSenderTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubWebPushClientAdapter(Exception? exception = null) : IWebPushClientAdapter {
-        public int SendCalls { get; private set; }
+        private int _sendCalls;
+
+        public int SendCalls => Volatile.Read(ref _sendCalls);
 
         public Task SendNotificationAsync(
             PushSubscription subscription,
             string payload,
             VapidDetails vapidDetails,
             CancellationToken cancellationToken) {
-            SendCalls++;
+            Interlocked.Increment(ref _sendCalls);
             return exception is null
                 ? Task.CompletedTask
                 : Task.FromException(exception);

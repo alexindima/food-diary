@@ -25,6 +25,13 @@ public sealed class PaddleNotificationRecoveryJob(
                     result.Replayed);
             }
 
+            if (result.WasLimited) {
+                logger.LogWarning(
+                    "Paddle notification recovery stopped at its per-run limit: inspected={Inspected}, replayed={Replayed}.",
+                    result.Inspected,
+                    result.Replayed);
+            }
+
             observer.RecordSuccess(JobName, result.Replayed);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             observer.RecordCanceled(JobName);

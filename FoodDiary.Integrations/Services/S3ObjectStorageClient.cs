@@ -1,5 +1,6 @@
 using Amazon.S3;
 using Amazon.S3.Model;
+using System.Buffers;
 using System.Net;
 
 namespace FoodDiary.Integrations.Services;
@@ -9,6 +10,7 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
         string bucketName,
         string key,
         string contentType,
+        long contentLength,
         DateTime expiresAt) {
         var request = new GetPreSignedUrlRequest {
             BucketName = bucketName,
@@ -17,6 +19,7 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
             Expires = expiresAt,
             ContentType = contentType,
         };
+        request.Headers.ContentLength = contentLength;
 
         return s3Client.GetPreSignedURL(request);
     }
@@ -41,6 +44,38 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
             }, cancellationToken).ConfigureAwait(false);
 
             return new StoredObjectInfo(response.ContentLength, response.Headers.ContentType);
+        } catch (AmazonS3Exception ex) when (ex.StatusCode == HttpStatusCode.NotFound) {
+            return null;
+        }
+    }
+
+    public async Task<byte[]?> GetObjectBytesAsync(
+        string bucketName,
+        string key,
+        long maximumBytes,
+        CancellationToken cancellationToken) {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maximumBytes);
+
+        try {
+            using GetObjectResponse response = await s3Client.GetObjectAsync(new GetObjectRequest {
+                BucketName = bucketName,
+                Key = key,
+            }, cancellationToken).ConfigureAwait(false);
+            Stream responseStream = response.ResponseStream;
+            var content = new ArrayBufferWriter<byte>();
+            while (true) {
+                Memory<byte> buffer = content.GetMemory(81920);
+                int bytesRead = await responseStream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
+                if (bytesRead == 0) {
+                    return content.WrittenSpan.ToArray();
+                }
+
+                if (content.WrittenCount + bytesRead > maximumBytes) {
+                    throw new InvalidDataException("Stored object exceeds the allowed download size.");
+                }
+
+                content.Advance(bytesRead);
+            }
         } catch (AmazonS3Exception ex) when (ex.StatusCode == HttpStatusCode.NotFound) {
             return null;
         }

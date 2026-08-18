@@ -15,6 +15,11 @@ public static class ShoppingListItemBuilder {
         UserId userId,
         IProductLookupService productLookupService,
         CancellationToken cancellationToken) {
+        if (items.Count > ShoppingListInputLimits.ItemsMaxCount) {
+            return Result.Failure<IReadOnlyList<ShoppingListItemData>>(
+                Errors.Validation.Invalid(nameof(items), $"A shopping list must contain at most {ShoppingListInputLimits.ItemsMaxCount} items."));
+        }
+
         if (items.Count == 0) {
             return Result.Success<IReadOnlyList<ShoppingListItemData>>([]);
         }
@@ -82,6 +87,11 @@ public static class ShoppingListItemBuilder {
         ShoppingListItemInput item,
         int index,
         IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products) {
+        Error? textError = ValidateText(item);
+        if (textError is not null) {
+            return Result.Failure<ShoppingListItemData>(textError);
+        }
+
         Error? amountError = ValidateAmount(item);
         if (amountError is not null) {
             return Result.Failure<ShoppingListItemData>(amountError);
@@ -97,8 +107,26 @@ public static class ShoppingListItemBuilder {
             return Errors.Validation.Invalid(nameof(item.Amount), "Amount must be a finite number.");
         }
 
-        return item.Amount <= 0
-            ? Errors.Validation.Invalid(nameof(item.Amount), "Amount must be greater than zero.")
+        return item.Amount is <= 0 or > ShoppingListInputLimits.AmountMaxValue
+            ? Errors.Validation.Invalid(nameof(item.Amount), ShoppingListInputLimits.AmountRangeErrorMessage)
+            : null;
+    }
+
+    private static Error? ValidateText(ShoppingListItemInput item) {
+        if (!item.ProductId.HasValue && item.Name?.Trim().Length > ShoppingListInputLimits.ItemNameMaxLength) {
+            return Errors.Validation.Invalid(nameof(item.Name), $"Name must be at most {ShoppingListInputLimits.ItemNameMaxLength} characters.");
+        }
+
+        if (item.Category?.Trim().Length > ShoppingListInputLimits.CategoryMaxLength) {
+            return Errors.Validation.Invalid(nameof(item.Category), $"Category must be at most {ShoppingListInputLimits.CategoryMaxLength} characters.");
+        }
+
+        if (item.Aisle?.Trim().Length > ShoppingListInputLimits.CategoryMaxLength) {
+            return Errors.Validation.Invalid(nameof(item.Aisle), $"Aisle must be at most {ShoppingListInputLimits.CategoryMaxLength} characters.");
+        }
+
+        return item.Note?.Trim().Length > ShoppingListInputLimits.NoteMaxLength
+            ? Errors.Validation.Invalid(nameof(item.Note), $"Note must be at most {ShoppingListInputLimits.NoteMaxLength} characters.")
             : null;
     }
 

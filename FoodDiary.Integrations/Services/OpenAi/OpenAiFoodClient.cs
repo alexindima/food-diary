@@ -19,10 +19,11 @@ public sealed class OpenAiFoodClient(
     HttpClient httpClient,
     IOptions<OpenAiOptions> options,
     ILogger<OpenAiFoodClient> logger,
-    TimeProvider? timeProvider = null)
+    TimeProvider? timeProvider = null,
+    TimeSpan? overallRequestTimeout = null)
     : IOpenAiFoodClient {
     private const int MaxTransientRetries = 2;
-    private static readonly TimeSpan OverallRequestTimeout = TimeSpan.FromSeconds(60);
+    private static readonly TimeSpan DefaultOverallRequestTimeout = TimeSpan.FromSeconds(60);
     private static readonly TimeSpan MaximumRetryDelay = TimeSpan.FromSeconds(5);
     private static readonly TimeSpan[] RetryDelays = [
         TimeSpan.FromMilliseconds(250),
@@ -31,6 +32,9 @@ public sealed class OpenAiFoodClient(
 
     private readonly OpenAiOptions _options = options.Value;
     private readonly TimeProvider _timeProvider = timeProvider ?? TimeProvider.System;
+    private readonly TimeSpan _overallRequestTimeout = overallRequestTimeout is null or { Ticks: > 0 }
+        ? overallRequestTimeout ?? DefaultOverallRequestTimeout
+        : throw new ArgumentOutOfRangeException(nameof(overallRequestTimeout));
 
     public async Task<Result<AiProviderTokenBudget>> GetAnalyzeFoodImageTokenBudgetAsync(
         string imageUrl,
@@ -91,7 +95,8 @@ public sealed class OpenAiFoodClient(
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(response.Error);
         }
 
-        Result<FoodVisionModel> parsed = ParseVisionResponse(response.Json!);
+        using JsonDocument json = response.Json!;
+        Result<FoodVisionModel> parsed = ParseVisionResponse(json);
         if (parsed.IsFailure) {
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(parsed.Error);
         }
@@ -100,7 +105,7 @@ public sealed class OpenAiFoodClient(
             parsed.Value,
             operation,
             requestModel,
-            ExtractUsage(response.Json!)));
+            ExtractUsage(json)));
     }
 
     public async Task<Result<AiProviderTokenBudget>> GetParseFoodTextTokenBudgetAsync(
@@ -136,7 +141,8 @@ public sealed class OpenAiFoodClient(
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(response.Error);
         }
 
-        Result<FoodVisionModel> parsed = ParseVisionResponse(response.Json!);
+        using JsonDocument json = response.Json!;
+        Result<FoodVisionModel> parsed = ParseVisionResponse(json);
         if (parsed.IsFailure) {
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(parsed.Error);
         }
@@ -145,7 +151,7 @@ public sealed class OpenAiFoodClient(
             parsed.Value,
             operation,
             requestModel,
-            ExtractUsage(response.Json!)));
+            ExtractUsage(json)));
     }
 
     public async Task<Result<AiProviderTokenBudget>> GetCalculateNutritionTokenBudgetAsync(
@@ -179,7 +185,8 @@ public sealed class OpenAiFoodClient(
             return Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(response.Error);
         }
 
-        Result<FoodNutritionModel> parsed = ParseNutritionResponse(response.Json!);
+        using JsonDocument json = response.Json!;
+        Result<FoodNutritionModel> parsed = ParseNutritionResponse(json);
         if (parsed.IsFailure) {
             return Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(parsed.Error);
         }
@@ -188,7 +195,7 @@ public sealed class OpenAiFoodClient(
             parsed.Value,
             operation,
             requestModel,
-            ExtractUsage(response.Json!)));
+            ExtractUsage(json)));
     }
 
     private async Task<Result<long>> CountInputTokensAsync(object payload, CancellationToken cancellationToken) {
@@ -257,7 +264,7 @@ public sealed class OpenAiFoodClient(
         CancellationToken cancellationToken) {
         string requestBody = JsonSerializer.Serialize(payload);
         using var overallDeadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        overallDeadline.CancelAfter(OverallRequestTimeout);
+        overallDeadline.CancelAfter(_overallRequestTimeout);
 
         for (int attempt = 0; attempt <= MaxTransientRetries; attempt++) {
             using HttpRequestMessage request = CreateResponseRequest(requestBody);
@@ -279,11 +286,11 @@ public sealed class OpenAiFoodClient(
             }
 
             using HttpResponseMessage _ = response;
-            (bool IsSuccess, string? Body, Error Error) responseBody = await ReadResponseBodyAsync(
-                response.Content,
-                operation,
+            (bool IsSuccess, string? Body, Error Error) responseBody = await ReadResponseBodyWithinDeadlineAsync(
+                response.Content, operation,
                 model,
-                overallDeadline.Token).ConfigureAwait(false);
+                overallDeadline.Token,
+                cancellationToken).ConfigureAwait(false);
             if (!responseBody.IsSuccess) {
                 return (false, null, responseBody.Error, false);
             }
@@ -341,6 +348,20 @@ public sealed class OpenAiFoodClient(
         } catch (TimeoutException) {
             RecordAiRequest(operation, model, "response_body_timeout");
             return (false, null, Errors.Ai.InvalidResponse("OpenAI response body exceeded its read deadline."));
+        }
+    }
+
+    private static async Task<(bool IsSuccess, string? Body, Error Error)> ReadResponseBodyWithinDeadlineAsync(
+        HttpContent content,
+        string operation,
+        string model,
+        CancellationToken deadlineToken,
+        CancellationToken callerToken) {
+        try {
+            return await ReadResponseBodyAsync(content, operation, model, deadlineToken).ConfigureAwait(false);
+        } catch (OperationCanceledException) when (!callerToken.IsCancellationRequested) {
+            RecordAiRequest(operation, model, "timeout");
+            return (false, null, Errors.Ai.OpenAiFailed("OpenAI request deadline expired."));
         }
     }
 

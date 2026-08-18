@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Export.Internal;
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Abstractions.Export.Models;
 using FoodDiary.Application.Export.Models;
@@ -31,8 +30,17 @@ public sealed class ExportDiaryQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        DateTime normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(query.DateFrom);
-        DateTime normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(query.DateTo);
+        if (!ExportDiaryDateRangePolicy.TryResolve(
+                query.DateFrom,
+                query.DateTo,
+                query.TimeZoneOffsetMinutes,
+                out DateTime normalizedFrom,
+                out DateTime normalizedTo,
+                out TimeSpan displayOffset)) {
+            return Result.Failure<FileExportResult>(
+                Errors.Validation.Invalid(nameof(query.DateFrom), "Export dates cannot be represented with the requested time-zone offset."));
+        }
+
         if (normalizedFrom > normalizedTo) {
             return Result.Failure<FileExportResult>(
                 Errors.Validation.Invalid(nameof(query.DateFrom), "DateFrom must be less than or equal to DateTo."));
@@ -49,7 +57,6 @@ public sealed class ExportDiaryQueryHandler(
             normalizedTo,
             cancellationToken).ConfigureAwait(false);
 
-        TimeSpan displayOffset = ResolveDisplayOffset(normalizedFrom, query.TimeZoneOffsetMinutes);
         string fromStr = normalizedFrom.Add(displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         string toStr = normalizedTo.Add(displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
@@ -84,14 +91,4 @@ public sealed class ExportDiaryQueryHandler(
             : null;
     }
 
-    private static TimeSpan ResolveDisplayOffset(DateTime dateFrom, int? timeZoneOffsetMinutes) {
-        if (timeZoneOffsetMinutes is >= -840 and <= 840) {
-            return TimeSpan.FromMinutes(timeZoneOffsetMinutes.Value);
-        }
-
-        TimeSpan timeOfDay = dateFrom.TimeOfDay;
-        return timeOfDay <= TimeSpan.FromHours(12)
-            ? -timeOfDay
-            : TimeSpan.FromDays(1) - timeOfDay;
-    }
 }

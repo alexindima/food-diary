@@ -53,7 +53,7 @@ public sealed class WearableOAuthStateServiceTests {
         WearableOAuthStateService service = CreateService();
         string state = service.CreateState(userId, WearableProvider.Fitbit, "client-state");
 
-        Assert.False(service.IsValidState(state, userId, WearableProvider.GoogleFit));
+        Assert.False(service.IsValidState(state, userId, WearableProvider.Garmin));
     }
 
     [Theory]

@@ -25,7 +25,7 @@ public sealed class WearableDateValidatorTests {
     [MemberData(nameof(UnsupportedDates))]
     public void SyncValidator_WithUnsupportedDate_ReturnsValidationError(DateTime date) {
         var validator = new SyncWearableDataCommandValidator(CurrentTime);
-        var command = new SyncWearableDataCommand(Guid.NewGuid(), "googlefit", date);
+        var command = new SyncWearableDataCommand(Guid.NewGuid(), "fitbit", date);
 
         TestValidationResult<SyncWearableDataCommand> result = validator.TestValidate(command);
 

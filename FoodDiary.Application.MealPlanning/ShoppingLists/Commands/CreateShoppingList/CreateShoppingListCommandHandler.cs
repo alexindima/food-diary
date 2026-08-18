@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.MealPlanning.ShoppingLists.Mappings;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
 using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
 using FoodDiary.Application.MealPlanning.ShoppingLists.Services;
 using FoodDiary.Domain.Entities.Shopping;
@@ -32,6 +33,11 @@ public sealed class CreateShoppingListCommandHandler(
         if (string.IsNullOrWhiteSpace(command.Name)) {
             return Result.Failure<ShoppingListModel>(
                 Errors.Validation.Required(nameof(command.Name)));
+        }
+
+        if (command.Name.Trim().Length > ShoppingListInputLimits.NameMaxLength) {
+            return Result.Failure<ShoppingListModel>(
+                Errors.Validation.Invalid(nameof(command.Name), $"Name must be at most {ShoppingListInputLimits.NameMaxLength} characters."));
         }
 
         Result<IReadOnlyList<ShoppingListItemData>> itemsResult = await ShoppingListItemBuilder.BuildItemsAsync(

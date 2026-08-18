@@ -1217,7 +1217,7 @@
         "WAIST_GOAL": "Цель: {{value}} см",
         "CM": "см",
         "ACTIVITY_TITLE": "Активность за день",
-        "ACTIVITY_META": "Скоро из Google Fit",
+        "ACTIVITY_META": "Скоро из подключенного трекера",
         "CALORIES_BURNED": "Сожжено",
         "STEPS": "Шаги",
         "ADVICE_TITLE": "Совет дня",
@@ -2862,7 +2862,7 @@
     },
     "ACTIVITY_CARD": {
         "TITLE": "Активность за день",
-        "META": "Скоро подтянем из Google Fit",
+        "META": "Скоро подтянем из подключенного трекера",
         "CALORIES_BURNED": "Сожжено калорий",
         "STEPS": "Шаги",
         "KCAL": "ккал"

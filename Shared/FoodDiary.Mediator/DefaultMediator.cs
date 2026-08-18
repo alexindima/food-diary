@@ -1,40 +1,24 @@
-using System.Reflection;
+using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Mediator;
 
 internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMediator {
-    public Task<TResponse> Send<TResponse>(
+    private static readonly ConcurrentDictionary<(Type Request, Type Response), RequestHandlerWrapper> RequestHandlers = new();
+    private static readonly ConcurrentDictionary<(Type Request, Type Response), StreamRequestHandlerWrapper> StreamRequestHandlers = new();
+    private static readonly ConcurrentDictionary<Type, NotificationHandlerWrapper> NotificationHandlers = new();
+
+    public async Task<TResponse> Send<TResponse>(
         IRequest<TResponse> request,
         CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(request);
 
-        Type requestType = request.GetType();
-        Type responseType = typeof(TResponse);
-        Type handlerType = typeof(IRequestHandler<,>).MakeGenericType(requestType, responseType);
-        object handler = serviceProvider.GetRequiredService(handlerType);
-
-        RequestHandlerDelegate<TResponse> handlerDelegate = token => InvokeHandler<TResponse>(
-            handler,
-            request,
-            cancellationToken: token);
-
-        Type behaviorType = typeof(IPipelineBehavior<,>).MakeGenericType(requestType, responseType);
-        object[] behaviors = [.. serviceProvider
-            .GetServices(behaviorType)
-            .OfType<object>()
-            .Reverse()];
-
-        foreach (object behavior in behaviors) {
-            RequestHandlerDelegate<TResponse> next = handlerDelegate;
-            handlerDelegate = token => InvokeBehavior(
-                behavior,
-                request,
-                next,
-                token);
-        }
-
-        return handlerDelegate(cancellationToken);
+        RequestHandlerWrapper handler = GetRequestHandler(request.GetType(), typeof(TResponse));
+        object? response = await handler
+            .Handle(request, serviceProvider, cancellationToken)
+            .ConfigureAwait(false);
+        return (TResponse)response!;
     }
 
     public async Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
@@ -45,20 +29,26 @@ internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMedia
     public Task<object?> Send(object request, CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(request);
 
-        Type responseType = GetRequestResponseType(request.GetType())
-            ?? throw new InvalidOperationException($"Request type {request.GetType().Name} does not implement IRequest<TResponse>.");
-
-        return SendObject(request, responseType, cancellationToken);
+        Type responseType = GetSingleResponseType(request.GetType(), typeof(IRequest<>));
+        RequestHandlerWrapper handler = GetRequestHandler(request.GetType(), responseType);
+        return handler.Handle(request, serviceProvider, cancellationToken);
     }
 
     public IAsyncEnumerable<TResponse> CreateStream<TResponse>(
         IStreamRequest<TResponse> request,
         CancellationToken cancellationToken = default) {
-        throw new NotSupportedException("Stream requests are not supported by FoodDiary.Mediator.");
+        ArgumentNullException.ThrowIfNull(request);
+
+        StreamRequestHandlerWrapper handler = GetStreamRequestHandler(request.GetType(), typeof(TResponse));
+        return CastStream<TResponse>(handler.Handle(request, serviceProvider, cancellationToken), cancellationToken);
     }
 
     public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = default) {
-        throw new NotSupportedException("Stream requests are not supported by FoodDiary.Mediator.");
+        ArgumentNullException.ThrowIfNull(request);
+
+        Type responseType = GetSingleResponseType(request.GetType(), typeof(IStreamRequest<>));
+        StreamRequestHandlerWrapper handler = GetStreamRequestHandler(request.GetType(), responseType);
+        return handler.Handle(request, serviceProvider, cancellationToken);
     }
 
     public Task Publish<TNotification>(
@@ -78,62 +68,56 @@ internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMedia
             throw new InvalidOperationException($"Notification type {notification.GetType().Name} does not implement INotification.");
         }
 
-        Type handlerType = typeof(INotificationHandler<>).MakeGenericType(notification.GetType());
-        IEnumerable<object?> handlers = serviceProvider.GetServices(handlerType);
-        return PublishObjectToHandlers(handlers, notification, cancellationToken);
+        NotificationHandlerWrapper handler = NotificationHandlers.GetOrAdd(
+            notification.GetType(),
+            static notificationType => (NotificationHandlerWrapper)Activator.CreateInstance(
+                typeof(NotificationHandlerWrapper<>).MakeGenericType(notificationType))!);
+        return handler.Handle(notification, serviceProvider, cancellationToken);
     }
 
-    private static async Task<TResponse> InvokeHandler<TResponse>(
-        object handler,
-        object request,
-        CancellationToken cancellationToken) {
-        object? result = handler
-            .GetType()
-            .GetMethod(nameof(IRequestHandler<,>.Handle))!
-            .Invoke(handler, [request, cancellationToken]);
-
-        return await ((Task<TResponse>)result!).ConfigureAwait(false);
+    private static RequestHandlerWrapper GetRequestHandler(Type requestType, Type responseType) {
+        return RequestHandlers.GetOrAdd(
+            (requestType, responseType),
+            static key => (RequestHandlerWrapper)Activator.CreateInstance(
+                typeof(RequestHandlerWrapper<,>).MakeGenericType(key.Request, key.Response))!);
     }
 
-    private static async Task<TResponse> InvokeBehavior<TResponse>(
-        object behavior,
-        object request,
-        RequestHandlerDelegate<TResponse> next,
-        CancellationToken cancellationToken) {
-        object? result = behavior
-            .GetType()
-            .GetMethod(nameof(IPipelineBehavior<,>.Handle))!
-            .Invoke(behavior, [request, next, cancellationToken]);
-
-        return await ((Task<TResponse>)result!).ConfigureAwait(false);
+    private static StreamRequestHandlerWrapper GetStreamRequestHandler(Type requestType, Type responseType) {
+        return StreamRequestHandlers.GetOrAdd(
+            (requestType, responseType),
+            static key => (StreamRequestHandlerWrapper)Activator.CreateInstance(
+                typeof(StreamRequestHandlerWrapper<,>).MakeGenericType(key.Request, key.Response))!);
     }
 
-    private static Type? GetRequestResponseType(Type requestType) {
-        return requestType
+    private static Type GetSingleResponseType(Type requestType, Type requestInterfaceDefinition) {
+        string requestInterfaceName = requestInterfaceDefinition == typeof(IRequest<>)
+            ? "IRequest<TResponse>"
+            : "IStreamRequest<TResponse>";
+        Type[] responseTypes = [.. requestType
             .GetInterfaces()
-            .FirstOrDefault(static interfaceType =>
+            .Where(interfaceType =>
                 interfaceType.IsGenericType &&
-                interfaceType.GetGenericTypeDefinition() == typeof(IRequest<>))
-            ?.GetGenericArguments()[0];
+                interfaceType.GetGenericTypeDefinition() == requestInterfaceDefinition)
+            .Select(static interfaceType => interfaceType.GetGenericArguments()[0])
+            .Distinct()];
+
+        return responseTypes.Length switch {
+            0 => throw new InvalidOperationException(
+                $"Request type {requestType.Name} does not implement {requestInterfaceName}."),
+            1 => responseTypes[0],
+            _ => throw new InvalidOperationException(
+                $"Request type {requestType.Name} implements {requestInterfaceName} with multiple response types."),
+        };
     }
 
-    private async Task<object?> SendObject(
-        object request,
-        Type responseType,
-        CancellationToken cancellationToken) {
-        MethodInfo method = typeof(DefaultMediator)
-            .GetMethods(BindingFlags.Instance | BindingFlags.Public)
-            .Single(static method =>
-                string.Equals(method.Name, nameof(Send), StringComparison.Ordinal) &&
-                method.IsGenericMethodDefinition &&
-                method.GetParameters() is [{ ParameterType.IsGenericType: true } firstParameter, _] &&
-                firstParameter.ParameterType.GetGenericTypeDefinition() == typeof(IRequest<>))
-            .MakeGenericMethod(responseType);
-
-        var task = (Task)method.Invoke(this, [request, cancellationToken])!;
-        await task.ConfigureAwait(false);
-
-        return task.GetType().GetProperty(nameof(Task<>.Result))?.GetValue(task);
+    private static async IAsyncEnumerable<TResponse> CastStream<TResponse>(
+        IAsyncEnumerable<object?> responses,
+        [EnumeratorCancellation] CancellationToken cancellationToken) {
+        await foreach (object? response in responses
+            .WithCancellation(cancellationToken)
+            .ConfigureAwait(false)) {
+            yield return (TResponse)response!;
+        }
     }
 
     private static async Task PublishToHandlers<TNotification>(
@@ -146,16 +130,85 @@ internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMedia
         }
     }
 
-    private static async Task PublishObjectToHandlers(
-        IEnumerable<object?> handlers,
+    private static async Task PublishObjectToHandlers<TNotification>(
+        IEnumerable<INotificationHandler<TNotification>> handlers,
         object notification,
-        CancellationToken cancellationToken) {
-        foreach (object handler in handlers.OfType<object>()) {
-            var task = (Task)handler
-                .GetType()
-                .GetMethod(nameof(INotificationHandler<>.Handle))!
-                .Invoke(handler, [notification, cancellationToken])!;
-            await task.ConfigureAwait(false);
+        CancellationToken cancellationToken)
+        where TNotification : INotification {
+        foreach (INotificationHandler<TNotification> handler in handlers) {
+            await handler.Handle((TNotification)notification, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private abstract class RequestHandlerWrapper {
+        public abstract Task<object?> Handle(
+            object request,
+            IServiceProvider provider,
+            CancellationToken cancellationToken);
+    }
+
+    private sealed class RequestHandlerWrapper<TRequest, TResponse> : RequestHandlerWrapper
+        where TRequest : IRequest<TResponse> {
+        public override async Task<object?> Handle(
+            object request,
+            IServiceProvider provider,
+            CancellationToken cancellationToken) {
+            var typedRequest = (TRequest)request;
+            IRequestHandler<TRequest, TResponse> handler = provider.GetRequiredService<IRequestHandler<TRequest, TResponse>>();
+            RequestHandlerDelegate<TResponse> handlerDelegate = token => handler.Handle(typedRequest, token);
+
+            foreach (IPipelineBehavior<TRequest, TResponse> behavior in provider
+                .GetServices<IPipelineBehavior<TRequest, TResponse>>()
+                .Reverse()) {
+                RequestHandlerDelegate<TResponse> next = handlerDelegate;
+                handlerDelegate = token => behavior.Handle(typedRequest, next, token);
+            }
+
+            return await handlerDelegate(cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private abstract class StreamRequestHandlerWrapper {
+        public abstract IAsyncEnumerable<object?> Handle(
+            object request,
+            IServiceProvider provider,
+            CancellationToken cancellationToken);
+    }
+
+    private sealed class StreamRequestHandlerWrapper<TRequest, TResponse> : StreamRequestHandlerWrapper
+        where TRequest : IStreamRequest<TResponse> {
+        public override async IAsyncEnumerable<object?> Handle(
+            object request,
+            IServiceProvider provider,
+            [EnumeratorCancellation] CancellationToken cancellationToken) {
+            IStreamRequestHandler<TRequest, TResponse> handler =
+                provider.GetRequiredService<IStreamRequestHandler<TRequest, TResponse>>();
+
+            await foreach (TResponse response in handler
+                .Handle((TRequest)request, cancellationToken)
+                .WithCancellation(cancellationToken)
+                .ConfigureAwait(false)) {
+                yield return response;
+            }
+        }
+    }
+
+    private abstract class NotificationHandlerWrapper {
+        public abstract Task Handle(
+            object notification,
+            IServiceProvider provider,
+            CancellationToken cancellationToken);
+    }
+
+    private sealed class NotificationHandlerWrapper<TNotification> : NotificationHandlerWrapper
+        where TNotification : INotification {
+        public override Task Handle(
+            object notification,
+            IServiceProvider provider,
+            CancellationToken cancellationToken) {
+            IEnumerable<INotificationHandler<TNotification>> handlers =
+                provider.GetServices<INotificationHandler<TNotification>>();
+            return PublishObjectToHandlers<TNotification>(handlers, notification, cancellationToken);
         }
     }
 }

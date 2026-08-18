@@ -19,6 +19,7 @@ public sealed class BillingWebhookController(ISender mediator, BillingWebhookHtt
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
     public async Task<IActionResult> HandleWebhook([FromRoute] string provider) =>
         await HandleNoContent(await processor.CreateCommandAsync(Request, provider, HttpContext.RequestAborted));
 }

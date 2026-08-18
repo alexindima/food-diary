@@ -9,12 +9,14 @@ public static partial class DependencyInjection {
     private static void AddIntegrationOptions(this IServiceCollection services, IConfiguration configuration) {
         services.AddOptions<S3Options>()
             .Bind(configuration.GetSection(S3Options.SectionName))
+            .Validate(S3Options.IsEmptyOrComplete,
+                "S3 configuration must be empty or include AccessKeyId, SecretAccessKey, Bucket, and Region or ServiceUrl.")
             .Validate(S3Options.HasValidMaxUploadSize,
                 "S3:MaxUploadSizeBytes must be greater than zero.")
             .Validate(S3Options.HasValidPublicBaseUrl,
-                "S3:PublicBaseUrl must be an absolute URL when provided.")
+                "S3:PublicBaseUrl must be an absolute HTTP or HTTPS URL when provided.")
             .Validate(S3Options.HasValidServiceUrl,
-                "S3:ServiceUrl must be an absolute URL when provided.")
+                "S3:ServiceUrl must be an absolute HTTP or HTTPS URL when provided.")
             .ValidateOnStart();
         services.AddOptions<OpenAiOptions>()
             .Bind(configuration.GetSection(OpenAiOptions.SectionName))
@@ -96,11 +98,6 @@ public static partial class DependencyInjection {
             .Bind(configuration.GetSection(FitbitOptions.SectionName))
             .Validate(FitbitOptions.IsEmptyOrComplete,
                 "Fitbit configuration must be empty or include ClientId, ClientSecret, and an absolute RedirectUri.")
-            .ValidateOnStart();
-        services.AddOptions<GoogleFitOptions>()
-            .Bind(configuration.GetSection(GoogleFitOptions.SectionName))
-            .Validate(GoogleFitOptions.IsEmptyOrComplete,
-                "GoogleFit configuration must be empty or include ClientId, ClientSecret, and an absolute RedirectUri.")
             .ValidateOnStart();
     }
 

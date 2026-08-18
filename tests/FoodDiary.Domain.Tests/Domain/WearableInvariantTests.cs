@@ -33,11 +33,11 @@ public class WearableInvariantTests {
         DateTime expires = DateTime.UtcNow.AddHours(1);
 
         var conn = WearableConnection.Create(
-            userId, WearableProvider.GoogleFit, "ext-456", "access-token", "refresh-token", expires);
+            userId, WearableProvider.Garmin, "ext-456", "access-token", "refresh-token", expires);
 
         Assert.Multiple(
             () => Assert.Equal(userId, conn.UserId),
-            () => Assert.Equal(WearableProvider.GoogleFit, conn.Provider),
+            () => Assert.Equal(WearableProvider.Garmin, conn.Provider),
             () => Assert.Equal("ext-456", conn.ExternalUserId),
             () => Assert.Equal("access-token", conn.AccessToken),
             () => Assert.Equal("refresh-token", conn.RefreshToken),

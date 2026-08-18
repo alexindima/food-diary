@@ -65,7 +65,10 @@ foreach ($contract in $contracts) { $contractsByName[$contract.name] = $contract
 $consumerEdges = [System.Collections.Generic.List[object]]::new()
 $sourcePaths = @(
     $cacheInputs |
-        Where-Object { $_ -match '\.cs$' } |
+        Where-Object {
+            $_ -match '\.cs$' -and
+            (Test-Path -LiteralPath (Join-Path $repositoryRoot $_) -PathType Leaf)
+        } |
         Sort-Object -Unique
 )
 

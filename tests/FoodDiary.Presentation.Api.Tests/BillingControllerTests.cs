@@ -1,3 +1,4 @@
+using System.Reflection;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
@@ -9,6 +10,7 @@ using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Billing;
 using FoodDiary.Presentation.Api.Features.Billing.Requests;
 using FoodDiary.Presentation.Api.Features.Billing.Responses;
+using FoodDiary.Presentation.Api.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +18,8 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BillingControllerTests {
+    private const string RequestId = "checkout-request-id";
+
     [Fact]
     public async Task GetOverview_SendsQueryAndReturnsResponse() {
         BillingOverviewModel model = CreateOverview();
@@ -68,6 +72,7 @@ public sealed class BillingControllerTests {
         Assert.Equal(userId, command.UserId);
         Assert.Equal("premium", command.Plan);
         Assert.Equal("stripe", command.Provider);
+        Assert.Equal(RequestId, command.IdempotencyKey);
     }
 
     [Fact]
@@ -87,12 +92,19 @@ public sealed class BillingControllerTests {
         Assert.Equal(userId, command.UserId);
     }
 
-    private static BillingController CreateController(ISender sender) =>
-        new(sender) {
+    private static BillingController CreateController(ISender sender) {
+        var httpContext = new DefaultHttpContext();
+        MethodInfo setRequestId = typeof(IdempotencyRequestContext).GetMethod(
+            "SetRequestId",
+            BindingFlags.Static | BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException("Idempotency request context setter was not found.");
+        setRequestId.Invoke(null, [httpContext, RequestId]);
+        return new BillingController(sender) {
             ControllerContext = new ControllerContext {
-                HttpContext = new DefaultHttpContext(),
+                HttpContext = httpContext,
             },
         };
+    }
 
     private static BillingOverviewModel CreateOverview() =>
         new(

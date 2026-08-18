@@ -1,4 +1,4 @@
-export type WearableProvider = 'Fitbit' | 'GoogleFit' | 'Garmin' | 'AppleHealth';
+export type WearableProvider = 'Fitbit' | 'Garmin' | 'AppleHealth';
 
 export type WearableConnection = {
     provider: string;

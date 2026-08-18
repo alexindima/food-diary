@@ -3,7 +3,7 @@
   "summary": {
     "composeServices": 19,
     "hostedServices": 10,
-    "httpClients": 13,
+    "httpClients": 12,
     "webhooks": 20,
     "recurringJobRegistrations": 15
   },
@@ -207,11 +207,6 @@
       "contract": null,
       "implementation": "FitbitClient",
       "registrationPath": "FoodDiary.Integrations/Wearables/FitbitClient.cs"
-    },
-    {
-      "contract": null,
-      "implementation": "GoogleFitClient",
-      "registrationPath": "FoodDiary.Integrations/Wearables/GoogleFitClient.cs"
     },
     {
       "contract": "IMailInboxClient",

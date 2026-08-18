@@ -14,7 +14,7 @@ const CONNECTION: WearableConnection = {
     lastSyncedAtUtc: '2026-05-15T00:00:00Z',
     connectedAtUtc: '2026-05-01T00:00:00Z',
 };
-const PROVIDER_COUNT = 4;
+const PROVIDER_COUNT = 3;
 
 describe('WearableConnectionsComponent', () => {
     it('loads provider rows and renders connection status', () => {
@@ -25,7 +25,7 @@ describe('WearableConnectionsComponent', () => {
         expect(component['providerRows']()[0].connection).toEqual(CONNECTION);
         expect(text).toContain('Fitbit');
         expect(text).toContain('WEARABLES.CONNECTED');
-        expect(text).toContain('Google Fit');
+        expect(text).toContain('Garmin');
         expect(text).toContain('WEARABLES.NOT_CONNECTED');
     });
 

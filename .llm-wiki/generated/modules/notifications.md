@@ -59,13 +59,13 @@ Source: `FoodDiary.Presentation.Api/Features/Notifications/NotificationsControll
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Notification, WebPushSubscription, NotificationWebPushOutboxMessage
-- Public contract files: 39
+- Public contract files: 40
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 39
+- Public contract types: 40
 - Interfaces: 22
 - DTO/read-model/projection types: 2
 - Enums: 0
@@ -75,6 +75,7 @@ Source: `FoodDiary.Presentation.Api/Features/Notifications/NotificationsControll
 - `class NotificationPayloadSerializer`
 - `class NotificationTargetUrlResolver`
 - `class NotificationTypes`
+- `class WebPushDeliveryLimits`
 - `interface INotificationCleanupService`
 - `interface INotificationClientRefreshService`
 - `interface INotificationDeduplicationService`
@@ -100,8 +101,7 @@ Source: `FoodDiary.Presentation.Api/Features/Notifications/NotificationsControll
 - `record DietologistInvitationDecisionNotificationPayload`
 - `record DietologistInvitationReceivedNotificationPayload`
 - `record EmptyNotificationPayload`
-- `record FastingPhaseNotificationPayload`
-- ... 9 more type(s)
+- ... 10 more type(s)
 
 ## Focused Tests
 

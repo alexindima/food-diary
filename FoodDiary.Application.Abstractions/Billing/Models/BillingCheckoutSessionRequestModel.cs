@@ -4,4 +4,5 @@ public sealed record BillingCheckoutSessionRequestModel(
     Guid UserId,
     string Email,
     string Plan,
-    string? ExistingCustomerId);
+    string? ExistingCustomerId,
+    string? IdempotencyKey = null);

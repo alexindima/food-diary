@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Exercises.Internal;
+using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Exercises.Mappings;
@@ -34,6 +35,17 @@ public sealed class UpdateExerciseEntryCommandHandler(
             value => new ExerciseEntryId(value));
         if (entryIdResult.IsFailure) {
             return RequiredIdParser.ToFailure<ExerciseEntryModel, ExerciseEntryId>(entryIdResult);
+        }
+
+        Error? inputError = ExerciseEntryInputValidation.GetError(
+            command.DurationMinutes,
+            command.CaloriesBurned,
+            command.Name,
+            command.ClearName,
+            command.Notes,
+            command.ClearNotes);
+        if (inputError is not null) {
+            return Result.Failure<ExerciseEntryModel>(inputError);
         }
 
         ExerciseEntryId entryId = entryIdResult.Value;

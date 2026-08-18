@@ -61,7 +61,8 @@ public sealed class CreateCheckoutSessionCommandHandler(
                 userId.Value,
                 user.Email,
                 plan,
-                existingSubscription?.ExternalCustomerId),
+                existingSubscription?.ExternalCustomerId,
+                ResolveIdempotencyKey(request.IdempotencyKey)),
             cancellationToken).ConfigureAwait(false);
         if (sessionResult.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(sessionResult.Error);
@@ -106,6 +107,11 @@ public sealed class CreateCheckoutSessionCommandHandler(
             ? billingProviderGatewayAccessor.GetActiveProvider()
             : billingProviderGatewayAccessor.GetProviderOrDefault(normalizedProvider);
     }
+
+    private static string ResolveIdempotencyKey(string? idempotencyKey) =>
+        string.IsNullOrWhiteSpace(idempotencyKey)
+            ? Guid.NewGuid().ToString("N")
+            : idempotencyKey.Trim();
 
     private static bool IsPaidPremiumActive(BillingSubscription? subscription, DateTime nowUtc) {
         if (subscription is null || string.IsNullOrWhiteSpace(subscription.Status)) {

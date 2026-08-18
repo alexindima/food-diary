@@ -281,6 +281,23 @@ public class RecipeCommentsFeatureTests {
         Assert.True(result.Value.Data[0].IsOwnedByCurrentUser);
     }
 
+    [Fact]
+    public async Task GetRecipeComments_WithExtremePaging_BoundsLimitAndPreventsOffsetOverflow() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        GetRecipeCommentsQueryHandler handler = CreateRecipeCommentsHandler(new InMemoryRecipeCommentRepository());
+
+        Result<PagedResponse<RecipeCommentModel>> result = await handler.Handle(
+            new GetRecipeCommentsQuery(userId.Value, recipeId.Value, int.MaxValue, int.MaxValue),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(100, result.Value.Limit),
+            () => Assert.Equal(10_000, result.Value.Page),
+            () => Assert.Empty(result.Value.Data));
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryRecipeCommentRepository : IRecipeCommentRepository {
         private readonly List<RecipeComment> _comments = [];

@@ -1,5 +1,6 @@
-using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
@@ -16,6 +17,19 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
     IAuditLogger auditLogger)
     : ICommandHandler<UpsertWebPushSubscriptionCommand, Result> {
     public async Task<Result> Handle(UpsertWebPushSubscriptionCommand command, CancellationToken cancellationToken) {
+        if (!WebPushEndpointPolicy.IsAllowed(command.Endpoint)) {
+            return Result.Failure(Errors.Validation.Invalid(
+                nameof(command.Endpoint),
+                "Endpoint must be an absolute HTTPS web push URL."));
+        }
+
+        if (command.ExpirationTimeUtc is { } expirationTimeUtc &&
+            expirationTimeUtc.Kind == DateTimeKind.Unspecified) {
+            return Result.Failure(Errors.Validation.Invalid(
+                nameof(command.ExpirationTimeUtc),
+                "ExpirationTimeUtc timestamp kind must be specified."));
+        }
+
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
@@ -29,6 +43,10 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
             command.Endpoint,
             asTracking: true,
             cancellationToken).ConfigureAwait(false);
+
+        if (existing is null || existing.UserId != userId) {
+            await EvictOldestSubscriptionsAsync(userId, cancellationToken).ConfigureAwait(false);
+        }
 
         if (existing is null) {
             var subscription = WebPushSubscription.Create(
@@ -66,5 +84,20 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
             existing.Id.Value.ToString(),
             $"endpointHost={WebPushEndpointHost.Resolve(existing.Endpoint)};locale={command.Locale ?? "-"}");
         return Result.Success();
+    }
+
+    private async Task EvictOldestSubscriptionsAsync(UserId userId, CancellationToken cancellationToken) {
+        IReadOnlyList<WebPushSubscription> subscriptions = await webPushSubscriptionRepository
+            .GetByUserAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        int countToDelete = subscriptions.Count - WebPushDeliveryLimits.MaximumSubscriptionsPerUser + 1;
+        if (countToDelete <= 0) {
+            return;
+        }
+
+        WebPushSubscription[] oldest = [.. subscriptions
+            .OrderBy(subscription => subscription.ModifiedOnUtc ?? subscription.CreatedOnUtc)
+            .Take(countToDelete)];
+        await webPushSubscriptionRepository.DeleteRangeAsync(oldest, cancellationToken).ConfigureAwait(false);
     }
 }

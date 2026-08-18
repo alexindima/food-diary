@@ -63,10 +63,10 @@ public sealed class WearableHttpMappingsTests {
     public void ToDisconnectCommand_MapsUserIdAndProvider() {
         var userId = Guid.NewGuid();
 
-        DisconnectWearableCommand command = WearableHttpMappings.ToDisconnectCommand(userId, "googlefit");
+        DisconnectWearableCommand command = WearableHttpMappings.ToDisconnectCommand(userId, "garmin");
 
         Assert.Equal(userId, command.UserId);
-        Assert.Equal("googlefit", command.Provider);
+        Assert.Equal("garmin", command.Provider);
     }
 
     [Fact]
@@ -102,7 +102,7 @@ public sealed class WearableHttpMappingsTests {
     public void WearableConnectionModelList_ToHttpResponse_MapsAllItems() {
         var models = new List<WearableConnectionModel> {
             new("fitbit", "ext-1", true, null, DateTime.UtcNow),
-            new("googlefit", "ext-2", false, null, DateTime.UtcNow),
+            new("garmin", "ext-2", false, null, DateTime.UtcNow),
         };
 
         IReadOnlyList<WearableConnectionHttpResponse> responses = models.ToHttpResponse();
@@ -110,7 +110,7 @@ public sealed class WearableHttpMappingsTests {
         Assert.Multiple(
             () => Assert.Equal(2, responses.Count),
             () => Assert.Equal("fitbit", responses[0].Provider),
-            () => Assert.Equal("googlefit", responses[1].Provider));
+            () => Assert.Equal("garmin", responses[1].Provider));
     }
 
     [Fact]

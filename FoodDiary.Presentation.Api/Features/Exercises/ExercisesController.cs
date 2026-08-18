@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Exercises.Mappings;
 using FoodDiary.Presentation.Api.Features.Exercises.Requests;
 using FoodDiary.Presentation.Api.Features.Exercises.Responses;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@ public sealed class ExercisesController(ISender mediator) : AuthorizedController
     [HttpPost]
     [EnableIdempotency]
     [ProducesResponseType<ExerciseEntryHttpResponse>(StatusCodes.Status201Created)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> Create(
         [FromCurrentUser] Guid userId,
         [FromBody] CreateExerciseEntryHttpRequest request) =>
@@ -30,6 +32,8 @@ public sealed class ExercisesController(ISender mediator) : AuthorizedController
 
     [HttpPut("{id:guid}")]
     [ProducesResponseType<ExerciseEntryHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> Update(
         [FromCurrentUser] Guid userId,
         Guid id,

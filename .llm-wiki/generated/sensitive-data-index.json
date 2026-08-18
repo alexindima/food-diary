@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1468,
-    "credential": 156,
+    "candidateFields": 1466,
+    "credential": 153,
     "identity": 153,
     "health": 663,
     "financial": 199,
-    "privateContent": 297,
-    "boundaryFiles": 186,
+    "privateContent": 298,
+    "boundaryFiles": 184,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -649,13 +649,6 @@
     },
     {
       "category": "credential",
-      "name": "ClientSecret",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/GoogleFitOptions.cs",
-      "line": 7
-    },
-    {
-      "category": "credential",
       "name": "ApiKey",
       "type": "string",
       "path": "FoodDiary.Integrations/Options/OpenAiOptions.cs",
@@ -737,20 +730,6 @@
       "type": "string",
       "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
       "line": 200
-    },
-    {
-      "category": "credential",
-      "name": "AccessToken",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Wearables/GoogleFitClient.cs",
-      "line": 243
-    },
-    {
-      "category": "credential",
-      "name": "RefreshToken",
-      "type": "string?",
-      "path": "FoodDiary.Integrations/Wearables/GoogleFitClient.cs",
-      "line": 246
     },
     {
       "category": "credential",
@@ -2045,21 +2024,21 @@
       "name": "CustomerId",
       "type": "string",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 618
+      "line": 620
     },
     {
       "category": "financial",
       "name": "Checkout",
       "type": "TransactionCheckoutRequest",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 621
+      "line": 623
     },
     {
       "category": "financial",
       "name": "Checkout",
       "type": "TransactionCheckoutResponse?",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 632
+      "line": 634
     },
     {
       "category": "financial",
@@ -2171,7 +2150,7 @@
       "name": "InvalidSubscriptions",
       "type": "List<WebPushDeliverySubscription>",
       "path": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
-      "line": 66
+      "line": 69
     },
     {
       "category": "financial",
@@ -7862,7 +7841,7 @@
       "name": "Email",
       "type": "string",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 608
+      "line": 610
     },
     {
       "category": "identity",
@@ -8668,6 +8647,13 @@
       "type": "bool",
       "path": "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
       "line": 16
+    },
+    {
+      "category": "privateContent",
+      "name": "MaxNotesLength",
+      "type": "notes,",
+      "path": "FoodDiary.Application.Exercises/Common/ExerciseEntryInputValidation.cs",
+      "line": 48
     },
     {
       "category": "privateContent",
@@ -10341,13 +10327,6 @@
       "fieldCount": 1
     },
     {
-      "path": "FoodDiary.Integrations/Options/GoogleFitOptions.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
       "path": "FoodDiary.Integrations/Options/OpenAiOptions.cs",
       "categories": [
         "credential"
@@ -10429,13 +10408,6 @@
     },
     {
       "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 2
-    },
-    {
-      "path": "FoodDiary.Integrations/Wearables/GoogleFitClient.cs",
       "categories": [
         "credential"
       ],
@@ -11654,7 +11626,7 @@
   "potentialLogging": [
     {
       "path": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
-      "line": 46,
+      "line": 49,
       "fieldNames": [
         "InvalidSubscriptions"
       ]
@@ -11663,7 +11635,7 @@
   "externalTransfers": [
     {
       "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 199,
+      "line": 206,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",
@@ -11680,7 +11652,7 @@
     },
     {
       "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 320,
+      "line": 327,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",

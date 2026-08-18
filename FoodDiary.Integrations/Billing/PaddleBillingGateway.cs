@@ -413,7 +413,9 @@ public sealed class PaddleBillingGateway(
     }
 
     private static string CreateCheckoutReference(BillingCheckoutSessionRequestModel request) =>
-$"{request.UserId:N}:{request.Plan.Trim().ToLowerInvariant()}";
+        string.IsNullOrWhiteSpace(request.IdempotencyKey)
+            ? $"{request.UserId:N}:{request.Plan.Trim().ToLowerInvariant()}"
+            : request.IdempotencyKey.Trim();
 
     private static bool IsAmbiguousNetworkFailure(Exception exception, CancellationToken cancellationToken) =>
         exception is HttpRequestException ||

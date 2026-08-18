@@ -181,14 +181,18 @@
       "pageSha256": "cd98e594f87b4a55e4b30f289d286334704562d489f085767fc62d58a25721d1",
       "sources": [
         {
+          "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "sha256": "fae83fda26556a84652a7a9f873bd4819aec379ff82d32a3ce70a494bfe60f4d"
+        },
+        {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "d95e077b2b402a6b203912dd6c2a570285360eff76a0919f5f777ec990dbf2be"
+          "sha256": "1388b4345ae9d7ab464677ea60f272bffbc8853863017c4b988c0587a04529f1"
         }
       ],
-      "reason": "Reviewed the regenerated OpenAPI contract: wearable sync adds documented 400 and 409 responses with no structural breaking changes.",
+      "reason": "Full OpenAPI contract was regenerated from the current host; the intentional exercise 400/404 and billing 502 responses are covered by a passing snapshot test.",
       "baseRef": "HEAD",
-      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
-      "reviewedAtUtc": "2026-08-18T13:55:10.5473803Z"
+      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
+      "reviewedAtUtc": "2026-08-18T21:10:50.3897121Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -197,13 +201,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "c8401b6407575a55b8b5140dcde5dac7a413ea77be0984ef4f1fa1d662ac7d95"
+          "sha256": "74612d54aa6dacaa67b3738c09a539af41d8428bfa2609605afa8ffae38d1ec4"
         }
       ],
-      "reason": "Request-aborted operations are recorded as cancelled with status 499 without failure metrics or warning logs, while handled unexpected exceptions reach the bounded request exception counter; focused unit tests cover all new paths.",
+      "reason": "Compiled indexes were regenerated from the current combined worktree; Google Fit is absent from catalog, configuration, runtime, and frontend contracts, focused integration/API/frontend/architecture checks pass, and concurrent Export/MealPlanning/Results changes remain owned by their sessions.",
       "baseRef": "HEAD",
-      "gitHead": "33b3aa6e84d029f69a9cb8034375c9e6da6bfb78",
-      "reviewedAtUtc": "2026-08-18T11:46:05.7743255Z"
+      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
+      "reviewedAtUtc": "2026-08-18T19:54:27.7663362Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -212,13 +216,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "b012541e77dc4582997cd06d6d5d1cbbc3d4b9aac1f8d8c782b7b17ae320973b"
+          "sha256": "3d0f20d2f1178146c43825f8939287d256a77e12eae89bc82915628d7c058e08"
         }
       ],
-      "reason": "Reviewed regenerated backend contracts: wearable validation, idempotency responses, and host-boundary changes match the implementation and integration snapshots.",
+      "reason": "Full OpenAPI contract was regenerated from the current host; the intentional exercise 400/404 and billing 502 responses are covered by a passing snapshot test.",
       "baseRef": "HEAD",
-      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
-      "reviewedAtUtc": "2026-08-18T13:55:42.8031024Z"
+      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
+      "reviewedAtUtc": "2026-08-18T21:10:51.1058240Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -443,13 +447,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "0c88ec28dee79b26f56c337e97a98dda5339fd6dc69890ca9433412eee6ab80f"
+          "sha256": "c8ce05d5c8a5c61f218086ea55889a798816c5f4357d0ae386b59496d691bd2e"
         }
       ],
-      "reason": "Reviewed regenerated configuration and dependency rollout data: new Data Protection and FluentValidation dependencies are version-locked and require no migration.",
+      "reason": "Compiled indexes were regenerated from the current combined worktree; Google Fit is absent from catalog, configuration, runtime, and frontend contracts, focused integration/API/frontend/architecture checks pass, and concurrent Export/MealPlanning/Results changes remain owned by their sessions.",
       "baseRef": "HEAD",
-      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
-      "reviewedAtUtc": "2026-08-18T13:55:44.8065016Z"
+      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
+      "reviewedAtUtc": "2026-08-18T19:54:28.6620615Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -620,14 +624,14 @@
       "pageSha256": "e0bcb5f66a740244e70770809493d58e74bd99a10ab7cc27533ad7676aaa5d1a",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "24219117ec06ffcc85219472f89f16239a8cef046da544ffb3067464b201d4ba"
+          "path": ".llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1",
+          "sha256": "d5ec14dbf799a6788d57230739206ad5c2e1ddda5dd768473ffd293aa389e853"
         }
       ],
-      "reason": "The API hardening adds focused unit, integration, and architecture coverage; the concurrent CI change only pins the existing .NET SDK version and does not alter verification workflow semantics.",
+      "reason": "Backend contract indexing now skips tracked source paths deleted in the working tree; the affected update completed and index-selection smoke passed.",
       "baseRef": "HEAD",
-      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
-      "reviewedAtUtc": "2026-08-18T12:52:48.0059404Z"
+      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
+      "reviewedAtUtc": "2026-08-18T19:53:43.7583708Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -776,13 +780,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d31a01a0f8d75b8891826bb8392f7bf54c630de1e632e96318c0578d0d43bc3d"
+          "sha256": "48cb53512baa552a8cb5bb5e01af6ffb5ae6d9979d7f425a92aa01b4b9f67abe"
+        },
+        {
+          "path": "docs/privacy/PRIVACY_RELEASE_CHECKLIST.md",
+          "sha256": "d7ed095eed6a28a430c3e99c2f63694081ccef55968827e090d62a4a2ec23706"
         }
       ],
-      "reason": "Reviewed regenerated sensitive-data index: OAuth state is protected, proxy logs avoid query strings, and exception route labels remain bounded.",
+      "reason": "No new sensitive data collection or persistence was introduced; dietologist relationship and cycle consent mutations now reject impersonation and all nine HTTP cases return 403.",
       "baseRef": "HEAD",
-      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
-      "reviewedAtUtc": "2026-08-18T13:55:50.7679390Z"
+      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
+      "reviewedAtUtc": "2026-08-18T21:10:51.5600326Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -837,13 +845,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "185a4ca17d2cee106f07f9a9fa529a78d54a698534a102f43262775a14655fe5"
+          "sha256": "5576c258c5b0a6d8263360d3f054c6d2046a4e288bf879940520c509d4904490"
         }
       ],
-      "reason": "Reviewed regenerated quality index: new unit, architecture, frontend, and integration tests cover the changed runtime boundaries.",
+      "reason": "Focused application, presentation, HTTP hardening, OpenAPI, and all 709 architecture tests passed; generated quality indexes were refreshed from current sources.",
       "baseRef": "HEAD",
-      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
-      "reviewedAtUtc": "2026-08-18T13:55:52.7693159Z"
+      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
+      "reviewedAtUtc": "2026-08-18T21:10:52.7679849Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -916,13 +924,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "824d74f94ee8be13c695a345642405261ec3f3d1abbdea6b4a1b772701e3dbf8"
+          "sha256": "a5253ee775a0211d987acdf9b7d67aa759f08e533d0c8a322a68948d7428ec9a"
         }
       ],
-      "reason": "Reviewed regenerated runtime topology: API host, Nginx proxy, wearable providers, and Data Protection composition remain correctly layered.",
+      "reason": "Compiled indexes were regenerated from the current combined worktree; Google Fit is absent from catalog, configuration, runtime, and frontend contracts, focused integration/API/frontend/architecture checks pass, and concurrent Export/MealPlanning/Results changes remain owned by their sessions.",
       "baseRef": "HEAD",
-      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
-      "reviewedAtUtc": "2026-08-18T13:55:56.8080521Z"
+      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
+      "reviewedAtUtc": "2026-08-18T19:54:30.5616323Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1083,17 +1091,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "333207bcdc53a9368a81a82636093da33399ba6ddba4f4f4533fd99b6d1de7e5"
+          "sha256": "80cb579cb7327f9ce49285cb12629e465ae8444f3d54839772632d3280ef035a"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "0181b136a57418ce965ca106315f02011659cf7fe43168bc1d0a6b36c40b058b"
+          "sha256": "72a5b50288768639afb28e919b1e35cfed922e5dff0df96b757010a730c995c5"
         }
       ],
-      "reason": "Reviewed regenerated frontend and contract indexes: the wearable sync journey remains compatible with the new idempotency and validation requirements.",
+      "reason": "Compiled indexes were regenerated from the current combined worktree; Google Fit is absent from catalog, configuration, runtime, and frontend contracts, focused integration/API/frontend/architecture checks pass, and concurrent Export/MealPlanning/Results changes remain owned by their sessions.",
       "baseRef": "HEAD",
-      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
-      "reviewedAtUtc": "2026-08-18T13:55:58.8436148Z"
+      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
+      "reviewedAtUtc": "2026-08-18T19:54:31.1497115Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1197,13 +1205,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "333207bcdc53a9368a81a82636093da33399ba6ddba4f4f4533fd99b6d1de7e5"
+          "sha256": "80cb579cb7327f9ce49285cb12629e465ae8444f3d54839772632d3280ef035a"
         }
       ],
-      "reason": "Reviewed regenerated frontend contract index: wearable sync now sends the required UUID idempotency header and its unit test verifies the request.",
+      "reason": "Compiled indexes were regenerated from the current combined worktree; Google Fit is absent from catalog, configuration, runtime, and frontend contracts, focused integration/API/frontend/architecture checks pass, and concurrent Export/MealPlanning/Results changes remain owned by their sessions.",
       "baseRef": "HEAD",
-      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
-      "reviewedAtUtc": "2026-08-18T13:55:48.8440285Z"
+      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
+      "reviewedAtUtc": "2026-08-18T19:54:29.1138868Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1212,13 +1220,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "c6787fcdc0a3de28ced96d48cf5a45067df961e57f4b9e54a64f9b06f7bf7c67"
+          "sha256": "be0350e4f405241bb683ef8b25e2ad575e3271114252c38bbb33f566bf630896"
         }
       ],
-      "reason": "Reviewed regenerated repository catalog query context: changed projects, packages, tests, and runtime configuration are represented consistently.",
+      "reason": "Affected compiled navigation indexes were regenerated from current source hashes; the implementation changes do not require new manual product documentation.",
       "baseRef": "HEAD",
-      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
-      "reviewedAtUtc": "2026-08-18T13:55:54.7634028Z"
+      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
+      "reviewedAtUtc": "2026-08-18T21:10:54.4624192Z"
     },
     {
       "pageId": "workflow.review-diff",

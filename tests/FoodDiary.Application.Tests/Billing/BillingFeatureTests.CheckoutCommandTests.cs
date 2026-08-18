@@ -55,7 +55,11 @@ public partial class BillingFeatureTests {
             new FixedDateTimeProvider(Now));
 
         Result<BillingCheckoutSessionModel> result = await handler.Handle(
-            new CreateCheckoutSessionCommand(user.Id.Value, " Monthly ", $" {BillingProviderNames.YooKassa} "),
+            new CreateCheckoutSessionCommand(
+                user.Id.Value,
+                " Monthly ",
+                $" {BillingProviderNames.YooKassa} ",
+                "checkout-request-id"),
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -64,6 +68,7 @@ public partial class BillingFeatureTests {
         Assert.Equal(BillingProviderNames.YooKassa, subscription.Provider);
         Assert.Equal("customer_123", subscription.ExternalCustomerId);
         Assert.Equal(BillingSubscription.PendingCheckoutStatus, subscription.Status);
+        Assert.Equal("checkout-request-id", yooKassaGateway.LastCheckoutRequest?.IdempotencyKey);
 
         BillingPayment payment = Assert.Single(paymentRepository.Payments);
         Assert.Equal(BillingPaymentKinds.Checkout, payment.Kind);

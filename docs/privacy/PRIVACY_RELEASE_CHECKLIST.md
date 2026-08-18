@@ -40,7 +40,7 @@ production-enabled/disabled decision and, when enabled, matching policy text:
 | MailRelay and downstream SMTP/MX delivery | `FoodDiary.Integrations/Services/RelayEmailTransport.cs` and `MailRelay/` | Which delivery operators receive addresses/content and what logs are retained? |
 | Web Push | `FoodDiary.Integrations/Services/WebPush*` | Which browser push services receive subscription endpoints and payload metadata? |
 | Google identity | `FoodDiary.Integrations/Authentication/GoogleTokenValidator.cs` | Is Google login enabled and which identity claims are stored? |
-| Google Fit | `FoodDiary.Integrations/Wearables/GoogleFitClient.cs` | Is wearable import enabled, which scopes are requested, and how can access be revoked? |
+| Fitbit | `FoodDiary.Integrations/Wearables/FitbitClient.cs` | Is wearable import enabled, which scopes are requested, and how can access be revoked? |
 | Telegram | `FoodDiary.Integrations/Authentication/Telegram*` and `FoodDiary.Telegram.Bot/` | Which Telegram identifiers/messages are stored and for how long? |
 | PostgreSQL, Redis, RabbitMQ | deployment composition and infrastructure projects | Record operator, region, encryption, backup, access, and retention configuration for each environment. |
 

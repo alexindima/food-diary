@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3333,
-    "symbols": 3342,
+    "sourceFiles": 3341,
+    "symbols": 3350,
     "interfaceImplementationLinks": 233,
     "dependencyInjectionRegistrations": 234,
     "kinds": {
-      "class": 1716,
+      "class": 1723,
       "enum": 56,
-      "interface": 413,
+      "interface": 414,
       "record": 1041,
       "record struct": 116
     },
@@ -26,13 +26,13 @@
       "Controller": 90,
       "Entity": 84,
       "Event": 19,
-      "Factory": 9,
-      "Handler": 7,
+      "Factory": 10,
+      "Handler": 9,
       "LookupRepository": 3,
       "Mapper": 8,
       "Mapping": 4,
-      "Options": 61,
-      "Other": 1250,
+      "Options": 60,
+      "Other": 1254,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -41,7 +41,7 @@
       "Request": 132,
       "Response": 174,
       "Service": 273,
-      "Validator": 190,
+      "Validator": 192,
       "ValueObject": 126,
       "WriteRepository": 46
     }
@@ -3230,6 +3230,13 @@
       "kind": "record",
       "role": "Configuration",
       "path": "FoodDiary.Application.Abstractions/Notifications/Common/WebPushClientConfiguration.cs",
+      "line": 2
+    },
+    {
+      "name": "WebPushDeliveryLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Notifications/Common/WebPushDeliveryLimits.cs",
       "line": 2
     },
     {
@@ -7717,14 +7724,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "CreateExerciseEntryCommandValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "DeleteExerciseEntryCommand",
@@ -7752,7 +7759,21 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
-      "line": 14
+      "line": 15
+    },
+    {
+      "name": "UpdateExerciseEntryCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "ExerciseEntryInputValidation",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Exercises/Common/ExerciseEntryInputValidation.cs",
+      "line": 5
     },
     {
       "name": "IExerciseEntryReadService",
@@ -7881,6 +7902,13 @@
       "line": 5
     },
     {
+      "name": "ExportDiaryDateRangePolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryDateRangePolicy.cs",
+      "line": 4
+    },
+    {
       "name": "ExportDiaryQuery",
       "kind": "record",
       "role": "Query",
@@ -7892,7 +7920,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "ExportDiaryQueryValidator",
@@ -9971,14 +9999,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "CreateShoppingListCommandValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "DeleteShoppingListCommand",
@@ -10013,14 +10041,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "UpdateShoppingListCommandValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "IShoppingListCreationService",
@@ -10058,11 +10086,25 @@
       "line": 5
     },
     {
+      "name": "ShoppingListInputLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListInputLimits.cs",
+      "line": 2
+    },
+    {
       "name": "ShoppingListItemInput",
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListItemInput.cs",
       "line": 2
+    },
+    {
+      "name": "ShoppingListItemInputValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListItemInputValidator.cs",
+      "line": 4
     },
     {
       "name": "ShoppingListMappings",
@@ -10734,14 +10776,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "UpsertWebPushSubscriptionCommandValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "INotificationFeedReadService",
@@ -10812,6 +10854,13 @@
       "role": "Other",
       "path": "FoodDiary.Application.Notifications/Common/WebPushEndpointHost.cs",
       "line": 2
+    },
+    {
+      "name": "WebPushEndpointPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Notifications/Common/WebPushEndpointPolicy.cs",
+      "line": 4
     },
     {
       "name": "DependencyInjection",
@@ -17275,13 +17324,6 @@
       "line": 2
     },
     {
-      "name": "GoogleFitOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Integrations/Options/GoogleFitOptions.cs",
-      "line": 2
-    },
-    {
       "name": "OpenAiOptions",
       "kind": "class",
       "role": "Options",
@@ -17398,14 +17440,14 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Integrations/Services/S3ImageStorageService.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "S3ObjectStorageClient",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Services/S3ObjectStorageClient.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "StoredObjectInfo",
@@ -17429,24 +17471,31 @@
       "line": 4
     },
     {
+      "name": "WebPushEndpointValidationHandler",
+      "kind": "class",
+      "role": "Handler",
+      "path": "FoodDiary.Integrations/Services/WebPushEndpointValidationHandler.cs",
+      "line": 4
+    },
+    {
       "name": "WebPushNotificationSender",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
-      "line": 11
+      "line": 12
+    },
+    {
+      "name": "WebPushSocketsHttpHandlerFactory",
+      "kind": "class",
+      "role": "Factory",
+      "path": "FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs",
+      "line": 5
     },
     {
       "name": "FitbitClient",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "line": 15
-    },
-    {
-      "name": "GoogleFitClient",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Wearables/GoogleFitClient.cs",
       "line": 15
     },
     {
@@ -18532,7 +18581,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
-      "line": 24
+      "line": 25
     },
     {
       "name": "AuthTelegramController",
@@ -18763,7 +18812,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "CycleHttpMappings",
@@ -19071,14 +19120,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistController.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "DietologistInvitationsController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistInvitationsController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "DietologistHttpMappings",
@@ -19309,7 +19358,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Exercises/ExercisesController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "ExerciseHttpMappings",
@@ -20009,7 +20058,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Notifications/NotificationPushController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "NotificationsController",
@@ -20450,7 +20499,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/ShoppingLists/ShoppingListsController.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "StatisticsHttpQueryMappings",
@@ -23313,133 +23362,140 @@
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Mediator/DefaultMediator.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Mediator/DependencyInjection.cs",
-      "line": 5
+      "line": 10
     },
     {
       "name": "IMediator",
       "kind": "interface",
       "role": "Other",
       "path": "Shared/FoodDiary.Mediator/IMediator.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "INotification",
       "kind": "interface",
       "role": "Other",
       "path": "Shared/FoodDiary.Mediator/INotification.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "INotificationHandler",
       "kind": "interface",
       "role": "Handler",
       "path": "Shared/FoodDiary.Mediator/INotificationHandler.cs",
-      "line": 2
+      "line": 7
     },
     {
       "name": "IPipelineBehavior",
       "kind": "interface",
       "role": "Other",
       "path": "Shared/FoodDiary.Mediator/IPipelineBehavior.cs",
-      "line": 2
+      "line": 8
     },
     {
       "name": "IPublisher",
       "kind": "interface",
       "role": "Other",
       "path": "Shared/FoodDiary.Mediator/IPublisher.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "IRequest",
       "kind": "interface",
       "role": "Request",
       "path": "Shared/FoodDiary.Mediator/IRequest.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "IRequest",
       "kind": "interface",
       "role": "Request",
       "path": "Shared/FoodDiary.Mediator/IRequest.cs",
-      "line": 4
+      "line": 12
     },
     {
       "name": "IRequestHandler",
       "kind": "interface",
       "role": "Handler",
       "path": "Shared/FoodDiary.Mediator/IRequestHandler.cs",
-      "line": 2
+      "line": 8
     },
     {
       "name": "ISender",
       "kind": "interface",
       "role": "Other",
       "path": "Shared/FoodDiary.Mediator/ISender.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "IStreamRequest",
       "kind": "interface",
       "role": "Request",
       "path": "Shared/FoodDiary.Mediator/IStreamRequest.cs",
-      "line": 2
+      "line": 7
+    },
+    {
+      "name": "IStreamRequestHandler",
+      "kind": "interface",
+      "role": "Handler",
+      "path": "Shared/FoodDiary.Mediator/IStreamRequestHandler.cs",
+      "line": 8
     },
     {
       "name": "MediatorServiceConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Shared/FoodDiary.Mediator/MediatorServiceConfiguration.cs",
-      "line": 4
+      "line": 8
     },
     {
       "name": "NotificationEnvelope",
       "kind": "record",
       "role": "Other",
       "path": "Shared/FoodDiary.Mediator/NotificationEnvelope.cs",
-      "line": 2
+      "line": 7
     },
     {
       "name": "Unit",
       "kind": "record struct",
       "role": "Other",
       "path": "Shared/FoodDiary.Mediator/Unit.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "Error",
       "kind": "record",
       "role": "Other",
       "path": "Shared/FoodDiary.Results/Error.cs",
-      "line": 2
+      "line": 12
     },
     {
       "name": "ErrorKind",
       "kind": "enum",
       "role": "Other",
       "path": "Shared/FoodDiary.Results/ErrorKind.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "Result",
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Results/Result.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "Result",
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Results/Result.cs",
-      "line": 29
+      "line": 73
     }
   ],
   "interfaceImplementations": [
@@ -26537,14 +26593,14 @@
       "implementation": "WebPushNotificationSender",
       "lifetime": "Scoped",
       "path": "FoodDiary.Integrations/DependencyInjection.Notifications.cs",
-      "line": 10
+      "line": 14
     },
     {
       "service": "IWebPushConfigurationProvider",
       "implementation": "WebPushNotificationSender",
       "lifetime": "Scoped",
       "path": "FoodDiary.Integrations/DependencyInjection.Notifications.cs",
-      "line": 11
+      "line": 15
     },
     {
       "service": "IObjectStorageClient",
@@ -26712,7 +26768,7 @@
       "implementation": "DefaultMediator",
       "lifetime": "Scoped",
       "path": "Shared/FoodDiary.Mediator/DependencyInjection.cs",
-      "line": 13
+      "line": 26
     }
   ]
 }

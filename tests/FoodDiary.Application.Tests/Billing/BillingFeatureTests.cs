@@ -620,10 +620,12 @@ public partial class BillingFeatureTests {
         Error? webhookError = null)
         : IBillingProviderGateway {
         public string Provider { get; } = provider;
+        public BillingCheckoutSessionRequestModel? LastCheckoutRequest { get; private set; }
 
         public Task<Result<BillingCheckoutSessionModel>> CreateCheckoutSessionAsync(
             BillingCheckoutSessionRequestModel request,
             CancellationToken cancellationToken = default) {
+            LastCheckoutRequest = request;
             if (checkoutError is not null) {
                 return Task.FromResult(Result.Failure<BillingCheckoutSessionModel>(checkoutError));
             }

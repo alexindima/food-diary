@@ -55,6 +55,35 @@ public sealed class IntegrationOptionsTests {
         Assert.Equal(expected, S3Options.HasValidMaxUploadSize(options));
     }
 
+    [Fact]
+    public void S3Options_IsEmptyOrComplete_AcceptsEmptyConfiguration() {
+        Assert.True(S3Options.IsEmptyOrComplete(new S3Options()));
+    }
+
+    [Theory]
+    [InlineData("access", "secret", "bucket", "eu-central-1", null, true)]
+    [InlineData("access", "secret", "bucket", "", "http://minio:9000", true)]
+    [InlineData("access", "", "bucket", "eu-central-1", null, false)]
+    [InlineData("access", "secret", "", "eu-central-1", null, false)]
+    [InlineData("access", "secret", "bucket", "", null, false)]
+    public void S3Options_IsEmptyOrComplete_RejectsPartialConfiguration(
+        string accessKeyId,
+        string secretAccessKey,
+        string bucket,
+        string region,
+        string? serviceUrl,
+        bool expected) {
+        var options = new S3Options {
+            AccessKeyId = accessKeyId,
+            SecretAccessKey = secretAccessKey,
+            Bucket = bucket,
+            Region = region,
+            ServiceUrl = serviceUrl,
+        };
+
+        Assert.Equal(expected, S3Options.IsEmptyOrComplete(options));
+    }
+
     [Theory]
     [InlineData(0, false)]
     [InlineData(-1, false)]
@@ -100,6 +129,7 @@ public sealed class IntegrationOptionsTests {
     [InlineData(null, true)]
     [InlineData("", true)]
     [InlineData("https://cdn.example.com", true)]
+    [InlineData("file:///tmp/assets", false)]
     [InlineData("not-a-url", false)]
     public void S3Options_HasValidPublicBaseUrl_ValidatesAbsoluteUrl(string? publicBaseUrl, bool expected) {
         var options = new S3Options { PublicBaseUrl = publicBaseUrl };
@@ -111,6 +141,8 @@ public sealed class IntegrationOptionsTests {
     [InlineData(null, true)]
     [InlineData("", true)]
     [InlineData("https://s3.example.com", true)]
+    [InlineData("http://minio:9000", true)]
+    [InlineData("ftp://s3.example.com", false)]
     [InlineData("/relative", false)]
     public void S3Options_HasValidServiceUrl_ValidatesAbsoluteUrl(string? serviceUrl, bool expected) {
         var options = new S3Options { ServiceUrl = serviceUrl };

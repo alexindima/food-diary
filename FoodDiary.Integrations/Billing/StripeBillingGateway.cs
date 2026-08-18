@@ -35,6 +35,7 @@ public sealed class StripeBillingGateway(
             return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
         }
 
+        string idempotencyKey = ResolveIdempotencyKey(request.IdempotencyKey);
         string? customerId = request.ExistingCustomerId;
         if (string.IsNullOrWhiteSpace(customerId)) {
             var customerService = new CustomerService(stripeClient);
@@ -44,6 +45,9 @@ public sealed class StripeBillingGateway(
                     Metadata = new Dictionary<string, string>(StringComparer.Ordinal) {
                         ["user_id"] = request.UserId.ToString(),
                     },
+                },
+                new RequestOptions {
+                    IdempotencyKey = $"{idempotencyKey}:customer",
                 },
                 cancellationToken: cancellationToken).ConfigureAwait(false);
             customerId = customer.Id;
@@ -73,6 +77,9 @@ public sealed class StripeBillingGateway(
                         ["plan"] = request.Plan,
                     },
                 },
+            },
+            new RequestOptions {
+                IdempotencyKey = $"{idempotencyKey}:session",
             },
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -230,4 +237,9 @@ public sealed class StripeBillingGateway(
             ? parsed
             : null;
     }
+
+    private static string ResolveIdempotencyKey(string? idempotencyKey) =>
+        string.IsNullOrWhiteSpace(idempotencyKey)
+            ? Guid.NewGuid().ToString("N")
+            : idempotencyKey.Trim();
 }

@@ -602,7 +602,7 @@
         "WAIST_GOAL": "Goal: {{value}} cm",
         "CM": "cm",
         "ACTIVITY_TITLE": "Daily activity",
-        "ACTIVITY_META": "From Google Fit soon",
+        "ACTIVITY_META": "From a connected tracker soon",
         "CALORIES_BURNED": "Calories burned",
         "STEPS": "Steps",
         "ADVICE_TITLE": "Daily tip",
@@ -5842,7 +5842,7 @@
     },
     "ACTIVITY_CARD": {
         "TITLE": "Daily activity",
-        "META": "From Google Fit soon",
+        "META": "From a connected tracker soon",
         "CALORIES_BURNED": "Calories burned",
         "STEPS": "Steps",
         "KCAL": "kcal"

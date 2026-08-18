@@ -11,6 +11,10 @@ Rules for `Shared/FoodDiary.Mediator/`.
 - Do not add feature-specific request, handler, or pipeline behavior here.
 - Do not reference ASP.NET, EF Core, provider SDKs, or application/domain projects.
 - Preserve cancellation propagation through mediator APIs.
+- Preserve request pipeline order and sequential notification handler execution.
+- Keep runtime dispatch compatible with explicit interface implementations and handlers that implement multiple mediator interfaces.
+- Stream requests must resolve `IStreamRequestHandler<TRequest, TResponse>` and propagate enumeration cancellation.
+- Validate open pipeline behaviors during registration rather than on first dispatch.
 - Keep public abstractions small and stable; changes here can affect every backend module.
 
 ## Commands

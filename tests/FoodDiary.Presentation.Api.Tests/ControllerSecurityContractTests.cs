@@ -270,6 +270,7 @@ public sealed class ControllerSecurityContractTests {
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ImagesController), nameof(ImagesController.GetUploadUrl));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(BillingController), nameof(BillingController.StartPremiumTrial));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(BillingController), nameof(BillingController.CreateCheckoutSession));
+        AssertRequiresIdempotencyKey(typeof(BillingController), nameof(BillingController.CreateCheckoutSession));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(BillingController), nameof(BillingController.CreatePortalSession));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(BulkRecommendationsController), nameof(BulkRecommendationsController.Create));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(AdminEmailTemplatesController), nameof(AdminEmailTemplatesController.SendTest));
@@ -351,7 +352,11 @@ public sealed class ControllerSecurityContractTests {
     }
 
     private static void AssertRequiresIdempotencyKey(string actionName) {
-        MethodInfo method = GetAction(typeof(AiFoodController), actionName);
+        AssertRequiresIdempotencyKey(typeof(AiFoodController), actionName);
+    }
+
+    private static void AssertRequiresIdempotencyKey(Type controllerType, string actionName) {
+        MethodInfo method = GetAction(controllerType, actionName);
         EnableIdempotencyAttribute attribute = AssertSingleAttribute<EnableIdempotencyAttribute>(method);
 
         Assert.True(attribute.RequireKey);

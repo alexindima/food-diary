@@ -7,6 +7,7 @@ using FoodDiary.Presentation.Api.Features.Users.Mappings;
 using FoodDiary.Presentation.Api.Features.Users.Responses;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -60,6 +61,7 @@ public sealed class AuthSessionController(ISender mediator) : BaseApiController(
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [BlockImpersonatedAccess]
     public Task<IActionResult> LinkGoogle([FromCurrentUser] Guid userId, [FromBody] GoogleLoginHttpRequest request) =>
         HandleOk(request.ToLinkCommand(userId), static value => value.ToHttpResponse());
 

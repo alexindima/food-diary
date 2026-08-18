@@ -12,6 +12,9 @@ public sealed class GetRecipeCommentsQueryHandler(
     IRecipeCommentReadService commentReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipeCommentsQuery, Result<PagedResponse<RecipeCommentModel>>> {
+    private const int MaxPageNumber = 10_000;
+    private const int MaxPageSize = 100;
+
     public async Task<Result<PagedResponse<RecipeCommentModel>>> Handle(
         GetRecipeCommentsQuery query,
         CancellationToken cancellationToken) {
@@ -23,8 +26,8 @@ public sealed class GetRecipeCommentsQueryHandler(
             return CurrentUserAccessResolver.ToFailure<PagedResponse<RecipeCommentModel>>(userIdResult);
         }
 
-        int pageNumber = Math.Max(query.Page, 1);
-        int pageSize = Math.Max(query.Limit, 1);
+        int pageSize = Math.Clamp(query.Limit, 1, MaxPageSize);
+        int pageNumber = Math.Clamp(query.Page, 1, MaxPageNumber);
         var recipeId = (RecipeId)query.RecipeId;
 
         PagedResponse<RecipeCommentModel> comments = await commentReadService

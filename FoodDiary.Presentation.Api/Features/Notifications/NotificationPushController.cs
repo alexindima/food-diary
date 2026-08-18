@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Features.Notifications.Mappings;
 using FoodDiary.Presentation.Api.Features.Notifications.Requests;
 using FoodDiary.Presentation.Api.Features.Notifications.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ public sealed class NotificationPushController(ISender mediator) : AuthorizedCon
     [HttpPut("subscription")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [BlockImpersonatedAccess]
     public Task<IActionResult> UpsertWebPushSubscription(
         [FromCurrentUser] Guid userId,
         [FromBody] UpsertWebPushSubscriptionHttpRequest request) =>
@@ -32,6 +34,7 @@ public sealed class NotificationPushController(ISender mediator) : AuthorizedCon
 
     [HttpDelete("subscription")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [BlockImpersonatedAccess]
     public Task<IActionResult> RemoveWebPushSubscription(
         [FromCurrentUser] Guid userId,
         [FromBody] RemoveWebPushSubscriptionHttpRequest request) =>

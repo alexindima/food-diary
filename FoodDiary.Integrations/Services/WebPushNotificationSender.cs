@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Text.Json;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Models;
@@ -17,6 +18,8 @@ public sealed class WebPushNotificationSender(
     TimeProvider timeProvider,
     ILogger<WebPushNotificationSender> logger)
     : IWebPushNotificationSender, IWebPushConfigurationProvider {
+    private const int MaximumConcurrentDeliveries = 4;
+    private static readonly TimeSpan DeliveryDeadline = TimeSpan.FromSeconds(35);
     private readonly WebPushOptions _options = optionsAccessor.Value;
 
     public WebPushClientConfiguration GetClientConfiguration() {
@@ -68,36 +71,58 @@ public sealed class WebPushNotificationSender(
         IReadOnlyCollection<WebPushDeliverySubscription> subscriptions,
         CancellationToken cancellationToken) {
         var vapidDetails = new VapidDetails(_options.Subject, _options.PublicKey, _options.PrivateKey);
-        var invalidSubscriptions = new List<WebPushDeliverySubscription>();
+        var invalidSubscriptions = new ConcurrentBag<WebPushDeliverySubscription>();
         int deliveredCount = 0;
 
-        foreach (WebPushDeliverySubscription subscription in subscriptions) {
-            NotificationText text = notificationTextRenderer.RenderFromPayload(notification.Type, notification.PayloadJson, subscription.Locale);
-            string payload = BuildPayload(notification, text);
-            var pushSubscription = new PushSubscription(subscription.Endpoint, subscription.P256Dh, subscription.Auth);
+        using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        deadline.CancelAfter(DeliveryDeadline);
+        try {
+            await Parallel.ForEachAsync(
+                subscriptions.Take(WebPushDeliveryLimits.MaximumSubscriptionsPerUser),
+                new ParallelOptions {
+                    CancellationToken = deadline.Token,
+                    MaxDegreeOfParallelism = MaximumConcurrentDeliveries,
+                },
+                async (subscription, deliveryCancellationToken) => {
+                    NotificationText text = notificationTextRenderer.RenderFromPayload(
+                        notification.Type,
+                        notification.PayloadJson,
+                        subscription.Locale);
+                    string payload = BuildPayload(notification, text);
+                    var pushSubscription = new PushSubscription(subscription.Endpoint, subscription.P256Dh, subscription.Auth);
 
-            try {
-                cancellationToken.ThrowIfCancellationRequested();
-                await webPushClient.SendNotificationAsync(pushSubscription, payload, vapidDetails, cancellationToken).ConfigureAwait(false);
-                deliveredCount++;
-            } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
-                throw;
-            } catch (WebPushException ex) when (IsExpiredSubscription(ex)) {
-                invalidSubscriptions.Add(subscription);
-                logger.LogInformation(
-                    "Removing expired web push subscription {SubscriptionId} for user {UserId}.",
-                    subscription.Id,
-                    notification.UserId.Value);
-            } catch (Exception ex) {
-                logger.LogWarning(
-                    ex,
-                    "Failed to send web push notification {NotificationId} to subscription {SubscriptionId}.",
-                    notification.Id.Value,
-                    subscription.Id);
-            }
+                    try {
+                        await webPushClient.SendNotificationAsync(
+                            pushSubscription,
+                            payload,
+                            vapidDetails,
+                            deliveryCancellationToken).ConfigureAwait(false);
+                        Interlocked.Increment(ref deliveredCount);
+                    } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+                        throw;
+                    } catch (OperationCanceledException) when (deadline.IsCancellationRequested) {
+                    } catch (WebPushException ex) when (IsExpiredSubscription(ex)) {
+                        invalidSubscriptions.Add(subscription);
+                        logger.LogInformation(
+                            "Removing expired web push subscription {SubscriptionId} for user {UserId}.",
+                            subscription.Id,
+                            notification.UserId.Value);
+                    } catch (Exception ex) {
+                        logger.LogWarning(
+                            ex,
+                            "Failed to send web push notification {NotificationId} to subscription {SubscriptionId}.",
+                            notification.Id.Value,
+                            subscription.Id);
+                    }
+                }).ConfigureAwait(false);
+        } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && deadline.IsCancellationRequested) {
+            logger.LogWarning(
+                "Web push delivery deadline expired for notification {NotificationId} and user {UserId}.",
+                notification.Id.Value,
+                notification.UserId.Value);
         }
 
-        return (deliveredCount, invalidSubscriptions);
+        return (deliveredCount, [.. invalidSubscriptions]);
     }
 
     private bool IsConfigured() {

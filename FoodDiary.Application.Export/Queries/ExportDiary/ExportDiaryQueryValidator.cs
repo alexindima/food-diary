@@ -18,5 +18,16 @@ public sealed class ExportDiaryQueryValidator : AbstractValidator<ExportDiaryQue
             .Must(x => (x.DateTo - x.DateFrom).TotalDays <= 366)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Export range must not exceed one year.");
+
+        RuleFor(x => x.DateFrom)
+            .Must((query, ignoredDateFrom) => ExportDiaryDateRangePolicy.TryResolve(
+                query.DateFrom,
+                query.DateTo,
+                query.TimeZoneOffsetMinutes,
+                out _,
+                out _,
+                out _))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Export dates cannot be represented with the requested time-zone offset.");
     }
 }

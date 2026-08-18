@@ -83,6 +83,45 @@ public sealed class PaddleNotificationRecoveryServiceTests {
         Assert.EndsWith("/notifications?page=2", handler.Requests[1].RequestUri?.AbsoluteUri, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task ReplayFailedAsync_WhenReplayLimitReached_StopsCurrentRun() {
+        var handler = new QueueHandler(
+            JsonResponse("""
+                {
+                  "data": [
+                    { "id": "ntf_first", "origin": "event", "replayed_at": null },
+                    { "id": "ntf_second", "origin": "event", "replayed_at": null }
+                  ],
+                  "meta": { "pagination": { "next": null } }
+                }
+                """),
+            new HttpResponseMessage(HttpStatusCode.Accepted));
+        var service = new PaddleNotificationRecoveryService(
+            new HttpClient(handler),
+            MsOptions.Create(ValidOptions()),
+            maximumReplaysPerRun: 1);
+
+        PaddleNotificationRecoveryResult result = await service.ReplayFailedAsync(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(1, result.Inspected),
+            () => Assert.Equal(1, result.Replayed),
+            () => Assert.True(result.WasLimited),
+            () => Assert.Equal(2, handler.Requests.Count));
+    }
+
+    [Fact]
+    public async Task ReplayFailedAsync_WhenOverallDeadlineExpires_ReturnsLimitedResult() {
+        var service = new PaddleNotificationRecoveryService(
+            new HttpClient(new BlockingHandler()),
+            MsOptions.Create(ValidOptions()),
+            overallTimeout: TimeSpan.FromMilliseconds(50));
+
+        PaddleNotificationRecoveryResult result = await service.ReplayFailedAsync(CancellationToken.None);
+
+        Assert.Equal(new PaddleNotificationRecoveryResult(0, 0, WasLimited: true), result);
+    }
+
     [Theory]
     [InlineData("live_client-token", "paddle-api-key", true)]
     [InlineData("test_client-token", "paddle-api-key", false)]
@@ -141,6 +180,16 @@ public sealed class PaddleNotificationRecoveryServiceTests {
             CancellationToken cancellationToken) {
             Requests.Add(request);
             return Task.FromResult(_responses.Dequeue());
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class BlockingHandler : HttpMessageHandler {
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken) {
+            await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
     }
 }

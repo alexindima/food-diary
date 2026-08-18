@@ -23,7 +23,7 @@ public sealed class S3ObjectStorageClientTests {
         var client = new S3ObjectStorageClient(amazonS3);
         DateTime expiresAt = new(2026, 6, 14, 12, 0, 0, DateTimeKind.Utc);
 
-        string url = client.GetPreSignedUploadUrl("bucket", "images/key.webp", "image/webp", expiresAt);
+        string url = client.GetPreSignedUploadUrl("bucket", "images/key.webp", "image/webp", 1234, expiresAt);
 
         Assert.Equal("https://s3.example.com/upload", url);
         Assert.NotNull(capturedRequest);
@@ -32,7 +32,8 @@ public sealed class S3ObjectStorageClientTests {
             () => Assert.Equal("images/key.webp", capturedRequest.Key),
             () => Assert.Equal(HttpVerb.PUT, capturedRequest.Verb),
             () => Assert.Equal(expiresAt, capturedRequest.Expires),
-            () => Assert.Equal("image/webp", capturedRequest.ContentType));
+            () => Assert.Equal("image/webp", capturedRequest.ContentType),
+            () => Assert.Equal(1234, capturedRequest.Headers.ContentLength));
     }
 
     [Fact]
@@ -97,6 +98,45 @@ public sealed class S3ObjectStorageClientTests {
         StoredObjectInfo? info = await client.GetObjectInfoAsync("bucket", "missing.webp", CancellationToken.None);
 
         Assert.Null(info);
+    }
+
+    [Fact]
+    public async Task GetObjectBytesAsync_WhenObjectExists_ReturnsBoundedContent() {
+        byte[] expected = "image-content"u8.ToArray();
+        IAmazonS3 amazonS3 = CreateS3Client((method, args) => {
+            if (string.Equals(method.Name, nameof(IAmazonS3.GetObjectAsync), StringComparison.Ordinal) &&
+                args is [GetObjectRequest request, CancellationToken]) {
+                Assert.Equal("bucket", request.BucketName);
+                Assert.Equal("images/key.webp", request.Key);
+                return Task.FromResult(new GetObjectResponse {
+                    ResponseStream = new MemoryStream(expected),
+                });
+            }
+
+            throw new NotSupportedException(method.Name);
+        });
+        var client = new S3ObjectStorageClient(amazonS3);
+
+        byte[]? content = await client.GetObjectBytesAsync("bucket", "images/key.webp", 1024, CancellationToken.None);
+
+        Assert.Equal(expected, content);
+    }
+
+    [Fact]
+    public async Task GetObjectBytesAsync_WhenObjectExceedsLimit_ThrowsInvalidData() {
+        IAmazonS3 amazonS3 = CreateS3Client((method, _) => {
+            if (string.Equals(method.Name, nameof(IAmazonS3.GetObjectAsync), StringComparison.Ordinal)) {
+                return Task.FromResult(new GetObjectResponse {
+                    ResponseStream = new MemoryStream(new byte[5]),
+                });
+            }
+
+            throw new NotSupportedException(method.Name);
+        });
+        var client = new S3ObjectStorageClient(amazonS3);
+
+        await Assert.ThrowsAsync<InvalidDataException>(() =>
+            client.GetObjectBytesAsync("bucket", "images/key.webp", 4, CancellationToken.None));
     }
 
     private static IAmazonS3 CreateS3Client(Func<MethodInfo, object?[]?, object?> handler) {

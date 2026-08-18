@@ -10,11 +10,14 @@ namespace FoodDiary.Application.Admin.Queries.GetAdminContentReports;
 
 public sealed class GetAdminContentReportsQueryHandler(IAdminContentReadService adminContentReadService)
     : IQueryHandler<GetAdminContentReportsQuery, Result<PagedResponse<AdminContentReportModel>>> {
+    private const int MaxPageNumber = 10_000;
+    private const int MaxPageSize = 100;
+
     public async Task<Result<PagedResponse<AdminContentReportModel>>> Handle(
         GetAdminContentReportsQuery query,
         CancellationToken cancellationToken) {
-        int pageNumber = Math.Max(query.Page, 1);
-        int pageSize = Math.Max(query.Limit, 1);
+        int pageSize = Math.Clamp(query.Limit, 1, MaxPageSize);
+        int pageNumber = Math.Clamp(query.Page, 1, MaxPageNumber);
 
         ReportStatus? status = EnumFilterParser.ParseOptional<ReportStatus>(query.Status);
 

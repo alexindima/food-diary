@@ -247,6 +247,27 @@ public class ExportFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
+    [Theory]
+    [InlineData(true, 840)]
+    [InlineData(true, null)]
+    [InlineData(false, -840)]
+    public async Task ExportDiary_WithDateThatOverflowsDisplayOffset_ReturnsValidationFailure(
+        bool useMaximumDate,
+        int? timeZoneOffsetMinutes) {
+        var userId = UserId.New();
+        ExportDiaryQueryHandler handler = CreateHandler([]);
+        var date = DateTime.SpecifyKind(
+            useMaximumDate ? DateTime.MaxValue : DateTime.MinValue,
+            DateTimeKind.Utc);
+
+        Result<FileExportResult> result = await handler.Handle(
+            new ExportDiaryQuery(userId.Value, date, date, TimeZoneOffsetMinutes: timeZoneOffsetMinutes),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
     [Fact]
     public async Task ExportDiary_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("export-deleted@example.com", "hash");

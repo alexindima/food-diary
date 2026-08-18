@@ -72,6 +72,25 @@ public class ExercisesFeatureTests {
     }
 
     [Fact]
+    public async Task CreateExerciseEntry_WithDomainInvalidInput_ReturnsValidationFailure() {
+        var repo = new InMemoryExerciseEntryRepository();
+        var handler = new CreateExerciseEntryCommandHandler(repo, CreateCurrentUserAccessService());
+
+        Result<ExerciseEntryModel> result = await handler.Handle(
+            new CreateExerciseEntryCommand(
+                Guid.NewGuid(),
+                DateTime.UtcNow,
+                "Running",
+                1441,
+                10_001,
+                new string('n', 257),
+                Notes: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+    }
+
+    [Fact]
     public async Task DeleteExerciseEntry_WhenExists_Succeeds() {
         var userId = UserId.New();
         var entry = ExerciseEntry.Create(userId, DateTime.UtcNow, ExerciseType.Running, 30, 200);
@@ -193,6 +212,29 @@ public class ExercisesFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result, "Authentication.InvalidToken");
+    }
+
+    [Fact]
+    public async Task UpdateExerciseEntry_WithDomainInvalidInput_ReturnsValidationFailureBeforeLookup() {
+        var handler = new UpdateExerciseEntryCommandHandler(
+            new InMemoryExerciseEntryRepository(),
+            CreateCurrentUserAccessService());
+
+        Result<ExerciseEntryModel> result = await handler.Handle(
+            new UpdateExerciseEntryCommand(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                ExerciseType: null,
+                DurationMinutes: null,
+                CaloriesBurned: double.NegativeInfinity,
+                Name: null,
+                ClearName: false,
+                Notes: null,
+                ClearNotes: false,
+                Date: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
     }
 
     [Fact]

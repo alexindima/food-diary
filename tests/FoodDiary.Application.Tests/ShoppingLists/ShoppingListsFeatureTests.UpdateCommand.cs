@@ -59,6 +59,22 @@ public partial class ShoppingListsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateShoppingListCommandHandler_WithNameOverDomainLimit_ReturnsValidationFailure() {
+        var user = User.Create("shopping-update-long-name@example.com", "hash");
+        var handler = new UpdateShoppingListCommandHandler(
+            new NoopShoppingListRepository(),
+            new NoopProductLookupService(),
+            CreateCurrentUserAccessService(user));
+
+        Result<ShoppingListModel> result = await handler.Handle(
+            new UpdateShoppingListCommand(user.Id.Value, Guid.NewGuid(), new string('x', 129), Items: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
     public async Task UpdateShoppingListCommandHandler_WhenListIsMissing_ReturnsNotFound() {
         var user = User.Create("shopping-list-missing@example.com", "hash");
         var handler = new UpdateShoppingListCommandHandler(

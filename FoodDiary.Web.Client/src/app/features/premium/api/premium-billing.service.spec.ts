@@ -46,6 +46,7 @@ describe('PremiumBillingService', () => {
         const req = httpMock.expectOne(`${baseUrl}/checkout-session`);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual({ plan: 'yearly' });
+        expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
         req.flush({
             sessionId: 'cs_test_123',
             url: 'https://checkout.stripe.com/pay/cs_test_123',
@@ -78,6 +79,7 @@ describe('PremiumBillingService', () => {
         const req = httpMock.expectOne(`${baseUrl}/checkout-session`);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual({ plan: 'monthly', provider: 'paddle' });
+        expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
         req.flush({
             sessionId: 'cs_test_456',
             url: 'https://checkout.paddle.com/pay/cs_test_456',

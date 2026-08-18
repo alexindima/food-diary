@@ -92,6 +92,8 @@ public class LayeringTests {
             "Microsoft.Extensions.Http.Resilience",
             "Microsoft.Extensions.Options.ConfigurationExtensions",
             "Microsoft.IdentityModel.Protocols.OpenIdConnect",
+            "SkiaSharp",
+            "SkiaSharp.NativeAssets.Linux.NoDependencies",
             "Stripe.net",
             "System.IdentityModel.Tokens.Jwt",
             "WebPush",

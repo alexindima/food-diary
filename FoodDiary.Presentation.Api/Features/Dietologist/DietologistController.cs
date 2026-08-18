@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
 using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,18 +19,21 @@ public sealed class DietologistController(ISender mediator) : AuthorizedControll
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [BlockImpersonatedAccess]
     public Task<IActionResult> Invite([FromCurrentUser] Guid userId, [FromBody] InviteDietologistHttpRequest request) =>
         HandleNoContent(request.ToCommand(userId));
 
     [HttpDelete("relationship")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [BlockImpersonatedAccess]
     public Task<IActionResult> RevokeOrDisconnect([FromCurrentUser] Guid userId) =>
         HandleNoContent(userId.ToRevokeInvitationCommand());
 
     [HttpPut("permissions")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [BlockImpersonatedAccess]
     public Task<IActionResult> UpdatePermissions([FromCurrentUser] Guid userId, [FromBody] UpdateDietologistPermissionsHttpRequest request) =>
         HandleNoContent(request.ToCommand(userId));
 
