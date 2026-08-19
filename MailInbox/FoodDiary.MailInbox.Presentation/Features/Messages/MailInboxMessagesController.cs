@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodDiary.MailInbox.Presentation.Features.Messages;
 
 [Route("api/mail-inbox/messages")]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public sealed class MailInboxMessagesController(ISender sender) : AuthorizedMailInboxEndpointBase(sender) {
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<InboundMailMessageSummaryHttpResponse>>(StatusCodes.Status200OK)]

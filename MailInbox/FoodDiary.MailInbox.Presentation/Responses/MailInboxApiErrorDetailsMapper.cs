@@ -11,7 +11,7 @@ public static class MailInboxApiErrorDetailsMapper {
     }
 
     private static string ToCamelCaseSegment(string segment) =>
-        string.IsNullOrWhiteSpace(segment) || char.IsLower(segment[0])
+        char.IsLower(segment[0])
             ? segment
             : char.ToLowerInvariant(segment[0]) + segment[1..];
 }

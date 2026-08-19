@@ -15,6 +15,10 @@ public abstract class MailInboxControllerBase(ISender sender) : ControllerBase {
         return sender.Send(request, HttpContext.RequestAborted);
     }
 
+    protected Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken) {
+        return sender.Send(request, cancellationToken);
+    }
+
     protected async Task<IActionResult> HandleOk<TResponse, THttpResponse>(
         IRequest<Result<TResponse>> request,
         Func<TResponse, THttpResponse> map) {
@@ -24,6 +28,14 @@ public abstract class MailInboxControllerBase(ISender sender) : ControllerBase {
 
     protected async Task<IActionResult> HandleOk(IRequest<Result> request, object response) {
         Result result = await Send(request);
+        return result.ToOkActionResult(this, response);
+    }
+
+    protected async Task<IActionResult> HandleOk(
+        IRequest<Result> request,
+        object response,
+        CancellationToken cancellationToken) {
+        Result result = await Send(request, cancellationToken);
         return result.ToOkActionResult(this, response);
     }
 

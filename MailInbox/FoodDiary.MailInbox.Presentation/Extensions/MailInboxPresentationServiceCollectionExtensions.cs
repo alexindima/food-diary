@@ -12,17 +12,19 @@ public static class MailInboxPresentationServiceCollectionExtensions {
         services.AddScoped<MailInboxApiKeyAuthorizationFilter>();
         services.AddSingleton<MailInboxMessageDetailConcurrencyGate>();
         services.AddScoped<MailInboxMessageDetailConcurrencyFilter>();
+        services.AddSingleton<MailInboxReadinessConcurrencyGate>();
+        services.AddScoped<MailInboxReadinessConcurrencyFilter>();
         services.AddOptions<MailInboxHttpOptions>()
             .Bind(configuration.GetSection(MailInboxHttpOptions.SectionName))
-            .Validate(MailInboxHttpOptions.HasValidApiKey, "MailInboxHttp configuration is invalid; API-key enforcement and positive message-detail limits are required.")
+            .Validate(MailInboxHttpOptions.HasValidApiKey, "MailInboxHttp configuration is invalid; API-key enforcement, key length, and bounded request limits are required.")
             .ValidateOnStart();
 
         services
-            .AddControllers()
+            .AddControllers(options => options.Filters.Add<MailInboxExceptionFilter>())
             .ConfigureApiBehaviorOptions(options => {
                 options.InvalidModelStateResponseFactory = context => {
                     var errors = context.ModelState
-                        .Where(static entry => entry.Value?.Errors.Count > 0)
+                        .Where(static entry => entry.Value!.Errors.Count > 0)
                         .ToDictionary(
                             static entry => MailInboxApiErrorDetailsMapper.ToCamelCasePath(
                                 string.IsNullOrWhiteSpace(entry.Key) ? "request" : entry.Key),

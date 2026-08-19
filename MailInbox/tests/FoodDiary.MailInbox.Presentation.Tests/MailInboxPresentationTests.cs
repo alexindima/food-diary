@@ -119,12 +119,13 @@ public sealed class MailInboxPresentationTests {
     [Fact]
     public void MailInboxApiErrorDetailsMapper_ConvertsDottedPathSegmentsToCamelCase() {
         Assert.Equal("request.toRecipients.0.address", MailInboxApiErrorDetailsMapper.ToCamelCasePath("Request.ToRecipients.0.Address"));
+        Assert.Equal("already.lower", MailInboxApiErrorDetailsMapper.ToCamelCasePath("already.lower"));
         Assert.Equal("request", MailInboxApiErrorDetailsMapper.ToCamelCasePath(""));
     }
 
     [Theory]
-    [InlineData(true, "secret", true)]
-    [InlineData(false, "secret", false)]
+    [InlineData(true, "0123456789abcdef0123456789abcdef", true)]
+    [InlineData(false, "0123456789abcdef0123456789abcdef", false)]
     [InlineData(true, "", false)]
     [InlineData(true, " ", false)]
     public void MailInboxHttpOptions_HasValidApiKey_ReturnsExpectedResult(
@@ -194,6 +195,7 @@ public sealed class MailInboxPresentationTests {
             () => Assert.Equal(["admin@fooddiary.club"], summary.ToRecipients),
             () => Assert.Equal("Hello", summary.Subject),
             () => Assert.Equal("received", summary.Status),
+            () => Assert.Null(summary.ReadAtUtc),
             () => Assert.Equal(receivedAtUtc, summary.ReceivedAtUtc),
             () => Assert.Equal(report, details.DmarcReport),
             () => Assert.Equal("message-id", details.MessageId),
@@ -205,7 +207,9 @@ public sealed class MailInboxPresentationTests {
             () => Assert.Equal("raw", details.RawMime),
             () => Assert.Equal("dmarc-report", details.Category),
             () => Assert.Equal("received", details.Status),
+            () => Assert.Null(details.ReadAtUtc),
             () => Assert.Equal(receivedAtUtc, details.ReceivedAtUtc),
+            () => Assert.Null(details.ContentPurgedAtUtc),
             () => Assert.Equal("google.com", report.OrganizationName),
             () => Assert.Equal("report-1", report.ReportId),
             () => Assert.Equal("fooddiary.club", report.Domain),
@@ -245,8 +249,12 @@ public sealed class MailInboxPresentationTests {
             () => Assert.Equal(expectedStatusCode, objectResult.StatusCode),
             () => Assert.Equal("code", response.Error),
             () => Assert.Equal("trace-123", response.TraceId));
-        Assert.NotNull(response.Errors);
-        Assert.Equal(["Required"], response.Errors["Request.RawMime"]);
+        if (kind is ErrorKind.Internal or ErrorKind.ExternalFailure) {
+            Assert.Null(response.Errors);
+        } else {
+            Assert.NotNull(response.Errors);
+            Assert.Equal(["Required"], response.Errors["Request.RawMime"]);
+        }
     }
 
     [Fact]
@@ -259,7 +267,7 @@ public sealed class MailInboxPresentationTests {
         MailInboxApiErrorHttpResponse response = Assert.IsType<MailInboxApiErrorHttpResponse>(objectResult.Value);
         Assert.Multiple(
             () => Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode),
-            () => Assert.Equal("message", response.Message),
+            () => Assert.Equal("An unexpected error occurred.", response.Message),
             () => Assert.Null(response.TraceId),
             () => Assert.Null(response.Errors));
     }
@@ -300,6 +308,22 @@ public sealed class MailInboxPresentationTests {
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         Assert.Equal("accepted", ok.Value);
+    }
+
+    [Fact]
+    public async Task MailInboxControllerBase_HandleOk_WhenCommandFails_ReturnsErrorResponse() {
+        StubSender sender = new StubSender()
+            .Register(
+                new TestMailInboxCommand(),
+                Result.Failure(new Error("MailInbox.Test.Conflict", "Conflict", ErrorKind.Conflict)));
+        var controller = new TestMailInboxController(sender) {
+            ControllerContext = CreateControllerContext(),
+        };
+
+        IActionResult result = await controller.HandleCommand(new TestMailInboxCommand());
+
+        ObjectResult error = Assert.IsType<ObjectResult>(result);
+        Assert.Equal(StatusCodes.Status409Conflict, error.StatusCode);
     }
 
     [Fact]
@@ -377,7 +401,7 @@ public sealed class MailInboxPresentationTests {
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["MailInboxHttp:RequireApiKey"] = "true",
-                ["MailInboxHttp:ApiKey"] = "secret",
+                ["MailInboxHttp:ApiKey"] = "0123456789abcdef0123456789abcdef",
             })
             .Build();
         services.AddLogging();
@@ -388,14 +412,22 @@ public sealed class MailInboxPresentationTests {
         ApiBehaviorOptions options = provider.GetRequiredService<IOptions<ApiBehaviorOptions>>().Value;
         var context = new ActionContext(new DefaultHttpContext(), new RouteData(), new ActionDescriptor());
         context.ModelState.AddModelError("Request.RawMime", "");
+        context.ModelState.SetModelValue("Ignored", "value", "value");
+        context.ModelState.AddModelError("", "Request is invalid.");
         context.HttpContext.TraceIdentifier = "trace-presentation";
 
         BadRequestObjectResult result = Assert.IsType<BadRequestObjectResult>(options.InvalidModelStateResponseFactory(context));
         MailInboxApiErrorHttpResponse response = Assert.IsType<MailInboxApiErrorHttpResponse>(result.Value);
+        IReadOnlyDictionary<string, string[]> errors = Assert.IsAssignableFrom<IReadOnlyDictionary<string, string[]>>(response.Errors);
+        var emptyContext = new ActionContext(new DefaultHttpContext(), new RouteData(), new ActionDescriptor());
+        BadRequestObjectResult emptyResult = Assert.IsType<BadRequestObjectResult>(options.InvalidModelStateResponseFactory(emptyContext));
+        MailInboxApiErrorHttpResponse emptyResponse = Assert.IsType<MailInboxApiErrorHttpResponse>(emptyResult.Value);
         Assert.Multiple(
             () => Assert.Equal("Validation.Invalid", response.Error),
             () => Assert.Equal("trace-presentation", response.TraceId),
-            () => Assert.Equal(["The value is invalid."], response.Errors!["request.rawMime"]));
+            () => Assert.Equal(["The value is invalid."], errors["request.rawMime"]),
+            () => Assert.Equal(["Request is invalid."], errors["request"]),
+            () => Assert.Null(emptyResponse.Errors));
     }
 
     [Fact]
@@ -522,7 +554,11 @@ public sealed class MailInboxPresentationTests {
             []);
 
     private static MailInboxHealthController CreateHealthController(ISender sender) =>
-        new(sender) {
+        new(
+            sender,
+            Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
+                ApiKey = "0123456789abcdef0123456789abcdef",
+            })) {
             ControllerContext = CreateControllerContext(),
         };
 

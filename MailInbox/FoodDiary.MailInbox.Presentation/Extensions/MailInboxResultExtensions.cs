@@ -32,11 +32,21 @@ public static class MailInboxResultExtensions {
     public static IActionResult ErrorResult(Error error, string? traceId) =>
         new ObjectResult(new MailInboxApiErrorHttpResponse(
             error.Code,
-            error.Message,
+            PublicMessage(error),
             traceId,
-            error.Details)) {
+            IsSafeToExpose(error.Kind) ? error.Details : null)) {
             StatusCode = MapStatusCode(error.Kind ?? ErrorKind.Internal),
         };
+
+    private static string PublicMessage(Error error) =>
+        error.Kind switch {
+            ErrorKind.ExternalFailure => "A dependent service failed.",
+            ErrorKind.Validation or ErrorKind.Unauthorized or ErrorKind.NotFound or ErrorKind.Conflict => error.Message,
+            _ => "An unexpected error occurred.",
+        };
+
+    private static bool IsSafeToExpose(ErrorKind? kind) =>
+        kind is ErrorKind.Validation or ErrorKind.Unauthorized or ErrorKind.NotFound or ErrorKind.Conflict;
 
     private static int MapStatusCode(ErrorKind kind) =>
         kind switch {
