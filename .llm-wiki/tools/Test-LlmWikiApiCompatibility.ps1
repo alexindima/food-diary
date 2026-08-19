@@ -28,8 +28,10 @@ function Get-Properties {
 }
 function Get-PropertyValue {
     param($Object, [string]$Name)
-    if ($null -eq $Object -or -not $Object.PSObject.Properties[$Name]) { return $null }
-    $Object.PSObject.Properties[$Name].Value
+    if ($null -eq $Object) { return $null }
+    $property = $Object.PSObject.Properties | Where-Object Name -eq $Name | Select-Object -First 1
+    if ($null -eq $property) { return $null }
+    $property.Value
 }
 
 function Add-Change {
@@ -51,45 +53,125 @@ function Add-Change {
     })
 }
 
+function Convert-CompactSchemaShape {
+    param($Source)
+
+    $shape = [ordered]@{}
+    $scalarMappings = [ordered]@{
+        Type = 'type'
+        Format = 'format'
+        Reference = '$ref'
+        Nullable = 'nullable'
+        Default = 'default'
+        MinLength = 'minLength'
+        MaxLength = 'maxLength'
+        Minimum = 'minimum'
+        Maximum = 'maximum'
+        MinItems = 'minItems'
+        MaxItems = 'maxItems'
+        Pattern = 'pattern'
+        Enum = 'enum'
+    }
+    foreach ($mapping in $scalarMappings.GetEnumerator()) {
+        $value = Get-PropertyValue $Source $mapping.Key
+        if ($null -ne $value -and -not ($value -is [string] -and [string]::IsNullOrWhiteSpace($value))) {
+            $shape[$mapping.Value] = $value
+        }
+    }
+
+    $itemType = Get-PropertyValue $Source 'ItemType'
+    $itemFormat = Get-PropertyValue $Source 'ItemFormat'
+    $itemReference = Get-PropertyValue $Source 'ItemReference'
+    if ($null -ne $itemType -or $null -ne $itemFormat -or $null -ne $itemReference) {
+        $shape['items'] = [ordered]@{}
+        if ($null -ne $itemType) { $shape['items']['type'] = $itemType }
+        if ($null -ne $itemFormat) { $shape['items']['format'] = $itemFormat }
+        if ($null -ne $itemReference) { $shape['items']['$ref'] = $itemReference }
+    }
+
+    $additionalType = Get-PropertyValue $Source 'AdditionalPropertiesType'
+    $additionalReference = Get-PropertyValue $Source 'AdditionalPropertiesReference'
+    if ($null -ne $additionalType -or $null -ne $additionalReference) {
+        $shape['additionalProperties'] = [ordered]@{}
+        if ($null -ne $additionalType) { $shape['additionalProperties']['type'] = $additionalType }
+        if ($null -ne $additionalReference) { $shape['additionalProperties']['$ref'] = $additionalReference }
+    }
+
+    return $shape
+}
+
 function ConvertTo-ComparableOpenApi {
     param($Snapshot)
 
-    if ($null -ne $Snapshot -and $Snapshot.PSObject.Properties['Endpoints'] -and $null -ne $Snapshot.Endpoints) {
+    $snapshotEndpoints = Get-PropertyValue $Snapshot 'Endpoints'
+    if ($null -ne $snapshotEndpoints) {
         $paths = [ordered]@{}
-        foreach ($endpoint in @($Snapshot.Endpoints)) {
+        foreach ($endpoint in @($snapshotEndpoints)) {
             $operations = [ordered]@{}
             foreach ($operation in @($endpoint.Operations)) {
                 $responses = [ordered]@{}
                 foreach ($responseCode in @($operation.ResponseCodes)) {
                     $responses[[string]$responseCode] = [ordered]@{}
                 }
-                $queryParameters = if ($operation.PSObject.Properties['QueryParameters']) { @($operation.QueryParameters) } else { @() }
-                $parameters = @($queryParameters | Where-Object { $null -ne $_ } | ForEach-Object {
+                $successResponses = @(Get-PropertyValue $operation 'SuccessResponses')
+                foreach ($successResponse in @($successResponses | Where-Object { $null -ne $_ })) {
+                    $statusCode = [string]$successResponse.StatusCode
+                    if (-not $responses.Contains($statusCode)) { $responses[$statusCode] = [ordered]@{} }
+                    if (-not $responses[$statusCode].Contains('content')) { $responses[$statusCode]['content'] = [ordered]@{} }
+                    $responses[$statusCode]['content'][[string]$successResponse.MediaType] = [ordered]@{
+                        schema = Convert-CompactSchemaShape $successResponse
+                    }
+                    $headers = @((Get-PropertyValue $successResponse 'Headers') | Where-Object { $null -ne $_ })
+                    if ($headers.Count -gt 0) {
+                        $responses[$statusCode]['headers'] = [ordered]@{}
+                        foreach ($header in $headers) {
+                            $responses[$statusCode]['headers'][[string]$header.Name] = [ordered]@{
+                                schema = Convert-CompactSchemaShape $header
+                            }
+                        }
+                    }
+                }
+                $queryParameters = @(Get-PropertyValue $operation 'QueryParameters')
+                $pathParameters = @(Get-PropertyValue $operation 'PathParameters')
+                $parameters = @(@($queryParameters) + @($pathParameters) | Where-Object { $null -ne $_ } | ForEach-Object {
                     [ordered]@{
                         name = [string]$_.Name
                         in = [string]$_.Location
                         required = [bool]$_.Required
-                        schema = [ordered]@{
-                            type = [string]$_.Type
-                            format = $(if ($_.PSObject.Properties['Format']) { [string]$_.Format } else { '' })
-                            default = $(if ($_.PSObject.Properties['Default']) { $_.Default } else { $null })
-                        }
+                        schema = Convert-CompactSchemaShape $_
                     }
                 })
-                $operations[[string]$operation.Method.ToLowerInvariant()] = [ordered]@{
+                $comparableOperation = [ordered]@{
                     parameters = $parameters
                     responses = $responses
                 }
+                $requestBody = Get-PropertyValue $operation 'RequestBody'
+                if ($null -ne $requestBody) {
+                    $requestContent = [ordered]@{}
+                    $requestMediaTypes = Get-PropertyValue $requestBody 'Content'
+                    foreach ($mediaType in @($requestMediaTypes | Where-Object { $null -ne $_ })) {
+                        $requestContent[[string]$mediaType.MediaType] = [ordered]@{
+                            schema = Convert-CompactSchemaShape $mediaType
+                        }
+                    }
+                    $comparableOperation['requestBody'] = [ordered]@{
+                        required = [bool](Get-PropertyValue $requestBody 'Required')
+                        content = $requestContent
+                    }
+                } elseif ([bool](Get-PropertyValue $operation 'HasRequestBody')) {
+                    $comparableOperation['requestBody'] = [ordered]@{ required = $false; content = [ordered]@{} }
+                }
+                $operations[[string]$operation.Method.ToLowerInvariant()] = $comparableOperation
             }
             $paths[[string]$endpoint.Path] = $operations
         }
 
         $schemas = [ordered]@{}
-        $snapshotSchemas = if ($Snapshot.PSObject.Properties['Schemas']) { @($Snapshot.Schemas) } else { @() }
+        $snapshotSchemas = @(Get-PropertyValue $Snapshot 'Schemas')
         foreach ($schema in @($snapshotSchemas | Where-Object { $null -ne $_ -and -not [string]::IsNullOrWhiteSpace([string]$_.Name) })) {
             $properties = [ordered]@{}
             $required = [System.Collections.Generic.List[string]]::new()
-            $schemaProperties = if ($schema.PSObject.Properties['Properties']) { @($schema.Properties) } else { @() }
+            $schemaProperties = @(Get-PropertyValue $schema 'Properties')
             foreach ($property in @($schemaProperties | Where-Object { $null -ne $_ -and -not [string]::IsNullOrWhiteSpace([string]$_.Name) })) {
                 $shape = [ordered]@{}
                 $propertyType = Get-PropertyValue $property 'Type'
@@ -124,6 +206,93 @@ function ConvertTo-ComparableOpenApi {
     }
 
     return $Snapshot
+}
+
+function Get-SchemaShapeText {
+    param($Schema)
+
+    if ($null -eq $Schema) { return '' }
+    $shape = [ordered]@{}
+    foreach ($name in @(
+        'type', 'format', '$ref', 'nullable', 'default',
+        'minLength', 'maxLength', 'minimum', 'maximum',
+        'exclusiveMinimum', 'exclusiveMaximum', 'minItems', 'maxItems',
+        'pattern', 'enum')) {
+        $value = Get-PropertyValue $Schema $name
+        if ($null -ne $value) { $shape[$name] = $value }
+    }
+    $items = Get-PropertyValue $Schema 'items'
+    if ($null -ne $items) { $shape['items'] = Get-SchemaShapeText $items }
+    $additionalProperties = Get-PropertyValue $Schema 'additionalProperties'
+    if ($null -ne $additionalProperties) {
+        $shape['additionalProperties'] = if ($additionalProperties -is [bool]) {
+            $additionalProperties
+        } else {
+            Get-SchemaShapeText $additionalProperties
+        }
+    }
+    foreach ($composition in @('allOf', 'anyOf', 'oneOf')) {
+        $nodes = Get-PropertyValue $Schema $composition
+        if ($null -ne $nodes) { $shape[$composition] = @($nodes | ForEach-Object { Get-SchemaShapeText $_ }) }
+    }
+    return ($shape | ConvertTo-Json -Depth 12 -Compress)
+}
+
+function Compare-ContentContracts {
+    param(
+        $BeforeContent,
+        $AfterContent,
+        [string]$Location,
+        [string]$ContractKind,
+        [System.Collections.Generic.List[object]]$Changes
+    )
+
+    foreach ($beforeMedia in Get-Properties $BeforeContent) {
+        $afterMedia = Get-Properties $AfterContent | Where-Object Name -eq $beforeMedia.Name | Select-Object -First 1
+        $mediaLocation = "${Location}::$($beforeMedia.Name)"
+        if ($null -eq $afterMedia) {
+            Add-Change $Changes 'breaking' "removed-$ContractKind-media-type" $mediaLocation 'Documented media type was removed.'
+            continue
+        }
+        $beforeShape = Get-SchemaShapeText (Get-PropertyValue $beforeMedia.Value 'schema')
+        $afterShape = Get-SchemaShapeText (Get-PropertyValue $afterMedia.Value 'schema')
+        if ($beforeShape -ne $afterShape) {
+            Add-Change $Changes 'breaking' "changed-$ContractKind-schema" $mediaLocation "Schema shape changed from '$beforeShape' to '$afterShape'."
+        }
+    }
+    foreach ($afterMedia in Get-Properties $AfterContent) {
+        if (@(Get-Properties $BeforeContent | Where-Object Name -eq $afterMedia.Name).Count -eq 0) {
+            Add-Change $Changes 'additive' "added-$ContractKind-media-type" "${Location}::$($afterMedia.Name)" 'Documented media type was added.'
+        }
+    }
+}
+
+function Compare-HeaderContracts {
+    param(
+        $BeforeHeaders,
+        $AfterHeaders,
+        [string]$Location,
+        [System.Collections.Generic.List[object]]$Changes
+    )
+
+    foreach ($beforeHeader in Get-Properties $BeforeHeaders) {
+        $afterHeader = Get-Properties $AfterHeaders | Where-Object Name -eq $beforeHeader.Name | Select-Object -First 1
+        $headerLocation = "${Location}::header.$($beforeHeader.Name)"
+        if ($null -eq $afterHeader) {
+            Add-Change $Changes 'breaking' 'removed-response-header' $headerLocation 'Documented response header was removed.'
+            continue
+        }
+        $beforeShape = Get-SchemaShapeText (Get-PropertyValue $beforeHeader.Value 'schema')
+        $afterShape = Get-SchemaShapeText (Get-PropertyValue $afterHeader.Value 'schema')
+        if ($beforeShape -ne $afterShape) {
+            Add-Change $Changes 'breaking' 'changed-response-header' $headerLocation "Header schema changed from '$beforeShape' to '$afterShape'."
+        }
+    }
+    foreach ($afterHeader in Get-Properties $AfterHeaders) {
+        if (@(Get-Properties $BeforeHeaders | Where-Object Name -eq $afterHeader.Name).Count -eq 0) {
+            Add-Change $Changes 'additive' 'added-response-header' "${Location}::header.$($afterHeader.Name)" 'Documented response header was added.'
+        }
+    }
 }
 
 function Compare-PayloadKeySets {
@@ -253,8 +422,8 @@ $baseText = if ($PSBoundParameters.ContainsKey('BaseSnapshotContent')) {
 
 $beforeSource = $baseText | ConvertFrom-Json
 $afterSource = $currentText | ConvertFrom-Json
-$beforeHasEndpoints = $null -ne $beforeSource -and $beforeSource.PSObject.Properties['Endpoints'] -and $null -ne $beforeSource.Endpoints
-$afterHasEndpoints = $null -ne $afterSource -and $afterSource.PSObject.Properties['Endpoints'] -and $null -ne $afterSource.Endpoints
+$beforeHasEndpoints = $null -ne (Get-PropertyValue $beforeSource 'Endpoints')
+$afterHasEndpoints = $null -ne (Get-PropertyValue $afterSource 'Endpoints')
 $snapshotFormat = if ($beforeHasEndpoints -or $afterHasEndpoints) {
     'endpoint-contract'
 } else {
@@ -302,8 +471,8 @@ foreach ($pathProperty in Get-Properties $before.paths) {
             if (-not $beforeParameter.required -and $afterParameter.required) {
                 Add-Change $changes 'breaking' 'required-parameter' $location 'Parameter became required.'
             }
-            $beforeShape = "$(Get-PropertyValue $beforeParameter.schema 'type')|$(Get-PropertyValue $beforeParameter.schema 'format')|default=$(Get-PropertyValue $beforeParameter.schema 'default')"
-            $afterShape = "$(Get-PropertyValue $afterParameter.schema 'type')|$(Get-PropertyValue $afterParameter.schema 'format')|default=$(Get-PropertyValue $afterParameter.schema 'default')"
+            $beforeShape = Get-SchemaShapeText $beforeParameter.schema
+            $afterShape = Get-SchemaShapeText $afterParameter.schema
             if ($beforeShape -ne $afterShape) {
                 Add-Change $changes 'breaking' 'changed-parameter' $location "Parameter shape changed from '$beforeShape' to '$afterShape'."
             }
@@ -318,14 +487,53 @@ foreach ($pathProperty in Get-Properties $before.paths) {
             }
         }
 
+        $beforeRequestBody = Get-PropertyValue $methodProperty.Value 'requestBody'
+        $afterRequestBody = Get-PropertyValue $afterMethodProperty.Value 'requestBody'
+        $operationLocation = "$($method.ToUpperInvariant()) $path"
+        if ($null -ne $beforeRequestBody -and $null -eq $afterRequestBody) {
+            Add-Change $changes 'breaking' 'removed-request-body' $operationLocation 'Documented request body was removed.'
+        } elseif ($null -eq $beforeRequestBody -and $null -ne $afterRequestBody) {
+            if ([bool](Get-PropertyValue $afterRequestBody 'required')) {
+                Add-Change $changes 'breaking' 'added-required-request-body' $operationLocation 'A required request body was added.'
+            } else {
+                Add-Change $changes 'additive' 'added-optional-request-body' $operationLocation 'An optional request body was added.'
+            }
+        } elseif ($null -ne $beforeRequestBody -and $null -ne $afterRequestBody) {
+            if (-not [bool](Get-PropertyValue $beforeRequestBody 'required') -and
+                [bool](Get-PropertyValue $afterRequestBody 'required')) {
+                Add-Change $changes 'breaking' 'required-request-body' $operationLocation 'Request body became required.'
+            }
+            Compare-ContentContracts `
+                (Get-PropertyValue $beforeRequestBody 'content') `
+                (Get-PropertyValue $afterRequestBody 'content') `
+                "${operationLocation}::request" `
+                'request' `
+                $changes
+        }
+
         foreach ($responseProperty in Get-Properties $methodProperty.Value.responses) {
+            $afterResponseProperty = Get-Properties $afterMethodProperty.Value.responses |
+                Where-Object Name -eq $responseProperty.Name |
+                Select-Object -First 1
             $stillPresent = @(
-                Get-Properties $afterMethodProperty.Value.responses |
-                    Where-Object Name -eq $responseProperty.Name
+                $afterResponseProperty
             ).Count -gt 0
             if (-not $stillPresent) {
                 Add-Change $changes 'breaking' 'removed-response' "$($method.ToUpperInvariant()) $path" "Documented response '$($responseProperty.Name)' was removed."
+                continue
             }
+            $responseLocation = "${operationLocation}::response.$($responseProperty.Name)"
+            Compare-ContentContracts `
+                (Get-PropertyValue $responseProperty.Value 'content') `
+                (Get-PropertyValue $afterResponseProperty.Value 'content') `
+                $responseLocation `
+                'response' `
+                $changes
+            Compare-HeaderContracts `
+                (Get-PropertyValue $responseProperty.Value 'headers') `
+                (Get-PropertyValue $afterResponseProperty.Value 'headers') `
+                $responseLocation `
+                $changes
         }
         foreach ($responseProperty in Get-Properties $afterMethodProperty.Value.responses) {
             $wasPresent = @(

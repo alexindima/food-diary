@@ -58,6 +58,25 @@ public partial class ShoppingListsFeatureTests {
     }
 
     [Fact]
+    public async Task ShoppingListItemBuilder_WithUnspecifiedCheckedTimestamp_ReturnsValidationFailure() {
+        var unspecified = new DateTime(2026, 1, 1, 10, 0, 0, DateTimeKind.Unspecified);
+        ShoppingListItemInput[] items = [
+            new ShoppingListItemInput(Id: null, ProductId: null, Name: "Milk", Amount: 1, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: true, CheckedOnUtc: unspecified, SortOrder: 1),
+        ];
+
+        Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
+            items,
+            UserId.New(),
+            new NoopProductLookupService(),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Validation.Invalid", result.Error.Code),
+            () => Assert.Contains("CheckedOnUtc", result.Error.Message, StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task ShoppingListItemBuilder_WithAmountOverDomainLimit_ReturnsValidationFailure() {
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             [new ShoppingListItemInput(Id: null, ProductId: null, Name: "Milk", Amount: 1_000_001d, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: 1)],

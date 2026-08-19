@@ -41,6 +41,16 @@ internal static class DomainGuard {
         return value.HasValue ? PositiveFinite(value.Value, paramName) : null;
     }
 
+    public static int Positive(int value, string paramName) {
+        return value <= 0
+            ? throw new ArgumentOutOfRangeException(paramName, "Value must be greater than zero.")
+            : value;
+    }
+
+    public static int? Positive(int? value, string paramName) {
+        return value.HasValue ? Positive(value.Value, paramName) : null;
+    }
+
     public static string RequiredText(string value, int maxLength, string paramName) {
         if (string.IsNullOrWhiteSpace(value)) {
             throw new ArgumentException("Value is required.", paramName);
@@ -73,9 +83,19 @@ internal static class DomainGuard {
         }
 
         string normalized = value.Trim();
+        ValidateJson(normalized, paramName);
+        return normalized;
+    }
+
+    public static string RequiredJson(string value, int maxLength, string paramName) {
+        string normalized = RequiredText(value, maxLength, paramName);
+        ValidateJson(normalized, paramName);
+        return normalized;
+    }
+
+    private static void ValidateJson(string value, string paramName) {
         try {
-            using var document = JsonDocument.Parse(normalized);
-            return normalized;
+            using var document = JsonDocument.Parse(value);
         } catch (JsonException exception) {
             throw new ArgumentException("Value must contain valid JSON.", paramName, exception);
         }

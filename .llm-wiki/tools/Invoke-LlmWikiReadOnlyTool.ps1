@@ -45,7 +45,7 @@ function Copy-WorkspaceOverlay {
     param(
         [Parameter(Mandatory)][string]$SourceRoot,
         [Parameter(Mandatory)][string]$SnapshotRoot,
-        [Parameter(Mandatory)][string[]]$Path
+        [Parameter(Mandatory)][AllowEmptyCollection()][string[]]$Path
     )
 
     foreach ($relativePath in @($Path | Where-Object { $_ })) {
@@ -62,7 +62,7 @@ function Copy-WorkspaceOverlay {
 
 function Select-RelevantOverlayPath {
     param(
-        [Parameter(Mandatory)][string[]]$WorkspacePath,
+        [Parameter(Mandatory)][AllowEmptyCollection()][string[]]$WorkspacePath,
         [Parameter(Mandatory)][hashtable]$Arguments
     )
 
@@ -90,7 +90,7 @@ function Select-RelevantOverlayPath {
 function Get-ReadOnlySnapshotFingerprint {
     param(
         [Parameter(Mandatory)][string]$RepositoryRoot,
-        [Parameter(Mandatory)][string[]]$OverlayPath
+        [Parameter(Mandatory)][AllowEmptyCollection()][string[]]$OverlayPath
     )
 
     $head = (& git -C $RepositoryRoot rev-parse HEAD).Trim()

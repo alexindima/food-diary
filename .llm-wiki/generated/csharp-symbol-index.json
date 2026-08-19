@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3385,
-    "symbols": 3395,
+    "sourceFiles": 3391,
+    "symbols": 3401,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 237,
     "kinds": {
-      "class": 1762,
-      "enum": 57,
+      "class": 1766,
+      "enum": 60,
       "interface": 417,
-      "record": 1043,
-      "record struct": 116
+      "record": 1041,
+      "record struct": 117
     },
     "roles": {
-      "Command": 159,
-      "CommandHandler": 155,
+      "Command": 158,
+      "CommandHandler": 154,
       "Configuration": 88,
       "Controller": 90,
       "Entity": 84,
@@ -32,17 +32,17 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 61,
-      "Other": 1284,
+      "Other": 1293,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
       "ReadRepository": 47,
       "Repository": 104,
-      "Request": 133,
+      "Request": 132,
       "Response": 174,
       "Service": 276,
-      "Validator": 201,
-      "ValueObject": 126,
+      "Validator": 200,
+      "ValueObject": 127,
       "WriteRepository": 46
     }
   },
@@ -11287,7 +11287,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateApplier.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "ProductUpdateLimitValidator",
@@ -13667,7 +13667,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Notifications/Notification.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "WebPushSubscription",
@@ -13863,7 +13863,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Tracking/HydrationEntry.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "MarketingAttributionEvent",
@@ -13912,35 +13912,35 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Usda/DailyReferenceValue.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "UsdaFood",
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Usda/UsdaFood.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "UsdaFoodNutrient",
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodNutrient.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "UsdaFoodPortion",
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodPortion.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "UsdaNutrient",
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Usda/UsdaNutrient.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "Role",
@@ -14991,6 +14991,13 @@
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/ProductIdentityUpdate.cs",
       "line": 4
+    },
+    {
+      "name": "ProductMeasurementNutritionUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "FoodDiary.Domain/ValueObjects/ProductMeasurementNutritionUpdate.cs",
+      "line": 7
     },
     {
       "name": "ProductMeasurementState",
@@ -18378,7 +18385,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/GetAdminDashboardHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "GetAdminImpersonationSessionsHttpQuery",
@@ -18392,7 +18399,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/GetAdminMailInboxMessagesHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "GetAdminUserLoginEventsHttpQuery",
@@ -18413,7 +18420,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/GetAdminUserRoleAuditHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "GetAdminUsersHttpQuery",
@@ -18427,21 +18434,21 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/GetCollaborationAuditHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "GetFastingTelemetrySummaryHttpQuery",
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/GetFastingTelemetrySummaryHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "GetMarketingAttributionSummaryHttpQuery",
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/GetMarketingAttributionSummaryHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "UpdateAdminAchievementDefinitionHttpRequest",
@@ -19435,7 +19442,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/Requests/GetAttentionSignalsHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "GetClientDashboardHttpQuery",
@@ -19673,7 +19680,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Fasting/Requests/GetFastingHistoryHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "ReduceActiveFastingTargetHttpRequest",
@@ -20457,7 +20464,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Products/Requests/GetRecentProductsHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "UpdateProductHttpRequest",
@@ -20499,7 +20506,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/RecipeComments/RecipeCommentsController.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "CreateRecipeCommentHttpRequest",
@@ -20604,7 +20611,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Recipes/Requests/GetRecentRecipesHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "GetRecipesHttpQuery",
@@ -20758,7 +20765,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Statistics/Requests/GetStatisticsHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "AggregatedStatisticsHttpResponse",
@@ -21094,14 +21101,14 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/WaistEntries/Requests/GetWaistHistoryPageSummaryHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "GetWaistSummariesHttpQuery",
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/WaistEntries/Requests/GetWaistSummariesHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "UpdateWaistEntryHttpRequest",
@@ -21304,14 +21311,14 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/WeightEntries/Requests/GetWeightHistoryPageSummaryHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "GetWeightSummariesHttpQuery",
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/WeightEntries/Requests/GetWeightSummariesHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "UpdateWeightEntryHttpRequest",
@@ -21454,6 +21461,13 @@
       "line": 7
     },
     {
+      "name": "OpenApiNumericRangeAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Policies/OpenApiNumericRangeAttribute.cs",
+      "line": 4
+    },
+    {
       "name": "PresentationPolicyNames",
       "kind": "class",
       "role": "Other",
@@ -21529,6 +21543,13 @@
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Responses/ProducesApiErrorResponseAttribute.cs",
       "line": 6
+    },
+    {
+      "name": "ProducesFileResponseAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Responses/ProducesFileResponseAttribute.cs",
+      "line": 4
     },
     {
       "name": "AllowImpersonatedAccessAttribute",
@@ -21902,6 +21923,13 @@
       "line": 5
     },
     {
+      "name": "PresentationContractOperationFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Web.Api/Swagger/PresentationContractOperationFilter.cs",
+      "line": 13
+    },
+    {
       "name": "PresentationTransportOperationFilter",
       "kind": "class",
       "role": "Other",
@@ -22000,27 +22028,6 @@
       "line": 4
     },
     {
-      "name": "ReceiveInboundMailCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "ReceiveInboundMailCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommandHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "ReceiveInboundMailCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommandValidator.cs",
-      "line": 4
-    },
-    {
       "name": "DmarcReportPreview",
       "kind": "record",
       "role": "Other",
@@ -22070,13 +22077,6 @@
       "line": 2
     },
     {
-      "name": "ReceiveInboundMailRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/ReceiveInboundMailRequest.cs",
-      "line": 2
-    },
-    {
       "name": "GetInboundMailMessageDetailsQuery",
       "kind": "record",
       "role": "Query",
@@ -22110,6 +22110,27 @@
       "role": "Validator",
       "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryValidator.cs",
       "line": 4
+    },
+    {
+      "name": "MailInboxAdmissionOutcome",
+      "kind": "enum",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxAdmissionOutcome.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxIngestionOutcome",
+      "kind": "enum",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxIngestionOutcome.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxRetentionOutcome",
+      "kind": "enum",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxRetentionOutcome.cs",
+      "line": 2
     },
     {
       "name": "MailInboxTelemetry",
@@ -22396,7 +22417,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/MailInboxHealthController.cs",
-      "line": 11
+      "line": 15
     },
     {
       "name": "MailInboxHealthHttpMappings",
@@ -22417,7 +22438,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "InboundMailHttpMappings",
@@ -22462,6 +22483,13 @@
       "line": 9
     },
     {
+      "name": "MailInboxExceptionFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxExceptionFilter.cs",
+      "line": 8
+    },
+    {
       "name": "MailInboxMessageDetailConcurrencyFilter",
       "kind": "class",
       "role": "Other",
@@ -22473,6 +22501,20 @@
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageDetailConcurrencyGate.cs",
+      "line": 5
+    },
+    {
+      "name": "MailInboxReadinessConcurrencyFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxReadinessConcurrencyFilter.cs",
+      "line": 7
+    },
+    {
+      "name": "MailInboxReadinessConcurrencyGate",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxReadinessConcurrencyGate.cs",
       "line": 5
     },
     {
@@ -22501,7 +22543,7 @@
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Security/MailInboxRequestAuthorizer.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "Program",

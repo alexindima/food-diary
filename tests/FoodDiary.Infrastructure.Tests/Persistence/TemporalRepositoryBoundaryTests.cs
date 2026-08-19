@@ -44,26 +44,27 @@ public sealed class TemporalRepositoryBoundaryTests {
     public async Task HydrationRepository_AtMaximumDate_UsesInclusiveEndWithoutOverflow() {
         await using FoodDiaryDbContext context = CreateContext();
         var user = User.Create($"hydration-boundary-{Guid.NewGuid():N}@example.com", "hash");
-        var entry = HydrationEntry.Create(user.Id, DateTime.MaxValue, 250);
+        var maximumUtc = DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc);
+        var entry = HydrationEntry.Create(user.Id, maximumUtc, 250);
         context.AddRange(user, entry);
         await context.SaveChangesAsync();
         var repository = new HydrationEntryRepository(context);
 
         IReadOnlyList<HydrationEntry> entries = await repository.GetByDateAsync(
             user.Id,
-            DateTime.MaxValue,
+            maximumUtc,
             CancellationToken.None);
-        int total = await repository.GetDailyTotalAsync(user.Id, DateTime.MaxValue, CancellationToken.None);
+        int total = await repository.GetDailyTotalAsync(user.Id, maximumUtc, CancellationToken.None);
         IReadOnlyList<(DateTime Date, int TotalMl)> totals = await repository.GetDailyTotalsAsync(
             user.Id,
-            DateTime.MaxValue,
-            DateTime.MaxValue,
+            maximumUtc,
+            maximumUtc,
             CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.Single(entries),
             () => Assert.Equal(250, total),
-            () => Assert.Equal((DateTime.MaxValue.Date, 250), Assert.Single(totals)));
+            () => Assert.Equal((maximumUtc.Date, 250), Assert.Single(totals)));
     }
 
     private static FoodDiaryDbContext CreateContext() {

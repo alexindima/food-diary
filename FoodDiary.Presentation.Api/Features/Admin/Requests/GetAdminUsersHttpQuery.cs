@@ -4,8 +4,8 @@ using FoodDiary.Presentation.Api.Policies;
 namespace FoodDiary.Presentation.Api.Features.Admin.Requests;
 
 public sealed record GetAdminUsersHttpQuery(
-    int Page = 1,
-    int Limit = 20,
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPage, PresentationQueryLimits.MaximumPage)] int Page = 1,
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int Limit = 20,
     [MaxLength(PresentationQueryLimits.MaximumSearchLength)] string? Search = null,
     [MaxLength(PresentationQueryLimits.MaximumFilterLength)]
     [AllowedQueryValues(

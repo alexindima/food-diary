@@ -5,8 +5,8 @@ namespace FoodDiary.Presentation.Api.Features.Dashboard.Requests;
 
 public sealed record GetDashboardSnapshotHttpQuery(
     DateTime Date,
-    int Page = 1,
-    int PageSize = 10,
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPage, PresentationQueryLimits.MaximumPage)] int Page = 1,
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int PageSize = 10,
     [Required, MaxLength(PresentationQueryLimits.MaximumLocaleLength)] string Locale = "en",
-    int TrendDays = 7,
-    int? TimeZoneOffsetMinutes = null);
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumDashboardTrendDays)] int TrendDays = 7,
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumTimeZoneOffsetMinutes, PresentationQueryLimits.MaximumTimeZoneOffsetMinutes)] int? TimeZoneOffsetMinutes = null);

@@ -125,7 +125,9 @@ public sealed class ProductHttpMappingsTests {
             Limit: 500,
             Search: "  yogurt  ",
             IncludePublic: true,
-            ProductTypes: "Food, food, Drink");
+            ProductTypes: "Food, food, Drink",
+            CaloriesFrom: 0,
+            CaloriesTo: -1);
 
         GetProductsQuery query = request.ToQuery(userId);
 
@@ -135,7 +137,9 @@ public sealed class ProductHttpMappingsTests {
             () => Assert.Equal(100, query.Limit),
             () => Assert.Equal("yogurt", query.Search),
             () => Assert.True(query.IncludePublic),
-            () => Assert.Equal(["Food", "Drink"], query.ProductTypes));
+            () => Assert.Equal(["Food", "Drink"], query.ProductTypes),
+            () => Assert.Equal(0, query.CaloriesFrom),
+            () => Assert.Null(query.CaloriesTo));
     }
 
     [Fact]
@@ -154,6 +158,9 @@ public sealed class ProductHttpMappingsTests {
             () => Assert.Equal(20, query.Limit),
             () => Assert.Null(query.Search),
             () => Assert.Null(query.ProductTypes));
+
+        GetProductsQuery delimitersOnly = new GetProductsHttpQuery(ProductTypes: ",,,").ToQuery(Guid.NewGuid());
+        Assert.Null(delimitersOnly.ProductTypes);
     }
 
     [Fact]

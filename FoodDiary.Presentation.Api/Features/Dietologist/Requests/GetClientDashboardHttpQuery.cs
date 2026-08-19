@@ -7,7 +7,7 @@ public sealed record GetClientDashboardHttpQuery(
     DateTime? Date = null,
     DateTime? DateFrom = null,
     DateTime? DateTo = null,
-    int Page = 1,
-    int PageSize = 10,
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPage, PresentationQueryLimits.MaximumPage)] int Page = 1,
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int PageSize = 10,
     [Required, MaxLength(PresentationQueryLimits.MaximumLocaleLength)] string Locale = "en",
-    int TrendDays = 7);
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumDashboardTrendDays)] int TrendDays = 7);

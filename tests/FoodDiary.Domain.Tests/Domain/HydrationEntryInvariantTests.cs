@@ -29,6 +29,14 @@ public class HydrationEntryInvariantTests {
     }
 
     [Fact]
+    public void Create_WithUnspecifiedTimestamp_Throws() {
+        var timestamp = new DateTime(2026, 8, 19, 12, 0, 0, DateTimeKind.Unspecified);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            HydrationEntry.Create(UserId.New(), timestamp, 250));
+    }
+
+    [Fact]
     public void Update_WithSameValues_DoesNotSetModifiedOnUtc() {
         DateTime timestamp = DateTime.UtcNow;
         var entry = HydrationEntry.Create(UserId.New(), timestamp, 250);
@@ -58,5 +66,18 @@ public class HydrationEntryInvariantTests {
         var entry = HydrationEntry.Create(UserId.New(), DateTime.UtcNow, 250);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => entry.Update(amountMl: amountMl));
+    }
+
+    [Fact]
+    public void Update_WithUnspecifiedTimestamp_ThrowsWithoutChangingAmount() {
+        var entry = HydrationEntry.Create(UserId.New(), DateTime.UtcNow, 250);
+        var timestamp = new DateTime(2026, 8, 19, 12, 0, 0, DateTimeKind.Unspecified);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            entry.Update(amountMl: 500, timestampUtc: timestamp));
+
+        Assert.Multiple(
+            () => Assert.Equal(250, entry.AmountMl),
+            () => Assert.Null(entry.ModifiedOnUtc));
     }
 }

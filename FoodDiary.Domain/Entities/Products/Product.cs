@@ -247,43 +247,10 @@ public sealed class Product : AggregateRoot<ProductId> {
         MeasurementUnit? baseUnit = null,
         double? baseAmount = null,
         double? defaultPortionAmount = null) {
-        ProductMeasurementState state = GetMeasurementState();
-        bool changed = false;
-        MeasurementUnit targetUnit = baseUnit ?? state.BaseUnit;
-        DomainGuard.Defined(targetUnit, nameof(baseUnit));
-        double targetBaseAmount = state.BaseAmount;
-
-        if (baseAmount.HasValue) {
-            targetBaseAmount = NormalizeBaseAmount(targetUnit, baseAmount.Value, nameof(baseAmount));
-        } else if (baseUnit.HasValue) {
-            targetBaseAmount = GetCanonicalBaseAmount(targetUnit);
-        }
-
-        if (baseUnit.HasValue && state.BaseUnit != targetUnit) {
-            state = state with { BaseUnit = targetUnit };
-            changed = true;
-        }
-
-        if (!AreClose(state.BaseAmount, targetBaseAmount)) {
-            state = state with { BaseAmount = targetBaseAmount };
-            changed = true;
-        }
-
-        if (defaultPortionAmount.HasValue) {
-            double normalizedDefaultPortionAmount = NormalizeDefaultPortionAmount(targetUnit, defaultPortionAmount.Value, nameof(defaultPortionAmount));
-            if (!AreClose(state.DefaultPortionAmount, normalizedDefaultPortionAmount)) {
-                state = state with { DefaultPortionAmount = normalizedDefaultPortionAmount };
-                changed = true;
-            }
-        }
-
-        EnsureDefaultPortionAmountWithinLimit(targetUnit, state.DefaultPortionAmount, nameof(defaultPortionAmount));
-        EnsureNutritionWithinLimit(targetUnit, GetNutrition());
-
-        if (changed) {
-            ApplyMeasurementState(state);
-            SetModified();
-        }
+        UpdateMeasurementAndNutrition(new ProductMeasurementNutritionUpdate(
+            BaseUnit: baseUnit,
+            BaseAmount: baseAmount,
+            DefaultPortionAmount: defaultPortionAmount));
     }
 
     public void UpdateNutrition(
@@ -293,20 +260,72 @@ public sealed class Product : AggregateRoot<ProductId> {
         double? carbsPerBase = null,
         double? fiberPerBase = null,
         double? alcoholPerBase = null) {
+        UpdateMeasurementAndNutrition(new ProductMeasurementNutritionUpdate(
+            CaloriesPerBase: caloriesPerBase,
+            ProteinsPerBase: proteinsPerBase,
+            FatsPerBase: fatsPerBase,
+            CarbsPerBase: carbsPerBase,
+            FiberPerBase: fiberPerBase,
+            AlcoholPerBase: alcoholPerBase));
+    }
+
+    public void UpdateMeasurementAndNutrition(ProductMeasurementNutritionUpdate update) {
+        ProductMeasurementState currentMeasurement = GetMeasurementState();
+        ProductMeasurementState updatedMeasurement = currentMeasurement;
+        MeasurementUnit targetUnit = update.BaseUnit ?? currentMeasurement.BaseUnit;
+        DomainGuard.Defined(targetUnit, nameof(update.BaseUnit));
+        double targetBaseAmount = currentMeasurement.BaseAmount;
+
+        if (update.BaseAmount.HasValue) {
+            targetBaseAmount = NormalizeBaseAmount(targetUnit, update.BaseAmount.Value, nameof(update.BaseAmount));
+        } else if (update.BaseUnit.HasValue) {
+            targetBaseAmount = GetCanonicalBaseAmount(targetUnit);
+        }
+
+        updatedMeasurement = updatedMeasurement with {
+            BaseUnit = targetUnit,
+            BaseAmount = targetBaseAmount,
+        };
+
+        if (update.DefaultPortionAmount.HasValue) {
+            double normalizedDefaultPortionAmount = NormalizeDefaultPortionAmount(
+                targetUnit,
+                update.DefaultPortionAmount.Value,
+                nameof(update.DefaultPortionAmount));
+            updatedMeasurement = updatedMeasurement with { DefaultPortionAmount = normalizedDefaultPortionAmount };
+        }
+
         ProductNutrition currentNutrition = GetNutrition();
         ProductNutrition updatedNutrition = currentNutrition.With(
-            caloriesPerBase: caloriesPerBase,
-            proteinsPerBase: proteinsPerBase,
-            fatsPerBase: fatsPerBase,
-            carbsPerBase: carbsPerBase,
-            fiberPerBase: fiberPerBase,
-            alcoholPerBase: alcoholPerBase);
-        EnsureNutritionWithinLimit(BaseUnit, updatedNutrition);
+            caloriesPerBase: update.CaloriesPerBase,
+            proteinsPerBase: update.ProteinsPerBase,
+            fatsPerBase: update.FatsPerBase,
+            carbsPerBase: update.CarbsPerBase,
+            fiberPerBase: update.FiberPerBase,
+            alcoholPerBase: update.AlcoholPerBase);
+        EnsureDefaultPortionAmountWithinLimit(
+            targetUnit,
+            updatedMeasurement.DefaultPortionAmount,
+            nameof(update.DefaultPortionAmount));
+        EnsureNutritionWithinLimit(targetUnit, updatedNutrition);
 
-        if (!currentNutrition.IsCloseTo(updatedNutrition, ComparisonEpsilon)) {
-            ApplyNutrition(updatedNutrition);
-            SetModified();
+        bool measurementChanged =
+            currentMeasurement.BaseUnit != updatedMeasurement.BaseUnit ||
+            !AreClose(currentMeasurement.BaseAmount, updatedMeasurement.BaseAmount) ||
+            !AreClose(currentMeasurement.DefaultPortionAmount, updatedMeasurement.DefaultPortionAmount);
+        bool nutritionChanged = !currentNutrition.IsCloseTo(updatedNutrition, ComparisonEpsilon);
+
+        if (!measurementChanged && !nutritionChanged) {
+            return;
         }
+
+        if (measurementChanged) {
+            ApplyMeasurementState(updatedMeasurement);
+        }
+        if (nutritionChanged) {
+            ApplyNutrition(updatedNutrition);
+        }
+        SetModified();
     }
 
     public void UpdateMedia(

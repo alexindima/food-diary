@@ -36,6 +36,12 @@ public class NotificationInvariantTests {
     }
 
     [Fact]
+    public void Create_WithMalformedJsonPayload_Throws() {
+        Assert.Throws<ArgumentException>(() =>
+            Notification.Create(UserId.New(), "info", "{not-json"));
+    }
+
+    [Fact]
     public void Create_TrimsTypeAndPayload() {
         var notification = Notification.Create(
             UserId.New(), "  info  ", "  {\"kind\":\"test\"}  ");

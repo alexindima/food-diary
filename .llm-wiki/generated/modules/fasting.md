@@ -137,6 +137,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.JobManager.Tests/FastingNotificationJobTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.JobManager.Tests/FastingTelemetryCleanupJobTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/FastingHttpMappingsTests.cs`
+- [presentation] `tests/FoodDiary.Presentation.Api.Tests/FastingReadControllerTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/FastingTelemetrySummaryServiceTests.cs`
 - [integration] `tests/FoodDiary.Web.Api.IntegrationTests/FastingApiIntegrationTests.cs`
 

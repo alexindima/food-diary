@@ -61,6 +61,20 @@ public class ShoppingListsValidatorTests {
     }
 
     [Fact]
+    public async Task CreateShoppingList_WithUnspecifiedCheckedTimestamp_HasError() {
+        ShoppingListItemInput item = CreateValidItem() with {
+            IsChecked = true,
+            CheckedOnUtc = new DateTime(2026, 1, 1, 10, 0, 0, DateTimeKind.Unspecified),
+        };
+
+        TestValidationResult<CreateShoppingListCommand> result = await new CreateShoppingListCommandValidator().TestValidateAsync(
+            new CreateShoppingListCommand(Guid.NewGuid(), "List", [item]));
+
+        result.ShouldHaveValidationErrorFor("Items[0].CheckedOnUtc")
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Fact]
     public async Task CreateShoppingList_AtDomainAndCollectionLimits_HasNoErrors() {
         ShoppingListItemInput boundaryItem = CreateValidItem() with {
             Name = new string('x', 256),

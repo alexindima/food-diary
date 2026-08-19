@@ -38,6 +38,24 @@ public sealed class S3ImageStorageServiceTests {
     }
 
     [Fact]
+    public async Task CreatePresignedUploadAsync_WhenCallerCancels_DoesNotGenerateUploadUrl() {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+        var storageClient = new CountingObjectStorageClient();
+        S3ImageStorageService service = CreateService(storageClient);
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            service.CreatePresignedUploadAsync(
+                UserId.New(),
+                "meal.webp",
+                "image/webp",
+                1024,
+                cancellationTokenSource.Token));
+
+        Assert.Equal(0, storageClient.PresignCount);
+    }
+
+    [Fact]
     public async Task CreatePresignedUploadAsync_WhenContentTypeIsInvalid_RecordsValidationErrorMetric() {
         long? count = null;
         string? outcome = null;
@@ -161,6 +179,19 @@ public sealed class S3ImageStorageServiceTests {
     }
 
     [Fact]
+    public async Task DeleteAsync_WhenCallerCancelsBlankDelete_PropagatesCancellation() {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+        var storageClient = new CountingObjectStorageClient();
+        S3ImageStorageService service = CreateService(storageClient);
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            service.DeleteAsync("   ", cancellationTokenSource.Token));
+
+        Assert.Equal(0, storageClient.DeleteCount);
+    }
+
+    [Fact]
     public async Task DeleteAsync_WhenObjectDeleted_RecordsSuccessMetric() {
         long? count = null;
         string? operation = null;
@@ -237,6 +268,16 @@ public sealed class S3ImageStorageServiceTests {
             () => Assert.Equal(1, count),
             () => Assert.Equal("validate", operation),
             () => Assert.Equal("success", outcome));
+    }
+
+    [Fact]
+    public async Task ValidateUploadedObjectAsync_WhenCallerCancelsBlankValidation_PropagatesCancellation() {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient());
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            service.ValidateUploadedObjectAsync("   ", cancellationTokenSource.Token));
     }
 
     [Theory]
@@ -491,6 +532,7 @@ public sealed class S3ImageStorageServiceTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class CountingObjectStorageClient : IObjectStorageClient {
+        public int PresignCount { get; private set; }
         public int DeleteCount { get; private set; }
 
         public string GetPreSignedUploadUrl(
@@ -498,8 +540,10 @@ public sealed class S3ImageStorageServiceTests {
             string key,
             string contentType,
             long contentLength,
-            DateTime expiresAt) =>
-            $"https://storage.example.com/{bucketName}/{key}";
+            DateTime expiresAt) {
+            PresignCount++;
+            return $"https://storage.example.com/{bucketName}/{key}";
+        }
 
         public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) {
             DeleteCount++;

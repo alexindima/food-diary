@@ -15,17 +15,19 @@ namespace FoodDiary.Presentation.Api.Features.Cycles;
 public sealed class CyclesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("current")]
     [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public Task<IActionResult> GetCurrent([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToCurrentQuery(), static value => value?.ToHttpResponse());
+        HandleOptional(userId.ToCurrentQuery(), static value => value?.ToHttpResponse());
 
     [HttpGet("current/nutrition-summary")]
     [ProducesResponseType<CycleNutritionSummaryHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetNutritionSummary(
         [FromCurrentUser] Guid userId,
         [FromQuery] DateTime dateFrom,
         [FromQuery] DateTime dateTo) =>
-        HandleOk(userId.ToNutritionSummaryQuery(dateFrom, dateTo), static value => value?.ToHttpResponse());
+        HandleOptional(userId.ToNutritionSummaryQuery(dateFrom, dateTo), static value => value?.ToHttpResponse());
 
     [HttpPost]
     [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]

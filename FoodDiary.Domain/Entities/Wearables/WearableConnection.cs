@@ -92,8 +92,11 @@ public sealed class WearableConnection : AggregateRoot<WearableConnectionId> {
     }
 
     public void RecordConnectRequest(string requestId, string requestHash) {
-        LastConnectRequestId = DomainGuard.RequiredText(requestId, IdempotencyValueMaxLength, nameof(requestId));
-        LastConnectRequestHash = DomainGuard.RequiredText(requestHash, IdempotencyValueMaxLength, nameof(requestHash));
+        string normalizedRequestId = DomainGuard.RequiredText(requestId, IdempotencyValueMaxLength, nameof(requestId));
+        string normalizedRequestHash = DomainGuard.RequiredText(requestHash, IdempotencyValueMaxLength, nameof(requestHash));
+
+        LastConnectRequestId = normalizedRequestId;
+        LastConnectRequestHash = normalizedRequestHash;
         SetModified();
     }
 

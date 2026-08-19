@@ -8,7 +8,15 @@ internal sealed class UsdaFoodNutrientConfiguration : IEntityTypeConfiguration<U
     public void Configure(EntityTypeBuilder<UsdaFoodNutrient> builder) {
         builder.ToTable("UsdaFoodNutrients");
         builder.HasKey(e => e.Id);
-        builder.Property(e => e.Id).ValueGeneratedNever();
+        builder.Property(e => e.Id)
+            .ValueGeneratedNever()
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
+        builder.Property(e => e.FdcId)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
+        builder.Property(e => e.NutrientId)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
+        builder.Property(e => e.Amount)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
 
         builder.HasIndex(e => new { e.FdcId, e.NutrientId }).IsUnique();
         builder.HasIndex(e => e.NutrientId);

@@ -8,7 +8,15 @@ internal sealed class UsdaFoodPortionConfiguration : IEntityTypeConfiguration<Us
     public void Configure(EntityTypeBuilder<UsdaFoodPortion> builder) {
         builder.ToTable("UsdaFoodPortions");
         builder.HasKey(e => e.Id);
-        builder.Property(e => e.Id).ValueGeneratedNever();
+        builder.Property(e => e.Id)
+            .ValueGeneratedNever()
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
+        builder.Property(e => e.FdcId)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
+        builder.Property(e => e.Amount)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
+        builder.Property(e => e.GramWeight)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
 
         builder.Property(e => e.MeasureUnitName).HasMaxLength(128);
         builder.Property(e => e.PortionDescription).HasMaxLength(256);

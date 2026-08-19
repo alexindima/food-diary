@@ -1,4 +1,5 @@
 using System.Globalization;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -33,12 +34,8 @@ public sealed class Notification : AggregateRoot<NotificationId> {
             throw new ArgumentException("Notification type is required.", nameof(type));
         }
 
-        if (string.IsNullOrWhiteSpace(payloadJson)) {
-            throw new ArgumentException("Notification payload is required.", nameof(payloadJson));
-        }
-
         string normalizedType = type.Trim();
-        string normalizedPayloadJson = payloadJson.Trim();
+        string normalizedPayloadJson = DomainGuard.RequiredJson(payloadJson, PayloadJsonMaxLength, nameof(payloadJson));
         string? normalizedReferenceId = NormalizeOptional(referenceId, ReferenceIdMaxLength, nameof(referenceId));
 
         var notification = new Notification {
@@ -47,9 +44,7 @@ public sealed class Notification : AggregateRoot<NotificationId> {
             Type = normalizedType.Length > TypeMaxLength
                 ? throw new ArgumentOutOfRangeException(nameof(type), $"Type must be at most {TypeMaxLength} characters.")
                 : normalizedType,
-            PayloadJson = normalizedPayloadJson.Length > PayloadJsonMaxLength
-                ? throw new ArgumentOutOfRangeException(nameof(payloadJson), $"PayloadJson must be at most {PayloadJsonMaxLength} characters.")
-                : normalizedPayloadJson,
+            PayloadJson = normalizedPayloadJson,
             ReferenceId = normalizedReferenceId,
             IsRead = false,
         };

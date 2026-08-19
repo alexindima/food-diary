@@ -22,6 +22,7 @@ public sealed class WebPushOptions {
                && HasValidVapidKeys(options)
                && options.Subject.Length <= 256
                && IntegrationUriValidator.IsVapidSubject(options.Subject)
+               && !string.IsNullOrWhiteSpace(options.DefaultUrl)
                && options.DefaultUrl.Length <= 256
                && IntegrationUriValidator.IsSafeNavigationUrl(options.DefaultUrl);
     }

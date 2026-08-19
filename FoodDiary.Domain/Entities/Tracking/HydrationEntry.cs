@@ -1,7 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FoodDiary.Domain.Entities.Tracking;
 
@@ -37,20 +38,20 @@ public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
     }
 
     public void Update(int? amountMl = null, DateTime? timestampUtc = null) {
+        int? normalizedAmountMl = amountMl.HasValue ? NormalizeAmount(amountMl.Value) : null;
+        DateTime? normalizedTimestamp = timestampUtc.HasValue ? Normalize(timestampUtc.Value) : null;
         bool changed = false;
 
-        if (amountMl.HasValue) {
-            int normalizedAmountMl = NormalizeAmount(amountMl.Value);
-            if (AmountMl != normalizedAmountMl) {
-                AmountMl = normalizedAmountMl;
+        if (normalizedAmountMl.HasValue) {
+            if (AmountMl != normalizedAmountMl.Value) {
+                AmountMl = normalizedAmountMl.Value;
                 changed = true;
             }
         }
 
-        if (timestampUtc.HasValue) {
-            DateTime normalizedTimestamp = Normalize(timestampUtc.Value);
-            if (Timestamp != normalizedTimestamp) {
-                Timestamp = normalizedTimestamp;
+        if (normalizedTimestamp.HasValue) {
+            if (Timestamp != normalizedTimestamp.Value) {
+                Timestamp = normalizedTimestamp.Value;
                 changed = true;
             }
         }
@@ -61,10 +62,7 @@ public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
     }
 
     private static DateTime Normalize(DateTime value) {
-        return value.Kind switch {
-            DateTimeKind.Utc => value,
-            _ => value.ToUniversalTime(),
-        };
+        return DomainGuard.RequiredUtc(value, nameof(value));
     }
 
     private static void EnsureUserId(UserId userId) {

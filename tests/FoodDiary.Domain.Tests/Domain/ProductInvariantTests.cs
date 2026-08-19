@@ -619,6 +619,37 @@ public class ProductInvariantTests {
     }
 
     [Fact]
+    public void UpdateMeasurementAndNutrition_ToStricterUnitWithValidReplacement_AppliesAtomically() {
+        var product = Product.Create(
+            UserId.New(),
+            name: "Large piece",
+            baseUnit: MeasurementUnit.Pcs,
+            baseAmount: 1,
+            defaultPortionAmount: 1,
+            caloriesPerBase: Product.MaxPieceCaloriesPerBase,
+            proteinsPerBase: Product.MaxPieceNutrientPerBase,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0);
+
+        product.UpdateMeasurementAndNutrition(new ProductMeasurementNutritionUpdate(
+            BaseUnit: MeasurementUnit.G,
+            BaseAmount: 100,
+            DefaultPortionAmount: 100,
+            CaloriesPerBase: 500,
+            ProteinsPerBase: 50));
+
+        Assert.Multiple(
+            () => Assert.Equal(MeasurementUnit.G, product.BaseUnit),
+            () => Assert.Equal(100, product.BaseAmount),
+            () => Assert.Equal(100, product.DefaultPortionAmount),
+            () => Assert.Equal(500, product.CaloriesPerBase),
+            () => Assert.Equal(50, product.ProteinsPerBase),
+            () => Assert.NotNull(product.ModifiedOnUtc));
+    }
+
+    [Fact]
     public void Create_WithNullDefaultPortionAmount_UsesBaseAmount() {
         var product = Product.Create(
             UserId.New(),

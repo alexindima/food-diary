@@ -21,8 +21,9 @@ public sealed class WaistEntriesController(ISender mediator) : AuthorizedControl
 
     [HttpGet("latest")]
     [ProducesResponseType<WaistEntryHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public Task<IActionResult> GetLatest([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToLatestQuery(), static value => value?.ToHttpResponse());
+        HandleOptional(userId.ToLatestQuery(), static value => value?.ToHttpResponse());
 
     [HttpGet("summary")]
     [ProducesResponseType<List<WaistEntrySummaryHttpResponse>>(StatusCodes.Status200OK)]

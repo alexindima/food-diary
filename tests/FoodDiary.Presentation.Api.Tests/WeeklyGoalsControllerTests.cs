@@ -54,6 +54,16 @@ public sealed class WeeklyGoalsControllerTests {
     }
 
     [Fact]
+    public async Task Get_WhenGoalDoesNotExist_ReturnsNoContent() {
+        ISender sender = SubstituteSender.Create(Result.Success<WeeklyGoalModel?>(value: null));
+        WeeklyGoalsController controller = CreateController(sender);
+
+        IActionResult result = await controller.Get(Guid.NewGuid(), new GetWeeklyGoalHttpQuery(WeekStart));
+
+        Assert.IsType<NoContentResult>(result);
+    }
+
+    [Fact]
     public async Task Upsert_SendsCommandAndReturnsResponse() {
         IRequest<Result<WeeklyGoalModel>>? sentRequest = null;
         ISender sender = SubstituteSender.Create(Result.Success(CreateModel()), request => sentRequest = request);

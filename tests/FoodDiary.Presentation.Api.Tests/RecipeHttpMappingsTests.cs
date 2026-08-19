@@ -24,7 +24,11 @@ public sealed class RecipeHttpMappingsTests {
             Page: 2,
             Limit: 25,
             Search: "soup",
-            IncludePublic: false);
+            IncludePublic: false,
+            Category: "  dinner  ",
+            MaxTotalTime: 30,
+            CaloriesFrom: 0,
+            CaloriesTo: -1);
 
         GetRecipesQuery query = request.ToQuery(userId);
 
@@ -33,7 +37,11 @@ public sealed class RecipeHttpMappingsTests {
             () => Assert.Equal(2, query.Page),
             () => Assert.Equal(25, query.Limit),
             () => Assert.Equal("soup", query.Search),
-            () => Assert.False(query.IncludePublic));
+            () => Assert.False(query.IncludePublic),
+            () => Assert.Equal("dinner", query.Category),
+            () => Assert.Equal(30, query.MaxTotalTime),
+            () => Assert.Equal(0, query.CaloriesFrom),
+            () => Assert.Null(query.CaloriesTo));
     }
 
     [Fact]

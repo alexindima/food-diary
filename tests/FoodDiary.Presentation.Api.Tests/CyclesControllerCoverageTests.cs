@@ -34,14 +34,14 @@ public sealed class CyclesControllerCoverageTests {
     }
 
     [Fact]
-    public async Task GetCurrent_ReturnsNullWhenNoCycle() {
+    public async Task GetCurrent_ReturnsNoContentWhenNoCycle() {
         var userId = Guid.NewGuid();
         ISender sender = SubstituteSender.Create(Result.Success<CycleModel?>(value: null));
         CyclesController controller = CreateController(new CyclesController(sender));
 
         IActionResult result = await controller.GetCurrent(userId);
 
-        Assert.Null(Assert.IsType<OkObjectResult>(result).Value);
+        Assert.IsType<NoContentResult>(result);
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public sealed class CyclesControllerCoverageTests {
     }
 
     [Fact]
-    public async Task GetNutritionSummary_ReturnsNullWhenNoSummary() {
+    public async Task GetNutritionSummary_ReturnsNoContentWhenNoSummary() {
         var userId = Guid.NewGuid();
         DateTime dateFrom = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
         ISender sender = SubstituteSender.Create(Result.Success<CycleNutritionSummaryModel?>(value: null));
@@ -71,7 +71,7 @@ public sealed class CyclesControllerCoverageTests {
 
         IActionResult result = await controller.GetNutritionSummary(userId, dateFrom, dateFrom.AddDays(7));
 
-        Assert.Null(Assert.IsType<OkObjectResult>(result).Value);
+        Assert.IsType<NoContentResult>(result);
     }
 
     [Fact]

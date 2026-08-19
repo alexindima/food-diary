@@ -277,6 +277,7 @@ public sealed class UsdaQueryHandlerTests {
         string unit,
         double amount) =>
         new() {
+            Id = nutrientId,
             FdcId = fdcId,
             NutrientId = nutrientId,
             Amount = amount,

@@ -78,7 +78,7 @@ public sealed class OpenFoodFactsProduct {
         double? normalizedFats = DomainGuard.NonNegativeFinite(fatsPer100G, nameof(fatsPer100G));
         double? normalizedCarbs = DomainGuard.NonNegativeFinite(carbsPer100G, nameof(carbsPer100G));
         double? normalizedFiber = DomainGuard.NonNegativeFinite(fiberPer100G, nameof(fiberPer100G));
-        DateTime normalizedSyncedAtUtc = EnsureUtc(syncedAtUtc);
+        DateTime normalizedSyncedAtUtc = DomainGuard.RequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
 
         Name = normalizedName;
         Brand = normalizedBrand;
@@ -94,12 +94,9 @@ public sealed class OpenFoodFactsProduct {
     }
 
     public void MarkSeen(DateTime seenAtUtc) {
-        LastSeenAtUtc = EnsureUtc(seenAtUtc);
+        LastSeenAtUtc = DomainGuard.RequiredUtc(seenAtUtc, nameof(seenAtUtc));
         if (SearchHitCount < int.MaxValue) {
             SearchHitCount++;
         }
     }
-
-    private static DateTime EnsureUtc(DateTime value) =>
-        value.Kind == DateTimeKind.Utc ? value : value.ToUniversalTime();
 }

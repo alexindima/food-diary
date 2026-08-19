@@ -130,6 +130,20 @@ public class WearableInvariantTests {
     }
 
     [Fact]
+    public void WearableConnection_RecordConnectRequest_WhenHashIsInvalid_DoesNotPartiallyUpdateFingerprint() {
+        WearableConnection conn = CreateConnection();
+        conn.RecordConnectRequest("original-request", "original-hash");
+        DateTime? modifiedOnUtc = conn.ModifiedOnUtc;
+
+        Assert.Throws<ArgumentException>(() => conn.RecordConnectRequest("new-request", "   "));
+
+        Assert.Multiple(
+            () => Assert.Equal("original-request", conn.LastConnectRequestId),
+            () => Assert.Equal("original-hash", conn.LastConnectRequestHash),
+            () => Assert.Equal(modifiedOnUtc, conn.ModifiedOnUtc));
+    }
+
+    [Fact]
     public void WearableConnection_MarkSynced_SetsLastSyncedAtUtc() {
         WearableConnection conn = CreateConnection();
 

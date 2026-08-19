@@ -1,4 +1,6 @@
+using FoodDiary.Presentation.Api.Policies;
+
 namespace FoodDiary.Presentation.Api.Features.Admin.Requests;
 
 public sealed record GetAdminDashboardHttpQuery(
-    int Recent = 5);
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumAdminDashboardRecentItems)] int Recent = 5);

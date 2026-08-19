@@ -29,6 +29,7 @@ public sealed class S3ImageStorageService(
         long fileSizeBytes,
         CancellationToken cancellationToken) {
         try {
+            cancellationToken.ThrowIfCancellationRequested();
             ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
             ArgumentException.ThrowIfNullOrWhiteSpace(contentType);
             if (fileSizeBytes <= 0) {
@@ -60,24 +61,35 @@ public sealed class S3ImageStorageService(
             var result = new PresignedUpload(uploadUrl, fileUrl, key, expiresAt);
             return Task.FromResult(result);
         } catch (Exception ex) {
+            string outcome;
+            if (ex is OperationCanceledException && cancellationToken.IsCancellationRequested) {
+                outcome = "canceled";
+            } else {
+                outcome = ex is ArgumentException or InvalidOperationException ? "validation_error" : "failure";
+            }
+
             IntegrationsTelemetry.RecordStorageOperation(
                 "presign",
-                ex is ArgumentException or InvalidOperationException ? "validation_error" : "failure",
+                outcome,
                 ex.GetType().Name);
             throw;
         }
     }
 
     public async Task DeleteAsync(string objectKey, CancellationToken cancellationToken) {
-        if (string.IsNullOrWhiteSpace(objectKey)) {
-            return;
-        }
-
         try {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (string.IsNullOrWhiteSpace(objectKey)) {
+                return;
+            }
+
             await storageClient.DeleteObjectAsync(_options.Bucket, objectKey, cancellationToken).ConfigureAwait(false);
             IntegrationsTelemetry.RecordStorageOperation("delete", "success");
         } catch (Exception ex) {
-            IntegrationsTelemetry.RecordStorageOperation("delete", "failure", ex.GetType().Name);
+            string outcome = ex is OperationCanceledException && cancellationToken.IsCancellationRequested
+                ? "canceled"
+                : "failure";
+            IntegrationsTelemetry.RecordStorageOperation("delete", outcome, ex.GetType().Name);
             throw;
         }
     }
@@ -88,6 +100,7 @@ public sealed class S3ImageStorageService(
         string outcome = "success";
         string? errorType = null;
         try {
+            cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrWhiteSpace(objectKey)) {
                 return CreateInvalidValidationResult(ref outcome, "invalid_key", "Image object key is required.");
             }

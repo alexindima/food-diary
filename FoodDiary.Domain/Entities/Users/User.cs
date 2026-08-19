@@ -521,6 +521,9 @@ public sealed partial class User : AggregateRoot<UserId> {
     public void ReplaceRoles(IReadOnlyCollection<Role> roles) {
         ArgumentNullException.ThrowIfNull(roles);
         EnsureNotDeleted();
+        if (roles.Any(static role => role is null)) {
+            throw new ArgumentException("Roles must not contain null elements.", nameof(roles));
+        }
 
         Role[] normalizedRoles = [.. roles.DistinctBy(role => role.Id)];
         RoleId[] requestedRoleIds = [

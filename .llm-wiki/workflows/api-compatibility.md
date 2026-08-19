@@ -24,14 +24,21 @@ After regenerating API contract snapshots, compare them with the intended base:
 
 The guard understands both a raw OpenAPI document and this repository's compact
 `Endpoints` contract snapshot. The full compact snapshot records component
-schema properties used by request and response bodies in addition to query-parameter
-name, location, requiredness, type, format, and default. The guard classifies
+schema properties used by request and response bodies. It also records query-
+and path-parameter name, location, requiredness, type, format, default,
+validation limits and enum values. Every request and successful response media
+type includes its schema type, format or reference, array item and dictionary
+value shape, nullability, and documented response headers. Snapshot equality
+keeps all of those details review-visible, and the semantic compatibility guard
+classifies changes across those shapes and documented response codes. The guard classifies
 removed parameters, newly required parameters, requiredness increases, and
 shape changes as breaking; new optional parameters are additive. It also compares serialized key sets in
 `payload-contract-snapshots.json`, so response-field additions remain visible
-when the compact endpoint snapshot has no component schemas. It reports removed paths, operations, documented
-responses, and incompatible parameter changes as breaking. New paths, operations, optional parameters,
-documented responses, and component schemas are additive. It is a
+when the compact endpoint snapshot has no component schemas. It reports removed
+paths, operations, documented responses, and incompatible parameter,
+request-body, response-schema, media-type, and response-header changes as
+breaking. New paths, operations, optional parameters, media types, response
+headers, documented responses, and component schemas are additive. It is a
 focused compatibility gate, not a substitute for integration tests or review of
 schema semantics, authorization, error shapes, and status-code behavior.
 

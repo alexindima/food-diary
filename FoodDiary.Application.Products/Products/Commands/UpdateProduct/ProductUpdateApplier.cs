@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Products.Products.Commands.UpdateProduct;
 
@@ -48,26 +49,25 @@ internal static class ProductUpdateApplier {
         Product product,
         UpdateProductCommand command,
         ProductUpdateValues values) {
-        if (values.Unit.HasValue || command.BaseAmount.HasValue || command.DefaultPortionAmount.HasValue) {
-            product.UpdateMeasurement(
-                baseUnit: values.Unit,
-                baseAmount: command.BaseAmount,
-                defaultPortionAmount: command.DefaultPortionAmount);
-        }
-
-        if (command.CaloriesPerBase.HasValue ||
+        if (values.Unit.HasValue ||
+            command.BaseAmount.HasValue ||
+            command.DefaultPortionAmount.HasValue ||
+            command.CaloriesPerBase.HasValue ||
             command.ProteinsPerBase.HasValue ||
             command.FatsPerBase.HasValue ||
             command.CarbsPerBase.HasValue ||
             command.FiberPerBase.HasValue ||
             command.AlcoholPerBase.HasValue) {
-            product.UpdateNutrition(
-                caloriesPerBase: command.CaloriesPerBase,
-                proteinsPerBase: command.ProteinsPerBase,
-                fatsPerBase: command.FatsPerBase,
-                carbsPerBase: command.CarbsPerBase,
-                fiberPerBase: command.FiberPerBase,
-                alcoholPerBase: command.AlcoholPerBase);
+            product.UpdateMeasurementAndNutrition(new ProductMeasurementNutritionUpdate(
+                BaseUnit: values.Unit,
+                BaseAmount: command.BaseAmount,
+                DefaultPortionAmount: command.DefaultPortionAmount,
+                CaloriesPerBase: command.CaloriesPerBase,
+                ProteinsPerBase: command.ProteinsPerBase,
+                FatsPerBase: command.FatsPerBase,
+                CarbsPerBase: command.CarbsPerBase,
+                FiberPerBase: command.FiberPerBase,
+                AlcoholPerBase: command.AlcoholPerBase));
         }
     }
 

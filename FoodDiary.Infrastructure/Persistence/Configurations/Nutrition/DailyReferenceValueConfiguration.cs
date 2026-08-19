@@ -8,6 +8,12 @@ internal sealed class DailyReferenceValueConfiguration : IEntityTypeConfiguratio
     public void Configure(EntityTypeBuilder<DailyReferenceValue> builder) {
         builder.ToTable("DailyReferenceValues");
         builder.HasKey(e => e.Id);
+        builder.Property(e => e.Id)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
+        builder.Property(e => e.NutrientId)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
+        builder.Property(e => e.Value)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
 
         builder.Property(e => e.Unit).HasMaxLength(32).IsRequired();
         builder.Property(e => e.AgeGroup).HasMaxLength(64).IsRequired();

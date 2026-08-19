@@ -39,11 +39,13 @@ public sealed class DietologistController(ISender mediator) : AuthorizedControll
 
     [HttpGet("my-dietologist")]
     [ProducesResponseType<DietologistInfoHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public Task<IActionResult> GetMyDietologist([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToMyDietologistQuery(), static value => value?.ToHttpResponse());
+        HandleOptional(userId.ToMyDietologistQuery(), static value => value?.ToHttpResponse());
 
     [HttpGet("relationship")]
     [ProducesResponseType<DietologistRelationshipHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public Task<IActionResult> GetRelationship([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToMyDietologistRelationshipQuery(), static value => value?.ToHttpResponse());
+        HandleOptional(userId.ToMyDietologistRelationshipQuery(), static value => value?.ToHttpResponse());
 }

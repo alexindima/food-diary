@@ -38,5 +38,10 @@ internal sealed class ShoppingListItemInputValidator : AbstractValidator<Shoppin
                  amount.Value is > 0 and <= ShoppingListInputLimits.AmountMaxValue))
             .WithErrorCode("Validation.Invalid")
             .WithMessage(ShoppingListInputLimits.AmountRangeErrorMessage);
+
+        RuleFor(item => item.CheckedOnUtc)
+            .Must(timestamp => !timestamp.HasValue || timestamp.Value.Kind != DateTimeKind.Unspecified)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("CheckedOnUtc must include timezone information.");
     }
 }

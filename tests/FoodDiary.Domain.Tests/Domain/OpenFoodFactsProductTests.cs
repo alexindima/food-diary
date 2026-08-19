@@ -100,6 +100,46 @@ public sealed class OpenFoodFactsProductTests {
         Assert.Equal(2, product.SearchHitCount);
     }
 
+    [Fact]
+    public void Create_WithUnspecifiedTimestamp_Throws() {
+        var timestamp = new DateTime(2026, 8, 19, 12, 0, 0, DateTimeKind.Unspecified);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            OpenFoodFactsProduct.Create(
+                "4600000000001",
+                "Milk",
+                brand: null,
+                category: null,
+                imageUrl: null,
+                caloriesPer100G: null,
+                proteinsPer100G: null,
+                fatsPer100G: null,
+                carbsPer100G: null,
+                fiberPer100G: null,
+                timestamp));
+    }
+
+    [Fact]
+    public void MarkSeen_WithUnspecifiedTimestamp_ThrowsWithoutIncrementingHitCount() {
+        var product = OpenFoodFactsProduct.Create(
+            "4600000000001",
+            "Milk",
+            brand: null,
+            category: null,
+            imageUrl: null,
+            caloriesPer100G: null,
+            proteinsPer100G: null,
+            fatsPer100G: null,
+            carbsPer100G: null,
+            fiberPer100G: null,
+            DateTime.UtcNow);
+        var timestamp = new DateTime(2026, 8, 19, 12, 0, 0, DateTimeKind.Unspecified);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => product.MarkSeen(timestamp));
+
+        Assert.Equal(1, product.SearchHitCount);
+    }
+
     [Theory]
     [InlineData("")]
     [InlineData(" ")]

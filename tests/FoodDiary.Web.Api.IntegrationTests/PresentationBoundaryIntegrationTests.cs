@@ -1048,6 +1048,109 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task SwaggerJson_DocumentsGroupedQueryValidationConstraints() {
+        HttpClient client = apiFactory.CreateClient();
+        using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
+        JsonElement paths = json.RootElement.GetProperty("paths");
+
+        JsonElement lessonCategory = GetOpenApiParameter(paths, "/api/v{version}/lessons", "get", "Category")
+            .GetProperty("schema");
+        JsonElement recipeSort = GetOpenApiParameter(paths, "/api/v{version}/recipes/explore", "get", "SortBy")
+            .GetProperty("schema");
+        JsonElement weightSort = GetOpenApiParameter(paths, "/api/v{version}/weight-entries", "get", "Sort")
+            .GetProperty("schema");
+        JsonElement recipePage = GetOpenApiParameter(paths, "/api/v{version}/recipes", "get", "Page")
+            .GetProperty("schema");
+        JsonElement recipeLimit = GetOpenApiParameter(paths, "/api/v{version}/recipes", "get", "Limit")
+            .GetProperty("schema");
+        string[] recipeSortValues = [.. recipeSort.GetProperty("enum").EnumerateArray()
+            .Select(static value => value.GetString() ?? string.Empty)];
+        string[] weightSortValues = [.. weightSort.GetProperty("enum").EnumerateArray()
+            .Select(static value => value.GetString() ?? string.Empty)];
+
+        Assert.Multiple(
+            () => Assert.Equal(PresentationQueryLimits.MaximumCategoryLength, lessonCategory.GetProperty("maxLength").GetInt32()),
+            () => Assert.Equal(
+                [PresentationQueryValues.Newest, PresentationQueryValues.Popular],
+                recipeSortValues),
+            () => Assert.Equal(PresentationQueryLimits.MaximumSortLength, recipeSort.GetProperty("maxLength").GetInt32()),
+            () => Assert.Equal(PresentationQueryLimits.MinimumPage, recipePage.GetProperty("minimum").GetInt32()),
+            () => Assert.Equal(PresentationQueryLimits.MaximumPage, recipePage.GetProperty("maximum").GetInt32()),
+            () => Assert.Equal(1, recipePage.GetProperty("default").GetInt32()),
+            () => Assert.Equal(PresentationQueryLimits.MinimumPageSize, recipeLimit.GetProperty("minimum").GetInt32()),
+            () => Assert.Equal(PresentationQueryLimits.MaximumPageSize, recipeLimit.GetProperty("maximum").GetInt32()),
+            () => Assert.Equal(10, recipeLimit.GetProperty("default").GetInt32()),
+            () => Assert.Equal(
+                [PresentationQueryValues.Ascending, PresentationQueryValues.Descending],
+                weightSortValues));
+    }
+
+    [Fact]
+    public async Task SwaggerJson_DocumentsRequestArrayAndFileSchemaDetails() {
+        HttpClient client = apiFactory.CreateClient();
+        using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
+        JsonElement paths = json.RootElement.GetProperty("paths");
+        JsonElement loginBody = paths.GetProperty("/api/v{version}/auth/login")
+            .GetProperty("post")
+            .GetProperty("requestBody");
+        JsonElement weightItems = paths.GetProperty("/api/v{version}/weight-entries")
+            .GetProperty("get")
+            .GetProperty("responses")
+            .GetProperty("200")
+            .GetProperty("content")
+            .GetProperty("application/json")
+            .GetProperty("schema")
+            .GetProperty("items");
+        JsonElement exportResponse = paths.GetProperty("/api/v{version}/export/diary")
+            .GetProperty("get")
+            .GetProperty("responses")
+            .GetProperty("200");
+
+        Assert.Multiple(
+            () => Assert.Equal(
+                "#/components/schemas/LoginHttpRequest",
+                loginBody.GetProperty("content").GetProperty("application/json").GetProperty("schema").GetProperty("$ref").GetString()),
+            () => Assert.Equal(
+                "#/components/schemas/WeightEntryHttpResponse",
+                weightItems.GetProperty("$ref").GetString()),
+            () => Assert.Equal("binary", exportResponse.GetProperty("content").GetProperty("text/csv").GetProperty("schema").GetProperty("format").GetString()),
+            () => Assert.Equal("binary", exportResponse.GetProperty("content").GetProperty("application/pdf").GetProperty("schema").GetProperty("format").GetString()),
+            () => Assert.True(exportResponse.GetProperty("headers").TryGetProperty("Content-Disposition", out _)));
+    }
+
+    [Fact]
+    public async Task SwaggerJson_DocumentsOptionalSuccessResponses() {
+        HttpClient client = apiFactory.CreateClient();
+        using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
+        JsonElement paths = json.RootElement.GetProperty("paths");
+        string[] optionalPaths = [
+            "/api/v{version}/cycles/current",
+            "/api/v{version}/cycles/current/nutrition-summary",
+            "/api/v{version}/dietologist/my-dietologist",
+            "/api/v{version}/dietologist/relationship",
+            "/api/v{version}/fasting/current",
+            "/api/v{version}/waist-entries/latest",
+            "/api/v{version}/weekly-goals",
+            "/api/v{version}/weight-entries/latest",
+        ];
+
+        Assert.All(optionalPaths, path => {
+            JsonElement responses = paths
+                .GetProperty(path)
+                .GetProperty("get")
+                .GetProperty("responses");
+            JsonElement successSchema = responses
+                .GetProperty("200")
+                .GetProperty("content")
+                .GetProperty("application/json")
+                .GetProperty("schema");
+            Assert.Multiple(
+                () => Assert.True(responses.TryGetProperty("204", out _), $"GET {path} must document HTTP 204."),
+                () => Assert.False(IsNullableSchema(successSchema), $"GET {path} must keep HTTP 200 object-only."));
+        });
+    }
+
+    [Fact]
     public async Task SwaggerJson_MatchesFocusedPresentationContractSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         HttpResponseMessage response = await client.GetAsync("/swagger/v1/swagger.json");
@@ -1265,11 +1368,13 @@ public sealed class PresentationBoundaryIntegrationTests(
             .Select(operation => new OperationSnapshot(
                 operation.Name,
                 operation.Value.TryGetProperty("requestBody", out _),
+                CreateRequestBodySnapshot(operation.Value),
                 operation.Value.TryGetProperty("responses", out JsonElement responses)
                     ? [.. responses.EnumerateObject()
                         .Select(response => response.Name)
                         .Order(StringComparer.Ordinal)]
                     : Array.Empty<string>(),
+                CreateSuccessResponseSnapshots(operation.Value),
                 CreateParameterSnapshots(operation.Value, "query"),
                 includePathParameters ? CreateParameterSnapshots(operation.Value, "path") : null))
             .OrderBy(operation => operation.Method, StringComparer.Ordinal)];
@@ -1302,12 +1407,160 @@ public sealed class PresentationBoundaryIntegrationTests(
                     schema.TryGetProperty("maximum", out JsonElement maximum) ? maximum.GetDouble() : null,
                     schema.TryGetProperty("minItems", out JsonElement minItems) ? minItems.GetInt32() : null,
                     schema.TryGetProperty("maxItems", out JsonElement maxItems) ? maxItems.GetInt32() : null,
-                    schema.TryGetProperty("pattern", out JsonElement pattern) ? pattern.GetString() : null);
+                    schema.TryGetProperty("pattern", out JsonElement pattern) ? pattern.GetString() : null,
+                    schema.TryGetProperty("enum", out JsonElement enumValues) && enumValues.ValueKind == JsonValueKind.Array
+                        ? [.. enumValues.EnumerateArray().Select(static value => value.GetString() ?? value.GetRawText())]
+                        : null);
             })
             .OrderBy(parameter => parameter.Location, StringComparer.Ordinal)
             .ThenBy(parameter => parameter.Name, StringComparer.Ordinal)];
 
         return snapshots.Length == 0 ? null : snapshots;
+    }
+
+    private static IReadOnlyList<OpenApiSuccessResponseSnapshot>? CreateSuccessResponseSnapshots(JsonElement operation) {
+        if (!operation.TryGetProperty("responses", out JsonElement responses) || responses.ValueKind != JsonValueKind.Object) {
+            return null;
+        }
+
+        OpenApiSuccessResponseSnapshot[] snapshots = [.. responses.EnumerateObject()
+            .Where(static response => response.Name.Length == 3 && response.Name[0] == '2')
+            .SelectMany(static response =>
+                response.Value.TryGetProperty("content", out JsonElement content) && content.ValueKind == JsonValueKind.Object
+                    ? content.EnumerateObject()
+                        .Select(mediaType => CreateSuccessResponseSnapshot(response.Name, mediaType, response.Value))
+                    : [])
+            .OrderBy(static response => response.StatusCode, StringComparer.Ordinal)
+            .ThenBy(static response => response.MediaType, StringComparer.Ordinal)];
+
+        return snapshots.Length == 0 ? null : snapshots;
+    }
+
+    private static OpenApiSuccessResponseSnapshot CreateSuccessResponseSnapshot(
+        string statusCode,
+        JsonProperty mediaType,
+        JsonElement response) {
+        JsonElement schema = mediaType.Value.GetProperty("schema");
+        OpenApiSchemaShapeSnapshot shape = CreateSchemaShapeSnapshot(schema);
+        return new OpenApiSuccessResponseSnapshot(
+            statusCode,
+            mediaType.Name,
+            shape.Type,
+            shape.Format,
+            shape.Reference,
+            shape.Nullable,
+            shape.ItemType,
+            shape.ItemFormat,
+            shape.ItemReference,
+            shape.AdditionalPropertiesType,
+            shape.AdditionalPropertiesReference,
+            CreateHeaderSnapshots(response));
+    }
+
+    private static OpenApiRequestBodySnapshot? CreateRequestBodySnapshot(JsonElement operation) {
+        if (!operation.TryGetProperty("requestBody", out JsonElement requestBody) ||
+            !requestBody.TryGetProperty("content", out JsonElement content) ||
+            content.ValueKind != JsonValueKind.Object) {
+            return null;
+        }
+
+        OpenApiMediaTypeSnapshot[] mediaTypes = [.. content.EnumerateObject()
+            .Select(static mediaType => {
+                OpenApiSchemaShapeSnapshot shape = CreateSchemaShapeSnapshot(mediaType.Value.GetProperty("schema"));
+                return new OpenApiMediaTypeSnapshot(
+                    mediaType.Name,
+                    shape.Type,
+                    shape.Format,
+                    shape.Reference,
+                    shape.Nullable,
+                    shape.ItemType,
+                    shape.ItemFormat,
+                    shape.ItemReference,
+                    shape.AdditionalPropertiesType,
+                    shape.AdditionalPropertiesReference);
+            })
+            .OrderBy(static mediaType => mediaType.MediaType, StringComparer.Ordinal)];
+
+        return new OpenApiRequestBodySnapshot(
+            requestBody.TryGetProperty("required", out JsonElement required) && required.GetBoolean(),
+            mediaTypes);
+    }
+
+    private static IReadOnlyList<OpenApiHeaderSnapshot>? CreateHeaderSnapshots(JsonElement response) {
+        if (!response.TryGetProperty("headers", out JsonElement headers) || headers.ValueKind != JsonValueKind.Object) {
+            return null;
+        }
+
+        OpenApiHeaderSnapshot[] snapshots = [.. headers.EnumerateObject()
+            .Select(static header => {
+                JsonElement schema = header.Value.GetProperty("schema");
+                return new OpenApiHeaderSnapshot(
+                    header.Name,
+                    GetSchemaType(schema),
+                    schema.TryGetProperty("format", out JsonElement format) ? format.GetString() : null,
+                    GetSchemaReference(schema));
+            })
+            .OrderBy(static header => header.Name, StringComparer.Ordinal)];
+        return snapshots.Length == 0 ? null : snapshots;
+    }
+
+    private static OpenApiSchemaShapeSnapshot CreateSchemaShapeSnapshot(JsonElement schema) {
+        JsonElement items = schema.TryGetProperty("items", out JsonElement itemsNode) ? itemsNode : default;
+        JsonElement additionalProperties = schema.TryGetProperty("additionalProperties", out JsonElement additionalPropertiesNode)
+            ? additionalPropertiesNode
+            : default;
+        return new OpenApiSchemaShapeSnapshot(
+            GetSchemaType(schema),
+            schema.TryGetProperty("format", out JsonElement format) ? format.GetString() : null,
+            GetSchemaReference(schema),
+            IsNullableSchema(schema),
+            items.ValueKind == JsonValueKind.Object ? GetSchemaType(items) : null,
+            items.ValueKind == JsonValueKind.Object && items.TryGetProperty("format", out JsonElement itemFormat)
+                ? itemFormat.GetString()
+                : null,
+            items.ValueKind == JsonValueKind.Object ? GetSchemaReference(items) : null,
+            additionalProperties.ValueKind == JsonValueKind.Object ? GetSchemaType(additionalProperties) : null,
+            additionalProperties.ValueKind == JsonValueKind.Object ? GetSchemaReference(additionalProperties) : null);
+    }
+
+    private static string? GetSchemaType(JsonElement schema) {
+        if (!schema.TryGetProperty("type", out JsonElement type)) {
+            return null;
+        }
+
+        return type.ValueKind switch {
+            JsonValueKind.String => type.GetString(),
+            JsonValueKind.Array => string.Join('|', type.EnumerateArray().Select(static value => value.GetString())),
+            _ => null,
+        };
+    }
+
+    private static string? GetSchemaReference(JsonElement schema) {
+        if (schema.TryGetProperty("$ref", out JsonElement reference)) {
+            return reference.GetString();
+        }
+
+        if (!schema.TryGetProperty("allOf", out JsonElement allOf) || allOf.ValueKind != JsonValueKind.Array) {
+            return null;
+        }
+
+        foreach (JsonElement item in allOf.EnumerateArray()) {
+            if (item.TryGetProperty("$ref", out reference)) {
+                return reference.GetString();
+            }
+        }
+
+        return null;
+    }
+
+    private static bool IsNullableSchema(JsonElement schema) {
+        if (schema.TryGetProperty("nullable", out JsonElement nullable) && nullable.ValueKind == JsonValueKind.True) {
+            return true;
+        }
+
+        return schema.TryGetProperty("type", out JsonElement type) &&
+               type.ValueKind == JsonValueKind.Array &&
+               type.EnumerateArray().Any(static value => string.Equals(value.GetString(), "null", StringComparison.Ordinal));
     }
 
     private static IReadOnlyList<OpenApiSchemaSnapshot>? CreateSchemaSnapshots(JsonElement root) {
@@ -1453,9 +1706,63 @@ public sealed class PresentationBoundaryIntegrationTests(
     private sealed record OperationSnapshot(
         string Method,
         bool HasRequestBody,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] OpenApiRequestBodySnapshot? RequestBody,
         IReadOnlyList<string> ResponseCodes,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] IReadOnlyList<OpenApiSuccessResponseSnapshot>? SuccessResponses,
         [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] IReadOnlyList<OpenApiParameterSnapshot>? QueryParameters,
         [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] IReadOnlyList<OpenApiParameterSnapshot>? PathParameters);
+
+    [ExcludeFromCodeCoverage]
+    private sealed record OpenApiSuccessResponseSnapshot(
+        string StatusCode,
+        string MediaType,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Type,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Format,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Reference,
+        bool Nullable,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? ItemType,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? ItemFormat,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? ItemReference,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? AdditionalPropertiesType,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? AdditionalPropertiesReference,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] IReadOnlyList<OpenApiHeaderSnapshot>? Headers);
+
+    [ExcludeFromCodeCoverage]
+    private sealed record OpenApiRequestBodySnapshot(
+        bool Required,
+        IReadOnlyList<OpenApiMediaTypeSnapshot> Content);
+
+    [ExcludeFromCodeCoverage]
+    private sealed record OpenApiMediaTypeSnapshot(
+        string MediaType,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Type,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Format,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Reference,
+        bool Nullable,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? ItemType,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? ItemFormat,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? ItemReference,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? AdditionalPropertiesType,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? AdditionalPropertiesReference);
+
+    [ExcludeFromCodeCoverage]
+    private sealed record OpenApiHeaderSnapshot(
+        string Name,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Type,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Format,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Reference);
+
+    [ExcludeFromCodeCoverage]
+    private sealed record OpenApiSchemaShapeSnapshot(
+        string? Type,
+        string? Format,
+        string? Reference,
+        bool Nullable,
+        string? ItemType,
+        string? ItemFormat,
+        string? ItemReference,
+        string? AdditionalPropertiesType,
+        string? AdditionalPropertiesReference);
 
     [ExcludeFromCodeCoverage]
     private sealed record OpenApiParameterSnapshot(
@@ -1471,7 +1778,8 @@ public sealed class PresentationBoundaryIntegrationTests(
         [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] double? Maximum,
         [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] int? MinItems,
         [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] int? MaxItems,
-        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Pattern);
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Pattern,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] IReadOnlyList<string>? Enum);
 
     [ExcludeFromCodeCoverage]
     private sealed record OpenApiSchemaSnapshot(

@@ -12,6 +12,7 @@ $protectedSentinel = Join-Path $repositoryRoot '.llm-wiki/generated/read-only-gu
 $dirtySentinel = Join-Path $repositoryRoot 'read-only-guard-worktree-smoke.tmp'
 $cleanSourceRelative = 'Shared/FoodDiary.Results/Result.cs'
 $cleanSource = Join-Path $repositoryRoot $cleanSourceRelative
+$cleanRepositoryRoot = Join-Path $fixtureRoot 'clean-repository'
 $writerJob = $null
 
 try {
@@ -65,6 +66,26 @@ Start-Sleep -Milliseconds 750
     $safeOutput = @(& $guardPath -ToolPath $safeTool)
     if ('read-only-safe-control' -notin $safeOutput) {
         throw 'Read-only guard did not preserve output from a legitimate read-only tool.'
+    }
+
+    $cleanToolsRoot = Join-Path $cleanRepositoryRoot '.llm-wiki/tools'
+    $null = New-Item -ItemType Directory -Path $cleanToolsRoot -Force
+    Copy-Item -LiteralPath $guardPath -Destination (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -Force
+    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1') -Destination (Join-Path $cleanToolsRoot 'LlmWikiGitPaths.ps1') -Force
+    $cleanSafeTool = Join-Path $cleanToolsRoot 'clean-safe.ps1'
+    [IO.File]::WriteAllText($cleanSafeTool, "Write-Output 'read-only-clean-control'", [Text.UTF8Encoding]::new($false))
+    & git -C $cleanRepositoryRoot init --quiet
+    & git -C $cleanRepositoryRoot config user.email 'wiki-smoke@example.invalid'
+    & git -C $cleanRepositoryRoot config user.name 'Wiki Smoke'
+    & git -C $cleanRepositoryRoot add --all
+    & git -C $cleanRepositoryRoot commit --quiet -m 'fixture'
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to prepare the clean read-only guard regression repository.' }
+
+    $cleanOutput = @(& (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
+        -ToolPath $cleanSafeTool `
+        -ToolArguments @{ ProposedPath = @('CleanScope') })
+    if ('read-only-clean-control' -notin $cleanOutput) {
+        throw 'Read-only guard did not preserve output when the scoped workspace overlay was empty.'
     }
 
     $productOnlyPlan = & (Join-Path $PSScriptRoot 'Invoke-LlmWikiAffectedSmoke.ps1') `

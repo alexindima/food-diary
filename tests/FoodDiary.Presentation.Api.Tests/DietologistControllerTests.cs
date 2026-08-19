@@ -101,7 +101,7 @@ public sealed class DietologistControllerTests {
     }
 
     [Fact]
-    public async Task GetMyDietologist_WhenMissing_ReturnsNullResponse() {
+    public async Task GetMyDietologist_WhenMissing_ReturnsNoContent() {
         IRequest<Result<DietologistInfoModel?>>? sentRequest = null;
         ISender sender = SubstituteSender.Create(Result.Success<DietologistInfoModel?>(value: null), request => sentRequest = request);
         DietologistController controller = CreateController(sender);
@@ -109,8 +109,7 @@ public sealed class DietologistControllerTests {
 
         IActionResult result = await controller.GetMyDietologist(userId);
 
-        OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
-        Assert.Null(ok.Value);
+        Assert.IsType<NoContentResult>(result);
         GetMyDietologistQuery query = Assert.IsType<GetMyDietologistQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
@@ -149,7 +148,7 @@ public sealed class DietologistControllerTests {
     }
 
     [Fact]
-    public async Task GetRelationship_WhenMissing_ReturnsNullResponse() {
+    public async Task GetRelationship_WhenMissing_ReturnsNoContent() {
         IRequest<Result<DietologistRelationshipModel?>>? sentRequest = null;
         ISender sender = SubstituteSender.Create(Result.Success<DietologistRelationshipModel?>(value: null), request => sentRequest = request);
         DietologistController controller = CreateController(sender);
@@ -157,8 +156,7 @@ public sealed class DietologistControllerTests {
 
         IActionResult result = await controller.GetRelationship(userId);
 
-        OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
-        Assert.Null(ok.Value);
+        Assert.IsType<NoContentResult>(result);
         GetMyDietologistRelationshipQuery query = Assert.IsType<GetMyDietologistRelationshipQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }

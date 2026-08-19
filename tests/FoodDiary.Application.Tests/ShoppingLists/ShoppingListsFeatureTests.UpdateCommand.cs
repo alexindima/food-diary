@@ -211,6 +211,40 @@ public partial class ShoppingListsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateShoppingListCommandHandler_WhenCheckedTimestampIsOmitted_PreservesExistingTimestamp() {
+        var user = User.Create("shopping-preserve-checked-on@example.com", "hash");
+        var list = ShoppingList.Create(user.Id, "Weekly");
+        var checkedOnUtc = new DateTime(2026, 1, 1, 10, 0, 0, DateTimeKind.Utc);
+        ShoppingListItem existing = list.AddItem(
+            "Milk",
+            productId: null,
+            1,
+            MeasurementUnit.Ml,
+            "Dairy",
+            isChecked: true,
+            1,
+            checkedOnUtc: checkedOnUtc);
+        var repository = new SingleShoppingListRepository(list);
+        var handler = new UpdateShoppingListCommandHandler(
+            repository,
+            new NoopProductLookupService(),
+            CreateCurrentUserAccessService(user));
+
+        Result<ShoppingListModel> result = await handler.Handle(
+            new UpdateShoppingListCommand(
+                user.Id.Value,
+                list.Id.Value,
+                Name: null,
+                [
+                    new ShoppingListItemInput(existing.Id.Value, ProductId: null, "Milk", Amount: 1, Unit: "Ml", Category: "Dairy", Aisle: null, Note: null, IsChecked: true, CheckedOnUtc: null, SortOrder: 1),
+                ]),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(checkedOnUtc, Assert.Single(result.Value.Items).CheckedOnUtc);
+    }
+
+    [Fact]
     public async Task UpdateShoppingListCommandHandler_WithNameOnly_UpdatesWithoutReplacingItems() {
         var user = User.Create("shopping-update-name-only@example.com", "hash");
         var list = ShoppingList.Create(user.Id, "Old");

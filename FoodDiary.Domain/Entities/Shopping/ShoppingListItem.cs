@@ -73,7 +73,7 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
             Aisle = normalizedAisle,
             Note = normalizedNote,
             IsChecked = isChecked,
-            CheckedOnUtc = isChecked ? NormalizeCheckedOnUtc(checkedOnUtc) : null,
+            CheckedOnUtc = ResolveCheckedOnUtc(isChecked, checkedOnUtc, existingCheckedOnUtc: null),
             SortOrder = sortOrder,
         };
         item.SetCreated();
@@ -105,7 +105,7 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
         string? normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
         string? normalizedAisle = NormalizeOptionalText(aisle, CategoryMaxLength, nameof(aisle));
         string? normalizedNote = NormalizeOptionalText(note, NoteMaxLength, nameof(note));
-        DateTime? normalizedCheckedOnUtc = isChecked ? NormalizeCheckedOnUtc(checkedOnUtc) : null;
+        DateTime? normalizedCheckedOnUtc = ResolveCheckedOnUtc(isChecked, checkedOnUtc, CheckedOnUtc);
 
         ProductId = productId;
         Name = normalizedName;
@@ -180,8 +180,18 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
             : value.Value;
     }
 
-    private static DateTime? NormalizeCheckedOnUtc(DateTime? value) =>
-        value?.ToUniversalTime() ?? DomainTime.UtcNow;
+    private static DateTime? ResolveCheckedOnUtc(
+        bool isChecked,
+        DateTime? checkedOnUtc,
+        DateTime? existingCheckedOnUtc) {
+        if (!isChecked) {
+            return null;
+        }
+
+        return checkedOnUtc.HasValue
+            ? DomainGuard.RequiredUtc(checkedOnUtc.Value, nameof(checkedOnUtc))
+            : existingCheckedOnUtc ?? DomainTime.UtcNow;
+    }
 
     private static void EnsureShoppingListId(ShoppingListId shoppingListId) {
         if (shoppingListId == ShoppingListId.Empty) {

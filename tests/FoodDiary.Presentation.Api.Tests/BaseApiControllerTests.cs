@@ -24,6 +24,28 @@ public sealed class BaseApiControllerTests {
     }
 
     [Fact]
+    public async Task HandleOptional_ReturnsNoContentWhenMappedValueIsNull() {
+        var request = new TestOptionalRequest();
+        ISender mediator = CreateSender(request, Result.Success<string?>(value: null));
+        TestController controller = CreateController(mediator);
+
+        IActionResult result = await controller.HandleOptionalPublic(request, static value => value);
+
+        Assert.IsType<NoContentResult>(result);
+    }
+
+    [Fact]
+    public async Task HandleOptional_ReturnsMappedOkResultWhenValueExists() {
+        var request = new TestOptionalRequest();
+        ISender mediator = CreateSender(request, Result.Success<string?>("value"));
+        TestController controller = CreateController(mediator);
+
+        IActionResult result = await controller.HandleOptionalPublic(request, static value => value?.ToUpperInvariant());
+
+        Assert.Equal("VALUE", Assert.IsType<OkObjectResult>(result).Value);
+    }
+
+    [Fact]
     public async Task HandleCreated_ReturnsCreatedAtActionResult() {
         var request = new TestCreatedRequest();
         ISender mediator = CreateSender(
@@ -145,6 +167,12 @@ public sealed class BaseApiControllerTests {
             Func<TResponse, THttpResponse> map) =>
             HandleCreated(request, actionName, routeValues, map);
 
+        public Task<IActionResult> HandleOptionalPublic<TResponse, THttpResponse>(
+            IRequest<Result<TResponse>> request,
+            Func<TResponse, THttpResponse?> map)
+            where THttpResponse : class =>
+            HandleOptional(request, map);
+
         public Task<IActionResult> HandleNoContentPublic(IRequest<Result> request) =>
             HandleNoContent(request);
 
@@ -166,6 +194,9 @@ public sealed class BaseApiControllerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed record TestOkRequest : IRequest<Result<string>>;
+
+    [ExcludeFromCodeCoverage]
+    private sealed record TestOptionalRequest : IRequest<Result<string?>>;
 
     [ExcludeFromCodeCoverage]
     private sealed record TestCreatedRequest : IRequest<Result<CreatedModel>>;

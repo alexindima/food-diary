@@ -216,13 +216,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "772bc3c43846bf916ff1aad25877865401348f0c4bb33aeae1a5ec75b86ad46e"
+          "sha256": "45f90ffea1b1022409e6c01a89dc010899565f05fb28840dc9a319a214a3ea60"
         }
       ],
-      "reason": "Reviewed the freshly regenerated backend-contract index after the merge; the contract-review workflow remains accurate and the index generator completed successfully.",
+      "reason": "Regenerated and reviewed the OpenAPI contract after adding query bounds, request and response schema shapes, file media types, and explicit optional responses; focused and full integration tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
-      "reviewedAtUtc": "2026-08-19T12:53:02.1373267Z"
+      "gitHead": "56693d6ebb798d0d8ea3877592e17dbaedd97c96",
+      "reviewedAtUtc": "2026-08-19T23:05:22.8465696Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -431,13 +431,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "7f76d076028118a2974f1cc2782a01d030fef470585650e91362c377a4cb5f50"
+          "sha256": "9f583800d8cefe3bbbbe316eb8d391fc7bbb5e456c0afbb429e7d88ea0273db6"
         }
       ],
-      "reason": "Reviewed the remaining affected navigation pages against their declared current sources; no workflow contract change beyond the documented cache, isolation, graph, and verification updates was required.",
+      "reason": "Reviewed the regenerated configuration and repository catalog indexes against the current option, persistence, domain, presentation, and test source changes included in this complete working-tree commit.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:15:16.1220431Z"
+      "gitHead": "56693d6ebb798d0d8ea3877592e17dbaedd97c96",
+      "reviewedAtUtc": "2026-08-19T23:06:31.7364394Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -461,13 +461,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "cf198f9826939880098916b7fd0797fbb75fd4ab8a86261bd1606b49a97a6198"
+          "sha256": "79465f84d054f6b9602f0bed6c8fc6fc32a8d1b9c86b7ae3dd625a1a6c3baa47"
         }
       ],
-      "reason": "Reviewed the freshly regenerated domain-data index after the merge; the domain/data review workflow remains accurate and the index generator completed successfully.",
+      "reason": "Domain-data and quality indexes reflect the stricter USDA and UTC invariants; domain, application, infrastructure, and architecture regression suites pass.",
       "baseRef": "HEAD",
-      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
-      "reviewedAtUtc": "2026-08-19T12:53:03.4098436Z"
+      "gitHead": "fe614150d2afa5f98ad3723ff106606e7522efa9",
+      "reviewedAtUtc": "2026-08-19T22:46:50.9672654Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -756,13 +756,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4e163fd1ba46f81921b60bf21b075179a8d57594ac490e1ba21c3a02fd45ba45"
+          "sha256": "d519ed98a5d6e8e27c2f5b9c66105c1b5802c3713fce42534538c2531560f5fb"
         }
       ],
-      "reason": "Sensitive-data diff contains only moved MailRelay query/command paths, removal of an obsolete initializer credential candidate, and line shifts in unchanged OpenAI transfer sites; no new sensitive fields, destinations, logging, or provider payloads were introduced.",
+      "reason": "Reviewed the regenerated sensitive-data index against the current domain validation, integration option, storage service, and presentation changes; no new secret material or unsafe data exposure is introduced.",
       "baseRef": "HEAD",
-      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
-      "reviewedAtUtc": "2026-08-19T12:59:21.7041759Z"
+      "gitHead": "56693d6ebb798d0d8ea3877592e17dbaedd97c96",
+      "reviewedAtUtc": "2026-08-19T23:06:32.0479270Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -817,13 +817,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d20cceb03dd849d75c5352d85f00ed43b6843067e487dab33d96d85e98b72e6f"
+          "sha256": "bf75c0eea2aa6982f79165e1699ddd9f4c8c75a0291b71f4be90d862fc4c122d"
         }
       ],
-      "reason": "Regenerated quality and repository indexes match the current source graph; Presentation has 100% line and 89.49% branch coverage, with 776 Presentation tests and 710 architecture tests passing.",
+      "reason": "Reviewed the quality index against focused presentation, host, integration, architecture, solution build, and coverage runs; targeted tests cover the new and previously under-covered behavior.",
       "baseRef": "HEAD",
-      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
-      "reviewedAtUtc": "2026-08-19T13:06:25.3867181Z"
+      "gitHead": "56693d6ebb798d0d8ea3877592e17dbaedd97c96",
+      "reviewedAtUtc": "2026-08-19T23:05:31.0869380Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1192,17 +1192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "d09d44d2e65356747b0d1a8e6138ab150213d83e98a368db8ec01cd1af513438"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "242ba5c7b16402fb42532f2e644d9e58f5bed445650fa904672932c6d3a4bdf3"
+          "sha256": "0f904ae1c104a2e3b096d41a41a4657b023486d50d0592eb1acafeb0552d619e"
         }
       ],
-      "reason": "Repository catalog changes are verified line-number shifts from the three documented 400 responses and the version-neutral attribute; the root guide addition accurately codifies the feature-folder convention enforced by the new architecture test.",
+      "reason": "Reviewed the regenerated configuration and repository catalog indexes against the current option, persistence, domain, presentation, and test source changes included in this complete working-tree commit.",
       "baseRef": "HEAD",
-      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
-      "reviewedAtUtc": "2026-08-19T13:06:39.1490685Z"
+      "gitHead": "56693d6ebb798d0d8ea3877592e17dbaedd97c96",
+      "reviewedAtUtc": "2026-08-19T23:06:32.3524005Z"
     },
     {
       "pageId": "workflow.review-diff",

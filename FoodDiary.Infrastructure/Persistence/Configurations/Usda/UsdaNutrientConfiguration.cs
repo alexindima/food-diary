@@ -8,7 +8,9 @@ internal sealed class UsdaNutrientConfiguration : IEntityTypeConfiguration<UsdaN
     public void Configure(EntityTypeBuilder<UsdaNutrient> builder) {
         builder.ToTable("UsdaNutrients");
         builder.HasKey(e => e.Id);
-        builder.Property(e => e.Id).ValueGeneratedNever();
+        builder.Property(e => e.Id)
+            .ValueGeneratedNever()
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
 
         builder.Property(e => e.Name).HasMaxLength(256).IsRequired();
         builder.Property(e => e.UnitName).HasMaxLength(32).IsRequired();

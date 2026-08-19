@@ -222,6 +222,20 @@ public sealed class IntegrationOptionsTests {
         Assert.False(WebPushOptions.HasValidConfiguration(options));
     }
 
+    [Fact]
+    public void WebPushOptions_WhenEnabledAndDefaultUrlIsNull_ReturnsFalse() {
+        WebPushOptions valid = CreateValidWebPushOptions();
+        var options = new WebPushOptions {
+            Enabled = valid.Enabled,
+            Subject = valid.Subject,
+            PublicKey = valid.PublicKey,
+            PrivateKey = valid.PrivateKey,
+            DefaultUrl = null!,
+        };
+
+        Assert.False(WebPushOptions.HasValidConfiguration(options));
+    }
+
     [Theory]
     [InlineData("mailto:admin@example.com", true)]
     [InlineData("https://example.com/contact", true)]
@@ -261,6 +275,13 @@ public sealed class IntegrationOptionsTests {
         };
 
         Assert.True(StripeOptions.HasValidConfiguration(options));
+    }
+
+    [Fact]
+    public void StripeOptions_HasAnyConfiguration_IgnoresUnusedPublishableKey() {
+        var options = new StripeOptions { PublishableKey = "pk_legacy" };
+
+        Assert.False(StripeOptions.HasAnyConfiguration(options));
     }
 
     private static WebPushOptions CreateValidWebPushOptions(

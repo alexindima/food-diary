@@ -54,6 +54,9 @@ linked-worktree registrations. Safe snapshots are reused and bounded by a
 retention policy. When `-PlannedPath` is explicit, research and planning overlay
 and fingerprint only that scope plus Wiki tooling dependencies instead of
 inheriting an unrelated session baseline.
+A clean worktree, or a worktree whose changes are all outside that explicit
+scope, legitimately produces an empty overlay. The read-oriented command still
+runs from the captured `HEAD` snapshot and must accept that empty path set.
 
 For physical module extraction, use bounded source research and a compile proof:
 

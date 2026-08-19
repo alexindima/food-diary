@@ -203,7 +203,7 @@ public sealed class AdditionalFeatureControllerTests {
 
         CapturedSender nullLatestSender = SubstituteSender.Capture(Result.Success<WeightEntryModel?>(value: null));
         WeightEntriesController nullLatestController = CreateController(new WeightEntriesController(nullLatestSender));
-        Assert.Null(Assert.IsType<OkObjectResult>(await nullLatestController.GetLatest(userId)).Value);
+        Assert.IsType<NoContentResult>(await nullLatestController.GetLatest(userId));
 
         CapturedSender summarySender = SubstituteSender.Capture(Result.Success<IReadOnlyList<WeightEntrySummaryModel>>([summary]));
         WeightEntriesController summaryController = CreateController(new WeightEntriesController(summarySender));
@@ -258,7 +258,7 @@ public sealed class AdditionalFeatureControllerTests {
 
         CapturedSender nullLatestSender = SubstituteSender.Capture(Result.Success<WaistEntryModel?>(value: null));
         WaistEntriesController nullLatestController = CreateController(new WaistEntriesController(nullLatestSender));
-        Assert.Null(Assert.IsType<OkObjectResult>(await nullLatestController.GetLatest(userId)).Value);
+        Assert.IsType<NoContentResult>(await nullLatestController.GetLatest(userId));
 
         CapturedSender summarySender = SubstituteSender.Capture(Result.Success<IReadOnlyList<WaistEntrySummaryModel>>([summary]));
         WaistEntriesController summaryController = CreateController(new WaistEntriesController(summarySender));

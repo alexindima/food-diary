@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1050,
+    "contracts": 1048,
     "ambiguousContracts": 3,
-    "consumerEdges": 7372,
-    "productionConsumerEdges": 4462,
-    "testConsumerEdges": 2910,
-    "consumedContracts": 1050,
+    "consumerEdges": 7377,
+    "productionConsumerEdges": 4458,
+    "testConsumerEdges": 2919,
+    "consumedContracts": 1048,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -13984,38 +13984,6 @@
       "ambiguous": false
     },
     {
-      "name": "ReceiveInboundMailCommand",
-      "roles": [
-        "Command"
-      ],
-      "kinds": [
-        "record"
-      ],
-      "areas": [
-        "MailInbox"
-      ],
-      "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommand.cs"
-      ],
-      "ambiguous": false
-    },
-    {
-      "name": "ReceiveInboundMailRequest",
-      "roles": [
-        "Request"
-      ],
-      "kinds": [
-        "record"
-      ],
-      "areas": [
-        "MailInbox"
-      ],
-      "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/ReceiveInboundMailRequest.cs"
-      ],
-      "ambiguous": false
-    },
-    {
       "name": "RecipeAutoNutritionEnabledDomainEvent",
       "roles": [
         "Event"
@@ -20325,7 +20293,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ResultExtensionsTests.cs",
       "isTest": true,
-      "referenceCount": 18
+      "referenceCount": 22
     },
     {
       "contract": "ApiErrorHttpResponse",
@@ -21938,6 +21906,19 @@
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "CheckMailInboxReadinessQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Application/Health/CheckMailInboxReadinessQuery.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxReadinessConcurrencyTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "CheckMailRelayReadinessQuery",
@@ -25486,7 +25467,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 12
+      "referenceCount": 14
     },
     {
       "contract": "CreateShoppingListCommand",
@@ -33562,6 +33543,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetCurrentFastingQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingReadControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetCurrentShoppingListQuery",
       "roles": [
         "Query"
@@ -37576,7 +37570,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ProductHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "GetProductsOverviewHttpQuery",
@@ -37771,7 +37765,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ProductHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "GetProfileOverviewQuery",
@@ -40410,7 +40404,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/WeeklyGoalsControllerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "GetWeeklyGoalQuery",
@@ -64536,19 +64530,6 @@
         "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailStore.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IInboundMailStore",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailStore.cs"
-      ],
-      "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -80878,7 +80859,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Controllers/BaseApiController.cs",
       "isTest": false,
-      "referenceCount": 8
+      "referenceCount": 9
     },
     {
       "contract": "IRequest",
@@ -80941,19 +80922,6 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/IRequest.cs"
-      ],
-      "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -80982,7 +80950,7 @@
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/FoodDiary.MailInbox.Presentation/Controllers/MailInboxControllerBase.cs",
       "isTest": false,
-      "referenceCount": 5
+      "referenceCount": 7
     },
     {
       "contract": "IRequest",
@@ -81239,6 +81207,19 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxReadinessConcurrencyTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayResultAndValidationBehaviorTests.cs",
       "isTest": true,
@@ -81411,7 +81392,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerTests.cs",
       "isTest": true,
-      "referenceCount": 12
+      "referenceCount": 14
     },
     {
       "contract": "IRequest",
@@ -81568,6 +81549,19 @@
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ExportControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingReadControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IRequest",
@@ -82008,19 +82002,6 @@
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IRequestHandler",
-      "roles": [
-        "Handler"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
-      ],
-      "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -83579,6 +83560,19 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxReadinessConcurrencyTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs",
       "isTest": true,
@@ -83790,7 +83784,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerTests.cs",
       "isTest": true,
-      "referenceCount": 13
+      "referenceCount": 15
     },
     {
       "contract": "ISender",
@@ -83947,6 +83941,19 @@
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ExportControllerTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingReadControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ISender",
@@ -84232,7 +84239,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/WeeklyGoalsControllerTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "IServerStatusService",
@@ -84985,6 +84992,19 @@
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IStreamRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IStreamRequest.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxReadinessConcurrencyTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -95932,7 +95952,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "MailgunEventDataHttpRequest",
@@ -96138,6 +96158,19 @@
         "MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorHttpResponse.cs"
       ],
       "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/MailInboxHealthController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "MailInboxApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
       "isTest": false,
       "referenceCount": 1
@@ -96164,6 +96197,19 @@
         "MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorHttpResponse.cs"
       ],
       "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxExceptionFilter.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MailInboxApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageDetailConcurrencyFilter.cs",
       "isTest": false,
       "referenceCount": 1
@@ -96177,9 +96223,61 @@
         "MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorHttpResponse.cs"
       ],
       "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxReadinessConcurrencyFilter.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MailInboxApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxMessageDetailConcurrencyTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "MailInboxApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationSecurityTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "MailInboxApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 10
+    },
+    {
+      "contract": "MailInboxApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxReadinessConcurrencyTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "MailInboxHealthHttpResponse",
@@ -100301,84 +100399,6 @@
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/UserHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "ReceiveInboundMailCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommand.cs"
-      ],
-      "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "ReceiveInboundMailCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommand.cs"
-      ],
-      "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommandValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ReceiveInboundMailCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommand.cs"
-      ],
-      "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs",
-      "isTest": true,
-      "referenceCount": 3
-    },
-    {
-      "contract": "ReceiveInboundMailRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/ReceiveInboundMailRequest.cs"
-      ],
-      "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ReceiveInboundMailRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/ReceiveInboundMailRequest.cs"
-      ],
-      "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ReceiveInboundMailRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/ReceiveInboundMailRequest.cs"
-      ],
-      "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "RecipeAutoNutritionEnabledDomainEvent",
@@ -109231,7 +109251,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.UpdateCommand.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "UpdateShoppingListCommand",
@@ -112430,6 +112450,19 @@
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/WeightEntryHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "WeightEntryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/WeightEntries/Responses/WeightEntryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "WeightEntrySummaryHttpResponse",

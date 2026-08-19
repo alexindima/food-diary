@@ -14,8 +14,9 @@ namespace FoodDiary.Presentation.Api.Features.Fasting;
 public sealed class FastingReadController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("current")]
     [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public Task<IActionResult> GetCurrent([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToCurrentQuery(), static value => value?.ToHttpResponse());
+        HandleOptional(userId.ToCurrentQuery(), static value => value?.ToHttpResponse());
 
     [HttpGet("overview")]
     [ProducesResponseType<FastingOverviewHttpResponse>(StatusCodes.Status200OK)]

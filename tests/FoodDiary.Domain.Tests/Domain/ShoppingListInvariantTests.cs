@@ -284,6 +284,13 @@ public class ShoppingListInvariantTests {
     }
 
     [Fact]
+    public void RemoveItemsExcept_WithNullSet_ThrowsArgumentNullException() {
+        var list = ShoppingList.Create(UserId.New(), "Weekly");
+
+        Assert.Throws<ArgumentNullException>(() => list.RemoveItemsExcept(null!));
+    }
+
+    [Fact]
     public void ShoppingListItem_Create_WithExplicitItemId_UsesProvidedId() {
         var id = ShoppingListItemId.New();
 
@@ -368,6 +375,87 @@ public class ShoppingListInvariantTests {
 
         Assert.False(item.IsChecked);
         Assert.Null(item.CheckedOnUtc);
+    }
+
+    [Fact]
+    public void ShoppingListItem_UpdateDetails_WhenCheckedTimestampIsOmitted_PreservesExistingTimestamp() {
+        var list = ShoppingList.Create(UserId.New(), "Weekly");
+        var checkedOnUtc = new DateTime(2026, 1, 1, 10, 0, 0, DateTimeKind.Utc);
+        ShoppingListItem item = list.AddItem(
+            name: "Milk",
+            productId: null,
+            amount: 1,
+            unit: MeasurementUnit.Ml,
+            category: null,
+            isChecked: true,
+            sortOrder: 0,
+            checkedOnUtc: checkedOnUtc);
+
+        item.UpdateDetails(
+            name: "Milk",
+            productId: null,
+            amount: 1,
+            unit: MeasurementUnit.Ml,
+            category: null,
+            aisle: null,
+            note: null,
+            isChecked: true,
+            checkedOnUtc: null,
+            sortOrder: 0);
+
+        Assert.Equal(checkedOnUtc, item.CheckedOnUtc);
+    }
+
+    [Fact]
+    public void ShoppingListItem_Create_WithUnspecifiedCheckedTimestamp_Throws() {
+        var checkedOnUtc = new DateTime(2026, 1, 1, 10, 0, 0, DateTimeKind.Unspecified);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => ShoppingListItem.Create(
+            ShoppingListId.New(),
+            name: "Milk",
+            productId: null,
+            amount: 1,
+            unit: MeasurementUnit.Ml,
+            category: null,
+            isChecked: true,
+            sortOrder: 0,
+            checkedOnUtc: checkedOnUtc));
+    }
+
+    [Fact]
+    public void ShoppingListItem_UpdateDetails_WithUnspecifiedCheckedTimestamp_ThrowsWithoutChangingState() {
+        var list = ShoppingList.Create(UserId.New(), "Weekly");
+        var originalCheckedOnUtc = new DateTime(2026, 1, 1, 10, 0, 0, DateTimeKind.Utc);
+        ShoppingListItem item = list.AddItem(
+            name: "Milk",
+            productId: null,
+            amount: 1,
+            unit: MeasurementUnit.Ml,
+            category: null,
+            isChecked: true,
+            sortOrder: 0,
+            checkedOnUtc: originalCheckedOnUtc);
+        var unspecified = new DateTime(2026, 1, 2, 10, 0, 0, DateTimeKind.Unspecified);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => item.UpdateDetails(
+            name: "Changed",
+            productId: null,
+            amount: 2,
+            unit: MeasurementUnit.G,
+            category: "Changed",
+            aisle: null,
+            note: null,
+            isChecked: true,
+            checkedOnUtc: unspecified,
+            sortOrder: 1));
+
+        Assert.Multiple(
+            () => Assert.Equal("Milk", item.Name),
+            () => Assert.Equal(1, item.Amount),
+            () => Assert.Equal(MeasurementUnit.Ml, item.Unit),
+            () => Assert.Null(item.Category),
+            () => Assert.Equal(originalCheckedOnUtc, item.CheckedOnUtc),
+            () => Assert.Equal(0, item.SortOrder));
     }
 
     [Fact]

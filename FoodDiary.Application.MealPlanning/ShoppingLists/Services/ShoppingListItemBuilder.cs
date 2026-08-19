@@ -97,6 +97,11 @@ public static class ShoppingListItemBuilder {
             return Result.Failure<ShoppingListItemData>(amountError);
         }
 
+        Error? checkedOnUtcError = ValidateCheckedOnUtc(item);
+        if (checkedOnUtcError is not null) {
+            return Result.Failure<ShoppingListItemData>(checkedOnUtcError);
+        }
+
         return item.ProductId.HasValue
             ? BuildProductItem(item, index, products)
             : BuildCustomItem(item, index);
@@ -109,6 +114,12 @@ public static class ShoppingListItemBuilder {
 
         return item.Amount is <= 0 or > ShoppingListInputLimits.AmountMaxValue
             ? Errors.Validation.Invalid(nameof(item.Amount), ShoppingListInputLimits.AmountRangeErrorMessage)
+            : null;
+    }
+
+    private static Error? ValidateCheckedOnUtc(ShoppingListItemInput item) {
+        return item.CheckedOnUtc?.Kind == DateTimeKind.Unspecified
+            ? Errors.Validation.Invalid(nameof(item.CheckedOnUtc), "CheckedOnUtc must include timezone information.")
             : null;
     }
 

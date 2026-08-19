@@ -37,6 +37,18 @@ public static class ResultExtensions {
                 : ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
         }
 
+        public IActionResult ToOptionalActionResult<TResponse>(
+            ControllerBase controller,
+            Func<T, TResponse?> map)
+            where TResponse : class {
+            if (result.IsFailure) {
+                return ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
+            }
+
+            TResponse? response = map(result.Value);
+            return response is null ? controller.NoContent() : controller.Ok(response);
+        }
+
         public IActionResult ToCreatedAtActionResult<TResponse>(
             ControllerBase controller,
             string actionName,

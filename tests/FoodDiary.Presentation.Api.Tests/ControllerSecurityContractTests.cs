@@ -229,6 +229,37 @@ public sealed class ControllerSecurityContractTests {
     }
 
     [Fact]
+    public void PresentationQueryNumbers_HaveExplicitOpenApiRanges() {
+        Type[] numericTypes = [typeof(byte), typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal)];
+        Type[] queryTypes = [.. typeof(BaseApiController).Assembly
+            .GetTypes()
+            .Where(static type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true)
+            .Where(static type => type.Name.EndsWith("HttpQuery", StringComparison.Ordinal))];
+        ParameterInfo[] numericParameters = [.. queryTypes
+            .SelectMany(static type => Assert.Single(type.GetConstructors()).GetParameters())
+            .Where(parameter => numericTypes.Contains(Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType))];
+
+        Assert.NotEmpty(numericParameters);
+        foreach (ParameterInfo parameter in numericParameters) {
+            OpenApiNumericRangeAttribute range = Assert.IsType<OpenApiNumericRangeAttribute>(
+                parameter.GetCustomAttribute<OpenApiNumericRangeAttribute>());
+            Assert.Multiple(
+                () => Assert.False(double.IsNaN(range.Minimum)),
+                () => Assert.True(range.Maximum is null || range.Maximum >= range.Minimum));
+        }
+    }
+
+    [Fact]
+    public void ProducesFileResponseAttribute_DefensivelyCopiesContentTypes() {
+        string[] source = ["text/csv"];
+        var attribute = new ProducesFileResponseAttribute(source);
+
+        source[0] = "application/octet-stream";
+
+        Assert.Equal(["text/csv"], attribute.ContentTypes);
+    }
+
+    [Fact]
     public void ClosedSetQueryStrings_RejectUnknownValues() {
         (Type QueryType, string ParameterName, string AcceptedValue)[] expectations = [
             (typeof(global::FoodDiary.Presentation.Api.Features.Admin.Requests.GetAdminContentReportsHttpQuery), "Status", PresentationQueryValues.Pending),

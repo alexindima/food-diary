@@ -16,6 +16,7 @@ namespace FoodDiary.Presentation.Api.Features.Export;
 [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public sealed class ExportController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("diary")]
+    [ProducesFileResponse("text/csv", "application/pdf")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
@@ -31,6 +32,7 @@ public sealed class ExportController(ISender mediator) : AuthorizedController(me
         HandleFile(ExportHttpMappings.ToQuery(userId, dateFrom, dateTo, format, locale, timeZoneOffsetMinutes, reportOrigin));
 
     [HttpGet("cycle")]
+    [ProducesFileResponse("text/csv")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
@@ -43,6 +45,7 @@ public sealed class ExportController(ISender mediator) : AuthorizedController(me
         HandleFile(ExportHttpMappings.ToCycleQuery(userId, dateFrom, dateTo, timeZoneOffsetMinutes));
 
     [HttpPost("cycle/sensitive")]
+    [ProducesFileResponse("text/csv")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]

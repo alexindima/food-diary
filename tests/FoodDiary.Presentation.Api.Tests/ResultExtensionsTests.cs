@@ -76,6 +76,41 @@ public sealed class ResultExtensionsTests {
     }
 
     [Fact]
+    public void ToActionResult_FailedGenericResult_ReturnsStandardError() {
+        var result = Result.Failure<string>(CreateError("Validation.Invalid", "Failure"));
+
+        IActionResult actionResult = result.ToActionResult();
+
+        Assert.Equal(
+            StatusCodes.Status400BadRequest,
+            Assert.IsType<ObjectResult>(actionResult).StatusCode);
+    }
+
+    [Fact]
+    public void ToOkActionResult_WithoutMap_ReturnsSuccessfulValue() {
+        var result = Result.Success("value");
+        TestController controller = CreateController("trace-ok-value");
+
+        IActionResult actionResult = result.ToOkActionResult(controller);
+
+        Assert.Equal("value", Assert.IsType<OkObjectResult>(actionResult).Value);
+    }
+
+    [Fact]
+    public void ToCreatedResult_FailedResult_UsesControllerTraceIdentifier() {
+        var result = Result.Failure<string>(CreateError("Validation.Invalid", "Failure"));
+        TestController controller = CreateController("trace-created-failure");
+
+        IActionResult actionResult = result.ToCreatedResult(controller, static value => value);
+
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(actionResult);
+        ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        Assert.Multiple(
+            () => Assert.Equal(StatusCodes.Status400BadRequest, objectResult.StatusCode),
+            () => Assert.Equal("trace-created-failure", response.TraceId));
+    }
+
+    [Fact]
     public void ToOkActionResult_WithMap_MapsSuccessfulValue() {
         var result = Result.Success("value");
         TestController controller = CreateController("trace-success");
@@ -84,6 +119,40 @@ public sealed class ResultExtensionsTests {
 
         OkObjectResult okResult = Assert.IsType<OkObjectResult>(actionResult);
         Assert.Equal("VALUE", okResult.Value);
+    }
+
+    [Fact]
+    public void ToOptionalActionResult_NullMappedValue_ReturnsNoContent() {
+        var result = Result.Success<string?>(value: null);
+        TestController controller = CreateController("trace-optional-empty");
+
+        IActionResult actionResult = result.ToOptionalActionResult(controller, static value => value);
+
+        Assert.IsType<NoContentResult>(actionResult);
+    }
+
+    [Fact]
+    public void ToOptionalActionResult_Value_ReturnsOk() {
+        var result = Result.Success<string?>("value");
+        TestController controller = CreateController("trace-optional-value");
+
+        IActionResult actionResult = result.ToOptionalActionResult(controller, static value => value);
+
+        Assert.Equal("value", Assert.IsType<OkObjectResult>(actionResult).Value);
+    }
+
+    [Fact]
+    public void ToOptionalActionResult_Failure_ReturnsStandardErrorWithTraceIdentifier() {
+        var result = Result.Failure<string?>(CreateError("Validation.Invalid", "Failure"));
+        TestController controller = CreateController("trace-optional-failure");
+
+        IActionResult actionResult = result.ToOptionalActionResult(controller, static value => value);
+
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(actionResult);
+        ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        Assert.Multiple(
+            () => Assert.Equal(StatusCodes.Status400BadRequest, objectResult.StatusCode),
+            () => Assert.Equal("trace-optional-failure", response.TraceId));
     }
 
     [Fact]

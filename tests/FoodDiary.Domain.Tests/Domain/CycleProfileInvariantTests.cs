@@ -667,6 +667,29 @@ public class CycleProfileInvariantTests {
     }
 
     [Fact]
+    public void ClearSymptomEntries_WithInvalidCategory_ThrowsWithoutRemovingEntries() {
+        DateOnly date = new(2026, 4, 2);
+        var profile = CycleProfile.Create(UserId.New(), date.AddDays(-1));
+        profile.UpsertSymptomEntry(date, CycleSymptomCategory.Pain, 4, tags: [], note: null);
+        DateTime? modifiedAt = profile.ModifiedOnUtc;
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            profile.ClearSymptomEntries(date, [CycleSymptomCategory.Pain, (CycleSymptomCategory)999]));
+
+        Assert.Multiple(
+            () => Assert.Single(profile.SymptomEntries),
+            () => Assert.Equal(modifiedAt, profile.ModifiedOnUtc));
+    }
+
+    [Fact]
+    public void ClearSymptomEntries_WithNullCategories_Throws() {
+        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 4, 1));
+
+        Assert.Throws<ArgumentNullException>(() =>
+            profile.ClearSymptomEntries(new DateOnly(2026, 4, 2), null!));
+    }
+
+    [Fact]
     public void ClearFertilitySignal_RemovesOnlyFertilityDataForDate() {
         DateOnly date = new(2026, 4, 2);
         var profile = CycleProfile.Create(UserId.New(), date.AddDays(-1));

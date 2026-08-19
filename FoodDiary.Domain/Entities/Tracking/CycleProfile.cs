@@ -305,6 +305,11 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
     }
 
     public bool ClearSymptomEntries(DateOnly date, IReadOnlyCollection<CycleSymptomCategory> categories) {
+        ArgumentNullException.ThrowIfNull(categories);
+        foreach (CycleSymptomCategory category in categories) {
+            EnsureDefined(category, nameof(categories));
+        }
+
         HashSet<CycleSymptomCategory> categorySet = [.. categories];
         int removedCount = _symptomEntries.RemoveAll(entry => entry.Date == date && categorySet.Contains(entry.Category));
         if (removedCount == 0) {

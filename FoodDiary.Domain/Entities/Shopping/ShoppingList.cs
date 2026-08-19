@@ -59,6 +59,8 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
         _items.FirstOrDefault(item => item.Id == id);
 
     public void RemoveItemsExcept(IReadOnlySet<ShoppingListItemId> itemIdsToKeep) {
+        ArgumentNullException.ThrowIfNull(itemIdsToKeep);
+
         int removedCount = _items.RemoveAll(item => !itemIdsToKeep.Contains(item.Id));
         if (removedCount == 0) {
             return;

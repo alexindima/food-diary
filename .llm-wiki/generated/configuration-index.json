@@ -257,7 +257,10 @@
       "properties": [
         "ApiKey",
         "MaxConcurrentMessageDetailRequests",
+        "MaxConcurrentReadinessRequests",
         "MessageDetailQueueTimeout",
+        "ReadinessExecutionTimeout",
+        "ReadinessQueueTimeout",
         "RequireApiKey"
       ],
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs"

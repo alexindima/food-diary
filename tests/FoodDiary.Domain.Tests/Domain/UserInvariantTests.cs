@@ -1108,6 +1108,21 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void ReplaceRoles_WithNullElement_ThrowsWithoutChangingRoles() {
+        var user = User.Create("test@example.com", "hash");
+        var adminRole = Role.Create("Admin");
+        user.ReplaceRoles([adminRole]);
+        DateTime? modifiedAt = user.ModifiedOnUtc;
+
+        Assert.Throws<ArgumentException>(() => user.ReplaceRoles([adminRole, null!]));
+
+        Assert.Multiple(
+            () => Assert.Single(user.UserRoles),
+            () => Assert.Same(adminRole, user.UserRoles.Single().Role),
+            () => Assert.Equal(modifiedAt, user.ModifiedOnUtc));
+    }
+
+    [Fact]
     public void UpdateProfile_WithUnsupportedGender_Throws() {
         var user = User.Create("test@example.com", "hash");
 

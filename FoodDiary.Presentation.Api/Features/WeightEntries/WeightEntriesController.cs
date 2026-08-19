@@ -21,8 +21,9 @@ public sealed class WeightEntriesController(ISender mediator) : AuthorizedContro
 
     [HttpGet("latest")]
     [ProducesResponseType<WeightEntryHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public Task<IActionResult> GetLatest([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToLatestQuery(), static value => value?.ToHttpResponse());
+        HandleOptional(userId.ToLatestQuery(), static value => value?.ToHttpResponse());
 
     [HttpGet("summary")]
     [ProducesResponseType<List<WeightEntrySummaryHttpResponse>>(StatusCodes.Status200OK)]

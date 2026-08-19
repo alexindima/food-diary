@@ -14,9 +14,10 @@ namespace FoodDiary.Presentation.Api.Features.WeeklyGoals;
 public sealed class WeeklyGoalsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<WeeklyGoalHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> Get([FromCurrentUser] Guid userId, [FromQuery] GetWeeklyGoalHttpQuery query) =>
-        HandleOk(query.ToQuery(userId), static value => value?.ToHttpResponse());
+        HandleOptional(query.ToQuery(userId), static value => value?.ToHttpResponse());
 
     [HttpPut]
     [ProducesResponseType<WeeklyGoalHttpResponse>(StatusCodes.Status200OK)]

@@ -14,6 +14,18 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory factory)
     : IClassFixture<TestAuthApiWebApplicationFactory> {
     [Fact]
+    public async Task GetCurrent_WhenNoSession_ReturnsNoContent() {
+        User user = await SeedUserAsync();
+        HttpClient client = CreateAuthenticatedClient(user);
+
+        HttpResponseMessage response = await client.GetAsync("/api/v1/fasting/current");
+        string content = await response.Content.ReadAsStringAsync();
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        Assert.Empty(content);
+    }
+
+    [Fact]
     public async Task GetOverview_WithActiveSession_ReturnsCurrentStatsAlertsAndHistory() {
         User user = await SeedUserAsync();
         var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, DateTime.UtcNow.AddDays(-5));

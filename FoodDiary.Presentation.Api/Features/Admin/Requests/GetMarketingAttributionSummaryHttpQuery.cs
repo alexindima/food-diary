@@ -1,4 +1,6 @@
+using FoodDiary.Presentation.Api.Policies;
+
 namespace FoodDiary.Presentation.Api.Features.Admin.Requests;
 
 public sealed record GetMarketingAttributionSummaryHttpQuery(
-    int Hours = 720);
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumMarketingAttributionHours)] int Hours = 720);

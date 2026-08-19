@@ -323,6 +323,20 @@ public sealed class DependencyInjectionTests {
     }
 
     [Fact]
+    public void AddIntegrations_WithOnlyLegacyStripePublishableKey_DoesNotRequireStripeConfiguration() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["Stripe:PublishableKey"] = "pk_legacy",
+        });
+
+        services.AddIntegrations(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        StripeOptions options = provider.GetRequiredService<IOptions<StripeOptions>>().Value;
+        Assert.Equal("pk_legacy", options.PublishableKey);
+    }
+
+    [Fact]
     public void AddIntegrations_WithInvalidWebPushConfiguration_FailsOptionsValidation() {
         var services = new ServiceCollection();
         IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {

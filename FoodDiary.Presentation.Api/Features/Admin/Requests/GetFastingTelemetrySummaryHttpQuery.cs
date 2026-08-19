@@ -1,4 +1,6 @@
+using FoodDiary.Presentation.Api.Policies;
+
 namespace FoodDiary.Presentation.Api.Features.Admin.Requests;
 
 public sealed record GetFastingTelemetrySummaryHttpQuery(
-    int Hours = 24);
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumFastingTelemetryHours)] int Hours = 24);

@@ -25,6 +25,14 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         return result.ToOkActionResult(this, map);
     }
 
+    protected async Task<IActionResult> HandleOptional<TResponse, THttpResponse>(
+        IRequest<Result<TResponse>> request,
+        Func<TResponse, THttpResponse?> map)
+        where THttpResponse : class {
+        Result<TResponse> result = await Send(request);
+        return result.ToOptionalActionResult(this, map);
+    }
+
     protected async Task<IActionResult> HandleCreated<TResponse, THttpResponse>(
         IRequest<Result<TResponse>> request,
         string actionName,
@@ -62,5 +70,4 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         Result<FileExportResult> result = await Send(request);
         return result.ToFileActionResult(this);
     }
-
 }

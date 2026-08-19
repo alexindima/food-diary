@@ -411,6 +411,49 @@ public partial class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateProductCommandHandler_ToStricterUnitWithValidReplacementNutrition_UpdatesAtomically() {
+        var user = User.Create("update-product-atomic-unit@example.com", "hash");
+        var product = Product.Create(
+            user.Id,
+            name: "Large piece",
+            baseUnit: MeasurementUnit.Pcs,
+            baseAmount: 1,
+            defaultPortionAmount: 1,
+            caloriesPerBase: Product.MaxPieceCaloriesPerBase,
+            proteinsPerBase: Product.MaxPieceNutrientPerBase,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private);
+        var repository = new SingleProductRepository(product);
+        var handler = new UpdateProductCommandHandler(
+            repository,
+            repository,
+            new RecordingCleanupService(),
+            new StubUserRepository(user),
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+
+        Result<ProductModel> result = await handler.Handle(
+            CreateUpdateProductCommand(user.Id.Value, product.Id.Value, baseUnit: "g") with {
+                BaseAmount = 100,
+                DefaultPortionAmount = 100,
+                CaloriesPerBase = 500,
+                ProteinsPerBase = 50,
+            },
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.True(repository.UpdateCalled),
+            () => Assert.Equal(MeasurementUnit.G, product.BaseUnit),
+            () => Assert.Equal(100, product.BaseAmount),
+            () => Assert.Equal(100, product.DefaultPortionAmount),
+            () => Assert.Equal(500, product.CaloriesPerBase),
+            () => Assert.Equal(50, product.ProteinsPerBase));
+    }
+
+    [Fact]
     public async Task UpdateProductCommandHandler_WithNonCanonicalBaseAmountForCurrentUnit_ReturnsValidationFailure() {
         var user = User.Create("update-product-base-amount@example.com", "hash");
         var product = Product.Create(

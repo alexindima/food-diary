@@ -7,6 +7,26 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/LoginHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/LoginHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/LoginHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -14,6 +34,26 @@
             "413",
             "429",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -24,6 +64,26 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/RegisterHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/RegisterHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/RegisterHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -31,6 +91,26 @@
             "413",
             "429",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -47,20 +127,42 @@
             "401",
             "500"
           ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/ProductHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/ProductHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/ProductHttpResponsePagedHttpResponse",
+              "Nullable": false
+            }
+          ],
           "QueryParameters": [
             {
               "Name": "CaloriesFrom",
               "Location": "query",
               "Required": false,
               "Type": "number",
-              "Format": "double"
+              "Format": "double",
+              "Minimum": 0
             },
             {
               "Name": "CaloriesTo",
               "Location": "query",
               "Required": false,
               "Type": "number",
-              "Format": "double"
+              "Format": "double",
+              "Minimum": 0
             },
             {
               "Name": "HasImage",
@@ -72,39 +174,68 @@
               "Name": "IncludePublic",
               "Location": "query",
               "Required": false,
-              "Type": "boolean"
+              "Type": "boolean",
+              "Default": "true"
             },
             {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "10",
+              "Minimum": 1,
+              "Maximum": 100
             },
             {
               "Name": "Page",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             },
             {
               "Name": "ProductTypes",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 256
             },
             {
               "Name": "Search",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 128
             }
           ]
         },
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/CreateProductHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/CreateProductHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/CreateProductHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "201",
             "400",
@@ -114,6 +245,26 @@
             "413",
             "500",
             "503"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "201",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/ProductHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "201",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/ProductHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "201",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/ProductHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -140,11 +291,51 @@
             "401",
             "404",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/ProductHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/ProductHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/ProductHttpResponse",
+              "Nullable": false
+            }
           ]
         },
         {
           "Method": "patch",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/UpdateProductHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/UpdateProductHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/UpdateProductHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -154,6 +345,26 @@
             "409",
             "413",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/ProductHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/ProductHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/ProductHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -170,26 +381,49 @@
             "401",
             "500"
           ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/RecipeHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/RecipeHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/RecipeHttpResponsePagedHttpResponse",
+              "Nullable": false
+            }
+          ],
           "QueryParameters": [
             {
               "Name": "CaloriesFrom",
               "Location": "query",
               "Required": false,
               "Type": "number",
-              "Format": "double"
+              "Format": "double",
+              "Minimum": 0
             },
             {
               "Name": "CaloriesTo",
               "Location": "query",
               "Required": false,
               "Type": "number",
-              "Format": "double"
+              "Format": "double",
+              "Minimum": 0
             },
             {
               "Name": "Category",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 64
             },
             {
               "Name": "HasImage",
@@ -201,40 +435,69 @@
               "Name": "IncludePublic",
               "Location": "query",
               "Required": false,
-              "Type": "boolean"
+              "Type": "boolean",
+              "Default": "true"
             },
             {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "10",
+              "Minimum": 1,
+              "Maximum": 100
             },
             {
               "Name": "MaxTotalTime",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Minimum": 1
             },
             {
               "Name": "Page",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             },
             {
               "Name": "Search",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 128
             }
           ]
         },
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/CreateRecipeHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/CreateRecipeHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/CreateRecipeHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "201",
             "400",
@@ -244,6 +507,26 @@
             "413",
             "500",
             "503"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "201",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/RecipeHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "201",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/RecipeHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "201",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/RecipeHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -271,6 +554,26 @@
             "404",
             "500"
           ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/RecipeHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/RecipeHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/RecipeHttpResponse",
+              "Nullable": false
+            }
+          ],
           "QueryParameters": [
             {
               "Name": "includePublic",
@@ -284,6 +587,26 @@
         {
           "Method": "patch",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/UpdateRecipeHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/UpdateRecipeHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/UpdateRecipeHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -293,6 +616,26 @@
             "409",
             "413",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/RecipeHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/RecipeHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/RecipeHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -308,6 +651,29 @@
             "400",
             "401",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AggregatedStatisticsHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AggregatedStatisticsHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AggregatedStatisticsHttpResponse"
+            }
           ],
           "QueryParameters": [
             {
@@ -329,7 +695,10 @@
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 366
             }
           ]
         }
@@ -346,11 +715,51 @@
             "401",
             "404",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/UserHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/UserHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/UserHttpResponse",
+              "Nullable": false
+            }
           ]
         },
         {
           "Method": "patch",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/UpdateUserHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/UpdateUserHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/UpdateUserHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -359,6 +768,26 @@
             "404",
             "413",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/UserHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/UserHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/UserHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -374,6 +803,26 @@
             "401",
             "404",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/ProfileOverviewHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/ProfileOverviewHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/ProfileOverviewHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -384,6 +833,26 @@
         {
           "Method": "patch",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/UpdateUserAppearanceHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/UpdateUserAppearanceHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/UpdateUserAppearanceHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -392,6 +861,26 @@
             "404",
             "413",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/UserHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/UserHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/UserHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -408,63 +897,28 @@
             "401",
             "500"
           ],
-          "QueryParameters": [
+          "SuccessResponses": [
             {
-              "Name": "DateFrom",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "date-time"
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/WaistEntryHttpResponse"
             },
             {
-              "Name": "DateTo",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "date-time"
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/WaistEntryHttpResponse"
             },
             {
-              "Name": "Limit",
-              "Location": "query",
-              "Required": false,
-              "Type": "integer",
-              "Format": "int32"
-            },
-            {
-              "Name": "Sort",
-              "Location": "query",
-              "Required": false,
-              "Type": "string"
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/WaistEntryHttpResponse"
             }
-          ]
-        },
-        {
-          "Method": "post",
-          "HasRequestBody": true,
-          "ResponseCodes": [
-            "201",
-            "400",
-            "401",
-            "403",
-            "409",
-            "413",
-            "500",
-            "503"
-          ]
-        }
-      ]
-    },
-    {
-      "Path": "/api/v{version}/weight-entries",
-      "Operations": [
-        {
-          "Method": "get",
-          "HasRequestBody": false,
-          "ResponseCodes": [
-            "200",
-            "400",
-            "401",
-            "500"
           ],
           "QueryParameters": [
             {
@@ -486,19 +940,47 @@
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Minimum": 1,
+              "Maximum": 1000
             },
             {
               "Name": "Sort",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "Default": "\u0022desc\u0022",
+              "MaxLength": 32,
+              "Enum": [
+                "asc",
+                "desc"
+              ]
             }
           ]
         },
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/CreateWaistEntryHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/CreateWaistEntryHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/CreateWaistEntryHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "201",
             "400",
@@ -508,6 +990,155 @@
             "413",
             "500",
             "503"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "201",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/WaistEntryHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "201",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/WaistEntryHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "201",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/WaistEntryHttpResponse",
+              "Nullable": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/weight-entries",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/WeightEntryHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/WeightEntryHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/WeightEntryHttpResponse"
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "DateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "DateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Minimum": 1,
+              "Maximum": 1000
+            },
+            {
+              "Name": "Sort",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Default": "\u0022desc\u0022",
+              "MaxLength": 32,
+              "Enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          ]
+        },
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/CreateWeightEntryHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/CreateWeightEntryHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/CreateWeightEntryHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
+          "ResponseCodes": [
+            "201",
+            "400",
+            "401",
+            "403",
+            "409",
+            "413",
+            "500",
+            "503"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "201",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/WeightEntryHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "201",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/WeightEntryHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "201",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/WeightEntryHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]

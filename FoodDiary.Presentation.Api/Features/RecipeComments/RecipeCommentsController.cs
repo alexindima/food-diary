@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.RecipeComments.Mappings;
 using FoodDiary.Presentation.Api.Features.RecipeComments.Requests;
 using FoodDiary.Presentation.Api.Features.RecipeComments.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
@@ -18,8 +19,8 @@ public sealed class RecipeCommentsController(ISender mediator) : AuthorizedContr
     public Task<IActionResult> GetAll(
         [FromCurrentUser] Guid userId,
         Guid recipeId,
-        [FromQuery] int page = 1,
-        [FromQuery] int limit = 20) =>
+        [FromQuery, OpenApiNumericRange(PresentationQueryLimits.MinimumPage, PresentationQueryLimits.MaximumPage)] int page = 1,
+        [FromQuery, OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int limit = 20) =>
         HandleOk(RecipeCommentHttpMappings.ToQuery(userId, recipeId, page, limit),
             static value => value.ToHttpResponse());
 

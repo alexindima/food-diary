@@ -1009,14 +1009,14 @@
       "name": "RequireApiKey",
       "type": "bool",
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
-      "line": 6
+      "line": 8
     },
     {
       "category": "credential",
       "name": "ApiKey",
       "type": "string",
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
-      "line": 7
+      "line": 9
     },
     {
       "category": "credential",
@@ -1933,7 +1933,7 @@
       "name": "BaseAmount",
       "type": "BaseUnit,",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 500
+      "line": 519
     },
     {
       "category": "financial",
@@ -1961,21 +1961,21 @@
       "name": "AmountMl",
       "type": "int",
       "path": "FoodDiary.Domain/Entities/Tracking/HydrationEntry.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "double",
       "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodNutrient.cs",
-      "line": 10
+      "line": 21
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "double",
       "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodPortion.cs",
-      "line": 9
+      "line": 17
     },
     {
       "category": "financial",
@@ -5321,14 +5321,14 @@
       "name": "Gender",
       "type": "string",
       "path": "FoodDiary.Domain/Entities/Usda/DailyReferenceValue.cs",
-      "line": 12
+      "line": 23
     },
     {
       "category": "health",
       "name": "GramWeight",
       "type": "double",
       "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodPortion.cs",
-      "line": 11
+      "line": 22
     },
     {
       "category": "health",
@@ -9409,14 +9409,14 @@
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 317
+      "line": 336
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 513
+      "line": 532
     },
     {
       "category": "privateContent",

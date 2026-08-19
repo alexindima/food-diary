@@ -1,6 +1,9 @@
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
+using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Web.Api.Swagger;
 using Microsoft.AspNetCore.Authorization;
@@ -243,6 +246,142 @@ public sealed class SwaggerOperationFilterTests {
             () => Assert.True(operation.Responses.ContainsKey("409")));
     }
 
+    [Fact]
+    public void PresentationContractFilter_DocumentsGroupedQueryValidation() {
+        var filter = new PresentationContractOperationFilter();
+        var operation = new OpenApiOperation {
+            Parameters = [
+                new OpenApiParameter {
+                    Name = "Filter",
+                    In = ParameterLocation.Query,
+                    Schema = new OpenApiSchema { Type = JsonSchemaType.String },
+                },
+                new OpenApiParameter {
+                    Name = "Page",
+                    In = ParameterLocation.Query,
+                    Schema = new OpenApiSchema { Type = JsonSchemaType.Integer },
+                },
+            ],
+        };
+
+        filter.Apply(operation, CreateContext(nameof(TestController.GroupedQuery)));
+
+        IOpenApiSchema schema = operation.Parameters!.Single(parameter => string.Equals(parameter.Name, "Filter", StringComparison.Ordinal)).Schema!;
+        IOpenApiSchema pageSchema = operation.Parameters.Single(parameter => string.Equals(parameter.Name, "Page", StringComparison.Ordinal)).Schema!;
+        string[] allowedValues = [.. schema.Enum!.Select(static value => value!.GetValue<string>())];
+        Assert.Multiple(
+            () => Assert.Equal(12, schema.MaxLength),
+            () => Assert.Equal(["one", "two"], allowedValues),
+            () => Assert.Equal("1", pageSchema.Minimum),
+            () => Assert.Equal("100", pageSchema.Maximum),
+            () => Assert.Equal(2, pageSchema.Default!.GetValue<int>()));
+    }
+
+    [Fact]
+    public void PresentationContractFilter_DocumentsDirectQueryRangeAndDefault() {
+        var filter = new PresentationContractOperationFilter();
+        var operation = new OpenApiOperation {
+            Parameters = [
+                new OpenApiParameter {
+                    Name = "limit",
+                    In = ParameterLocation.Query,
+                    Schema = new OpenApiSchema { Type = JsonSchemaType.Integer },
+                },
+            ],
+        };
+
+        filter.Apply(operation, CreateContext(nameof(TestController.DirectQuery)));
+
+        IOpenApiSchema schema = Assert.Single(operation.Parameters!).Schema!;
+        Assert.Multiple(
+            () => Assert.Equal("1", schema.Minimum),
+            () => Assert.Equal("50", schema.Maximum),
+            () => Assert.Equal(20, schema.Default!.GetValue<int>()));
+    }
+
+    [Fact]
+    public void PresentationContractFilter_DocumentsMinimumOnlyAndIgnoresUnmatchedParameter() {
+        var filter = new PresentationContractOperationFilter();
+        var operation = new OpenApiOperation {
+            Parameters = [
+                new OpenApiParameter {
+                    Name = "unrelated",
+                    In = ParameterLocation.Query,
+                    Schema = new OpenApiSchema { Type = JsonSchemaType.String },
+                },
+                new OpenApiParameter {
+                    Name = "minimumOnly",
+                    In = ParameterLocation.Query,
+                    Schema = new OpenApiSchema { Type = JsonSchemaType.Number },
+                },
+            ],
+        };
+
+        filter.Apply(operation, CreateContext(nameof(TestController.MinimumOnlyQuery)));
+
+        IOpenApiSchema schema = operation.Parameters.Single(parameter =>
+            string.Equals(parameter.Name, "minimumOnly", StringComparison.Ordinal)).Schema!;
+        Assert.Multiple(
+            () => Assert.Equal("0", schema.Minimum),
+            () => Assert.Null(schema.Maximum),
+            () => Assert.Null(operation.Parameters.Single(parameter =>
+                string.Equals(parameter.Name, "unrelated", StringComparison.Ordinal)).Schema!.Default));
+    }
+
+    [Fact]
+    public void PresentationContractFilter_DocumentsFileResponseMediaAndHeader() {
+        var filter = new PresentationContractOperationFilter();
+        var operation = new OpenApiOperation {
+            Responses = new OpenApiResponses {
+                ["200"] = new OpenApiResponse { Description = "OK" },
+            },
+        };
+
+        filter.Apply(operation, CreateContext(nameof(TestController.FileResponse)));
+
+        IOpenApiResponse response = operation.Responses!["200"];
+        Assert.Multiple(
+            () => Assert.Equal(["application/pdf", "text/csv"], response.Content!.Keys.Order(StringComparer.Ordinal), StringComparer.Ordinal),
+            () => Assert.All(response.Content!.Values, mediaType => {
+                Assert.Equal(JsonSchemaType.String, mediaType.Schema!.Type);
+                Assert.Equal("binary", mediaType.Schema.Format);
+            }),
+            () => Assert.True(response.Headers!.ContainsKey("Content-Disposition")));
+    }
+
+    [Fact]
+    public void PresentationContractFilter_PreservesExistingFileResponseHeaders() {
+        var filter = new PresentationContractOperationFilter();
+        var operation = new OpenApiOperation {
+            Responses = new OpenApiResponses {
+                ["200"] = new OpenApiResponse {
+                    Description = "OK",
+                    Headers = new Dictionary<string, IOpenApiHeader>(StringComparer.Ordinal) {
+                        ["X-Export-Version"] = new OpenApiHeader(),
+                    },
+                },
+            },
+        };
+
+        filter.Apply(operation, CreateContext(nameof(TestController.FileResponse)));
+
+        Assert.Equal(
+            ["Content-Disposition", "X-Export-Version"],
+            operation.Responses!["200"].Headers!.Keys.Order(StringComparer.Ordinal),
+            StringComparer.Ordinal);
+    }
+
+    [Fact]
+    public void PresentationContractFilter_IgnoresUnsupportedDescriptionsAndMissingMetadata() {
+        var filter = new PresentationContractOperationFilter();
+        var operation = new OpenApiOperation();
+
+        filter.Apply(operation, CreateContext(new ActionDescriptor()));
+        filter.Apply(operation, CreateContext(nameof(TestController.GroupedQuery)));
+
+        Assert.Null(operation.Parameters);
+    }
+
     private static OperationFilterContext CreateContext(string methodName, string? httpMethod = null) {
         return CreateContext(typeof(TestController), methodName, httpMethod);
     }
@@ -316,7 +455,25 @@ public sealed class SwaggerOperationFilterTests {
 
         [EnableRateLimiting("test")]
         public OkResult RateLimited() => Ok();
+
+        public IActionResult GroupedQuery([FromQuery] TestHttpQuery query) => Ok(query);
+
+        public IActionResult DirectQuery(
+            [FromQuery, OpenApiNumericRange(1, 50)] int limit = 20) => Ok(limit);
+
+        public IActionResult MinimumOnlyQuery(
+            [FromQuery, OpenApiNumericRange(0)] double? minimumOnly = null) => Ok(minimumOnly);
+
+        [ProducesFileResponse("text/csv", "application/pdf")]
+        public OkResult FileResponse() => Ok();
+
     }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record TestHttpQuery(
+        [MaxLength(12)]
+        [AllowedQueryValues("one", "two")] string? Filter,
+        [OpenApiNumericRange(1, 100)] int Page = 2);
 
     [EnableRateLimiting("test")]
     [ExcludeFromCodeCoverage]

@@ -13,6 +13,26 @@
             "403",
             "500"
           ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminAiUsageSummaryHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminAiUsageSummaryHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminAiUsageSummaryHttpResponse",
+              "Nullable": false
+            }
+          ],
           "QueryParameters": [
             {
               "Name": "From",
@@ -45,6 +65,26 @@
             "403",
             "500"
           ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminBillingPaymentHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminBillingPaymentHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminBillingPaymentHttpResponsePagedHttpResponse",
+              "Nullable": false
+            }
+          ],
           "QueryParameters": [
             {
               "Name": "FromUtc",
@@ -57,39 +97,49 @@
               "Name": "Kind",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 64
             },
             {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "20",
+              "Minimum": 1,
+              "Maximum": 100
             },
             {
               "Name": "Page",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             },
             {
               "Name": "Provider",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 64
             },
             {
               "Name": "Search",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 128
             },
             {
               "Name": "Status",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 64
             },
             {
               "Name": "ToUtc",
@@ -115,6 +165,26 @@
             "403",
             "500"
           ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminBillingSubscriptionHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminBillingSubscriptionHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminBillingSubscriptionHttpResponsePagedHttpResponse",
+              "Nullable": false
+            }
+          ],
           "QueryParameters": [
             {
               "Name": "FromUtc",
@@ -127,39 +197,49 @@
               "Name": "Kind",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 64
             },
             {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "20",
+              "Minimum": 1,
+              "Maximum": 100
             },
             {
               "Name": "Page",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             },
             {
               "Name": "Provider",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 64
             },
             {
               "Name": "Search",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 128
             },
             {
               "Name": "Status",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 64
             },
             {
               "Name": "ToUtc",
@@ -185,6 +265,26 @@
             "403",
             "500"
           ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminBillingWebhookEventHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminBillingWebhookEventHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminBillingWebhookEventHttpResponsePagedHttpResponse",
+              "Nullable": false
+            }
+          ],
           "QueryParameters": [
             {
               "Name": "FromUtc",
@@ -197,39 +297,49 @@
               "Name": "Kind",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 64
             },
             {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "20",
+              "Minimum": 1,
+              "Maximum": 100
             },
             {
               "Name": "Page",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             },
             {
               "Name": "Provider",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 64
             },
             {
               "Name": "Search",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 128
             },
             {
               "Name": "Status",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 64
             },
             {
               "Name": "ToUtc",
@@ -254,13 +364,36 @@
             "403",
             "500"
           ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminDashboardSummaryHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminDashboardSummaryHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminDashboardSummaryHttpResponse",
+              "Nullable": false
+            }
+          ],
           "QueryParameters": [
             {
               "Name": "Recent",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "5",
+              "Minimum": 1,
+              "Maximum": 20
             }
           ]
         }
@@ -277,6 +410,29 @@
             "401",
             "403",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminEmailTemplateHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminEmailTemplateHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminEmailTemplateHttpResponse"
+            }
           ]
         }
       ]
@@ -287,6 +443,26 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/AdminEmailTemplateTestHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/AdminEmailTemplateTestHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/AdminEmailTemplateTestHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "204",
             "400",
@@ -307,6 +483,26 @@
         {
           "Method": "put",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/AdminEmailTemplateUpsertHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/AdminEmailTemplateUpsertHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/AdminEmailTemplateUpsertHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -314,6 +510,26 @@
             "403",
             "413",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminEmailTemplateHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminEmailTemplateHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminEmailTemplateHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -331,44 +547,99 @@
             "403",
             "500"
           ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminUserHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminUserHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminUserHttpResponsePagedHttpResponse",
+              "Nullable": false
+            }
+          ],
           "QueryParameters": [
             {
               "Name": "IncludeDeleted",
               "Location": "query",
               "Required": false,
-              "Type": "boolean"
+              "Type": "boolean",
+              "Default": "false"
             },
             {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "20",
+              "Minimum": 1,
+              "Maximum": 100
             },
             {
               "Name": "Page",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             },
             {
               "Name": "Search",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 128
             },
             {
               "Name": "Status",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 64,
+              "Enum": [
+                "all",
+                "active",
+                "inactive",
+                "deleted"
+              ]
             }
           ]
         },
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/AdminUserCreateHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/AdminUserCreateHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/AdminUserCreateHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "201",
             "400",
@@ -377,6 +648,26 @@
             "409",
             "413",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "201",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminUserCreationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "201",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminUserCreationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "201",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminUserCreationHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -394,26 +685,53 @@
             "403",
             "500"
           ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminImpersonationSessionHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminImpersonationSessionHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminImpersonationSessionHttpResponsePagedHttpResponse",
+              "Nullable": false
+            }
+          ],
           "QueryParameters": [
             {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "20",
+              "Minimum": 1,
+              "Maximum": 100
             },
             {
               "Name": "Page",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             },
             {
               "Name": "Search",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 128
             }
           ]
         }
@@ -432,26 +750,53 @@
             "403",
             "500"
           ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminUserLoginEventHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminUserLoginEventHttpResponsePagedHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminUserLoginEventHttpResponsePagedHttpResponse",
+              "Nullable": false
+            }
+          ],
           "QueryParameters": [
             {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "20",
+              "Minimum": 1,
+              "Maximum": 100
             },
             {
               "Name": "Page",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
             },
             {
               "Name": "Search",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 128
             },
             {
               "Name": "UserId",
@@ -476,6 +821,29 @@
             "401",
             "403",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminUserLoginDeviceSummaryHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminUserLoginDeviceSummaryHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminUserLoginDeviceSummaryHttpResponse"
+            }
           ],
           "QueryParameters": [
             {
@@ -509,11 +877,51 @@
             "403",
             "404",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminUserHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminUserHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminUserHttpResponse",
+              "Nullable": false
+            }
           ]
         },
         {
           "Method": "patch",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/AdminUserUpdateHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/AdminUserUpdateHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/AdminUserUpdateHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -522,6 +930,26 @@
             "404",
             "413",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminUserHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminUserHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminUserHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -532,6 +960,26 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/AdminImpersonationStartHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/AdminImpersonationStartHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/AdminImpersonationStartHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -540,6 +988,26 @@
             "404",
             "413",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminImpersonationStartHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminImpersonationStartHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminImpersonationStartHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -550,6 +1018,26 @@
         {
           "Method": "patch",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/AdminUserSetPasswordHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/AdminUserSetPasswordHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/AdminUserSetPasswordHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "204",
             "400",
@@ -568,6 +1056,26 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/AdminSsoExchangeHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/AdminSsoExchangeHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/AdminSsoExchangeHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -575,6 +1083,26 @@
             "413",
             "429",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -590,6 +1118,26 @@
             "401",
             "403",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminSsoStartHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminSsoStartHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminSsoStartHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -600,6 +1148,26 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/GoogleLoginHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/GoogleLoginHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/GoogleLoginHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -608,6 +1176,26 @@
             "413",
             "429",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -618,6 +1206,26 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/LoginHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/LoginHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/LoginHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -625,6 +1233,26 @@
             "413",
             "429",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -635,6 +1263,26 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/ConfirmPasswordResetHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/ConfirmPasswordResetHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/ConfirmPasswordResetHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -643,6 +1291,26 @@
             "413",
             "429",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -653,6 +1321,26 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/RequestPasswordResetHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/RequestPasswordResetHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/RequestPasswordResetHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "204",
             "400",
@@ -669,6 +1357,26 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/RefreshTokenHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/RefreshTokenHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/RefreshTokenHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -676,6 +1384,26 @@
             "413",
             "429",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -686,6 +1414,26 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/RegisterHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/RegisterHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/RegisterHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -693,6 +1441,26 @@
             "413",
             "429",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -703,6 +1471,26 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/RestoreAccountHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/RestoreAccountHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/RestoreAccountHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "200",
             "400",
@@ -710,6 +1498,26 @@
             "413",
             "429",
             "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            }
           ]
         }
       ]
@@ -720,6 +1528,26 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/VerifyEmailHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/VerifyEmailHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/VerifyEmailHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "204",
             "400",
@@ -739,6 +1567,26 @@
         {
           "Method": "post",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/ResendEmailVerificationHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/ResendEmailVerificationHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/ResendEmailVerificationHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "204",
             "400",
@@ -758,6 +1606,26 @@
         {
           "Method": "patch",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/ChangePasswordHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/ChangePasswordHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/ChangePasswordHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "204",
             "400",
@@ -777,6 +1645,26 @@
         {
           "Method": "patch",
           "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/SetPasswordHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/SetPasswordHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/SetPasswordHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "204",
             "400",

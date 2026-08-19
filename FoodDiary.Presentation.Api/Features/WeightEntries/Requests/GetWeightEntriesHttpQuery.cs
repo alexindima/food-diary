@@ -6,7 +6,7 @@ namespace FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 public sealed record GetWeightEntriesHttpQuery(
     DateTime? DateFrom = null,
     DateTime? DateTo = null,
-    int? Limit = null,
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumCollectionSize)] int? Limit = null,
     [Required, MaxLength(PresentationQueryLimits.MaximumSortLength)]
     [AllowedQueryValues(
         PresentationQueryValues.Ascending,
