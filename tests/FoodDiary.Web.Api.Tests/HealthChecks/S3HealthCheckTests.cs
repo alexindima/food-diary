@@ -4,8 +4,6 @@ using Amazon.S3.Model;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Web.Api.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting;
 using OptionsFactory = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Web.Api.Tests.HealthChecks;
@@ -16,26 +14,12 @@ public sealed class S3HealthCheckTests {
     public async Task CheckHealthAsync_WhenBucketIsBlank_ReturnsHealthyWithoutCallingS3() {
         var check = new S3HealthCheck(
             CreateS3Client((_, _) => throw new InvalidOperationException("S3 should not be called.")),
-            OptionsFactory.Create(new S3Options { Bucket = string.Empty }),
-            new StubHostEnvironment(Environments.Development));
+            OptionsFactory.Create(new S3Options { Bucket = string.Empty }));
 
         HealthCheckResult result = await check.CheckHealthAsync(new HealthCheckContext());
 
         Assert.Equal(HealthStatus.Healthy, result.Status);
         Assert.Equal("S3 not configured.", result.Description);
-    }
-
-    [Fact]
-    public async Task CheckHealthAsync_WhenBucketIsBlankOutsideDevelopment_ReturnsUnhealthyWithoutCallingS3() {
-        var check = new S3HealthCheck(
-            CreateS3Client((_, _) => throw new InvalidOperationException("S3 should not be called.")),
-            OptionsFactory.Create(new S3Options { Bucket = string.Empty }),
-            new StubHostEnvironment(Environments.Production));
-
-        HealthCheckResult result = await check.CheckHealthAsync(new HealthCheckContext());
-
-        Assert.Equal(HealthStatus.Unhealthy, result.Status);
-        Assert.Equal("S3 bucket is not configured.", result.Description);
     }
 
     [Fact]
@@ -46,8 +30,7 @@ public sealed class S3HealthCheckTests {
                 capturedRequest = request;
                 return Task.FromResult(new GetBucketLocationResponse());
             }),
-            OptionsFactory.Create(new S3Options { Bucket = "food-diary-test" }),
-            new StubHostEnvironment(Environments.Production));
+            OptionsFactory.Create(new S3Options { Bucket = "food-diary-test" }));
 
         HealthCheckResult result = await check.CheckHealthAsync(new HealthCheckContext());
 
@@ -61,8 +44,7 @@ public sealed class S3HealthCheckTests {
         var exception = new InvalidOperationException("S3 is down");
         var check = new S3HealthCheck(
             CreateS3Client((_, _) => throw exception),
-            OptionsFactory.Create(new S3Options { Bucket = "food-diary-test" }),
-            new StubHostEnvironment(Environments.Production));
+            OptionsFactory.Create(new S3Options { Bucket = "food-diary-test" }));
 
         HealthCheckResult result = await check.CheckHealthAsync(new HealthCheckContext());
 
@@ -99,13 +81,5 @@ public sealed class S3HealthCheckTests {
             ArgumentNullException.ThrowIfNull(targetMethod);
             return InvokeHandler(targetMethod, args);
         }
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class StubHostEnvironment(string environmentName) : IHostEnvironment {
-        public string EnvironmentName { get; set; } = environmentName;
-        public string ApplicationName { get; set; } = "FoodDiary.Web.Api.Tests";
-        public string ContentRootPath { get; set; } = AppContext.BaseDirectory;
-        public IFileProvider ContentRootFileProvider { get; set; } = new NullFileProvider();
     }
 }

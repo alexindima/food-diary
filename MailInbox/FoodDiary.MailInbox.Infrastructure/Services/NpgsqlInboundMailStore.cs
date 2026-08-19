@@ -13,10 +13,14 @@ namespace FoodDiary.MailInbox.Infrastructure.Services;
 
 public sealed class NpgsqlInboundMailStore(
     NpgsqlDataSource dataSource,
-    DmarcReportParser dmarcReportParser,
+    IMailInboxDmarcReportParser dmarcReportParser,
     IOptions<MailInboxStorageOptions> options,
-    TimeProvider timeProvider) : IInboundMailStore, IMailInboxSchemaInitializer {
+    TimeProvider timeProvider) : IInboundMailStore, IMailInboxSchemaInitializer, IDisposable {
+    private const long SchemaMigrationLockKey = 5_564_833_284_657_606_737;
     private readonly MailInboxStorageOptions _options = options.Value;
+    private readonly SemaphoreSlim _messageDetailReadSlots = new(
+        options.Value.MaxConcurrentMessageDetailReads,
+        options.Value.MaxConcurrentMessageDetailReads);
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private static readonly MailInboxSchemaMigration[] SchemaMigrations = [
         new(
@@ -85,18 +89,117 @@ public sealed class NpgsqlInboundMailStore(
                 raw_bytes bigint not null
             );
             """),
+        new(
+            "202608190001_add_sliding_dedup_index",
+            """
+            create index if not exists ix_mailinbox_messages_ingestion_received_at_utc
+                on mailinbox_messages (ingestion_key, received_at_utc desc);
+            """),
+        new(
+            "202608190002_bound_persisted_mail_metadata",
+            """
+            update mailinbox_messages
+            set message_id = left(message_id, 998),
+                from_address = left(from_address, 320),
+                subject = left(subject, 998)
+            where char_length(message_id) > 998
+               or char_length(from_address) > 320
+               or char_length(subject) > 998;
+
+            create or replace function mailinbox_recipients_within_limits(recipients pg_catalog.jsonb)
+            returns boolean
+            language sql
+            immutable
+            parallel safe
+            strict
+            as $function$
+                select case
+                    when pg_catalog.jsonb_typeof(recipients) <> 'array' then false
+                    else pg_catalog.jsonb_array_length(recipients) between 1 and 100
+                         and not exists (
+                             select 1
+                             from pg_catalog.jsonb_array_elements(recipients) as recipient(value)
+                             where pg_catalog.jsonb_typeof(recipient.value) <> 'string'
+                                or btrim(recipient.value #>> '{}') = ''
+                                or char_length(recipient.value #>> '{}') > 320
+                         )
+                end;
+            $function$;
+
+            update mailinbox_messages
+            set to_recipients_json = case
+                when pg_catalog.jsonb_typeof(to_recipients_json) = 'array' then coalesce((
+                    select pg_catalog.jsonb_agg(left(recipient.value, 320) order by recipient.ordinality)
+                    from pg_catalog.jsonb_array_elements_text(to_recipients_json)
+                         with ordinality as recipient(value, ordinality)
+                    where recipient.ordinality <= 100
+                      and btrim(recipient.value) <> ''
+                ), '["unknown@invalid"]'::jsonb)
+                else '["unknown@invalid"]'::jsonb
+            end
+            where not mailinbox_recipients_within_limits(to_recipients_json);
+
+            do $migration$
+            begin
+                if not exists (
+                    select 1 from pg_constraint
+                    where conname = 'ck_mailinbox_messages_message_id_length'
+                      and conrelid = 'mailinbox_messages'::regclass
+                ) then
+                    alter table mailinbox_messages
+                        add constraint ck_mailinbox_messages_message_id_length
+                        check (message_id is null or char_length(message_id) <= 998);
+                end if;
+
+                if not exists (
+                    select 1 from pg_constraint
+                    where conname = 'ck_mailinbox_messages_from_address_length'
+                      and conrelid = 'mailinbox_messages'::regclass
+                ) then
+                    alter table mailinbox_messages
+                        add constraint ck_mailinbox_messages_from_address_length
+                        check (from_address is null or char_length(from_address) <= 320);
+                end if;
+
+                if not exists (
+                    select 1 from pg_constraint
+                    where conname = 'ck_mailinbox_messages_subject_length'
+                      and conrelid = 'mailinbox_messages'::regclass
+                ) then
+                    alter table mailinbox_messages
+                        add constraint ck_mailinbox_messages_subject_length
+                        check (subject is null or char_length(subject) <= 998);
+                end if;
+
+                if not exists (
+                    select 1 from pg_constraint
+                    where conname = 'ck_mailinbox_messages_recipients_limits'
+                      and conrelid = 'mailinbox_messages'::regclass
+                ) then
+                    alter table mailinbox_messages
+                        add constraint ck_mailinbox_messages_recipients_limits
+                        check (mailinbox_recipients_within_limits(to_recipients_json));
+                end if;
+            end
+            $migration$;
+            """),
     ];
     public async Task EnsureSchemaAsync(CancellationToken cancellationToken) {
         NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
-            await EnsureMigrationTableAsync(connection, cancellationToken).ConfigureAwait(false);
+            await AcquireSchemaMigrationLockAsync(connection, cancellationToken).ConfigureAwait(false);
+            try {
+                await EnsureMigrationTableAsync(connection, cancellationToken).ConfigureAwait(false);
 
-            foreach (MailInboxSchemaMigration migration in SchemaMigrations) {
-                if (await IsMigrationAppliedAsync(connection, migration.Name, cancellationToken).ConfigureAwait(false)) {
-                    continue;
+                foreach (MailInboxSchemaMigration migration in SchemaMigrations) {
+                    if (await IsMigrationAppliedAsync(connection, migration.Name, cancellationToken).ConfigureAwait(false)) {
+                        continue;
+                    }
+
+                    await ApplyMigrationAsync(connection, migration, cancellationToken).ConfigureAwait(false);
                 }
-
-                await ApplyMigrationAsync(connection, migration, cancellationToken).ConfigureAwait(false);
+            } finally {
+                await ReleaseSchemaMigrationLockAsync(connection, CancellationToken.None).ConfigureAwait(false);
             }
         }
     }
@@ -104,6 +207,7 @@ public sealed class NpgsqlInboundMailStore(
     public async Task<InboundMailSaveResult> SaveAsync(
         InboundMailMessage message,
         CancellationToken cancellationToken) {
+        MailInboxStoredMessageLimits.ThrowIfInvalid(message);
         const string sql = """
                            insert into mailinbox_messages (
                                id,
@@ -139,19 +243,37 @@ public sealed class NpgsqlInboundMailStore(
                            """;
 
         Guid id = message.Id.Value;
+        string recipientsJson = JsonSerializer.Serialize(message.ToRecipients, JsonOptions);
         string ingestionKey = CalculateIngestionKey(message);
         DateTimeOffset deduplicationBucketUtc = GetDeduplicationBucket(message.ReceivedAtUtc);
         long rawSizeBytes = message.RawMimeBytes.Length;
+        long accountedSizeBytes = CalculateAccountedSizeBytes(message, recipientsJson);
         NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             await using (transaction.ConfigureAwait(false)) {
+                await AcquireIngestionLockAsync(
+                    connection,
+                    transaction,
+                    ingestionKey,
+                    cancellationToken).ConfigureAwait(false);
+                Guid? duplicateId = await FindRecentDuplicateAsync(
+                    connection,
+                    transaction,
+                    ingestionKey,
+                    message.ReceivedAtUtc - _options.DeduplicationWindow,
+                    cancellationToken).ConfigureAwait(false);
+                if (duplicateId is not null) {
+                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                    return new InboundMailSaveResult(duplicateId.Value, WasDuplicate: true);
+                }
+
                 var command = new NpgsqlCommand(sql, connection, transaction);
                 await using (command.ConfigureAwait(false)) {
                     command.Parameters.AddWithValue("id", id);
                     command.Parameters.AddWithNullableValue("message_id", message.MessageId);
                     command.Parameters.AddWithNullableValue("from_address", message.FromAddress);
-                    command.Parameters.AddWithValue("to_recipients_json", JsonSerializer.Serialize(message.ToRecipients, JsonOptions));
+                    command.Parameters.AddWithValue("to_recipients_json", recipientsJson);
                     command.Parameters.AddWithNullableValue("subject", message.Subject);
                     command.Parameters.AddWithNullableValue("text_body", message.TextBody);
                     command.Parameters.AddWithNullableValue("html_body", message.HtmlBody);
@@ -172,7 +294,7 @@ public sealed class NpgsqlInboundMailStore(
                         connection,
                         transaction,
                         message.ReceivedAtUtc,
-                        rawSizeBytes,
+                        accountedSizeBytes,
                         cancellationToken).ConfigureAwait(false)) {
                     throw new InboundMailStorageQuotaExceededException();
                 }
@@ -180,6 +302,42 @@ public sealed class NpgsqlInboundMailStore(
                 await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
                 return new InboundMailSaveResult(id, wasDuplicate);
             }
+        }
+    }
+
+    private static async Task AcquireIngestionLockAsync(
+        NpgsqlConnection connection,
+        NpgsqlTransaction transaction,
+        string ingestionKey,
+        CancellationToken cancellationToken) {
+        const string sql = "select pg_advisory_xact_lock(hashtextextended(@ingestion_key, 0));";
+        var command = new NpgsqlCommand(sql, connection, transaction);
+        await using (command.ConfigureAwait(false)) {
+            command.Parameters.AddWithValue("ingestion_key", ingestionKey);
+            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private static async Task<Guid?> FindRecentDuplicateAsync(
+        NpgsqlConnection connection,
+        NpgsqlTransaction transaction,
+        string ingestionKey,
+        DateTimeOffset windowStartUtc,
+        CancellationToken cancellationToken) {
+        const string sql = """
+                           select id
+                           from mailinbox_messages
+                           where ingestion_key = @ingestion_key
+                             and received_at_utc >= @window_start_utc
+                           order by received_at_utc desc
+                           limit 1;
+                           """;
+        var command = new NpgsqlCommand(sql, connection, transaction);
+        await using (command.ConfigureAwait(false)) {
+            command.Parameters.AddWithValue("ingestion_key", ingestionKey);
+            command.Parameters.AddWithValue("window_start_utc", windowStartUtc.ToUniversalTime());
+            object? result = await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+            return result is Guid id ? id : null;
         }
     }
 
@@ -220,6 +378,17 @@ public sealed class NpgsqlInboundMailStore(
     }
 
     public async Task<InboundMailMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) {
+        await _messageDetailReadSlots.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try {
+            return await GetMessageDetailsCoreAsync(id, cancellationToken).ConfigureAwait(false);
+        } finally {
+            _messageDetailReadSlots.Release();
+        }
+    }
+
+    private async Task<InboundMailMessageDetails?> GetMessageDetailsCoreAsync(
+        Guid id,
+        CancellationToken cancellationToken) {
         const string sql = """
                            select id, message_id, from_address, to_recipients_json::text, subject, text_body, html_body, raw_mime, status, read_at_utc, received_at_utc, content_purged_at_utc
                            from mailinbox_messages
@@ -332,12 +501,12 @@ public sealed class NpgsqlInboundMailStore(
         NpgsqlConnection connection,
         NpgsqlTransaction transaction,
         DateTimeOffset receivedAtUtc,
-        long rawSizeBytes,
+        long accountedSizeBytes,
         CancellationToken cancellationToken) {
         const string sql = """
                            insert into mailinbox_daily_ingestion_usage (usage_date, message_count, raw_bytes)
-                           select @usage_date, 1, @raw_bytes
-                           where @raw_bytes <= @max_raw_bytes
+                           select @usage_date, 1, @accounted_bytes
+                           where @accounted_bytes <= @max_raw_bytes
                            on conflict (usage_date) do update
                            set message_count = mailinbox_daily_ingestion_usage.message_count + 1,
                                raw_bytes = mailinbox_daily_ingestion_usage.raw_bytes + excluded.raw_bytes
@@ -348,7 +517,7 @@ public sealed class NpgsqlInboundMailStore(
         var command = new NpgsqlCommand(sql, connection, transaction);
         await using (command.ConfigureAwait(false)) {
             command.Parameters.AddWithValue("usage_date", DateOnly.FromDateTime(receivedAtUtc.UtcDateTime));
-            command.Parameters.AddWithValue("raw_bytes", rawSizeBytes);
+            command.Parameters.AddWithValue("accounted_bytes", accountedSizeBytes);
             command.Parameters.AddWithValue("max_messages", _options.MaxMessagesPerDay);
             command.Parameters.AddWithValue("max_raw_bytes", _options.MaxRawBytesPerDay);
             return await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false) is true;
@@ -439,6 +608,23 @@ public sealed class NpgsqlInboundMailStore(
         return Convert.ToHexString(hash.GetHashAndReset());
     }
 
+    private static long CalculateAccountedSizeBytes(InboundMailMessage message, string recipientsJson) {
+        return checked(
+            message.RawMimeBytes.Length +
+            GetUtf8ByteCount(message.MessageId) +
+            GetUtf8ByteCount(message.FromAddress) +
+            Encoding.UTF8.GetByteCount(recipientsJson) +
+            GetUtf8ByteCount(message.Subject) +
+            GetUtf8ByteCount(message.TextBody) +
+            GetUtf8ByteCount(message.HtmlBody) +
+            Encoding.UTF8.GetByteCount(message.Status.Value));
+    }
+
+    private static int GetUtf8ByteCount(string? value) =>
+        value is null ? 0 : Encoding.UTF8.GetByteCount(value);
+
+    public void Dispose() => _messageDetailReadSlots.Dispose();
+
     private DateTimeOffset GetDeduplicationBucket(DateTimeOffset receivedAtUtc) {
         long windowTicks = _options.DeduplicationWindow.Ticks;
         long bucketTicks = receivedAtUtc.ToUniversalTime().Ticks / windowTicks * windowTicks;
@@ -474,6 +660,32 @@ public sealed class NpgsqlInboundMailStore(
 
         var command = new NpgsqlCommand(sql, connection);
         await using (command.ConfigureAwait(false)) {
+            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private static async Task AcquireSchemaMigrationLockAsync(
+        NpgsqlConnection connection,
+        CancellationToken cancellationToken) {
+        const string sql = "select pg_advisory_lock(@lock_key);";
+        var command = new NpgsqlCommand(sql, connection);
+        await using (command.ConfigureAwait(false)) {
+            command.Parameters.AddWithValue("lock_key", SchemaMigrationLockKey);
+            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private static async Task ReleaseSchemaMigrationLockAsync(
+        NpgsqlConnection connection,
+        CancellationToken cancellationToken) {
+        if (connection.State != System.Data.ConnectionState.Open) {
+            return;
+        }
+
+        const string sql = "select pg_advisory_unlock(@lock_key);";
+        var command = new NpgsqlCommand(sql, connection);
+        await using (command.ConfigureAwait(false)) {
+            command.Parameters.AddWithValue("lock_key", SchemaMigrationLockKey);
             await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
         }
     }

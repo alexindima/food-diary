@@ -9,10 +9,19 @@ public sealed class IntegrationOptionsTests {
     [InlineData("", true)]
     [InlineData("   ", true)]
     [InlineData("client-id", true)]
-    public void GoogleAuthOptions_HasValidClientId_AllowsEmptyOrNonWhitespaceValues(string clientId, bool expected) {
+    [InlineData("client id", false)]
+    [InlineData("client\tid", false)]
+    public void GoogleAuthOptions_HasValidClientId_RejectsWhitespaceInsideConfiguredValue(string clientId, bool expected) {
         var options = new GoogleAuthOptions { ClientId = clientId };
 
         Assert.Equal(expected, GoogleAuthOptions.HasValidClientId(options));
+    }
+
+    [Fact]
+    public void GoogleAuthOptions_HasValidClientId_RejectsOversizedValue() {
+        var options = new GoogleAuthOptions { ClientId = new string('a', 513) };
+
+        Assert.False(GoogleAuthOptions.HasValidClientId(options));
     }
 
     [Theory]
@@ -60,7 +69,10 @@ public sealed class IntegrationOptionsTests {
 
     [Fact]
     public void S3Options_IsEmptyOrComplete_AcceptsEmptyConfiguration() {
-        Assert.True(S3Options.IsEmptyOrComplete(new S3Options()));
+        var options = new S3Options();
+
+        Assert.True(S3Options.IsEmptyOrComplete(options));
+        Assert.False(S3Options.HasCompleteConfiguration(options));
     }
 
     [Theory]
@@ -85,6 +97,7 @@ public sealed class IntegrationOptionsTests {
         };
 
         Assert.Equal(expected, S3Options.IsEmptyOrComplete(options));
+        Assert.Equal(expected, S3Options.HasCompleteConfiguration(options));
     }
 
     [Theory]
@@ -101,6 +114,9 @@ public sealed class IntegrationOptionsTests {
     [InlineData("https://api.nal.usda.gov/fdc/v1", true)]
     [InlineData("http://api.example.com", false)]
     [InlineData("/relative", false)]
+    [InlineData("https://user:secret@api.example.com", false)]
+    [InlineData("https://api.example.com?key=value", false)]
+    [InlineData("https://api.example.com#fragment", false)]
     public void UsdaApiOptions_HasValidBaseUrl_RequiresAbsoluteHttpsUrl(string baseUrl, bool expected) {
         var options = new UsdaApiOptions { BaseUrl = baseUrl };
 
@@ -111,6 +127,9 @@ public sealed class IntegrationOptionsTests {
     [InlineData("https://world.openfoodfacts.org", true)]
     [InlineData("http://openfoodfacts.example.com", false)]
     [InlineData("not-a-url", false)]
+    [InlineData("https://user:secret@openfoodfacts.example.com", false)]
+    [InlineData("https://openfoodfacts.example.com?query=value", false)]
+    [InlineData("https://openfoodfacts.example.com#fragment", false)]
     public void OpenFoodFactsApiOptions_HasValidBaseUrl_RequiresAbsoluteHttpsUrl(string baseUrl, bool expected) {
         var options = new OpenFoodFactsApiOptions { BaseUrl = baseUrl };
 
@@ -134,6 +153,8 @@ public sealed class IntegrationOptionsTests {
     [InlineData("https://cdn.example.com", true)]
     [InlineData("file:///tmp/assets", false)]
     [InlineData("not-a-url", false)]
+    [InlineData("https://user:secret@cdn.example.com", false)]
+    [InlineData("https://cdn.example.com?query=value", false)]
     public void S3Options_HasValidPublicBaseUrl_ValidatesAbsoluteUrl(string? publicBaseUrl, bool expected) {
         var options = new S3Options { PublicBaseUrl = publicBaseUrl };
 
@@ -147,6 +168,8 @@ public sealed class IntegrationOptionsTests {
     [InlineData("http://minio:9000", true)]
     [InlineData("ftp://s3.example.com", false)]
     [InlineData("/relative", false)]
+    [InlineData("http://user:secret@minio:9000", false)]
+    [InlineData("http://minio:9000#fragment", false)]
     public void S3Options_HasValidServiceUrl_ValidatesAbsoluteUrl(string? serviceUrl, bool expected) {
         var options = new S3Options { ServiceUrl = serviceUrl };
 
@@ -171,6 +194,69 @@ public sealed class IntegrationOptionsTests {
 
         Assert.True(WebPushOptions.HasValidConfiguration(invalid));
         Assert.False(WebPushOptions.HasValidConfiguration(missingKey));
+    }
+
+    [Theory]
+    [InlineData("mailto:admin@example.com", true)]
+    [InlineData("https://example.com/contact", true)]
+    [InlineData("http://example.com/contact", false)]
+    [InlineData("file:///tmp/contact", false)]
+    [InlineData("javascript:alert(1)", false)]
+    public void WebPushOptions_WhenEnabled_ValidatesVapidSubject(string subject, bool expected) {
+        var options = new WebPushOptions {
+            Enabled = true,
+            Subject = subject,
+            PublicKey = "public",
+            PrivateKey = "private",
+            DefaultUrl = "/",
+        };
+
+        Assert.Equal(expected, WebPushOptions.HasValidConfiguration(options));
+    }
+
+    [Theory]
+    [InlineData("/", true)]
+    [InlineData("/notifications", true)]
+    [InlineData("https://app.example.com/notifications", true)]
+    [InlineData("//attacker.example/notifications", false)]
+    [InlineData("javascript:alert(1)", false)]
+    [InlineData("https://user:secret@app.example.com", false)]
+    [InlineData("relative/path", false)]
+    public void WebPushOptions_WhenEnabled_ValidatesDefaultNavigationUrl(string defaultUrl, bool expected) {
+        var options = new WebPushOptions {
+            Enabled = true,
+            Subject = "mailto:admin@example.com",
+            PublicKey = "public",
+            PrivateKey = "private",
+            DefaultUrl = defaultUrl,
+        };
+
+        Assert.Equal(expected, WebPushOptions.HasValidConfiguration(options));
+    }
+
+    [Theory]
+    [InlineData("", "", "", true)]
+    [InlineData("client", "secret", "https://app.example.com/fitbit", true)]
+    [InlineData("client", "secret", "http://localhost:4200/fitbit", true)]
+    [InlineData("client", "secret", "http://app.example.com/fitbit", false)]
+    [InlineData("client", "secret", "javascript:alert(1)", false)]
+    [InlineData("client", "secret", "https://user:secret@app.example.com/fitbit", false)]
+    [InlineData("client", "secret", "https://app.example.com/fitbit#fragment", false)]
+    public void FitbitOptions_IsEmptyOrComplete_RequiresSecureRedirectUrl(
+        string clientId,
+        string clientSecret,
+        string redirectUri,
+        bool expected) {
+        var options = new FitbitOptions {
+            ClientId = clientId,
+            ClientSecret = clientSecret,
+            RedirectUri = redirectUri,
+        };
+
+        Assert.Equal(expected, FitbitOptions.IsEmptyOrComplete(options));
+        Assert.Equal(
+            expected && !string.IsNullOrWhiteSpace(clientId),
+            FitbitOptions.HasCompleteConfiguration(options));
     }
 
     [Theory]
@@ -213,6 +299,9 @@ public sealed class IntegrationOptionsTests {
     [InlineData("https://api.yookassa.ru/v3", true)]
     [InlineData("http://api.yookassa.test/v3", false)]
     [InlineData("not-a-url", false)]
+    [InlineData("https://user:secret@api.yookassa.test/v3", false)]
+    [InlineData("https://api.yookassa.test/v3?query=value", false)]
+    [InlineData("https://api.yookassa.test/v3#fragment", false)]
     public void YooKassaOptions_HasValidCheckoutConfiguration_RequiresHttpsApiBaseUrl(string apiBaseUrl, bool expected) {
         var options = new YooKassaOptions {
             ShopId = "shop",

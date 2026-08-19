@@ -1,3 +1,5 @@
+using FoodDiary.MailInbox.Infrastructure.Services;
+
 namespace FoodDiary.MailInbox.Infrastructure.Options;
 
 public sealed class MailInboxSmtpOptions {
@@ -31,6 +33,8 @@ public sealed class MailInboxSmtpOptions {
 
     public int MaxMessagesPerSenderPerHour { get; init; } = 20;
 
+    public long MaxRawBytesPerIpPerHour { get; init; } = 64L * 1024 * 1024;
+
     public int MaxTrackedRateLimitKeys { get; init; } = 10_000;
 
     public int MaxRecipientsPerMessage { get; init; } = 4;
@@ -58,6 +62,7 @@ public sealed class MailInboxSmtpOptions {
             MaxMessagesPerSession: > 0,
             MaxMessagesPerIpPerHour: > 0,
             MaxMessagesPerSenderPerHour: > 0,
+            MaxRawBytesPerIpPerHour: > 0,
             MaxTrackedRateLimitKeys: > 0,
             MaxRecipientsPerMessage: > 0,
             MaxMimeParts: > 0,
@@ -65,6 +70,8 @@ public sealed class MailInboxSmtpOptions {
             MaxExtractedBodyCharacters: > 0,
         } &&
                options.MaxConcurrentConnectionsPerIp <= options.MaxConcurrentConnections &&
+               options.MaxRawBytesPerIpPerHour >= options.MaxMessageSizeBytes &&
+               options.MaxRecipientsPerMessage <= MailInboxStoredMessageLimits.MaxRecipients &&
                options.ProcessingQueueTimeout > TimeSpan.Zero &&
                options.SessionTimeout > TimeSpan.Zero &&
                !string.IsNullOrWhiteSpace(options.ServerName) &&

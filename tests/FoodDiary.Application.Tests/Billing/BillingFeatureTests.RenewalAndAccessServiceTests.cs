@@ -47,6 +47,7 @@ public partial class BillingFeatureTests {
         Assert.Equal("pay_renewed", subscription.ExternalSubscriptionId);
         Assert.Equal(Now.AddMonths(1), subscription.CurrentPeriodEndUtc);
         Assert.Equal("{\"renewed\":true}", subscription.ProviderMetadataJson);
+        Assert.Equal(Now.AddMonths(-1), subscription.LastWebhookOccurredAtUtc);
 
         BillingPayment payment = Assert.Single(paymentRepository.Payments);
         Assert.Equal(BillingPaymentKinds.Renewal, payment.Kind);

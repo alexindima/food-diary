@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Responses;
@@ -38,11 +39,12 @@ public sealed class WaistEntriesController(ISender mediator) : AuthorizedControl
         HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
 
     [HttpPost]
-    [ProducesResponseType<WaistEntryHttpResponse>(StatusCodes.Status200OK)]
+    [EnableIdempotency(requireKey: true)]
+    [ProducesResponseType<WaistEntryHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateWaistEntryHttpRequest request) =>
-        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
+        HandleCreated(request.ToCommand(userId), static value => value.ToHttpResponse());
 
     [HttpPut("{id:guid}")]
     [ProducesResponseType<WaistEntryHttpResponse>(StatusCodes.Status200OK)]

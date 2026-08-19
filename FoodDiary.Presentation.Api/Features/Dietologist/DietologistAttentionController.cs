@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
@@ -27,7 +28,7 @@ public sealed class DietologistAttentionController(ISender mediator) : Authorize
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> SetAttentionSignalState(
-        string signalId,
+        [Required, MaxLength(DietologistRequestLimits.MaximumSignalIdLength)] string signalId,
         [FromCurrentUser] Guid userId,
         [FromBody] SetAttentionSignalStateHttpRequest request) =>
         HandleNoContent(request.ToCommand(userId, signalId));

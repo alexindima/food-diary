@@ -219,7 +219,7 @@ public class LayeringTests {
             "services.AddNotificationIntegrations();",
             "services.AddAiIntegrations();",
             "services.AddFoodDataIntegrations(configuration);",
-            "services.AddWearableIntegrations();",
+            "services.AddWearableIntegrations(configuration);",
         ];
 
         string[] actualRegistrations = [.. File.ReadLines(dependencyInjectionPath)

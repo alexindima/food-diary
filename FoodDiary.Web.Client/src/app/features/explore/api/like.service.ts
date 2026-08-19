@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -16,8 +17,9 @@ export class LikeService extends ApiService {
         );
     }
 
-    public toggle(recipeId: string): Observable<RecipeLikeStatus> {
-        return this.post<RecipeLikeStatus>(`${recipeId}/likes/toggle`, {}).pipe(
+    public toggle(recipeId: string, isLiked: boolean): Observable<RecipeLikeStatus> {
+        const headers = new HttpHeaders({ 'Idempotency-Key': crypto.randomUUID() });
+        return this.post<RecipeLikeStatus>(`${recipeId}/likes/toggle`, { isLiked }, headers).pipe(
             catchError((error: unknown) => rethrowApiError('Toggle like error', error)),
         );
     }

@@ -45,7 +45,11 @@ public sealed class RecentItem : Entity<RecentItemId> {
     }
 
     public void Touch(DateTime? usedAtUtc = null) {
-        LastUsedAtUtc = NormalizeUtc(usedAtUtc ?? DomainTime.UtcNow);
+        DateTime normalizedUsedAtUtc = NormalizeUtc(usedAtUtc ?? DomainTime.UtcNow);
+        if (normalizedUsedAtUtc > LastUsedAtUtc) {
+            LastUsedAtUtc = normalizedUsedAtUtc;
+        }
+
         if (UsageCount < int.MaxValue) {
             UsageCount++;
         }

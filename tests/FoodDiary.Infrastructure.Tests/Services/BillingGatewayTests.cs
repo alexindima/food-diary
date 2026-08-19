@@ -16,6 +16,7 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class BillingGatewayTests {
+    private static readonly DateTimeOffset PaddleRecoveryNow = new(2026, 8, 19, 0, 0, 0, TimeSpan.Zero);
     private const string StripeTestApiKey = "stripe-test-api-key";
 
     [Fact]
@@ -298,6 +299,8 @@ public sealed class BillingGatewayTests {
                     "id": "txn_recovered",
                     "status": "ready",
                     "checkout": { "url": "https://checkout.paddle.com/txn_recovered" },
+                    "items": [{ "price": { "id": "pri_monthly" }, "quantity": 1 }],
+                    "created_at": "2026-08-18T23:55:00Z",
                     "custom_data": {
                       "user_id": "{{userId}}",
                       "plan": "monthly",
@@ -315,7 +318,8 @@ public sealed class BillingGatewayTests {
                 PremiumMonthlyPriceId = "pri_monthly",
                 PremiumYearlyPriceId = "pri_yearly",
                 CheckoutUrl = "https://app.example/billing/paddle",
-            }));
+            }),
+            new FixedTimeProvider(PaddleRecoveryNow));
 
         Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
             new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "monthly", "ctm_123", "new-request-id"),
@@ -387,6 +391,181 @@ public sealed class BillingGatewayTests {
         Assert.DoesNotContain(handler.Requests, request =>
             request.Method == HttpMethod.Post &&
             string.Equals(request.RequestUri?.AbsolutePath, "/customers", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task PaddleCreateCheckoutSession_WhenMatchingCustomerIsOnSecondPage_ReusesCustomer() {
+        var userId = Guid.NewGuid();
+        var handler = new RecordingHttpMessageHandler(
+            new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = JsonContent("""
+                    {
+                      "data": [],
+                      "meta": { "pagination": { "next": "https://attacker.example/customers?after=cursor" } }
+                    }
+                    """),
+            },
+            new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = JsonContent($$"""
+                    { "data": [{ "id": "ctm_second_page", "custom_data": { "user_id": "{{userId}}" } }] }
+                    """),
+            },
+            EmptyPaddleListResponse(),
+            new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = JsonContent("""{ "data": { "id": "txn_new", "checkout": { "url": "https://checkout.paddle.com/txn_new" } } }"""),
+            });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+                PremiumMonthlyPriceId = "pri_monthly",
+                PremiumYearlyPriceId = "pri_yearly",
+                CheckoutUrl = "https://app.example/billing/paddle",
+            }));
+
+        Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "monthly", ExistingCustomerId: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Equal("ctm_second_page", result.Value.CustomerId);
+        Assert.Equal("api.paddle.test", handler.Requests[1].RequestUri?.Host);
+        Assert.Equal("?after=cursor", handler.Requests[1].RequestUri?.Query);
+    }
+
+    [Fact]
+    public async Task PaddleCreateCheckoutSession_WhenExactTransactionIsOnSecondPage_ReusesItWithoutPost() {
+        var userId = Guid.NewGuid();
+        const string checkoutReference = "checkout-request-id";
+        var handler = new RecordingHttpMessageHandler(
+            new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = JsonContent("""
+                    {
+                      "data": [],
+                      "meta": { "pagination": { "next": "https://api.paddle.test/transactions?after=cursor" } }
+                    }
+                    """),
+            },
+            new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = JsonContent($$"""
+                    {
+                      "data": [{
+                        "id": "txn_second_page",
+                        "status": "ready",
+                        "checkout": { "url": "https://checkout.paddle.com/txn_second_page" },
+                        "items": [{ "price": { "id": "pri_monthly" }, "quantity": 1 }],
+                        "custom_data": {
+                          "user_id": "{{userId}}",
+                          "plan": "monthly",
+                          "checkout_reference": "{{checkoutReference}}"
+                        }
+                      }]
+                    }
+                    """),
+            });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+                PremiumMonthlyPriceId = "pri_monthly",
+                PremiumYearlyPriceId = "pri_yearly",
+                CheckoutUrl = "https://app.example/billing/paddle",
+            }));
+
+        Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "monthly", "ctm_123", checkoutReference),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Equal("txn_second_page", result.Value.SessionId);
+        Assert.Equal(2, handler.Requests.Count);
+        Assert.All(handler.Requests, request => Assert.Equal(HttpMethod.Get, request.Method));
+    }
+
+    [Fact]
+    public async Task PaddleCreateCheckoutSession_WhenPreviousReferenceIsStale_CreatesNewTransaction() {
+        var userId = Guid.NewGuid();
+        var handler = new RecordingHttpMessageHandler(
+            new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = JsonContent($$"""
+                    {
+                      "data": [{
+                        "id": "txn_stale",
+                        "status": "ready",
+                        "checkout": { "url": "https://checkout.paddle.com/txn_stale" },
+                        "items": [{ "price": { "id": "pri_monthly" }, "quantity": 1 }],
+                        "created_at": "2026-08-18T23:00:00Z",
+                        "custom_data": {
+                          "user_id": "{{userId}}",
+                          "plan": "monthly",
+                          "checkout_reference": "old-request"
+                        }
+                      }]
+                    }
+                    """),
+            },
+            new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = JsonContent("""{ "data": { "id": "txn_new", "checkout": { "url": "https://checkout.paddle.com/txn_new" } } }"""),
+            });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+                PremiumMonthlyPriceId = "pri_monthly",
+                PremiumYearlyPriceId = "pri_yearly",
+                CheckoutUrl = "https://app.example/billing/paddle",
+            }),
+            new FixedTimeProvider(PaddleRecoveryNow));
+
+        Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "monthly", "ctm_123", "new-request"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Equal("txn_new", result.Value.SessionId);
+        Assert.Equal(HttpMethod.Post, handler.Requests[1].Method);
+    }
+
+    [Fact]
+    public async Task PaddleCreateCheckoutSession_WhenExactTransactionUsesOldPrice_FailsClosed() {
+        var userId = Guid.NewGuid();
+        var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent($$"""
+                {
+                  "data": [{
+                    "id": "txn_old_price",
+                    "status": "ready",
+                    "checkout": { "url": "https://checkout.paddle.com/txn_old_price" },
+                    "items": [{ "price": { "id": "pri_retired" }, "quantity": 1 }],
+                    "custom_data": {
+                      "user_id": "{{userId}}",
+                      "plan": "monthly",
+                      "checkout_reference": "same-request"
+                    }
+                  }]
+                }
+                """),
+        });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+                PremiumMonthlyPriceId = "pri_monthly",
+                PremiumYearlyPriceId = "pri_yearly",
+                CheckoutUrl = "https://app.example/billing/paddle",
+            }));
+
+        Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "monthly", "ctm_123", "same-request"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+        Assert.Single(handler.Requests);
     }
 
     [Fact]
@@ -915,6 +1094,50 @@ public sealed class BillingGatewayTests {
     }
 
     [Fact]
+    public async Task PaddleWebhook_WhenEventTypePropertyIsMissing_ReturnsNullEvent() {
+        const string payload = """{}""";
+        PaddleBillingGateway gateway = CreateConfiguredPaddleWebhookGateway();
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreatePaddleSignature(payload, "secret"),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Null(result.Value);
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_WhenSupportedEventDataIsMissing_ReturnsValidationFailure() {
+        const string payload = """{"event_id":"evt_missing_data","event_type":"subscription.updated"}""";
+        PaddleBillingGateway gateway = CreateConfiguredPaddleWebhookGateway();
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreatePaddleSignature(payload, "secret"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+        Assert.Contains("data", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_WhenSupportedEventIdentifierIsMissing_ReturnsValidationFailure() {
+        const string payload = """{"event_type":"subscription.updated","data":{}}""";
+        PaddleBillingGateway gateway = CreateConfiguredPaddleWebhookGateway();
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreatePaddleSignature(payload, "secret"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+        Assert.Contains("identifier", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task PaddleWebhook_WhenSubscriptionIdentifiersMissing_ReturnsNullEvent() {
         string payload = JsonSerializer.Serialize(new {
             event_id = "evt_missing_ids",
@@ -1429,6 +1652,53 @@ public sealed class BillingGatewayTests {
 
         Assert.True(result.IsSuccess, result.Error.Message);
         Assert.Null(result.Value);
+        Assert.Empty(handler.Requests);
+    }
+
+    [Theory]
+    [InlineData("../payments")]
+    [InlineData("pay_123?expand=true")]
+    [InlineData("pay/123")]
+    [InlineData("pay 123")]
+    public async Task YooKassaWebhook_WhenPaymentIdContainsInvalidCharacters_RejectsWithoutFetchingPayment(
+        string paymentId) {
+        var handler = new RecordingHttpMessageHandler();
+        var gateway = new YooKassaBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(ValidYooKassaOptions()));
+        string payload = JsonSerializer.Serialize(new {
+            @event = "payment.succeeded",
+            @object = new { id = paymentId },
+        });
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            payload,
+            signatureHeader: "",
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+        Assert.Empty(handler.Requests);
+    }
+
+    [Fact]
+    public async Task YooKassaWebhook_WhenPaymentIdIsOversized_RejectsWithoutFetchingPayment() {
+        var handler = new RecordingHttpMessageHandler();
+        var gateway = new YooKassaBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(ValidYooKassaOptions()));
+        string payload = JsonSerializer.Serialize(new {
+            @event = "payment.succeeded",
+            @object = new { id = new string('p', 129) },
+        });
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            payload,
+            signatureHeader: "",
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
         Assert.Empty(handler.Requests);
     }
 
@@ -2596,6 +2866,7 @@ public sealed class BillingGatewayTests {
                         "id": "txn_after_timeout",
                         "status": "ready",
                         "checkout": { "url": "https://checkout.paddle.com/txn_after_timeout" },
+                        "items": [{ "price": { "id": "pri_monthly" }, "quantity": 1 }],
                         "custom_data": {
                           "user_id": "{{userId}}",
                           "plan": "{{plan}}",
@@ -2606,5 +2877,10 @@ public sealed class BillingGatewayTests {
                     """),
             });
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider(DateTimeOffset utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => utcNow;
     }
 }

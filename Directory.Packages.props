@@ -5,7 +5,7 @@
 
   <ItemGroup>
     <!-- Analyzers -->
-    <PackageVersion Include="Meziantou.Analyzer" Version="3.0.165" />
+    <PackageVersion Include="Meziantou.Analyzer" Version="3.0.167" />
     <PackageVersion Include="Roslynator.Analyzers" Version="4.16.1" />
 
     <!-- API -->
@@ -32,7 +32,7 @@
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
 
     <!-- Microsoft.Extensions -->
-    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.11" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.10" />
@@ -40,25 +40,25 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.8.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.9.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.11" />
     <PackageVersion Include="ModelContextProtocol" Version="2.2.0" />
 
     <!-- Infrastructure -->
-    <PackageVersion Include="AWSSDK.S3" Version="4.0.102" />
+    <PackageVersion Include="AWSSDK.S3" Version="4.0.102.2" />
     <PackageVersion Include="DnsClient" Version="1.8.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.11" />
     <PackageVersion Include="MailKit" Version="4.17.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="QuestPDF" Version="2026.7.1" />
     <PackageVersion Include="RabbitMQ.Client" Version="7.2.1" />
     <PackageVersion Include="SmtpServer" Version="11.1.0" />
-    <PackageVersion Include="Stripe.net" Version="52.0.0" />
-    <PackageVersion Include="SkiaSharp" Version="4.148.0" />
-    <PackageVersion Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.148.0" />
+    <PackageVersion Include="Stripe.net" Version="52.3.0" />
+    <PackageVersion Include="SkiaSharp" Version="4.151.1" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.151.1" />
     <PackageVersion Include="WebPush" Version="1.0.13" />
 
     <!-- Hangfire -->

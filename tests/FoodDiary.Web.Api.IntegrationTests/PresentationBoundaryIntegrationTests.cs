@@ -3,14 +3,21 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Ai.Models;
 using FoodDiary.Presentation.Api.Features.Ai.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
+using FoodDiary.Presentation.Api.Features.Billing;
+using FoodDiary.Presentation.Api.Features.Dietologist;
+using FoodDiary.Presentation.Api.Features.Export;
 using FoodDiary.Presentation.Api.Features.Images.Requests;
+using FoodDiary.Presentation.Api.Features.OpenFoodFacts;
+using FoodDiary.Presentation.Api.Features.Products;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
 using FoodDiary.Presentation.Api.Features.Users.Requests;
+using FoodDiary.Presentation.Api.Features.Usda;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
@@ -351,7 +358,8 @@ public sealed class PresentationBoundaryIntegrationTests(
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.RoleHeader, PresentationRoleNames.Admin);
         string title = $"Imported lesson {Guid.NewGuid():N}";
 
-        HttpResponseMessage response = await client.PostAsJsonAsync(
+        HttpResponseMessage response = await PostWithIdempotencyAsync(
+            client,
             "/api/v1/admin/lessons/import",
             new AdminLessonsImportHttpRequest(
                 Version: 1,
@@ -480,6 +488,46 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task BillingWebhook_WithOversizedProvider_IsRejectedAtTransportBoundary() {
+        HttpClient client = apiFactory.CreateClient();
+        string provider = new('p', BillingWebhookRequestLimits.MaximumProviderLength + 1);
+
+        HttpResponseMessage response = await client.PostAsJsonAsync(
+            $"/api/v1/billing/webhooks/{provider}",
+            new { Event = "ignored" });
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task UsdaSearch_WithOversizedSearch_IsRejectedBeforeProviderCall() {
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+        string search = new('s', UsdaRequestLimits.MaximumSearchLength + 1);
+
+        HttpResponseMessage response = await client.GetAsync(
+            $"/api/v1/usda/foods?search={Uri.EscapeDataString(search)}&limit=20");
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task RetrySensitiveWrite_WithoutIdempotencyKey_IsRejectedBeforeHandler() {
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+        HttpResponseMessage response = await client.PostAsJsonAsync(
+            "/api/v1/hydrations",
+            new { TimestampUtc = DateTime.UtcNow, AmountMl = 250 });
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
     public async Task GetProductById_WithMissingProduct_ReturnsNotFoundContract() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
@@ -519,7 +567,7 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
-    public async Task CreateWaistEntry_WithDuplicateDate_ReturnsConflictContract() {
+    public async Task CreateWaistEntry_WithExactRetry_ReturnsExistingEntry() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
@@ -529,16 +577,25 @@ public sealed class PresentationBoundaryIntegrationTests(
             new DateTime(2026, 3, 25, 12, 0, 0, DateTimeKind.Utc),
             72.3);
 
-        HttpResponseMessage firstResponse = await client.PostAsJsonAsync("/api/v1/waist-entries", request);
-        firstResponse.EnsureSuccessStatusCode();
+        HttpResponseMessage firstResponse = await PostWithIdempotencyAsync(client, "/api/v1/waist-entries", request);
+        HttpResponseMessage retryResponse = await PostWithIdempotencyAsync(client, "/api/v1/waist-entries", request);
+        HttpResponseMessage conflictingResponse = await PostWithIdempotencyAsync(
+            client,
+            "/api/v1/waist-entries",
+            request with { CircumferenceCm = 73.1 });
+        IdPayload? firstPayload = await firstResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
+        IdPayload? retryPayload = await retryResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
+        ErrorPayload? conflictPayload = await conflictingResponse.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
-        HttpResponseMessage duplicateResponse = await client.PostAsJsonAsync("/api/v1/waist-entries", request);
-        ErrorPayload? payload = await duplicateResponse.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
-
-        Assert.Equal(HttpStatusCode.Conflict, duplicateResponse.StatusCode);
-        Assert.NotNull(payload);
-        Assert.Equal("WaistEntry.AlreadyExists", payload.Error);
-        await AssertErrorContractSnapshotAsync("waist-entry-duplicate-date", payload);
+        Assert.Equal(HttpStatusCode.Created, firstResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.Created, retryResponse.StatusCode);
+        Assert.NotNull(firstPayload);
+        Assert.NotNull(retryPayload);
+        Assert.Equal(firstPayload.Id, retryPayload.Id);
+        Assert.Equal(HttpStatusCode.Conflict, conflictingResponse.StatusCode);
+        Assert.NotNull(conflictPayload);
+        Assert.Equal("WaistEntry.AlreadyExists", conflictPayload.Error);
+        await AssertErrorContractSnapshotAsync("waist-entry-duplicate-date", conflictPayload);
     }
 
     [Fact]
@@ -790,12 +847,27 @@ public sealed class PresentationBoundaryIntegrationTests(
             () => Assert.Equal(1, schema.GetProperty("minLength").GetInt32()),
             () => Assert.Equal(128, schema.GetProperty("maxLength").GetInt32()),
             () => Assert.True(productCreate.GetProperty("responses").TryGetProperty("400", out _)),
-            () => Assert.True(productCreate.GetProperty("responses").TryGetProperty("409", out _)));
+            () => Assert.True(productCreate.GetProperty("responses").TryGetProperty("409", out _)),
+            () => Assert.True(productCreate.GetProperty("responses").TryGetProperty("503", out _)));
 
         JsonElement aiCreate = paths.GetProperty("/api/v{version}/ai/food/vision").GetProperty("post");
         JsonElement requiredIdempotency = Assert.Single(aiCreate.GetProperty("parameters").EnumerateArray(), static parameter =>
             string.Equals(parameter.GetProperty("name").GetString(), "Idempotency-Key", StringComparison.Ordinal));
         Assert.True(requiredIdempotency.GetProperty("required").GetBoolean());
+
+        (string Path, string Method)[] retrySensitiveOperations = [
+            ("/api/v{version}/recipes/{recipeId}/likes/toggle", "post"),
+            ("/api/v{version}/hydrations", "post"),
+            ("/api/v{version}/wearables/{provider}/connect", "post"),
+            ("/api/v{version}/waist-entries", "post"),
+            ("/api/v{version}/admin/lessons/import", "post"),
+        ];
+        Assert.All(retrySensitiveOperations, operation => {
+            JsonElement endpoint = paths.GetProperty(operation.Path).GetProperty(operation.Method);
+            JsonElement parameter = Assert.Single(endpoint.GetProperty("parameters").EnumerateArray(), static value =>
+                string.Equals(value.GetProperty("name").GetString(), "Idempotency-Key", StringComparison.Ordinal));
+            Assert.True(parameter.GetProperty("required").GetBoolean());
+        });
 
         JsonElement refresh = paths.GetProperty("/api/v{version}/auth/refresh").GetProperty("post");
         Assert.False(refresh.TryGetProperty("parameters", out JsonElement refreshParameters) &&
@@ -831,6 +903,8 @@ public sealed class PresentationBoundaryIntegrationTests(
             ("/api/v{version}/billing/checkout-session", "post"),
             ("/api/v{version}/billing/portal-session", "post"),
             ("/api/v{version}/admin/email-templates/test", "post"),
+            ("/api/v{version}/auth/telegram/link", "post"),
+            ("/api/v{version}/wearables/{provider}/auth-url", "get"),
         ];
 
         foreach ((string path, string method) in operations) {
@@ -838,6 +912,75 @@ public sealed class PresentationBoundaryIntegrationTests(
                 paths.GetProperty(path).GetProperty(method).GetProperty("responses").TryGetProperty("429", out _),
                 $"{method.ToUpperInvariant()} {path} must document HTTP 429.");
         }
+    }
+
+    [Fact]
+    public async Task SwaggerJson_WearableAuthUrl_DocumentsBoundedRequiredState() {
+        HttpClient client = apiFactory.CreateClient();
+        using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
+        JsonElement operation = json.RootElement
+            .GetProperty("paths")
+            .GetProperty("/api/v{version}/wearables/{provider}/auth-url")
+            .GetProperty("get");
+        JsonElement state = Assert.Single(operation.GetProperty("parameters").EnumerateArray(), static parameter =>
+            string.Equals(parameter.GetProperty("name").GetString(), "state", StringComparison.Ordinal));
+        JsonElement stateSchema = state.GetProperty("schema");
+
+        Assert.Multiple(
+            () => Assert.True(state.GetProperty("required").GetBoolean()),
+            () => Assert.Equal(
+                WearableInputLimits.MaximumOAuthStateLength,
+                stateSchema.GetProperty("maxLength").GetInt32()),
+            () => Assert.True(operation.GetProperty("responses").TryGetProperty("403", out _)),
+            () => Assert.True(operation.GetProperty("responses").TryGetProperty("429", out _)));
+    }
+
+    [Fact]
+    public async Task SwaggerJson_DocumentsScalarAndOAuthInputBounds() {
+        HttpClient client = apiFactory.CreateClient();
+        using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
+        JsonElement paths = json.RootElement.GetProperty("paths");
+
+        (string Path, string Method, string Parameter, int MaximumLength)[] lengthCases = [
+            ("/api/v{version}/billing/webhooks/{provider}", "post", "provider", BillingWebhookRequestLimits.MaximumProviderLength),
+            ("/api/v{version}/open-food-facts/products/{barcode}", "get", "barcode", OpenFoodFactsRequestLimits.MaximumBarcodeLength),
+            ("/api/v{version}/open-food-facts/products", "get", "search", OpenFoodFactsRequestLimits.MaximumSearchLength),
+            ("/api/v{version}/products/suggestions", "get", "search", ProductSuggestionRequestLimits.MaximumSearchLength),
+            ("/api/v{version}/usda/foods", "get", "search", UsdaRequestLimits.MaximumSearchLength),
+            ("/api/v{version}/dietologist/recommendation-templates", "get", "search", DietologistRequestLimits.MaximumTemplateSearchLength),
+            ("/api/v{version}/dietologist/clients/attention/{signalId}/state", "put", "signalId", DietologistRequestLimits.MaximumSignalIdLength),
+            ("/api/v{version}/export/diary", "get", "reportOrigin", ExportRequestLimits.MaximumReportOriginLength),
+        ];
+        Assert.All(lengthCases, testCase => {
+            JsonElement parameter = GetOpenApiParameter(paths, testCase.Path, testCase.Method, testCase.Parameter);
+            Assert.Equal(testCase.MaximumLength, parameter.GetProperty("schema").GetProperty("maxLength").GetInt32());
+        });
+
+        (string Path, string Parameter, int Minimum, int Maximum)[] rangeCases = [
+            ("/api/v{version}/open-food-facts/products", "limit", OpenFoodFactsRequestLimits.MinimumLimit, OpenFoodFactsRequestLimits.MaximumLimit),
+            ("/api/v{version}/products/suggestions", "limit", ProductSuggestionRequestLimits.MinimumLimit, ProductSuggestionRequestLimits.MaximumLimit),
+            ("/api/v{version}/usda/foods", "limit", UsdaRequestLimits.MinimumLimit, UsdaRequestLimits.MaximumLimit),
+            ("/api/v{version}/export/diary", "timeZoneOffsetMinutes", ExportRequestLimits.MinimumTimeZoneOffsetMinutes, ExportRequestLimits.MaximumTimeZoneOffsetMinutes),
+        ];
+        Assert.All(rangeCases, testCase => {
+            JsonElement schema = GetOpenApiParameter(paths, testCase.Path, "get", testCase.Parameter).GetProperty("schema");
+            Assert.Multiple(
+                () => Assert.Equal(testCase.Minimum, schema.GetProperty("minimum").GetInt32()),
+                () => Assert.Equal(testCase.Maximum, schema.GetProperty("maximum").GetInt32()));
+        });
+
+        JsonElement connectSchema = json.RootElement
+            .GetProperty("components")
+            .GetProperty("schemas")
+            .GetProperty("ConnectWearableHttpRequest")
+            .GetProperty("properties");
+        Assert.Multiple(
+            () => Assert.Equal(
+                WearableInputLimits.MaximumAuthorizationCodeLength,
+                connectSchema.GetProperty("code").GetProperty("maxLength").GetInt32()),
+            () => Assert.Equal(
+                WearableInputLimits.MaximumProtectedOAuthStateLength,
+                connectSchema.GetProperty("state").GetProperty("maxLength").GetInt32()));
     }
 
     [Fact]
@@ -1038,7 +1181,7 @@ public sealed class PresentationBoundaryIntegrationTests(
     private static string BuildFullOpenApiSnapshot(JsonElement root) {
         JsonElement paths = root.GetProperty("paths");
         EndpointSnapshot[] endpoints = [.. paths.EnumerateObject()
-            .Select(property => CreateEndpointSnapshot(paths, property.Name))
+            .Select(property => CreateEndpointSnapshot(paths, property.Name, includePathParameters: true))
             .OrderBy(endpoint => endpoint.Path, StringComparer.Ordinal)];
 
         var snapshot = new OpenApiFocusedSnapshot(
@@ -1049,7 +1192,10 @@ public sealed class PresentationBoundaryIntegrationTests(
         return JsonSerializer.Serialize(snapshot, IndentedJsonOptions);
     }
 
-    private static EndpointSnapshot CreateEndpointSnapshot(JsonElement paths, string path) {
+    private static EndpointSnapshot CreateEndpointSnapshot(
+        JsonElement paths,
+        string path,
+        bool includePathParameters = false) {
         JsonElement pathNode = paths.GetProperty(path);
         OperationSnapshot[] operations = [.. pathNode.EnumerateObject()
             .Select(operation => new OperationSnapshot(
@@ -1060,20 +1206,23 @@ public sealed class PresentationBoundaryIntegrationTests(
                         .Select(response => response.Name)
                         .Order(StringComparer.Ordinal)]
                     : Array.Empty<string>(),
-                CreateParameterSnapshots(operation.Value)))
+                CreateParameterSnapshots(operation.Value, "query"),
+                includePathParameters ? CreateParameterSnapshots(operation.Value, "path") : null))
             .OrderBy(operation => operation.Method, StringComparer.Ordinal)];
 
         return new EndpointSnapshot(path.ToLowerInvariant(), operations);
     }
 
-    private static IReadOnlyList<OpenApiParameterSnapshot>? CreateParameterSnapshots(JsonElement operation) {
+    private static IReadOnlyList<OpenApiParameterSnapshot>? CreateParameterSnapshots(
+        JsonElement operation,
+        string expectedLocation) {
         if (!operation.TryGetProperty("parameters", out JsonElement parameters) || parameters.ValueKind != JsonValueKind.Array) {
             return null;
         }
 
         OpenApiParameterSnapshot[] snapshots = [.. parameters.EnumerateArray()
             .Where(parameter => parameter.TryGetProperty("in", out JsonElement location) &&
-                string.Equals(location.GetString(), "query", StringComparison.Ordinal))
+                string.Equals(location.GetString(), expectedLocation, StringComparison.Ordinal))
             .Select(parameter => {
                 JsonElement schema = parameter.GetProperty("schema");
                 return new OpenApiParameterSnapshot(
@@ -1082,7 +1231,14 @@ public sealed class PresentationBoundaryIntegrationTests(
                     parameter.TryGetProperty("required", out JsonElement required) && required.GetBoolean(),
                     schema.TryGetProperty("type", out JsonElement type) ? type.GetString() ?? string.Empty : string.Empty,
                     schema.TryGetProperty("format", out JsonElement format) ? format.GetString() : null,
-                    schema.TryGetProperty("default", out JsonElement defaultValue) ? defaultValue.GetRawText() : null);
+                    schema.TryGetProperty("default", out JsonElement defaultValue) ? defaultValue.GetRawText() : null,
+                    schema.TryGetProperty("minLength", out JsonElement minLength) ? minLength.GetInt32() : null,
+                    schema.TryGetProperty("maxLength", out JsonElement maxLength) ? maxLength.GetInt32() : null,
+                    schema.TryGetProperty("minimum", out JsonElement minimum) ? minimum.GetDouble() : null,
+                    schema.TryGetProperty("maximum", out JsonElement maximum) ? maximum.GetDouble() : null,
+                    schema.TryGetProperty("minItems", out JsonElement minItems) ? minItems.GetInt32() : null,
+                    schema.TryGetProperty("maxItems", out JsonElement maxItems) ? maxItems.GetInt32() : null,
+                    schema.TryGetProperty("pattern", out JsonElement pattern) ? pattern.GetString() : null);
             })
             .OrderBy(parameter => parameter.Location, StringComparer.Ordinal)
             .ThenBy(parameter => parameter.Name, StringComparer.Ordinal)];
@@ -1138,7 +1294,14 @@ public sealed class PresentationBoundaryIntegrationTests(
                 : null,
             items.ValueKind == JsonValueKind.Object && items.TryGetProperty("$ref", out JsonElement itemReference)
                 ? itemReference.GetString()
-                : null);
+                : null,
+            property.TryGetProperty("minLength", out JsonElement minLength) ? minLength.GetInt32() : null,
+            property.TryGetProperty("maxLength", out JsonElement maxLength) ? maxLength.GetInt32() : null,
+            property.TryGetProperty("minimum", out JsonElement minimum) ? minimum.GetDouble() : null,
+            property.TryGetProperty("maximum", out JsonElement maximum) ? maximum.GetDouble() : null,
+            property.TryGetProperty("minItems", out JsonElement minItems) ? minItems.GetInt32() : null,
+            property.TryGetProperty("maxItems", out JsonElement maxItems) ? maxItems.GetInt32() : null,
+            property.TryGetProperty("pattern", out JsonElement pattern) ? pattern.GetString() : null);
     }
 
     private static async Task AssertErrorContractSnapshotAsync(string scenario, ErrorPayload payload) {
@@ -1155,6 +1318,29 @@ public sealed class PresentationBoundaryIntegrationTests(
             actual.ReplaceLineEndings("\n").TrimEnd());
     }
 
+    private static JsonElement GetOpenApiParameter(
+        JsonElement paths,
+        string path,
+        string method,
+        string parameterName) =>
+        Assert.Single(
+            paths.GetProperty(path).GetProperty(method).GetProperty("parameters").EnumerateArray(),
+            parameter => string.Equals(
+                parameter.GetProperty("name").GetString(),
+                parameterName,
+                StringComparison.Ordinal));
+
+    private static async Task<HttpResponseMessage> PostWithIdempotencyAsync<T>(
+        HttpClient client,
+        string requestUri,
+        T payload) {
+        using var request = new HttpRequestMessage(HttpMethod.Post, requestUri) {
+            Content = JsonContent.Create(payload),
+        };
+        request.Headers.Add("Idempotency-Key", Guid.NewGuid().ToString("D"));
+        return await client.SendAsync(request).ConfigureAwait(false);
+    }
+
     private static async Task AssertSnapshotAsync(string snapshotFileName, string actual) {
         string snapshotPath = SnapshotPathResolver.GetPath(snapshotFileName);
         if (string.Equals(Environment.GetEnvironmentVariable("UPDATE_CONTRACT_SNAPSHOTS"), "1", StringComparison.Ordinal)) {
@@ -1169,6 +1355,9 @@ public sealed class PresentationBoundaryIntegrationTests(
 
     [ExcludeFromCodeCoverage]
     private sealed record AuthPayload(string AccessToken);
+
+    [ExcludeFromCodeCoverage]
+    private sealed record IdPayload(Guid Id);
 
     [ExcludeFromCodeCoverage]
     private sealed record ErrorPayload(string Error, string Message, string? TraceId = null, IReadOnlyDictionary<string, string[]>? Errors = null);
@@ -1201,7 +1390,8 @@ public sealed class PresentationBoundaryIntegrationTests(
         string Method,
         bool HasRequestBody,
         IReadOnlyList<string> ResponseCodes,
-        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] IReadOnlyList<OpenApiParameterSnapshot>? QueryParameters);
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] IReadOnlyList<OpenApiParameterSnapshot>? QueryParameters,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] IReadOnlyList<OpenApiParameterSnapshot>? PathParameters);
 
     [ExcludeFromCodeCoverage]
     private sealed record OpenApiParameterSnapshot(
@@ -1210,7 +1400,14 @@ public sealed class PresentationBoundaryIntegrationTests(
         bool Required,
         string Type,
         [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Format,
-        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Default);
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Default,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] int? MinLength,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] int? MaxLength,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] double? Minimum,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] double? Maximum,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] int? MinItems,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] int? MaxItems,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Pattern);
 
     [ExcludeFromCodeCoverage]
     private sealed record OpenApiSchemaSnapshot(
@@ -1226,5 +1423,12 @@ public sealed class PresentationBoundaryIntegrationTests(
         [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Reference,
         bool Nullable,
         [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? ItemType,
-        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? ItemReference);
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? ItemReference,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] int? MinLength,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] int? MaxLength,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] double? Minimum,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] double? Maximum,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] int? MinItems,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] int? MaxItems,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Pattern);
 }

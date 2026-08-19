@@ -43,31 +43,30 @@ public sealed class S3Options {
         options.MaxUploadSizeBytes is > 0 and <= MaximumUploadSizeBytes;
 
     public static bool IsEmptyOrComplete(S3Options options) {
-        bool anyConfigured = !string.IsNullOrWhiteSpace(options.AccessKeyId) ||
-                             !string.IsNullOrWhiteSpace(options.SecretAccessKey) ||
-                             !string.IsNullOrWhiteSpace(options.Region) ||
-                             !string.IsNullOrWhiteSpace(options.Bucket) ||
-                             !string.IsNullOrWhiteSpace(options.ServiceUrl) ||
-                             !string.IsNullOrWhiteSpace(options.PublicBaseUrl);
-        return !anyConfigured ||
-               (!string.IsNullOrWhiteSpace(options.AccessKeyId) &&
-                !string.IsNullOrWhiteSpace(options.SecretAccessKey) &&
-                !string.IsNullOrWhiteSpace(options.Bucket) &&
-                (!string.IsNullOrWhiteSpace(options.Region) || !string.IsNullOrWhiteSpace(options.ServiceUrl)));
+        return !HasAnyConfiguration(options) || HasCompleteConfiguration(options);
     }
+
+    public static bool HasCompleteConfiguration(S3Options options) =>
+        !string.IsNullOrWhiteSpace(options.AccessKeyId) &&
+        !string.IsNullOrWhiteSpace(options.SecretAccessKey) &&
+        !string.IsNullOrWhiteSpace(options.Bucket) &&
+        (!string.IsNullOrWhiteSpace(options.Region) || !string.IsNullOrWhiteSpace(options.ServiceUrl));
 
     public static bool HasValidPublicBaseUrl(S3Options options) {
         return string.IsNullOrWhiteSpace(options.PublicBaseUrl) ||
-               IsHttpUrl(options.PublicBaseUrl);
+               IntegrationUriValidator.IsAbsoluteHttpBaseUrl(options.PublicBaseUrl);
     }
 
     public static bool HasValidServiceUrl(S3Options options) {
         return string.IsNullOrWhiteSpace(options.ServiceUrl) ||
-               IsHttpUrl(options.ServiceUrl);
+               IntegrationUriValidator.IsAbsoluteHttpBaseUrl(options.ServiceUrl);
     }
 
-    private static bool IsHttpUrl(string value) =>
-        Uri.TryCreate(value, UriKind.Absolute, out Uri? uri) &&
-        (string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase) ||
-         string.Equals(uri.Scheme, Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase));
+    private static bool HasAnyConfiguration(S3Options options) =>
+        !string.IsNullOrWhiteSpace(options.AccessKeyId) ||
+        !string.IsNullOrWhiteSpace(options.SecretAccessKey) ||
+        !string.IsNullOrWhiteSpace(options.Region) ||
+        !string.IsNullOrWhiteSpace(options.Bucket) ||
+        !string.IsNullOrWhiteSpace(options.ServiceUrl) ||
+        !string.IsNullOrWhiteSpace(options.PublicBaseUrl);
 }

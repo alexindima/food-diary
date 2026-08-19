@@ -36,6 +36,15 @@ public sealed class ConnectWearableCommandHandler(
 
         WearableProvider provider = providerResult.Value;
 
+        WearableConnection? existing = await connectionRepository
+            .GetAsync(userIdResult.Value, provider, cancellationToken)
+            .ConfigureAwait(false);
+        if (existing is not null && string.Equals(existing.LastConnectRequestId, command.RequestId, StringComparison.Ordinal)) {
+            return string.Equals(existing.LastConnectRequestHash, command.RequestHash, StringComparison.Ordinal)
+                ? Result.Success(ToModel(existing))
+                : Result.Failure<WearableConnectionModel>(Errors.Idempotency.Conflict);
+        }
+
         IWearableClient? client = wearableClients.FirstOrDefault(c => c.Provider == provider);
         if (client is null) {
             return Result.Failure<WearableConnectionModel>(Errors.Wearable.ProviderNotConfigured(command.Provider));
@@ -52,18 +61,13 @@ public sealed class ConnectWearableCommandHandler(
 
         string protectedAccessToken = tokenProtector.Protect(tokenResult.AccessToken);
         string? protectedRefreshToken = tokenResult.RefreshToken is null ? null : tokenProtector.Protect(tokenResult.RefreshToken);
-        WearableConnection? existing = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
-            existing.UpdateTokens(protectedAccessToken, protectedRefreshToken, tokenResult.ExpiresAtUtc);
-            if (!existing.IsActive) {
-                existing = WearableConnection.Create(
-                    userIdResult.Value,
-                    provider,
-                    tokenResult.ExternalUserId,
-                    protectedAccessToken,
-                    protectedRefreshToken,
-                    tokenResult.ExpiresAtUtc);
-            }
+            existing.Reconnect(
+                tokenResult.ExternalUserId,
+                protectedAccessToken,
+                protectedRefreshToken,
+                tokenResult.ExpiresAtUtc);
+            existing.RecordConnectRequest(command.RequestId, command.RequestHash);
             await connectionRepository.UpdateAsync(existing, cancellationToken).ConfigureAwait(false);
             return Result.Success(ToModel(existing));
         }
@@ -75,6 +79,7 @@ public sealed class ConnectWearableCommandHandler(
             protectedAccessToken,
             protectedRefreshToken,
             tokenResult.ExpiresAtUtc);
+        connection.RecordConnectRequest(command.RequestId, command.RequestHash);
 
         await connectionRepository.AddAsync(connection, cancellationToken).ConfigureAwait(false);
         return Result.Success(ToModel(connection));

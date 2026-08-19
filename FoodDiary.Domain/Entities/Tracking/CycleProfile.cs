@@ -151,11 +151,13 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         CycleConsent? consent = _consents.FirstOrDefault(item => item.Purpose == purpose);
         if (consent is null) {
             _consents.Add(CycleConsent.Create(Id, purpose, grantedAtUtc));
-        } else {
-            consent.Grant(grantedAtUtc);
+            SetModified();
+            return;
         }
 
-        SetModified();
+        if (consent.Grant(grantedAtUtc)) {
+            SetModified();
+        }
     }
 
     public void RevokeConsent(CycleConsentPurpose purpose, DateTime revokedAtUtc) {
@@ -412,7 +414,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         SetModified();
     }
 
-    public void ReconcileMenstrualEpisodes() {
+    private void ReconcileMenstrualEpisodes() {
         _menstrualEpisodes.RemoveAll(episode => episode.Status == MenstrualEpisodeStatus.Inferred);
         DateOnly[] bleedingDates = [.. _bleedingEntries
             .Where(entry => entry.Type == BleedingType.Bleeding)

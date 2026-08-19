@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
@@ -18,9 +19,10 @@ namespace FoodDiary.Presentation.Api.Features.Dietologist;
 public sealed class RecommendationTemplatesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<RecommendationTemplateHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> Search(
         [FromCurrentUser] Guid userId,
-        [FromQuery] string? search = null,
+        [FromQuery, MaxLength(DietologistRequestLimits.MaximumTemplateSearchLength)] string? search = null,
         [FromQuery] bool includeArchived = false) =>
         HandleOk(
             userId.ToSearchTemplatesQuery(search, includeArchived),

@@ -26,7 +26,7 @@ public static partial class DependencyInjection {
             options.Timeout = TimeSpan.FromSeconds(15);
         });
         services.AddScoped<IAdminMailInboxReader, MailInboxClientAdminMailInboxReader>();
-        services.AddSingleton<RelayEmailTransport>();
-        services.AddSingleton<IEmailTransport>(static sp => sp.GetRequiredService<RelayEmailTransport>());
+        services.AddScoped<RelayEmailTransport>();
+        services.AddScoped<IEmailTransport>(static sp => sp.GetRequiredService<RelayEmailTransport>());
     }
 }

@@ -50,13 +50,14 @@ describe('LikeService', () => {
     it('toggles like status', () => {
         const status = createStatus({ isLiked: false });
 
-        service.toggle('recipe-1').subscribe(result => {
+        service.toggle('recipe-1', false).subscribe(result => {
             expect(result).toEqual(status);
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/recipe-1/likes/toggle`);
         expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({});
+        expect(req.request.body).toEqual({ isLiked: false });
+        expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
         req.flush(status);
     });
 });

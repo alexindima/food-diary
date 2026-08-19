@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Hydration.Common;
@@ -33,6 +34,15 @@ public sealed class CreateHydrationEntryCommandHandler(
         }
 
         DateTime timestampUtc = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(command.TimestampUtc);
+        HydrationEntry? existing = await repository
+            .GetByTimestampAsync(userId, timestampUtc, cancellationToken)
+            .ConfigureAwait(false);
+        if (existing is not null) {
+            return existing.AmountMl == command.AmountMl
+                ? Result.Success(existing.ToModel())
+                : Result.Failure<HydrationEntryModel>(Errors.HydrationEntry.AlreadyExists(timestampUtc));
+        }
+
         var entry = HydrationEntry.Create(userId, timestampUtc, command.AmountMl);
         await repository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
 

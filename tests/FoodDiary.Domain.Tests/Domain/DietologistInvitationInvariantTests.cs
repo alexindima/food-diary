@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -205,6 +206,20 @@ public class DietologistInvitationInvariantTests {
     }
 
     [Fact]
+    public void IsExpired_AtExactExpiry_ReturnsTrue() {
+        var utcNow = new DateTime(2026, 8, 19, 12, 0, 0, DateTimeKind.Utc);
+        var invitation = DietologistInvitation.Create(
+            UserId.New(),
+            "d@e.com",
+            "hash",
+            utcNow,
+            DietologistPermissions.AllEnabled);
+        using IDisposable scope = DomainTime.Override(new FixedTimeProvider(utcNow));
+
+        Assert.True(invitation.IsExpired());
+    }
+
+    [Fact]
     public void Accept_WhenExpired_Throws() {
         var invitation = DietologistInvitation.Create(
             UserId.New(),
@@ -223,5 +238,10 @@ public class DietologistInvitationInvariantTests {
             "token-hash",
             DateTime.UtcNow.AddDays(7),
             DietologistPermissions.AllEnabled);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 }

@@ -35,12 +35,17 @@ public sealed class UpdateDesiredWaistCommandHandler(
         }
 
         User currentUser = userResult.Value;
+        FoodDiary.Domain.Entities.Tracking.WaistGoal? activeGoal = currentUser.WaistGoals.SingleOrDefault(
+            goal => goal.Status == FoodDiary.Domain.Enums.WaistGoalStatus.Active);
+        if (command.DesiredWaistCm == currentUser.DesiredWaistCm) {
+            return Result.Success(new UserDesiredWaistModel(currentUser.DesiredWaistCm, activeGoal?.StartWaistCm, activeGoal?.StartedAtUtc));
+        }
+
         DateTime nowUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
         double? trackedWaist = await currentWaistProvider
             .GetCurrentWaistAsync(userId, cancellationToken)
             .ConfigureAwait(false);
-        double? activeGoalStartWaist = currentUser.WaistGoals.SingleOrDefault(
-            goal => goal.Status == FoodDiary.Domain.Enums.WaistGoalStatus.Active)?.StartWaistCm;
+        double? activeGoalStartWaist = activeGoal?.StartWaistCm;
         double currentWaist = trackedWaist ?? activeGoalStartWaist ?? command.DesiredWaistCm ?? 1;
         if (command.DesiredWaistCm.HasValue) {
             currentUser.StartWaistGoal(command.DesiredWaistCm.Value, currentWaist, nowUtc);
@@ -49,7 +54,7 @@ public sealed class UpdateDesiredWaistCommandHandler(
         }
         await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
-        FoodDiary.Domain.Entities.Tracking.WaistGoal? activeGoal = currentUser.WaistGoals.SingleOrDefault(
+        activeGoal = currentUser.WaistGoals.SingleOrDefault(
             goal => goal.Status == FoodDiary.Domain.Enums.WaistGoalStatus.Active);
         return Result.Success(new UserDesiredWaistModel(currentUser.DesiredWaistCm, activeGoal?.StartWaistCm, activeGoal?.StartedAtUtc));
     }

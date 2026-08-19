@@ -6,8 +6,8 @@ using FoodDiary.Presentation.Api.Features.RecipeLikes.Responses;
 namespace FoodDiary.Presentation.Api.Features.RecipeLikes.Mappings;
 
 public static class RecipeLikeHttpMappings {
-    public static ToggleRecipeLikeCommand ToCommand(Guid userId, Guid recipeId) =>
-        new(userId, recipeId);
+    public static ToggleRecipeLikeCommand ToCommand(Guid userId, Guid recipeId, bool isLiked) =>
+        new(userId, recipeId, isLiked);
 
     public static GetRecipeLikeStatusQuery ToQuery(Guid userId, Guid recipeId) =>
         new(userId, recipeId);

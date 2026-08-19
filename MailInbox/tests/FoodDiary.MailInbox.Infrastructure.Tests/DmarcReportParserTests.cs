@@ -1,3 +1,5 @@
+using System.Buffers.Binary;
+using System.Globalization;
 using System.IO.Compression;
 using System.Text;
 using FoodDiary.MailInbox.Application.Messages.Models;
@@ -42,6 +44,46 @@ public sealed class DmarcReportParserTests {
     }
 
     [Fact]
+    public void TryParse_WhenZipContainsTooManyEntries_RejectsBeforeArchiveMaterialization() {
+        (string EntryName, string Payload)[] entries = [.. Enumerable.Range(0, 32)
+            .Select(static index => (
+                string.Concat("metadata-", index.ToString(CultureInfo.InvariantCulture), ".txt"),
+                "metadata"))
+            .Append(("report.xml", CreateDmarcXml()))];
+        string rawMime = CreateRawMessage(CreateZipAttachment(entries));
+        var parser = new DmarcReportParser();
+
+        DmarcReportPreview? report = parser.TryParse(rawMime);
+
+        Assert.Null(report);
+    }
+
+    [Fact]
+    public void TryParse_WhenZipEntryNameExceedsMetadataBudget_RejectsBeforeArchiveMaterialization() {
+        string oversizedEntryName = string.Concat(new string('a', 1021), ".xml");
+        string rawMime = CreateRawMessage(CreateZipAttachment(oversizedEntryName, CreateDmarcXml()));
+        var parser = new DmarcReportParser();
+
+        DmarcReportPreview? report = parser.TryParse(rawMime);
+
+        Assert.Null(report);
+    }
+
+    [Theory]
+    [InlineData("false-end-record")]
+    [InlineData("multi-disk")]
+    [InlineData("invalid-central-entry")]
+    [InlineData("unexpected-central-metadata")]
+    public void TryParse_WhenZipMetadataIsMalformed_ReturnsNull(string mutation) {
+        string rawMime = CreateRawMessage(CreateMalformedZipAttachment(mutation));
+        var parser = new DmarcReportParser();
+
+        DmarcReportPreview? report = parser.TryParse(rawMime);
+
+        Assert.Null(report);
+    }
+
+    [Fact]
     public void TryParse_WhenZipContentTypeHasNoFileName_ReturnsPreview() {
         MimePart attachment = CreateZipReportAttachment();
         attachment.FileName = null;
@@ -68,6 +110,33 @@ public sealed class DmarcReportParserTests {
 
         Assert.NotNull(report);
         Assert.Equal("google.com", report.OrganizationName);
+    }
+
+    [Fact]
+    public void TryParse_WhenXmlNestingExceedsStructuralBudget_ReturnsNull() {
+        string nestedElements = string.Concat(Enumerable.Repeat("<nested>", 20_000));
+        string closingElements = string.Concat(Enumerable.Repeat("</nested>", 20_000));
+        string xml = string.Concat("<feedback>", nestedElements, closingElements, "</feedback>");
+        string rawMime = CreateRawMessage(CreateXmlAttachment(xml));
+        var parser = new DmarcReportParser();
+
+        DmarcReportPreview? report = parser.TryParse(rawMime);
+
+        Assert.Null(report);
+    }
+
+    [Fact]
+    public void TryParse_WhenXmlElementCountExceedsStructuralBudget_ReturnsNull() {
+        string xml = string.Concat(
+            "<feedback>",
+            string.Concat(Enumerable.Repeat("<r/>", 250_000)),
+            "</feedback>");
+        string rawMime = CreateRawMessage(CreateXmlAttachment(xml));
+        var parser = new DmarcReportParser();
+
+        DmarcReportPreview? report = parser.TryParse(rawMime);
+
+        Assert.Null(report);
     }
 
     [Theory]
@@ -383,6 +452,17 @@ public sealed class DmarcReportParserTests {
     }
 
     private static MimePart CreateZipAttachment(params (string EntryName, string Payload)[] entries) {
+        return CreateZipAttachment(CreateZipBytes(entries));
+    }
+
+    private static MimePart CreateXmlAttachment(string xml) => new("application", "xml") {
+        FileName = "report.xml",
+        Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes(xml))),
+        ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+        ContentTransferEncoding = ContentEncoding.Base64,
+    };
+
+    private static byte[] CreateZipBytes(params (string EntryName, string Payload)[] entries) {
         using var compressed = new MemoryStream();
         using (var archive = new ZipArchive(compressed, ZipArchiveMode.Create, leaveOpen: true)) {
             foreach ((string? entryName, string? payload) in entries) {
@@ -393,9 +473,42 @@ public sealed class DmarcReportParserTests {
             }
         }
 
+        return compressed.ToArray();
+    }
+
+    private static MimePart CreateMalformedZipAttachment(string mutation) {
+        byte[] bytes = CreateZipBytes(("report.xml", CreateDmarcXml()));
+        int endOfCentralDirectoryOffset = bytes.Length - 22;
+        switch (mutation) {
+            case "false-end-record":
+                int originalLength = bytes.Length;
+                Array.Resize(ref bytes, originalLength + 22);
+                BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(originalLength), 0x06054b50);
+                BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(originalLength + 20), 1);
+                break;
+            case "multi-disk":
+                BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(endOfCentralDirectoryOffset + 4), 1);
+                break;
+            case "invalid-central-entry":
+                int centralDirectoryOffset = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(
+                    bytes.AsSpan(endOfCentralDirectoryOffset + 16)));
+                bytes[centralDirectoryOffset] = 0;
+                break;
+            case "unexpected-central-metadata":
+                BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(endOfCentralDirectoryOffset + 8), 0);
+                BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(endOfCentralDirectoryOffset + 10), 0);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(mutation), mutation, "Unknown ZIP mutation.");
+        }
+
+        return CreateZipAttachment(bytes);
+    }
+
+    private static MimePart CreateZipAttachment(byte[] bytes) {
         return new MimePart("application", "zip") {
             FileName = "fooddiary.club.zip",
-            Content = new MimeContent(new MemoryStream(compressed.ToArray())),
+            Content = new MimeContent(new MemoryStream(bytes)),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
             ContentTransferEncoding = ContentEncoding.Base64,
         };

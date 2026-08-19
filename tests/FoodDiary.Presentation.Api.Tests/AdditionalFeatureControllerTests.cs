@@ -169,7 +169,7 @@ public sealed class AdditionalFeatureControllerTests {
 
         CapturedSender createSender = SubstituteSender.Capture(Result.Success(model));
         HydrationEntriesController createController = CreateHydrationController(createSender, now);
-        Assert.IsType<HydrationEntryHttpResponse>(Assert.IsType<OkObjectResult>(await createController.Create(userId, new CreateHydrationEntryHttpRequest(now, 250))).Value);
+        Assert.IsType<HydrationEntryHttpResponse>(Assert.IsType<CreatedResult>(await createController.Create(userId, new CreateHydrationEntryHttpRequest(now, 250))).Value);
         Assert.Equal(250, Assert.IsType<CreateHydrationEntryCommand>(createSender.Request).AmountMl);
 
         CapturedSender updateSender = SubstituteSender.Capture(Result.Success(model));
@@ -279,7 +279,7 @@ public sealed class AdditionalFeatureControllerTests {
 
         CapturedSender createSender = SubstituteSender.Capture(Result.Success(model));
         WaistEntriesController createController = CreateController(new WaistEntriesController(createSender));
-        Assert.IsType<WaistEntryHttpResponse>(Assert.IsType<OkObjectResult>(await createController.Create(userId, new CreateWaistEntryHttpRequest(date, 80.5))).Value);
+        Assert.IsType<WaistEntryHttpResponse>(Assert.IsType<CreatedResult>(await createController.Create(userId, new CreateWaistEntryHttpRequest(date, 80.5))).Value);
         Assert.Equal(userId, Assert.IsType<CreateWaistEntryCommand>(createSender.Request).UserId);
 
         CapturedSender updateSender = SubstituteSender.Capture(Result.Success(model));

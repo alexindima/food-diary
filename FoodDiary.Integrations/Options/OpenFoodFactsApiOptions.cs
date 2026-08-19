@@ -8,8 +8,7 @@ public sealed class OpenFoodFactsApiOptions {
     public string UserAgent { get; init; } = "FoodDiary/1.0";
 
     public static bool HasValidBaseUrl(OpenFoodFactsApiOptions options) =>
-        Uri.TryCreate(options.BaseUrl, UriKind.Absolute, out Uri? uri) &&
-        string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase);
+        IntegrationUriValidator.IsAbsoluteHttpsBaseUrl(options.BaseUrl);
 
     public static bool HasValidUserAgent(OpenFoodFactsApiOptions options) {
         using var request = new HttpRequestMessage();

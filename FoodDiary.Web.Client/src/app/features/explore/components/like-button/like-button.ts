@@ -42,7 +42,7 @@ export class LikeButtonComponent {
 
         this.isToggling.set(true);
         this.exploreInteractionsFacade
-            .toggleLike(this.recipeId())
+            .toggleLike(this.recipeId(), !this.isLiked())
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: status => {

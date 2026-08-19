@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -40,7 +41,10 @@ export class WaistEntriesService extends ApiService {
     }
 
     public create(payload: CreateWaistEntryPayload): Observable<WaistEntry> {
-        return this.post<WaistEntry>('', payload).pipe(catchError((error: unknown) => rethrowApiError('Create waist entry error', error)));
+        const headers = new HttpHeaders({ 'Idempotency-Key': crypto.randomUUID() });
+        return this.post<WaistEntry>('', payload, headers).pipe(
+            catchError((error: unknown) => rethrowApiError('Create waist entry error', error)),
+        );
     }
 
     public update(id: string, payload: UpdateWaistEntryPayload): Observable<WaistEntry> {

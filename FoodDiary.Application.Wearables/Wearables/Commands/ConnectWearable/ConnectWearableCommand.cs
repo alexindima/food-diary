@@ -8,4 +8,6 @@ public record ConnectWearableCommand(
     Guid? UserId,
     string Provider,
     string Code,
-    string State) : ICommand<Result<WearableConnectionModel>>, IUserRequest;
+    string State,
+    string RequestId,
+    string RequestHash) : ICommand<Result<WearableConnectionModel>>, IUserRequest;

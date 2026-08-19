@@ -1,6 +1,8 @@
 using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.Infrastructure.Services;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using SmtpServer;
 using SmtpServer.IO;
 using SmtpServer.Mail;
@@ -213,16 +215,19 @@ public sealed class MailInboxMailboxFilterTests {
     }
 
     [Fact]
-    public void RateLimiter_WhenTrackedKeyCapacityIsReached_EvictsInsteadOfRejectingUnseenIdentity() {
+    public void RateLimiter_WhenTrackedKeyCapacityIsReached_ShardsOverflowByIdentity() {
         Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> options =
             Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
                 MaxTrackedRateLimitKeys = 2,
             });
         var limiter = new MailInboxFixedWindowRateLimiter(options, TimeProvider.System);
 
-        Assert.True(limiter.TryAcquire("sender", "first", permitLimit: 1, TimeSpan.FromHours(1)));
-        Assert.True(limiter.TryAcquire("sender", "second", permitLimit: 1, TimeSpan.FromHours(1)));
-        Assert.True(limiter.TryAcquire("sender", "legitimate-new", permitLimit: 1, TimeSpan.FromHours(1)));
+        Assert.True(limiter.TryAcquire("sender", "tracked", permitLimit: 1, TimeSpan.FromHours(1)));
+        Assert.True(limiter.TryAcquire("sender", "overflow-a", permitLimit: 2, TimeSpan.FromHours(1)));
+        Assert.True(limiter.TryAcquire("sender", "overflow-a", permitLimit: 2, TimeSpan.FromHours(1)));
+        Assert.False(limiter.TryAcquire("sender", "overflow-a", permitLimit: 2, TimeSpan.FromHours(1)));
+        Assert.True(limiter.TryAcquire("sender", "overflow-b", permitLimit: 1, TimeSpan.FromHours(1)));
+        Assert.False(limiter.TryAcquire("sender", "tracked", permitLimit: 1, TimeSpan.FromHours(1)));
     }
 
     [Fact]
@@ -244,7 +249,7 @@ public sealed class MailInboxMailboxFilterTests {
         var timeProvider = new AdjustableTimeProvider();
         Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> options =
             Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
-                MaxTrackedRateLimitKeys = 1,
+                MaxTrackedRateLimitKeys = 2,
             });
         var limiter = new MailInboxFixedWindowRateLimiter(options, timeProvider);
         Assert.True(limiter.TryAcquire("ip", "old", permitLimit: 1, TimeSpan.FromHours(1)));
@@ -255,7 +260,7 @@ public sealed class MailInboxMailboxFilterTests {
     }
 
     [Fact]
-    public void RateLimiter_WhenNewScopeHasNoExistingWindow_EvictsOldestGlobalWindow() {
+    public void RateLimiter_WhenCapacityIsReached_KeepsOverflowBudgetsIndependentByScope() {
         Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> options =
             Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
                 MaxTrackedRateLimitKeys = 1,
@@ -264,6 +269,43 @@ public sealed class MailInboxMailboxFilterTests {
         Assert.True(limiter.TryAcquire("ip", "192.0.2.10", permitLimit: 1, TimeSpan.FromHours(1)));
 
         Assert.True(limiter.TryAcquire("sender", "sender@example.com", permitLimit: 1, TimeSpan.FromHours(1)));
+        Assert.True(limiter.TryAcquire("sender", "other@example.com", permitLimit: 1, TimeSpan.FromHours(1)));
+        Assert.False(limiter.TryAcquire("sender", "other@example.com", permitLimit: 1, TimeSpan.FromHours(1)));
+        Assert.True(limiter.TryAcquire("custom", "value", permitLimit: 1, TimeSpan.FromHours(1)));
+        Assert.False(limiter.TryAcquire("custom", "value", permitLimit: 1, TimeSpan.FromHours(1)));
+        Assert.False(limiter.TryAcquire("ip", "192.0.2.10", permitLimit: 1, TimeSpan.FromHours(1)));
+    }
+
+    [Fact]
+    public void RateLimiter_WhenValuesCollideUnderPublicHash_UsesSecretOverflowAssignment() {
+        byte[] secret = [.. Enumerable.Range(1, 32).Select(static value => (byte)value)];
+        const string victim = "victim@example.com";
+        string attacker = Enumerable.Range(0, 100_000)
+            .Select(static value => FormattableString.Invariant($"attacker-{value}@example.com"))
+            .First(value =>
+                GetPublicShard("sender", value) == GetPublicShard("sender", victim) &&
+                GetKeyedShard(secret, "sender", value) != GetKeyedShard(secret, "sender", victim));
+        Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> options =
+            Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
+                MaxTrackedRateLimitKeys = 2,
+            });
+        var limiter = new MailInboxFixedWindowRateLimiter(options, TimeProvider.System, secret);
+
+        Assert.True(limiter.TryAcquire("sender", "tracked@example.com", permitLimit: 1, TimeSpan.FromHours(1)));
+        Assert.True(limiter.TryAcquire("sender", attacker, permitLimit: 1, TimeSpan.FromHours(1)));
+        Assert.True(limiter.TryAcquire("sender", victim, permitLimit: 1, TimeSpan.FromHours(1)));
+    }
+
+    [Fact]
+    public void RateLimiter_WhenPermitsWouldExceedBudget_RejectsWithoutPartialCharge() {
+        Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> options =
+            Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions());
+        var limiter = new MailInboxFixedWindowRateLimiter(options, TimeProvider.System);
+
+        Assert.True(limiter.TryAcquire("ip-bytes", "192.0.2.10", 100, TimeSpan.FromHours(1), permits: 60));
+        Assert.False(limiter.TryAcquire("ip-bytes", "192.0.2.10", 100, TimeSpan.FromHours(1), permits: 50));
+        Assert.True(limiter.TryAcquire("ip-bytes", "192.0.2.10", 100, TimeSpan.FromHours(1), permits: 40));
+        Assert.False(limiter.TryAcquire("ip-bytes", "192.0.2.10", 100, TimeSpan.FromHours(1), permits: 1));
     }
 
     private static MailInboxMailboxFilter CreateFilter(MailInboxSmtpOptions options) {
@@ -272,6 +314,17 @@ public sealed class MailInboxMailboxFilterTests {
         return new MailInboxMailboxFilter(
             optionsWrapper,
             new MailInboxFixedWindowRateLimiter(optionsWrapper, TimeProvider.System));
+    }
+
+    private static int GetPublicShard(string scope, string value) {
+        byte[] key = SHA256.HashData(Encoding.UTF8.GetBytes($"{scope}\n{value}"));
+        return (key[0] << 4) | (key[1] >> 4);
+    }
+
+    private static int GetKeyedShard(byte[] secret, string scope, string value) {
+        byte[] key = SHA256.HashData(Encoding.UTF8.GetBytes($"{scope}\n{value}"));
+        byte[] hash = HMACSHA256.HashData(secret, Encoding.ASCII.GetBytes(Convert.ToHexString(key)));
+        return (hash[0] << 4) | (hash[1] >> 4);
     }
 
     [ExcludeFromCodeCoverage]

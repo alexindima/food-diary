@@ -5,6 +5,13 @@ public sealed class GoogleAuthOptions {
 
     public string ClientId { get; init; } = string.Empty;
 
-    public static bool HasValidClientId(GoogleAuthOptions options) =>
-        string.IsNullOrWhiteSpace(options.ClientId) || !string.IsNullOrWhiteSpace(options.ClientId.Trim());
+    public static bool HasValidClientId(GoogleAuthOptions options) {
+        if (string.IsNullOrWhiteSpace(options.ClientId)) {
+            return true;
+        }
+
+        string clientId = options.ClientId.Trim();
+        return clientId.Length <= 512 &&
+               !clientId.Any(static character => char.IsWhiteSpace(character) || char.IsControl(character));
+    }
 }

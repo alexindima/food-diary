@@ -17,7 +17,13 @@ public sealed class MailInboxSmtpOptionsTests {
     [InlineData(null, true)]
     [InlineData("", true)]
     [InlineData("http://localhost:4317", true)]
+    [InlineData("https://telemetry.example.com/v1/traces", true)]
     [InlineData("relative", false)]
+    [InlineData("ftp://telemetry.example.com", false)]
+    [InlineData("file:///tmp/telemetry", false)]
+    [InlineData("https://user:secret@telemetry.example.com", false)]
+    [InlineData("https://telemetry.example.com?token=secret", false)]
+    [InlineData("https://telemetry.example.com/#fragment", false)]
     public void OpenTelemetryOptions_HasValidOtlpEndpoint_ReturnsExpectedResult(
         string? endpoint,
         bool expected) {
@@ -102,11 +108,28 @@ public sealed class MailInboxSmtpOptionsTests {
     }
 
     [Fact]
+    public void HasValidConfiguration_WhenPerIpByteBudgetIsSmallerThanOneMessage_ReturnsFalse() {
+        var options = new MailInboxSmtpOptions {
+            MaxMessageSizeBytes = 1024,
+            MaxRawBytesPerIpPerHour = 1023,
+        };
+
+        Assert.False(MailInboxSmtpOptions.HasValidConfiguration(options));
+    }
+
+    [Fact]
     public void StorageOptions_WhenMetadataRetentionIsShorterThanContentRetention_AreInvalid() {
         var options = new MailInboxStorageOptions {
             ContentRetention = TimeSpan.FromDays(30),
             MetadataRetention = TimeSpan.FromDays(7),
         };
+
+        Assert.False(MailInboxStorageOptions.HasValidConfiguration(options));
+    }
+
+    [Fact]
+    public void StorageOptions_WhenMessageDetailConcurrencyIsZero_AreInvalid() {
+        var options = new MailInboxStorageOptions { MaxConcurrentMessageDetailReads = 0 };
 
         Assert.False(MailInboxStorageOptions.HasValidConfiguration(options));
     }
@@ -149,6 +172,7 @@ public sealed class MailInboxSmtpOptionsTests {
                 ["MailInboxSmtp:ServerName"] = "mail.fooddiary.club",
                 ["MailInboxSmtp:Port"] = "2526",
                 ["MailInboxSmtp:MaxMessageSizeBytes"] = "4096",
+                ["MailInboxSmtp:MaxRawBytesPerIpPerHour"] = "32768",
                 ["MailInboxSmtp:AllowedRecipients:0"] = "admin@fooddiary.club",
                 ["MailInboxStorage:MaxMessagesPerDay"] = "17",
                 ["MailInboxStorage:MaxRawBytesPerDay"] = "65536",
@@ -157,6 +181,7 @@ public sealed class MailInboxSmtpOptionsTests {
                 ["MailInboxStorage:MetadataRetention"] = "90.00:00:00",
                 ["MailInboxStorage:CleanupInterval"] = "03:00:00",
                 ["MailInboxStorage:CleanupBatchSize"] = "25",
+                ["MailInboxStorage:MaxConcurrentMessageDetailReads"] = "3",
             })
             .Build();
         services.AddSingleton<IConfiguration>(configuration);
@@ -169,6 +194,7 @@ public sealed class MailInboxSmtpOptionsTests {
         Assert.Equal("mail.fooddiary.club", options.ServerName);
         Assert.Equal(2526, options.Port);
         Assert.Equal(4096, options.MaxMessageSizeBytes);
+        Assert.Equal(32768, options.MaxRawBytesPerIpPerHour);
         Assert.Contains("admin@fooddiary.club", options.AllowedRecipients, StringComparer.Ordinal);
 
         MailInboxStorageOptions storageOptions = provider.GetRequiredService<IOptions<MailInboxStorageOptions>>().Value;
@@ -179,6 +205,7 @@ public sealed class MailInboxSmtpOptionsTests {
         Assert.Equal(TimeSpan.FromDays(90), storageOptions.MetadataRetention);
         Assert.Equal(TimeSpan.FromHours(3), storageOptions.CleanupInterval);
         Assert.Equal(25, storageOptions.CleanupBatchSize);
+        Assert.Equal(3, storageOptions.MaxConcurrentMessageDetailReads);
     }
 
     [Fact]
@@ -250,6 +277,9 @@ public sealed class MailInboxSmtpOptionsTests {
         Assert.Same(store, provider.GetRequiredService<IMailInboxSchemaInitializer>());
         Assert.IsType<NpgsqlMailInboxReadinessChecker>(provider.GetRequiredService<IMailInboxReadinessChecker>());
         Assert.IsType<DmarcReportParser>(provider.GetRequiredService<DmarcReportParser>());
+        Assert.Same(
+            provider.GetRequiredService<DmarcReportParser>(),
+            provider.GetRequiredService<IMailInboxDmarcReportParser>());
         Assert.IsType<SmtpInboundMessageStore>(provider.GetRequiredService<SmtpInboundMessageStore>());
         Assert.IsType<MailInboxFixedWindowRateLimiter>(provider.GetRequiredService<MailInboxFixedWindowRateLimiter>());
         Assert.IsType<MailInboxMailboxFilter>(provider.GetRequiredService<MailInboxMailboxFilter>());
@@ -288,6 +318,6 @@ public sealed class MailInboxSmtpOptionsTests {
         InvalidOperationException exception = Assert.Throws<InvalidOperationException>(
             () => services.AddMailInboxTelemetry(configuration));
 
-        Assert.Contains("absolute URI", exception.Message, StringComparison.Ordinal);
+        Assert.Contains("HTTP(S) URI", exception.Message, StringComparison.Ordinal);
     }
 }

@@ -27,6 +27,16 @@ public static partial class DependencyInjection {
             return new AmazonS3Client(credentials, config);
         });
         services.AddSingleton<IObjectStorageClient, S3ObjectStorageClient>();
-        services.AddSingleton<IImageStorageService, S3ImageStorageService>();
+        services.AddSingleton<IImageStorageService>(sp => {
+            IOptions<S3Options> options = sp.GetRequiredService<IOptions<S3Options>>();
+            if (!S3Options.HasCompleteConfiguration(options.Value)) {
+                return new UnconfiguredImageStorageService();
+            }
+
+            return new S3ImageStorageService(
+                sp.GetRequiredService<IObjectStorageClient>(),
+                options,
+                sp.GetRequiredService<TimeProvider>());
+        });
     }
 }

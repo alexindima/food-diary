@@ -34,14 +34,14 @@ public sealed class WearableSyncEntry : AggregateRoot<WearableSyncEntryId> {
             Provider = provider,
             DataType = dataType,
             Date = NormalizeUtcDate(date),
-            Value = DomainGuard.Finite(value, nameof(value)),
+            Value = DomainGuard.NonNegativeFinite(value, nameof(value)),
         };
         entry.SetCreated();
         return entry;
     }
 
     public void UpdateValue(double value) {
-        DomainGuard.Finite(value, nameof(value));
+        DomainGuard.NonNegativeFinite(value, nameof(value));
         if (Math.Abs(Value - value) <= 0.000001) {
             return;
         }

@@ -26,6 +26,18 @@ public sealed class WearableClientTests {
     }
 
     [Fact]
+    public void FitbitGetAuthorizationUrl_EscapesClientIdentifier() {
+        FitbitClient client = CreateFitbitClient(
+            new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)),
+            clientId: "client id&admin=true");
+
+        string url = client.GetAuthorizationUrl("state");
+
+        Assert.Contains("client_id=client%20id%26admin%3Dtrue", url, StringComparison.Ordinal);
+        Assert.DoesNotContain("&admin=true", url, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task FitbitExchangeCodeAsync_WhenClientIdMissing_ReturnsNullWithoutRequest() {
         var handler = new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK));
         FitbitClient client = CreateFitbitClient(handler, clientId: "");

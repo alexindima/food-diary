@@ -9,7 +9,7 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Application.Lessons.Services;
 
-public sealed class LessonAdministrationService(INutritionLessonWriteRepository repository)
+public sealed class LessonAdministrationService(INutritionLessonRepository repository)
     : ILessonAdministrationService {
     public async Task<Result<NutritionLesson>> CreateAsync(
         string title,
@@ -69,11 +69,11 @@ public sealed class LessonAdministrationService(INutritionLessonWriteRepository 
     public async Task<Result<IReadOnlyList<NutritionLesson>>> ImportAsync(
         IReadOnlyList<LessonAdministrationItem> items,
         CancellationToken cancellationToken) {
-        var lessons = new List<NutritionLesson>(items.Count);
+        var parsedLessons = new List<NutritionLesson>(items.Count);
         for (int index = 0; index < items.Count; index++) {
             LessonAdministrationItem item = items[index];
             try {
-                lessons.Add(NutritionLesson.Create(
+                parsedLessons.Add(NutritionLesson.Create(
                     item.Title,
                     item.Content,
                     item.Summary,
@@ -88,7 +88,53 @@ public sealed class LessonAdministrationService(INutritionLessonWriteRepository 
             }
         }
 
-        await repository.AddRangeAsync(lessons, cancellationToken).ConfigureAwait(false);
-        return Result.Success<IReadOnlyList<NutritionLesson>>(lessons);
+        IReadOnlyList<NutritionLesson> existingLessons = await repository
+            .GetAllAsync(cancellationToken)
+            .ConfigureAwait(false);
+        var lessonsByContent = new Dictionary<LessonContentIdentity, NutritionLesson>();
+        foreach (NutritionLesson existingLesson in existingLessons) {
+            lessonsByContent.TryAdd(ToContentIdentity(existingLesson), existingLesson);
+        }
+
+        var importedLessons = new List<NutritionLesson>(parsedLessons.Count);
+        var newLessons = new List<NutritionLesson>(parsedLessons.Count);
+        foreach (NutritionLesson parsedLesson in parsedLessons) {
+            LessonContentIdentity identity = ToContentIdentity(parsedLesson);
+            if (lessonsByContent.TryGetValue(identity, out NutritionLesson? existingLesson)) {
+                importedLessons.Add(existingLesson);
+                continue;
+            }
+
+            lessonsByContent.Add(identity, parsedLesson);
+            newLessons.Add(parsedLesson);
+            importedLessons.Add(parsedLesson);
+        }
+
+        if (newLessons.Count > 0) {
+            await repository.AddRangeAsync(newLessons, cancellationToken).ConfigureAwait(false);
+        }
+
+        return Result.Success<IReadOnlyList<NutritionLesson>>(importedLessons);
     }
+
+    private static LessonContentIdentity ToContentIdentity(NutritionLesson lesson) =>
+        new(
+            lesson.Title,
+            lesson.Content,
+            lesson.Summary,
+            lesson.Locale,
+            lesson.Category,
+            lesson.Difficulty,
+            lesson.EstimatedReadMinutes,
+            lesson.SortOrder);
+
+    private sealed record LessonContentIdentity(
+        string Title,
+        string Content,
+        string? Summary,
+        string Locale,
+        LessonCategory Category,
+        LessonDifficulty Difficulty,
+        int EstimatedReadMinutes,
+        int SortOrder);
 }

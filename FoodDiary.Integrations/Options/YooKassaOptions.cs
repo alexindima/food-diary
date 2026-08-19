@@ -28,8 +28,7 @@ public sealed class YooKassaOptions {
         Billing.BillingUrlValidator.IsAbsoluteHttps(options.ReturnUrl);
 
     private static bool HasValidApiBaseUrl(string? value) =>
-        Uri.TryCreate(value, UriKind.Absolute, out Uri? uri) &&
-        string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase);
+        IntegrationUriValidator.IsAbsoluteHttpsBaseUrl(value);
 
     private static bool IsValidAmount(string? value) =>
         decimal.TryParse(value, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out decimal amount) &&

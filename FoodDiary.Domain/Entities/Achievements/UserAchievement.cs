@@ -28,9 +28,7 @@ public sealed class UserAchievement : Entity<UserAchievementId> {
             throw new ArgumentException("UserId is required.", nameof(userId));
         }
 
-        if (achievementKey is null) {
-            throw new ArgumentNullException(nameof(achievementKey));
-        }
+        ArgumentNullException.ThrowIfNull(achievementKey);
 
         string normalizedKey = achievementKey.Trim();
         if (normalizedKey.Length is 0 or > AchievementKeyMaxLength) {

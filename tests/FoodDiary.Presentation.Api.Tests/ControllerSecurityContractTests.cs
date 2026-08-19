@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
@@ -15,6 +16,7 @@ using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Billing;
 using FoodDiary.Presentation.Api.Features.Dashboard;
 using FoodDiary.Presentation.Api.Features.Images;
+using FoodDiary.Presentation.Api.Features.Hydration;
 using FoodDiary.Presentation.Api.Features.Export;
 using FoodDiary.Presentation.Api.Features.Export.Requests;
 using FoodDiary.Presentation.Api.Features.Logs;
@@ -24,8 +26,11 @@ using FoodDiary.Presentation.Api.Features.Notifications;
 using FoodDiary.Presentation.Api.Features.OpenFoodFacts;
 using FoodDiary.Presentation.Api.Features.Products;
 using FoodDiary.Presentation.Api.Features.Recipes;
+using FoodDiary.Presentation.Api.Features.RecipeLikes;
 using FoodDiary.Presentation.Api.Features.Version;
+using FoodDiary.Presentation.Api.Features.WaistEntries;
 using FoodDiary.Presentation.Api.Features.Wearables;
+using FoodDiary.Presentation.Api.Features.Wearables.Requests;
 using FoodDiary.Presentation.Api.Features.Usda;
 using FoodDiary.Presentation.Api.Features.Users;
 using FoodDiary.Presentation.Api.Features.Users.Requests;
@@ -112,6 +117,7 @@ public sealed class ControllerSecurityContractTests {
         AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.VerifyEmail), PresentationPolicyNames.AuthRateLimitPolicyName);
         AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.ResendVerifyEmail), PresentationPolicyNames.AuthRateLimitPolicyName);
         AssertActionRateLimit(typeof(AdminSsoController), nameof(AdminSsoController.AdminSsoExchange), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthTelegramController), nameof(AuthTelegramController.LinkTelegram), PresentationPolicyNames.AuthRateLimitPolicyName);
         AssertActionRateLimit(typeof(AuthTelegramController), nameof(AuthTelegramController.TelegramBotAuth), PresentationPolicyNames.AuthRateLimitPolicyName);
     }
 
@@ -356,6 +362,11 @@ public sealed class ControllerSecurityContractTests {
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(DashboardController), nameof(DashboardController.SendTestEmail));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(DietologistController), nameof(DietologistController.Invite));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(WearablesController), nameof(WearablesController.Sync));
+        AssertRequiresIdempotencyKey(typeof(WearablesController), nameof(WearablesController.Connect));
+        AssertRequiresIdempotencyKey(typeof(RecipeLikesController), nameof(RecipeLikesController.Toggle));
+        AssertRequiresIdempotencyKey(typeof(HydrationEntriesController), nameof(HydrationEntriesController.Create));
+        AssertRequiresIdempotencyKey(typeof(WaistEntriesController), nameof(WaistEntriesController.Create));
+        AssertRequiresIdempotencyKey(typeof(AdminLessonsController), nameof(AdminLessonsController.Import));
         Assert.DoesNotContain(
             GetAction(typeof(AdminUserCreationController), nameof(AdminUserCreationController.CreateUser)).GetCustomAttributes(inherit: true),
             static attribute => attribute is EnableIdempotencyAttribute);
@@ -363,9 +374,14 @@ public sealed class ControllerSecurityContractTests {
 
     [Fact]
     public void WearableProviderMutations_EnforceSensitiveAccessAndResourcePolicies() {
+        AssertHasAttribute<BlockImpersonatedAccessAttribute>(typeof(WearablesController), nameof(WearablesController.GetAuthUrl));
         AssertHasAttribute<BlockImpersonatedAccessAttribute>(typeof(WearablesController), nameof(WearablesController.Connect));
         AssertHasAttribute<BlockImpersonatedAccessAttribute>(typeof(WearablesController), nameof(WearablesController.Disconnect));
         AssertHasAttribute<BlockImpersonatedAccessAttribute>(typeof(WearablesController), nameof(WearablesController.Sync));
+        AssertActionRateLimit(
+            typeof(WearablesController),
+            nameof(WearablesController.GetAuthUrl),
+            PresentationPolicyNames.WearableRateLimitPolicyName);
         AssertActionRateLimit(
             typeof(WearablesController),
             nameof(WearablesController.Connect),
@@ -378,6 +394,34 @@ public sealed class ControllerSecurityContractTests {
         EnableIdempotencyAttribute idempotency = AssertSingleAttribute<EnableIdempotencyAttribute>(
             GetAction(typeof(WearablesController), nameof(WearablesController.Sync)));
         Assert.True(idempotency.RequireKey);
+    }
+
+    [Fact]
+    public void WearableEndpoints_ConstrainProviderAndOAuthPayloadLengths() {
+        MethodInfo authUrlMethod = GetAction(typeof(WearablesController), nameof(WearablesController.GetAuthUrl));
+        ParameterInfo state = authUrlMethod.GetParameters()
+            .Single(static parameter => string.Equals(parameter.Name, "state", StringComparison.Ordinal));
+        PropertyInfo code = typeof(ConnectWearableHttpRequest).GetProperty(nameof(ConnectWearableHttpRequest.Code))!;
+        PropertyInfo protectedState = typeof(ConnectWearableHttpRequest).GetProperty(nameof(ConnectWearableHttpRequest.State))!;
+
+        Assert.Multiple(
+            () => Assert.All(
+                new[] { nameof(WearablesController.GetAuthUrl), nameof(WearablesController.Connect), nameof(WearablesController.Disconnect), nameof(WearablesController.Sync) },
+                actionName => AssertParameterMaximumLength(
+                    typeof(WearablesController),
+                    actionName,
+                    "provider",
+                    WearableInputLimits.MaximumProviderLength)),
+            () => Assert.NotNull(state.GetCustomAttribute<RequiredAttribute>()),
+            () => Assert.Equal(
+                WearableInputLimits.MaximumOAuthStateLength,
+                Assert.IsType<MaxLengthAttribute>(state.GetCustomAttribute<MaxLengthAttribute>()).Length),
+            () => Assert.Equal(
+                WearableInputLimits.MaximumAuthorizationCodeLength,
+                Assert.IsType<MaxLengthAttribute>(code.GetCustomAttribute<MaxLengthAttribute>()).Length),
+            () => Assert.Equal(
+                WearableInputLimits.MaximumProtectedOAuthStateLength,
+                Assert.IsType<MaxLengthAttribute>(protectedState.GetCustomAttribute<MaxLengthAttribute>()).Length));
     }
 
     [Fact]
@@ -438,6 +482,20 @@ public sealed class ControllerSecurityContractTests {
         EnableRateLimitingAttribute attribute = AssertSingleAttribute<EnableRateLimitingAttribute>(method);
 
         Assert.Equal(expectedPolicyName, attribute.PolicyName);
+    }
+
+    private static void AssertParameterMaximumLength(
+        Type controllerType,
+        string actionName,
+        string parameterName,
+        int expectedMaximumLength) {
+        ParameterInfo parameter = GetAction(controllerType, actionName).GetParameters()
+            .Single(value => string.Equals(value.Name, parameterName, StringComparison.Ordinal));
+
+        Assert.NotNull(parameter.GetCustomAttribute<RequiredAttribute>());
+        Assert.Equal(
+            expectedMaximumLength,
+            Assert.IsType<MaxLengthAttribute>(parameter.GetCustomAttribute<MaxLengthAttribute>()).Length);
     }
 
     private static void AssertRequiresIdempotencyKey(string actionName) {

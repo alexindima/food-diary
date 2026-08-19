@@ -3773,12 +3773,12 @@
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/admin/lessons/{id:guid}",
-            "line": 42
+            "line": 44
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/admin/lessons/{id:guid}",
-            "line": 49
+            "line": 51
           }
         ]
       },
@@ -4047,7 +4047,7 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/bot/auth",
-            "line": 58
+            "line": 60
           }
         ]
       },
@@ -4086,7 +4086,7 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/billing/webhooks/{provider}",
-            "line": 17
+            "line": 18
           }
         ]
       },
@@ -4242,12 +4242,12 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dietologist/clients/attention",
-            "line": 18
+            "line": 19
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/dietologist/clients/attention/{signalId}/state",
-            "line": 25
+            "line": 26
           }
         ]
       },
@@ -4414,22 +4414,22 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates",
-            "line": 19
+            "line": 20
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates",
-            "line": 29
+            "line": 31
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates/{templateId:guid}",
-            "line": 38
+            "line": 40
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates/{templateId:guid}",
-            "line": 47
+            "line": 49
           }
         ]
       },
@@ -4468,17 +4468,17 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/export/diary",
-            "line": 17
+            "line": 18
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/export/cycle",
-            "line": 31
+            "line": 33
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/export/cycle/sensitive",
-            "line": 42
+            "line": 45
           }
         ]
       },
@@ -4686,27 +4686,27 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/hydrations",
-            "line": 15
+            "line": 16
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/hydrations/daily",
-            "line": 21
+            "line": 22
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/hydrations",
-            "line": 27
+            "line": 28
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/hydrations/{id:guid}",
-            "line": 34
+            "line": 36
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/hydrations/{id:guid}",
-            "line": 42
+            "line": 44
           }
         ]
       },
@@ -4786,22 +4786,22 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/meal-plans",
-            "line": 16
+            "line": 20
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/meal-plans/{id:guid}",
-            "line": 23
+            "line": 28
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/meal-plans/{id:guid}/adopt",
-            "line": 30
+            "line": 35
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/meal-plans/{id:guid}/shopping-list",
-            "line": 38
+            "line": 43
           }
         ]
       },
@@ -4924,12 +4924,12 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/open-food-facts/products/{barcode}",
-            "line": 16
+            "line": 18
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/open-food-facts/products",
-            "line": 21
+            "line": 25
           }
         ]
       },
@@ -4988,7 +4988,7 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/products/suggestions",
-            "line": 17
+            "line": 18
           }
         ]
       },
@@ -5027,12 +5027,12 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/likes/toggle",
-            "line": 13
+            "line": 15
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/likes",
-            "line": 21
+            "line": 25
           }
         ]
       },
@@ -5169,27 +5169,27 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/usda/foods",
-            "line": 16
+            "line": 18
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/usda/foods/{fdcId:int}",
-            "line": 24
+            "line": 27
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/usda/products/{productId:guid}/link",
-            "line": 30
+            "line": 33
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/usda/products/{productId:guid}/link",
-            "line": 38
+            "line": 41
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/usda/daily-micronutrients",
-            "line": 45
+            "line": 48
           }
         ]
       },
@@ -5335,37 +5335,37 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/waist-entries",
-            "line": 15
+            "line": 16
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/waist-entries/latest",
-            "line": 21
+            "line": 22
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/waist-entries/summary",
-            "line": 26
+            "line": 27
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/waist-entries/page-summary",
-            "line": 32
+            "line": 33
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/waist-entries",
-            "line": 40
+            "line": 41
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/waist-entries/{id:guid}",
-            "line": 47
+            "line": 49
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/waist-entries/{id:guid}",
-            "line": 55
+            "line": 57
           }
         ]
       },
@@ -5377,32 +5377,32 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/wearables/connections",
-            "line": 19
+            "line": 20
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/wearables/{provider}/auth-url",
-            "line": 24
+            "line": 25
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/wearables/{provider}/connect",
-            "line": 31
+            "line": 38
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/wearables/{provider}/disconnect",
-            "line": 42
+            "line": 52
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/wearables/{provider}/sync",
-            "line": 52
+            "line": 62
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/wearables/daily-summary",
-            "line": 65
+            "line": 75
           }
         ]
       },
@@ -5502,17 +5502,17 @@
           {
             "verb": "GET",
             "route": "/api/mail-inbox/messages",
-            "line": 14
+            "line": 16
           },
           {
             "verb": "GET",
             "route": "/api/mail-inbox/messages/{id:guid}",
-            "line": 19
+            "line": 21
           },
           {
             "verb": "POST",
             "route": "/api/mail-inbox/messages/{id:guid}/read",
-            "line": 25
+            "line": 29
           }
         ]
       },

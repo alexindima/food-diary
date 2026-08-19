@@ -7,6 +7,14 @@ namespace FoodDiary.Integrations;
 
 public static partial class DependencyInjection {
     private static void AddIntegrationOptions(this IServiceCollection services, IConfiguration configuration) {
+        services.AddGeneralIntegrationOptions(configuration);
+        services.AddBillingIntegrationOptions(configuration);
+        services.AddProviderIntegrationOptions(configuration);
+    }
+
+    private static void AddGeneralIntegrationOptions(
+        this IServiceCollection services,
+        IConfiguration configuration) {
         services.AddOptions<S3Options>()
             .Bind(configuration.GetSection(S3Options.SectionName))
             .Validate(S3Options.IsEmptyOrComplete,
@@ -32,13 +40,18 @@ public static partial class DependencyInjection {
         services.AddOptions<GoogleAuthOptions>()
             .Bind(configuration.GetSection(GoogleAuthOptions.SectionName))
             .Validate(GoogleAuthOptions.HasValidClientId,
-                "GoogleAuth:ClientId must be empty or a non-whitespace value.")
+                "GoogleAuth:ClientId must be empty or contain at most 512 non-whitespace characters.")
             .ValidateOnStart();
         services.AddOptions<TelegramAuthOptions>()
             .Bind(configuration.GetSection(TelegramAuthOptions.SectionName))
             .Validate(TelegramAuthOptions.HasValidAuthTtl,
                 "TelegramAuth:AuthTtlSeconds must be greater than zero.")
             .ValidateOnStart();
+    }
+
+    private static void AddBillingIntegrationOptions(
+        this IServiceCollection services,
+        IConfiguration configuration) {
         services.AddOptions<BillingOptions>()
             .Bind(configuration.GetSection(BillingOptions.SectionName))
             .Validate(static options => !string.IsNullOrWhiteSpace(options.Provider),
@@ -76,6 +89,11 @@ public static partial class DependencyInjection {
                     YooKassaOptions.HasValidCheckoutConfiguration(options),
                 "YooKassa configuration is incomplete for the active billing provider.")
             .ValidateOnStart();
+    }
+
+    private static void AddProviderIntegrationOptions(
+        this IServiceCollection services,
+        IConfiguration configuration) {
         services.AddOptions<WebPushOptions>()
             .Bind(configuration.GetSection(WebPushOptions.SectionName))
             .Validate(WebPushOptions.HasValidConfiguration,
@@ -97,7 +115,7 @@ public static partial class DependencyInjection {
         services.AddOptions<FitbitOptions>()
             .Bind(configuration.GetSection(FitbitOptions.SectionName))
             .Validate(FitbitOptions.IsEmptyOrComplete,
-                "Fitbit configuration must be empty or include ClientId, ClientSecret, and an absolute RedirectUri.")
+                "Fitbit configuration must be empty or include ClientId, ClientSecret, and an HTTPS RedirectUri (HTTP is allowed only for loopback).")
             .ValidateOnStart();
     }
 

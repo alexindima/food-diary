@@ -1,7 +1,9 @@
+using System.ComponentModel.DataAnnotations;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.OpenFoodFacts.Mappings;
 using FoodDiary.Presentation.Api.Features.OpenFoodFacts.Responses;
 using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +17,16 @@ namespace FoodDiary.Presentation.Api.Features.OpenFoodFacts;
 public sealed class OpenFoodFactsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("products/{barcode}")]
     [ProducesResponseType<OpenFoodFactsProductHttpResponse>(StatusCodes.Status200OK)]
-    public Task<IActionResult> SearchByBarcode(string barcode) =>
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> SearchByBarcode(
+        [Required, MaxLength(OpenFoodFactsRequestLimits.MaximumBarcodeLength)] string barcode) =>
         HandleOk(OpenFoodFactsHttpMappings.ToQuery(barcode), static value => value.ToHttpResponse());
 
     [HttpGet("products")]
     [ProducesResponseType<IReadOnlyList<OpenFoodFactsProductHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> Search(
-        [FromQuery] string search,
-        [FromQuery] int limit = 10) =>
+        [FromQuery, MaxLength(OpenFoodFactsRequestLimits.MaximumSearchLength)] string search,
+        [FromQuery, Range(OpenFoodFactsRequestLimits.MinimumLimit, OpenFoodFactsRequestLimits.MaximumLimit)] int limit = 10) =>
         HandleOk(OpenFoodFactsHttpMappings.ToSearchQuery(search, limit), static value => value.ToListHttpResponse());
 }

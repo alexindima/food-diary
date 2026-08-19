@@ -17,6 +17,8 @@ public sealed class MailInboxStorageOptions {
 
     public int CleanupBatchSize { get; init; } = 500;
 
+    public int MaxConcurrentMessageDetailReads { get; init; } = 2;
+
     public static bool HasValidConfiguration(MailInboxStorageOptions options) =>
         options.MaxMessagesPerDay > 0 &&
         options.MaxRawBytesPerDay > 0 &&
@@ -24,5 +26,6 @@ public sealed class MailInboxStorageOptions {
         options.ContentRetention > TimeSpan.Zero &&
         options.MetadataRetention >= options.ContentRetention &&
         options.CleanupInterval > TimeSpan.Zero &&
-        options.CleanupBatchSize > 0;
+        options.CleanupBatchSize > 0 &&
+        options.MaxConcurrentMessageDetailReads > 0;
 }

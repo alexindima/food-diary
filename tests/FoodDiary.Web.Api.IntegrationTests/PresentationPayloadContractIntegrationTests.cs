@@ -277,13 +277,20 @@ public sealed class PresentationPayloadContractIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        client.DefaultRequestHeaders.Add("Idempotency-Key", Guid.NewGuid().ToString("D"));
 
-        HttpResponseMessage createResponse = await client.PostAsJsonAsync(
-            "/api/v1/hydrations",
-            new CreateHydrationEntryHttpRequest(
-                new DateTime(2026, 3, 26, 9, 30, 0, DateTimeKind.Utc),
-                450));
-        createResponse.EnsureSuccessStatusCode();
+        var createRequest = new CreateHydrationEntryHttpRequest(
+            new DateTime(2026, 3, 26, 9, 30, 0, DateTimeKind.Utc),
+            450);
+        HttpResponseMessage createResponse = await client.PostAsJsonAsync("/api/v1/hydrations", createRequest);
+        HttpResponseMessage replayResponse = await client.PostAsJsonAsync("/api/v1/hydrations", createRequest);
+        string createdPayload = await createResponse.Content.ReadAsStringAsync();
+        string replayedPayload = await replayResponse.Content.ReadAsStringAsync();
+
+        Assert.Multiple(
+            () => Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode),
+            () => Assert.Equal(HttpStatusCode.Created, replayResponse.StatusCode),
+            () => Assert.Equal(createdPayload, replayedPayload));
 
         HttpResponseMessage response = await client.GetAsync("/api/v1/hydrations/daily?dateUtc=2026-03-26");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());

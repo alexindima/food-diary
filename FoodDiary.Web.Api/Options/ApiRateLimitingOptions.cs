@@ -18,6 +18,11 @@ public sealed class ApiRateLimitingOptions {
         WindowSeconds = 60,
     };
 
+    public FixedWindowPolicyOptions YooKassaWebhook { get; init; } = new() {
+        PermitLimit = 30,
+        WindowSeconds = 60,
+    };
+
     public FixedWindowPolicyOptions ClientTelemetry { get; init; } = new() {
         PermitLimit = 60,
         WindowSeconds = 60,
@@ -63,6 +68,8 @@ public sealed class ApiRateLimitingOptions {
     public static bool HasValidAi(ApiRateLimitingOptions options) => options.Ai.IsValid();
 
     public static bool HasValidWebhook(ApiRateLimitingOptions options) => options.Webhook.IsValid();
+
+    public static bool HasValidYooKassaWebhook(ApiRateLimitingOptions options) => options.YooKassaWebhook.IsValid();
 
     public static bool HasValidClientTelemetry(ApiRateLimitingOptions options) => options.ClientTelemetry.IsValid();
 

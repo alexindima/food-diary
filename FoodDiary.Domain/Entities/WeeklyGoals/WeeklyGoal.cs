@@ -58,13 +58,27 @@ public sealed class WeeklyGoal : Entity<WeeklyGoalId> {
         DateTime modifiedAtUtc) {
         ValidateTargetDays(targetDays);
         ValidateReminder(reminderEnabled, reminderTimeMinutes, timeZoneOffsetMinutes);
+        DateTime normalizedModifiedAtUtc = NormalizeUtc(modifiedAtUtc);
+
+        int? normalizedReminderTimeMinutes = reminderEnabled ? reminderTimeMinutes : null;
+        int? normalizedTimeZoneOffsetMinutes = reminderEnabled ? timeZoneOffsetMinutes : null;
+        bool reminderConfigurationChanged =
+            ReminderEnabled != reminderEnabled ||
+            ReminderTimeMinutes != normalizedReminderTimeMinutes ||
+            TimeZoneOffsetMinutes != normalizedTimeZoneOffsetMinutes;
+        if (TargetDays == targetDays && !reminderConfigurationChanged) {
+            return;
+        }
 
         TargetDays = targetDays;
         ReminderEnabled = reminderEnabled;
-        ReminderTimeMinutes = reminderEnabled ? reminderTimeMinutes : null;
-        TimeZoneOffsetMinutes = reminderEnabled ? timeZoneOffsetMinutes : null;
-        LastReminderLocalDate = null;
-        SetModified(NormalizeUtc(modifiedAtUtc));
+        ReminderTimeMinutes = normalizedReminderTimeMinutes;
+        TimeZoneOffsetMinutes = normalizedTimeZoneOffsetMinutes;
+        if (reminderConfigurationChanged) {
+            LastReminderLocalDate = null;
+        }
+
+        SetModified(normalizedModifiedAtUtc);
     }
 
     public void MarkReminderSent(DateOnly localDate, DateTime modifiedAtUtc) {

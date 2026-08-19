@@ -3,6 +3,8 @@ using FoodDiary.MailInbox.Application.Messages.Queries;
 using FoodDiary.MailInbox.Presentation.Controllers;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Mappings;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Responses;
+using FoodDiary.MailInbox.Presentation.Filters;
+using FoodDiary.MailInbox.Presentation.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,8 +19,10 @@ public sealed class MailInboxMessagesController(ISender sender) : AuthorizedMail
         HandleOk(limit.ToQuery(), static value => value.ToHttpResponse());
 
     [HttpGet("{id:guid}")]
+    [ServiceFilter(typeof(MailInboxMessageDetailConcurrencyFilter))]
     [ProducesResponseType<InboundMailMessageDetailsHttpResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<MailInboxApiErrorHttpResponse>(StatusCodes.Status429TooManyRequests)]
     public Task<IActionResult> GetById(Guid id) =>
         HandleOk(new GetInboundMailMessageDetailsQuery(id), static value => value.ToHttpResponse());
 

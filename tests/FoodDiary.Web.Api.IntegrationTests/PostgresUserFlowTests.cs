@@ -51,10 +51,16 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         HttpClient client = await CreateAuthenticatedClientAsync();
         DateTime now = DateTime.UtcNow.Date.AddHours(12);
 
-        HttpResponseMessage response1 = await client.PostAsJsonAsync("/api/v1/hydrations", new CreateHydrationEntryHttpRequest(now, 250));
-        HttpResponseMessage response2 = await client.PostAsJsonAsync("/api/v1/hydrations", new CreateHydrationEntryHttpRequest(now.AddMinutes(30), 500));
-        await AssertStatusCodeAsync(HttpStatusCode.OK, response1);
-        await AssertStatusCodeAsync(HttpStatusCode.OK, response2);
+        HttpResponseMessage response1 = await PostWithIdempotencyAsync(
+            client,
+            "/api/v1/hydrations",
+            new CreateHydrationEntryHttpRequest(now, 250));
+        HttpResponseMessage response2 = await PostWithIdempotencyAsync(
+            client,
+            "/api/v1/hydrations",
+            new CreateHydrationEntryHttpRequest(now.AddMinutes(30), 500));
+        await AssertStatusCodeAsync(HttpStatusCode.Created, response1);
+        await AssertStatusCodeAsync(HttpStatusCode.Created, response2);
 
         HttpResponseMessage totalResponse = await client.GetAsync(string.Create(CultureInfo.InvariantCulture, $"/api/v1/hydrations/daily?date={now:yyyy-MM-dd}"));
         await AssertStatusCodeAsync(HttpStatusCode.OK, totalResponse);
@@ -65,19 +71,21 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
     }
 
     [RequiresDockerFact]
-    public async Task CreateWaistEntry_WithDuplicateDate_ReturnsConflict() {
+    public async Task CreateWaistEntry_WithExactRetry_ReturnsExistingEntry() {
         HttpClient client = await CreateAuthenticatedClientAsync();
         var request = new CreateWaistEntryHttpRequest(
             new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), 80.0);
 
-        HttpResponseMessage first = await client.PostAsJsonAsync("/api/v1/waist-entries", request);
-        HttpResponseMessage duplicate = await client.PostAsJsonAsync("/api/v1/waist-entries", request);
-        ErrorPayload? payload = await duplicate.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+        HttpResponseMessage first = await PostWithIdempotencyAsync(client, "/api/v1/waist-entries", request);
+        HttpResponseMessage retry = await PostWithIdempotencyAsync(client, "/api/v1/waist-entries", request);
+        IdPayload? firstPayload = await first.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
+        IdPayload? retryPayload = await retry.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
 
-        await AssertStatusCodeAsync(HttpStatusCode.OK, first);
-        Assert.Equal(HttpStatusCode.Conflict, duplicate.StatusCode);
-        Assert.NotNull(payload);
-        Assert.Equal("WaistEntry.AlreadyExists", payload.Error);
+        await AssertStatusCodeAsync(HttpStatusCode.Created, first);
+        await AssertStatusCodeAsync(HttpStatusCode.Created, retry);
+        Assert.NotNull(firstPayload);
+        Assert.NotNull(retryPayload);
+        Assert.Equal(firstPayload.Id, retryPayload.Id);
     }
 
     [RequiresDockerFact]
@@ -124,6 +132,17 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         Assert.NotNull(payload);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", payload.AccessToken);
         return client;
+    }
+
+    private static async Task<HttpResponseMessage> PostWithIdempotencyAsync<T>(
+        HttpClient client,
+        string requestUri,
+        T payload) {
+        using var request = new HttpRequestMessage(HttpMethod.Post, requestUri) {
+            Content = JsonContent.Create(payload),
+        };
+        request.Headers.Add("Idempotency-Key", Guid.NewGuid().ToString("D"));
+        return await client.SendAsync(request).ConfigureAwait(false);
     }
 
     private static async Task AssertStatusCodeAsync(HttpStatusCode expected, HttpResponseMessage response) {

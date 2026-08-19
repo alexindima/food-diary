@@ -120,8 +120,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             "EN",
             LessonCategory.NutritionBasics,
             LessonDifficulty.Beginner,
-            estimatedReadMinutes: 0,
-            sortOrder: -1);
+            estimatedReadMinutes: 1,
+            sortOrder: 0);
         var hydration = NutritionLesson.Create(
             "Hydration",
             "Drink water",
@@ -515,6 +515,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
         Assert.NotNull(await hydrationRepository.GetByIdAsync(hydration.Id));
         Assert.NotNull(await hydrationRepository.GetByIdAsync(hydration.Id, asTracking: true));
+        Assert.NotNull(await hydrationRepository.GetByTimestampAsync(user.Id, today.AddHours(9)));
         Assert.Equal(2, (await hydrationRepository.GetByDateAsync(user.Id, today)).Count);
         Assert.Equal(2, (await hydrationRepository.GetByDateReadModelsAsync(user.Id, today)).Count);
         Assert.Equal(800, await hydrationRepository.GetDailyTotalAsync(user.Id, today));

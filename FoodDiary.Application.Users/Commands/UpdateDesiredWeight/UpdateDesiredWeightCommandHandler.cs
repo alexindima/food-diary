@@ -35,12 +35,17 @@ public sealed class UpdateDesiredWeightCommandHandler(
         }
 
         User currentUser = userResult.Value;
+        FoodDiary.Domain.Entities.Tracking.WeightGoal? activeGoal = currentUser.WeightGoals.SingleOrDefault(
+            goal => goal.Status == FoodDiary.Domain.Enums.WeightGoalStatus.Active);
+        if (command.DesiredWeightKg == currentUser.DesiredWeightKg) {
+            return Result.Success(new UserDesiredWeightModel(currentUser.DesiredWeightKg, activeGoal?.StartWeightKg, activeGoal?.StartedAtUtc));
+        }
+
         DateTime nowUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
         double? trackedWeight = await currentWeightProvider
             .GetCurrentWeightAsync(userId, cancellationToken)
             .ConfigureAwait(false);
-        double? activeGoalStartWeight = currentUser.WeightGoals.SingleOrDefault(
-            goal => goal.Status == FoodDiary.Domain.Enums.WeightGoalStatus.Active)?.StartWeightKg;
+        double? activeGoalStartWeight = activeGoal?.StartWeightKg;
         double currentWeight = trackedWeight ?? currentUser.WeightKg ?? activeGoalStartWeight ?? command.DesiredWeightKg ?? 1;
         if (command.DesiredWeightKg.HasValue) {
             currentUser.StartWeightGoal(command.DesiredWeightKg.Value, currentWeight, nowUtc);
@@ -49,7 +54,7 @@ public sealed class UpdateDesiredWeightCommandHandler(
         }
         await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
-        FoodDiary.Domain.Entities.Tracking.WeightGoal? activeGoal = currentUser.WeightGoals.SingleOrDefault(
+        activeGoal = currentUser.WeightGoals.SingleOrDefault(
             goal => goal.Status == FoodDiary.Domain.Enums.WeightGoalStatus.Active);
         return Result.Success(new UserDesiredWeightModel(currentUser.DesiredWeightKg, activeGoal?.StartWeightKg, activeGoal?.StartedAtUtc));
     }

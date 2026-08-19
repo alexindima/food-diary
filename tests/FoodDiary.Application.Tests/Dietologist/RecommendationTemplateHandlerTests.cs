@@ -289,6 +289,19 @@ public sealed class RecommendationTemplateHandlerTests {
     }
 
     [Fact]
+    public async Task SearchRecommendationTemplatesValidator_RejectsOversizedSearch() {
+        var query = new SearchRecommendationTemplatesQuery(
+            Guid.NewGuid(),
+            new string('x', SearchRecommendationTemplatesQueryValidator.MaximumSearchLength + 1),
+            IncludeArchived: false);
+
+        TestValidationResult<SearchRecommendationTemplatesQuery> result =
+            await new SearchRecommendationTemplatesQueryValidator().TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(value => value.Search);
+    }
+
+    [Fact]
     public async Task SearchRecommendationTemplates_WhenAccessFails_ReturnsFailure() {
         var handler = new SearchRecommendationTemplatesQueryHandler(
             Substitute.For<IRecommendationTemplateReadService>(),

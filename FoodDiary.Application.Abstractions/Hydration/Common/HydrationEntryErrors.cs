@@ -12,4 +12,9 @@ public static class HydrationEntryErrors {
         "HydrationEntry.NotAccessible",
         $"Hydration entry with id '{id}' was not found or is not accessible.",
         Kind: ErrorKind.NotFound);
+
+    public static Error AlreadyExists(DateTime timestampUtc) => new(
+        "HydrationEntry.AlreadyExists",
+        $"A hydration entry already exists at '{timestampUtc:O}'.",
+        Kind: ErrorKind.Conflict);
 }

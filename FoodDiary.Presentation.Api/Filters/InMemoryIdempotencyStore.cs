@@ -1,8 +1,16 @@
 namespace FoodDiary.Presentation.Api.Filters;
 
 public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdempotencyStore {
+    private const int DefaultMaximumEntries = 10_000;
     private readonly Lock _syncRoot = new();
     private readonly Dictionary<string, Entry> _entries = new(StringComparer.Ordinal);
+    private readonly PriorityQueue<Expiration, DateTime> _expirations = new();
+    private readonly int _maximumEntries = DefaultMaximumEntries;
+
+    public InMemoryIdempotencyStore(TimeProvider timeProvider, int maximumEntries) : this(timeProvider) {
+        ArgumentOutOfRangeException.ThrowIfLessThan(maximumEntries, 1);
+        _maximumEntries = maximumEntries;
+    }
 
     public Task<IdempotencyReservation> ReserveAsync(
         string key,
@@ -32,8 +40,14 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
                 return Task.FromResult(new IdempotencyReservation(IdempotencyReservationStatus.InProgress));
             }
 
+            if (_entries.Count >= _maximumEntries) {
+                return Task.FromResult(new IdempotencyReservation(IdempotencyReservationStatus.CapacityExceeded));
+            }
+
             string ownerToken = Guid.NewGuid().ToString("N");
-            _entries[key] = Entry.InProgress(requestHash, ownerToken, nowUtc.Add(processingTtl));
+            DateTime expiresAtUtc = nowUtc.Add(processingTtl);
+            _entries[key] = Entry.InProgress(requestHash, ownerToken, expiresAtUtc);
+            _expirations.Enqueue(new Expiration(key, expiresAtUtc), expiresAtUtc);
             return Task.FromResult(new IdempotencyReservation(
                 IdempotencyReservationStatus.Acquired,
                 OwnerToken: ownerToken));
@@ -57,12 +71,15 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
                 !entry.Completed &&
                 string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal) &&
                 string.Equals(entry.OwnerToken, ownerToken, StringComparison.Ordinal)) {
+                DateTime expiresAtUtc = nowUtc.Add(responseTtl);
                 _entries[key] = Entry.CompletedEntry(
                     requestHash,
                     statusCode,
                     body,
                     location,
-                    nowUtc.Add(responseTtl));
+                    expiresAtUtc);
+                _expirations.Enqueue(new Expiration(key, expiresAtUtc), expiresAtUtc);
+                CompactExpirationQueueIfNeeded();
             }
         }
 
@@ -81,6 +98,7 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
                 string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal) &&
                 string.Equals(entry.OwnerToken, ownerToken, StringComparison.Ordinal)) {
                 _entries.Remove(key);
+                CompactExpirationQueueIfNeeded();
             }
         }
 
@@ -88,14 +106,30 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
     }
 
     private void RemoveExpiredEntries(DateTime nowUtc) {
-        string[] expiredKeys = [.. _entries
-            .Where(entry => entry.Value.ExpiresAtUtc <= nowUtc)
-            .Select(static entry => entry.Key)];
+        while (_expirations.TryPeek(out Expiration? expiration, out DateTime expiresAtUtc) && expiresAtUtc <= nowUtc) {
+            _expirations.Dequeue();
+            if (expiration is not null &&
+                _entries.TryGetValue(expiration.Key, out Entry? entry) &&
+                entry.ExpiresAtUtc == expiration.ExpiresAtUtc) {
+                _entries.Remove(expiration.Key);
+            }
+        }
 
-        foreach (string key in expiredKeys) {
-            _entries.Remove(key);
+        CompactExpirationQueueIfNeeded();
+    }
+
+    private void CompactExpirationQueueIfNeeded() {
+        if (_expirations.Count <= _maximumEntries + _entries.Count) {
+            return;
+        }
+
+        _expirations.Clear();
+        foreach ((string key, Entry entry) in _entries) {
+            _expirations.Enqueue(new Expiration(key, entry.ExpiresAtUtc), entry.ExpiresAtUtc);
         }
     }
+
+    private sealed record Expiration(string Key, DateTime ExpiresAtUtc);
 
     private sealed record Entry(
         string RequestHash,

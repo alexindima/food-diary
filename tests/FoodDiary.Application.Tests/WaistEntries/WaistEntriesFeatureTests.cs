@@ -113,6 +113,37 @@ public class WaistEntriesFeatureTests {
     }
 
     [Fact]
+    public async Task CreateWaistEntryCommandHandler_WhenSamePayloadIsRetried_ReturnsOriginalEntry() {
+        var repository = new InMemoryWaistEntryRepository();
+        var user = User.Create("waist-retry@example.com", "hash");
+        var handler = new CreateWaistEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
+        var command = new CreateWaistEntryCommand(user.Id.Value, new DateTime(2026, 5, 27), 82);
+
+        Result<WaistEntryModel> first = await handler.Handle(command, CancellationToken.None);
+        Result<WaistEntryModel> replay = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(first);
+        ResultAssert.Success(replay);
+        Assert.Equal(first.Value.Id, replay.Value.Id);
+    }
+
+    [Fact]
+    public async Task CreateWaistEntryCommandHandler_WhenDateIsReusedWithDifferentValue_ReturnsConflict() {
+        var repository = new InMemoryWaistEntryRepository();
+        var user = User.Create("waist-conflict@example.com", "hash");
+        var handler = new CreateWaistEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
+        DateTime date = new(2026, 5, 27);
+        await handler.Handle(new CreateWaistEntryCommand(user.Id.Value, date, 82), CancellationToken.None);
+
+        Result<WaistEntryModel> conflict = await handler.Handle(
+            new CreateWaistEntryCommand(user.Id.Value, date, 83),
+            CancellationToken.None);
+
+        ResultAssert.Failure(conflict);
+        Assert.Equal("WaistEntry.AlreadyExists", conflict.Error.Code);
+    }
+
+    [Fact]
     public async Task GetWaistSummariesQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
         var user = User.Create("waist-summary-invalid-date-range@example.com", "hash");
         var handler = new GetWaistSummariesQueryHandler(

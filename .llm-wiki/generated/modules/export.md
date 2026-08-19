@@ -44,18 +44,19 @@ Source: `FoodDiary.Presentation.Api/Features/Export/ExportController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 5
+- Public contract files: 6
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 5
+- Public contract types: 6
 - Interfaces: 3
 - DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
+- `class ExportInputLimits`
 - `interface IDiaryPdfGenerator`
 - `interface IDiaryPdfReportTextProvider`
 - `interface IExportDiaryReadService`

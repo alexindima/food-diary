@@ -6,7 +6,14 @@ public sealed class MailInboxHttpOptions {
     public bool RequireApiKey { get; init; } = true;
     public string ApiKey { get; init; } = string.Empty;
 
+    public int MaxConcurrentMessageDetailRequests { get; init; } = 2;
+
+    public TimeSpan MessageDetailQueueTimeout { get; init; } = TimeSpan.FromSeconds(5);
+
     public static bool HasValidApiKey(MailInboxHttpOptions options) {
-        return options.RequireApiKey && !string.IsNullOrWhiteSpace(options.ApiKey);
+        return options.RequireApiKey &&
+               !string.IsNullOrWhiteSpace(options.ApiKey) &&
+               options.MaxConcurrentMessageDetailRequests > 0 &&
+               options.MessageDetailQueueTimeout > TimeSpan.Zero;
     }
 }

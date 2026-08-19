@@ -5,9 +5,9 @@ MailInbox accepts untrusted SMTP traffic and can receive personal data, attachme
 ## Admission and storage boundaries
 
 - The SMTP listener limits concurrent connections globally and per source address.
-- Message admission is bounded per session, source address, and envelope sender. Source and sender values are hashed before they become in-memory rate-limit keys.
-- Message size, envelope recipient count, MIME part count, extracted body length, and concurrent MIME processing are bounded.
-- Daily message and raw-byte quotas are updated atomically with the message insert. A quota rejection rolls back the insert and returns a temporary SMTP failure.
+- Message admission is bounded per session, source address, envelope sender, and actual DATA bytes per source address. Source and sender values are hashed before they become in-memory rate-limit keys.
+- Message size, persisted header fields, envelope recipient count, MIME part count, extracted body length, concurrent MIME processing, and concurrent message-detail parsing are bounded.
+- Daily message and accounted-storage quotas are updated atomically with the message insert. Accounted storage includes raw MIME and every separately persisted text/metadata copy. A quota rejection rolls back the insert and returns a temporary SMTP failure.
 - Raw MIME is stored as PostgreSQL `bytea`; the ingest path does not convert arbitrary MIME bytes to UTF-8 before persistence.
 - A fingerprint of the canonical envelope and raw MIME bytes deduplicates SMTP retries inside the configured window. `Message-Id` is not trusted as the sole idempotency key.
 

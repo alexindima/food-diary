@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
@@ -29,7 +29,8 @@ export class AdminLessonsService {
     }
 
     public importLessons(request: AdminLessonsImportRequest): Observable<AdminLessonsImportResponse> {
-        return this.http.post<AdminLessonsImportResponse>(`${this.baseUrl}/import`, request);
+        const headers = new HttpHeaders({ 'Idempotency-Key': crypto.randomUUID() });
+        return this.http.post<AdminLessonsImportResponse>(`${this.baseUrl}/import`, request, { headers });
     }
 
     public delete(id: string): Observable<void> {

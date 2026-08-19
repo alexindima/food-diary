@@ -98,7 +98,7 @@ public sealed class DietologistInvitation : AggregateRoot<DietologistInvitationI
     }
 
     public bool IsExpired() =>
-        Status == DietologistInvitationStatus.Pending && ExpiresAtUtc < DomainTime.UtcNow;
+        Status == DietologistInvitationStatus.Pending && ExpiresAtUtc <= DomainTime.UtcNow;
 
     public DietologistPermissions GetPermissions() => new(
         ShareMeals, ShareStatistics, ShareWeight, ShareWaist, ShareGoals, ShareHydration, ShareProfile, ShareFasting);

@@ -8,10 +8,25 @@ using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using System.Text.Json;
+using FluentValidation.TestHelper;
+using FoodDiary.Application.Abstractions.Billing.Common;
 
 namespace FoodDiary.Application.Tests.Billing;
 
 public partial class BillingFeatureTests {
+    [Fact]
+    public async Task ProcessBillingWebhookValidator_RejectsOversizedProvider() {
+        var command = new ProcessBillingWebhookCommand(
+            new string('p', BillingInputLimits.MaximumProviderLength + 1),
+            "{}",
+            string.Empty);
+
+        TestValidationResult<ProcessBillingWebhookCommand> result =
+            await new ProcessBillingWebhookCommandValidator().TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(value => value.Provider);
+    }
+
     [Fact]
     public async Task BillingWebhookInboxService_WhenEventIsMissingOrProcessed_ReturnsSuccess() {
         var repository = new RecordingBillingWebhookEventRepository();

@@ -38,8 +38,8 @@ export class ExploreInteractionsFacade {
         return this.likeService.getStatus(recipeId);
     }
 
-    public toggleLike(recipeId: string): Observable<RecipeLikeStatus> {
-        return this.likeService.toggle(recipeId);
+    public toggleLike(recipeId: string, isLiked: boolean): Observable<RecipeLikeStatus> {
+        return this.likeService.toggle(recipeId, isLiked);
     }
 
     public createReport(dto: CreateReportDto): Observable<ContentReport> {

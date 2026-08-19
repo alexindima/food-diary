@@ -15,6 +15,15 @@ public class UsdaValidatorTests {
     }
 
     [Fact]
+    public async Task Validate_WithOversizedSearch_HasError() {
+        var query = new SearchUsdaFoodsQuery(new string('x', SearchUsdaFoodsQueryValidator.MaximumSearchLength + 1));
+
+        TestValidationResult<SearchUsdaFoodsQuery> result = await _validator.TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(q => q.Search);
+    }
+
+    [Fact]
     public async Task Validate_WithLimitTooLow_HasError() {
         var query = new SearchUsdaFoodsQuery("chicken", Limit: 0);
         TestValidationResult<SearchUsdaFoodsQuery> result = await _validator.TestValidateAsync(query);

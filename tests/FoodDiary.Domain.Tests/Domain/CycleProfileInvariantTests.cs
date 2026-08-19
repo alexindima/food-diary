@@ -19,6 +19,15 @@ public class CycleProfileInvariantTests {
         Assert.Equal(new DateOnly(2026, 3, 27), profile.TrackingStartDate);
     }
 
+    [Fact]
+    public void ReconcileMenstrualEpisodes_IsNotExposedAsPublicMutation() {
+        MethodInfo? method = typeof(CycleProfile).GetMethod(
+            "ReconcileMenstrualEpisodes",
+            BindingFlags.Instance | BindingFlags.Public);
+
+        Assert.Null(method);
+    }
+
     [Theory]
     [InlineData(17, 5, 14)]
     [InlineData(61, 5, 14)]
@@ -394,6 +403,40 @@ public class CycleProfileInvariantTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             factor.Update(startDate.AddDays(-1), notes: null, clearNotes: false));
+    }
+
+    [Fact]
+    public void GrantConsent_WhenAlreadyActive_PreservesOriginalGrantTimestamp() {
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
+        DateTime originalGrantedAtUtc = DateTime.UtcNow.AddMinutes(-5);
+        profile.GrantConsent(CycleConsentPurpose.NutritionInsights, originalGrantedAtUtc);
+        CycleConsent consent = Assert.Single(profile.Consents, item => item.Purpose == CycleConsentPurpose.NutritionInsights);
+        DateTime? modifiedAfterInitialGrant = profile.ModifiedOnUtc;
+
+        profile.GrantConsent(CycleConsentPurpose.NutritionInsights, originalGrantedAtUtc.AddMinutes(1));
+
+        Assert.Multiple(
+            () => Assert.Equal(originalGrantedAtUtc, consent.GrantedAtUtc),
+            () => Assert.Equal(modifiedAfterInitialGrant, profile.ModifiedOnUtc),
+            () => Assert.True(consent.IsActive));
+    }
+
+    [Fact]
+    public void GrantConsent_WhenRegrantPredatesRevocation_ThrowsWithoutChangingConsent() {
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
+        DateTime grantedAtUtc = DateTime.UtcNow.AddMinutes(-10);
+        DateTime revokedAtUtc = grantedAtUtc.AddMinutes(5);
+        profile.GrantConsent(CycleConsentPurpose.NutritionInsights, grantedAtUtc);
+        profile.RevokeConsent(CycleConsentPurpose.NutritionInsights, revokedAtUtc);
+        CycleConsent consent = Assert.Single(profile.Consents, item => item.Purpose == CycleConsentPurpose.NutritionInsights);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            profile.GrantConsent(CycleConsentPurpose.NutritionInsights, revokedAtUtc.AddTicks(-1)));
+
+        Assert.Multiple(
+            () => Assert.Equal(grantedAtUtc, consent.GrantedAtUtc),
+            () => Assert.Equal(revokedAtUtc, consent.RevokedAtUtc),
+            () => Assert.False(consent.IsActive));
     }
 
     [Fact]

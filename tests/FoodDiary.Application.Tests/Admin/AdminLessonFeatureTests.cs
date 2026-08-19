@@ -276,6 +276,27 @@ public class AdminLessonFeatureTests {
     }
 
     [Fact]
+    public async Task ImportAdminLessonsHandler_WhenSamePayloadIsRetried_ReturnsOriginalLessonsWithoutDuplicates() {
+        var repo = new InMemoryLessonRepository();
+        var handler = new ImportAdminLessonsCommandHandler(new LessonAdministrationService(repo));
+        var command = new ImportAdminLessonsCommand(
+            Version: 1,
+            Lessons: [
+                new ImportAdminLessonItem("Intro", "Content", "Summary", "en", "NutritionBasics", "Beginner", 3, 2),
+            ]);
+
+        Result<AdminLessonsImportModel> first = await handler.Handle(command, CancellationToken.None);
+        Result<AdminLessonsImportModel> replay = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(first);
+        ResultAssert.Success(replay);
+        Assert.Multiple(
+            () => Assert.Single(repo.Lessons),
+            () => Assert.Equal(first.Value.Lessons[0].Id, replay.Value.Lessons[0].Id),
+            () => Assert.Equal(1, replay.Value.ImportedCount));
+    }
+
+    [Fact]
     public async Task ImportAdminLessonsHandler_WithInvalidCategory_ReturnsIndexedValidationFailure() {
         var handler = new ImportAdminLessonsCommandHandler(new LessonAdministrationService(new InMemoryLessonRepository()));
 

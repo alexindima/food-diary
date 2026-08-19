@@ -20,8 +20,8 @@ public static class WearableHttpMappings {
 
     extension(ConnectWearableHttpRequest request) {
         public ConnectWearableCommand ToCommand(
-        Guid userId, string provider) =>
-                new(userId, provider, request.Code, request.State);
+        Guid userId, string provider, string requestId, string requestHash) =>
+                new(userId, provider, request.Code, request.State, requestId, requestHash);
     }
 
     public static DisconnectWearableCommand ToDisconnectCommand(Guid userId, string provider) =>

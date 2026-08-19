@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Export.Common;
 
 namespace FoodDiary.Application.Export.Queries.ExportDiary;
 
@@ -29,5 +30,15 @@ public sealed class ExportDiaryQueryValidator : AbstractValidator<ExportDiaryQue
                 out _))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Export dates cannot be represented with the requested time-zone offset.");
+
+        RuleFor(x => x.Locale)
+            .MaximumLength(ExportInputLimits.MaximumLocaleLength);
+        RuleFor(x => x.ReportOrigin)
+            .MaximumLength(ExportInputLimits.MaximumReportOriginLength);
+        RuleFor(x => x.TimeZoneOffsetMinutes)
+            .InclusiveBetween(
+                ExportInputLimits.MinimumTimeZoneOffsetMinutes,
+                ExportInputLimits.MaximumTimeZoneOffsetMinutes)
+            .When(x => x.TimeZoneOffsetMinutes.HasValue);
     }
 }

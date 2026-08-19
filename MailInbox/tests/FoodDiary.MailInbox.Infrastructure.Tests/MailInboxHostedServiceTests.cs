@@ -305,9 +305,8 @@ public sealed class MailInboxHostedServiceTests {
     [Fact]
     public async Task RetentionHostedService_WhenCanceledDuringPurge_StopsCleanly() {
         using var cts = new CancellationTokenSource();
-        await cts.CancelAsync();
         var service = new MailInboxRetentionHostedService(
-            new RecordingRetentionStore(expectedCallCount: 1, failuresBeforeSuccess: 0),
+            new CancelingRetentionStore(cts),
             Microsoft.Extensions.Options.Options.Create(new MailInboxStorageOptions()),
             FixedTime,
             NullLogger<MailInboxRetentionHostedService>.Instance);
@@ -402,14 +401,16 @@ public sealed class MailInboxHostedServiceTests {
     private static MailInboxSmtpHostedService CreateSmtpHostedService(MailInboxSmtpOptions options) {
         Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> optionsWrapper =
             Microsoft.Extensions.Options.Options.Create(options);
+        var rateLimiter = new MailInboxFixedWindowRateLimiter(optionsWrapper, TimeProvider.System);
         var messageStore = new SmtpInboundMessageStore(
             new ThrowingInboundMailStore(),
             optionsWrapper,
+            rateLimiter,
             TimeProvider.System,
             NullLogger<SmtpInboundMessageStore>.Instance);
         var mailboxFilter = new MailInboxMailboxFilter(
             optionsWrapper,
-            new MailInboxFixedWindowRateLimiter(optionsWrapper, TimeProvider.System));
+            rateLimiter);
         return new MailInboxSmtpHostedService(
             optionsWrapper,
             messageStore,
@@ -563,10 +564,41 @@ public sealed class MailInboxHostedServiceTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class DrainingRetentionStore(IReadOnlyList<InboundMailRetentionResult> results) : IInboundMailStore {
-        private int _callCount;
+    private sealed class CancelingRetentionStore(CancellationTokenSource cancellationSource) : IInboundMailStore {
+        public async Task<InboundMailRetentionResult> PurgeExpiredAsync(
+            DateTimeOffset contentCutoffUtc,
+            DateTimeOffset metadataCutoffUtc,
+            int batchSize,
+            CancellationToken cancellationToken) {
+            await cancellationSource.CancelAsync().ConfigureAwait(false);
+            return await Task.FromCanceled<InboundMailRetentionResult>(cancellationToken).ConfigureAwait(false);
+        }
 
-        public int CallCount => _callCount;
+        public Task<InboundMailSaveResult> SaveAsync(
+            InboundMailMessage message,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(
+            int limit,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<InboundMailMessageDetails?> GetMessageDetailsAsync(
+            Guid id,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<bool> MarkAsReadAsync(
+            Guid id,
+            DateTimeOffset readAtUtc,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class DrainingRetentionStore(IReadOnlyList<InboundMailRetentionResult> results) : IInboundMailStore {
+        public int CallCount { get; private set; }
 
         public Task<InboundMailRetentionResult> PurgeExpiredAsync(
             DateTimeOffset contentCutoffUtc,
@@ -574,7 +606,7 @@ public sealed class MailInboxHostedServiceTests {
             int batchSize,
             CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
-            InboundMailRetentionResult result = results[_callCount++];
+            InboundMailRetentionResult result = results[CallCount++];
             return Task.FromResult(result);
         }
 

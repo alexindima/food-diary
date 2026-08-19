@@ -245,7 +245,9 @@ public sealed class OpenAiFoodClient(
             using var json = JsonDocument.Parse(responseBody, new JsonDocumentOptions {
                 MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
             });
-            if (json.RootElement.TryGetProperty("input_tokens", out JsonElement tokensElement) &&
+            if (json.RootElement.ValueKind == JsonValueKind.Object &&
+                json.RootElement.TryGetProperty("input_tokens", out JsonElement tokensElement) &&
+                tokensElement.ValueKind == JsonValueKind.Number &&
                 tokensElement.TryGetInt64(out long inputTokens) &&
                 inputTokens > 0) {
                 return Result.Success(inputTokens);
@@ -482,7 +484,9 @@ public sealed class OpenAiFoodClient(
     }
 
     private static string? ExtractOutputText(JsonDocument json) {
-        if (!json.RootElement.TryGetProperty("output", out JsonElement output) || output.ValueKind != JsonValueKind.Array) {
+        if (json.RootElement.ValueKind != JsonValueKind.Object ||
+            !json.RootElement.TryGetProperty("output", out JsonElement output) ||
+            output.ValueKind != JsonValueKind.Array) {
             return null;
         }
 
@@ -492,9 +496,12 @@ public sealed class OpenAiFoodClient(
             }
 
             foreach (JsonElement part in content.EnumerateArray()) {
-                if (part.TryGetProperty("type", out JsonElement type) &&
-string.Equals(type.GetString(), "output_text", StringComparison.Ordinal) &&
-                    part.TryGetProperty("text", out JsonElement text)) {
+                if (part.ValueKind == JsonValueKind.Object &&
+                    part.TryGetProperty("type", out JsonElement type) &&
+                    type.ValueKind == JsonValueKind.String &&
+                    string.Equals(type.GetString(), "output_text", StringComparison.Ordinal) &&
+                    part.TryGetProperty("text", out JsonElement text) &&
+                    text.ValueKind == JsonValueKind.String) {
                     return text.GetString();
                 }
             }
@@ -518,16 +525,40 @@ string.Equals(type.GetString(), "output_text", StringComparison.Ordinal) &&
     }
 
     private static AiUsageTokens? ExtractUsage(JsonDocument json) {
-        if (!json.RootElement.TryGetProperty("usage", out JsonElement usage) ||
+        if (json.RootElement.ValueKind != JsonValueKind.Object ||
+            !json.RootElement.TryGetProperty("usage", out JsonElement usage) ||
             usage.ValueKind != JsonValueKind.Object) {
             return null;
         }
 
-        int input = usage.TryGetProperty("input_tokens", out JsonElement inputTokens) ? inputTokens.GetInt32() : 0;
-        int output = usage.TryGetProperty("output_tokens", out JsonElement outputTokens) ? outputTokens.GetInt32() : 0;
-        int total = usage.TryGetProperty("total_tokens", out JsonElement totalTokens) ? totalTokens.GetInt32() : input + output;
+        if (!TryGetNonNegativeInt32(usage, "input_tokens", out int input) ||
+            !TryGetNonNegativeInt32(usage, "output_tokens", out int output)) {
+            return null;
+        }
+
+        int total;
+        if (usage.TryGetProperty("total_tokens", out JsonElement totalTokens)) {
+            if (totalTokens.ValueKind != JsonValueKind.Number ||
+                !totalTokens.TryGetInt32(out total) ||
+                total < 0) {
+                return null;
+            }
+        } else {
+            long computedTotal = (long)input + output;
+            if (computedTotal > int.MaxValue) {
+                return null;
+            }
+
+            total = (int)computedTotal;
+        }
 
         return new AiUsageTokens(input, output, total);
+    }
+
+    private static bool TryGetNonNegativeInt32(JsonElement parent, string propertyName, out int value) {
+        value = 0;
+        return parent.TryGetProperty(propertyName, out JsonElement element) &&
+               (element.ValueKind == JsonValueKind.Number && element.TryGetInt32(out value) && value >= 0);
     }
 
     private TimeSpan ResolveRetryDelay(HttpResponseMessage response, int attempt) {

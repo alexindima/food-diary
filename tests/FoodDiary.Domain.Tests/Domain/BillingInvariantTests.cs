@@ -154,6 +154,46 @@ public sealed class BillingInvariantTests {
     }
 
     [Fact]
+    public void BillingSubscription_NonWebhookSnapshot_PreservesWebhookOrderingWatermark() {
+        BillingSubscription subscription = CreatePendingSubscription();
+        DateTime webhookOccurredAtUtc = Now.AddMinutes(-1);
+        subscription.ApplyProviderSnapshot(
+            BillingProviderNames.YooKassa,
+            "payment_1",
+            "pm_1",
+            "price_monthly",
+            "monthly",
+            "active",
+            Now,
+            Now.AddMonths(1),
+            cancelAtPeriodEnd: false,
+            canceledAtUtc: null,
+            trialStartUtc: null,
+            trialEndUtc: null,
+            "evt_webhook",
+            Now,
+            webhookOccurredAtUtc: webhookOccurredAtUtc);
+
+        subscription.ApplyProviderSnapshot(
+            BillingProviderNames.YooKassa,
+            "payment_2",
+            "pm_1",
+            "price_monthly",
+            "monthly",
+            "active",
+            Now.AddMonths(1),
+            Now.AddMonths(2),
+            cancelAtPeriodEnd: false,
+            canceledAtUtc: null,
+            trialStartUtc: null,
+            trialEndUtc: null,
+            "evt_renewal",
+            Now.AddMonths(1));
+
+        Assert.Equal(webhookOccurredAtUtc, subscription.LastWebhookOccurredAtUtc);
+    }
+
+    [Fact]
     public void BillingSubscription_CancelAtPeriodEnd_DoesNotScheduleNextBillingAttempt() {
         var subscription = BillingSubscription.CreatePending(
             UserId,

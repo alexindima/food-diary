@@ -86,6 +86,18 @@ public class MiscDomainInvariantTests {
     }
 
     [Fact]
+    public void RecentItem_Touch_WithOlderTimestamp_DoesNotRegressLastUsedTime() {
+        DateTime latestUsedAtUtc = DateTime.UtcNow;
+        var recentItem = RecentItem.Create(UserId.New(), RecentItemType.Product, Guid.NewGuid(), latestUsedAtUtc);
+
+        recentItem.Touch(latestUsedAtUtc.AddMinutes(-1));
+
+        Assert.Multiple(
+            () => Assert.Equal(latestUsedAtUtc, recentItem.LastUsedAtUtc),
+            () => Assert.Equal(2, recentItem.UsageCount));
+    }
+
+    [Fact]
     public void RecentItem_Create_WithLocalTimestamp_NormalizesToUtc() {
         var localTimestamp = new DateTime(2026, 3, 27, 12, 30, 0, DateTimeKind.Local);
 

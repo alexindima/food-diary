@@ -160,8 +160,11 @@ public sealed class ProductSearchSuggestionTests {
         TestValidationResult<SearchProductSuggestionsQuery> emptySearch = await _validator.TestValidateAsync(new SearchProductSuggestionsQuery("", 5));
         TestValidationResult<SearchProductSuggestionsQuery> tooLowLimit = await _validator.TestValidateAsync(new SearchProductSuggestionsQuery("fanta", 0));
         TestValidationResult<SearchProductSuggestionsQuery> tooHighLimit = await _validator.TestValidateAsync(new SearchProductSuggestionsQuery("fanta", 21));
+        TestValidationResult<SearchProductSuggestionsQuery> tooLongSearch = await _validator.TestValidateAsync(
+            new SearchProductSuggestionsQuery(new string('x', SearchProductSuggestionsQueryValidator.MaximumSearchLength + 1), 5));
 
         emptySearch.ShouldHaveValidationErrorFor(q => q.Search);
+        tooLongSearch.ShouldHaveValidationErrorFor(q => q.Search);
         tooLowLimit.ShouldHaveValidationErrorFor(q => q.Limit);
         tooHighLimit.ShouldHaveValidationErrorFor(q => q.Limit);
     }

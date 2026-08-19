@@ -37,7 +37,7 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
         options.AddPolicy<string>(PresentationPolicyNames.AiRateLimitPolicyName, context =>
             CreatePartition(settings.Ai, $"ai:{GetPartitionKey(context)}"));
         options.AddPolicy<string>(PresentationPolicyNames.WebhookRateLimitPolicyName, context =>
-            CreatePartition(settings.Webhook, $"webhook:{GetPartitionKey(context)}"));
+            CreateWebhookPartition(settings, context));
         options.AddPolicy<string>(PresentationPolicyNames.ClientTelemetryRateLimitPolicyName, context =>
             CreatePartition(settings.ClientTelemetry, $"client-telemetry:{GetPartitionKey(context)}"));
         options.AddPolicy<string>(PresentationPolicyNames.MarketingAttributionRateLimitPolicyName, context =>
@@ -68,6 +68,15 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
                 QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                 AutoReplenishment = true,
             });
+    }
+
+    private static RateLimitPartition<string> CreateWebhookPartition(
+        ApiRateLimitingOptions settings,
+        HttpContext context) {
+        string? provider = context.Request.RouteValues["provider"]?.ToString();
+        return string.Equals(provider, "yookassa", StringComparison.OrdinalIgnoreCase)
+            ? CreatePartition(settings.YooKassaWebhook, "webhook:provider:yookassa")
+            : CreatePartition(settings.Webhook, $"webhook:{GetPartitionKey(context)}");
     }
 
     private static string GetPartitionKey(HttpContext context) {

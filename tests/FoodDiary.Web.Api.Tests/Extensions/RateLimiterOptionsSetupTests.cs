@@ -69,6 +69,26 @@ public sealed class RateLimiterOptionsSetupTests {
         Assert.NotNull(partition);
     }
 
+    [Fact]
+    public void Configure_WebhookPolicyFactory_UsesGlobalPartitionForYooKassa() {
+        var options = new RateLimiterOptions();
+        new RateLimiterOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiRateLimitingOptions())).Configure(options);
+        object policy = FindPolicy(options, PresentationPolicyNames.WebhookRateLimitPolicyName);
+        Delegate factory = Assert.Single(GetDelegates(policy));
+        DefaultHttpContext firstContext = CreateWebhookContext("YooKassa", "198.51.100.25");
+        DefaultHttpContext secondContext = CreateWebhookContext("yookassa", "203.0.113.10");
+        DefaultHttpContext stripeContext = CreateWebhookContext("stripe", "198.51.100.25");
+
+        string firstPartitionKey = GetPartitionKey(factory.DynamicInvoke(firstContext));
+        string secondPartitionKey = GetPartitionKey(factory.DynamicInvoke(secondContext));
+        string stripePartitionKey = GetPartitionKey(factory.DynamicInvoke(stripeContext));
+
+        Assert.Multiple(
+            () => Assert.Equal("webhook:provider:yookassa", firstPartitionKey),
+            () => Assert.Equal(firstPartitionKey, secondPartitionKey),
+            () => Assert.False(string.Equals(firstPartitionKey, stripePartitionKey, StringComparison.Ordinal)));
+    }
+
     [Theory]
     [InlineData(PresentationPolicyNames.ClientTelemetryRateLimitPolicyName)]
     [InlineData(PresentationPolicyNames.MarketingAttributionRateLimitPolicyName)]
@@ -129,6 +149,32 @@ public sealed class RateLimiterOptionsSetupTests {
         object? policy = dictionary[policyName];
         Assert.NotNull(policy);
         return policy;
+    }
+
+    private static DefaultHttpContext CreateWebhookContext(string provider, string remoteIpAddress) {
+        var context = new DefaultHttpContext();
+        context.Request.RouteValues["provider"] = provider;
+        context.Connection.RemoteIpAddress = System.Net.IPAddress.Parse(remoteIpAddress);
+        return context;
+    }
+
+    private static string GetPartitionKey(object? partition) {
+        Assert.NotNull(partition);
+        PropertyInfo? property = partition.GetType().GetProperty(
+            "PartitionKey",
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        Assert.NotNull(property);
+        object? value = property.GetValue(partition);
+        if (value is string partitionKey) {
+            return partitionKey;
+        }
+
+        Assert.NotNull(value);
+        PropertyInfo? keyProperty = value.GetType().GetProperty(
+            "Key",
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        Assert.NotNull(keyProperty);
+        return Assert.IsType<string>(keyProperty.GetValue(value));
     }
 
     private static IReadOnlyList<Delegate> GetDelegates(object instance) {

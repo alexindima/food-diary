@@ -3,8 +3,8 @@
   "summary": {
     "optionTypes": 54,
     "configurationFiles": 7,
-    "configurationKeys": 240,
-    "environmentVariables": 174
+    "configurationKeys": 247,
+    "environmentVariables": 178
   },
   "optionTypes": [
     {
@@ -92,7 +92,8 @@
         "TestDelivery",
         "Wearable",
         "Webhook",
-        "WindowSeconds"
+        "WindowSeconds",
+        "YooKassaWebhook"
       ],
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs"
     },
@@ -255,6 +256,8 @@
       "section": "MailInboxHttp",
       "properties": [
         "ApiKey",
+        "MaxConcurrentMessageDetailRequests",
+        "MessageDetailQueueTimeout",
         "RequireApiKey"
       ],
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs"
@@ -276,6 +279,7 @@
         "MaxMessagesPerSession",
         "MaxMimeDepth",
         "MaxMimeParts",
+        "MaxRawBytesPerIpPerHour",
         "MaxRecipientsPerMessage",
         "MaxTrackedRateLimitKeys",
         "Port",
@@ -294,6 +298,7 @@
         "CleanupInterval",
         "ContentRetention",
         "DeduplicationWindow",
+        "MaxConcurrentMessageDetailReads",
         "MaxMessagesPerDay",
         "MaxRawBytesPerDay",
         "MetadataRetention"
@@ -800,6 +805,9 @@
         "RateLimiting:Webhook:PermitLimit",
         "RateLimiting:Webhook:QueueLimit",
         "RateLimiting:Webhook:WindowSeconds",
+        "RateLimiting:YooKassaWebhook:PermitLimit",
+        "RateLimiting:YooKassaWebhook:QueueLimit",
+        "RateLimiting:YooKassaWebhook:WindowSeconds",
         "S3:AccessKeyId",
         "S3:Bucket",
         "S3:MaxUploadSizeBytes",
@@ -848,6 +856,8 @@
         "Logging:LogLevel:Default",
         "Logging:LogLevel:Microsoft.AspNetCore",
         "MailInboxHttp:ApiKey",
+        "MailInboxHttp:MaxConcurrentMessageDetailRequests",
+        "MailInboxHttp:MessageDetailQueueTimeout",
         "MailInboxHttp:RequireApiKey",
         "MailInboxSmtp:AllowedRecipients",
         "MailInboxSmtp:CertificatePath",
@@ -862,6 +872,7 @@
         "MailInboxSmtp:MaxMessagesPerSession",
         "MailInboxSmtp:MaxMimeDepth",
         "MailInboxSmtp:MaxMimeParts",
+        "MailInboxSmtp:MaxRawBytesPerIpPerHour",
         "MailInboxSmtp:MaxRecipientsPerMessage",
         "MailInboxSmtp:MaxTrackedRateLimitKeys",
         "MailInboxSmtp:Port",
@@ -873,6 +884,7 @@
         "MailInboxStorage:CleanupInterval",
         "MailInboxStorage:ContentRetention",
         "MailInboxStorage:DeduplicationWindow",
+        "MailInboxStorage:MaxConcurrentMessageDetailReads",
         "MailInboxStorage:MaxMessagesPerDay",
         "MailInboxStorage:MaxRawBytesPerDay",
         "MailInboxStorage:MetadataRetention",
@@ -1030,6 +1042,8 @@
         "MAIL_RELAY_POSTGRES_PASSWORD",
         "MAIL_RELAY_POSTGRES_PORT",
         "MAIL_RELAY_POSTGRES_USER",
+        "MailInboxHttp__MaxConcurrentMessageDetailRequests",
+        "MailInboxHttp__MessageDetailQueueTimeout",
         "MailInboxSmtp__AllowedRecipients__0",
         "MailInboxSmtp__AllowedRecipients__1",
         "MailInboxSmtp__AllowedRecipients__2",
@@ -1046,6 +1060,7 @@
         "MailInboxSmtp__MaxMessagesPerSession",
         "MailInboxSmtp__MaxMimeDepth",
         "MailInboxSmtp__MaxMimeParts",
+        "MailInboxSmtp__MaxRawBytesPerIpPerHour",
         "MailInboxSmtp__MaxRecipientsPerMessage",
         "MailInboxSmtp__MaxTrackedRateLimitKeys",
         "MailInboxSmtp__Port",
@@ -1057,6 +1072,7 @@
         "MailInboxStorage__CleanupInterval",
         "MailInboxStorage__ContentRetention",
         "MailInboxStorage__DeduplicationWindow",
+        "MailInboxStorage__MaxConcurrentMessageDetailReads",
         "MailInboxStorage__MaxMessagesPerDay",
         "MailInboxStorage__MaxRawBytesPerDay",
         "MailInboxStorage__MetadataRetention",

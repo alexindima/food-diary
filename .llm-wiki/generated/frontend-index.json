@@ -3117,7 +3117,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/explore/api/like.service.ts",
-      "line": 10
+      "line": 11
     },
     {
       "name": "ReportService",
@@ -3502,7 +3502,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/hydration/api/hydration.service.ts",
-      "line": 10
+      "line": 11
     },
     {
       "name": "LessonService",
@@ -4776,7 +4776,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
-      "line": 20
+      "line": 21
     },
     {
       "name": "WaistHistoryChartCardComponent",

@@ -68,4 +68,38 @@ public sealed class WeeklyGoalInvariantTests {
             () => Assert.Null(goal.TimeZoneOffsetMinutes),
             () => Assert.Null(goal.LastReminderLocalDate));
     }
+
+    [Fact]
+    public void Update_WithIdenticalConfiguration_PreservesReminderDateAndModificationTimestamp() {
+        var goal = WeeklyGoal.Create(
+            UserId.New(), WeekStart, WeeklyGoalType.DiaryLogging, targetDays: 5,
+            reminderEnabled: true, reminderTimeMinutes: 21 * 60, timeZoneOffsetMinutes: 240);
+        var reminderDate = new DateOnly(year: 2026, month: 8, day: 10);
+        goal.MarkReminderSent(reminderDate, WeekStart.AddHours(value: 17));
+        DateTime? modifiedAfterReminder = goal.ModifiedOnUtc;
+
+        goal.Update(targetDays: 5, reminderEnabled: true, reminderTimeMinutes: 21 * 60,
+            timeZoneOffsetMinutes: 240, modifiedAtUtc: WeekStart.AddDays(value: 1));
+
+        Assert.Multiple(
+            () => Assert.Equal(reminderDate, goal.LastReminderLocalDate),
+            () => Assert.Equal(modifiedAfterReminder, goal.ModifiedOnUtc));
+    }
+
+    [Fact]
+    public void Update_WhenOnlyTargetChanges_PreservesReminderDate() {
+        var goal = WeeklyGoal.Create(
+            UserId.New(), WeekStart, WeeklyGoalType.DiaryLogging, targetDays: 5,
+            reminderEnabled: true, reminderTimeMinutes: 21 * 60, timeZoneOffsetMinutes: 240);
+        var reminderDate = new DateOnly(year: 2026, month: 8, day: 10);
+        goal.MarkReminderSent(reminderDate, WeekStart.AddHours(value: 17));
+
+        goal.Update(targetDays: 7, reminderEnabled: true, reminderTimeMinutes: 21 * 60,
+            timeZoneOffsetMinutes: 240, modifiedAtUtc: WeekStart.AddDays(value: 1));
+
+        Assert.Multiple(
+            () => Assert.Equal(7, goal.TargetDays),
+            () => Assert.Equal(reminderDate, goal.LastReminderLocalDate),
+            () => Assert.Equal(WeekStart.AddDays(value: 1), goal.ModifiedOnUtc));
+    }
 }

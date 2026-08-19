@@ -35,9 +35,19 @@ public sealed class MealPlanDay : Entity<MealPlanDayId> {
         return day;
     }
 
-    public MealPlanMeal AddMeal(MealType mealType, RecipeId recipeId, int servings = 1) {
+    public MealPlanMeal AddMeal(MealType mealType, RecipeId recipeId, int servings = 1) =>
+        AddMeal(mealType, recipeId, servings, markModified: true);
+
+    internal MealPlanMeal AddMealOnCreation(MealType mealType, RecipeId recipeId, int servings) =>
+        AddMeal(mealType, recipeId, servings, markModified: false);
+
+    private MealPlanMeal AddMeal(MealType mealType, RecipeId recipeId, int servings, bool markModified) {
         var meal = MealPlanMeal.Create(Id, mealType, recipeId, servings);
         _meals.Add(meal);
+        if (markModified) {
+            SetModified();
+        }
+
         return meal;
     }
 }

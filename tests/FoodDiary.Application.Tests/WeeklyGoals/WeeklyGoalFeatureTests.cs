@@ -178,6 +178,26 @@ public sealed class WeeklyGoalFeatureTests {
     }
 
     [Fact]
+    public async Task UpsertHandler_WhenRequestIsRetried_PreservesReminderDeduplicationDate() {
+        var userId = UserId.New();
+        WeeklyGoal goal = CreateGoal(userId, reminderEnabled: true);
+        var reminderDate = new DateOnly(2026, 8, 10);
+        goal.MarkReminderSent(reminderDate, WeekStartUtc.AddHours(17));
+        IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
+        repository.GetAsync(userId, WeekStartUtc, true, Arg.Any<CancellationToken>()).Returns(goal);
+        UpsertWeeklyGoalCommandHandler handler = CreateUpsertHandler(
+            repository,
+            Substitute.For<IMealActivityReadService>());
+
+        Result<WeeklyGoalModel> result = await handler.Handle(
+            new UpsertWeeklyGoalCommand(userId.Value, WeekStart, 5, true, new TimeOnly(9, 30), 240),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(reminderDate, goal.LastReminderLocalDate);
+    }
+
+    [Fact]
     public async Task UpsertHandler_WhenAccessFails_ReturnsFailureWithoutRepositoryCall() {
         IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
         var handler = new UpsertWeeklyGoalCommandHandler(

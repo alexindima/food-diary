@@ -14,4 +14,9 @@ public interface IHydrationEntryWriteRepository {
         HydrationEntryId id,
         bool asTracking = false,
         CancellationToken cancellationToken = default);
+
+    Task<HydrationEntry?> GetByTimestampAsync(
+        UserId userId,
+        DateTime timestampUtc,
+        CancellationToken cancellationToken = default);
 }

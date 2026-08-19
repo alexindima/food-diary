@@ -15,7 +15,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
 
-        Assert.Equal(3, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_schema_migrations"));
+        Assert.Equal(5, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_schema_migrations"));
         Assert.Equal(
             "read_at_utc",
             await GetScalarAsync<string>(
@@ -38,6 +38,21 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
                   and table_name = 'mailinbox_messages'
                   and column_name = 'raw_mime'
                 """));
+        Assert.Equal(
+            4,
+            await GetScalarAsync<long>(
+                dataSource,
+                """
+                select count(*)
+                from pg_constraint
+                where conrelid = 'public.mailinbox_messages'::regclass
+                  and conname in (
+                      'ck_mailinbox_messages_message_id_length',
+                      'ck_mailinbox_messages_from_address_length',
+                      'ck_mailinbox_messages_subject_length',
+                      'ck_mailinbox_messages_recipients_limits')
+                  and convalidated
+                """));
     }
 
     [RequiresDockerFact]
@@ -48,7 +63,25 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
 
         await store.EnsureSchemaAsync(CancellationToken.None);
 
-        Assert.Equal(3, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_schema_migrations"));
+        Assert.Equal(5, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_schema_migrations"));
+    }
+
+    [RequiresDockerFact]
+    public async Task EnsureSchemaAsync_WhenCalledConcurrently_SerializesMigrations() {
+        fixture.EnsureAvailable();
+        string connectionString = await fixture.CreateIsolatedDatabaseAsync().ConfigureAwait(false);
+        var dataSource = NpgsqlDataSource.Create(connectionString);
+        await using (dataSource.ConfigureAwait(false)) {
+            NpgsqlInboundMailStore[] stores = [.. Enumerable.Range(0, 4).Select(_ => CreateStore(dataSource))];
+
+            await Task.WhenAll(stores.Select(store => store.EnsureSchemaAsync(CancellationToken.None)))
+                .ConfigureAwait(false);
+
+            Assert.Equal(
+                5,
+                await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_schema_migrations")
+                    .ConfigureAwait(false));
+        }
     }
 
     [RequiresDockerFact]
@@ -163,6 +196,36 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
     }
 
     [RequiresDockerFact]
+    public async Task GetMessageDetailsAsync_WhenRequestsRunInParallel_BoundsParserConcurrency() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        NpgsqlInboundMailStore seedingStore = CreateStore(dataSource);
+        InboundMailSaveResult saved = await seedingStore.SaveAsync(
+            CreateMessage("parallel-details", new DateTimeOffset(2026, 6, 18, 9, 0, 0, TimeSpan.Zero)),
+            CancellationToken.None);
+        var parser = new BlockingDmarcReportParser(expectedConcurrentCalls: 2);
+        using NpgsqlInboundMailStore store = CreateStore(
+            dataSource,
+            new MailInboxStorageOptions { MaxConcurrentMessageDetailReads = 2 },
+            parser);
+
+        Task<InboundMailMessageDetails?>[] reads = [.. Enumerable.Range(0, 6)
+            .Select(_ => store.GetMessageDetailsAsync(saved.Id, CancellationToken.None))];
+        await parser.WaitUntilExpectedConcurrencyAsync()
+            .WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System);
+
+        Assert.Equal(2, parser.ActiveCalls);
+        Assert.Equal(2, parser.MaxConcurrentCalls);
+        Assert.All(reads, static read => Assert.False(read.IsCompleted));
+
+        parser.Release();
+        InboundMailMessageDetails?[] details = await Task.WhenAll(reads);
+
+        Assert.All(details, static detail => Assert.NotNull(detail));
+        Assert.Equal(2, parser.MaxConcurrentCalls);
+    }
+
+    [RequiresDockerFact]
     public async Task SaveAsync_WhenSmtpDeliveryIsRetried_ReturnsExistingMessageWithoutConsumingQuotaTwice() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
@@ -179,6 +242,62 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         Assert.Equal(firstResult.Id, retryResult.Id);
         Assert.Equal(1, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_messages"));
         Assert.Equal(1, await GetScalarAsync<long>(dataSource, "select message_count from mailinbox_daily_ingestion_usage"));
+    }
+
+    [RequiresDockerFact]
+    public async Task SaveAsync_WhenRetryCrossesFixedBucketBoundary_DeduplicatesWithinSlidingWindow() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        NpgsqlInboundMailStore store = CreateStore(
+            dataSource,
+            new MailInboxStorageOptions { DeduplicationWindow = TimeSpan.FromHours(1) });
+        var receivedAt = new DateTimeOffset(2026, 6, 18, 11, 59, 0, TimeSpan.Zero);
+
+        InboundMailSaveResult first = await store.SaveAsync(CreateMessage("boundary", receivedAt), CancellationToken.None);
+        InboundMailSaveResult retry = await store.SaveAsync(
+            CreateMessage("boundary", receivedAt.AddMinutes(2)),
+            CancellationToken.None);
+
+        Assert.False(first.WasDuplicate);
+        Assert.True(retry.WasDuplicate);
+        Assert.Equal(first.Id, retry.Id);
+        Assert.Equal(1, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_messages"));
+    }
+
+    [RequiresDockerFact]
+    public async Task SaveAsync_WhenSameContentArrivesOutsideSlidingWindow_PersistsNewMessage() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        NpgsqlInboundMailStore store = CreateStore(
+            dataSource,
+            new MailInboxStorageOptions { DeduplicationWindow = TimeSpan.FromHours(1) });
+        var receivedAt = new DateTimeOffset(2026, 6, 18, 11, 0, 0, TimeSpan.Zero);
+
+        InboundMailSaveResult first = await store.SaveAsync(CreateMessage("repeat", receivedAt), CancellationToken.None);
+        InboundMailSaveResult later = await store.SaveAsync(
+            CreateMessage("repeat", receivedAt.AddHours(2)),
+            CancellationToken.None);
+
+        Assert.False(first.WasDuplicate);
+        Assert.False(later.WasDuplicate);
+        Assert.NotEqual(first.Id, later.Id);
+        Assert.Equal(2, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_messages"));
+    }
+
+    [RequiresDockerFact]
+    public async Task SaveAsync_WhenIdenticalMessagesArriveConcurrently_PersistsOneMessage() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        NpgsqlInboundMailStore store = CreateStore(dataSource);
+        var receivedAt = new DateTimeOffset(2026, 6, 18, 9, 0, 0, TimeSpan.Zero);
+
+        InboundMailSaveResult[] results = await Task.WhenAll(Enumerable.Range(0, 4)
+            .Select(_ => store.SaveAsync(CreateMessage("concurrent", receivedAt), CancellationToken.None)));
+
+        Assert.Single(results, static result => !result.WasDuplicate);
+        Assert.Equal(3, results.Count(static result => result.WasDuplicate));
+        Assert.Single(results.Select(static result => result.Id).Distinct());
+        Assert.Equal(1, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_messages"));
     }
 
     [RequiresDockerFact]
@@ -212,6 +331,60 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         Assert.Equal("InboundMailStorageQuotaExceededException", exception.GetType().Name);
         Assert.Equal(0, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_messages"));
         Assert.Equal(0, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_daily_ingestion_usage"));
+    }
+
+    [RequiresDockerFact]
+    public async Task SaveAsync_WhenPersistedCopiesExceedDailyByteQuota_RollsBackMessageAndUsage() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        InboundMailMessage message = CreateMessage(
+            new string('s', 100),
+            new DateTimeOffset(2026, 6, 18, 9, 0, 0, TimeSpan.Zero));
+        NpgsqlInboundMailStore store = CreateStore(
+            dataSource,
+            new MailInboxStorageOptions { MaxRawBytesPerDay = message.RawMimeBytes.Length });
+
+        Exception exception = await Assert.ThrowsAnyAsync<Exception>(
+            () => store.SaveAsync(message, CancellationToken.None));
+
+        Assert.Equal("InboundMailStorageQuotaExceededException", exception.GetType().Name);
+        Assert.Equal(0, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_messages"));
+        Assert.Equal(0, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_daily_ingestion_usage"));
+    }
+
+    [RequiresDockerFact]
+    public async Task SaveAsync_WhenSubjectExceedsStoredMetadataLimit_RejectsBeforeDatabaseAccess() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        NpgsqlInboundMailStore store = CreateStore(dataSource);
+        InboundMailMessage message = CreateMessage(
+            new string('s', 999),
+            new DateTimeOffset(2026, 6, 18, 9, 0, 0, TimeSpan.Zero));
+
+        await Assert.ThrowsAsync<ArgumentException>(() => store.SaveAsync(message, CancellationToken.None));
+
+        Assert.Equal(0, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_messages"));
+    }
+
+    [RequiresDockerFact]
+    public async Task Schema_WhenRecipientExceedsStoredMetadataLimit_RejectsDirectUpdate() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        NpgsqlInboundMailStore store = CreateStore(dataSource);
+        InboundMailSaveResult saved = await store.SaveAsync(
+            CreateMessage("bounded-recipient", new DateTimeOffset(2026, 6, 18, 9, 0, 0, TimeSpan.Zero)),
+            CancellationToken.None);
+        string recipientsJson = System.Text.Json.JsonSerializer.Serialize(new[] { new string('r', 321) });
+
+        PostgresException exception = await Assert.ThrowsAsync<PostgresException>(() => GetScalarAsync<int>(
+            dataSource,
+            "update mailinbox_messages set to_recipients_json = @recipients_json::jsonb where id = @id; select 1;",
+            parameters => {
+                parameters.AddWithValue("recipients_json", recipientsJson);
+                parameters.AddWithValue("id", saved.Id);
+            }));
+
+        Assert.Equal(PostgresErrorCodes.CheckViolation, exception.SqlState);
     }
 
     [RequiresDockerFact]
@@ -284,6 +457,51 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         }
     }
 
+    [RequiresDockerFact]
+    public async Task ReadinessChecker_WhenRequiredIndexIsMissing_Throws() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        await GetScalarAsync<int>(
+            dataSource,
+            "drop index ix_mailinbox_messages_ingestion_received_at_utc; select 1;");
+        var checker = new NpgsqlMailInboxReadinessChecker(dataSource);
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => checker.CheckReadyAsync(CancellationToken.None));
+
+        Assert.Contains("schema is not ready", exception.Message, StringComparison.Ordinal);
+    }
+
+    [RequiresDockerFact]
+    public async Task ReadinessChecker_WhenMetadataConstraintIsMissing_Throws() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        await GetScalarAsync<int>(
+            dataSource,
+            "alter table mailinbox_messages drop constraint ck_mailinbox_messages_subject_length; select 1;");
+        var checker = new NpgsqlMailInboxReadinessChecker(dataSource);
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => checker.CheckReadyAsync(CancellationToken.None));
+
+        Assert.Contains("schema is not ready", exception.Message, StringComparison.Ordinal);
+    }
+
+    [RequiresDockerFact]
+    public async Task ReadinessChecker_WhenLatestMigrationRecordIsMissing_Throws() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        await GetScalarAsync<int>(
+            dataSource,
+            "delete from mailinbox_schema_migrations where name = '202608190002_bound_persisted_mail_metadata'; select 1;");
+        var checker = new NpgsqlMailInboxReadinessChecker(dataSource);
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => checker.CheckReadyAsync(CancellationToken.None));
+
+        Assert.Contains("schema is not ready", exception.Message, StringComparison.Ordinal);
+    }
+
     private async Task<NpgsqlDataSource> CreateDataSourceAsync() {
         string connectionString = await fixture.CreateIsolatedDatabaseAsync().ConfigureAwait(false);
         var dataSource = NpgsqlDataSource.Create(connectionString);
@@ -293,10 +511,11 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
 
     private static NpgsqlInboundMailStore CreateStore(
         NpgsqlDataSource dataSource,
-        MailInboxStorageOptions? options = null) =>
+        MailInboxStorageOptions? options = null,
+        IMailInboxDmarcReportParser? parser = null) =>
         new(
             dataSource,
-            new DmarcReportParser(),
+            parser ?? new DmarcReportParser(),
             Microsoft.Extensions.Options.Options.Create(options ?? new MailInboxStorageOptions()),
             FixedTime);
 
@@ -305,6 +524,50 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider : TimeProvider {
         public override DateTimeOffset GetUtcNow() => new(2026, 6, 18, 12, 0, 0, TimeSpan.Zero);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class BlockingDmarcReportParser(int expectedConcurrentCalls) : IMailInboxDmarcReportParser {
+        private readonly TaskCompletionSource _expectedConcurrencyReached =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly ManualResetEventSlim _release = new(initialState: false);
+        private int _activeCalls;
+        private int _maxConcurrentCalls;
+
+        public int ActiveCalls => Volatile.Read(ref _activeCalls);
+
+        public int MaxConcurrentCalls => Volatile.Read(ref _maxConcurrentCalls);
+
+        public Task WaitUntilExpectedConcurrencyAsync() => _expectedConcurrencyReached.Task;
+
+        public void Release() => _release.Set();
+
+        public DmarcReportPreview? TryParse(string rawMime, CancellationToken cancellationToken = default) {
+            int activeCalls = Interlocked.Increment(ref _activeCalls);
+            UpdateMaximum(activeCalls);
+            if (activeCalls >= expectedConcurrentCalls) {
+                _expectedConcurrencyReached.TrySetResult();
+            }
+
+            try {
+                _release.Wait(cancellationToken);
+                return null;
+            } finally {
+                Interlocked.Decrement(ref _activeCalls);
+            }
+        }
+
+        private void UpdateMaximum(int value) {
+            int current = Volatile.Read(ref _maxConcurrentCalls);
+            while (value > current) {
+                int observed = Interlocked.CompareExchange(ref _maxConcurrentCalls, value, current);
+                if (observed == current) {
+                    return;
+                }
+
+                current = observed;
+            }
+        }
     }
 
     private static InboundMailMessage CreateMessage(string subject, DateTimeOffset receivedAtUtc) =>

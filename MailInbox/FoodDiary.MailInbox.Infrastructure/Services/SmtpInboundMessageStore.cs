@@ -1,4 +1,5 @@
 using System.Buffers;
+using System.Net;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Domain.Messages;
@@ -10,6 +11,7 @@ using MimeKit;
 using SmtpServer;
 using SmtpServer.Protocol;
 using SmtpServer.Storage;
+using SmtpServer.Net;
 using System.Diagnostics;
 
 namespace FoodDiary.MailInbox.Infrastructure.Services;
@@ -17,9 +19,13 @@ namespace FoodDiary.MailInbox.Infrastructure.Services;
 public sealed class SmtpInboundMessageStore(
     IInboundMailStore store,
     IOptions<MailInboxSmtpOptions> options,
+    MailInboxFixedWindowRateLimiter rateLimiter,
     TimeProvider timeProvider,
     ILogger<SmtpInboundMessageStore> logger) : MessageStore, IDisposable {
     private readonly MailInboxSmtpOptions _options = options.Value;
+    private readonly HashSet<string> _allowedRecipients = options.Value.AllowedRecipients
+        .Select(static address => address.Trim().ToLowerInvariant())
+        .ToHashSet(StringComparer.Ordinal);
     private readonly SemaphoreSlim _processingSlots = new(
         options.Value.MaxConcurrentMessageProcessing,
         options.Value.MaxConcurrentMessageProcessing);
@@ -41,9 +47,26 @@ public sealed class SmtpInboundMessageStore(
         }
 
         try {
+            if (messageSize == 0) {
+                MailInboxTelemetry.RecordIngestion("empty_message", Stopwatch.GetElapsedTime(startedAt), messageSize);
+                return new SmtpResponse(SmtpReplyCode.TransactionFailed, "Message content is required.");
+            }
+
             if (messageSize > _options.MaxMessageSizeBytes) {
                 MailInboxTelemetry.RecordIngestion("message_too_large", Stopwatch.GetElapsedTime(startedAt), messageSize);
                 return SmtpResponse.SizeLimitExceeded;
+            }
+
+            if (!rateLimiter.TryAcquire(
+                    "ip-bytes",
+                    GetSourceAddress(context),
+                    _options.MaxRawBytesPerIpPerHour,
+                    TimeSpan.FromHours(1),
+                    messageSize)) {
+                MailInboxTelemetry.RecordIngestion("ip_byte_rate_limited", Stopwatch.GetElapsedTime(startedAt), messageSize);
+                return new SmtpResponse(
+                    SmtpReplyCode.InsufficientStorage,
+                    "Per-source mail byte capacity is temporarily exhausted.");
             }
 
             byte[] rawBytes = buffer.ToArray();
@@ -61,24 +84,29 @@ public sealed class SmtpInboundMessageStore(
 
             string[] recipients = [.. transaction.To
                 .Select(static mailbox => $"{mailbox.User}@{mailbox.Host}")
-                .Where(static address => !string.IsNullOrWhiteSpace(address))];
+                .Where(static address => !string.IsNullOrWhiteSpace(address))
+                .Select(static address => address.Trim().ToLowerInvariant())];
 
-            if (recipients.Length == 0) {
-                recipients = [.. message.To.Mailboxes
-                    .Select(static mailbox => mailbox.Address)
-                    .Where(static address => !string.IsNullOrWhiteSpace(address))];
-            }
-
-            if (recipients.Length == 0 || recipients.Length > _options.MaxRecipientsPerMessage) {
+            if (recipients.Length == 0 ||
+                recipients.Length > _options.MaxRecipientsPerMessage ||
+                recipients.Any(recipient => !_allowedRecipients.Contains(recipient))) {
                 MailInboxTelemetry.RecordIngestion("recipient_limit", Stopwatch.GetElapsedTime(startedAt), messageSize);
                 return SmtpResponse.NoValidRecipientsGiven;
             }
 
+            string? messageId = message.MessageId;
+            string? fromAddress = message.From.Mailboxes.FirstOrDefault()?.Address;
+            string? subject = message.Subject;
+            if (!MailInboxStoredMessageLimits.IsWithinLimits(messageId, fromAddress, recipients, subject)) {
+                MailInboxTelemetry.RecordIngestion("metadata_limit", Stopwatch.GetElapsedTime(startedAt), messageSize);
+                return new SmtpResponse(SmtpReplyCode.TransactionFailed, "Message metadata exceeds the allowed limits.");
+            }
+
             var inboundMessage = InboundMailMessage.Receive(
-                message.MessageId,
-                message.From.Mailboxes.FirstOrDefault()?.Address,
+                messageId,
+                fromAddress,
                 recipients,
-                message.Subject,
+                subject,
                 Truncate(message.TextBody, _options.MaxExtractedBodyCharacters),
                 Truncate(message.HtmlBody, _options.MaxExtractedBodyCharacters),
                 rawBytes,
@@ -113,6 +141,16 @@ public sealed class SmtpInboundMessageStore(
     }
 
     public void Dispose() => _processingSlots.Dispose();
+
+    private static string GetSourceAddress(ISessionContext? context) {
+        if (context is not null &&
+            context.Properties.TryGetValue(EndpointListener.RemoteEndPointKey, out object? value) &&
+            value is IPEndPoint endpoint) {
+            return MailInboxNetworkIdentity.GetKey(endpoint.Address);
+        }
+
+        return "unknown";
+    }
 
     private static async Task<MimeMessage> ParseMessageAsync(
         byte[] rawBytes,

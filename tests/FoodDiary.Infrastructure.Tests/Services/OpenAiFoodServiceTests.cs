@@ -142,6 +142,26 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     [Fact]
+    public async Task GetParseFoodTextTokenBudgetAsync_WhenCountHasWrongJsonType_FailsClosed() {
+        using var httpClient = new HttpClient(new CountingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = new StringContent("""{"input_tokens":"not-a-number"}"""),
+        }));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key",
+            TextModel = "text-model",
+        });
+
+        Result<AiProviderTokenBudget> result = await client.GetParseFoodTextTokenBudgetAsync(
+            "apple 100g",
+            "en",
+            TextPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.InvalidResponse", result.Error.Code);
+    }
+
+    [Fact]
     public async Task CalculateNutritionAsync_WhenTransportFails_ReturnsOpenAiFailedError() {
         long? requestCount = null;
         string? outcome = null;
@@ -538,6 +558,58 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     [Fact]
+    public async Task CalculateNutritionAsync_WhenOutputTextPropertiesHaveWrongTypes_ReturnsInvalidResponseError() {
+        using var httpClient = new HttpClient(new SequenceHttpMessageHandler(new Queue<HttpResponseMessage>([
+            new(HttpStatusCode.OK) {
+                Content = new StringContent("""{"output":[{"content":[{"type":123,"text":456}]}]}"""),
+            },
+        ])));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
+
+        Result<OpenAiFoodClientResponse<FoodNutritionModel>> result = await client.CalculateNutritionAsync(
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
+            NutritionPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.InvalidResponse", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CalculateNutritionAsync_WhenUsageHasWrongTypes_IgnoresUsageWithoutFailingResponse() {
+        string outputText = JsonSerializer.Serialize("""
+            {
+              "calories": 52,
+              "protein": 0.3,
+              "fat": 0.2,
+              "carbs": 14,
+              "fiber": 2.4,
+              "alcohol": 0,
+              "items": []
+            }
+            """);
+        using var httpClient = new HttpClient(new SequenceHttpMessageHandler(new Queue<HttpResponseMessage>([
+            new(HttpStatusCode.OK) {
+                Content = new StringContent($$"""
+                    {
+                      "output": [{ "content": [{ "type": "output_text", "text": {{outputText}} }] }],
+                      "usage": { "input_tokens": "bad", "output_tokens": 7, "total_tokens": 18 }
+                    }
+                    """),
+            },
+        ])));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
+
+        Result<OpenAiFoodClientResponse<FoodNutritionModel>> result = await client.CalculateNutritionAsync(
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
+            NutritionPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Null(result.Value.Usage);
+    }
+
+    [Fact]
     public async Task CalculateNutritionAsync_WhenParsedNutritionIsNull_ReturnsInvalidResponseError() {
         using var httpClient = new HttpClient(new SequenceHttpMessageHandler(new Queue<HttpResponseMessage>([
             CreateOpenAiSuccessResponse("null"),
@@ -638,6 +710,7 @@ public sealed class OpenAiFoodServiceTests {
     [InlineData("""{"error":"provider supplied secret"}""", "provider_error")]
     [InlineData("not-json", "response_metadata_unavailable")]
     [InlineData("null", "response_metadata_unavailable")]
+    [InlineData("[]", "response_metadata_unavailable")]
     public async Task CalculateNutritionAsync_WhenErrorBodyVaries_ReturnsDiagnosticMetadataWithoutProviderMessage(
         string responseBody,
         string expectedSummary) {
@@ -710,6 +783,16 @@ public sealed class OpenAiFoodServiceTests {
     [Fact]
     public void ExtractUsage_WhenUsageIsMissing_ReturnsNull() {
         using var json = JsonDocument.Parse("""{"output":[]}""");
+
+        Assert.Null(InvokePrivateStatic<AiUsageTokens?>("ExtractUsage", json));
+    }
+
+    [Theory]
+    [InlineData("""{"usage":{}}""")]
+    [InlineData("""{"usage":{"input_tokens":12}}""")]
+    [InlineData("""{"usage":{"output_tokens":7}}""")]
+    public void ExtractUsage_WhenRequiredTokenCountIsMissing_ReturnsNull(string payload) {
+        using var json = JsonDocument.Parse(payload);
 
         Assert.Null(InvokePrivateStatic<AiUsageTokens?>("ExtractUsage", json));
     }

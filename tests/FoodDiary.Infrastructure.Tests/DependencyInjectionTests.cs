@@ -138,6 +138,36 @@ public sealed class DependencyInjectionTests {
     }
 
     [Fact]
+    public async Task AddIntegrations_WithOptionalProvidersNotConfigured_RegistersSafeStorageFallbackOnly() {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal));
+
+        services.AddIntegrations(configuration);
+        await using ServiceProvider provider = services.BuildServiceProvider();
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
+
+        IImageStorageService imageStorage = provider.GetRequiredService<IImageStorageService>();
+        Assert.IsType<UnconfiguredImageStorageService>(imageStorage);
+        Assert.Empty(scope.ServiceProvider.GetServices<IWearableClient>());
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            imageStorage.CreatePresignedUploadAsync(
+                UserId.New(),
+                "meal.webp",
+                "image/webp",
+                1024,
+                CancellationToken.None));
+        ImageObjectValidationResult validation = await imageStorage.ValidateUploadedObjectAsync(
+            "users/test/meal.webp",
+            CancellationToken.None);
+
+        Assert.Contains("not configured", exception.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.False(validation.IsValid);
+        Assert.Equal("storage_not_configured", validation.ErrorCode);
+    }
+
+    [Fact]
     public void AddIntegrations_WithNonPositiveTelegramAuthTtl_FailsOptionsValidation() {
         var services = new ServiceCollection();
         IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
@@ -167,8 +197,12 @@ public sealed class DependencyInjectionTests {
         Assert.IsType<AmazonS3Client>(provider.GetRequiredService<IAmazonS3>());
         Assert.IsType<S3ObjectStorageClient>(provider.GetRequiredService<IObjectStorageClient>());
         Assert.IsType<S3ImageStorageService>(provider.GetRequiredService<IImageStorageService>());
-        Assert.IsType<RelayEmailTransport>(provider.GetRequiredService<RelayEmailTransport>());
-        Assert.IsType<RelayEmailTransport>(provider.GetRequiredService<IEmailTransport>());
+        Assert.IsType<RelayEmailTransport>(scope.ServiceProvider.GetRequiredService<RelayEmailTransport>());
+        Assert.IsType<RelayEmailTransport>(scope.ServiceProvider.GetRequiredService<IEmailTransport>());
+        Assert.Contains(
+            services,
+            descriptor => descriptor.ServiceType == typeof(IEmailTransport) &&
+                          descriptor.Lifetime == ServiceLifetime.Scoped);
         Assert.NotNull(provider.GetRequiredService<IGoogleTokenValidator>());
         Assert.NotNull(provider.GetRequiredService<ITelegramAuthValidator>());
         Assert.NotNull(provider.GetRequiredService<ITelegramLoginWidgetValidator>());

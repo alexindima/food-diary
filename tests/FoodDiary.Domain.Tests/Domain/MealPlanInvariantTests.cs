@@ -74,8 +74,10 @@ public class MealPlanInvariantTests {
 
         MealPlanDay day = plan.AddDay(1);
 
-        Assert.Equal(1, day.DayNumber);
-        Assert.Single(plan.Days);
+        Assert.Multiple(
+            () => Assert.Equal(1, day.DayNumber),
+            () => Assert.Single(plan.Days),
+            () => Assert.NotNull(plan.ModifiedOnUtc));
     }
 
     [Theory]
@@ -124,7 +126,8 @@ public class MealPlanInvariantTests {
         Assert.Multiple(
             () => Assert.Equal(MealType.Lunch, meal.MealType),
             () => Assert.Equal(recipeId, meal.RecipeId),
-            () => Assert.Equal(2, meal.Servings));
+            () => Assert.Equal(2, meal.Servings),
+            () => Assert.NotNull(day.ModifiedOnUtc));
         Assert.Single(day.Meals);
     }
 
@@ -159,6 +162,9 @@ public class MealPlanInvariantTests {
             () => Assert.Equal(2, adopted.Days.Count));
 
         MealPlanDay adoptedDay1 = adopted.Days.First(d => d.DayNumber == 1);
-        Assert.Equal(2, adoptedDay1.Meals.Count);
+        Assert.Multiple(
+            () => Assert.Equal(2, adoptedDay1.Meals.Count),
+            () => Assert.Null(adopted.ModifiedOnUtc),
+            () => Assert.All(adopted.Days, day => Assert.Null(day.ModifiedOnUtc)));
     }
 }

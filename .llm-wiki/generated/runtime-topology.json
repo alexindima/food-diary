@@ -4,7 +4,7 @@
     "composeServices": 19,
     "hostedServices": 10,
     "httpClients": 12,
-    "webhooks": 20,
+    "webhooks": 22,
     "recurringJobRegistrations": 16
   },
   "composeServices": [
@@ -317,6 +317,10 @@
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs"
     },
     {
+      "name": "BillingWebhookRequestLimits",
+      "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookRequestLimits.cs"
+    },
+    {
       "name": "BillingWebhookSubscriptionWriter",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookSubscriptionWriter.cs"
     },
@@ -331,6 +335,10 @@
     {
       "name": "ProcessBillingWebhookCommandHandler",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs"
+    },
+    {
+      "name": "ProcessBillingWebhookCommandValidator",
+      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandValidator.cs"
     },
     {
       "name": "ProcessQueuedBillingWebhookCommandHandler",

@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3356,
-    "symbols": 3366,
+    "sourceFiles": 3381,
+    "symbols": 3392,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 235,
     "kinds": {
-      "class": 1737,
+      "class": 1760,
       "enum": 57,
-      "interface": 415,
-      "record": 1041,
+      "interface": 416,
+      "record": 1043,
       "record struct": 116
     },
     "roles": {
@@ -32,16 +32,16 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 61,
-      "Other": 1263,
+      "Other": 1281,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
       "ReadRepository": 47,
       "Repository": 104,
-      "Request": 132,
+      "Request": 133,
       "Response": 174,
-      "Service": 275,
-      "Validator": 195,
+      "Service": 276,
+      "Validator": 201,
       "ValueObject": 126,
       "WriteRepository": 46
     }
@@ -811,6 +811,13 @@
       "line": 2
     },
     {
+      "name": "BillingInputLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Billing/Common/BillingInputLimits.cs",
+      "line": 2
+    },
+    {
       "name": "BillingPaymentAlreadyExistsException",
       "kind": "class",
       "role": "Other",
@@ -1305,14 +1312,28 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.HydrationEntry.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "HydrationEntry",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.HydrationEntry.cs",
-      "line": 8
+      "line": 7
+    },
+    {
+      "name": "Errors",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Idempotency.cs",
+      "line": 4
+    },
+    {
+      "name": "Idempotency",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Idempotency.cs",
+      "line": 6
     },
     {
       "name": "Errors",
@@ -2173,6 +2194,13 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Export/Common/DiaryPdfReportTexts.cs",
+      "line": 2
+    },
+    {
+      "name": "ExportInputLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Export/Common/ExportInputLimits.cs",
       "line": 2
     },
     {
@@ -4374,6 +4402,13 @@
       "line": 4
     },
     {
+      "name": "WearableInputLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Wearables/Common/WearableInputLimits.cs",
+      "line": 2
+    },
+    {
       "name": "WearableConnectionModel",
       "kind": "record",
       "role": "Other",
@@ -5660,6 +5695,13 @@
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
       "line": 10
+    },
+    {
+      "name": "ProcessBillingWebhookCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandValidator.cs",
+      "line": 5
     },
     {
       "name": "ProcessQueuedBillingWebhookCommand",
@@ -7671,6 +7713,13 @@
       "line": 9
     },
     {
+      "name": "SearchRecommendationTemplatesQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryValidator.cs",
+      "line": 4
+    },
+    {
       "name": "ClientTaskDueReminderProcessor",
       "kind": "class",
       "role": "Other",
@@ -7927,7 +7976,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ExportDiaryDateRangePolicy",
@@ -7955,7 +8004,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "CycleCsvGenerator",
@@ -8928,7 +8977,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "CreateHydrationEntryCommandValidator",
@@ -9110,7 +9159,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "AdminSsoStartCommand",
@@ -9208,7 +9257,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "LinkGoogleCommand",
@@ -9250,7 +9299,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/LinkTelegram/LinkTelegramCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "LoginCommand",
@@ -9292,7 +9341,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "RegisterCommand",
@@ -9418,7 +9467,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "TelegramVerifyCommand",
@@ -9439,7 +9488,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramVerify/TelegramVerifyCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "VerifyEmailCommand",
@@ -10020,7 +10069,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "MealPlanReadService",
@@ -12858,6 +12907,13 @@
       "line": 13
     },
     {
+      "name": "ConnectWearableCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommandValidator.cs",
+      "line": 5
+    },
+    {
       "name": "DisconnectWearableCommand",
       "kind": "record",
       "role": "Command",
@@ -12870,6 +12926,13 @@
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
       "line": 13
+    },
+    {
+      "name": "DisconnectWearableCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandValidator.cs",
+      "line": 5
     },
     {
       "name": "SyncWearableDataCommand",
@@ -12890,7 +12953,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandValidator.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "IWearableReadService",
@@ -12926,6 +12989,13 @@
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
       "line": 11
+    },
+    {
+      "name": "GetWearableAuthUrlQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryValidator.cs",
+      "line": 5
     },
     {
       "name": "GetWearableConnectionsQuery",
@@ -16743,11 +16813,18 @@
       "line": 8
     },
     {
+      "name": "PostCommitRecentItemUsageRecorder",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
+      "line": 6
+    },
+    {
       "name": "RecentItemRepository",
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/RecentItems/RecentItemRepository.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "RecipeCommentRepository",
@@ -17275,6 +17352,13 @@
       "line": 10
     },
     {
+      "name": "PaddlePage",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Integrations/Billing/PaddlePage.cs",
+      "line": 2
+    },
+    {
       "name": "StripeBillingGateway",
       "kind": "class",
       "role": "Other",
@@ -17363,7 +17447,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/DependencyInjection.Wearables.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "BoundedHttpContentReader",
@@ -17391,6 +17475,13 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Integrations/Options/GoogleAuthOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "IntegrationUriValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Integrations/Options/IntegrationUriValidator.cs",
       "line": 2
     },
     {
@@ -17539,6 +17630,13 @@
       "role": "Other",
       "path": "FoodDiary.Integrations/Services/StoredObjectInfo.cs",
       "line": 2
+    },
+    {
+      "name": "UnconfiguredImageStorageService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.Integrations/Services/UnconfiguredImageStorageService.cs",
+      "line": 5
     },
     {
       "name": "UsdaFoodSearchService",
@@ -18707,7 +18805,7 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/AdminSsoExchangeHttpRequest.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "ConfirmPasswordResetHttpRequest",
@@ -18721,7 +18819,7 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/GoogleLoginHttpRequest.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "LoginHttpRequest",
@@ -18735,7 +18833,7 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/RefreshTokenHttpRequest.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "RegisterHttpRequest",
@@ -18770,7 +18868,7 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/TelegramAuthHttpRequest.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "TelegramBotAuthHttpRequest",
@@ -18784,7 +18882,7 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/TelegramLoginWidgetHttpRequest.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "VerifyEmailHttpRequest",
@@ -18819,7 +18917,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "BillingWebhookHttpProcessor",
@@ -18827,6 +18925,13 @@
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookHttpProcessor.cs",
       "line": 8
+    },
+    {
+      "name": "BillingWebhookRequestLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookRequestLimits.cs",
+      "line": 4
     },
     {
       "name": "BillingHttpMappings",
@@ -19197,7 +19302,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistAttentionController.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "DietologistClientsController",
@@ -19228,6 +19333,13 @@
       "line": 17
     },
     {
+      "name": "DietologistRequestLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistRequestLimits.cs",
+      "line": 5
+    },
+    {
       "name": "DietologistHttpMappings",
       "kind": "class",
       "role": "Other",
@@ -19253,7 +19365,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/RecommendationTemplatesController.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "AcceptInvitationHttpRequest",
@@ -19491,7 +19603,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Export/ExportController.cs",
-      "line": 16
+      "line": 17
+    },
+    {
+      "name": "ExportRequestLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Features/Export/ExportRequestLimits.cs",
+      "line": 4
     },
     {
       "name": "ExportHttpMappings",
@@ -19505,7 +19624,7 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Export/Requests/SensitiveCycleExportHttpRequest.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "FastingController",
@@ -19778,7 +19897,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Hydration/HydrationEntriesController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "HydrationHttpMappings",
@@ -19995,7 +20114,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/MealPlans/MealPlansController.cs",
-      "line": 15
+      "line": 17
     },
     {
       "name": "MealPlanDayHttpResponse",
@@ -20254,7 +20373,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/OpenFoodFacts/OpenFoodFactsController.cs",
-      "line": 15
+      "line": 17
+    },
+    {
+      "name": "OpenFoodFactsRequestLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Features/OpenFoodFacts/OpenFoodFactsRequestLimits.cs",
+      "line": 5
     },
     {
       "name": "OpenFoodFactsProductHttpResponse",
@@ -20292,11 +20418,18 @@
       "line": 15
     },
     {
+      "name": "ProductSuggestionRequestLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Features/Products/ProductSuggestionRequestLimits.cs",
+      "line": 4
+    },
+    {
       "name": "ProductSuggestionsController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Products/ProductSuggestionsController.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "CreateProductHttpRequest",
@@ -20401,7 +20534,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/RecipeLikes/RecipeLikesController.cs",
-      "line": 12
+      "line": 14
+    },
+    {
+      "name": "SetRecipeLikeStateHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "FoodDiary.Presentation.Api/Features/RecipeLikes/Requests/SetRecipeLikeStateHttpRequest.cs",
+      "line": 4
     },
     {
       "name": "RecipeLikeStatusHttpResponse",
@@ -20737,7 +20877,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Usda/UsdaController.cs",
-      "line": 15
+      "line": 17
+    },
+    {
+      "name": "UsdaRequestLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Features/Usda/UsdaRequestLimits.cs",
+      "line": 4
     },
     {
       "name": "UserHttpMappings",
@@ -20989,7 +21136,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/WaistEntries/WaistEntriesController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "WearableHttpMappings",
@@ -21003,7 +21150,7 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Wearables/Requests/ConnectWearableHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "WearableAuthUrlHttpResponse",
@@ -21027,11 +21174,18 @@
       "line": 2
     },
     {
+      "name": "WearableRequestLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Features/Wearables/WearableRequestLimits.cs",
+      "line": 4
+    },
+    {
       "name": "WearablesController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "WeeklyCheckInHttpMappings",
@@ -21654,7 +21808,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 82
+      "line": 89
     },
     {
       "name": "CorsOptionsSetup",
@@ -22032,7 +22186,7 @@
       "kind": "class",
       "role": "Options",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxSmtpOptions.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "MailInboxStorageOptions",
@@ -22053,14 +22207,21 @@
       "kind": "class",
       "role": "Options",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/OpenTelemetryOptions.cs",
-      "line": 11
+      "line": 29
     },
     {
       "name": "DmarcReportParser",
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
-      "line": 10
+      "line": 11
+    },
+    {
+      "name": "IMailInboxDmarcReportParser",
+      "kind": "interface",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/IMailInboxDmarcReportParser.cs",
+      "line": 4
     },
     {
       "name": "InboundMailStorageQuotaExceededException",
@@ -22119,6 +22280,13 @@
       "line": 13
     },
     {
+      "name": "MailInboxStoredMessageLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxStoredMessageLimits.cs",
+      "line": 4
+    },
+    {
       "name": "NpgsqlExtensions",
       "kind": "class",
       "role": "Other",
@@ -22144,7 +22312,7 @@
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpInboundMessageStore.cs",
-      "line": 16
+      "line": 18
     },
     {
       "name": "InitializerCommand",
@@ -22228,7 +22396,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
-      "line": 13
+      "line": 15
     },
     {
       "name": "InboundMailHttpMappings",
@@ -22271,6 +22439,20 @@
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxApiKeyAuthorizationFilter.cs",
       "line": 9
+    },
+    {
+      "name": "MailInboxMessageDetailConcurrencyFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageDetailConcurrencyFilter.cs",
+      "line": 7
+    },
+    {
+      "name": "MailInboxMessageDetailConcurrencyGate",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageDetailConcurrencyGate.cs",
+      "line": 5
     },
     {
       "name": "MailInboxHttpOptions",
@@ -26456,6 +26638,13 @@
       "line": 9
     },
     {
+      "service": "IRecentItemUsageRecorder",
+      "implementation": "PostCommitRecentItemUsageRecorder",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.RecentItems.cs",
+      "line": 13
+    },
+    {
       "service": "IRecipeCommentRepository",
       "implementation": "RecipeCommentRepository",
       "lifetime": "Scoped",
@@ -26736,13 +26925,6 @@
       "line": 29
     },
     {
-      "service": "IImageStorageService",
-      "implementation": "S3ImageStorageService",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Integrations/DependencyInjection.Storage.cs",
-      "line": 30
-    },
-    {
       "service": "IRecurringJobRegistrationVerifier",
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
@@ -26845,7 +27027,7 @@
       "implementation": "NpgsqlMailInboxReadinessChecker",
       "lifetime": "Singleton",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
-      "line": 45
+      "line": 46
     },
     {
       "service": "IMailRelayDeliveryPolicy",

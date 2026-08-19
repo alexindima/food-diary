@@ -45,6 +45,7 @@ public sealed class PresentationTransportOperationFilter : IOperationFilter {
 
         AddApiErrorResponse(operation, context, StatusCodes.Status400BadRequest);
         AddApiErrorResponse(operation, context, StatusCodes.Status409Conflict);
+        AddApiErrorResponse(operation, context, StatusCodes.Status503ServiceUnavailable);
     }
 
     private static void RemoveCurrentUserParameters(
@@ -75,7 +76,12 @@ public sealed class PresentationTransportOperationFilter : IOperationFilter {
         }
 
         operation.Responses[statusCodeText] = new OpenApiResponse {
-            Description = statusCode == StatusCodes.Status400BadRequest ? "Bad Request" : "Conflict",
+            Description = statusCode switch {
+                StatusCodes.Status400BadRequest => "Bad Request",
+                StatusCodes.Status409Conflict => "Conflict",
+                StatusCodes.Status503ServiceUnavailable => "Service Unavailable",
+                _ => "Error",
+            },
             Content = new Dictionary<string, OpenApiMediaType>(StringComparer.Ordinal) {
                 ["application/json"] = new() {
                     Schema = context.SchemaGenerator.GenerateSchema(typeof(ApiErrorHttpResponse), context.SchemaRepository),

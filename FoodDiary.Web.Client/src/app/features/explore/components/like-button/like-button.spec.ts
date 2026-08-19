@@ -40,7 +40,7 @@ describe('LikeButtonComponent', () => {
     it('toggles like status', () => {
         component['onToggle']();
 
-        expect(likeService.toggleLike).toHaveBeenCalledWith('recipe-1');
+        expect(likeService.toggleLike).toHaveBeenCalledWith('recipe-1', true);
         expect(component['isLiked']()).toBe(true);
         expect(component['totalLikes']()).toBe(UPDATED_LIKES);
         expect(component['isToggling']()).toBe(false);

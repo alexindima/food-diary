@@ -54,25 +54,19 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
 
         EnsureClearConflict(clearTag, normalizedTag, nameof(clearTag), nameof(tag));
 
-        if (value is not null) {
-            if (!string.Equals(Value, normalizedValue, StringComparison.Ordinal)) {
-                Value = normalizedValue!;
-                changed = true;
-            }
+        if (value is not null && !string.Equals(Value, normalizedValue, StringComparison.Ordinal)) {
+            Value = normalizedValue!;
+            changed = true;
         }
 
-        if (locale is not null) {
-            if (!string.Equals(Locale, normalizedLocale, StringComparison.Ordinal)) {
-                Locale = normalizedLocale!;
-                changed = true;
-            }
+        if (locale is not null && !string.Equals(Locale, normalizedLocale, StringComparison.Ordinal)) {
+            Locale = normalizedLocale!;
+            changed = true;
         }
 
-        if (weight.HasValue) {
-            if (Weight != normalizedWeight) {
-                Weight = normalizedWeight!.Value;
-                changed = true;
-            }
+        if (weight.HasValue && Weight != normalizedWeight) {
+            Weight = normalizedWeight!.Value;
+            changed = true;
         }
 
         if (clearTag) {

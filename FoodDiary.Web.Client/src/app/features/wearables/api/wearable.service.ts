@@ -24,7 +24,8 @@ export class WearableService extends ApiService {
     }
 
     public connect(provider: string, code: string, state: string): Observable<WearableConnection> {
-        return this.post<WearableConnection>(`${provider}/connect`, { code, state }).pipe(
+        const headers = new HttpHeaders({ 'Idempotency-Key': crypto.randomUUID() });
+        return this.post<WearableConnection>(`${provider}/connect`, { code, state }, headers).pipe(
             catchError((error: unknown) => rethrowApiError('Connect wearable error', error)),
         );
     }

@@ -4,6 +4,8 @@ namespace FoodDiary.Application.OpenFoodFacts.Queries.SearchProducts;
 
 public sealed class SearchOpenFoodFactsQueryValidator : AbstractValidator<SearchOpenFoodFactsQuery> {
     public const int MaximumSearchLength = 256;
+    public const int MinimumLimit = 1;
+    public const int MaximumLimit = 50;
 
     public SearchOpenFoodFactsQueryValidator() {
         RuleFor(x => x.Search)
@@ -15,8 +17,8 @@ public sealed class SearchOpenFoodFactsQueryValidator : AbstractValidator<Search
             .WithMessage($"Search query must not exceed {MaximumSearchLength} characters.");
 
         RuleFor(x => x.Limit)
-            .InclusiveBetween(1, 50)
+            .InclusiveBetween(MinimumLimit, MaximumLimit)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("Limit must be between 1 and 50.");
+            .WithMessage($"Limit must be between {MinimumLimit} and {MaximumLimit}.");
     }
 }

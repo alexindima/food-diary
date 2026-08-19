@@ -8,12 +8,16 @@ public sealed class FitbitOptions {
     public string RedirectUri { get; init; } = string.Empty;
 
     public static bool IsEmptyOrComplete(FitbitOptions options) {
-        bool anyConfigured = !string.IsNullOrWhiteSpace(options.ClientId) ||
-                             !string.IsNullOrWhiteSpace(options.ClientSecret) ||
-                             !string.IsNullOrWhiteSpace(options.RedirectUri);
-        return !anyConfigured ||
-               (!string.IsNullOrWhiteSpace(options.ClientId) &&
-                !string.IsNullOrWhiteSpace(options.ClientSecret) &&
-                Uri.IsWellFormedUriString(options.RedirectUri, UriKind.Absolute));
+        return !HasAnyConfiguration(options) || HasCompleteConfiguration(options);
     }
+
+    public static bool HasCompleteConfiguration(FitbitOptions options) =>
+        !string.IsNullOrWhiteSpace(options.ClientId) &&
+        !string.IsNullOrWhiteSpace(options.ClientSecret) &&
+        IntegrationUriValidator.IsSecureRedirectUrl(options.RedirectUri);
+
+    private static bool HasAnyConfiguration(FitbitOptions options) =>
+        !string.IsNullOrWhiteSpace(options.ClientId) ||
+        !string.IsNullOrWhiteSpace(options.ClientSecret) ||
+        !string.IsNullOrWhiteSpace(options.RedirectUri);
 }

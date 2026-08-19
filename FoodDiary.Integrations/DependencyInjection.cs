@@ -13,7 +13,7 @@ public static partial class DependencyInjection {
         services.AddNotificationIntegrations();
         services.AddAiIntegrations();
         services.AddFoodDataIntegrations(configuration);
-        services.AddWearableIntegrations();
+        services.AddWearableIntegrations(configuration);
 
         return services;
     }

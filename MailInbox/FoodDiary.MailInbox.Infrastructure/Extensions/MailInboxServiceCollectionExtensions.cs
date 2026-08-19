@@ -23,7 +23,7 @@ public static class MailInboxServiceCollectionExtensions {
 
         services.AddOptions<OpenTelemetryOptions>()
             .Bind(configuration.GetSection(OpenTelemetryOptions.SectionName))
-            .Validate(OpenTelemetryOptions.HasValidOtlpEndpoint, "OpenTelemetry OTLP endpoint must be an absolute URI when configured.")
+            .Validate(OpenTelemetryOptions.HasValidOtlpEndpoint, "OpenTelemetry OTLP endpoint must be an HTTP(S) URI without credentials, query, or fragment.")
             .ValidateOnStart();
 
         services.AddOptions<MailInboxStorageOptions>()
@@ -40,6 +40,7 @@ public static class MailInboxServiceCollectionExtensions {
         services.AddSingleton<NpgsqlInboundMailStore>();
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton<DmarcReportParser>();
+        services.AddSingleton<IMailInboxDmarcReportParser>(static sp => sp.GetRequiredService<DmarcReportParser>());
         services.AddSingleton<IInboundMailStore>(static sp => sp.GetRequiredService<NpgsqlInboundMailStore>());
         services.AddSingleton<IMailInboxSchemaInitializer>(static sp => sp.GetRequiredService<NpgsqlInboundMailStore>());
         services.AddSingleton<IMailInboxReadinessChecker, NpgsqlMailInboxReadinessChecker>();
@@ -90,9 +91,9 @@ public static class MailInboxServiceCollectionExtensions {
             return null;
         }
 
-        if (!Uri.TryCreate(endpoint, UriKind.Absolute, out Uri? endpointUri)) {
+        if (!OpenTelemetryOptions.TryCreateOtlpEndpoint(endpoint, out Uri? endpointUri)) {
             throw new InvalidOperationException(
-                "OpenTelemetry:Otlp:Endpoint must be a valid absolute URI when provided.");
+                "OpenTelemetry:Otlp:Endpoint must be an HTTP(S) URI without credentials, query, or fragment.");
         }
 
         return endpointUri;

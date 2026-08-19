@@ -76,7 +76,9 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
         return plan;
     }
 
-    public MealPlanDay AddDay(int dayNumber) {
+    public MealPlanDay AddDay(int dayNumber) => AddDay(dayNumber, markModified: true);
+
+    private MealPlanDay AddDay(int dayNumber, bool markModified) {
         if (dayNumber <= 0 || dayNumber > DurationDays) {
             throw new ArgumentOutOfRangeException(
                 nameof(dayNumber),
@@ -89,6 +91,10 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
 
         var day = MealPlanDay.Create(Id, dayNumber);
         _days.Add(day);
+        if (markModified) {
+            SetModified();
+        }
+
         return day;
     }
 
@@ -110,9 +116,9 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
         adopted.SetCreated();
 
         foreach (MealPlanDay sourceDay in _days.OrderBy(d => d.DayNumber)) {
-            MealPlanDay newDay = adopted.AddDay(sourceDay.DayNumber);
+            MealPlanDay newDay = adopted.AddDay(sourceDay.DayNumber, markModified: false);
             foreach (MealPlanMeal sourceMeal in sourceDay.Meals) {
-                newDay.AddMeal(sourceMeal.MealType, sourceMeal.RecipeId, sourceMeal.Servings);
+                newDay.AddMealOnCreation(sourceMeal.MealType, sourceMeal.RecipeId, sourceMeal.Servings);
             }
         }
 

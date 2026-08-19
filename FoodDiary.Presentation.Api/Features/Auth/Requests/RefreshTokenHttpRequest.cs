@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Presentation.Api.Features.Auth.Requests;
 
 public sealed record RefreshTokenHttpRequest(
-    [Required, MaxLength(4096)] string RefreshToken
+    [Required, MaxLength(AuthenticationInputLimits.MaximumOpaqueTokenLength)] string RefreshToken
 );

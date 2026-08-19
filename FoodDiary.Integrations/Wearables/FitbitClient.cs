@@ -32,7 +32,7 @@ internal sealed class FitbitClient(
 
     public string GetAuthorizationUrl(string state) {
         FitbitOptions config = options.Value;
-        return $"https://www.fitbit.com/oauth2/authorize?response_type=code&client_id={config.ClientId}" +
+        return $"https://www.fitbit.com/oauth2/authorize?response_type=code&client_id={Uri.EscapeDataString(config.ClientId)}" +
                $"&redirect_uri={Uri.EscapeDataString(config.RedirectUri)}&scope=activity+heartrate+sleep" +
                $"&state={Uri.EscapeDataString(state)}";
     }

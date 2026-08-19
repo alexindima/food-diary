@@ -50,13 +50,13 @@ public readonly record struct UserSecurityState(
     public UserSecurityState WithRefreshToken(string? refreshToken, DateTime nowUtc) {
         return this with {
             RefreshToken = refreshToken,
-            LastLoginAtUtc = refreshToken is null ? LastLoginAtUtc : nowUtc,
+            LastLoginAtUtc = refreshToken is null ? LastLoginAtUtc : LatestLogin(nowUtc),
         };
     }
 
     public UserSecurityState WithAuthenticationActivity(DateTime nowUtc) {
         return this with {
-            LastLoginAtUtc = nowUtc,
+            LastLoginAtUtc = LatestLogin(nowUtc),
         };
     }
 
@@ -103,5 +103,11 @@ public readonly record struct UserSecurityState(
             PasswordResetTokenExpiresAtUtc = null,
             PasswordResetSentAtUtc = null,
         };
+    }
+
+    private DateTime LatestLogin(DateTime candidateUtc) {
+        return LastLoginAtUtc is { } lastLoginAtUtc && lastLoginAtUtc > candidateUtc
+            ? lastLoginAtUtc
+            : candidateUtc;
     }
 }

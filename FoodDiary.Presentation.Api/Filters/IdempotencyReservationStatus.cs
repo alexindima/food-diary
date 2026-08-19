@@ -5,4 +5,5 @@ public enum IdempotencyReservationStatus {
     Replay = 1,
     Conflict = 2,
     InProgress = 3,
+    CapacityExceeded = 4,
 }

@@ -203,11 +203,23 @@ public sealed class S3ImageStorageServiceTests {
 
     [Fact]
     public async Task ValidateUploadedObjectAsync_WhenObjectMetadataIsValid_ReturnsValid() {
+        long? count = null;
+        string? operation = null;
+        string? outcome = null;
+        using MeterListener listener = CreateInfrastructureListener((value, tags) => {
+            count = value;
+            operation = GetTagValue(tags, "fooddiary.storage.operation");
+            outcome = GetTagValue(tags, "fooddiary.storage.outcome");
+        });
         S3ImageStorageService service = CreateService(new StubObjectStorageClient());
 
         ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
 
-        Assert.True(result.IsValid);
+        Assert.Multiple(
+            () => Assert.True(result.IsValid),
+            () => Assert.Equal(1, count),
+            () => Assert.Equal("validate", operation),
+            () => Assert.Equal("success", outcome));
     }
 
     [Theory]
@@ -277,12 +289,21 @@ public sealed class S3ImageStorageServiceTests {
 
     [Fact]
     public async Task ValidateUploadedObjectAsync_WhenObjectInfoMissing_ReturnsNotFound() {
+        string? operation = null;
+        string? outcome = null;
+        using MeterListener listener = CreateInfrastructureListener((_, tags) => {
+            operation = GetTagValue(tags, "fooddiary.storage.operation");
+            outcome = GetTagValue(tags, "fooddiary.storage.outcome");
+        });
         S3ImageStorageService service = CreateService(new NullObjectStorageClient());
 
         ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
 
-        Assert.False(result.IsValid);
-        Assert.Equal("not_found", result.ErrorCode);
+        Assert.Multiple(
+            () => Assert.False(result.IsValid),
+            () => Assert.Equal("not_found", result.ErrorCode),
+            () => Assert.Equal("validate", operation),
+            () => Assert.Equal("not_found", outcome));
     }
 
     [Fact]
@@ -317,10 +338,23 @@ public sealed class S3ImageStorageServiceTests {
 
     [Fact]
     public async Task ValidateUploadedObjectAsync_WhenStorageThrows_Rethrows() {
+        string? operation = null;
+        string? outcome = null;
+        string? errorType = null;
+        using MeterListener listener = CreateInfrastructureListener((_, tags) => {
+            operation = GetTagValue(tags, "fooddiary.storage.operation");
+            outcome = GetTagValue(tags, "fooddiary.storage.outcome");
+            errorType = GetTagValue(tags, "error.type");
+        });
         S3ImageStorageService service = CreateService(new ThrowingObjectStorageClient(new InvalidOperationException("boom")));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal("validate", operation),
+            () => Assert.Equal("failure", outcome),
+            () => Assert.Equal(nameof(InvalidOperationException), errorType));
     }
 
     private static S3ImageStorageService CreateService(IObjectStorageClient storageClient, string publicBaseUrl = "") {

@@ -19,6 +19,9 @@ internal static class IntegrationsTelemetry {
     public static readonly Counter<long> ExternalProviderRequestCounter = Meter.CreateCounter<long>(
         "fooddiary.external_provider.requests");
 
+    public static readonly Counter<long> ExternalProviderRejectionCounter = Meter.CreateCounter<long>(
+        "fooddiary.external_provider.rejections");
+
     public static readonly Histogram<double> ExternalProviderDuration = Meter.CreateHistogram<double>(
         "fooddiary.external_provider.duration",
         unit: "ms");
@@ -46,5 +49,18 @@ internal static class IntegrationsTelemetry {
 
         ExternalProviderRequestCounter.Add(1, tags);
         ExternalProviderDuration.Record(durationMs, tags);
+    }
+
+    public static void RecordExternalProviderRejection(
+        string provider,
+        string operation,
+        string reason,
+        string fallback) {
+        ExternalProviderRejectionCounter.Add(
+            1,
+            new KeyValuePair<string, object?>("fooddiary.external_provider", provider),
+            new KeyValuePair<string, object?>("fooddiary.external_provider.operation", operation),
+            new KeyValuePair<string, object?>("fooddiary.external_provider.rejection_reason", reason),
+            new KeyValuePair<string, object?>("fooddiary.external_provider.fallback", fallback));
     }
 }

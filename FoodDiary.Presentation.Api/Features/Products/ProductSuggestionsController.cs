@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Products.Mappings;
@@ -18,7 +19,7 @@ public sealed class ProductSuggestionsController(ISender mediator) : AuthorizedC
     [ProducesResponseType<IReadOnlyList<ProductSearchSuggestionHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> SearchSuggestions(
-        [FromQuery] string search,
-        [FromQuery] int limit = 5) =>
+        [FromQuery, MaxLength(ProductSuggestionRequestLimits.MaximumSearchLength)] string search,
+        [FromQuery, Range(ProductSuggestionRequestLimits.MinimumLimit, ProductSuggestionRequestLimits.MaximumLimit)] int limit = 5) =>
         HandleOk(ProductHttpMappings.ToSuggestionsQuery(search, limit), static value => value.ToHttpResponse());
 }

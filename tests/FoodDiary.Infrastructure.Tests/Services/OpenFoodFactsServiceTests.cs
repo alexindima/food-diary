@@ -411,6 +411,19 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task SearchAsync_WhenManyUniqueRequestsAreInFlight_BoundsSharedStateAndProviderConcurrency() {
+        long rejectionCount = 0;
+        string? rejectionProvider = null;
+        string? rejectionOperation = null;
+        string? rejectionReason = null;
+        string? rejectionFallback = null;
+        using MeterListener listener = CreateExternalProviderListener(
+            onRejection: (value, tags) => {
+                Interlocked.Add(ref rejectionCount, value);
+                rejectionProvider = GetTagValue(tags, "fooddiary.external_provider");
+                rejectionOperation = GetTagValue(tags, "fooddiary.external_provider.operation");
+                rejectionReason = GetTagValue(tags, "fooddiary.external_provider.rejection_reason");
+                rejectionFallback = GetTagValue(tags, "fooddiary.external_provider.fallback");
+            });
         var handler = new ConcurrencyTrackingHttpMessageHandler(OpenFoodFactsService.MaxConcurrentSearches);
         OpenFoodFactsService service = CreateService(handler);
         string queryPrefix = Guid.NewGuid().ToString("N");
@@ -434,7 +447,17 @@ public sealed class OpenFoodFactsServiceTests {
         }
 
         await Task.WhenAll(requests).WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System);
-        Assert.Equal(0, OpenFoodFactsService.InFlightSearchCount);
+        Assert.Multiple(
+            () => Assert.Equal(OpenFoodFactsService.MaxInFlightSearches, handler.RequestCount),
+            () => Assert.Equal(0, OpenFoodFactsService.InFlightSearchCount),
+            () => Assert.Equal(requestCount - OpenFoodFactsService.MaxInFlightSearches, rejectionCount),
+            () => Assert.Equal("open_food_facts", rejectionProvider),
+            () => Assert.Equal("search", rejectionOperation),
+            () => Assert.Equal("in_flight_limit", rejectionReason),
+            () => Assert.Equal("empty", rejectionFallback),
+            () => Assert.All(
+                requests.Skip(OpenFoodFactsService.MaxInFlightSearches),
+                static request => Assert.Empty(request.Result)));
     }
 
     [Fact]
@@ -552,6 +575,34 @@ public sealed class OpenFoodFactsServiceTests {
         Assert.Equal("http_error", outcome);
     }
 
+    [Fact]
+    public void RemoveCachedSearch_WhenEntryWasReplaced_PreservesReplacement() {
+        System.Reflection.FieldInfo cacheField = typeof(OpenFoodFactsService).GetField(
+            "SearchCache",
+            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+        var cache = (System.Collections.IDictionary)cacheField.GetValue(null)!;
+        Type cachedType = typeof(OpenFoodFactsService).GetNestedType(
+            "CachedSearchResult",
+            System.Reflection.BindingFlags.NonPublic)!;
+        IReadOnlyList<OpenFoodFactsProductModel> products = Array.Empty<OpenFoodFactsProductModel>();
+        object staleEntry = Activator.CreateInstance(cachedType, FixedNow - TimeSpan.FromHours(7), products, 0L)!;
+        object replacement = Activator.CreateInstance(cachedType, FixedNow, products, 0L)!;
+        string cacheKey = OpenFoodFactsService.GetSearchCacheKey($"replacement-{Guid.NewGuid():N}", 10);
+        try {
+            cache[cacheKey] = staleEntry;
+            cache[cacheKey] = replacement;
+            System.Reflection.MethodInfo removeMethod = typeof(OpenFoodFactsService).GetMethod(
+                "RemoveCachedSearch",
+                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+
+            removeMethod.Invoke(null, [cacheKey, staleEntry]);
+
+            Assert.Same(replacement, cache[cacheKey]);
+        } finally {
+            cache.Remove(cacheKey);
+        }
+    }
+
     private static OpenFoodFactsService CreateService(
         HttpMessageHandler handler,
         ILogger<OpenFoodFactsService>? logger = null) {
@@ -612,21 +663,26 @@ public sealed class OpenFoodFactsServiceTests {
     }
 
     private static MeterListener CreateExternalProviderListener(
-        Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onRequest,
-        Action<double, ReadOnlySpan<KeyValuePair<string, object?>>>? onDuration) {
+        Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onRequest = null,
+        Action<double, ReadOnlySpan<KeyValuePair<string, object?>>>? onDuration = null,
+        Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onRejection = null) {
         var listener = new MeterListener();
         listener.InstrumentPublished = (instrument, meterListener) => {
             if (!string.Equals(instrument.Meter.Name, IntegrationsMeterName, StringComparison.Ordinal)) {
                 return;
             }
 
-            if (instrument.Name is "fooddiary.external_provider.requests" or "fooddiary.external_provider.duration") {
+            if (instrument.Name is "fooddiary.external_provider.requests" or
+                "fooddiary.external_provider.duration" or
+                "fooddiary.external_provider.rejections") {
                 meterListener.EnableMeasurementEvents(instrument);
             }
         };
         listener.SetMeasurementEventCallback<long>((instrument, value, tags, _) => {
             if (string.Equals(instrument.Name, "fooddiary.external_provider.requests", StringComparison.Ordinal)) {
                 onRequest?.Invoke(value, tags);
+            } else if (string.Equals(instrument.Name, "fooddiary.external_provider.rejections", StringComparison.Ordinal)) {
+                onRejection?.Invoke(value, tags);
             }
         });
         listener.SetMeasurementEventCallback<double>((instrument, value, tags, _) => {
@@ -716,15 +772,18 @@ public sealed class OpenFoodFactsServiceTests {
         private readonly TaskCompletionSource _release = new(TaskCreationOptions.RunContinuationsAsynchronously);
         private int _activeRequests;
         private int _maxObservedConcurrency;
+        private int _requestCount;
 
         public TaskCompletionSource ConcurrencyLimitReached { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
         public int MaxObservedConcurrency => Volatile.Read(ref _maxObservedConcurrency);
+        public int RequestCount => Volatile.Read(ref _requestCount);
 
         public void ReleaseResponses() => _release.TrySetResult();
 
         protected override async Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request,
             CancellationToken cancellationToken) {
+            Interlocked.Increment(ref _requestCount);
             int activeRequests = Interlocked.Increment(ref _activeRequests);
             UpdateMaxObservedConcurrency(activeRequests);
             if (activeRequests >= expectedConcurrency) {

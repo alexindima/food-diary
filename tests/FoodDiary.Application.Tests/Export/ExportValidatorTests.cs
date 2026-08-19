@@ -1,4 +1,5 @@
 using FluentValidation.TestHelper;
+using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Export.Queries.ExportCycle;
 using FoodDiary.Application.Export.Queries.ExportDiary;
 
@@ -49,6 +50,24 @@ public class ExportValidatorTests {
         var query = new ExportDiaryQuery(Guid.NewGuid(), date, date);
         TestValidationResult<ExportDiaryQuery> result = await _validator.TestValidateAsync(query);
         result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task Validate_WithOversizedOptionalInputsAndInvalidOffset_HasErrors() {
+        var query = new ExportDiaryQuery(
+            Guid.NewGuid(),
+            new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 4, 7, 0, 0, 0, DateTimeKind.Utc),
+            Locale: new string('l', ExportInputLimits.MaximumLocaleLength + 1),
+            TimeZoneOffsetMinutes: ExportInputLimits.MaximumTimeZoneOffsetMinutes + 1,
+            ReportOrigin: new string('o', ExportInputLimits.MaximumReportOriginLength + 1));
+
+        TestValidationResult<ExportDiaryQuery> result = await _validator.TestValidateAsync(query);
+
+        Assert.Multiple(
+            () => result.ShouldHaveValidationErrorFor(value => value.Locale),
+            () => result.ShouldHaveValidationErrorFor(value => value.TimeZoneOffsetMinutes),
+            () => result.ShouldHaveValidationErrorFor(value => value.ReportOrigin));
     }
 
     [Theory]
@@ -121,5 +140,18 @@ public class ExportValidatorTests {
         TestValidationResult<ExportCycleQuery> result = await _cycleValidator.TestValidateAsync(query);
 
         result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task ValidateCycle_WithInvalidOffset_HasError() {
+        var query = new ExportCycleQuery(
+            Guid.NewGuid(),
+            new DateOnly(2026, 4, 1),
+            new DateOnly(2026, 4, 7),
+            TimeZoneOffsetMinutes: ExportInputLimits.MinimumTimeZoneOffsetMinutes - 1);
+
+        TestValidationResult<ExportCycleQuery> result = await _cycleValidator.TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(value => value.TimeZoneOffsetMinutes);
     }
 }

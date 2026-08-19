@@ -127,7 +127,7 @@ public sealed class BillingSubscription : Entity<Guid> {
         NextBillingAttemptUtc = ResolveNextBillingAttemptUtc(Status, CancelAtPeriodEnd, CurrentPeriodEndUtc);
         ProviderMetadataJson = normalizedMetadata;
         LastWebhookEventId = normalizedWebhookEventId;
-        LastWebhookOccurredAtUtc = normalizedWebhookOccurredAt;
+        LastWebhookOccurredAtUtc = normalizedWebhookOccurredAt ?? LastWebhookOccurredAtUtc;
         LastSyncedAtUtc = normalizedSyncedAt;
         SetModified(LastSyncedAtUtc.Value);
     }

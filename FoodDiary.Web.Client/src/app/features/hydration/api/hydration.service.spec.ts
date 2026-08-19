@@ -93,6 +93,7 @@ describe('HydrationService', () => {
             amountMl: ENTRY_AMOUNT_ML,
             timestampUtc: timestamp.toISOString(),
         });
+        expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
         req.flush(MOCK_ENTRY);
     });
 

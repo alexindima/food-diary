@@ -6,4 +6,5 @@ namespace FoodDiary.Application.RecipeCommunity.RecipeLikes.Commands.ToggleRecip
 
 public record ToggleRecipeLikeCommand(
     Guid? UserId,
-    Guid RecipeId) : ICommand<Result<RecipeLikeStatusModel>>, IUserRequest;
+    Guid RecipeId,
+    bool IsLiked) : ICommand<Result<RecipeLikeStatusModel>>, IUserRequest;

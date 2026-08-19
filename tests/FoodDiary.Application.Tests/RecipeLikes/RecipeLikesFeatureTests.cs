@@ -25,7 +25,7 @@ public class RecipeLikesFeatureTests {
 
         var handler = new ToggleRecipeLikeCommandHandler(repo, recipeAccessService, CreateCurrentUserAccessService());
         Result<RecipeLikeStatusModel> result = await handler.Handle(
-            new ToggleRecipeLikeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
+            new ToggleRecipeLikeCommand(userId.Value, recipe.Id.Value, IsLiked: true), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.True(result.Value.IsLiked);
@@ -42,7 +42,7 @@ public class RecipeLikesFeatureTests {
 
         var handler = new ToggleRecipeLikeCommandHandler(repo, recipeAccessService, CreateCurrentUserAccessService());
         Result<RecipeLikeStatusModel> result = await handler.Handle(
-            new ToggleRecipeLikeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
+            new ToggleRecipeLikeCommand(userId.Value, recipe.Id.Value, IsLiked: false), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.False(result.Value.IsLiked);
@@ -56,7 +56,7 @@ public class RecipeLikesFeatureTests {
 
         var handler = new ToggleRecipeLikeCommandHandler(repo, recipeAccessService, CreateCurrentUserAccessService());
         Result<RecipeLikeStatusModel> result = await handler.Handle(
-            new ToggleRecipeLikeCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
+            new ToggleRecipeLikeCommand(Guid.NewGuid(), Guid.NewGuid(), IsLiked: true), CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
@@ -70,9 +70,31 @@ public class RecipeLikesFeatureTests {
             CreateCurrentUserAccessService());
 
         Result<RecipeLikeStatusModel> result = await handler.Handle(
-            new ToggleRecipeLikeCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
+            new ToggleRecipeLikeCommand(UserId: null, Guid.NewGuid(), IsLiked: true), CancellationToken.None);
 
         ResultAssert.Failure(result);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task ToggleRecipeLike_WhenRequestedStateAlreadyApplied_DoesNotChangeTotal(bool isLiked) {
+        var userId = UserId.New();
+        var recipe = Recipe.Create(userId, "Pasta", 1);
+        var repo = new InMemoryRecipeLikeRepository();
+        if (isLiked) {
+            repo.Seed(RecipeLike.Create(userId, recipe.Id));
+        }
+
+        var handler = new ToggleRecipeLikeCommandHandler(repo, CreateRecipeAccessService(recipe), CreateCurrentUserAccessService());
+
+        Result<RecipeLikeStatusModel> result = await handler.Handle(
+            new ToggleRecipeLikeCommand(userId.Value, recipe.Id.Value, isLiked), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(isLiked, result.Value.IsLiked),
+            () => Assert.Equal(isLiked ? 1 : 0, result.Value.TotalLikes));
     }
 
     [Fact]

@@ -342,6 +342,42 @@ public partial class DietologistFeatureTests {
     }
 
     [Fact]
+    public async Task InvitationReadService_AtExactExpiry_UsesExpiredBoundaryConsistently() {
+        var utcNow = new DateTime(2026, 8, 19, 12, 0, 0, DateTimeKind.Utc);
+        var clientId = UserId.New();
+        var dietologistId = UserId.New();
+        var invitation = DietologistInvitation.Create(
+            clientId,
+            "diet@example.com",
+            "hash",
+            utcNow,
+            AllDomainPermissions);
+        var invitationRepository = new InMemoryInvitationRepository();
+        invitationRepository.Seed(invitation);
+        var userRepository = new InMemoryUserRepository();
+        userRepository.Seed(CreateUser(dietologistId, "diet@example.com"));
+        var service = new DietologistInvitationReadService(
+            invitationRepository,
+            userRepository,
+            userRepository,
+            new FixedTimeProvider(utcNow));
+
+        Result<InvitationModel> tokenResult = await service.GetByTokenAsync(
+            dietologistId,
+            invitation.Id.Value,
+            CancellationToken.None);
+        DietologistInvitationForCurrentUserModel currentUserModel = ResultAssert.Success(
+            await service.GetForCurrentUserAsync(
+                dietologistId,
+                invitation.Id.Value,
+                CancellationToken.None));
+
+        Assert.Multiple(
+            () => ResultAssert.Failure(tokenResult, "Dietologist.InvitationExpired"),
+            () => Assert.Equal("Expired", currentUserModel.Status));
+    }
+
+    [Fact]
     public async Task GetInvitationByToken_WhenNotPending_ReturnsFailure() {
         var clientId = UserId.New();
         DietologistInvitation invitation = CreatePendingInvitation(clientId);
@@ -1091,6 +1127,11 @@ public partial class DietologistFeatureTests {
             .GetRelationshipAsync(UserId.New(), CancellationToken.None);
 
         ResultAssert.Failure(result);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 
 }

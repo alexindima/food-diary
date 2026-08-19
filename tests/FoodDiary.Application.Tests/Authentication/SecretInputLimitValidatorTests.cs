@@ -7,9 +7,15 @@ using FoodDiary.Application.Dietologist.Commands.DeclineInvitation;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Queries.ExportCycle;
 using FoodDiary.Application.Identity.Authentication.Commands.ConfirmPasswordReset;
+using FoodDiary.Application.Identity.Authentication.Commands.AdminSsoExchange;
+using FoodDiary.Application.Identity.Authentication.Commands.GoogleLogin;
+using FoodDiary.Application.Identity.Authentication.Commands.LinkTelegram;
 using FoodDiary.Application.Identity.Authentication.Commands.Login;
+using FoodDiary.Application.Identity.Authentication.Commands.RefreshToken;
 using FoodDiary.Application.Identity.Authentication.Commands.Register;
 using FoodDiary.Application.Identity.Authentication.Commands.RestoreAccount;
+using FoodDiary.Application.Identity.Authentication.Commands.TelegramLoginWidget;
+using FoodDiary.Application.Identity.Authentication.Commands.TelegramVerify;
 using FoodDiary.Application.Identity.Authentication.Commands.VerifyEmail;
 using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.SetPassword;
@@ -93,6 +99,51 @@ public sealed class SecretInputLimitValidatorTests {
         new DeclineInvitationCommandValidator()
             .TestValidate(new DeclineInvitationCommand(Guid.NewGuid(), OversizedToken, Guid.NewGuid()))
             .ShouldHaveValidationErrorFor(command => command.Token);
+    }
+
+    [Fact]
+    public void ExternalAuthenticationValidators_RejectOversizedAssertions() {
+        new TelegramVerifyCommandValidator()
+            .TestValidate(new TelegramVerifyCommand(
+                new string('t', AuthenticationInputLimits.MaximumTelegramInitDataLength + 1)))
+            .ShouldHaveValidationErrorFor(command => command.InitData);
+        new LinkTelegramCommandValidator()
+            .TestValidate(new LinkTelegramCommand(
+                Guid.NewGuid(),
+                new string('t', AuthenticationInputLimits.MaximumTelegramInitDataLength + 1)))
+            .ShouldHaveValidationErrorFor(command => command.InitData);
+        new GoogleLoginCommandValidator()
+            .TestValidate(new GoogleLoginCommand(
+                new string('g', AuthenticationInputLimits.MaximumGoogleCredentialLength + 1)))
+            .ShouldHaveValidationErrorFor(command => command.Credential);
+        new RefreshTokenCommandValidator()
+            .TestValidate(new RefreshTokenCommand(OversizedToken))
+            .ShouldHaveValidationErrorFor(command => command.RefreshToken);
+        new AdminSsoExchangeCommandValidator()
+            .TestValidate(new AdminSsoExchangeCommand(
+                new string('s', AuthenticationInputLimits.MaximumAdminSsoCodeLength + 1)))
+            .ShouldHaveValidationErrorFor(command => command.Code);
+    }
+
+    [Fact]
+    public void TelegramLoginWidgetValidator_RejectsOversizedTextFields() {
+        var command = new TelegramLoginWidgetCommand(
+            Id: 1,
+            AuthDate: 1,
+            Hash: new string('h', AuthenticationInputLimits.MaximumTelegramHashLength + 1),
+            Username: new string('u', AuthenticationInputLimits.MaximumTelegramUsernameLength + 1),
+            FirstName: new string('f', AuthenticationInputLimits.MaximumTelegramNameLength + 1),
+            LastName: new string('l', AuthenticationInputLimits.MaximumTelegramNameLength + 1),
+            PhotoUrl: new string('p', AuthenticationInputLimits.MaximumTelegramPhotoUrlLength + 1));
+        TestValidationResult<TelegramLoginWidgetCommand> result =
+            new TelegramLoginWidgetCommandValidator().TestValidate(command);
+
+        Assert.Multiple(
+            () => result.ShouldHaveValidationErrorFor(value => value.Hash),
+            () => result.ShouldHaveValidationErrorFor(value => value.Username),
+            () => result.ShouldHaveValidationErrorFor(value => value.FirstName),
+            () => result.ShouldHaveValidationErrorFor(value => value.LastName),
+            () => result.ShouldHaveValidationErrorFor(value => value.PhotoUrl));
     }
 
     [Fact]

@@ -12,6 +12,14 @@
             "401",
             "403",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -24,7 +32,16 @@
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -44,6 +61,21 @@
             "409",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -68,6 +100,14 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -83,6 +123,14 @@
             "401",
             "403",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -100,6 +148,28 @@
             "403",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "key",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 64
+            },
+            {
+              "Name": "locale",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 10
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -130,6 +200,14 @@
               "Required": false,
               "Type": "string",
               "Format": "date"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
             }
           ]
         }
@@ -201,6 +279,14 @@
               "Type": "string",
               "Format": "date-time"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -270,6 +356,14 @@
               "Required": false,
               "Type": "string",
               "Format": "date-time"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
             }
           ]
         }
@@ -341,6 +435,14 @@
               "Type": "string",
               "Format": "date-time"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -411,6 +513,14 @@
               "Type": "string",
               "Format": "date-time"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -435,6 +545,14 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -450,6 +568,14 @@
             "401",
             "403",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -468,7 +594,16 @@
             "409",
             "413",
             "429",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -486,6 +621,28 @@
             "403",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "key",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 64
+            },
+            {
+              "Name": "locale",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 10
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -501,6 +658,14 @@
             "401",
             "403",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -513,7 +678,16 @@
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -529,8 +703,18 @@
             "400",
             "401",
             "403",
+            "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -547,6 +731,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -560,6 +759,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -585,6 +799,14 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -601,6 +823,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -617,6 +854,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -654,6 +906,14 @@
               "Required": false,
               "Type": "string"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -672,6 +932,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -690,6 +965,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -713,6 +1003,14 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
             }
           ]
         }
@@ -764,6 +1062,14 @@
               "Required": false,
               "Type": "string"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -777,6 +1083,14 @@
             "409",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -808,6 +1122,14 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
             }
           ]
         }
@@ -845,6 +1167,14 @@
               "Name": "Search",
               "Location": "query",
               "Required": false,
+              "Type": "string"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
               "Type": "string"
             }
           ]
@@ -892,6 +1222,14 @@
               "Type": "string",
               "Format": "uuid"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -924,6 +1262,14 @@
               "Type": "string",
               "Format": "date-time"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -941,6 +1287,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -954,6 +1315,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -972,6 +1348,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -990,6 +1381,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1016,6 +1422,21 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1035,7 +1456,16 @@
             "413",
             "429",
             "500",
-            "502"
+            "502",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1055,7 +1485,16 @@
             "413",
             "429",
             "500",
-            "502"
+            "502",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1075,7 +1514,16 @@
             "413",
             "429",
             "500",
-            "502"
+            "502",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1090,6 +1538,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1107,6 +1563,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1122,6 +1586,14 @@
             "401",
             "403",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1140,6 +1612,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1159,6 +1639,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1176,6 +1664,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1194,6 +1690,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1210,6 +1714,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1227,6 +1739,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1244,6 +1764,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1261,6 +1789,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1278,6 +1814,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1296,7 +1840,16 @@
             "404",
             "409",
             "413",
+            "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1316,6 +1869,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1335,6 +1896,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1354,6 +1923,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1373,6 +1950,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1392,7 +1977,16 @@
             "413",
             "429",
             "500",
-            "502"
+            "502",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1408,6 +2002,14 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1426,7 +2028,16 @@
             "409",
             "429",
             "500",
-            "502"
+            "502",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1443,7 +2054,16 @@
             "401",
             "403",
             "409",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1461,6 +2081,21 @@
             "429",
             "500",
             "502"
+          ],
+          "PathParameters": [
+            {
+              "Name": "provider",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 32
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1475,6 +2110,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1493,6 +2136,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "taskId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1510,6 +2168,14 @@
             "403",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1524,6 +2190,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1555,6 +2229,14 @@
               "Type": "string",
               "Format": "date-time"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1572,6 +2254,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "cycleProfileId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1590,6 +2287,28 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "cycleProfileId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "purpose",
+              "Location": "path",
+              "Required": true,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1616,6 +2335,21 @@
               "Type": "string",
               "Format": "date-time"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "cycleProfileId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -1629,6 +2363,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "cycleProfileId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1647,6 +2396,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "cycleProfileId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1664,6 +2428,28 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "cycleProfileId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "menstrualEpisodeId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -1677,6 +2463,28 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "cycleProfileId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "menstrualEpisodeId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1695,6 +2503,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "cycleProfileId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1713,6 +2536,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "cycleProfileId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1771,6 +2609,14 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1801,6 +2647,14 @@
               "Required": false,
               "Type": "string"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1818,7 +2672,16 @@
             "403",
             "409",
             "429",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1838,6 +2701,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1853,6 +2724,14 @@
             "401",
             "403",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1905,6 +2784,14 @@
               "Type": "number",
               "Format": "double"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1923,6 +2810,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "signalId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 200
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1939,6 +2841,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "taskId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -1955,6 +2872,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "clientUserId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2022,6 +2954,21 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "clientUserId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2038,6 +2985,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "clientUserId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2053,6 +3015,21 @@
             "401",
             "403",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "clientUserId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -2065,7 +3042,23 @@
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "clientUserId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2081,6 +3074,21 @@
             "401",
             "403",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "clientUserId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -2094,7 +3102,23 @@
             "404",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "clientUserId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2114,6 +3138,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2129,6 +3161,21 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "invitationId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2146,6 +3193,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "invitationId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2161,6 +3223,21 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "invitationId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2178,6 +3255,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "invitationId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2195,7 +3287,16 @@
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2210,6 +3311,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2228,6 +3337,14 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2240,6 +3357,7 @@
           "HasRequestBody": false,
           "ResponseCodes": [
             "200",
+            "400",
             "401",
             "403",
             "500"
@@ -2256,6 +3374,15 @@
               "Name": "search",
               "Location": "query",
               "Required": false,
+              "Type": "string",
+              "MaxLength": 256
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
               "Type": "string"
             }
           ]
@@ -2270,7 +3397,16 @@
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2287,6 +3423,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "templateId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -2300,6 +3451,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "templateId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2317,7 +3483,16 @@
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2334,6 +3509,14 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -2343,6 +3526,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2373,6 +3564,14 @@
               "Type": "string",
               "Format": "date-time"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -2385,7 +3584,16 @@
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2401,6 +3609,21 @@
             "401",
             "403",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -2414,6 +3637,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2426,6 +3664,7 @@
           "HasRequestBody": false,
           "ResponseCodes": [
             "200",
+            "400",
             "401",
             "429",
             "500"
@@ -2450,7 +3689,17 @@
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Minimum": -840,
+              "Maximum": 840
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
             }
           ]
         }
@@ -2470,6 +3719,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2482,6 +3739,7 @@
           "HasRequestBody": false,
           "ResponseCodes": [
             "200",
+            "400",
             "401",
             "429",
             "500"
@@ -2506,26 +3764,40 @@
               "Location": "query",
               "Required": false,
               "Type": "string",
-              "Default": "\u0022csv\u0022"
+              "Default": "\u0022csv\u0022",
+              "MaxLength": 3,
+              "Pattern": "^(?i:csv|pdf)$"
             },
             {
               "Name": "locale",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 64
             },
             {
               "Name": "reportOrigin",
               "Location": "query",
               "Required": false,
-              "Type": "string"
+              "Type": "string",
+              "MaxLength": 2048
             },
             {
               "Name": "timeZoneOffsetMinutes",
               "Location": "query",
               "Required": false,
               "Type": "integer",
-              "Format": "int32"
+              "Format": "int32",
+              "Minimum": -840,
+              "Maximum": 840
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
             }
           ]
         }
@@ -2541,6 +3813,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2559,6 +3839,14 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2577,6 +3865,14 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2595,6 +3891,14 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2612,6 +3916,14 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2629,6 +3941,14 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2645,6 +3965,14 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2689,6 +4017,14 @@
               "Type": "string",
               "Format": "date-time"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2703,6 +4039,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2717,6 +4061,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2735,6 +4087,14 @@
             "409",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2749,6 +4109,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2763,6 +4131,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -2776,6 +4152,14 @@
             "409",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2790,6 +4174,21 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "mealId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2806,6 +4205,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2820,6 +4234,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -2833,6 +4255,14 @@
             "409",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2847,6 +4277,21 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "productId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2863,6 +4308,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -2876,6 +4336,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2890,6 +4365,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -2903,6 +4386,14 @@
             "409",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2917,6 +4408,21 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "recipeId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2933,6 +4439,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2947,6 +4468,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2962,6 +4491,14 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -2975,6 +4512,14 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -2999,19 +4544,36 @@
               "Type": "string",
               "Format": "date-time"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
           "Method": "post",
           "HasRequestBody": true,
           "ResponseCodes": [
-            "200",
+            "201",
             "400",
             "401",
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3036,6 +4598,14 @@
               "Type": "string",
               "Format": "date-time"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3052,6 +4622,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -3066,6 +4651,21 @@
             "409",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3085,7 +4685,16 @@
             "413",
             "429",
             "500",
-            "502"
+            "502",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3104,6 +4713,21 @@
             "409",
             "500",
             "502"
+          ],
+          "PathParameters": [
+            {
+              "Name": "assetId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3164,6 +4788,14 @@
               "Required": false,
               "Type": "string"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3178,6 +4810,21 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3193,6 +4840,21 @@
             "401",
             "403",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3205,6 +4867,7 @@
           "HasRequestBody": false,
           "ResponseCodes": [
             "200",
+            "400",
             "401",
             "500"
           ],
@@ -3213,6 +4876,15 @@
               "Name": "dietType",
               "Location": "query",
               "Required": false,
+              "Type": "string",
+              "MaxLength": 32
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
               "Type": "string"
             }
           ]
@@ -3229,6 +4901,21 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3245,7 +4932,23 @@
             "401",
             "403",
             "409",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3262,7 +4965,23 @@
             "401",
             "403",
             "409",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3340,6 +5059,14 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -3352,7 +5079,16 @@
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3437,6 +5173,14 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3453,6 +5197,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -3463,6 +5222,21 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -3476,6 +5250,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3494,7 +5283,23 @@
             "404",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3509,6 +5314,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3524,6 +5337,14 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -3537,6 +5358,14 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3551,6 +5380,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3568,6 +5405,14 @@
             "403",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -3580,6 +5425,14 @@
             "403",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3594,6 +5447,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3609,6 +5470,14 @@
             "401",
             "403",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3627,7 +5496,16 @@
             "409",
             "413",
             "429",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3642,6 +5520,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3658,6 +5544,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "notificationId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3670,6 +5571,7 @@
           "HasRequestBody": false,
           "ResponseCodes": [
             "200",
+            "400",
             "401",
             "429",
             "500"
@@ -3681,12 +5583,23 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "10"
+              "Default": "10",
+              "Minimum": 1,
+              "Maximum": 50
             },
             {
               "Name": "search",
               "Location": "query",
               "Required": false,
+              "Type": "string",
+              "MaxLength": 256
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
               "Type": "string"
             }
           ]
@@ -3701,9 +5614,25 @@
           "HasRequestBody": false,
           "ResponseCodes": [
             "200",
+            "400",
             "401",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "barcode",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 128
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3773,6 +5702,14 @@
               "Required": false,
               "Type": "string"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -3785,7 +5722,16 @@
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3869,6 +5815,14 @@
               "Required": false,
               "Type": "string"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3899,6 +5853,14 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3923,12 +5885,23 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "5"
+              "Default": "5",
+              "Minimum": 1,
+              "Maximum": 20
             },
             {
               "Name": "search",
               "Location": "query",
               "Required": false,
+              "Type": "string",
+              "MaxLength": 100
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
               "Type": "string"
             }
           ]
@@ -3947,6 +5920,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -3957,6 +5945,21 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -3971,6 +5974,21 @@
             "409",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -3988,7 +6006,23 @@
             "403",
             "404",
             "409",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4065,6 +6099,14 @@
               "Required": false,
               "Type": "string"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -4077,7 +6119,16 @@
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4131,6 +6182,14 @@
               "Name": "SortBy",
               "Location": "query",
               "Required": false,
+              "Type": "string"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
               "Type": "string"
             }
           ]
@@ -4223,6 +6282,14 @@
               "Required": false,
               "Type": "string"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4253,6 +6320,14 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4269,6 +6344,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -4288,6 +6378,21 @@
               "Type": "boolean",
               "Default": "true"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -4302,6 +6407,21 @@
             "409",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4319,7 +6439,23 @@
             "403",
             "404",
             "409",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4352,6 +6488,21 @@
               "Format": "int32",
               "Default": "1"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "recipeId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -4364,7 +6515,23 @@
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "recipeId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4381,6 +6548,28 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "commentId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "recipeId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -4394,6 +6583,28 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "commentId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "recipeId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4408,6 +6619,21 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "recipeId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4417,12 +6643,31 @@
       "Operations": [
         {
           "Method": "post",
-          "HasRequestBody": false,
+          "HasRequestBody": true,
           "ResponseCodes": [
             "200",
+            "400",
             "401",
             "403",
-            "500"
+            "409",
+            "413",
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "recipeId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4437,6 +6682,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4452,6 +6705,21 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "recommendationId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -4465,7 +6733,23 @@
             "404",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "recommendationId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4482,6 +6766,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "recommendationId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4499,7 +6798,16 @@
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4514,6 +6822,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -4526,7 +6842,16 @@
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4541,6 +6866,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4557,6 +6890,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -4567,6 +6915,21 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -4580,6 +6943,21 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4617,6 +6995,14 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
             }
           ]
         }
@@ -4656,6 +7042,14 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4670,6 +7064,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4693,6 +7095,14 @@
               "Type": "string",
               "Format": "date-time"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4705,6 +7115,7 @@
           "HasRequestBody": false,
           "ResponseCodes": [
             "200",
+            "400",
             "401",
             "429",
             "500"
@@ -4716,12 +7127,23 @@
               "Required": false,
               "Type": "integer",
               "Format": "int32",
-              "Default": "20"
+              "Default": "20",
+              "Minimum": 1,
+              "Maximum": 100
             },
             {
               "Name": "search",
               "Location": "query",
               "Required": false,
+              "Type": "string",
+              "MaxLength": 256
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
               "Type": "string"
             }
           ]
@@ -4739,6 +7161,21 @@
             "401",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "fdcId",
+              "Location": "path",
+              "Required": true,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4754,6 +7191,21 @@
             "401",
             "403",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "productId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -4766,6 +7218,21 @@
             "403",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "productId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4782,6 +7249,14 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4798,6 +7273,14 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -4809,6 +7292,14 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4824,6 +7315,14 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -4837,6 +7336,14 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4852,6 +7359,14 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -4865,6 +7380,14 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4880,6 +7403,14 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -4893,6 +7424,14 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4908,6 +7447,14 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4927,6 +7474,14 @@
             "413",
             "429",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4945,6 +7500,14 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4963,6 +7526,14 @@
             "404",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4978,6 +7549,14 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -4993,6 +7572,14 @@
             "401",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5037,19 +7624,36 @@
               "Required": false,
               "Type": "string"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
           "Method": "post",
           "HasRequestBody": true,
           "ResponseCodes": [
-            "200",
+            "201",
             "400",
             "401",
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5064,6 +7668,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5109,6 +7721,14 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5147,6 +7767,14 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5163,6 +7791,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -5177,6 +7820,21 @@
             "409",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5191,6 +7849,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5214,6 +7880,14 @@
               "Type": "string",
               "Format": "date-time"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5228,13 +7902,31 @@
             "200",
             "400",
             "401",
+            "403",
+            "429",
             "500"
           ],
           "QueryParameters": [
             {
               "Name": "state",
               "Location": "query",
-              "Required": false,
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 512
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "provider",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 32
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
               "Type": "string"
             }
           ]
@@ -5252,9 +7944,26 @@
             "400",
             "401",
             "403",
+            "409",
             "413",
             "429",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "provider",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 32
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5272,6 +7981,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "provider",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 32
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5290,7 +8014,8 @@
             "404",
             "409",
             "429",
-            "500"
+            "500",
+            "503"
           ],
           "QueryParameters": [
             {
@@ -5299,6 +8024,21 @@
               "Required": false,
               "Type": "string",
               "Format": "date-time"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "provider",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 32
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
             }
           ]
         }
@@ -5322,6 +8062,14 @@
               "Required": false,
               "Type": "string",
               "Format": "date"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
             }
           ]
         }
@@ -5347,6 +8095,14 @@
               "Type": "string",
               "Format": "date"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -5359,6 +8115,14 @@
             "403",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5403,6 +8167,14 @@
               "Required": false,
               "Type": "string"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -5415,7 +8187,16 @@
             "403",
             "409",
             "413",
-            "500"
+            "500",
+            "503"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5430,6 +8211,14 @@
             "200",
             "401",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5475,6 +8264,14 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5513,6 +8310,14 @@
               "Type": "integer",
               "Format": "int32"
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -5529,6 +8334,21 @@
             "403",
             "404",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         },
         {
@@ -5543,6 +8363,21 @@
             "409",
             "413",
             "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
           ]
         }
       ]
@@ -9063,15 +11898,19 @@
       "Properties": [
         {
           "Name": "code",
-          "Required": false,
+          "Required": true,
           "Type": "string",
-          "Nullable": true
+          "Nullable": false,
+          "MinLength": 1,
+          "MaxLength": 4096
         },
         {
           "Name": "state",
-          "Required": false,
+          "Required": true,
           "Type": "string",
-          "Nullable": true
+          "Nullable": false,
+          "MinLength": 1,
+          "MaxLength": 4096
         }
       ]
     },
@@ -16179,7 +19018,9 @@
           "Required": false,
           "Type": "integer",
           "Format": "int32",
-          "Nullable": true
+          "Nullable": true,
+          "Minimum": -840,
+          "Maximum": 840
         }
       ]
     },
@@ -16216,6 +19057,17 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "SetRecipeLikeStateHttpRequest",
+      "Properties": [
+        {
+          "Name": "isLiked",
+          "Required": true,
+          "Type": "boolean",
+          "Nullable": false
         }
       ]
     },

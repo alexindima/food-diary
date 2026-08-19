@@ -18,7 +18,8 @@ public sealed class WebPushOptions {
                && !string.IsNullOrWhiteSpace(options.PublicKey)
                && !string.IsNullOrWhiteSpace(options.PrivateKey)
                && options.Subject.Length <= 256
-               && Uri.IsWellFormedUriString(options.Subject, UriKind.Absolute)
-               && options.DefaultUrl.Length is > 0 and <= 256;
+               && IntegrationUriValidator.IsVapidSubject(options.Subject)
+               && options.DefaultUrl.Length <= 256
+               && IntegrationUriValidator.IsSafeNavigationUrl(options.DefaultUrl);
     }
 }

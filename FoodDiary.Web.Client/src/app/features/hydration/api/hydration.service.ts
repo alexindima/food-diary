@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Service } from '@angular/core';
 import { catchError, type Observable } from 'rxjs';
 
@@ -36,7 +37,8 @@ export class HydrationService extends ApiService {
             timestampUtc: timestampUtc.toISOString(),
         };
 
-        return this.post<HydrationEntry>('', payload).pipe(
+        const headers = new HttpHeaders({ 'Idempotency-Key': crypto.randomUUID() });
+        return this.post<HydrationEntry>('', payload, headers).pipe(
             catchError((error: unknown) => rethrowApiError('Create hydration entry error', error)),
         );
     }

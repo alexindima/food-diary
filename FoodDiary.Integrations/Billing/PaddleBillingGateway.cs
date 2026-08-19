@@ -18,7 +18,10 @@ public sealed class PaddleBillingGateway(
     IOptions<PaddleOptions> options,
     TimeProvider? timeProvider = null)
     : IBillingProviderGateway {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private const int RecoveryPageSize = 200;
+    private const int MaximumRecoveryPages = 10;
+    private static readonly TimeSpan RecentRecoveryWindow = TimeSpan.FromMinutes(15);
+    private static readonly TimeSpan MaximumRecoveryFutureSkew = TimeSpan.FromMinutes(5);
     private readonly PaddleOptions _options = options.Value;
     private readonly PaddleApiClient _apiClient = new(httpClient, options.Value);
     private readonly TimeProvider _timeProvider = timeProvider ?? TimeProvider.System;
@@ -90,6 +93,7 @@ public sealed class PaddleBillingGateway(
         Result<CreateTransactionResponse?> recoveryResult = await FindRecoverableTransactionAsync(
             request,
             customerId,
+            priceId,
             checkoutReference,
             cancellationToken).ConfigureAwait(false);
         if (recoveryResult.IsFailure) {
@@ -122,6 +126,7 @@ public sealed class PaddleBillingGateway(
                 recoveryResult = await FindRecoverableTransactionAsync(
                     request,
                     customerId,
+                    priceId,
                     checkoutReference,
                     cancellationToken).ConfigureAwait(false);
                 recoveredTransaction = recoveryResult.IsSuccess ? recoveryResult.Value : null;
@@ -145,7 +150,7 @@ public sealed class PaddleBillingGateway(
         try {
             Result<CreateCustomerPortalSessionResponse> sessionResponse = await _apiClient.SendAsync<CreateCustomerPortalSessionResponse>(
                 HttpMethod.Post,
-                $"customers/{request.CustomerId}/portal-sessions",
+                $"customers/{Uri.EscapeDataString(request.CustomerId)}/portal-sessions",
                 new { },
                 cancellationToken).ConfigureAwait(false);
             if (sessionResponse.IsFailure) {
@@ -187,33 +192,7 @@ public sealed class PaddleBillingGateway(
         }
 
         try {
-            using var document = JsonDocument.Parse(payload);
-            JsonElement root = document.RootElement;
-            string? eventType = root.GetProperty("event_type").GetString();
-            if (string.IsNullOrWhiteSpace(eventType)) {
-                return Task.FromResult(Result.Success<BillingWebhookEventModel?>(value: null));
-            }
-
-            JsonElement data = root.GetProperty("data");
-            if (eventType.StartsWith("transaction.", StringComparison.OrdinalIgnoreCase)) {
-                return Task.FromResult(Result.Success(CreateTransactionWebhookEvent(root, data, eventType)));
-            }
-
-            if (eventType.StartsWith("adjustment.", StringComparison.OrdinalIgnoreCase)) {
-                return Task.FromResult(Result.Success(CreateAdjustmentWebhookEvent(root, data, eventType)));
-            }
-
-            if (!eventType.StartsWith("subscription.", StringComparison.OrdinalIgnoreCase)) {
-                return Task.FromResult(Result.Success<BillingWebhookEventModel?>(value: null));
-            }
-
-            string? subscriptionId = GetString(data, "id");
-            string? customerId = GetString(data, "customer_id");
-            if (string.IsNullOrWhiteSpace(subscriptionId) || string.IsNullOrWhiteSpace(customerId)) {
-                return Task.FromResult(Result.Success<BillingWebhookEventModel?>(value: null));
-            }
-
-            return Task.FromResult(Result.Success<BillingWebhookEventModel?>(CreateWebhookEvent(root, data, eventType, customerId, subscriptionId)));
+            return Task.FromResult(ParseVerifiedWebhookEvent(payload));
         } catch (JsonException) {
             return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(
                 Errors.Billing.WebhookValidationFailed("Paddle webhook payload is invalid.")));
@@ -224,6 +203,51 @@ public sealed class PaddleBillingGateway(
             return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(
                 Errors.Billing.WebhookValidationFailed("Paddle webhook numeric value is invalid.")));
         }
+    }
+
+    private Result<BillingWebhookEventModel?> ParseVerifiedWebhookEvent(string payload) {
+        using var document = JsonDocument.Parse(payload);
+        JsonElement root = document.RootElement;
+        if (root.ValueKind != JsonValueKind.Object) {
+            return Result.Failure<BillingWebhookEventModel?>(
+                Errors.Billing.WebhookValidationFailed("Paddle webhook payload must be a JSON object."));
+        }
+
+        string? eventType = GetString(root, "event_type");
+        if (string.IsNullOrWhiteSpace(eventType)) {
+            return Result.Success<BillingWebhookEventModel?>(value: null);
+        }
+
+        bool isTransactionEvent = eventType.StartsWith("transaction.", StringComparison.OrdinalIgnoreCase);
+        bool isAdjustmentEvent = eventType.StartsWith("adjustment.", StringComparison.OrdinalIgnoreCase);
+        bool isSubscriptionEvent = eventType.StartsWith("subscription.", StringComparison.OrdinalIgnoreCase);
+        if (!isTransactionEvent && !isAdjustmentEvent && !isSubscriptionEvent) {
+            return Result.Success<BillingWebhookEventModel?>(value: null);
+        }
+
+        if (string.IsNullOrWhiteSpace(GetString(root, "event_id"))) {
+            return Result.Failure<BillingWebhookEventModel?>(
+                Errors.Billing.WebhookValidationFailed("Paddle webhook event identifier is missing."));
+        }
+
+        if (!root.TryGetProperty("data", out JsonElement data) || data.ValueKind != JsonValueKind.Object) {
+            return Result.Failure<BillingWebhookEventModel?>(
+                Errors.Billing.WebhookValidationFailed("Paddle webhook data is missing or invalid."));
+        }
+
+        if (isTransactionEvent) {
+            return Result.Success(CreateTransactionWebhookEvent(root, data, eventType));
+        }
+
+        if (isAdjustmentEvent) {
+            return Result.Success(CreateAdjustmentWebhookEvent(root, data, eventType));
+        }
+
+        string? subscriptionId = GetString(data, "id");
+        string? customerId = GetString(data, "customer_id");
+        return string.IsNullOrWhiteSpace(subscriptionId) || string.IsNullOrWhiteSpace(customerId)
+            ? Result.Success<BillingWebhookEventModel?>(value: null)
+            : Result.Success<BillingWebhookEventModel?>(CreateWebhookEvent(root, data, eventType, customerId, subscriptionId));
     }
 
     private BillingWebhookEventModel? CreateTransactionWebhookEvent(JsonElement root, JsonElement data, string eventType) {
@@ -349,7 +373,7 @@ public sealed class PaddleBillingGateway(
             : default;
 
         return new BillingWebhookEventModel(
-            root.GetProperty("event_id").GetString() ?? string.Empty,
+            GetString(root, "event_id") ?? string.Empty,
             eventType,
             customerId,
             subscriptionId,
@@ -396,62 +420,144 @@ public sealed class PaddleBillingGateway(
     private async Task<Result<string?>> FindExistingCustomerIdAsync(
         BillingCheckoutSessionRequestModel request,
         CancellationToken cancellationToken) {
-        string path = $"customers?email={Uri.EscapeDataString(request.Email)}&per_page=30";
-        Result<IReadOnlyList<CreateCustomerResponse>> result = await _apiClient.SendAsync<IReadOnlyList<CreateCustomerResponse>>(
-            HttpMethod.Get,
-            path,
-            body: null,
-            cancellationToken).ConfigureAwait(false);
-        if (result.IsFailure) {
-            return Result.Failure<string?>(result.Error);
-        }
-
+        string? next = $"customers?email={Uri.EscapeDataString(request.Email)}&per_page={RecoveryPageSize}";
         string userId = request.UserId.ToString();
-        CreateCustomerResponse? customer = result.Value.FirstOrDefault(candidate =>
-            candidate.CustomData?.TryGetValue("user_id", out string? value) == true &&
-            string.Equals(value, userId, StringComparison.OrdinalIgnoreCase));
-        if (customer is not null && string.IsNullOrWhiteSpace(customer.Id)) {
-            return Result.Failure<string?>(
-                Errors.Billing.ProviderOperationFailed(Provider, "Paddle customer identifier is missing."));
+        for (int pageNumber = 0; pageNumber < MaximumRecoveryPages && next is not null; pageNumber++) {
+            Result<PaddlePage<CreateCustomerResponse>> pageResult = await _apiClient
+                .GetPageAsync<CreateCustomerResponse>(next, cancellationToken)
+                .ConfigureAwait(false);
+            if (pageResult.IsFailure) {
+                return Result.Failure<string?>(pageResult.Error);
+            }
+
+            CreateCustomerResponse? customer = pageResult.Value.Items.FirstOrDefault(candidate =>
+                candidate.CustomData?.TryGetValue("user_id", out string? value) == true &&
+                string.Equals(value, userId, StringComparison.OrdinalIgnoreCase));
+            if (customer is not null) {
+                return string.IsNullOrWhiteSpace(customer.Id)
+                    ? Result.Failure<string?>(
+                        Errors.Billing.ProviderOperationFailed(Provider, "Paddle customer identifier is missing."))
+                    : Result.Success<string?>(customer.Id);
+            }
+
+            next = pageResult.Value.Next;
         }
 
-        return Result.Success(customer?.Id);
+        return next is null
+            ? Result.Success<string?>(value: null)
+            : Result.Failure<string?>(Errors.Billing.ProviderOperationFailed(
+                Provider,
+                "Paddle customer recovery exceeded the safe pagination limit."));
     }
 
     private async Task<Result<CreateTransactionResponse?>> FindRecoverableTransactionAsync(
         BillingCheckoutSessionRequestModel request,
         string customerId,
+        string priceId,
         string checkoutReference,
         CancellationToken cancellationToken) {
-        string path = $"transactions?customer_id={Uri.EscapeDataString(customerId)}&origin=api&per_page=30";
-        Result<IReadOnlyList<CreateTransactionResponse>> result = await _apiClient.SendAsync<IReadOnlyList<CreateTransactionResponse>>(
-            HttpMethod.Get,
-            path,
-            body: null,
-            cancellationToken).ConfigureAwait(false);
-        if (result.IsFailure) {
-            return Result.Failure<CreateTransactionResponse?>(result.Error);
-        }
-
+        string? next = $"transactions?customer_id={Uri.EscapeDataString(customerId)}&origin=api&per_page={RecoveryPageSize}";
         string userId = request.UserId.ToString();
-        IEnumerable<CreateTransactionResponse> candidates = result.Value.Where(transaction =>
-                transaction.Status is "draft" or "ready" &&
-                transaction.CustomData?.TryGetValue("user_id", out string? storedUserId) == true &&
-                string.Equals(storedUserId, userId, StringComparison.OrdinalIgnoreCase) &&
-                transaction.CustomData.TryGetValue("plan", out string? storedPlan) &&
-                string.Equals(storedPlan, request.Plan, StringComparison.OrdinalIgnoreCase));
-        CreateTransactionResponse? transaction = candidates.FirstOrDefault(candidate =>
-            candidate.CustomData?.TryGetValue("checkout_reference", out string? storedReference) == true &&
-            string.Equals(storedReference, checkoutReference, StringComparison.Ordinal)) ?? candidates.FirstOrDefault();
-        if (transaction is not null &&
-            (string.IsNullOrWhiteSpace(transaction.Id) ||
-             !BillingUrlValidator.IsAbsoluteHttps(transaction.Checkout?.Url))) {
-            return Result.Failure<CreateTransactionResponse?>(
-                Errors.Billing.ProviderOperationFailed(Provider, "Paddle recoverable transaction response is invalid."));
+        CreateTransactionResponse? recentFallback = null;
+        for (int pageNumber = 0; pageNumber < MaximumRecoveryPages && next is not null; pageNumber++) {
+            Result<PaddlePage<CreateTransactionResponse>> pageResult = await _apiClient
+                .GetPageAsync<CreateTransactionResponse>(next, cancellationToken)
+                .ConfigureAwait(false);
+            if (pageResult.IsFailure) {
+                return Result.Failure<CreateTransactionResponse?>(pageResult.Error);
+            }
+
+            foreach (CreateTransactionResponse transaction in pageResult.Value.Items.Where(candidate =>
+                         IsRecoveryCandidate(candidate, userId, request.Plan))) {
+                bool exactReference = transaction.CustomData?.TryGetValue(
+                    "checkout_reference",
+                    out string? storedReference) == true &&
+                    string.Equals(storedReference, checkoutReference, StringComparison.Ordinal);
+                if (exactReference) {
+                    return IsValidRecoverableTransaction(transaction, priceId)
+                        ? Result.Success<CreateTransactionResponse?>(transaction)
+                        : InvalidRecoverableTransaction();
+                }
+
+                if (!IsRecentRecoveryCandidate(transaction)) {
+                    continue;
+                }
+
+                if (!TryGetSingleTransactionPriceId(transaction, out string? transactionPriceId)) {
+                    return InvalidRecoverableTransaction();
+                }
+
+                if (!string.Equals(transactionPriceId, priceId, StringComparison.Ordinal)) {
+                    continue;
+                }
+
+                if (!HasValidTransactionIdentityAndUrl(transaction)) {
+                    return InvalidRecoverableTransaction();
+                }
+
+                recentFallback ??= transaction;
+            }
+
+            next = pageResult.Value.Next;
         }
 
-        return Result.Success(transaction);
+        return next is not null
+            ? Result.Failure<CreateTransactionResponse?>(Errors.Billing.ProviderOperationFailed(
+                Provider,
+                "Paddle transaction recovery exceeded the safe pagination limit."))
+            : Result.Success(recentFallback);
     }
+
+    private bool IsRecentRecoveryCandidate(CreateTransactionResponse transaction) {
+        if (!transaction.CreatedAt.HasValue) {
+            return false;
+        }
+
+        DateTimeOffset now = _timeProvider.GetUtcNow();
+        return transaction.CreatedAt.Value >= now - RecentRecoveryWindow &&
+               transaction.CreatedAt.Value <= now + MaximumRecoveryFutureSkew;
+    }
+
+    private static bool IsRecoveryCandidate(
+        CreateTransactionResponse transaction,
+        string userId,
+        string plan) =>
+        (string.Equals(transaction.Status, "draft", StringComparison.OrdinalIgnoreCase) ||
+         string.Equals(transaction.Status, "ready", StringComparison.OrdinalIgnoreCase)) &&
+        transaction.CustomData?.TryGetValue("user_id", out string? storedUserId) == true &&
+        string.Equals(storedUserId, userId, StringComparison.OrdinalIgnoreCase) &&
+        transaction.CustomData.TryGetValue("plan", out string? storedPlan) &&
+        string.Equals(storedPlan, plan, StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsValidRecoverableTransaction(
+        CreateTransactionResponse transaction,
+        string priceId) =>
+        HasValidTransactionIdentityAndUrl(transaction) &&
+        TryGetSingleTransactionPriceId(transaction, out string? transactionPriceId) &&
+        string.Equals(transactionPriceId, priceId, StringComparison.Ordinal);
+
+    private static bool HasValidTransactionIdentityAndUrl(CreateTransactionResponse transaction) =>
+        !string.IsNullOrWhiteSpace(transaction.Id) &&
+        BillingUrlValidator.IsAbsoluteHttps(transaction.Checkout?.Url);
+
+    private static bool TryGetSingleTransactionPriceId(
+        CreateTransactionResponse transaction,
+        out string? priceId) {
+        priceId = null;
+        if (transaction.Items is not { Count: 1 } ||
+            transaction.Items[0].Quantity != 1 ||
+            string.IsNullOrWhiteSpace(transaction.Items[0].Price?.Id)) {
+            return false;
+        }
+
+        priceId = transaction.Items[0].Price!.Id;
+        return true;
+    }
+
+    private static Result<CreateTransactionResponse?> InvalidRecoverableTransaction() =>
+        Result.Failure<CreateTransactionResponse?>(Errors.Billing.ProviderOperationFailed(
+            BillingProviderNames.Paddle,
+            "Paddle recoverable transaction response is invalid."));
 
     private static string CreateCheckoutReference(BillingCheckoutSessionRequestModel request) =>
         string.IsNullOrWhiteSpace(request.IdempotencyKey)
@@ -674,7 +780,16 @@ public sealed class PaddleBillingGateway(
         [property: JsonPropertyName("id")] string Id,
         [property: JsonPropertyName("checkout")] TransactionCheckoutResponse? Checkout,
         [property: JsonPropertyName("status")] string? Status = null,
-        [property: JsonPropertyName("custom_data")] IReadOnlyDictionary<string, string>? CustomData = null);
+        [property: JsonPropertyName("custom_data")] IReadOnlyDictionary<string, string>? CustomData = null,
+        [property: JsonPropertyName("items")] IReadOnlyList<TransactionItemResponse>? Items = null,
+        [property: JsonPropertyName("created_at")] DateTimeOffset? CreatedAt = null);
+
+    private sealed record TransactionItemResponse(
+        [property: JsonPropertyName("price")] TransactionPriceResponse? Price,
+        [property: JsonPropertyName("quantity")] int Quantity);
+
+    private sealed record TransactionPriceResponse(
+        [property: JsonPropertyName("id")] string? Id);
 
     private sealed record TransactionCheckoutResponse(
         [property: JsonPropertyName("url")] string? Url);

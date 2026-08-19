@@ -85,27 +85,29 @@ public sealed class S3ImageStorageService(
     public async Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
         string objectKey,
         CancellationToken cancellationToken) {
-        if (string.IsNullOrWhiteSpace(objectKey)) {
-            return new ImageObjectValidationResult(IsValid: false, "invalid_key", "Image object key is required.");
-        }
-
+        string outcome = "success";
+        string? errorType = null;
         try {
+            if (string.IsNullOrWhiteSpace(objectKey)) {
+                return CreateInvalidValidationResult(ref outcome, "invalid_key", "Image object key is required.");
+            }
+
             StoredObjectInfo? info = await storageClient.GetObjectInfoAsync(_options.Bucket, objectKey, cancellationToken).ConfigureAwait(false);
             if (info is null) {
-                return new ImageObjectValidationResult(IsValid: false, "not_found", "Image upload has not completed.");
+                return CreateInvalidValidationResult(ref outcome, "not_found", "Image upload has not completed.");
             }
 
             if (info.SizeBytes <= 0) {
-                return new ImageObjectValidationResult(IsValid: false, "empty", "Image file is empty.");
+                return CreateInvalidValidationResult(ref outcome, "empty", "Image file is empty.");
             }
 
             if (info.SizeBytes > _options.MaxUploadSizeBytes) {
-                return new ImageObjectValidationResult(IsValid: false, "too_large",
+                return CreateInvalidValidationResult(ref outcome, "too_large",
                     string.Create(CultureInfo.InvariantCulture, $"File is too large. Max allowed size: {_options.MaxUploadSizeBytes} bytes."));
             }
 
             if (string.IsNullOrWhiteSpace(info.ContentType) || !AllowedContentTypes.Contains(info.ContentType)) {
-                return new ImageObjectValidationResult(IsValid: false, "unsupported_type",
+                return CreateInvalidValidationResult(ref outcome, "unsupported_type",
                     $"Unsupported content type: {info.ContentType ?? "unknown"}.");
             }
 
@@ -115,23 +117,36 @@ public sealed class S3ImageStorageService(
                 _options.MaxUploadSizeBytes,
                 cancellationToken).ConfigureAwait(false);
             if (content is null) {
-                return new ImageObjectValidationResult(IsValid: false, "not_found", "Image upload has not completed.");
+                return CreateInvalidValidationResult(ref outcome, "not_found", "Image upload has not completed.");
             }
 
             if (content.LongLength != info.SizeBytes || !HasValidImageContent(content, info.ContentType)) {
-                return new ImageObjectValidationResult(IsValid: false, "invalid_content",
+                return CreateInvalidValidationResult(ref outcome, "invalid_content",
                     "Uploaded object content does not match a supported image format.");
             }
 
             return new ImageObjectValidationResult(IsValid: true);
         } catch (InvalidDataException ex) {
-            IntegrationsTelemetry.RecordStorageOperation("validate", "validation_error", ex.GetType().Name);
-            return new ImageObjectValidationResult(IsValid: false, "invalid_content",
+            errorType = ex.GetType().Name;
+            return CreateInvalidValidationResult(ref outcome, "invalid_content",
                 "Uploaded object content does not match a supported image format.");
         } catch (Exception ex) {
-            IntegrationsTelemetry.RecordStorageOperation("head", "failure", ex.GetType().Name);
+            outcome = ex is OperationCanceledException && cancellationToken.IsCancellationRequested
+                ? "canceled"
+                : "failure";
+            errorType = ex.GetType().Name;
             throw;
+        } finally {
+            IntegrationsTelemetry.RecordStorageOperation("validate", outcome, errorType);
         }
+    }
+
+    private static ImageObjectValidationResult CreateInvalidValidationResult(
+        ref string outcome,
+        string errorCode,
+        string errorMessage) {
+        outcome = errorCode;
+        return new ImageObjectValidationResult(IsValid: false, errorCode, errorMessage);
     }
 
     private static bool HasValidImageContent(byte[] content, string contentType) {

@@ -15,6 +15,7 @@ public sealed class YooKassaBillingGateway(
     HttpClient httpClient,
     IOptions<YooKassaOptions> options)
     : IBillingProviderGateway, IBillingRecurringProviderGateway {
+    private const int MaximumPaymentIdLength = 128;
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) {
         MaxDepth = Http.BoundedHttpContentReader.DefaultJsonMaxDepth,
     };
@@ -156,6 +157,11 @@ public sealed class YooKassaBillingGateway(
             return Result.Success<BillingWebhookEventModel?>(value: null);
         }
 
+        if (!IsValidPaymentId(notification.Object.Id)) {
+            return Result.Failure<BillingWebhookEventModel?>(
+                Errors.Billing.WebhookValidationFailed("YooKassa payment id is invalid."));
+        }
+
         Result<YooKassaPayment> paymentResult = await FetchPaymentAsync(notification.Object.Id, cancellationToken).ConfigureAwait(false);
         if (paymentResult.IsFailure) {
             return Result.Failure<BillingWebhookEventModel?>(paymentResult.Error);
@@ -204,6 +210,15 @@ public sealed class YooKassaBillingGateway(
 
     private async Task<Result<YooKassaPayment>> FetchPaymentAsync(string paymentId, CancellationToken cancellationToken) {
         return await _apiClient.SendAsync<YooKassaPayment>(HttpMethod.Get, $"payments/{paymentId}", body: null, idempotenceKey: null, cancellationToken).ConfigureAwait(false);
+    }
+
+    private static bool IsValidPaymentId(string value) {
+        if (value.Length is 0 or > MaximumPaymentIdLength) {
+            return false;
+        }
+
+        return value.All(static character =>
+            char.IsAsciiLetterOrDigit(character) || character is '_' or '-');
     }
 
     private bool IsConfiguredForCheckout() =>

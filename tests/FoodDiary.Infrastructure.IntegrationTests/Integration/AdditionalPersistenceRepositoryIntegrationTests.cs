@@ -50,6 +50,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             "access-token",
             "refresh-token",
             DateTime.UtcNow.AddHours(1));
+        connection.RecordConnectRequest(new string('A', 64), new string('B', 64));
 
         await connectionRepository.AddAsync(connection);
         await context.SaveChangesAsync();
@@ -63,8 +64,29 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
 
         Assert.NotNull(savedConnection);
         Assert.Equal("access-token-2", savedConnection.AccessToken);
+        Assert.Equal(new string('A', 64), savedConnection.LastConnectRequestId);
+        Assert.Equal(new string('B', 64), savedConnection.LastConnectRequestHash);
         Assert.Single(allConnections);
         Assert.Equal("Fitbit", Assert.Single(connectionModels).Provider);
+
+        savedConnection.Deactivate();
+        await connectionRepository.UpdateAsync(savedConnection);
+        await context.SaveChangesAsync();
+        savedConnection.Reconnect(
+            "external-user-reconnected",
+            "access-token-3",
+            "refresh-token-3",
+            DateTime.UtcNow.AddHours(3));
+        await connectionRepository.UpdateAsync(savedConnection);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        WearableConnection? reconnected = await connectionRepository.GetAsync(user.Id, WearableProvider.Fitbit);
+        Assert.NotNull(reconnected);
+        Assert.Multiple(
+            () => Assert.Equal(connection.Id, reconnected.Id),
+            () => Assert.True(reconnected.IsActive),
+            () => Assert.Equal("external-user-reconnected", reconnected.ExternalUserId),
+            () => Assert.Equal("access-token-3", reconnected.AccessToken));
 
         var syncRepository = new WearableSyncRepository(context);
         DateTime date = DateTime.UtcNow.Date;
@@ -154,6 +176,36 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             () => Assert.Equal(product.Barcode, saved.Barcode),
             () => Assert.Equal(2, saved.SearchHitCount),
             () => Assert.Contains("Concurrent product", saved.Name, StringComparison.Ordinal));
+    }
+
+    [RequiresDockerFact]
+    public async Task OpenFoodFactsRepository_UpsertAtMaximumHitCount_SaturatesCounter() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var repository = new OpenFoodFactsProductCacheRepository(context, FixedTime);
+        string barcode = $"saturated-{Guid.NewGuid():N}";
+        var product = new OpenFoodFactsProductModel(
+            barcode,
+            "Saturated product",
+            Brand: null,
+            Category: null,
+            ImageUrl: null,
+            CaloriesPer100G: null,
+            ProteinsPer100G: null,
+            FatsPer100G: null,
+            CarbsPer100G: null,
+            FiberPer100G: null);
+        await repository.UpsertAsync([product]);
+        await context.Database.ExecuteSqlInterpolatedAsync(
+            $"UPDATE \"OpenFoodFactsProducts\" SET \"SearchHitCount\" = {int.MaxValue} WHERE \"Barcode\" = {barcode}");
+
+        await repository.UpsertAsync([product with { Name = "Saturated product updated" }]);
+
+        OpenFoodFactsProduct saved = await context.OpenFoodFactsProducts
+            .AsNoTracking()
+            .SingleAsync(item => item.Barcode == barcode);
+        Assert.Multiple(
+            () => Assert.Equal(int.MaxValue, saved.SearchHitCount),
+            () => Assert.Equal("Saturated product updated", saved.Name));
     }
 
     [RequiresDockerFact]

@@ -13,6 +13,9 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class WearableHttpMappingsTests {
+    private const string RequestId = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    private const string RequestHash = "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB";
+
     [Fact]
     public void ToQuery_MapsUserId() {
         var userId = Guid.NewGuid();
@@ -50,13 +53,15 @@ public sealed class WearableHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new ConnectWearableHttpRequest("auth-code-123", "state-123");
 
-        ConnectWearableCommand command = request.ToCommand(userId, "fitbit");
+        ConnectWearableCommand command = request.ToCommand(userId, "fitbit", RequestId, RequestHash);
 
         Assert.Multiple(
             () => Assert.Equal(userId, command.UserId),
             () => Assert.Equal("fitbit", command.Provider),
             () => Assert.Equal("auth-code-123", command.Code),
-            () => Assert.Equal("state-123", command.State));
+            () => Assert.Equal("state-123", command.State),
+            () => Assert.Equal(RequestId, command.RequestId),
+            () => Assert.Equal(RequestHash, command.RequestHash));
     }
 
     [Fact]

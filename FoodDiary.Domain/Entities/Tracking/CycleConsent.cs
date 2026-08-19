@@ -35,10 +35,20 @@ public sealed class CycleConsent : Entity<CycleConsentId> {
         return consent;
     }
 
-    internal void Grant(DateTime grantedAtUtc) {
-        GrantedAtUtc = NormalizeUtc(grantedAtUtc);
+    internal bool Grant(DateTime grantedAtUtc) {
+        DateTime normalized = NormalizeUtc(grantedAtUtc);
+        if (IsActive) {
+            return false;
+        }
+
+        if (RevokedAtUtc is { } revokedAtUtc && normalized < revokedAtUtc) {
+            throw new ArgumentOutOfRangeException(nameof(grantedAtUtc), "Consent grant cannot precede its revocation.");
+        }
+
+        GrantedAtUtc = normalized;
         RevokedAtUtc = null;
         SetModified();
+        return true;
     }
 
     internal void Revoke(DateTime revokedAtUtc) {

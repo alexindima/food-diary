@@ -34,6 +34,10 @@ public sealed class CreateWaistEntryCommandHandler(
             normalizedDate,
             cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
+            if (existing.CircumferenceCm.Equals(command.CircumferenceCm)) {
+                return Result.Success(existing.ToModel());
+            }
+
             return Result.Failure<WaistEntryModel>(
                 Errors.WaistEntry.AlreadyExists(normalizedDate));
         }

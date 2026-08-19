@@ -9,6 +9,7 @@ using FoodDiary.Presentation.Api.Features.ContentReports;
 using FoodDiary.Presentation.Api.Features.ContentReports.Requests;
 using FoodDiary.Presentation.Api.Features.ContentReports.Responses;
 using FoodDiary.Presentation.Api.Features.RecipeLikes;
+using FoodDiary.Presentation.Api.Features.RecipeLikes.Requests;
 using FoodDiary.Presentation.Api.Features.RecipeLikes.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -55,13 +56,14 @@ public sealed class ContentReportRecipeLikeControllerTests {
             request => sentRequest = request);
         RecipeLikesController controller = CreateController(new RecipeLikesController(sender));
 
-        IActionResult result = await controller.Toggle(userId, recipeId);
+        IActionResult result = await controller.Toggle(userId, recipeId, new SetRecipeLikeStateHttpRequest(IsLiked: true));
 
         RecipeLikeStatusHttpResponse response = Assert.IsType<RecipeLikeStatusHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
         Assert.True(response.IsLiked);
         ToggleRecipeLikeCommand command = Assert.IsType<ToggleRecipeLikeCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(recipeId, command.RecipeId);
+        Assert.True(command.IsLiked);
     }
 
     [Fact]

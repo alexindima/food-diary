@@ -96,7 +96,10 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
                 "FiberPer100G" = EXCLUDED."FiberPer100G",
                 "LastSyncedAtUtc" = EXCLUDED."LastSyncedAtUtc",
                 "LastSeenAtUtc" = EXCLUDED."LastSeenAtUtc",
-                "SearchHitCount" = "OpenFoodFactsProducts"."SearchHitCount" + 1
+                "SearchHitCount" = CASE
+                    WHEN "OpenFoodFactsProducts"."SearchHitCount" = 2147483647 THEN 2147483647
+                    ELSE "OpenFoodFactsProducts"."SearchHitCount" + 1
+                END
             """,
             [
                 new NpgsqlParameter<string>("barcode", product.Barcode),

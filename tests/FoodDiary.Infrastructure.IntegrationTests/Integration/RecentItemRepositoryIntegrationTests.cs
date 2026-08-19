@@ -13,6 +13,47 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class RecentItemRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task RegisterUsageAsync_WhenCallsRace_UpsertsOnceAndPreservesNewestTimestamp() {
+        var baseline = new DateTime(2026, 3, 29, 12, 0, 0, DateTimeKind.Utc);
+        var user = User.Create("recent-concurrency@example.com", "hash");
+        var existingProductId = new ProductId(Guid.NewGuid());
+        var newProductId = new ProductId(Guid.NewGuid());
+
+        await using FoodDiaryDbContext seedContext = await databaseFixture.CreateDbContextAsync();
+        seedContext.Users.Add(user);
+        seedContext.RecentItems.Add(RecentItem.Create(
+            user.Id,
+            RecentItemType.Product,
+            existingProductId.Value,
+            baseline));
+        await seedContext.SaveChangesAsync();
+
+        await using FoodDiaryDbContext firstContext = CreateVerificationContext(seedContext);
+        await using FoodDiaryDbContext secondContext = CreateVerificationContext(seedContext);
+        var firstRepository = new RecentItemRepository(firstContext, new FixedDateTimeProvider(baseline.AddMinutes(1)));
+        var secondRepository = new RecentItemRepository(secondContext, new FixedDateTimeProvider(baseline.AddMinutes(2)));
+
+        await Task.WhenAll(
+            firstRepository.RegisterUsageAsync(user.Id, [existingProductId, newProductId], [], CancellationToken.None),
+            secondRepository.RegisterUsageAsync(user.Id, [existingProductId, newProductId], [], CancellationToken.None));
+
+        await using FoodDiaryDbContext verificationContext = CreateVerificationContext(seedContext);
+        List<RecentItem> storedItems = await verificationContext.RecentItems
+            .AsNoTracking()
+            .Where(item => item.UserId == user.Id && item.ItemType == RecentItemType.Product)
+            .OrderBy(item => item.ItemId)
+            .ToListAsync();
+
+        RecentItem existingItem = Assert.Single(storedItems, item => item.ItemId == existingProductId.Value);
+        RecentItem newItem = Assert.Single(storedItems, item => item.ItemId == newProductId.Value);
+        Assert.Multiple(
+            () => Assert.Equal(3, existingItem.UsageCount),
+            () => Assert.Equal(2, newItem.UsageCount),
+            () => Assert.Equal(baseline.AddMinutes(2), existingItem.LastUsedAtUtc),
+            () => Assert.Equal(baseline.AddMinutes(2), newItem.LastUsedAtUtc));
+    }
+
+    [RequiresDockerFact]
     public async Task RegisterUsageAsync_WhenRecentProductsAtCapacity_KeepsNewestHundredIncludingNewItem() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create("recent@example.com", "hash");

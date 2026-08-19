@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Wearables.Mappings;
 using FoodDiary.Presentation.Api.Features.Wearables.Requests;
@@ -24,7 +25,13 @@ public sealed class WearablesController(ISender mediator) : AuthorizedController
     [HttpGet("{provider}/auth-url")]
     [ProducesResponseType<WearableAuthUrlHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    public Task<IActionResult> GetAuthUrl([FromCurrentUser] Guid userId, string provider, [FromQuery] string state) =>
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [BlockImpersonatedAccess]
+    [EnableRateLimiting(PresentationPolicyNames.WearableRateLimitPolicyName)]
+    public Task<IActionResult> GetAuthUrl(
+        [FromCurrentUser] Guid userId,
+        [Required, MaxLength(WearableRequestLimits.MaximumProviderLength)] string provider,
+        [FromQuery, Required, MaxLength(WearableRequestLimits.MaximumOAuthStateLength)] string state) =>
         HandleOk(WearableHttpMappings.ToAuthUrlQuery(userId, provider, state),
             static url => new WearableAuthUrlHttpResponse(url));
 
@@ -33,11 +40,14 @@ public sealed class WearablesController(ISender mediator) : AuthorizedController
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [BlockImpersonatedAccess]
     [EnableRateLimiting(PresentationPolicyNames.WearableRateLimitPolicyName)]
+    [EnableIdempotency(requireKey: true)]
     public Task<IActionResult> Connect(
         [FromCurrentUser] Guid userId,
-        string provider,
+        [Required, MaxLength(WearableRequestLimits.MaximumProviderLength)] string provider,
         [FromBody] ConnectWearableHttpRequest request) =>
-        HandleOk(request.ToCommand(userId, provider), static value => value.ToHttpResponse());
+        HandleOk(
+            request.ToCommand(userId, provider, GetIdempotencyRequestId(), GetIdempotencyRequestHash()),
+            static value => value.ToHttpResponse());
 
     [HttpDelete("{provider}/disconnect")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -46,7 +56,7 @@ public sealed class WearablesController(ISender mediator) : AuthorizedController
     [BlockImpersonatedAccess]
     public Task<IActionResult> Disconnect(
         [FromCurrentUser] Guid userId,
-        string provider) =>
+        [Required, MaxLength(WearableRequestLimits.MaximumProviderLength)] string provider) =>
         HandleNoContent(WearableHttpMappings.ToDisconnectCommand(userId, provider));
 
     [HttpPost("{provider}/sync")]
@@ -58,7 +68,7 @@ public sealed class WearablesController(ISender mediator) : AuthorizedController
     [EnableIdempotency(requireKey: true)]
     public Task<IActionResult> Sync(
         [FromCurrentUser] Guid userId,
-        string provider,
+        [Required, MaxLength(WearableRequestLimits.MaximumProviderLength)] string provider,
         [FromQuery] DateTime date) =>
         HandleOk(WearableHttpMappings.ToSyncCommand(userId, provider, date), static value => value.ToHttpResponse());
 
@@ -68,4 +78,12 @@ public sealed class WearablesController(ISender mediator) : AuthorizedController
         [FromCurrentUser] Guid userId,
         [FromQuery] DateTime date) =>
         HandleOk(WearableHttpMappings.ToDailySummaryQuery(userId, date), static value => value.ToHttpResponse());
+
+    private string GetIdempotencyRequestId() =>
+        IdempotencyRequestContext.GetRequestId(HttpContext) ??
+        throw new InvalidOperationException("Required idempotency request ID is unavailable.");
+
+    private string GetIdempotencyRequestHash() =>
+        IdempotencyRequestContext.GetRequestHash(HttpContext) ??
+        throw new InvalidOperationException("Required idempotency request hash is unavailable.");
 }

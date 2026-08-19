@@ -1,6 +1,8 @@
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.RecipeLikes.Mappings;
+using FoodDiary.Presentation.Api.Features.RecipeLikes.Requests;
 using FoodDiary.Presentation.Api.Features.RecipeLikes.Responses;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +13,13 @@ namespace FoodDiary.Presentation.Api.Features.RecipeLikes;
 [Route("api/v{version:apiVersion}/recipes/{recipeId:guid}/likes")]
 public sealed class RecipeLikesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("toggle")]
+    [EnableIdempotency(requireKey: true)]
     [ProducesResponseType<RecipeLikeStatusHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> Toggle(
         [FromCurrentUser] Guid userId,
-        Guid recipeId) =>
-        HandleOk(RecipeLikeHttpMappings.ToCommand(userId, recipeId),
+        Guid recipeId,
+        [FromBody] SetRecipeLikeStateHttpRequest request) =>
+        HandleOk(RecipeLikeHttpMappings.ToCommand(userId, recipeId, request.IsLiked!.Value),
             static value => value.ToHttpResponse());
 
     [HttpGet]

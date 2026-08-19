@@ -232,6 +232,34 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void RecordAuthenticationActivity_WithOlderTimestamp_DoesNotRegressLoginOrAuditTime() {
+        var user = User.Create("test@example.com", "hash");
+        DateTime latestLoginAtUtc = DateTime.UtcNow.AddMinutes(2);
+        user.RecordAuthenticationActivity(latestLoginAtUtc);
+        DateTime? modifiedOnUtc = user.ModifiedOnUtc;
+
+        user.RecordAuthenticationActivity(latestLoginAtUtc.AddMinutes(-1));
+
+        Assert.Multiple(
+            () => Assert.Equal(latestLoginAtUtc, user.LastLoginAtUtc),
+            () => Assert.Equal(modifiedOnUtc, user.ModifiedOnUtc));
+    }
+
+    [Fact]
+    public void UpdateRefreshToken_WithOlderTimestamp_UpdatesTokenWithoutRegressingLoginOrAuditTime() {
+        var user = User.Create("test@example.com", "hash");
+        DateTime latestLoginAtUtc = DateTime.UtcNow.AddMinutes(2);
+        user.UpdateRefreshToken(new UserRefreshTokenUpdate("first-token", latestLoginAtUtc));
+
+        user.UpdateRefreshToken(new UserRefreshTokenUpdate("second-token", latestLoginAtUtc.AddMinutes(-1)));
+
+        Assert.Multiple(
+            () => Assert.Equal("second-token", user.RefreshToken),
+            () => Assert.Equal(latestLoginAtUtc, user.LastLoginAtUtc),
+            () => Assert.Equal(latestLoginAtUtc, user.ModifiedOnUtc));
+    }
+
+    [Fact]
     public void LinkTelegram_AndUnlinkTelegram_UpdateAccountLinkState() {
         var user = User.Create("test@example.com", "hash");
 
@@ -270,6 +298,15 @@ public class UserInvariantTests {
             user.SetEmailConfirmationToken("hash", DateTime.UtcNow.AddMinutes(-1)));
     }
 
+    [Fact]
+    public void SetEmailConfirmationToken_WhenExpiryDoesNotFollowIssuance_Throws() {
+        var user = User.Create("test@example.com", "hash");
+        DateTime issuedAtUtc = DateTime.UtcNow.AddHours(2);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.SetEmailConfirmationToken("hash", issuedAtUtc.AddMinutes(-1), issuedAtUtc));
+    }
+
     [Theory]
     [InlineData("")]
     [InlineData(" ")]
@@ -279,6 +316,15 @@ public class UserInvariantTests {
 
         Assert.Throws<ArgumentException>(() =>
             user.SetPasswordResetToken(tokenHash, DateTime.UtcNow.AddMinutes(30)));
+    }
+
+    [Fact]
+    public void SetPasswordResetToken_WhenExpiryDoesNotFollowIssuance_Throws() {
+        var user = User.Create("test@example.com", "hash");
+        DateTime issuedAtUtc = DateTime.UtcNow.AddHours(2);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.SetPasswordResetToken("hash", issuedAtUtc, issuedAtUtc));
     }
 
     [Fact]

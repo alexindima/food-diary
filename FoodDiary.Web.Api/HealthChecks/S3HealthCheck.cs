@@ -8,17 +8,14 @@ namespace FoodDiary.Web.Api.HealthChecks;
 
 public sealed class S3HealthCheck(
     IAmazonS3 s3Client,
-    IOptions<S3Options> s3Options,
-    IHostEnvironment environment) : IHealthCheck {
+    IOptions<S3Options> s3Options) : IHealthCheck {
     public async Task<HealthCheckResult> CheckHealthAsync(
         HealthCheckContext context,
         CancellationToken cancellationToken = default) {
         string bucket = s3Options.Value.Bucket;
 
         if (string.IsNullOrWhiteSpace(bucket)) {
-            return !environment.IsDevelopment()
-                ? HealthCheckResult.Unhealthy("S3 bucket is not configured.")
-                : HealthCheckResult.Healthy("S3 not configured.");
+            return HealthCheckResult.Healthy("S3 not configured.");
         }
 
         try {

@@ -50,6 +50,8 @@ public sealed class AuthTelegramController(ISender mediator) : BaseApiController
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     [BlockImpersonatedAccess]
     public Task<IActionResult> LinkTelegram([FromCurrentUser] Guid userId, [FromBody] TelegramAuthHttpRequest request) =>
         HandleOk(request.ToLinkCommand(userId), static value => value.ToHttpResponse());

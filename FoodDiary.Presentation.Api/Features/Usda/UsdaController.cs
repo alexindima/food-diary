@@ -1,8 +1,10 @@
+using System.ComponentModel.DataAnnotations;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Usda.Mappings;
 using FoodDiary.Presentation.Api.Features.Usda.Requests;
 using FoodDiary.Presentation.Api.Features.Usda.Responses;
 using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +18,10 @@ public sealed class UsdaController(ISender mediator) : AuthorizedController(medi
     [HttpGet("foods")]
     [EnableRateLimiting(PresentationPolicyNames.FoodDataRateLimitPolicyName)]
     [ProducesResponseType<IReadOnlyList<UsdaFoodHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> Search(
-        [FromQuery] string search,
-        [FromQuery] int limit = 20) =>
+        [FromQuery, MaxLength(UsdaRequestLimits.MaximumSearchLength)] string search,
+        [FromQuery, Range(UsdaRequestLimits.MinimumLimit, UsdaRequestLimits.MaximumLimit)] int limit = 20) =>
         HandleOk(UsdaHttpMappings.ToQuery(search, limit), static value => value.ToHttpResponse());
 
     [HttpGet("foods/{fdcId:int}")]

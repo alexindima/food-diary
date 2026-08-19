@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.RecentItems.Common;
-using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -31,11 +30,11 @@ public sealed class RecentItemRepository(FoodDiaryDbContext context, TimeProvide
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
 
         if (distinctProductIds.Count > 0) {
-            await TouchItemsAsync(userId, RecentItemType.Product, distinctProductIds, now, cancellationToken).ConfigureAwait(false);
+            await UpsertItemsAsync(userId, RecentItemType.Product, distinctProductIds, now, cancellationToken).ConfigureAwait(false);
         }
 
         if (distinctRecipeIds.Count > 0) {
-            await TouchItemsAsync(userId, RecentItemType.Recipe, distinctRecipeIds, now, cancellationToken).ConfigureAwait(false);
+            await UpsertItemsAsync(userId, RecentItemType.Recipe, distinctRecipeIds, now, cancellationToken).ConfigureAwait(false);
         }
 
         if (distinctProductIds.Count > 0) {
@@ -77,52 +76,43 @@ public sealed class RecentItemRepository(FoodDiaryDbContext context, TimeProvide
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    private async Task TouchItemsAsync(
+    private async Task UpsertItemsAsync(
         UserId userId,
         RecentItemType itemType,
         IReadOnlyCollection<Guid> itemIds,
         DateTime usedAtUtc,
         CancellationToken cancellationToken) {
-        List<RecentItem> existingItems = await context.RecentItems
-            .Where(x => x.UserId == userId && x.ItemType == itemType && itemIds.Contains(x.ItemId))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+        Guid[] ids = [.. itemIds];
+        Guid[] recentItemIds = [.. ids.Select(_ => RecentItemId.New().Value)];
+        string itemTypeValue = itemType.ToString();
 
-        var existingByItemId = existingItems.ToDictionary(x => x.ItemId);
-
-        foreach (Guid itemId in itemIds) {
-            if (existingByItemId.TryGetValue(itemId, out RecentItem? existing)) {
-                existing.Touch(usedAtUtc);
-                continue;
-            }
-
-            context.RecentItems.Add(RecentItem.Create(userId, itemType, itemId, usedAtUtc));
-        }
+        await context.Database.ExecuteSqlInterpolatedAsync($$"""
+            INSERT INTO "RecentItems" (
+                "Id", "UserId", "ItemType", "ItemId", "LastUsedAtUtc", "UsageCount", "CreatedOnUtc", "ModifiedOnUtc")
+            SELECT input."Id", {{userId.Value}}, {{itemTypeValue}}, input."ItemId", {{usedAtUtc}}, 1, {{usedAtUtc}}, NULL
+            FROM unnest({{recentItemIds}}, {{ids}}) AS input("Id", "ItemId")
+            ON CONFLICT ("UserId", "ItemType", "ItemId") DO UPDATE SET
+                "LastUsedAtUtc" = GREATEST("RecentItems"."LastUsedAtUtc", EXCLUDED."LastUsedAtUtc"),
+                "UsageCount" = LEAST("RecentItems"."UsageCount"::bigint + 1, {{int.MaxValue}})::integer,
+                "ModifiedOnUtc" = GREATEST(
+                    COALESCE("RecentItems"."ModifiedOnUtc", "RecentItems"."CreatedOnUtc"),
+                    EXCLUDED."LastUsedAtUtc")
+            """, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task TrimOverflowAsync(
         UserId userId,
         RecentItemType itemType,
         CancellationToken cancellationToken) {
-        List<RecentItem> storedItems = await context.RecentItems
-            .Where(x => x.UserId == userId && x.ItemType == itemType)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-
-        RecentItem[] addedItems = [.. context.ChangeTracker
-            .Entries<RecentItem>()
-            .Where(entry =>
-                entry.State == EntityState.Added &&
-                entry.Entity.UserId == userId &&
-                entry.Entity.ItemType == itemType)
-            .Select(entry => entry.Entity)];
-
-        RecentItem[] overflowItems = [.. storedItems
-            .Concat(addedItems)
-            .OrderByDescending(x => x.LastUsedAtUtc)
-            .ThenByDescending(x => x.CreatedOnUtc)
-            .Skip(MaxStoredPerType)];
-
-        if (overflowItems.Length > 0) {
-            context.RecentItems.RemoveRange(overflowItems);
-        }
+        string itemTypeValue = itemType.ToString();
+        await context.Database.ExecuteSqlInterpolatedAsync($$"""
+            DELETE FROM "RecentItems"
+            WHERE "Id" IN (
+                SELECT "Id"
+                FROM "RecentItems"
+                WHERE "UserId" = {{userId.Value}} AND "ItemType" = {{itemTypeValue}}
+                ORDER BY "LastUsedAtUtc" DESC, "CreatedOnUtc" DESC
+                OFFSET {{MaxStoredPerType}})
+            """, cancellationToken).ConfigureAwait(false);
     }
 }

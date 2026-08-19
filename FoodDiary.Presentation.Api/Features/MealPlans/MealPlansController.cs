@@ -1,8 +1,10 @@
+using System.ComponentModel.DataAnnotations;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.MealPlans.Mappings;
 using FoodDiary.Presentation.Api.Features.MealPlans.Responses;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Responses;
+using FoodDiary.Presentation.Api.Responses;
 using ShoppingListResponseMappings = FoodDiary.Presentation.Api.Features.ShoppingLists.Mappings.ShoppingListHttpResponseMappings;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
@@ -13,11 +15,14 @@ namespace FoodDiary.Presentation.Api.Features.MealPlans;
 [ApiController]
 [Route("api/v{version:apiVersion}/meal-plans")]
 public sealed class MealPlansController(ISender mediator) : AuthorizedController(mediator) {
+    private const int MaximumDietTypeLength = 32;
+
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<MealPlanSummaryHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetAll(
         [FromCurrentUser] Guid userId,
-        [FromQuery] string? dietType = null) =>
+        [FromQuery, MaxLength(MaximumDietTypeLength)] string? dietType = null) =>
         HandleOk(userId.ToQuery(dietType), static value => value.ToHttpResponse());
 
     [HttpGet("{id:guid}")]

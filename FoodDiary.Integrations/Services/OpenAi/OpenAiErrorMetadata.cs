@@ -18,7 +18,8 @@ internal static class OpenAiErrorMetadata {
                 documentOptions: new JsonDocumentOptions {
                     MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
                 });
-            if (root?["error"] is not JsonNode error) {
+            if (root is not JsonObject rootObject ||
+                rootObject["error"] is not JsonNode error) {
                 return "response_metadata_unavailable";
             }
 

@@ -79,6 +79,7 @@ describe('WearableService connections', () => {
         const connectReq = httpMock.expectOne(`${BASE_URL}/Fitbit/connect`);
         expect(connectReq.request.method).toBe('POST');
         expect(connectReq.request.body).toEqual({ code: 'code-1', state: 'state-1' });
+        expect(connectReq.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
         connectReq.flush(CONNECTION);
 
         service.disconnect('Fitbit').subscribe();

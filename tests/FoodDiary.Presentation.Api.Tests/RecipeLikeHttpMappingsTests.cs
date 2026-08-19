@@ -13,10 +13,11 @@ public sealed class RecipeLikeHttpMappingsTests {
         var userId = Guid.NewGuid();
         var recipeId = Guid.NewGuid();
 
-        ToggleRecipeLikeCommand command = RecipeLikeHttpMappings.ToCommand(userId, recipeId);
+        ToggleRecipeLikeCommand command = RecipeLikeHttpMappings.ToCommand(userId, recipeId, isLiked: true);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(recipeId, command.RecipeId);
+        Assert.True(command.IsLiked);
     }
 
     [Fact]

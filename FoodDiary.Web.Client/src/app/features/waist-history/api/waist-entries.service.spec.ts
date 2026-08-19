@@ -111,6 +111,7 @@ describe('WaistEntriesService mutations', () => {
         const req = httpMock.expectOne(`${BASE_URL}/`);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual(payload);
+        expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
         req.flush(MOCK_ENTRY);
     });
 

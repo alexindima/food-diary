@@ -61,8 +61,8 @@ public sealed class IdempotencyFilter(
         }
 
         string cacheKey = ComputeCacheKey(context, idempotencyKey);
-        IdempotencyRequestContext.SetRequestId(context.HttpContext, cacheKey);
         string requestHash = ComputeRequestHash(context);
+        IdempotencyRequestContext.SetRequest(context.HttpContext, cacheKey, requestHash);
         IdempotencyReservation reservation = await idempotencyStore
             .ReserveAsync(cacheKey, requestHash, CacheDuration, ProcessingDuration, context.HttpContext.RequestAborted)
             .ConfigureAwait(false);
@@ -135,6 +135,11 @@ public sealed class IdempotencyFilter(
 
         if (reservation.Status == IdempotencyReservationStatus.InProgress) {
             context.Result = CreateIdempotencyInProgress(context);
+            return true;
+        }
+
+        if (reservation.Status == IdempotencyReservationStatus.CapacityExceeded) {
+            context.Result = CreateIdempotencyCapacityExceeded(context);
             return true;
         }
 
@@ -292,6 +297,14 @@ public sealed class IdempotencyFilter(
             "The idempotency key is already being processed.",
             context.HttpContext.TraceIdentifier)) {
             StatusCode = StatusCodes.Status409Conflict,
+        };
+
+    private static ObjectResult CreateIdempotencyCapacityExceeded(ActionExecutingContext context) =>
+        new(new ApiErrorHttpResponse(
+            "Idempotency.CapacityExceeded",
+            "The idempotency store is temporarily at capacity. Retry later.",
+            context.HttpContext.TraceIdentifier)) {
+            StatusCode = StatusCodes.Status503ServiceUnavailable,
         };
 
     private static ObjectResult CreateIdempotencyRequired(ActionExecutingContext context) =>

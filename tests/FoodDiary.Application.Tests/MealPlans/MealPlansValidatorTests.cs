@@ -53,6 +53,33 @@ public class MealPlansValidatorTests {
         result.ShouldHaveValidationErrorFor(q => q.UserId);
     }
 
+    [Theory]
+    [InlineData("unknown")]
+    [InlineData("1")]
+    [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")]
+    public async Task GetMealPlans_WithInvalidDietType_HasError(string dietType) {
+        var validator = new GetMealPlansQueryValidator();
+
+        TestValidationResult<GetMealPlansQuery> result = await validator.TestValidateAsync(
+            new GetMealPlansQuery(Guid.NewGuid(), dietType));
+
+        result.ShouldHaveValidationErrorFor(query => query.DietType);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("keto")]
+    [InlineData("LowCarb")]
+    public async Task GetMealPlans_WithSupportedDietType_HasNoDietTypeError(string? dietType) {
+        var validator = new GetMealPlansQueryValidator();
+
+        TestValidationResult<GetMealPlansQuery> result = await validator.TestValidateAsync(
+            new GetMealPlansQuery(Guid.NewGuid(), dietType));
+
+        result.ShouldNotHaveValidationErrorFor(query => query.DietType);
+    }
+
     [Fact]
     public async Task GetMealPlanById_WithEmptyPlanId_HasError() {
         var validator = new GetMealPlanByIdQueryValidator();

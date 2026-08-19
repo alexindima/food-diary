@@ -13,7 +13,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task UpdateAdminLessonHandler_WithEmptyLessonId_ReturnsValidationFailure() {
         var handler = new UpdateAdminLessonCommandHandler(
-            new LessonAdministrationService(Substitute.For<INutritionLessonWriteRepository>()));
+            new LessonAdministrationService(Substitute.For<INutritionLessonRepository>()));
 
         Result<AdminLessonModel> result = await handler.Handle(
             new UpdateAdminLessonCommand(
@@ -36,7 +36,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task DeleteAdminLessonHandler_WithEmptyLessonId_ReturnsValidationFailure() {
         var handler = new DeleteAdminLessonCommandHandler(
-            new LessonAdministrationService(Substitute.For<INutritionLessonWriteRepository>()));
+            new LessonAdministrationService(Substitute.For<INutritionLessonRepository>()));
 
         Result result = await handler.Handle(new DeleteAdminLessonCommand(Guid.Empty), CancellationToken.None);
 

@@ -264,6 +264,88 @@ public sealed class IdempotencyFilterTests {
     }
 
     [Fact]
+    public async Task OnActionExecutionAsync_WhenFallbackStoreIsAtCapacity_ReturnsServiceUnavailable() {
+        var filter = new IdempotencyFilter(new FixedIdempotencyStore(
+            new IdempotencyReservation(IdempotencyReservationStatus.CapacityExceeded)));
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-capacity", userId: "user-capacity");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        await filter.OnActionExecutionAsync(
+            context,
+            () => throw new InvalidOperationException("A saturated store must reject before action execution."));
+
+        ObjectResult result = Assert.IsType<ObjectResult>(context.Result);
+        Assert.Equal(StatusCodes.Status503ServiceUnavailable, result.StatusCode);
+    }
+
+    [Fact]
+    public async Task StoreReserveAsync_WhenMaximumEntryCountIsReached_RejectsNewKeysUntilExpiration() {
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 7, 8, 10, 0, 0, DateTimeKind.Utc));
+        var store = new InMemoryIdempotencyStore(timeProvider, maximumEntries: 1);
+
+        IdempotencyReservation first = await store.ReserveAsync(
+            "first-key",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1));
+        IdempotencyReservation saturated = await store.ReserveAsync(
+            "second-key",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1));
+        timeProvider.Advance(TimeSpan.FromMinutes(2));
+        IdempotencyReservation afterExpiration = await store.ReserveAsync(
+            "second-key",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1));
+
+        Assert.Multiple(
+            () => Assert.Equal(IdempotencyReservationStatus.Acquired, first.Status),
+            () => Assert.Equal(IdempotencyReservationStatus.CapacityExceeded, saturated.Status),
+            () => Assert.Equal(IdempotencyReservationStatus.Acquired, afterExpiration.Status));
+    }
+
+    [Fact]
+    public void StoreConstructor_WithInvalidMaximumEntryCount_Throws() {
+        Assert.Throws<ArgumentOutOfRangeException>(() => new InMemoryIdempotencyStore(TimeProvider.System, maximumEntries: 0));
+    }
+
+    [Fact]
+    public async Task StoreExpirationCompaction_PreservesLiveReservations() {
+        var store = new InMemoryIdempotencyStore(TimeProvider.System, maximumEntries: 2);
+        IdempotencyReservation first = await store.ReserveAsync(
+            "first-compaction-key", "hash", TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(1));
+        IdempotencyReservation live = await store.ReserveAsync(
+            "live-compaction-key", "hash", TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(1));
+        await store.ReleaseAsync("first-compaction-key", "hash", first.OwnerToken!);
+        IdempotencyReservation transient = await store.ReserveAsync(
+            "transient-compaction-key", "hash", TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(1));
+        await store.ReleaseAsync("transient-compaction-key", "hash", transient.OwnerToken!);
+
+        IdempotencyReservation completed = await store.ReserveAsync(
+            "completed-compaction-key", "hash", TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(1));
+        await store.CompleteAsync(
+            "completed-compaction-key",
+            "hash",
+            completed.OwnerToken!,
+            StatusCodes.Status201Created,
+            "{\"id\":1}",
+            location: null,
+            responseTtl: TimeSpan.FromMinutes(10));
+
+        IdempotencyReservation liveResult = await store.ReserveAsync(
+            "live-compaction-key", "hash", TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(1));
+        IdempotencyReservation replay = await store.ReserveAsync(
+            "completed-compaction-key", "hash", TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(1));
+
+        Assert.Multiple(
+            () => Assert.Equal(IdempotencyReservationStatus.InProgress, liveResult.Status),
+            () => Assert.Equal(IdempotencyReservationStatus.Replay, replay.Status),
+            () => Assert.Equal(StatusCodes.Status201Created, replay.StatusCode));
+    }
+
+    [Fact]
     public async Task StoreReserveAsync_WhenInProgressReservationExpires_AllowsNewReservation() {
         var timeProvider = new MutableTimeProvider(new DateTime(2026, 7, 8, 10, 0, 0, DateTimeKind.Utc));
         var store = new InMemoryIdempotencyStore(timeProvider);

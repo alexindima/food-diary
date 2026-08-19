@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using System.Globalization;
 using System.IO.Compression;
 using System.Text;
@@ -8,13 +9,19 @@ using MimeKit;
 
 namespace FoodDiary.MailInbox.Infrastructure.Services;
 
-public sealed class DmarcReportParser {
+public sealed class DmarcReportParser : IMailInboxDmarcReportParser {
     private const int MaxDmarcAttachmentBytes = 5 * 1024 * 1024;
     private const int MaxDmarcXmlCharacters = 2 * 1024 * 1024;
     private const int MaxZipXmlEntries = 4;
+    private const int MaxZipEntries = 32;
+    private const int MaxZipEntryNameBytes = 1024;
+    private const int MaxZipTotalEntryNameBytes = 16 * 1024;
+    private const int MaxZipCentralDirectoryBytes = 64 * 1024;
     private const int MaxDmarcXmlDocuments = 4;
     private const int MaxDmarcTotalAttachmentBytes = 10 * 1024 * 1024;
     private const int MaxDmarcTotalXmlCharacters = 7 * 1024 * 1024;
+    private const int MaxDmarcXmlDepth = 64;
+    private const int MaxDmarcXmlElements = 250_000;
     private const int MaxDmarcRecords = 10_000;
 
     public DmarcReportPreview? TryParse(string rawMime, CancellationToken cancellationToken = default) {
@@ -83,6 +90,7 @@ public sealed class DmarcReportParser {
     }
 
     private static IEnumerable<string> ExtractZipXmlPayloads(byte[] bytes, DmarcParseBudget budget) {
+        ValidateZipMetadata(bytes);
         using var stream = new MemoryStream(bytes);
         using var archive = new ZipArchive(stream, ZipArchiveMode.Read);
         IEnumerable<ZipArchiveEntry> xmlEntries = archive.Entries
@@ -101,6 +109,81 @@ public sealed class DmarcReportParser {
         }
     }
 
+    private static void ValidateZipMetadata(ReadOnlySpan<byte> bytes) {
+        const uint endOfCentralDirectorySignature = 0x06054b50;
+        const uint centralDirectoryEntrySignature = 0x02014b50;
+        const int endOfCentralDirectoryLength = 22;
+        const int centralDirectoryEntryLength = 46;
+        int minimumOffset = Math.Max(0, bytes.Length - (ushort.MaxValue + endOfCentralDirectoryLength));
+
+        for (int offset = bytes.Length - endOfCentralDirectoryLength; offset >= minimumOffset; offset--) {
+            ReadOnlySpan<byte> candidate = bytes[offset..];
+            if (BinaryPrimitives.ReadUInt32LittleEndian(candidate) != endOfCentralDirectorySignature) {
+                continue;
+            }
+
+            ushort commentLength = BinaryPrimitives.ReadUInt16LittleEndian(candidate[20..]);
+            if (offset + endOfCentralDirectoryLength + commentLength != bytes.Length) {
+                continue;
+            }
+
+            ValidateCentralDirectory(bytes, candidate, offset, centralDirectoryEntrySignature, centralDirectoryEntryLength);
+            return;
+        }
+
+        throw new InvalidDataException("ZIP end-of-central-directory record was not found.");
+    }
+
+    private static void ValidateCentralDirectory(
+        ReadOnlySpan<byte> bytes,
+        ReadOnlySpan<byte> endOfCentralDirectory,
+        int endOfCentralDirectoryOffset,
+        uint centralDirectoryEntrySignature,
+        int centralDirectoryEntryLength) {
+        ushort diskNumber = BinaryPrimitives.ReadUInt16LittleEndian(endOfCentralDirectory[4..]);
+        ushort centralDirectoryDisk = BinaryPrimitives.ReadUInt16LittleEndian(endOfCentralDirectory[6..]);
+        ushort entriesOnDisk = BinaryPrimitives.ReadUInt16LittleEndian(endOfCentralDirectory[8..]);
+        ushort totalEntries = BinaryPrimitives.ReadUInt16LittleEndian(endOfCentralDirectory[10..]);
+        uint centralDirectorySize = BinaryPrimitives.ReadUInt32LittleEndian(endOfCentralDirectory[12..]);
+        uint centralDirectoryOffset = BinaryPrimitives.ReadUInt32LittleEndian(endOfCentralDirectory[16..]);
+
+        if (diskNumber != 0 || centralDirectoryDisk != 0 || entriesOnDisk != totalEntries ||
+            totalEntries == ushort.MaxValue || centralDirectorySize == uint.MaxValue ||
+            centralDirectoryOffset == uint.MaxValue) {
+            throw new InvalidDataException("Multi-disk and ZIP64 DMARC archives are not supported.");
+        }
+
+        if (totalEntries > MaxZipEntries || centralDirectorySize > MaxZipCentralDirectoryBytes ||
+            (ulong)centralDirectoryOffset + centralDirectorySize > (ulong)endOfCentralDirectoryOffset ||
+            (ulong)centralDirectoryOffset + centralDirectorySize > (ulong)bytes.Length) {
+            throw new InvalidDataException("ZIP central directory exceeds the allowed metadata budget.");
+        }
+
+        int position = checked((int)centralDirectoryOffset);
+        int centralDirectoryEnd = checked(position + (int)centralDirectorySize);
+        int totalEntryNameBytes = 0;
+        for (int entryIndex = 0; entryIndex < totalEntries; entryIndex++) {
+            if (position + centralDirectoryEntryLength > centralDirectoryEnd ||
+                BinaryPrimitives.ReadUInt32LittleEndian(bytes[position..]) != centralDirectoryEntrySignature) {
+                throw new InvalidDataException("ZIP central directory is malformed.");
+            }
+
+            ushort entryNameBytes = BinaryPrimitives.ReadUInt16LittleEndian(bytes[(position + 28)..]);
+            ushort extraFieldBytes = BinaryPrimitives.ReadUInt16LittleEndian(bytes[(position + 30)..]);
+            ushort commentBytes = BinaryPrimitives.ReadUInt16LittleEndian(bytes[(position + 32)..]);
+            totalEntryNameBytes = checked(totalEntryNameBytes + entryNameBytes);
+            if (entryNameBytes > MaxZipEntryNameBytes || totalEntryNameBytes > MaxZipTotalEntryNameBytes) {
+                throw new InvalidDataException("ZIP entry names exceed the allowed metadata budget.");
+            }
+
+            position = checked(position + centralDirectoryEntryLength + entryNameBytes + extraFieldBytes + commentBytes);
+        }
+
+        if (position != centralDirectoryEnd) {
+            throw new InvalidDataException("ZIP central directory contains unexpected metadata.");
+        }
+    }
+
     private static string DecompressGzip(byte[] bytes, DmarcParseBudget budget) {
         using var input = new MemoryStream(bytes);
         using var gzip = new GZipStream(input, CompressionMode.Decompress);
@@ -111,15 +194,10 @@ public sealed class DmarcReportParser {
         budget.ThrowIfCancellationRequested();
         XDocument document;
         try {
-            using var reader = XmlReader.Create(
-                new StringReader(xml),
-                new XmlReaderSettings {
-                    DtdProcessing = DtdProcessing.Prohibit,
-                    MaxCharactersInDocument = MaxDmarcXmlCharacters,
-                    XmlResolver = null,
-                });
+            ValidateXmlStructure(xml, budget);
+            using var reader = XmlReader.Create(new StringReader(xml), CreateXmlReaderSettings());
             document = XDocument.Load(reader);
-        } catch (Exception) {
+        } catch (Exception) when (!budget.IsCancellationRequested) {
             return null;
         }
 
@@ -148,6 +226,31 @@ public sealed class DmarcReportParser {
             ParseUnixTime(GetChildValue(dateRange, "end")),
             records);
     }
+
+    private static void ValidateXmlStructure(string xml, DmarcParseBudget budget) {
+        using var reader = XmlReader.Create(new StringReader(xml), CreateXmlReaderSettings());
+        int elementCount = 0;
+        while (reader.Read()) {
+            budget.ThrowIfCancellationRequested();
+            if (reader.NodeType != XmlNodeType.Element) {
+                continue;
+            }
+
+            if (reader.Depth > MaxDmarcXmlDepth) {
+                throw new InvalidDataException("DMARC XML nesting exceeds the maximum allowed depth.");
+            }
+
+            if (++elementCount > MaxDmarcXmlElements) {
+                throw new InvalidDataException("DMARC XML element count exceeds the maximum allowed size.");
+            }
+        }
+    }
+
+    private static XmlReaderSettings CreateXmlReaderSettings() => new() {
+        DtdProcessing = DtdProcessing.Prohibit,
+        MaxCharactersInDocument = MaxDmarcXmlCharacters,
+        XmlResolver = null,
+    };
 
     private static DmarcReportRecordPreview ParseRecord(XElement record) {
         XElement? row = record.Elements().FirstOrDefault(static element => IsElement(element, "row"));
@@ -207,6 +310,8 @@ public sealed class DmarcReportParser {
         private long _attachmentBytes;
         private int _xmlCharacters;
         private int _xmlDocuments;
+
+        public bool IsCancellationRequested => cancellationToken.IsCancellationRequested;
 
         public void ThrowIfCancellationRequested() => cancellationToken.ThrowIfCancellationRequested();
 

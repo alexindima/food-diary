@@ -1,4 +1,5 @@
 using System.Buffers;
+using System.Net;
 using System.Text;
 using System.Diagnostics.Metrics;
 using FoodDiary.MailInbox.Application.Abstractions;
@@ -10,7 +11,9 @@ using FoodDiary.MailInbox.Infrastructure.Options;
 using Microsoft.Extensions.Logging.Abstractions;
 using MimeKit;
 using SmtpServer;
+using SmtpServer.IO;
 using SmtpServer.Mail;
+using SmtpServer.Net;
 using SmtpServer.Protocol;
 
 namespace FoodDiary.MailInbox.Infrastructure.Tests;
@@ -32,9 +35,14 @@ public sealed class SmtpInboundMessageStoreTests {
         listener.SetMeasurementEventCallback<double>((instrument, _, tags, _) =>
             measurements.Add((instrument.Name, GetOutcome(tags))));
         listener.Start();
+        Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> options =
+            Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
+                AllowedRecipients = ["private-recipient@fooddiary.club"],
+            });
         var messageStore = new SmtpInboundMessageStore(
             new RecordingInboundMailStore(),
-            Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions()),
+            options,
+            new MailInboxFixedWindowRateLimiter(options, FixedTime),
             FixedTime,
             NullLogger<SmtpInboundMessageStore>.Instance);
 
@@ -60,14 +68,14 @@ public sealed class SmtpInboundMessageStoreTests {
 
         SmtpResponse response = await messageStore.SaveAsync(
             context: null!,
-            new TestMessageTransaction(["envelope@fooddiary.club"]),
+            new TestMessageTransaction(["support@fooddiary.club"]),
             new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(rawMime)),
             CancellationToken.None);
 
         Assert.Equal(SmtpResponse.Ok.ReplyCode, response.ReplyCode);
         Assert.NotNull(store.LastSaved);
         Assert.Equal("sender@example.com", store.LastSaved.FromAddress);
-        Assert.Equal(["envelope@fooddiary.club"], store.LastSaved.ToRecipients);
+        Assert.Equal(["support@fooddiary.club"], store.LastSaved.ToRecipients);
         Assert.Equal("Hello", store.LastSaved.Subject);
         Assert.Contains("plain text", store.LastSaved.TextBody, StringComparison.Ordinal);
         Assert.True(store.LastSaved.RawMimeBytes.Span.SequenceEqual(Encoding.UTF8.GetBytes(rawMime)));
@@ -82,28 +90,43 @@ public sealed class SmtpInboundMessageStoreTests {
 
         await messageStore.SaveAsync(
             context: null!,
-            new TestMessageTransaction(["fallback@fooddiary.club"]),
+            new TestMessageTransaction(["feedback@fooddiary.club"]),
             new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(rawMime)),
             CancellationToken.None);
 
         Assert.NotNull(store.LastSaved);
-        Assert.Equal(["fallback@fooddiary.club"], store.LastSaved.ToRecipients);
+        Assert.Equal(["feedback@fooddiary.club"], store.LastSaved.ToRecipients);
     }
 
     [Fact]
-    public async Task SaveAsync_WhenTransactionRecipientsAreEmpty_UsesMimeToHeaderRecipients() {
+    public async Task SaveAsync_WhenTransactionRecipientsAreEmpty_RejectsMimeHeaderRecipient() {
         var store = new RecordingInboundMailStore();
         SmtpInboundMessageStore messageStore = CreateMessageStore(store);
         string rawMime = CreateRawMime(includeToHeader: true);
 
-        await messageStore.SaveAsync(
+        SmtpResponse response = await messageStore.SaveAsync(
             context: null!,
             new TestMessageTransaction([]),
             new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(rawMime)),
             CancellationToken.None);
 
-        Assert.NotNull(store.LastSaved);
-        Assert.Equal(["admin@fooddiary.club"], store.LastSaved.ToRecipients);
+        Assert.Equal(SmtpResponse.NoValidRecipientsGiven.ReplyCode, response.ReplyCode);
+        Assert.Null(store.LastSaved);
+    }
+
+    [Fact]
+    public async Task SaveAsync_WhenEnvelopeRecipientIsNotAllowed_RejectsBeforePersistence() {
+        var store = new RecordingInboundMailStore();
+        SmtpInboundMessageStore messageStore = CreateMessageStore(store);
+
+        SmtpResponse response = await messageStore.SaveAsync(
+            context: null!,
+            new TestMessageTransaction(["attacker@example.com"]),
+            new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(CreateRawMime(includeToHeader: true))),
+            CancellationToken.None);
+
+        Assert.Equal(SmtpResponse.NoValidRecipientsGiven.ReplyCode, response.ReplyCode);
+        Assert.Null(store.LastSaved);
     }
 
     [Fact]
@@ -156,6 +179,71 @@ public sealed class SmtpInboundMessageStoreTests {
 
         Assert.Equal(SmtpResponse.SizeLimitExceeded.ReplyCode, response.ReplyCode);
         Assert.Null(store.LastSaved);
+    }
+
+    [Fact]
+    public async Task SaveAsync_WhenMessageIsEmpty_RejectsBeforeRateLimiting() {
+        var store = new RecordingInboundMailStore();
+        SmtpInboundMessageStore messageStore = CreateMessageStore(store);
+
+        SmtpResponse response = await messageStore.SaveAsync(
+            context: null!,
+            new TestMessageTransaction(["admin@fooddiary.club"]),
+            ReadOnlySequence<byte>.Empty,
+            CancellationToken.None);
+
+        Assert.Equal(SmtpReplyCode.TransactionFailed, response.ReplyCode);
+        Assert.Null(store.LastSaved);
+    }
+
+    [Fact]
+    public async Task SaveAsync_WhenSubjectExceedsStoredMetadataLimit_RejectsBeforePersistence() {
+        var store = new RecordingInboundMailStore();
+        SmtpInboundMessageStore messageStore = CreateMessageStore(store);
+        string rawMime = CreateRawMimeWithSubject(new string('s', 999));
+
+        SmtpResponse response = await messageStore.SaveAsync(
+            context: null!,
+            new TestMessageTransaction(["admin@fooddiary.club"]),
+            new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(rawMime)),
+            CancellationToken.None);
+
+        Assert.Equal(SmtpReplyCode.TransactionFailed, response.ReplyCode);
+        Assert.Null(store.LastSaved);
+    }
+
+    [Fact]
+    public async Task SaveAsync_WhenSourceByteWindowIsExhausted_RejectsOnlyThatSource() {
+        var store = new RecordingInboundMailStore();
+        byte[] rawBytes = Encoding.UTF8.GetBytes(CreateRawMime(includeToHeader: true));
+        SmtpInboundMessageStore messageStore = CreateMessageStore(
+            store,
+            new MailInboxSmtpOptions {
+                MaxMessageSizeBytes = rawBytes.Length,
+                MaxRawBytesPerIpPerHour = (rawBytes.Length * 2L) - 1,
+            });
+        var firstSource = new TestSessionContext(IPAddress.Parse("192.0.2.10"));
+        var secondSource = new TestSessionContext(IPAddress.Parse("198.51.100.20"));
+
+        SmtpResponse first = await messageStore.SaveAsync(
+            firstSource,
+            new TestMessageTransaction(["admin@fooddiary.club"]),
+            new ReadOnlySequence<byte>(rawBytes),
+            CancellationToken.None);
+        SmtpResponse limited = await messageStore.SaveAsync(
+            firstSource,
+            new TestMessageTransaction(["admin@fooddiary.club"]),
+            new ReadOnlySequence<byte>(rawBytes),
+            CancellationToken.None);
+        SmtpResponse independent = await messageStore.SaveAsync(
+            secondSource,
+            new TestMessageTransaction(["admin@fooddiary.club"]),
+            new ReadOnlySequence<byte>(rawBytes),
+            CancellationToken.None);
+
+        Assert.Equal(SmtpResponse.Ok.ReplyCode, first.ReplyCode);
+        Assert.Equal(SmtpReplyCode.InsufficientStorage, limited.ReplyCode);
+        Assert.Equal(SmtpResponse.Ok.ReplyCode, independent.ReplyCode);
     }
 
     [Fact]
@@ -336,12 +424,16 @@ public sealed class SmtpInboundMessageStoreTests {
 
     private static SmtpInboundMessageStore CreateMessageStore(
         IInboundMailStore store,
-        MailInboxSmtpOptions? options = null) =>
-        new(
+        MailInboxSmtpOptions? options = null) {
+        Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> optionsWrapper =
+            Microsoft.Extensions.Options.Options.Create(options ?? new MailInboxSmtpOptions());
+        return new SmtpInboundMessageStore(
             store,
-            Microsoft.Extensions.Options.Options.Create(options ?? new MailInboxSmtpOptions()),
+            optionsWrapper,
+            new MailInboxFixedWindowRateLimiter(optionsWrapper, FixedTime),
             FixedTime,
             NullLogger<SmtpInboundMessageStore>.Instance);
+    }
 
     private static string CreateRawMime(bool includeToHeader) {
         var message = new MimeMessage();
@@ -360,6 +452,13 @@ public sealed class SmtpInboundMessageStoreTests {
         message.WriteTo(stream);
         return Encoding.UTF8.GetString(stream.ToArray());
     }
+
+    private static string CreateRawMimeWithSubject(string subject) =>
+        $"From: sender@example.com\r\n" +
+        "To: admin@fooddiary.club\r\n" +
+        $"Subject: {subject}\r\n" +
+        "Content-Type: text/plain; charset=utf-8\r\n\r\n" +
+        "body";
 
     private static byte[] CreateBinaryRawMime() {
         var body = new MimePart("application", "octet-stream") {
@@ -429,6 +528,24 @@ public sealed class SmtpInboundMessageStoreTests {
 
         public IReadOnlyDictionary<string, string> Parameters { get; } =
             new Dictionary<string, string>(StringComparer.Ordinal);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class TestSessionContext(IPAddress remoteAddress) : ISessionContext {
+        public Guid SessionId { get; } = Guid.NewGuid();
+        public IServiceProvider ServiceProvider => null!;
+        public ISmtpServerOptions ServerOptions => null!;
+        public IEndpointDefinition EndpointDefinition => null!;
+        public ISecurableDuplexPipe Pipe => null!;
+        public AuthenticationContext Authentication => null!;
+        public IDictionary<string, object> Properties { get; } = new Dictionary<string, object>(StringComparer.Ordinal) {
+            [EndpointListener.RemoteEndPointKey] = new IPEndPoint(remoteAddress, 2525),
+        };
+
+        public event EventHandler<SmtpCommandEventArgs>? CommandExecuting { add { } remove { } }
+        public event EventHandler<SmtpCommandEventArgs>? CommandExecuted { add { } remove { } }
+        public event EventHandler<SmtpResponseExceptionEventArgs>? ResponseException { add { } remove { } }
+        public event EventHandler<EventArgs>? SessionAuthenticated { add { } remove { } }
     }
 
     [ExcludeFromCodeCoverage]

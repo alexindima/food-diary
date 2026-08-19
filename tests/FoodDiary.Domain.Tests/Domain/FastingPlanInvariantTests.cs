@@ -88,6 +88,37 @@ public class FastingPlanInvariantTests {
     }
 
     [Fact]
+    public void Stop_WithUnspecifiedTimestamp_ThrowsWithoutChangingState() {
+        var plan = FastingPlan.CreateExtended(
+            UserId.New(),
+            FastingProtocol.Fast72,
+            targetHours: 72,
+            startedAtUtc: DateTime.UtcNow);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => plan.Stop(new DateTime(2026, 8, 19)));
+
+        Assert.Multiple(
+            () => Assert.Equal(FastingPlanStatus.Active, plan.Status),
+            () => Assert.Null(plan.StoppedAtUtc));
+    }
+
+    [Fact]
+    public void Stop_BeforePlanStart_ThrowsWithoutChangingState() {
+        DateTime startedAtUtc = DateTime.UtcNow;
+        var plan = FastingPlan.CreateExtended(
+            UserId.New(),
+            FastingProtocol.Fast72,
+            targetHours: 72,
+            startedAtUtc: startedAtUtc);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => plan.Stop(startedAtUtc.AddTicks(-1)));
+
+        Assert.Multiple(
+            () => Assert.Equal(FastingPlanStatus.Active, plan.Status),
+            () => Assert.Null(plan.StoppedAtUtc));
+    }
+
+    [Fact]
     public void CreateIntermittent_WithEmptyUserId_Throws() {
         Assert.Throws<ArgumentException>(() =>
             FastingPlan.CreateIntermittent(UserId.Empty, FastingProtocol.Fast16Eat8, 16, 8, DateTime.UtcNow));

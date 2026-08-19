@@ -8,6 +8,7 @@ namespace FoodDiary.Domain.Entities.Wearables;
 
 public sealed class WearableConnection : AggregateRoot<WearableConnectionId> {
     private const int ExternalUserIdMaxLength = 256;
+    private const int IdempotencyValueMaxLength = 64;
     private const int TokenMaxLength = 8192;
 
     public UserId UserId { get; private set; }
@@ -18,6 +19,8 @@ public sealed class WearableConnection : AggregateRoot<WearableConnectionId> {
     public DateTime? TokenExpiresAtUtc { get; private set; }
     public DateTime? LastSyncedAtUtc { get; private set; }
     public bool IsActive { get; private set; }
+    public string? LastConnectRequestId { get; private set; }
+    public string? LastConnectRequestHash { get; private set; }
 
     public User User { get; private set; } = null!;
 
@@ -54,6 +57,10 @@ public sealed class WearableConnection : AggregateRoot<WearableConnectionId> {
     }
 
     public void UpdateTokens(string accessToken, string? refreshToken, DateTime? tokenExpiresAtUtc) {
+        if (!IsActive) {
+            throw new InvalidOperationException("Tokens cannot be updated for an inactive wearable connection.");
+        }
+
         string normalizedAccessToken = DomainGuard.RequiredText(accessToken, TokenMaxLength, nameof(accessToken));
         string? normalizedRefreshToken = refreshToken is not null
             ? DomainGuard.OptionalText(refreshToken, TokenMaxLength, nameof(refreshToken))
@@ -63,6 +70,30 @@ public sealed class WearableConnection : AggregateRoot<WearableConnectionId> {
         AccessToken = normalizedAccessToken;
         RefreshToken = normalizedRefreshToken;
         TokenExpiresAtUtc = normalizedTokenExpiresAt;
+        SetModified();
+    }
+
+    public void Reconnect(
+        string externalUserId,
+        string accessToken,
+        string? refreshToken,
+        DateTime? tokenExpiresAtUtc) {
+        string normalizedExternalUserId = DomainGuard.RequiredText(externalUserId, ExternalUserIdMaxLength, nameof(externalUserId));
+        string normalizedAccessToken = DomainGuard.RequiredText(accessToken, TokenMaxLength, nameof(accessToken));
+        string? normalizedRefreshToken = DomainGuard.OptionalText(refreshToken, TokenMaxLength, nameof(refreshToken));
+        DateTime? normalizedTokenExpiresAt = DomainGuard.OptionalUtc(tokenExpiresAtUtc, nameof(tokenExpiresAtUtc));
+
+        ExternalUserId = normalizedExternalUserId;
+        AccessToken = normalizedAccessToken;
+        RefreshToken = normalizedRefreshToken;
+        TokenExpiresAtUtc = normalizedTokenExpiresAt;
+        IsActive = true;
+        SetModified();
+    }
+
+    public void RecordConnectRequest(string requestId, string requestHash) {
+        LastConnectRequestId = DomainGuard.RequiredText(requestId, IdempotencyValueMaxLength, nameof(requestId));
+        LastConnectRequestHash = DomainGuard.RequiredText(requestHash, IdempotencyValueMaxLength, nameof(requestHash));
         SetModified();
     }
 

@@ -3,6 +3,8 @@ using FluentValidation;
 namespace FoodDiary.Application.OpenFoodFacts.Queries.SearchByBarcode;
 
 public sealed class SearchByBarcodeQueryValidator : AbstractValidator<SearchByBarcodeQuery> {
+    public const int MaximumBarcodeLength = 128;
+
     public SearchByBarcodeQueryValidator() {
         RuleFor(x => x.Barcode)
             .NotEmpty()
@@ -10,8 +12,8 @@ public sealed class SearchByBarcodeQueryValidator : AbstractValidator<SearchByBa
             .WithMessage("Barcode is required.");
 
         RuleFor(x => x.Barcode)
-            .MaximumLength(128)
+            .MaximumLength(MaximumBarcodeLength)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("Barcode must not exceed 128 characters.");
+            .WithMessage($"Barcode must not exceed {MaximumBarcodeLength} characters.");
     }
 }

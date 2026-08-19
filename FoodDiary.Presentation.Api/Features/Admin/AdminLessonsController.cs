@@ -31,10 +31,12 @@ public sealed class AdminLessonsController(ISender mediator) : BaseApiController
         HandleCreated(request.ToCreateCommand(), static value => value.ToLessonHttpResponse());
 
     [HttpPost("import")]
+    [EnableIdempotency(requireKey: true)]
     [RequestSizeLimit(PresentationRequestLimits.AdminImportPayloadBytes)]
     [RejectOversizedRequest(PresentationRequestLimits.AdminImportPayloadBytes)]
     [ProducesResponseType<AdminLessonsImportHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
     public Task<IActionResult> Import([FromBody] AdminLessonsImportHttpRequest request) =>
         HandleOk(request.ToImportCommand(), static value => value.ToLessonsImportHttpResponse());

@@ -39,19 +39,15 @@ public sealed class ToggleRecipeLikeCommandHandler(
             userIdResult.Value, recipeId, cancellationToken).ConfigureAwait(false);
         int currentTotalLikes = await likeRepository.CountByRecipeAsync(recipeId, cancellationToken).ConfigureAwait(false);
 
-        bool isLiked;
-        int totalLikes;
-        if (existingLike is not null) {
+        if (existingLike is not null && !command.IsLiked) {
             await likeRepository.DeleteAsync(existingLike, cancellationToken).ConfigureAwait(false);
-            isLiked = false;
-            totalLikes = Math.Max(0, currentTotalLikes - 1);
-        } else {
+            currentTotalLikes = Math.Max(0, currentTotalLikes - 1);
+        } else if (existingLike is null && command.IsLiked) {
             var like = RecipeLike.Create(userIdResult.Value, recipeId);
             await likeRepository.AddAsync(like, cancellationToken).ConfigureAwait(false);
-            isLiked = true;
-            totalLikes = currentTotalLikes + 1;
+            currentTotalLikes++;
         }
 
-        return Result.Success(new RecipeLikeStatusModel(isLiked, totalLikes));
+        return Result.Success(new RecipeLikeStatusModel(command.IsLiked, currentTotalLikes));
     }
 }

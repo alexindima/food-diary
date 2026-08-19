@@ -10,9 +10,11 @@ namespace FoodDiary.MailInbox.Presentation.Extensions;
 public static class MailInboxPresentationServiceCollectionExtensions {
     public static IServiceCollection AddMailInboxPresentation(this IServiceCollection services, IConfiguration configuration) {
         services.AddScoped<MailInboxApiKeyAuthorizationFilter>();
+        services.AddSingleton<MailInboxMessageDetailConcurrencyGate>();
+        services.AddScoped<MailInboxMessageDetailConcurrencyFilter>();
         services.AddOptions<MailInboxHttpOptions>()
             .Bind(configuration.GetSection(MailInboxHttpOptions.SectionName))
-            .Validate(MailInboxHttpOptions.HasValidApiKey, "MailInboxHttp:RequireApiKey must be true and MailInboxHttp:ApiKey must be provided.")
+            .Validate(MailInboxHttpOptions.HasValidApiKey, "MailInboxHttp configuration is invalid; API-key enforcement and positive message-detail limits are required.")
             .ValidateOnStart();
 
         services

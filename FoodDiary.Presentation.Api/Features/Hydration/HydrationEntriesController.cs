@@ -2,6 +2,7 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Hydration.Mappings;
 using FoodDiary.Presentation.Api.Features.Hydration.Requests;
 using FoodDiary.Presentation.Api.Features.Hydration.Responses;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
@@ -25,11 +26,12 @@ public sealed class HydrationEntriesController(ISender mediator, TimeProvider ti
         HandleOk(query.ToDailyQuery(userId, timeProvider.GetUtcNow().UtcDateTime), static value => value.ToHttpResponse());
 
     [HttpPost]
-    [ProducesResponseType<HydrationEntryHttpResponse>(StatusCodes.Status200OK)]
+    [EnableIdempotency(requireKey: true)]
+    [ProducesResponseType<HydrationEntryHttpResponse>(StatusCodes.Status201Created)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateHydrationEntryHttpRequest request) =>
-        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
+        HandleCreated(request.ToCommand(userId), static value => value.ToHttpResponse());
 
     [HttpPut("{id:guid}")]
     [ProducesResponseType<HydrationEntryHttpResponse>(StatusCodes.Status200OK)]

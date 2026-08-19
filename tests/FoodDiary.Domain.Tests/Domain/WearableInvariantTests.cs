@@ -76,6 +76,60 @@ public class WearableInvariantTests {
     }
 
     [Fact]
+    public void WearableConnection_UpdateTokens_WhenInactive_ThrowsAndKeepsTokensCleared() {
+        WearableConnection conn = CreateConnection();
+        conn.Deactivate();
+
+        Assert.Throws<InvalidOperationException>(() =>
+            conn.UpdateTokens("new-token", "new-refresh", DateTime.UtcNow.AddHours(1)));
+
+        Assert.Multiple(
+            () => Assert.False(conn.IsActive),
+            () => Assert.Equal(string.Empty, conn.AccessToken),
+            () => Assert.Null(conn.RefreshToken),
+            () => Assert.Null(conn.TokenExpiresAtUtc));
+    }
+
+    [Fact]
+    public void WearableConnection_Reconnect_ReactivatesAndReplacesIdentityAndTokens() {
+        WearableConnection conn = CreateConnection();
+        conn.Deactivate();
+        DateTime expiresAtUtc = DateTime.UtcNow.AddHours(2);
+
+        conn.Reconnect("new-external-user", "new-token", "new-refresh", expiresAtUtc);
+
+        Assert.Multiple(
+            () => Assert.True(conn.IsActive),
+            () => Assert.Equal("new-external-user", conn.ExternalUserId),
+            () => Assert.Equal("new-token", conn.AccessToken),
+            () => Assert.Equal("new-refresh", conn.RefreshToken),
+            () => Assert.Equal(expiresAtUtc, conn.TokenExpiresAtUtc));
+    }
+
+    [Fact]
+    public void WearableConnection_RecordConnectRequest_StoresFingerprint() {
+        WearableConnection conn = CreateConnection();
+        string requestId = new('A', 64);
+        string requestHash = new('B', 64);
+
+        conn.RecordConnectRequest(requestId, requestHash);
+
+        Assert.Multiple(
+            () => Assert.Equal(requestId, conn.LastConnectRequestId),
+            () => Assert.Equal(requestHash, conn.LastConnectRequestHash),
+            () => Assert.NotNull(conn.ModifiedOnUtc));
+    }
+
+    [Theory]
+    [InlineData("", "hash")]
+    [InlineData("request", "")]
+    public void WearableConnection_RecordConnectRequest_WithInvalidFingerprint_Throws(string requestId, string requestHash) {
+        WearableConnection conn = CreateConnection();
+
+        Assert.Throws<ArgumentException>(() => conn.RecordConnectRequest(requestId, requestHash));
+    }
+
+    [Fact]
     public void WearableConnection_MarkSynced_SetsLastSyncedAtUtc() {
         WearableConnection conn = CreateConnection();
 
@@ -141,6 +195,30 @@ public class WearableInvariantTests {
             dateTime, 10000);
 
         Assert.Equal(dateTime.Date, entry.Date);
+    }
+
+    [Theory]
+    [InlineData(WearableDataType.Steps)]
+    [InlineData(WearableDataType.HeartRate)]
+    [InlineData(WearableDataType.CaloriesBurned)]
+    [InlineData(WearableDataType.ActiveMinutes)]
+    [InlineData(WearableDataType.SleepMinutes)]
+    public void WearableSyncEntry_Create_WithNegativeValue_Throws(WearableDataType dataType) {
+        Assert.Throws<ArgumentOutOfRangeException>(() => WearableSyncEntry.Create(
+            UserId.New(), WearableProvider.Fitbit, dataType, DateTime.UtcNow, value: -1));
+    }
+
+    [Fact]
+    public void WearableSyncEntry_UpdateValue_WithNegativeValue_ThrowsWithoutChangingValue() {
+        var entry = WearableSyncEntry.Create(
+            UserId.New(), WearableProvider.Fitbit, WearableDataType.Steps,
+            DateTime.UtcNow, 10000);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => entry.UpdateValue(value: -1));
+
+        Assert.Multiple(
+            () => Assert.Equal(10000, entry.Value),
+            () => Assert.Null(entry.ModifiedOnUtc));
     }
 
     [Fact]

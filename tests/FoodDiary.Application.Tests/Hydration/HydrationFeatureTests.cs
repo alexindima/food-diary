@@ -288,6 +288,37 @@ public class HydrationFeatureTests {
     }
 
     [Fact]
+    public async Task CreateHydrationEntryCommandHandler_WhenSamePayloadIsRetried_ReturnsOriginalEntry() {
+        var user = User.Create("hydration-retry@example.com", "hash");
+        var repository = new InMemoryHydrationEntryRepository();
+        var handler = new CreateHydrationEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
+        var command = new CreateHydrationEntryCommand(user.Id.Value, DateTime.UtcNow, 250);
+
+        Result<HydrationEntryModel> first = await handler.Handle(command, CancellationToken.None);
+        Result<HydrationEntryModel> replay = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(first);
+        ResultAssert.Success(replay);
+        Assert.Equal(first.Value.Id, replay.Value.Id);
+    }
+
+    [Fact]
+    public async Task CreateHydrationEntryCommandHandler_WhenTimestampIsReusedWithDifferentAmount_ReturnsConflict() {
+        var user = User.Create("hydration-conflict@example.com", "hash");
+        var repository = new InMemoryHydrationEntryRepository();
+        var handler = new CreateHydrationEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
+        DateTime timestampUtc = DateTime.UtcNow;
+        await handler.Handle(new CreateHydrationEntryCommand(user.Id.Value, timestampUtc, 250), CancellationToken.None);
+
+        Result<HydrationEntryModel> conflict = await handler.Handle(
+            new CreateHydrationEntryCommand(user.Id.Value, timestampUtc, 300),
+            CancellationToken.None);
+
+        ResultAssert.Failure(conflict);
+        Assert.Equal("HydrationEntry.AlreadyExists", conflict.Error.Code);
+    }
+
+    [Fact]
     public async Task UpdateHydrationEntryCommandHandler_WithUnspecifiedTimestamp_PreservesInstantAsUtc() {
         var user = User.Create("hydration-update@example.com", "hash");
         var entry = HydrationEntry.Create(user.Id, new DateTime(2026, 3, 25, 12, 0, 0, DateTimeKind.Utc), 250);
@@ -571,6 +602,9 @@ public class HydrationFeatureTests {
         public Task<HydrationEntry?> GetByIdAsync(HydrationEntryId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
+        public Task<HydrationEntry?> GetByTimestampAsync(UserId userId, DateTime timestampUtc, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
         public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<HydrationEntry>>([]);
 
@@ -674,6 +708,12 @@ public class HydrationFeatureTests {
 
         public Task<HydrationEntry?> GetByIdAsync(HydrationEntryId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
             Task.FromResult(_entry?.Id == id ? _entry : null);
+
+        public Task<HydrationEntry?> GetByTimestampAsync(
+            UserId userId,
+            DateTime timestampUtc,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(_entries.FirstOrDefault(entry => entry.UserId == userId && entry.Timestamp == timestampUtc));
 
         public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) {
             LastGetByDateDateUtc = dateUtc;

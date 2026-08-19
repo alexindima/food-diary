@@ -10,7 +10,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IRecentItemReadRepository>(static provider => provider.GetRequiredService<IRecentItemRepository>());
         services.AddScoped<IRecentItemUsageReadService>(static provider => provider.GetRequiredService<IRecentItemRepository>());
         services.AddScoped<IRecentItemWriteRepository>(static provider => provider.GetRequiredService<IRecentItemRepository>());
-        services.AddScoped<IRecentItemUsageRecorder>(static provider => provider.GetRequiredService<IRecentItemRepository>());
+        services.AddScoped<IRecentItemUsageRecorder, PostCommitRecentItemUsageRecorder>();
 
     }
 }

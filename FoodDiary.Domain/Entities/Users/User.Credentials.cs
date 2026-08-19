@@ -31,17 +31,28 @@ public sealed partial class User {
         EnsureNotDeleted();
         string? normalizedRefreshToken = NormalizeOptionalToken(update.RefreshToken);
         DateTime effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(update.ChangedAtUtc, nameof(update.ChangedAtUtc));
-        UserSecurityState nextState = GetSecurityState().WithRefreshToken(normalizedRefreshToken, effectiveChangedAtUtc);
+        UserSecurityState currentState = GetSecurityState();
+        UserSecurityState nextState = currentState.WithRefreshToken(normalizedRefreshToken, effectiveChangedAtUtc);
+        if (nextState == currentState) {
+            return;
+        }
+
         ApplySecurityState(nextState);
 
-        SetModified(effectiveChangedAtUtc);
+        SetModified(LatestAuditTimestamp(effectiveChangedAtUtc));
     }
 
     public void RecordAuthenticationActivity(DateTime occurredAtUtc) {
         EnsureNotDeleted();
         DateTime normalizedOccurredAtUtc = NormalizeUtcTimestamp(occurredAtUtc, nameof(occurredAtUtc));
-        ApplySecurityState(GetSecurityState().WithAuthenticationActivity(normalizedOccurredAtUtc));
-        SetModified(normalizedOccurredAtUtc);
+        UserSecurityState currentState = GetSecurityState();
+        UserSecurityState nextState = currentState.WithAuthenticationActivity(normalizedOccurredAtUtc);
+        if (nextState == currentState) {
+            return;
+        }
+
+        ApplySecurityState(nextState);
+        SetModified(LatestAuditTimestamp(normalizedOccurredAtUtc));
     }
 
     public void UpdatePassword(string hashedPassword) {
@@ -66,6 +77,7 @@ public sealed partial class User {
         DateTime normalizedExpiresAtUtc = NormalizeUtcTimestamp(issue.ExpiresAtUtc, nameof(issue.ExpiresAtUtc));
         DateTime normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issue.IssuedAtUtc, nameof(issue.IssuedAtUtc));
         EnsureFutureUtc(normalizedExpiresAtUtc, nameof(issue.ExpiresAtUtc));
+        EnsureExpiresAfterIssuance(normalizedExpiresAtUtc, normalizedIssuedAtUtc, nameof(issue.ExpiresAtUtc));
         UserSecurityState nextState = GetSecurityState().WithEmailConfirmationToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
         ApplySecurityState(nextState);
         SetModified(normalizedIssuedAtUtc);
@@ -91,6 +103,7 @@ public sealed partial class User {
         DateTime normalizedExpiresAtUtc = NormalizeUtcTimestamp(issue.ExpiresAtUtc, nameof(issue.ExpiresAtUtc));
         DateTime normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issue.IssuedAtUtc, nameof(issue.IssuedAtUtc));
         EnsureFutureUtc(normalizedExpiresAtUtc, nameof(issue.ExpiresAtUtc));
+        EnsureExpiresAfterIssuance(normalizedExpiresAtUtc, normalizedIssuedAtUtc, nameof(issue.ExpiresAtUtc));
         UserSecurityState nextState = GetSecurityState().WithPasswordResetToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
         ApplySecurityState(nextState);
         SetModified(normalizedIssuedAtUtc);

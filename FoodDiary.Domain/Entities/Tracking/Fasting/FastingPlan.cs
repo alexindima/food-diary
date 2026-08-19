@@ -145,8 +145,13 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
             return;
         }
 
+        DateTime normalizedStoppedAt = NormalizeTimestamp(stoppedAtUtc, nameof(stoppedAtUtc));
+        if (normalizedStoppedAt < StartedAtUtc) {
+            throw new ArgumentOutOfRangeException(nameof(stoppedAtUtc), "Stop timestamp cannot be earlier than the plan start timestamp.");
+        }
+
         Status = FastingPlanStatus.Stopped;
-        StoppedAtUtc = NormalizeTimestamp(stoppedAtUtc, nameof(stoppedAtUtc));
+        StoppedAtUtc = normalizedStoppedAt;
         SetModified();
     }
 

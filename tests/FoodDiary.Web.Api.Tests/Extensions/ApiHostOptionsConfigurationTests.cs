@@ -22,14 +22,19 @@ public sealed class ApiHostOptionsConfigurationTests {
         var invalidExport = new ApiRateLimitingOptions {
             Export = new ApiRateLimitingOptions.FixedWindowPolicyOptions(),
         };
+        var invalidYooKassaWebhook = new ApiRateLimitingOptions {
+            YooKassaWebhook = new ApiRateLimitingOptions.FixedWindowPolicyOptions(),
+        };
 
         Assert.Multiple(
             () => Assert.True(ApiRateLimitingOptions.HasValidSecretVerification(valid)),
             () => Assert.True(ApiRateLimitingOptions.HasValidBilling(valid)),
             () => Assert.True(ApiRateLimitingOptions.HasValidExport(valid)),
+            () => Assert.True(ApiRateLimitingOptions.HasValidYooKassaWebhook(valid)),
             () => Assert.False(ApiRateLimitingOptions.HasValidSecretVerification(invalidSecretVerification)),
             () => Assert.False(ApiRateLimitingOptions.HasValidBilling(invalidBilling)),
-            () => Assert.False(ApiRateLimitingOptions.HasValidExport(invalidExport)));
+            () => Assert.False(ApiRateLimitingOptions.HasValidExport(invalidExport)),
+            () => Assert.False(ApiRateLimitingOptions.HasValidYooKassaWebhook(invalidYooKassaWebhook)));
     }
 
     [Fact]
@@ -97,6 +102,8 @@ public sealed class ApiHostOptionsConfigurationTests {
                 ["RateLimiting:Billing:WindowSeconds"] = "96",
                 ["RateLimiting:Export:PermitLimit"] = "6",
                 ["RateLimiting:Export:WindowSeconds"] = "97",
+                ["RateLimiting:YooKassaWebhook:PermitLimit"] = "13",
+                ["RateLimiting:YooKassaWebhook:WindowSeconds"] = "98",
                 ["OutputCache:AdminAiUsage:ExpirationSeconds"] = "30",
             })
             .Build();
@@ -139,6 +146,8 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Equal(96, rateLimiting.Billing.WindowSeconds);
         Assert.Equal(6, rateLimiting.Export.PermitLimit);
         Assert.Equal(97, rateLimiting.Export.WindowSeconds);
+        Assert.Equal(13, rateLimiting.YooKassaWebhook.PermitLimit);
+        Assert.Equal(98, rateLimiting.YooKassaWebhook.WindowSeconds);
         Assert.Equal(30, outputCache.AdminAiUsage.ExpirationSeconds);
         Assert.Equal(2, forwardedHeadersOptions.ForwardLimit);
         Assert.True(forwardedHeadersOptions.ForwardedHeaders.HasFlag(ForwardedHeaders.XForwardedHost));

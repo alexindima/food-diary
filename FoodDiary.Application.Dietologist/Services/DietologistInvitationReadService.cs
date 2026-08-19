@@ -213,7 +213,7 @@ public sealed class DietologistInvitationReadService(
 
     private bool IsExpired(DietologistInvitationReadModel invitation) =>
         invitation.Status == DietologistInvitationStatus.Pending &&
-        invitation.ExpiresAtUtc < timeProvider.GetUtcNow().UtcDateTime;
+        invitation.ExpiresAtUtc <= timeProvider.GetUtcNow().UtcDateTime;
 
     private static DietologistInvitationForCurrentUserModel ToCurrentUserInvitationModel(
         DietologistInvitationReadModel invitation,
@@ -225,7 +225,7 @@ public sealed class DietologistInvitationReadService(
             invitation.ClientFirstName,
             invitation.ClientLastName,
             invitation.Status == DietologistInvitationStatus.Pending &&
-                invitation.ExpiresAtUtc < timeProvider.GetUtcNow().UtcDateTime
+                invitation.ExpiresAtUtc <= timeProvider.GetUtcNow().UtcDateTime
                     ? "Expired"
                     : invitation.Status.ToString(),
             invitation.CreatedAtUtc,

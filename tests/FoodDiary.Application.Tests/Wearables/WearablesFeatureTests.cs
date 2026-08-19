@@ -13,12 +13,16 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FluentValidation.TestHelper;
 using FoodDiary.Results;
 
 namespace FoodDiary.Application.Tests.Wearables;
 
 [ExcludeFromCodeCoverage]
 public class WearablesFeatureTests {
+    private const string RequestId = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    private const string RequestHash = "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB";
+
     [Fact]
     public async Task ConnectWearable_WithValidCode_CreatesConnection() {
         var userId = UserId.New();
@@ -30,13 +34,57 @@ public class WearablesFeatureTests {
         string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
         var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
         Result<WearableConnectionModel> result = await handler.Handle(
-            new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", state),
+            new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", state, RequestId, RequestHash),
             CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal("Fitbit", result.Value.Provider);
         Assert.Equal("ext-user-123", result.Value.ExternalUserId);
         Assert.True(result.Value.IsActive);
+    }
+
+    [Fact]
+    public async Task ConnectWearable_WhenCommittedRequestIsRetried_ReplaysWithoutSecondCodeExchange() {
+        var userId = UserId.New();
+        var client = new StubWearableClient(WearableProvider.Fitbit, new WearableTokenResult(
+            "access-token", "refresh-token", "ext-user-123", DateTime.UtcNow.AddHours(1)));
+        var repo = new InMemoryWearableConnectionRepository();
+        var stateService = new StubWearableOAuthStateService();
+        string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
+        var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
+        var command = new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", state, RequestId, RequestHash);
+
+        Result<WearableConnectionModel> first = await handler.Handle(command, CancellationToken.None);
+        Result<WearableConnectionModel> replay = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(first);
+        ResultAssert.Success(replay);
+        Assert.Multiple(
+            () => Assert.Equal(first.Value.ExternalUserId, replay.Value.ExternalUserId),
+            () => Assert.Equal(1, client.ExchangeCodeCallCount));
+    }
+
+    [Fact]
+    public async Task ConnectWearable_WhenRequestIdIsReusedWithDifferentPayloadHash_ReturnsConflict() {
+        var userId = UserId.New();
+        var client = new StubWearableClient(WearableProvider.Fitbit, new WearableTokenResult(
+            "access-token", "refresh-token", "ext-user-123", DateTime.UtcNow.AddHours(1)));
+        var repo = new InMemoryWearableConnectionRepository();
+        var stateService = new StubWearableOAuthStateService();
+        string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
+        var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
+        await handler.Handle(
+            new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", state, RequestId, RequestHash),
+            CancellationToken.None);
+
+        Result<WearableConnectionModel> conflict = await handler.Handle(
+            new ConnectWearableCommand(userId.Value, "Fitbit", "different-code", state, RequestId, new string('C', 64)),
+            CancellationToken.None);
+
+        ResultAssert.Failure(conflict);
+        Assert.Multiple(
+            () => Assert.Equal("Idempotency.Conflict", conflict.Error.Code),
+            () => Assert.Equal(1, client.ExchangeCodeCallCount));
     }
 
     [Fact]
@@ -49,7 +97,7 @@ public class WearablesFeatureTests {
             CreateTokenProtector());
 
         Result<WearableConnectionModel> result = await handler.Handle(
-            new ConnectWearableCommand(Guid.NewGuid(), "InvalidProvider", "code", "state"),
+            new ConnectWearableCommand(Guid.NewGuid(), "InvalidProvider", "code", "state", RequestId, RequestHash),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -65,7 +113,7 @@ public class WearablesFeatureTests {
             CreateTokenProtector());
 
         Result<WearableConnectionModel> result = await handler.Handle(
-            new ConnectWearableCommand(Guid.Empty, "Fitbit", "code", "state"),
+            new ConnectWearableCommand(Guid.Empty, "Fitbit", "code", "state", RequestId, RequestHash),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -82,7 +130,7 @@ public class WearablesFeatureTests {
             CreateTokenProtector());
 
         Result<WearableConnectionModel> result = await handler.Handle(
-            new ConnectWearableCommand(Guid.NewGuid(), "Fitbit", "code", "state"),
+            new ConnectWearableCommand(Guid.NewGuid(), "Fitbit", "code", "state", RequestId, RequestHash),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -98,7 +146,7 @@ public class WearablesFeatureTests {
         var handler = new ConnectWearableCommandHandler([client], new InMemoryWearableConnectionRepository(), stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
 
         Result<WearableConnectionModel> result = await handler.Handle(
-            new ConnectWearableCommand(userId.Value, "Fitbit", "bad-code", state),
+            new ConnectWearableCommand(userId.Value, "Fitbit", "bad-code", state, RequestId, RequestHash),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -113,21 +161,23 @@ public class WearablesFeatureTests {
         var repo = new InMemoryWearableConnectionRepository();
         repo.Seed(existing);
 
-        var newToken = new WearableTokenResult("new-token", "new-refresh", "ext-user", DateTime.UtcNow.AddHours(1));
+        var newToken = new WearableTokenResult("new-token", "new-refresh", "new-ext-user", DateTime.UtcNow.AddHours(1));
         var client = new StubWearableClient(WearableProvider.Fitbit, newToken);
 
         var stateService = new StubWearableOAuthStateService();
         string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
         var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
         Result<WearableConnectionModel> result = await handler.Handle(
-            new ConnectWearableCommand(userId.Value, "Fitbit", "code", state),
+            new ConnectWearableCommand(userId.Value, "Fitbit", "code", state, RequestId, RequestHash),
             CancellationToken.None);
 
         ResultAssert.Success(result);
+        Assert.Equal("new-ext-user", result.Value.ExternalUserId);
+        Assert.Equal("new-ext-user", existing.ExternalUserId);
     }
 
     [Fact]
-    public async Task ConnectWearable_WithInactiveExistingConnection_ReplacesConnectionInResult() {
+    public async Task ConnectWearable_WithInactiveExistingConnection_ReactivatesExistingConnection() {
         var userId = UserId.New();
         var existing = WearableConnection.Create(
             userId, WearableProvider.Fitbit, "old-ext-user", "old-token", "old-refresh", tokenExpiresAtUtc: null);
@@ -142,13 +192,19 @@ public class WearablesFeatureTests {
         string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
         var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
         Result<WearableConnectionModel> result = await handler.Handle(
-            new ConnectWearableCommand(userId.Value, "Fitbit", "code", state),
+            new ConnectWearableCommand(userId.Value, "Fitbit", "code", state, RequestId, RequestHash),
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.True(result.Value.IsActive);
-        Assert.Equal("new-ext-user", result.Value.ExternalUserId);
-        Assert.True(repo.UpdateCalled);
+        IReadOnlyList<WearableConnection> savedConnections = await repo.GetAllForUserAsync(userId);
+        Assert.Multiple(
+            () => Assert.True(result.Value.IsActive),
+            () => Assert.Equal("new-ext-user", result.Value.ExternalUserId),
+            () => Assert.True(existing.IsActive),
+            () => Assert.Equal("new-ext-user", existing.ExternalUserId),
+            () => Assert.Single(savedConnections),
+            () => Assert.Same(existing, savedConnections[0]),
+            () => Assert.True(repo.UpdateCalled));
     }
 
     [Fact]
@@ -164,7 +220,7 @@ public class WearablesFeatureTests {
             CreateTokenProtector());
 
         Result<WearableConnectionModel> result = await handler.Handle(
-            new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", "tampered-state"),
+            new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", "tampered-state", RequestId, RequestHash),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -236,6 +292,55 @@ public class WearablesFeatureTests {
 
         ResultAssert.Success(result);
         Assert.Equal("https://auth.example.com?state=Fitbit:state-123", result.Value);
+    }
+
+    [Fact]
+    public void GetWearableAuthUrlValidator_RejectsOversizedProviderAndState() {
+        var query = new GetWearableAuthUrlQuery(
+            Guid.NewGuid(),
+            new string('p', WearableInputLimits.MaximumProviderLength + 1),
+            new string('s', WearableInputLimits.MaximumOAuthStateLength + 1));
+
+        TestValidationResult<GetWearableAuthUrlQuery> result =
+            new GetWearableAuthUrlQueryValidator().TestValidate(query);
+
+        Assert.Multiple(
+            () => result.ShouldHaveValidationErrorFor(value => value.Provider),
+            () => result.ShouldHaveValidationErrorFor(value => value.State));
+    }
+
+    [Fact]
+    public void ConnectWearableValidator_RejectsMissingAndOversizedInputs() {
+        var command = new ConnectWearableCommand(
+            UserId: null,
+            new string('p', WearableInputLimits.MaximumProviderLength + 1),
+            new string('c', WearableInputLimits.MaximumAuthorizationCodeLength + 1),
+            new string('s', WearableInputLimits.MaximumProtectedOAuthStateLength + 1),
+            RequestId,
+            RequestHash);
+
+        TestValidationResult<ConnectWearableCommand> result =
+            new ConnectWearableCommandValidator().TestValidate(command);
+
+        Assert.Multiple(
+            () => result.ShouldHaveValidationErrorFor(value => value.UserId),
+            () => result.ShouldHaveValidationErrorFor(value => value.Provider),
+            () => result.ShouldHaveValidationErrorFor(value => value.Code),
+            () => result.ShouldHaveValidationErrorFor(value => value.State));
+    }
+
+    [Fact]
+    public void DisconnectAndSyncValidators_RejectOversizedProvider() {
+        string provider = new('p', WearableInputLimits.MaximumProviderLength + 1);
+        TestValidationResult<DisconnectWearableCommand> disconnectResult =
+            new DisconnectWearableCommandValidator().TestValidate(new DisconnectWearableCommand(Guid.NewGuid(), provider));
+        TestValidationResult<SyncWearableDataCommand> syncResult =
+            new SyncWearableDataCommandValidator(TimeProvider.System).TestValidate(
+                new SyncWearableDataCommand(Guid.NewGuid(), provider, DateTime.UtcNow.Date));
+
+        Assert.Multiple(
+            () => disconnectResult.ShouldHaveValidationErrorFor(value => value.Provider),
+            () => syncResult.ShouldHaveValidationErrorFor(value => value.Provider));
     }
 
     [Fact]

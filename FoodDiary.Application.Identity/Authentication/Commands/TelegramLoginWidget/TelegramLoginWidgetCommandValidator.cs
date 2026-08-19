@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Identity.Authentication.Commands.TelegramLoginWidget;
 
@@ -17,6 +18,16 @@ public sealed class TelegramLoginWidgetCommandValidator : AbstractValidator<Tele
         RuleFor(x => x.Hash)
             .NotEmpty()
             .WithErrorCode("Validation.Required")
-            .WithMessage("hash is required.");
+            .WithMessage("hash is required.")
+            .MaximumLength(AuthenticationInputLimits.MaximumTelegramHashLength)
+            .WithErrorCode("Validation.Invalid");
+        RuleFor(x => x.Username)
+            .MaximumLength(AuthenticationInputLimits.MaximumTelegramUsernameLength);
+        RuleFor(x => x.FirstName)
+            .MaximumLength(AuthenticationInputLimits.MaximumTelegramNameLength);
+        RuleFor(x => x.LastName)
+            .MaximumLength(AuthenticationInputLimits.MaximumTelegramNameLength);
+        RuleFor(x => x.PhotoUrl)
+            .MaximumLength(AuthenticationInputLimits.MaximumTelegramPhotoUrlLength);
     }
 }

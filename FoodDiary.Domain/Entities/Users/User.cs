@@ -161,6 +161,17 @@ public sealed partial class User : AggregateRoot<UserId> {
         }
     }
 
+    private static void EnsureExpiresAfterIssuance(DateTime expiresAtUtc, DateTime issuedAtUtc, string paramName) {
+        if (expiresAtUtc <= issuedAtUtc) {
+            throw new ArgumentOutOfRangeException(paramName, "Expiration must be later than issuance.");
+        }
+    }
+
+    private DateTime LatestAuditTimestamp(DateTime candidateUtc) {
+        DateTime currentAuditTimestamp = ModifiedOnUtc ?? CreatedOnUtc;
+        return currentAuditTimestamp > candidateUtc ? currentAuditTimestamp : candidateUtc;
+    }
+
     private static void EnsureBirthDateIsNotFuture(DateTime? birthDate) {
         if (birthDate.HasValue && birthDate.Value.Date > DomainTime.UtcNow.Date) {
             throw new ArgumentOutOfRangeException(nameof(birthDate), "Birth date cannot be in the future.");

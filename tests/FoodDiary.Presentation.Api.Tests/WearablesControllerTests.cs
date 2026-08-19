@@ -1,3 +1,4 @@
+using System.Reflection;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Application.Wearables.Wearables.Commands.ConnectWearable;
@@ -10,6 +11,7 @@ using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Wearables;
 using FoodDiary.Presentation.Api.Features.Wearables.Requests;
 using FoodDiary.Presentation.Api.Features.Wearables.Responses;
+using FoodDiary.Presentation.Api.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +19,9 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class WearablesControllerTests {
+    private const string RequestId = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    private const string RequestHash = "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB";
+
     [Fact]
     public async Task GetConnections_SendsQueryAndReturnsConnections() {
         DateTime connectedAtUtc = DateTime.UtcNow.AddDays(-30);
@@ -73,6 +78,8 @@ public sealed class WearablesControllerTests {
         Assert.Equal(userId, command.UserId);
         Assert.Equal("fitbit", command.Provider);
         Assert.Equal("auth-code", command.Code);
+        Assert.Equal(RequestId, command.RequestId);
+        Assert.Equal(RequestHash, command.RequestHash);
     }
 
     [Fact]
@@ -130,12 +137,20 @@ public sealed class WearablesControllerTests {
         Assert.Equal(date, query.Date);
     }
 
-    private static WearablesController CreateController(ISender sender) =>
-        new(sender) {
+    private static WearablesController CreateController(ISender sender) {
+        var httpContext = new DefaultHttpContext();
+        MethodInfo setRequest = typeof(IdempotencyRequestContext).GetMethod(
+            "SetRequest",
+            BindingFlags.Static | BindingFlags.NonPublic) ??
+            throw new InvalidOperationException("Idempotency request context setter was not found.");
+        setRequest.Invoke(null, [httpContext, RequestId, RequestHash]);
+
+        return new WearablesController(sender) {
             ControllerContext = new ControllerContext {
-                HttpContext = new DefaultHttpContext(),
+                HttpContext = httpContext,
             },
         };
+    }
 
     private static WearableDailySummaryModel CreateDailySummary(DateTime date) =>
         new(date, Steps: 8500, HeartRate: 72, CaloriesBurned: 350, ActiveMinutes: 45, SleepMinutes: 420);
