@@ -149,7 +149,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
     private async Task<(DbContextOptions<FoodDiaryDbContext> Options, UserId UserId)> CreateDatabaseAsync() {
         string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
-            .UseNpgsql(connectionString)
+            .UseNpgsql(connectionString, npgsqlOptions => npgsqlOptions.EnableRetryOnFailure())
             .Options;
         await using var context = new FoodDiaryDbContext(options);
         await context.Database.MigrateAsync();

@@ -15,55 +15,52 @@ public sealed class AiQuotaRepository(
         CancellationToken cancellationToken = default) {
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
         ValidateReservation(request, nowUtc);
-        var context = new FoodDiaryDbContext(contextOptions);
-        await using ConfiguredAsyncDisposable configuredContext = context.ConfigureAwait(false);
-        IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-        await using ConfiguredAsyncDisposable configuredTransaction = transaction.ConfigureAwait(false);
 
-        await EnsurePeriodAsync(context, request, nowUtc, cancellationToken).ConfigureAwait(false);
-        AiQuotaPeriod period = await GetPeriodForUpdateAsync(
-            context,
-            request.UserId.Value,
-            request.PeriodStartUtc,
-            cancellationToken).ConfigureAwait(false);
-        await ExpirePendingReservationsAsync(context, period, nowUtc, cancellationToken).ConfigureAwait(false);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return await ExecuteInTransactionAsync(async (context, token) => {
+            await EnsurePeriodAsync(context, request, nowUtc, token).ConfigureAwait(false);
+            AiQuotaPeriod period = await GetPeriodForUpdateAsync(
+                context,
+                request.UserId.Value,
+                request.PeriodStartUtc,
+                token).ConfigureAwait(false);
+            await ExpirePendingReservationsAsync(context, period, nowUtc, token).ConfigureAwait(false);
+            await context.SaveChangesAsync(token).ConfigureAwait(false);
 
-        AiQuotaReservation? existing = await context.AiQuotaReservations
-            .SingleOrDefaultAsync(x => x.RequestId == request.RequestId, cancellationToken)
-            .ConfigureAwait(false);
-        if (existing is not null) {
-            if (!existing.BelongsTo(request)) {
-                return await CompleteReservationAttemptAsync(transaction, AiQuotaReservationStatus.Duplicate, cancellationToken).ConfigureAwait(false);
+            AiQuotaReservation? existing = await context.AiQuotaReservations
+                .SingleOrDefaultAsync(x => x.RequestId == request.RequestId, token)
+                .ConfigureAwait(false);
+            if (existing is not null) {
+                if (!existing.BelongsTo(request)) {
+                    return AiQuotaReservationStatus.Duplicate;
+                }
+
+                switch (existing.State) {
+                    case AiQuotaReservationState.Pending:
+                        return AiQuotaReservationStatus.InProgress;
+                    case AiQuotaReservationState.Completed:
+                    case AiQuotaReservationState.Orphaned:
+                        return AiQuotaReservationStatus.Duplicate;
+                    case AiQuotaReservationState.Released:
+                        break;
+                    default:
+                        throw new InvalidOperationException("Unsupported AI quota reservation state.");
+                }
             }
 
-            switch (existing.State) {
-                case AiQuotaReservationState.Pending:
-                    return await CompleteReservationAttemptAsync(transaction, AiQuotaReservationStatus.InProgress, cancellationToken).ConfigureAwait(false);
-                case AiQuotaReservationState.Completed:
-                case AiQuotaReservationState.Orphaned:
-                    return await CompleteReservationAttemptAsync(transaction, AiQuotaReservationStatus.Duplicate, cancellationToken).ConfigureAwait(false);
-                case AiQuotaReservationState.Released:
-                    break;
-                default:
-                    throw new InvalidOperationException("Unsupported AI quota reservation state.");
+            if (!period.CanReserve(request.InputTokens, request.OutputTokens, request.InputTokenLimit, request.OutputTokenLimit)) {
+                return AiQuotaReservationStatus.QuotaExceeded;
             }
-        }
 
-        if (!period.CanReserve(request.InputTokens, request.OutputTokens, request.InputTokenLimit, request.OutputTokenLimit)) {
-            return await CompleteReservationAttemptAsync(transaction, AiQuotaReservationStatus.QuotaExceeded, cancellationToken).ConfigureAwait(false);
-        }
+            period.Reserve(request.InputTokens, request.OutputTokens, nowUtc);
+            if (existing is null) {
+                context.AiQuotaReservations.Add(AiQuotaReservation.Create(request, nowUtc));
+            } else {
+                existing.Reacquire(request, nowUtc);
+            }
 
-        period.Reserve(request.InputTokens, request.OutputTokens, nowUtc);
-        if (existing is null) {
-            context.AiQuotaReservations.Add(AiQuotaReservation.Create(request, nowUtc));
-        } else {
-            existing.Reacquire(request, nowUtc);
-        }
-
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-        return AiQuotaReservationStatus.Acquired;
+            await context.SaveChangesAsync(token).ConfigureAwait(false);
+            return AiQuotaReservationStatus.Acquired;
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task ReconcileAsync(
@@ -71,84 +68,107 @@ public sealed class AiQuotaRepository(
         AiQuotaUsage usage,
         CancellationToken cancellationToken = default) {
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
-        var context = new FoodDiaryDbContext(contextOptions);
-        await using ConfiguredAsyncDisposable configuredContext = context.ConfigureAwait(false);
-        IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-        await using ConfiguredAsyncDisposable configuredTransaction = transaction.ConfigureAwait(false);
-        AiQuotaReservation reservation = await GetReservationForUpdateAsync(context, requestId, cancellationToken).ConfigureAwait(false);
 
-        if (reservation.State == AiQuotaReservationState.Completed) {
-            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-            return;
-        }
+        await ExecuteInTransactionAsync(async (context, token) => {
+            AiQuotaReservation reservation = await GetReservationForUpdateAsync(context, requestId, token).ConfigureAwait(false);
 
-        if (reservation.State is not (AiQuotaReservationState.Pending or AiQuotaReservationState.Orphaned)) {
-            throw new InvalidOperationException("Only pending or orphaned AI quota reservations can be reconciled.");
-        }
+            if (reservation.State == AiQuotaReservationState.Completed) {
+                return;
+            }
 
-        if (!string.Equals(reservation.Operation, usage.Operation, StringComparison.Ordinal) ||
-            usage.InputTokens < 0 ||
-            usage.OutputTokens < 0 ||
-            usage.TotalTokens < (long)usage.InputTokens + usage.OutputTokens ||
-            usage.InputTokens > reservation.ReservedInputTokens ||
-            usage.OutputTokens > reservation.ReservedOutputTokens) {
-            throw new InvalidOperationException("AI usage cannot be reconciled outside its reserved token budget.");
-        }
+            if (reservation.State is not (AiQuotaReservationState.Pending or AiQuotaReservationState.Orphaned)) {
+                throw new InvalidOperationException("Only pending or orphaned AI quota reservations can be reconciled.");
+            }
 
-        AiQuotaPeriod period = await GetPeriodForUpdateAsync(
-            context,
-            reservation.UserId.Value,
-            reservation.PeriodStartUtc,
-            cancellationToken).ConfigureAwait(false);
-        if (reservation.State == AiQuotaReservationState.Pending) {
-            period.ConsumeReserved(
-                reservation.ReservedInputTokens,
-                reservation.ReservedOutputTokens,
+            if (!string.Equals(reservation.Operation, usage.Operation, StringComparison.Ordinal) ||
+                usage.InputTokens < 0 ||
+                usage.OutputTokens < 0 ||
+                usage.TotalTokens < (long)usage.InputTokens + usage.OutputTokens ||
+                usage.InputTokens > reservation.ReservedInputTokens ||
+                usage.OutputTokens > reservation.ReservedOutputTokens) {
+                throw new InvalidOperationException("AI usage cannot be reconciled outside its reserved token budget.");
+            }
+
+            AiQuotaPeriod period = await GetPeriodForUpdateAsync(
+                context,
+                reservation.UserId.Value,
+                reservation.PeriodStartUtc,
+                token).ConfigureAwait(false);
+            if (reservation.State == AiQuotaReservationState.Pending) {
+                period.ConsumeReserved(
+                    reservation.ReservedInputTokens,
+                    reservation.ReservedOutputTokens,
+                    usage.InputTokens,
+                    usage.OutputTokens,
+                    nowUtc);
+            } else {
+                period.ReconcileOrphan(
+                    reservation.ReservedInputTokens,
+                    reservation.ReservedOutputTokens,
+                    usage.InputTokens,
+                    usage.OutputTokens,
+                    nowUtc);
+            }
+
+            reservation.Complete(usage.InputTokens, usage.OutputTokens, nowUtc);
+            context.AiUsages.Add(AiUsage.Create(
+                reservation.UserId,
+                usage.Operation,
+                usage.Model,
                 usage.InputTokens,
                 usage.OutputTokens,
-                nowUtc);
-        } else {
-            period.ReconcileOrphan(
-                reservation.ReservedInputTokens,
-                reservation.ReservedOutputTokens,
-                usage.InputTokens,
-                usage.OutputTokens,
-                nowUtc);
-        }
-
-        reservation.Complete(usage.InputTokens, usage.OutputTokens, nowUtc);
-        context.AiUsages.Add(AiUsage.Create(
-            reservation.UserId,
-            usage.Operation,
-            usage.Model,
-            usage.InputTokens,
-            usage.OutputTokens,
-            usage.TotalTokens));
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                usage.TotalTokens));
+            await context.SaveChangesAsync(token).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task ReleaseAsync(string requestId, CancellationToken cancellationToken = default) {
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
-        var context = new FoodDiaryDbContext(contextOptions);
-        await using ConfiguredAsyncDisposable configuredContext = context.ConfigureAwait(false);
-        IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-        await using ConfiguredAsyncDisposable configuredTransaction = transaction.ConfigureAwait(false);
-        AiQuotaReservation reservation = await GetReservationForUpdateAsync(context, requestId, cancellationToken).ConfigureAwait(false);
-        if (reservation.State != AiQuotaReservationState.Pending) {
-            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-            return;
-        }
 
-        AiQuotaPeriod period = await GetPeriodForUpdateAsync(
-            context,
-            reservation.UserId.Value,
-            reservation.PeriodStartUtc,
-            cancellationToken).ConfigureAwait(false);
-        period.Release(reservation.ReservedInputTokens, reservation.ReservedOutputTokens, nowUtc);
-        reservation.Release(nowUtc);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+        await ExecuteInTransactionAsync(async (context, token) => {
+            AiQuotaReservation reservation = await GetReservationForUpdateAsync(context, requestId, token).ConfigureAwait(false);
+            if (reservation.State != AiQuotaReservationState.Pending) {
+                return;
+            }
+
+            AiQuotaPeriod period = await GetPeriodForUpdateAsync(
+                context,
+                reservation.UserId.Value,
+                reservation.PeriodStartUtc,
+                token).ConfigureAwait(false);
+            period.Release(reservation.ReservedInputTokens, reservation.ReservedOutputTokens, nowUtc);
+            reservation.Release(nowUtc);
+            await context.SaveChangesAsync(token).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<T> ExecuteInTransactionAsync<T>(
+        Func<FoodDiaryDbContext, CancellationToken, Task<T>> operation,
+        CancellationToken cancellationToken) {
+        var strategyContext = new FoodDiaryDbContext(contextOptions);
+        await using ConfiguredAsyncDisposable configuredStrategyContext = strategyContext.ConfigureAwait(false);
+        IExecutionStrategy strategy = strategyContext.Database.CreateExecutionStrategy();
+        return await strategy.ExecuteAsync(async () => {
+            var context = new FoodDiaryDbContext(contextOptions);
+            await using ConfiguredAsyncDisposable configuredContext = context.ConfigureAwait(false);
+            IDbContextTransaction transaction = await context.Database
+                .BeginTransactionAsync(cancellationToken)
+                .ConfigureAwait(false);
+            await using (transaction.ConfigureAwait(false)) {
+                T result = await operation(context, cancellationToken).ConfigureAwait(false);
+                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                return result;
+            }
+        }).ConfigureAwait(false);
+    }
+
+    private async Task ExecuteInTransactionAsync(
+        Func<FoodDiaryDbContext, CancellationToken, Task> operation,
+        CancellationToken cancellationToken) {
+        await ExecuteInTransactionAsync(async (context, token) => {
+            await operation(context, token).ConfigureAwait(false);
+            return true;
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     private static void ValidateReservation(AiQuotaReservationRequest request, DateTime nowUtc) {
@@ -234,13 +254,5 @@ public sealed class AiQuotaRepository(
         }
 
         InfrastructureTelemetry.RecordAiQuotaOrphans(expired.Count);
-    }
-
-    private static async Task<AiQuotaReservationStatus> CompleteReservationAttemptAsync(
-        IDbContextTransaction transaction,
-        AiQuotaReservationStatus status,
-        CancellationToken cancellationToken) {
-        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-        return status;
     }
 }
