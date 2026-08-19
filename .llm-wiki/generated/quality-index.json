@@ -486,11 +486,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
-      "nonBlankLines": 223,
+      "nonBlankLines": 232,
       "decisionPoints": 36,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 58.46
+      "structuralRiskScore": 58.64
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list.ts",
@@ -18360,11 +18360,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
-      "nonBlankLines": 223,
+      "nonBlankLines": 232,
       "decisionPoints": 36,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 58.46
+      "structuralRiskScore": 58.64
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaReservation.cs",

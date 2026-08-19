@@ -713,13 +713,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "a00f24c96f4018cb5adb3767c8a6e8e014848f0e648cd1cfc40720dc83be4f8f"
+          "sha256": "d1d182b506dfee939d5ed14da350b5f6d6c8cc18a36a0661b1f3801acfc41ac9"
         }
       ],
-      "reason": "Reviewed the regenerated integrated indexes after rebasing backend hardening onto the current master cycle-health changes. The merged source preserves bounded cycle and cycle-export telemetry labels, unmatched-route cardinality protection, backend contract ownership, sensitive-data controls, persistence mappings, and the focused architecture and contract tests for both change sets.",
+      "reason": "Reviewed the AI quota transaction change: the repository now wraps the existing short PostgreSQL reservation lifecycle in EF execution strategy retries; no new sensitive-data fields, provider sharing, logging, or test-quality risks are introduced.",
       "baseRef": "HEAD",
-      "gitHead": "3dbd99082630f4ad534842934b350c783a929004",
-      "reviewedAtUtc": "2026-08-17T09:59:55.3020294Z"
+      "gitHead": "7b484d0ba98b1c19b41d13081a5180da46d090eb",
+      "reviewedAtUtc": "2026-08-19T05:21:08.5066732Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -758,13 +758,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "99815edad973953538e245508dd8877d3e028a267cf9eec9a9a2f836b4938a9d"
+          "sha256": "18cf45fe5dde8d71c02949204033196c235b9b6475af9ee8fe68d90380b0f951"
         }
       ],
-      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
+      "reason": "Reviewed the AI quota transaction change: the repository now wraps the existing short PostgreSQL reservation lifecycle in EF execution strategy retries; no new sensitive-data fields, provider sharing, logging, or test-quality risks are introduced.",
       "baseRef": "HEAD",
-      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
-      "reviewedAtUtc": "2026-08-17T15:56:43.6600237Z"
+      "gitHead": "7b484d0ba98b1c19b41d13081a5180da46d090eb",
+      "reviewedAtUtc": "2026-08-19T05:21:08.8081766Z"
     },
     {
       "pageId": "workflow-release-readiness",
