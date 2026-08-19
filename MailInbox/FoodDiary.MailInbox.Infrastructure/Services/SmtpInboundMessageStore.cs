@@ -42,18 +42,18 @@ public sealed class SmtpInboundMessageStore(
             .WaitAsync(_options.ProcessingQueueTimeout, cancellationToken)
             .ConfigureAwait(false);
         if (!entered) {
-            MailInboxTelemetry.RecordIngestion("overloaded", Stopwatch.GetElapsedTime(startedAt), messageSize);
+            MailInboxTelemetry.RecordIngestion(MailInboxIngestionOutcome.Overloaded, Stopwatch.GetElapsedTime(startedAt), messageSize);
             return new SmtpResponse(SmtpReplyCode.Overloaded, "Mail processing capacity is temporarily exhausted.");
         }
 
         try {
             if (messageSize == 0) {
-                MailInboxTelemetry.RecordIngestion("empty_message", Stopwatch.GetElapsedTime(startedAt), messageSize);
+                MailInboxTelemetry.RecordIngestion(MailInboxIngestionOutcome.EmptyMessage, Stopwatch.GetElapsedTime(startedAt), messageSize);
                 return new SmtpResponse(SmtpReplyCode.TransactionFailed, "Message content is required.");
             }
 
             if (messageSize > _options.MaxMessageSizeBytes) {
-                MailInboxTelemetry.RecordIngestion("message_too_large", Stopwatch.GetElapsedTime(startedAt), messageSize);
+                MailInboxTelemetry.RecordIngestion(MailInboxIngestionOutcome.MessageTooLarge, Stopwatch.GetElapsedTime(startedAt), messageSize);
                 return SmtpResponse.SizeLimitExceeded;
             }
 
@@ -63,7 +63,7 @@ public sealed class SmtpInboundMessageStore(
                     _options.MaxRawBytesPerIpPerHour,
                     TimeSpan.FromHours(1),
                     messageSize)) {
-                MailInboxTelemetry.RecordIngestion("ip_byte_rate_limited", Stopwatch.GetElapsedTime(startedAt), messageSize);
+                MailInboxTelemetry.RecordIngestion(MailInboxIngestionOutcome.IpByteRateLimited, Stopwatch.GetElapsedTime(startedAt), messageSize);
                 return new SmtpResponse(
                     SmtpReplyCode.InsufficientStorage,
                     "Per-source mail byte capacity is temporarily exhausted.");
@@ -78,7 +78,7 @@ public sealed class SmtpInboundMessageStore(
                     _options.MaxMimeDepth,
                     cancellationToken).ConfigureAwait(false);
             } catch (MimeStructureLimitExceededException) {
-                MailInboxTelemetry.RecordIngestion("mime_part_limit", Stopwatch.GetElapsedTime(startedAt), messageSize);
+                MailInboxTelemetry.RecordIngestion(MailInboxIngestionOutcome.MimePartLimit, Stopwatch.GetElapsedTime(startedAt), messageSize);
                 return new SmtpResponse(SmtpReplyCode.TransactionFailed, "MIME part limit exceeded.");
             }
 
@@ -90,7 +90,7 @@ public sealed class SmtpInboundMessageStore(
             if (recipients.Length == 0 ||
                 recipients.Length > _options.MaxRecipientsPerMessage ||
                 recipients.Any(recipient => !_allowedRecipients.Contains(recipient))) {
-                MailInboxTelemetry.RecordIngestion("recipient_limit", Stopwatch.GetElapsedTime(startedAt), messageSize);
+                MailInboxTelemetry.RecordIngestion(MailInboxIngestionOutcome.RecipientLimit, Stopwatch.GetElapsedTime(startedAt), messageSize);
                 return SmtpResponse.NoValidRecipientsGiven;
             }
 
@@ -98,7 +98,7 @@ public sealed class SmtpInboundMessageStore(
             string? fromAddress = message.From.Mailboxes.FirstOrDefault()?.Address;
             string? subject = message.Subject;
             if (!MailInboxStoredMessageLimits.IsWithinLimits(messageId, fromAddress, recipients, subject)) {
-                MailInboxTelemetry.RecordIngestion("metadata_limit", Stopwatch.GetElapsedTime(startedAt), messageSize);
+                MailInboxTelemetry.RecordIngestion(MailInboxIngestionOutcome.MetadataLimit, Stopwatch.GetElapsedTime(startedAt), messageSize);
                 return new SmtpResponse(SmtpReplyCode.TransactionFailed, "Message metadata exceeds the allowed limits.");
             }
 
@@ -121,19 +121,19 @@ public sealed class SmtpInboundMessageStore(
                 saveResult.WasDuplicate);
 
             MailInboxTelemetry.RecordIngestion(
-                saveResult.WasDuplicate ? "duplicate" : "success",
+                saveResult.WasDuplicate ? MailInboxIngestionOutcome.Duplicate : MailInboxIngestionOutcome.Success,
                 Stopwatch.GetElapsedTime(startedAt),
                 messageSize);
             return SmtpResponse.Ok;
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
-            MailInboxTelemetry.RecordIngestion("canceled", Stopwatch.GetElapsedTime(startedAt), messageSize);
+            MailInboxTelemetry.RecordIngestion(MailInboxIngestionOutcome.Canceled, Stopwatch.GetElapsedTime(startedAt), messageSize);
             throw;
         } catch (InboundMailStorageQuotaExceededException) {
-            MailInboxTelemetry.RecordIngestion("storage_quota", Stopwatch.GetElapsedTime(startedAt), messageSize);
+            MailInboxTelemetry.RecordIngestion(MailInboxIngestionOutcome.StorageQuota, Stopwatch.GetElapsedTime(startedAt), messageSize);
             return new SmtpResponse(SmtpReplyCode.InsufficientStorage, "Mail storage quota is temporarily exhausted.");
         } catch (Exception) {
             activity?.SetStatus(ActivityStatusCode.Error);
-            MailInboxTelemetry.RecordIngestion("failure", Stopwatch.GetElapsedTime(startedAt), messageSize);
+            MailInboxTelemetry.RecordIngestion(MailInboxIngestionOutcome.Failure, Stopwatch.GetElapsedTime(startedAt), messageSize);
             throw;
         } finally {
             _processingSlots.Release();

@@ -1,17 +1,17 @@
 using FluentValidation;
 using FluentValidation.Results;
+using System.Diagnostics.Metrics;
 using System.Globalization;
-using System.Text;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Application.Common.Behaviors;
 using FoodDiary.Results;
 using FoodDiary.MailInbox.Application.Common.Results;
 using FoodDiary.MailInbox.Application.Health;
 using FoodDiary.MailInbox.Application.Messages.Commands.MarkInboundMailMessageRead;
-using FoodDiary.MailInbox.Application.Messages.Commands.ReceiveInboundMail;
 using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessageDetails;
 using FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessages;
+using FoodDiary.MailInbox.Application.Telemetry;
 using FoodDiary.MailInbox.Domain.Messages;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,35 +21,6 @@ namespace FoodDiary.MailInbox.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxApplicationTests {
-    [Fact]
-    public async Task ReceiveInboundMailHandler_SavesReceivedAggregateAndReturnsStoreId() {
-        var store = new RecordingInboundMailStore();
-        var handler = new ReceiveInboundMailCommandHandler(store);
-        var receivedAt = new DateTimeOffset(2026, 5, 6, 10, 0, 0, TimeSpan.Zero);
-
-        Result<Guid> result = await handler.Handle(
-            new ReceiveInboundMailCommand(new ReceiveInboundMailRequest(
-                MessageId: " message-id ",
-                FromAddress: " sender@example.com ",
-                ToRecipients: [" admin@fooddiary.club "],
-                Subject: " Hello ",
-                TextBody: "Text",
-                HtmlBody: "<p>Text</p>",
-                RawMime: "raw mime",
-                ReceivedAtUtc: receivedAt)),
-            CancellationToken.None);
-
-        Assert.True(result.IsSuccess);
-        Assert.Equal(store.SavedId, result.Value);
-        Assert.NotNull(store.LastSaved);
-        Assert.Equal("message-id", store.LastSaved.MessageId);
-        Assert.Equal("sender@example.com", store.LastSaved.FromAddress);
-        Assert.Equal(["admin@fooddiary.club"], store.LastSaved.ToRecipients);
-        Assert.Equal("Hello", store.LastSaved.Subject);
-        Assert.True(store.LastSaved.RawMimeBytes.Span.SequenceEqual(Encoding.UTF8.GetBytes("raw mime")));
-        Assert.Equal(receivedAt, store.LastSaved.ReceivedAtUtc);
-    }
-
     [Fact]
     public async Task GetInboundMailMessagesHandler_ForwardsLimitAndCancellationToken() {
         using var cts = new CancellationTokenSource();
@@ -146,15 +117,169 @@ public sealed class MailInboxApplicationTests {
     }
 
     [Fact]
-    public async Task ReceiveInboundMailValidator_WithMissingRecipientsAndRawMime_Fails() {
-        var validator = new ReceiveInboundMailCommandValidator();
+    public void MessageModels_ExposeConstructedValues() {
+        var id = Guid.Parse("1f25ea80-d126-42ec-804c-b793c4d9435e");
+        var receivedAt = DateTimeOffset.Parse("2026-06-14T10:00:00Z", CultureInfo.InvariantCulture);
+        DateTimeOffset readAt = receivedAt.AddMinutes(1);
+        DateTimeOffset purgedAt = receivedAt.AddDays(30);
+        string[] recipients = ["admin@fooddiary.club"];
+        var dmarcRecord = new DmarcReportRecordPreview(
+            "192.0.2.1",
+            7,
+            "none",
+            "pass",
+            "pass",
+            "fooddiary.club",
+            "sender.fooddiary.club",
+            "fooddiary.club",
+            "pass",
+            "fooddiary.club",
+            "pass");
+        DmarcReportRecordPreview[] dmarcRecords = [dmarcRecord];
+        var dmarcReport = new DmarcReportPreview(
+            "Example Mail",
+            "report-42",
+            "fooddiary.club",
+            receivedAt.AddDays(-1),
+            receivedAt,
+            dmarcRecords);
+        var details = new InboundMailMessageDetails(
+            id,
+            "message-id",
+            "sender@example.com",
+            recipients,
+            "Hello",
+            "text",
+            "<p>text</p>",
+            "raw",
+            InboundMailMessageCategories.DmarcReport,
+            dmarcReport,
+            InboundMailMessageStatus.Received.ToString(),
+            readAt,
+            receivedAt,
+            purgedAt);
+        var summary = new InboundMailMessageSummary(
+            id,
+            "sender@example.com",
+            recipients,
+            "Hello",
+            InboundMailMessageCategories.DmarcReport,
+            InboundMailMessageStatus.Received.ToString(),
+            readAt,
+            receivedAt);
+        var retention = new InboundMailRetentionResult(3, 2);
+        var save = new InboundMailSaveResult(id, WasDuplicate: true);
 
-        ValidationResult result = await validator.ValidateAsync(new ReceiveInboundMailCommand(
-            new ReceiveInboundMailRequest(MessageId: null, FromAddress: null, [], Subject: null, TextBody: null, HtmlBody: null, "", DateTimeOffset.UtcNow)));
+        Assert.Multiple(
+            () => Assert.Equal("192.0.2.1", dmarcRecord.SourceIp),
+            () => Assert.Equal(7, dmarcRecord.Count),
+            () => Assert.Equal("none", dmarcRecord.Disposition),
+            () => Assert.Equal("pass", dmarcRecord.Dkim),
+            () => Assert.Equal("pass", dmarcRecord.Spf),
+            () => Assert.Equal("fooddiary.club", dmarcRecord.HeaderFrom),
+            () => Assert.Equal("sender.fooddiary.club", dmarcRecord.EnvelopeFrom),
+            () => Assert.Equal("fooddiary.club", dmarcRecord.DkimDomain),
+            () => Assert.Equal("pass", dmarcRecord.DkimResult),
+            () => Assert.Equal("fooddiary.club", dmarcRecord.SpfDomain),
+            () => Assert.Equal("pass", dmarcRecord.SpfResult),
+            () => Assert.Equal("Example Mail", dmarcReport.OrganizationName),
+            () => Assert.Equal("report-42", dmarcReport.ReportId),
+            () => Assert.Equal("fooddiary.club", dmarcReport.Domain),
+            () => Assert.Equal(receivedAt.AddDays(-1), dmarcReport.DateRangeStartUtc),
+            () => Assert.Equal(receivedAt, dmarcReport.DateRangeEndUtc),
+            () => Assert.Same(dmarcRecords, dmarcReport.Records),
+            () => Assert.Equal(id, details.Id),
+            () => Assert.Equal("message-id", details.MessageId),
+            () => Assert.Equal("sender@example.com", details.FromAddress),
+            () => Assert.Same(recipients, details.ToRecipients),
+            () => Assert.Equal("Hello", details.Subject),
+            () => Assert.Equal("text", details.TextBody),
+            () => Assert.Equal("<p>text</p>", details.HtmlBody),
+            () => Assert.Equal("raw", details.RawMime),
+            () => Assert.Equal(InboundMailMessageCategories.DmarcReport, details.Category),
+            () => Assert.Same(dmarcReport, details.DmarcReport),
+            () => Assert.Equal(InboundMailMessageStatus.Received.ToString(), details.Status),
+            () => Assert.Equal(readAt, details.ReadAtUtc),
+            () => Assert.Equal(receivedAt, details.ReceivedAtUtc),
+            () => Assert.Equal(purgedAt, details.ContentPurgedAtUtc),
+            () => Assert.Equal(id, summary.Id),
+            () => Assert.Equal("sender@example.com", summary.FromAddress),
+            () => Assert.Same(recipients, summary.ToRecipients),
+            () => Assert.Equal("Hello", summary.Subject),
+            () => Assert.Equal(InboundMailMessageCategories.DmarcReport, summary.Category),
+            () => Assert.Equal(InboundMailMessageStatus.Received.ToString(), summary.Status),
+            () => Assert.Equal(readAt, summary.ReadAtUtc),
+            () => Assert.Equal(receivedAt, summary.ReceivedAtUtc),
+            () => Assert.Equal(3, retention.ContentPurgedCount),
+            () => Assert.Equal(2, retention.MetadataDeletedCount),
+            () => Assert.Equal(id, save.Id),
+            () => Assert.True(save.WasDuplicate));
+    }
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Request.ToRecipients", StringComparison.Ordinal));
-        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Request.RawMime", StringComparison.Ordinal));
+    [Theory]
+    [InlineData(MailInboxIngestionOutcome.Overloaded, "overloaded")]
+    [InlineData(MailInboxIngestionOutcome.EmptyMessage, "empty_message")]
+    [InlineData(MailInboxIngestionOutcome.MessageTooLarge, "message_too_large")]
+    [InlineData(MailInboxIngestionOutcome.IpByteRateLimited, "ip_byte_rate_limited")]
+    [InlineData(MailInboxIngestionOutcome.MimePartLimit, "mime_part_limit")]
+    [InlineData(MailInboxIngestionOutcome.RecipientLimit, "recipient_limit")]
+    [InlineData(MailInboxIngestionOutcome.MetadataLimit, "metadata_limit")]
+    [InlineData(MailInboxIngestionOutcome.Duplicate, "duplicate")]
+    [InlineData(MailInboxIngestionOutcome.Success, "success")]
+    [InlineData(MailInboxIngestionOutcome.Canceled, "canceled")]
+    [InlineData(MailInboxIngestionOutcome.StorageQuota, "storage_quota")]
+    [InlineData(MailInboxIngestionOutcome.Failure, "failure")]
+    public void RecordIngestion_UsesStableBoundedOutcomeTag(
+        MailInboxIngestionOutcome outcome,
+        string expectedTagValue) {
+        IReadOnlyList<string> outcomes = CaptureOutcomes(() =>
+            MailInboxTelemetry.RecordIngestion(outcome, TimeSpan.FromMilliseconds(5), 42));
+
+        Assert.Multiple(
+            () => Assert.Equal(3, outcomes.Count),
+            () => Assert.All(outcomes, value => Assert.Equal(expectedTagValue, value)));
+    }
+
+    [Theory]
+    [InlineData(MailInboxAdmissionOutcome.MessageTooLarge, "message_too_large")]
+    [InlineData(MailInboxAdmissionOutcome.SessionRateLimited, "session_rate_limited")]
+    [InlineData(MailInboxAdmissionOutcome.IpRateLimited, "ip_rate_limited")]
+    [InlineData(MailInboxAdmissionOutcome.SenderRateLimited, "sender_rate_limited")]
+    [InlineData(MailInboxAdmissionOutcome.Accepted, "accepted")]
+    [InlineData(MailInboxAdmissionOutcome.RecipientNotAllowed, "recipient_not_allowed")]
+    [InlineData(MailInboxAdmissionOutcome.RecipientLimitExceeded, "recipient_limit_exceeded")]
+    public void RecordAdmission_UsesStableBoundedOutcomeTag(
+        MailInboxAdmissionOutcome outcome,
+        string expectedTagValue) {
+        IReadOnlyList<string> outcomes = CaptureOutcomes(() => MailInboxTelemetry.RecordAdmission(outcome));
+
+        Assert.Equal([expectedTagValue], outcomes);
+    }
+
+    [Theory]
+    [InlineData(MailInboxRetentionOutcome.Failure, "failure")]
+    [InlineData(MailInboxRetentionOutcome.ContentPurged, "content_purged")]
+    [InlineData(MailInboxRetentionOutcome.MetadataDeleted, "metadata_deleted")]
+    public void RecordRetention_UsesStableBoundedOutcomeTag(
+        MailInboxRetentionOutcome outcome,
+        string expectedTagValue) {
+        IReadOnlyList<string> outcomes = CaptureOutcomes(() => MailInboxTelemetry.RecordRetention(outcome, 2));
+
+        Assert.Equal([expectedTagValue], outcomes);
+    }
+
+    [Fact]
+    public void RecordTelemetry_WithUnknownOutcome_Throws() {
+        Assert.Multiple(
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => MailInboxTelemetry.RecordIngestion(
+                (MailInboxIngestionOutcome)(-1),
+                TimeSpan.Zero,
+                0)),
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => MailInboxTelemetry.RecordAdmission(
+                (MailInboxAdmissionOutcome)(-1))),
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => MailInboxTelemetry.RecordRetention(
+                (MailInboxRetentionOutcome)(-1),
+                0)));
     }
 
     [Theory]
@@ -326,17 +451,12 @@ public sealed class MailInboxApplicationTests {
             provider.GetServices<IValidator<GetInboundMailMessagesQuery>>(),
             validator => validator is GetInboundMailMessagesQueryValidator);
         Assert.Contains(
-            provider.GetServices<IValidator<ReceiveInboundMailCommand>>(),
-            validator => validator is ReceiveInboundMailCommandValidator);
-        Assert.Contains(
             provider.GetServices<IValidator<MarkInboundMailMessageReadCommand>>(),
             validator => validator is MarkInboundMailMessageReadCommandValidator);
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingInboundMailStore : IInboundMailStore {
-        public Guid SavedId { get; } = Guid.NewGuid();
-        public InboundMailMessage? LastSaved { get; private set; }
         public IReadOnlyList<InboundMailMessageSummary> MessageSummaries { get; init; } = [];
         public InboundMailMessageDetails? Details { get; init; }
         public int LastMessagesLimit { get; private set; }
@@ -344,10 +464,8 @@ public sealed class MailInboxApplicationTests {
         public DateTimeOffset LastReadAtUtc { get; private set; }
         public CancellationToken LastMessagesCancellationToken { get; private set; }
 
-        public Task<InboundMailSaveResult> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) {
-            LastSaved = message;
-            return Task.FromResult(new InboundMailSaveResult(SavedId, WasDuplicate: false));
-        }
+        public Task<InboundMailSaveResult> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
 
         public Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(int limit, CancellationToken cancellationToken) {
             LastMessagesLimit = limit;
@@ -383,6 +501,29 @@ public sealed class MailInboxApplicationTests {
             CancellationToken = cancellationToken;
             return Task.CompletedTask;
         }
+    }
+
+    private static IReadOnlyList<string> CaptureOutcomes(Action record) {
+        var outcomes = new List<string>();
+        using var listener = new MeterListener {
+            InstrumentPublished = (instrument, meterListener) => {
+                if (string.Equals(instrument.Meter.Name, MailInboxTelemetry.MeterName, StringComparison.Ordinal)) {
+                    meterListener.EnableMeasurementEvents(instrument);
+                }
+            },
+        };
+        listener.SetMeasurementEventCallback<long>((_, _, tags, _) => outcomes.Add(GetOutcome(tags)));
+        listener.SetMeasurementEventCallback<double>((_, _, tags, _) => outcomes.Add(GetOutcome(tags)));
+        listener.Start();
+
+        record();
+        return outcomes;
+    }
+
+    private static string GetOutcome(ReadOnlySpan<KeyValuePair<string, object?>> tags) {
+        KeyValuePair<string, object?> tag = Assert.Single(tags.ToArray());
+        Assert.Equal("fooddiary.mailinbox.outcome", tag.Key);
+        return Assert.IsType<string>(tag.Value);
     }
 
     private static InboundMailMessageDetails CreateDetails(Guid id) =>

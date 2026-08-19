@@ -22,7 +22,7 @@ public sealed class MailInboxRetentionHostedService(
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                 return;
             } catch (Exception exception) {
-                MailInboxTelemetry.RecordRetention("failure", 1);
+                MailInboxTelemetry.RecordRetention(MailInboxRetentionOutcome.Failure, 1);
                 logger.LogError(
                     "MailInbox retention failed. ErrorType={ErrorType}",
                     exception.GetType().Name);
@@ -44,8 +44,8 @@ public sealed class MailInboxRetentionHostedService(
             _options.CleanupBatchSize,
             cancellationToken).ConfigureAwait(false);
 
-        MailInboxTelemetry.RecordRetention("content_purged", result.ContentPurgedCount);
-        MailInboxTelemetry.RecordRetention("metadata_deleted", result.MetadataDeletedCount);
+        MailInboxTelemetry.RecordRetention(MailInboxRetentionOutcome.ContentPurged, result.ContentPurgedCount);
+        MailInboxTelemetry.RecordRetention(MailInboxRetentionOutcome.MetadataDeleted, result.MetadataDeletedCount);
         if (result.ContentPurgedCount > 0 || result.MetadataDeletedCount > 0) {
             logger.LogInformation(
                 "MailInbox retention completed. ContentPurged={ContentPurged}; MetadataDeleted={MetadataDeleted}",

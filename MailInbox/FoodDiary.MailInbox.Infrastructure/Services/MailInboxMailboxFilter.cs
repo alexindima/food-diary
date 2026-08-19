@@ -27,12 +27,12 @@ public sealed class MailInboxMailboxFilter(
         CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
         if (size > _options.MaxMessageSizeBytes) {
-            MailInboxTelemetry.RecordAdmission("message_too_large");
+            MailInboxTelemetry.RecordAdmission(MailInboxAdmissionOutcome.MessageTooLarge);
             return Task.FromResult(false);
         }
 
         if (!TryStartSessionMessage(context)) {
-            MailInboxTelemetry.RecordAdmission("session_rate_limited");
+            MailInboxTelemetry.RecordAdmission(MailInboxAdmissionOutcome.SessionRateLimited);
             return Task.FromResult(false);
         }
 
@@ -42,7 +42,7 @@ public sealed class MailInboxMailboxFilter(
                 sourceAddress,
                 _options.MaxMessagesPerIpPerHour,
                 RateLimitWindow)) {
-            MailInboxTelemetry.RecordAdmission("ip_rate_limited");
+            MailInboxTelemetry.RecordAdmission(MailInboxAdmissionOutcome.IpRateLimited);
             return Task.FromResult(false);
         }
 
@@ -51,11 +51,11 @@ public sealed class MailInboxMailboxFilter(
                 string.Concat(sourceAddress, "\n", from.AsAddress()),
                 _options.MaxMessagesPerSenderPerHour,
                 RateLimitWindow)) {
-            MailInboxTelemetry.RecordAdmission("sender_rate_limited");
+            MailInboxTelemetry.RecordAdmission(MailInboxAdmissionOutcome.SenderRateLimited);
             return Task.FromResult(false);
         }
 
-        MailInboxTelemetry.RecordAdmission("accepted");
+        MailInboxTelemetry.RecordAdmission(MailInboxAdmissionOutcome.Accepted);
         return Task.FromResult(true);
     }
 
@@ -67,12 +67,12 @@ public sealed class MailInboxMailboxFilter(
         cancellationToken.ThrowIfCancellationRequested();
         string address = to.AsAddress().Trim().ToLowerInvariant();
         if (!_allowedRecipients.Contains(address)) {
-            MailInboxTelemetry.RecordAdmission("recipient_not_allowed");
+            MailInboxTelemetry.RecordAdmission(MailInboxAdmissionOutcome.RecipientNotAllowed);
             return Task.FromResult(false);
         }
 
         if (!TryAddRecipient(context)) {
-            MailInboxTelemetry.RecordAdmission("recipient_limit_exceeded");
+            MailInboxTelemetry.RecordAdmission(MailInboxAdmissionOutcome.RecipientLimitExceeded);
             return Task.FromResult(false);
         }
 
