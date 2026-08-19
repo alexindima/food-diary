@@ -1134,6 +1134,7 @@ public sealed class JobsTests {
                 RecurringJobIds.UsersCleanup,
                 RecurringJobIds.UserLoginEventsCleanup,
                 RecurringJobIds.MarketingAttributionCleanup,
+                RecurringJobIds.FastingTelemetryCleanup,
                 RecurringJobIds.ClientTaskReminders,
                 RecurringJobIds.WeeklyGoalReminders,
             ],
@@ -1153,6 +1154,7 @@ public sealed class JobsTests {
                 RecurringJobIds.AchievementEvaluationOutbox,
                 RecurringJobIds.UserLoginEventsCleanup,
                 RecurringJobIds.MarketingAttributionCleanup,
+                RecurringJobIds.FastingTelemetryCleanup,
                 RecurringJobIds.ClientTaskReminders,
                 RecurringJobIds.WeeklyGoalReminders,
             ],
@@ -1214,6 +1216,7 @@ public sealed class JobsTests {
         MethodInfo? notificationMethod = typeof(NotificationCleanupJob).GetMethod(nameof(NotificationCleanupJob.Execute));
         MethodInfo? userLoginEventCleanupMethod = typeof(UserLoginEventCleanupJob).GetMethod(nameof(UserLoginEventCleanupJob.Execute));
         MethodInfo? marketingAttributionCleanupMethod = typeof(MarketingAttributionCleanupJob).GetMethod(nameof(MarketingAttributionCleanupJob.Execute));
+        MethodInfo? fastingTelemetryCleanupMethod = typeof(FastingTelemetryCleanupJob).GetMethod(nameof(FastingTelemetryCleanupJob.Execute));
         MethodInfo? userMethod = typeof(UserCleanupJob).GetMethod(nameof(UserCleanupJob.Execute));
 
         Assert.NotNull(imageMethod);
@@ -1225,6 +1228,7 @@ public sealed class JobsTests {
         Assert.NotNull(notificationMethod);
         Assert.NotNull(userLoginEventCleanupMethod);
         Assert.NotNull(marketingAttributionCleanupMethod);
+        Assert.NotNull(fastingTelemetryCleanupMethod);
         Assert.NotNull(userMethod);
 
         AssertExecutionPolicy(imageMethod!);
@@ -1236,6 +1240,7 @@ public sealed class JobsTests {
         AssertExecutionPolicy(notificationMethod!);
         AssertExecutionPolicy(userLoginEventCleanupMethod!);
         AssertExecutionPolicy(marketingAttributionCleanupMethod!);
+        AssertExecutionPolicy(fastingTelemetryCleanupMethod!);
         AssertExecutionPolicy(userMethod!);
         AssertCancellationTokenParameter(imageMethod!);
         AssertCancellationTokenParameter(billingRenewalMethod!);
@@ -1243,6 +1248,7 @@ public sealed class JobsTests {
         AssertCancellationTokenParameter(notificationMethod!);
         AssertCancellationTokenParameter(userLoginEventCleanupMethod!);
         AssertCancellationTokenParameter(marketingAttributionCleanupMethod!);
+        AssertCancellationTokenParameter(fastingTelemetryCleanupMethod!);
         AssertCancellationTokenParameter(userMethod!);
     }
 

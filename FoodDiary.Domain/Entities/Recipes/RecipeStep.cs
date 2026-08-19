@@ -63,6 +63,10 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
     }
 
     public RecipeIngredient AddNestedRecipeIngredient(RecipeId nestedRecipeId, double servings) {
+        if (nestedRecipeId == RecipeId) {
+            throw new ArgumentException("A recipe cannot contain itself as an ingredient.", nameof(nestedRecipeId));
+        }
+
         var ingredient = RecipeIngredient.CreateWithRecipe(Id, nestedRecipeId, servings);
         _ingredients.Add(ingredient);
         SetModified();

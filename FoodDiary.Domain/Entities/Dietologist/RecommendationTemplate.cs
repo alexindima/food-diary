@@ -28,8 +28,11 @@ public sealed class RecommendationTemplate : Entity<RecommendationTemplateId> {
     }
 
     public void Update(string name, string text) {
-        Name = Normalize(name, 120, nameof(name));
-        Text = Normalize(text, 2000, nameof(text));
+        string normalizedName = Normalize(name, 120, nameof(name));
+        string normalizedText = Normalize(text, 2000, nameof(text));
+
+        Name = normalizedName;
+        Text = normalizedText;
         SetModified();
     }
 

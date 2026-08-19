@@ -7,6 +7,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Domain.Entities.Wearables;
 
 public sealed class WearableConnection : AggregateRoot<WearableConnectionId> {
+    private const int ExternalUserIdMaxLength = 256;
+    private const int TokenMaxLength = 8192;
+
     public UserId UserId { get; private set; }
     public WearableProvider Provider { get; private set; }
     public string ExternalUserId { get; private set; } = string.Empty;
@@ -31,22 +34,19 @@ public sealed class WearableConnection : AggregateRoot<WearableConnectionId> {
         EnsureUserId(userId);
         DomainGuard.Defined(provider, nameof(provider));
 
-        if (string.IsNullOrWhiteSpace(externalUserId)) {
-            throw new ArgumentException("External user ID is required.", nameof(externalUserId));
-        }
-
-        if (string.IsNullOrWhiteSpace(accessToken)) {
-            throw new ArgumentException("Access token is required.", nameof(accessToken));
-        }
+        string normalizedExternalUserId = DomainGuard.RequiredText(externalUserId, ExternalUserIdMaxLength, nameof(externalUserId));
+        string normalizedAccessToken = DomainGuard.RequiredText(accessToken, TokenMaxLength, nameof(accessToken));
+        string? normalizedRefreshToken = DomainGuard.OptionalText(refreshToken, TokenMaxLength, nameof(refreshToken));
+        DateTime? normalizedTokenExpiresAt = DomainGuard.OptionalUtc(tokenExpiresAtUtc, nameof(tokenExpiresAtUtc));
 
         var connection = new WearableConnection {
             Id = WearableConnectionId.New(),
             UserId = userId,
             Provider = provider,
-            ExternalUserId = externalUserId,
-            AccessToken = accessToken,
-            RefreshToken = refreshToken,
-            TokenExpiresAtUtc = tokenExpiresAtUtc,
+            ExternalUserId = normalizedExternalUserId,
+            AccessToken = normalizedAccessToken,
+            RefreshToken = normalizedRefreshToken,
+            TokenExpiresAtUtc = normalizedTokenExpiresAt,
             IsActive = true,
         };
         connection.SetCreated();
@@ -54,13 +54,15 @@ public sealed class WearableConnection : AggregateRoot<WearableConnectionId> {
     }
 
     public void UpdateTokens(string accessToken, string? refreshToken, DateTime? tokenExpiresAtUtc) {
-        if (string.IsNullOrWhiteSpace(accessToken)) {
-            throw new ArgumentException("Access token is required.", nameof(accessToken));
-        }
+        string normalizedAccessToken = DomainGuard.RequiredText(accessToken, TokenMaxLength, nameof(accessToken));
+        string? normalizedRefreshToken = refreshToken is not null
+            ? DomainGuard.OptionalText(refreshToken, TokenMaxLength, nameof(refreshToken))
+            : RefreshToken;
+        DateTime? normalizedTokenExpiresAt = DomainGuard.OptionalUtc(tokenExpiresAtUtc, nameof(tokenExpiresAtUtc));
 
-        AccessToken = accessToken;
-        RefreshToken = refreshToken ?? RefreshToken;
-        TokenExpiresAtUtc = tokenExpiresAtUtc;
+        AccessToken = normalizedAccessToken;
+        RefreshToken = normalizedRefreshToken;
+        TokenExpiresAtUtc = normalizedTokenExpiresAt;
         SetModified();
     }
 

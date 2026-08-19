@@ -45,6 +45,15 @@ public class OpenFoodFactsValidatorTests {
     }
 
     [Fact]
+    public async Task SearchValidator_WithTooLongSearch_HasError() {
+        var query = new SearchOpenFoodFactsQuery(new string('x', SearchOpenFoodFactsQueryValidator.MaximumSearchLength + 1));
+
+        TestValidationResult<SearchOpenFoodFactsQuery> result = await _searchValidator.TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(q => q.Search);
+    }
+
+    [Fact]
     public async Task SearchValidator_WithLimitTooLow_HasError() {
         var query = new SearchOpenFoodFactsQuery("milk", Limit: 0);
         TestValidationResult<SearchOpenFoodFactsQuery> result = await _searchValidator.TestValidateAsync(query);

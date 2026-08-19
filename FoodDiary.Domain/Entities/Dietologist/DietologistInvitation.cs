@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Primitives;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Events;
@@ -8,6 +9,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Domain.Entities.Dietologist;
 
 public sealed class DietologistInvitation : AggregateRoot<DietologistInvitationId> {
+    private const int EmailMaxLength = 256;
+    private const int TokenHashMaxLength = 256;
+
     public UserId ClientUserId { get; private set; }
     public UserId? DietologistUserId { get; private set; }
     public string DietologistEmail { get; private set; } = string.Empty;
@@ -38,21 +42,19 @@ public sealed class DietologistInvitation : AggregateRoot<DietologistInvitationI
         DateTime expiresAtUtc,
         DietologistPermissions permissions) {
         EnsureUserId(clientUserId);
+        ArgumentNullException.ThrowIfNull(permissions);
 
-        if (string.IsNullOrWhiteSpace(dietologistEmail)) {
-            throw new ArgumentException("Dietologist email is required.", nameof(dietologistEmail));
-        }
-
-        if (string.IsNullOrWhiteSpace(tokenHash)) {
-            throw new ArgumentException("Token hash is required.", nameof(tokenHash));
-        }
+        string boundedEmail = DomainGuard.RequiredText(dietologistEmail, EmailMaxLength, nameof(dietologistEmail));
+        string normalizedEmail = EmailAddress.Create(boundedEmail).Value;
+        string normalizedTokenHash = DomainGuard.RequiredText(tokenHash, TokenHashMaxLength, nameof(tokenHash));
+        DateTime normalizedExpiresAt = DomainGuard.RequiredUtc(expiresAtUtc, nameof(expiresAtUtc));
 
         var invitation = new DietologistInvitation {
             Id = DietologistInvitationId.New(),
             ClientUserId = clientUserId,
-            DietologistEmail = dietologistEmail.Trim().ToLowerInvariant(),
-            TokenHash = tokenHash,
-            ExpiresAtUtc = expiresAtUtc,
+            DietologistEmail = normalizedEmail,
+            TokenHash = normalizedTokenHash,
+            ExpiresAtUtc = normalizedExpiresAt,
             Status = DietologistInvitationStatus.Pending,
         };
         invitation.ApplyPermissions(permissions);
@@ -90,6 +92,7 @@ public sealed class DietologistInvitation : AggregateRoot<DietologistInvitationI
     }
 
     public void UpdatePermissions(DietologistPermissions permissions) {
+        ArgumentNullException.ThrowIfNull(permissions);
         ApplyPermissions(permissions);
         SetModified();
     }

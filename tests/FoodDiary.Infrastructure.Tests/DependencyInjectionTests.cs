@@ -226,6 +226,9 @@ public sealed class DependencyInjectionTests {
     [InlineData(nameof(IUsdaFoodSearchService))]
     [InlineData(nameof(IOpenFoodFactsService))]
     [InlineData(nameof(PaddleBillingGateway))]
+    [InlineData(nameof(PaddleNotificationRecoveryService))]
+    [InlineData(nameof(YooKassaBillingGateway))]
+    [InlineData(nameof(IWebPushClientAdapter))]
     public async Task AddIntegrations_SensitiveQueryClients_DoNotUseDefaultHttpClientLogging(string clientName) {
         var services = new ServiceCollection();
         var loggerProvider = new RecordingLoggerProvider();

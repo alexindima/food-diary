@@ -54,10 +54,9 @@ public class FavoriteInvariantTests {
     }
 
     [Fact]
-    public void FavoriteProduct_Create_WithTooLongName_TruncatesToCommentMaxLength() {
-        var favorite = FavoriteProduct.Create(UserId.New(), ProductId.New(), new string('n', DomainConstants.CommentMaxLength + 1));
-
-        Assert.Equal(DomainConstants.CommentMaxLength, favorite.Name!.Length);
+    public void FavoriteProduct_Create_WithTooLongName_Throws() {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            FavoriteProduct.Create(UserId.New(), ProductId.New(), new string('n', DomainConstants.CommentMaxLength + 1)));
     }
 
     [Fact]
@@ -112,10 +111,9 @@ public class FavoriteInvariantTests {
     }
 
     [Fact]
-    public void FavoriteRecipe_Create_WithTooLongName_TruncatesToCommentMaxLength() {
-        var favorite = FavoriteRecipe.Create(UserId.New(), RecipeId.New(), new string('n', DomainConstants.CommentMaxLength + 1));
-
-        Assert.Equal(DomainConstants.CommentMaxLength, favorite.Name!.Length);
+    public void FavoriteRecipe_Create_WithTooLongName_Throws() {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            FavoriteRecipe.Create(UserId.New(), RecipeId.New(), new string('n', DomainConstants.CommentMaxLength + 1)));
     }
 
     [Fact]

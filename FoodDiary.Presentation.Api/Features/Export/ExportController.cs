@@ -2,8 +2,10 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Export.Mappings;
 using FoodDiary.Presentation.Api.Features.Export.Requests;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDiary.Presentation.Api.Features.Export;
@@ -14,6 +16,8 @@ namespace FoodDiary.Presentation.Api.Features.Export;
 public sealed class ExportController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("diary")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.ExportRateLimitPolicyName)]
     public Task<IActionResult> ExportDiary(
         [FromCurrentUser] Guid userId,
         [FromQuery] DateTime dateFrom,
@@ -26,6 +30,8 @@ public sealed class ExportController(ISender mediator) : AuthorizedController(me
 
     [HttpGet("cycle")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.ExportRateLimitPolicyName)]
     public Task<IActionResult> ExportCycle(
         [FromCurrentUser] Guid userId,
         [FromQuery] DateTime dateFrom,
@@ -36,6 +42,8 @@ public sealed class ExportController(ISender mediator) : AuthorizedController(me
     [HttpPost("cycle/sensitive")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.SecretVerificationRateLimitPolicyName)]
     public Task<IActionResult> ExportSensitiveCycle(
         [FromCurrentUser] Guid userId,
         [FromBody] SensitiveCycleExportHttpRequest request) =>

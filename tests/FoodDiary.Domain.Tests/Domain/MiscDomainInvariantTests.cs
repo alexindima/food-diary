@@ -113,14 +113,14 @@ public class MiscDomainInvariantTests {
 
     [Fact]
     public void DailyAdvice_Update_NormalizesFields() {
-        var advice = DailyAdvice.Create(" Hydrate ", " EN ", weight: 0, tag: "  water ");
+        var advice = DailyAdvice.Create(" Hydrate ", " EN ", weight: 1, tag: "  water ");
 
-        advice.Update(value: "  Sleep  ", locale: " RU ", weight: 0, tag: "   ");
+        advice.Update(value: "  Sleep  ", locale: " RU ", weight: 2, tag: "   ");
 
         Assert.Multiple(
             () => Assert.Equal("Sleep", advice.Value),
             () => Assert.Equal("ru", advice.Locale),
-            () => Assert.Equal(1, advice.Weight),
+            () => Assert.Equal(2, advice.Weight),
             () => Assert.Null(advice.Tag));
     }
 

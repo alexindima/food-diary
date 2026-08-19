@@ -33,7 +33,7 @@ public sealed class PaddleOptions {
         HasValidNotificationRecoveryConfiguration(options) &&
         !string.IsNullOrWhiteSpace(options.PremiumMonthlyPriceId) &&
         !string.IsNullOrWhiteSpace(options.PremiumYearlyPriceId) &&
-        Uri.IsWellFormedUriString(options.CheckoutUrl, UriKind.Absolute) &&
+        Billing.BillingUrlValidator.IsAbsoluteHttps(options.CheckoutUrl) &&
         options.WebhookTimestampToleranceSeconds is >= 5 and <= 900 &&
         HasMatchingEnvironment(options);
 

@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
@@ -128,7 +129,7 @@ public sealed class BillingRenewalService(
             subscription.MarkRenewalSkippedForInaccessibleUser(
                 BuildRenewalSkippedEventId(subscription, skippedAtUtc),
                 skippedAtUtc,
-                "Renewal skipped because subscription user is not accessible.");
+                SerializeReason("Renewal skipped because subscription user is not accessible."));
             if (subscription.PremiumRoleManagedByBilling) {
                 subscription.MarkPremiumRoleManagedByBilling(value: false, skippedAtUtc);
             }
@@ -242,7 +243,7 @@ public sealed class BillingRenewalService(
                 now.Add(FailedRenewalRetryDelay),
                 BuildRenewalFailureEventId(subscription, now),
                 now,
-                reason);
+                SerializeReason(reason));
             await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
 
             UserBillingProfileModel? failedRenewalUser = await billingUserContextService.GetUserIncludingDeletedAsync(subscription.UserId, ct).ConfigureAwait(false);
@@ -258,4 +259,6 @@ public sealed class BillingRenewalService(
             }
         }, cancellationToken).ConfigureAwait(false);
     }
+
+    private static string SerializeReason(string reason) => JsonSerializer.Serialize(new { reason });
 }

@@ -172,7 +172,16 @@ public sealed class PresentationServiceCollectionExtensionsTests {
         public Task AddAsync(FastingTelemetryEventRecord record, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
 
-        public Task<IReadOnlyList<FastingTelemetryEventRecord>> GetSinceAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) =>
+        public Task<int> DeleteOlderThanAsync(
+            DateTime olderThanUtc,
+            int batchSize,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(0);
+
+        public Task<IReadOnlyList<FastingTelemetryEventRecord>> GetRangeAsync(
+            DateTime fromUtc,
+            DateTime toUtc,
+            CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<FastingTelemetryEventRecord>>([]);
     }
 

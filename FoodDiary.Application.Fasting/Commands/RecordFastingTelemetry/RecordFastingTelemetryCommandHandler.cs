@@ -42,14 +42,18 @@ public sealed class RecordFastingTelemetryCommandHandler(
     }
 
     private DateTime ParseTimestampUtc(string? timestamp) {
+        DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
         return DateTime.TryParse(
             timestamp,
             CultureInfo.InvariantCulture,
             DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
             out DateTime parsed)
-            ? parsed
-            : timeProvider.GetUtcNow().UtcDateTime;
+            ? Min(parsed, nowUtc)
+            : nowUtc;
     }
+
+    private static DateTime Min(DateTime timestampUtc, DateTime nowUtc) =>
+        timestampUtc <= nowUtc ? timestampUtc : nowUtc;
 
     private static IReadOnlyDictionary<string, string> ReadDetails(JsonElement? details) {
         if (details is null || details.Value.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined || details.Value.ValueKind != JsonValueKind.Object) {

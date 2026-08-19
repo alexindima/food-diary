@@ -28,6 +28,10 @@ public sealed class UserAchievement : Entity<UserAchievementId> {
             throw new ArgumentException("UserId is required.", nameof(userId));
         }
 
+        if (achievementKey is null) {
+            throw new ArgumentNullException(nameof(achievementKey));
+        }
+
         string normalizedKey = achievementKey.Trim();
         if (normalizedKey.Length is 0 or > AchievementKeyMaxLength) {
             throw new ArgumentOutOfRangeException(nameof(achievementKey), $"Achievement key must contain between 1 and {AchievementKeyMaxLength} characters.");

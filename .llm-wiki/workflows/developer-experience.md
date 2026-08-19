@@ -9,6 +9,7 @@ tags:
   - developer-experience
   - planning
 sources:
+  - .llm-wiki/wiki.ps1
   - .llm-wiki/tools/Get-LlmWikiExperience.ps1
   - .llm-wiki/tools/Get-LlmWikiSolutionComparison.ps1
   - .llm-wiki/tools/Get-LlmWikiPhaseStatus.ps1
@@ -27,6 +28,12 @@ Normal development has five user-facing steps:
 ```text
 develop -> next -> phase-next -> validate -> handoff
 ```
+
+The default `help` output deliberately exposes only the primary daily workflow
+instead of presenting every compatibility and governance route as an equal
+choice. Use `help -Detailed` when diagnosing or automating an administrative
+command. The complete command catalog and its existing routes remain supported;
+the short help is a discoverability boundary, not a breaking CLI migration.
 
 Start or inspect work with one command:
 
@@ -73,12 +80,12 @@ Ceremony budgets keep tiny and bug work short and reserve governed workspaces an
 independent critique for evidence that requires them.
 
 Repeated structured planning queries reuse a content-addressed cache under the
-ignored Git directory. Task briefs, research packets, and test plans include the
-current commit, normalized arguments, and hashes of every modified or untracked
-file in their key. Any workspace edit therefore invalidates the result instead
-of returning stale navigation. Injected test inputs bypass the cache, and the
-cache stores only derived JSON; authoritative sources and generated Wiki pages
-remain unchanged.
+ignored Git directory. Task briefs, research packets, context queries, and test
+plans include the current commit, normalized arguments, hashes of relevant
+modified/untracked paths, and hashes of their dependent indexes. An edit outside
+the declared scope preserves a warm result; a relevant edit or index-lineage
+change invalidates it. Injected test inputs bypass the cache, and the cache stores
+only derived JSON; authoritative sources and generated Wiki pages remain unchanged.
 Writes use unique temporary files and atomic replacement. Cleanup is
 idempotent, so concurrent sessions may prune the same stale entry without
 turning an already-successful query into a failure.
@@ -96,12 +103,15 @@ the existing empty filtered result and avoids repeatedly materializing unrelated
 multi-megabyte JSON during routing regressions and MCP queries.
 
 The Development MCP keeps an additional bounded in-memory cache for successful
-read-only Wiki results. Its key includes the current Git/worktree fingerprint,
-command, and ordered arguments, so source or generated-index edits invalidate
-it with the repository snapshot. Entries expire after two minutes; oversized results,
-failures, and cancellations are not retained. `get_server_status` exposes cache
-hit/miss counts, queue depth, active commands, failure categories, and bounded
-per-command p50/p95 timings for operational diagnosis.
+read-only Wiki results. Planned paths and trace candidates define a scoped
+snapshot fingerprint, so unrelated concurrent edits do not evict the entry or
+produce a false `snapshot_changed`. A development-context request without an
+initial planned path runs the read-only graph trace first, accepts high/medium
+candidate paths as its scope, then captures one baseline for brief and test-plan
+composition. Entries expire after two minutes; oversized results, failures, and
+cancellations are not retained. `get_server_status` exposes cache hit/miss counts,
+queue depth, active commands, failure categories, and bounded per-command p50/p95
+timings for operational diagnosis.
 
 Facade command routing is guarded structurally: the command-catalog regression
 parses `wiki.ps1`, requires every `ValidateSet` command to have exactly one
@@ -179,3 +189,10 @@ explains discovery, blocker-count, and implementation-scope confidence
 individually. Read-only assessment reports implementation scope as
 `not-required`; it does not turn an intentionally absent edit boundary into a
 false warning or design blocker.
+
+Compact research applies `-Limit` at every external array boundary and rejects
+generic graph-only links such as `Unit`, `DependencyInjection`, and `Result`.
+Known-failure matches require two meaningful tokens or explicit path evidence;
+repository-brand stopwords do not qualify. With a planned path, unrelated routes
+and guides are omitted unless graph or scope evidence connects them. The JSON
+contract advertises and enforces a 30,000-character maximum.

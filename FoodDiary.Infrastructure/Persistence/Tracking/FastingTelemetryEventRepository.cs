@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
+using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
@@ -30,10 +31,34 @@ public sealed class FastingTelemetryEventRepository(FoodDiaryDbContext context) 
         return Task.CompletedTask;
     }
 
-    public async Task<IReadOnlyList<FastingTelemetryEventRecord>> GetSinceAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) {
+    public async Task<int> DeleteOlderThanAsync(
+        DateTime olderThanUtc,
+        int batchSize,
+        CancellationToken cancellationToken = default) {
+        FastingTelemetryEventId[] ids = await context.FastingTelemetryEvents
+            .AsNoTracking()
+            .Where(item => item.OccurredAtUtc < olderThanUtc)
+            .OrderBy(item => item.OccurredAtUtc)
+            .Select(item => item.Id)
+            .Take(Math.Max(batchSize, 1))
+            .ToArrayAsync(cancellationToken).ConfigureAwait(false);
+
+        if (ids.Length == 0) {
+            return 0;
+        }
+
+        return await context.FastingTelemetryEvents
+            .Where(item => Enumerable.Contains(ids, item.Id))
+            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<FastingTelemetryEventRecord>> GetRangeAsync(
+        DateTime fromUtc,
+        DateTime toUtc,
+        CancellationToken cancellationToken = default) {
         return await context.FastingTelemetryEvents
             .AsNoTracking()
-            .Where(x => x.OccurredAtUtc >= sinceUtc)
+            .Where(x => x.OccurredAtUtc >= fromUtc && x.OccurredAtUtc <= toUtc)
             .OrderByDescending(x => x.OccurredAtUtc)
             .Select(x => new FastingTelemetryEventRecord(
                 x.Name,

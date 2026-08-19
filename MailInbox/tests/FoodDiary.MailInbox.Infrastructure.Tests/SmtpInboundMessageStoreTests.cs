@@ -159,6 +159,97 @@ public sealed class SmtpInboundMessageStoreTests {
     }
 
     [Fact]
+    public async Task SaveAsync_WhenNoRecipientExists_RejectsBeforePersistence() {
+        var store = new RecordingInboundMailStore();
+        SmtpInboundMessageStore messageStore = CreateMessageStore(store);
+
+        SmtpResponse response = await messageStore.SaveAsync(
+            context: null!,
+            new TestMessageTransaction([]),
+            new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(CreateRawMime(includeToHeader: false))),
+            CancellationToken.None);
+
+        Assert.Equal(SmtpResponse.NoValidRecipientsGiven.ReplyCode, response.ReplyCode);
+        Assert.Null(store.LastSaved);
+    }
+
+    [Fact]
+    public async Task SaveAsync_WhenRecipientLimitIsExceeded_RejectsBeforePersistence() {
+        var store = new RecordingInboundMailStore();
+        SmtpInboundMessageStore messageStore = CreateMessageStore(
+            store,
+            new MailInboxSmtpOptions { MaxRecipientsPerMessage = 1 });
+
+        SmtpResponse response = await messageStore.SaveAsync(
+            context: null!,
+            new TestMessageTransaction(["admin@fooddiary.club", "support@fooddiary.club"]),
+            new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(CreateRawMime(includeToHeader: true))),
+            CancellationToken.None);
+
+        Assert.Equal(SmtpResponse.NoValidRecipientsGiven.ReplyCode, response.ReplyCode);
+        Assert.Null(store.LastSaved);
+    }
+
+    [Fact]
+    public async Task SaveAsync_WhenStorageQuotaIsExceeded_ReturnsInsufficientStorage() {
+        var quotaException = (Exception)Activator.CreateInstance(
+            typeof(SmtpInboundMessageStore).Assembly.GetType(
+                "FoodDiary.MailInbox.Infrastructure.Services.InboundMailStorageQuotaExceededException",
+                throwOnError: true)!,
+            nonPublic: true)!;
+        SmtpInboundMessageStore messageStore = CreateMessageStore(new ThrowingInboundMailStore(quotaException));
+
+        SmtpResponse response = await messageStore.SaveAsync(
+            context: null!,
+            new TestMessageTransaction(["admin@fooddiary.club"]),
+            new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(CreateRawMime(includeToHeader: true))),
+            CancellationToken.None);
+
+        Assert.Equal(SmtpReplyCode.InsufficientStorage, response.ReplyCode);
+    }
+
+    [Fact]
+    public async Task SaveAsync_WhenStorageFails_PropagatesFailure() {
+        var expected = new InvalidOperationException("failure");
+        SmtpInboundMessageStore messageStore = CreateMessageStore(new ThrowingInboundMailStore(expected));
+
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() => messageStore.SaveAsync(
+            context: null!,
+            new TestMessageTransaction(["admin@fooddiary.club"]),
+            new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(CreateRawMime(includeToHeader: true))),
+            CancellationToken.None));
+
+        Assert.Same(expected, actual);
+    }
+
+    [Fact]
+    public async Task SaveAsync_WhenStorageObservesCancellation_PropagatesCancellation() {
+        using var cts = new CancellationTokenSource();
+        var store = new CancelingInboundMailStore(cts);
+        SmtpInboundMessageStore messageStore = CreateMessageStore(store);
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => messageStore.SaveAsync(
+            context: null!,
+            new TestMessageTransaction(["admin@fooddiary.club"]),
+            new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(CreateRawMime(includeToHeader: true))),
+            cts.Token));
+    }
+
+    [Fact]
+    public async Task SaveAsync_WhenMessageIsDuplicate_ReturnsOk() {
+        var store = new RecordingInboundMailStore(wasDuplicate: true);
+        SmtpInboundMessageStore messageStore = CreateMessageStore(store);
+
+        SmtpResponse response = await messageStore.SaveAsync(
+            context: null!,
+            new TestMessageTransaction(["admin@fooddiary.club"]),
+            new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(CreateRawMime(includeToHeader: true))),
+            CancellationToken.None);
+
+        Assert.Equal(SmtpResponse.Ok.ReplyCode, response.ReplyCode);
+    }
+
+    [Fact]
     public async Task SaveAsync_WhenExtractedBodyExceedsLimit_TruncatesBeforePersistence() {
         var store = new RecordingInboundMailStore();
         SmtpInboundMessageStore messageStore = CreateMessageStore(
@@ -341,12 +432,65 @@ public sealed class SmtpInboundMessageStoreTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingInboundMailStore : IInboundMailStore {
+    private sealed class RecordingInboundMailStore(bool wasDuplicate = false) : IInboundMailStore {
         public InboundMailMessage? LastSaved { get; private set; }
 
         public Task<InboundMailSaveResult> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) {
             LastSaved = message;
-            return Task.FromResult(new InboundMailSaveResult(Guid.NewGuid(), WasDuplicate: false));
+            return Task.FromResult(new InboundMailSaveResult(Guid.NewGuid(), wasDuplicate));
+        }
+
+        public Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(
+            int limit,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<InboundMailMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<bool> MarkAsReadAsync(Guid id, DateTimeOffset readAtUtc, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<InboundMailRetentionResult> PurgeExpiredAsync(
+            DateTimeOffset contentCutoffUtc,
+            DateTimeOffset metadataCutoffUtc,
+            int batchSize,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ThrowingInboundMailStore(Exception exception) : IInboundMailStore {
+        public Task<InboundMailSaveResult> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) =>
+            Task.FromException<InboundMailSaveResult>(exception);
+
+        public Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(
+            int limit,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<InboundMailMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<bool> MarkAsReadAsync(Guid id, DateTimeOffset readAtUtc, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<InboundMailRetentionResult> PurgeExpiredAsync(
+            DateTimeOffset contentCutoffUtc,
+            DateTimeOffset metadataCutoffUtc,
+            int batchSize,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CancelingInboundMailStore(CancellationTokenSource cancellationSource) : IInboundMailStore {
+        public async Task<InboundMailSaveResult> SaveAsync(
+            InboundMailMessage message,
+            CancellationToken cancellationToken) {
+            await cancellationSource.CancelAsync().ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            throw new InvalidOperationException("Cancellation was not observed.");
         }
 
         public Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(

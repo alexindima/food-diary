@@ -13,12 +13,13 @@ public sealed class MailInboxFixedWindowRateLimiter(
     private readonly int _maxTrackedKeys = options.Value.MaxTrackedRateLimitKeys;
 
     public bool TryAcquire(string scope, string value, int permitLimit, TimeSpan window) {
-        string key = HashKey(scope, value);
+        string normalizedScope = scope.Trim().ToLowerInvariant();
+        string key = HashKey(normalizedScope, value);
         DateTimeOffset now = timeProvider.GetUtcNow();
         lock (_gate) {
             if (_windows.TryGetValue(key, out WindowCounter? counter)) {
                 if (now - counter.StartedAtUtc >= window) {
-                    _windows[key] = new WindowCounter(now, Count: 1);
+                    _windows[key] = new WindowCounter(normalizedScope, now, Count: 1);
                     return true;
                 }
 
@@ -32,12 +33,23 @@ public sealed class MailInboxFixedWindowRateLimiter(
 
             RemoveExpiredWindows(now, window);
             if (_windows.Count >= _maxTrackedKeys) {
-                return false;
+                EvictOldestWindow(normalizedScope);
             }
 
-            _windows.Add(key, new WindowCounter(now, Count: 1));
+            _windows.Add(key, new WindowCounter(normalizedScope, now, Count: 1));
             return true;
         }
+    }
+
+    private void EvictOldestWindow(string scope) {
+        KeyValuePair<string, WindowCounter>? oldestInScope = _windows
+            .Where(pair => pair.Value.Scope.Equals(scope, StringComparison.Ordinal))
+            .OrderBy(static pair => pair.Value.StartedAtUtc)
+            .Select(static pair => (KeyValuePair<string, WindowCounter>?)pair)
+            .FirstOrDefault();
+        KeyValuePair<string, WindowCounter> oldest = oldestInScope ??
+            _windows.MinBy(static pair => pair.Value.StartedAtUtc);
+        _windows.Remove(oldest.Key);
     }
 
     private void RemoveExpiredWindows(DateTimeOffset now, TimeSpan currentWindow) {
@@ -55,5 +67,5 @@ public sealed class MailInboxFixedWindowRateLimiter(
         return Convert.ToHexString(SHA256.HashData(bytes));
     }
 
-    private sealed record WindowCounter(DateTimeOffset StartedAtUtc, int Count);
+    private sealed record WindowCounter(string Scope, DateTimeOffset StartedAtUtc, int Count);
 }

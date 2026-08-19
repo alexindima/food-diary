@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1046,
+    "contracts": 1047,
     "ambiguousContracts": 3,
-    "consumerEdges": 7291,
-    "productionConsumerEdges": 4435,
-    "testConsumerEdges": 2856,
-    "consumedContracts": 1046,
+    "consumerEdges": 7325,
+    "productionConsumerEdges": 4440,
+    "testConsumerEdges": 2885,
+    "consumedContracts": 1047,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -8327,6 +8327,22 @@
       ],
       "definitionPaths": [
         "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionWriteRepository.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "IFastingTelemetryCleanupService",
+      "roles": [
+        "Service"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Fasting/Services/IFastingTelemetryCleanupService.cs"
       ],
       "ambiguous": false
     },
@@ -16853,6 +16869,19 @@
         "FoodDiary.Application.Dietologist/Commands/AcceptInvitation/AcceptInvitationCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AcceptInvitationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Dietologist/Commands/AcceptInvitation/AcceptInvitationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.AcceptInvitationCommandTests.cs",
       "isTest": true,
       "referenceCount": 10
@@ -16985,6 +17014,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Dietologist/Mappings/DietologistHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AcceptInvitationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Dietologist/Requests/AcceptInvitationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -19276,6 +19318,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "AdminUserCreateHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Admin/Requests/AdminUserCreateHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "AdminUserCreationHttpResponse",
       "roles": [
         "Response"
@@ -19584,6 +19639,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdminHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminUserSetPasswordHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Admin/Requests/AdminUserSetPasswordHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -20950,7 +21018,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs",
       "isTest": true,
-      "referenceCount": 15
+      "referenceCount": 17
     },
     {
       "contract": "BillingWebhookEvent",
@@ -20990,6 +21058,45 @@
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainCoverageCompletionTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "BillingWebhookEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/FourthPassDomainHardeningTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "BillingWebhookEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/SecondPassDomainHardeningTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "BillingWebhookEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/ThirdPassDomainHardeningTests.cs",
+      "isTest": true,
+      "referenceCount": 7
     },
     {
       "contract": "BillingWebhookEvent",
@@ -21585,6 +21692,19 @@
         "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ChangePasswordCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
       "isTest": true,
       "referenceCount": 6
@@ -21663,6 +21783,19 @@
         "FoodDiary.Presentation.Api/Features/Users/Requests/ChangePasswordHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ChangePasswordHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Users/Requests/ChangePasswordHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/UserHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -21691,7 +21824,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "CheckMailInboxReadinessQuery",
@@ -22120,7 +22253,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ClientTelemetryLogHttpRequestValidationTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 11
     },
     {
       "contract": "ClientTelemetryLogHttpRequest",
@@ -22159,7 +22292,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/FrontendObservabilityIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "ConfirmPasswordResetCommand",
@@ -22225,6 +22358,19 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/AuthenticationValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "ConfirmPasswordResetCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ConfirmPasswordResetCommand",
@@ -22833,6 +22979,19 @@
         "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateAdminUserCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -23017,7 +23176,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Dietologist/ClientTaskHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 9
     },
     {
       "contract": "CreateClientTaskCommand",
@@ -25893,6 +26052,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "CycleConsentHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Cycles/Responses/CycleConsentHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CycleHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "CycleFactorHttpResponse",
       "roles": [
         "Response"
@@ -26164,6 +26336,19 @@
       "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/Responses/CycleHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "CyclePredictionRevisionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CycleHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "CyclePredictionsHttpResponse",
@@ -26772,8 +26957,34 @@
         "FoodDiary.Application.Dietologist/Commands/DeclineInvitation/DeclineInvitationCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Dietologist/Commands/DeclineInvitation/DeclineInvitationCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DeclineInvitationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Dietologist/Commands/DeclineInvitation/DeclineInvitationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Dietologist/Mappings/DietologistHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DeclineInvitationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Dietologist/Commands/DeclineInvitation/DeclineInvitationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -26904,6 +27115,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Dietologist/Mappings/DietologistHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DeclineInvitationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Dietologist/Requests/DeclineInvitationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -29479,6 +29703,19 @@
       "consumerPath": "FoodDiary.Presentation.Api/Features/Export/Mappings/ExportHttpMappings.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "ExportCycleQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ExportCycleQuery",
@@ -34496,7 +34733,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingTelemetrySummaryServiceTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "GetFavoriteMealsQuery",
@@ -60421,6 +60658,58 @@
       "referenceCount": 1
     },
     {
+      "contract": "IFastingTelemetryCleanupService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Fasting/Services/IFastingTelemetryCleanupService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Fasting/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingTelemetryCleanupService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Fasting/Services/IFastingTelemetryCleanupService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingTelemetryCleanupService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingTelemetryCleanupService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Fasting/Services/IFastingTelemetryCleanupService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.JobManager/Services/FastingTelemetryCleanupJob.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingTelemetryCleanupService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Fasting/Services/IFastingTelemetryCleanupService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.JobManager.Tests/FastingTelemetryCleanupJobTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IFastingTelemetryEventReadRepository",
       "roles": [
         "ReadRepository"
@@ -60624,9 +60913,35 @@
         "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingTelemetryCleanupService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingTelemetryEventWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IFastingTelemetryEventWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingTelemetryCleanupServiceTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IFastingTelemetryEventWriteRepository",
@@ -64097,7 +64412,7 @@
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/MailInboxHostedServiceTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "IInboundMailStore",
@@ -64123,7 +64438,7 @@
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/SmtpInboundMessageStoreTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 5
     },
     {
       "contract": "IInitialAdminBootstrapService",
@@ -67283,6 +67598,19 @@
       "consumerPath": "tests/FoodDiary.ArchitectureTests/JobManagerGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IMediator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IMediator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/ChangeSetSnapshotServiceTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IMediator",
@@ -71830,6 +72158,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IPasswordHasher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Common/IPasswordHasher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.PasswordHashMigration.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -77746,7 +78087,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Recipes/Recipes/Services/RecipeIngredientAccessValidator.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IRecipeLookupService",
@@ -77812,6 +78153,19 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "IRecipeLookupService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeLookupService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.NutritionAndIngredientTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IRecipeLookupService",
@@ -92917,7 +93271,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IWebPushClientAdapter",
@@ -94933,6 +95287,19 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.RegisterLogin.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "LoginCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "LoginCommand",
@@ -100793,6 +101160,19 @@
         "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RegisterCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AuthHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -102288,6 +102668,19 @@
         "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RestoreAccountCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AuthHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -102901,7 +103294,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/OpenFoodFacts/OpenFoodFactsValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 10
     },
     {
       "contract": "SearchOpenFoodFactsQuery",
@@ -103333,6 +103726,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "SensitiveCycleExportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Export/Requests/SensitiveCycleExportHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "SetAdminUserPasswordCommand",
       "roles": [
         "Command"
@@ -103383,6 +103789,19 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
       "isTest": true,
       "referenceCount": 5
+    },
+    {
+      "contract": "SetAdminUserPasswordCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "SetAdminUserPasswordCommand",
@@ -103562,6 +103981,19 @@
         "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "SetPasswordCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
       "isTest": true,
       "referenceCount": 5
@@ -103629,6 +104061,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Users/UsersPasswordController.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "SetPasswordHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Users/Requests/SetPasswordHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -110453,6 +110898,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/AuthenticationValidatorsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "VerifyEmailCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

@@ -9,6 +9,7 @@ public static partial class DependencyInjection {
         services.AddTransient<WebPushEndpointValidationHandler>();
         services.AddHttpClient<IWebPushClientAdapter, WebPushClientAdapter>(client =>
                 client.Timeout = TimeSpan.FromSeconds(30))
+            .RemoveAllLoggers()
             .ConfigurePrimaryHttpMessageHandler(WebPushSocketsHttpHandlerFactory.Create)
             .AddHttpMessageHandler<WebPushEndpointValidationHandler>();
         services.AddScoped<IWebPushNotificationSender, WebPushNotificationSender>();

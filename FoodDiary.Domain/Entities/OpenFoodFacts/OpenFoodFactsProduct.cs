@@ -95,7 +95,9 @@ public sealed class OpenFoodFactsProduct {
 
     public void MarkSeen(DateTime seenAtUtc) {
         LastSeenAtUtc = EnsureUtc(seenAtUtc);
-        SearchHitCount++;
+        if (SearchHitCount < int.MaxValue) {
+            SearchHitCount++;
+        }
     }
 
     private static DateTime EnsureUtc(DateTime value) =>

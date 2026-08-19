@@ -59,16 +59,18 @@ public sealed class PaddleNotificationRecoveryService(
                     BoundedHttpContentReader.DefaultReadTimeout,
                     deadline.Token).ConfigureAwait(false) ?? throw new JsonException("Paddle notifications response was empty.");
 
-                foreach (NotificationResponse notification in payload.Data) {
+                IReadOnlyList<NotificationResponse> notifications = payload.Data
+                    ?? throw new JsonException("Paddle notifications response data was missing.");
+                foreach (NotificationResponse notification in notifications) {
+                    string notificationId = GetNotificationId(notification);
                     inspected++;
-                    if (!string.Equals(notification.Origin, "event", StringComparison.Ordinal) ||
-                        notification.ReplayedAt is not null) {
+                    if (!IsReplayCandidate(notification)) {
                         continue;
                     }
 
                     using var replayRequest = new HttpRequestMessage(
                         HttpMethod.Post,
-                        $"notifications/{Uri.EscapeDataString(notification.Id)}/replay");
+                        $"notifications/{Uri.EscapeDataString(notificationId)}/replay");
                     using HttpResponseMessage replayResponse = await httpClient.SendAsync(
                         replayRequest,
                         HttpCompletionOption.ResponseHeadersRead,
@@ -97,6 +99,15 @@ public sealed class PaddleNotificationRecoveryService(
         }
     }
 
+    private static string GetNotificationId(NotificationResponse notification) =>
+        string.IsNullOrWhiteSpace(notification.Id)
+            ? throw new JsonException("Paddle notification identifier was missing.")
+            : notification.Id;
+
+    private static bool IsReplayCandidate(NotificationResponse notification) =>
+        string.Equals(notification.Origin, "event", StringComparison.Ordinal) &&
+        notification.ReplayedAt is null;
+
     private static string? NormalizeNext(string? next) {
         if (string.IsNullOrWhiteSpace(next)) {
             return null;
@@ -108,12 +119,12 @@ public sealed class PaddleNotificationRecoveryService(
     }
 
     private sealed record ListNotificationsResponse(
-        IReadOnlyList<NotificationResponse> Data,
+        IReadOnlyList<NotificationResponse>? Data,
         ResponseMeta? Meta);
 
     private sealed record NotificationResponse(
-        string Id,
-        string Origin,
+        string? Id,
+        string? Origin,
         [property: JsonPropertyName("replayed_at")] DateTimeOffset? ReplayedAt);
 
     private sealed record ResponseMeta(PaginationMeta? Pagination);

@@ -5,9 +5,11 @@ using FoodDiary.Presentation.Api.Features.Admin.Mappings;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDiary.Presentation.Api.Features.Admin;
@@ -33,6 +35,8 @@ public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiCon
     [HttpPost("test")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.TestDeliveryRateLimitPolicyName)]
     [EnableIdempotency]
     public Task<IActionResult> SendTest([FromBody] AdminEmailTemplateTestHttpRequest request) =>
         HandleNoContent(request.ToCommand());

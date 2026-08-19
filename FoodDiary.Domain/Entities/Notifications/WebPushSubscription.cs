@@ -58,12 +58,18 @@ public sealed class WebPushSubscription : AggregateRoot<WebPushSubscriptionId> {
         string? userAgent = null) {
         EnsureUserId(userId);
 
+        string normalizedP256Dh = NormalizeRequired(p256Dh, KeyMaxLength, nameof(p256Dh));
+        string normalizedAuth = NormalizeRequired(auth, KeyMaxLength, nameof(auth));
+        DateTime? normalizedExpirationTime = NormalizeUtc(expirationTimeUtc, nameof(expirationTimeUtc));
+        string? normalizedLocale = NormalizeOptional(locale, LocaleMaxLength, nameof(locale));
+        string? normalizedUserAgent = NormalizeOptional(userAgent, UserAgentMaxLength, nameof(userAgent));
+
         UserId = userId;
-        P256Dh = NormalizeRequired(p256Dh, KeyMaxLength, nameof(p256Dh));
-        Auth = NormalizeRequired(auth, KeyMaxLength, nameof(auth));
-        ExpirationTimeUtc = NormalizeUtc(expirationTimeUtc, nameof(expirationTimeUtc));
-        Locale = NormalizeOptional(locale, LocaleMaxLength, nameof(locale));
-        UserAgent = NormalizeOptional(userAgent, UserAgentMaxLength, nameof(userAgent));
+        P256Dh = normalizedP256Dh;
+        Auth = normalizedAuth;
+        ExpirationTimeUtc = normalizedExpirationTime;
+        Locale = normalizedLocale;
+        UserAgent = normalizedUserAgent;
         SetModified();
     }
 
@@ -74,11 +80,11 @@ public sealed class WebPushSubscription : AggregateRoot<WebPushSubscriptionId> {
     }
 
     private static string NormalizeRequired(string value, int maxLength, string paramName) {
-        string normalized = value.Trim();
-        if (string.IsNullOrWhiteSpace(normalized)) {
+        if (string.IsNullOrWhiteSpace(value)) {
             throw new ArgumentException("Value is required.", paramName);
         }
 
+        string normalized = value.Trim();
         return normalized.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
             : normalized;

@@ -30,7 +30,7 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
             ValueMaxLength);
         string normalizedLocale = NormalizeLocale(locale);
         string? normalizedTag = NormalizeOptional(tag, nameof(tag), TagMaxLength);
-        int normalizedWeight = Math.Max(1, weight);
+        int normalizedWeight = NormalizeWeight(weight);
 
         var advice = new DailyAdvice(DailyAdviceId.New()) {
             Value = normalizedValue,
@@ -45,35 +45,32 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
 
     public void Update(string? value = null, string? locale = null, int? weight = null, string? tag = null, bool clearTag = false) {
         bool changed = false;
+        string? normalizedValue = value is not null
+            ? NormalizeRequired(value, nameof(value), "Advice value cannot be empty.", ValueMaxLength)
+            : null;
+        string? normalizedLocale = locale is not null ? NormalizeLocale(locale) : null;
+        int? normalizedWeight = weight.HasValue ? NormalizeWeight(weight.Value) : null;
         string? normalizedTag = NormalizeOptional(tag, nameof(tag), TagMaxLength);
 
         EnsureClearConflict(clearTag, normalizedTag, nameof(clearTag), nameof(tag));
 
         if (value is not null) {
-            string normalizedValue = NormalizeRequired(
-                value,
-                nameof(value),
-                "Advice value cannot be empty.",
-                ValueMaxLength);
-
             if (!string.Equals(Value, normalizedValue, StringComparison.Ordinal)) {
-                Value = normalizedValue;
+                Value = normalizedValue!;
                 changed = true;
             }
         }
 
         if (locale is not null) {
-            string normalizedLocale = NormalizeLocale(locale);
             if (!string.Equals(Locale, normalizedLocale, StringComparison.Ordinal)) {
-                Locale = normalizedLocale;
+                Locale = normalizedLocale!;
                 changed = true;
             }
         }
 
         if (weight.HasValue) {
-            int normalizedWeight = Math.Max(1, weight.Value);
             if (Weight != normalizedWeight) {
-                Weight = normalizedWeight;
+                Weight = normalizedWeight!.Value;
                 changed = true;
             }
         }
@@ -130,6 +127,12 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
         return normalized.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
             : normalized;
+    }
+
+    private static int NormalizeWeight(int value) {
+        return value <= 0
+            ? throw new ArgumentOutOfRangeException(nameof(value), "Weight must be greater than zero.")
+            : value;
     }
 
     private static void EnsureClearConflict<T>(bool clear, T? value, string clearParamName, string valueParamName)

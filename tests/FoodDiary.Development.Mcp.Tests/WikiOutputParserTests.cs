@@ -31,6 +31,10 @@ public sealed class WikiOutputParserTests {
               "consumers": [
                 { "consumerPath": "FoodDiary.Presentation.Api/Users/UpdateUserEndpoint.cs" }
               ],
+              "candidates": [
+                { "path": "FoodDiary.Application.Users/Queries/GetUser.cs", "confidence": "medium" },
+                { "path": "tests/FoodDiary.Application.Tests/NoisyTest.cs", "confidence": "low" }
+              ],
               "impact": {
                 "references": [
                   { "path": "tests/FoodDiary.ArchitectureTests/UnrelatedTests.cs" }
@@ -41,10 +45,11 @@ public sealed class WikiOutputParserTests {
 
         WikiCommandResult result = WikiOutputParser.Parse("trace", output, "repository", "head");
 
-        Assert.Equal(3, result.ReferencedPaths.Count);
+        Assert.Equal(5, result.ReferencedPaths.Count);
         Assert.Equal(
             [
                 "FoodDiary.Application.Users/Commands/UpdateUser.cs",
+                "FoodDiary.Application.Users/Queries/GetUser.cs",
                 "FoodDiary.Presentation.Api/Users/UpdateUserEndpoint.cs",
             ],
             result.GetScopePaths());

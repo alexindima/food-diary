@@ -56,7 +56,7 @@ public sealed class FavoriteRecipe : Entity<FavoriteRecipeId> {
 
         string trimmed = value.Trim();
         return trimmed.Length > DomainConstants.CommentMaxLength
-            ? trimmed[..DomainConstants.CommentMaxLength]
+            ? throw new ArgumentOutOfRangeException(nameof(value), "Name exceeds the maximum length.")
             : trimmed;
     }
 }

@@ -56,14 +56,17 @@ public sealed class FertilitySignal : Entity<FertilitySignalId> {
         bool clearNotes) {
         EnsureTemperature(basalBodyTemperatureCelsius);
         EnsureOptionalDefined(ovulationTestResult, nameof(ovulationTestResult));
+        string? normalizedCervicalFluid = CycleProfile.NormalizeNotes(cervicalFluid);
+        string? normalizedNotes = notes is not null ? CycleProfile.NormalizeNotes(notes) : Notes;
+
         BasalBodyTemperatureCelsius = basalBodyTemperatureCelsius;
         OvulationTestResult = ovulationTestResult;
-        CervicalFluid = CycleProfile.NormalizeNotes(cervicalFluid);
+        CervicalFluid = normalizedCervicalFluid;
         HadSex = hadSex;
         if (clearNotes) {
             Notes = null;
         } else if (notes is not null) {
-            Notes = CycleProfile.NormalizeNotes(notes);
+            Notes = normalizedNotes;
         }
         SetModified();
     }

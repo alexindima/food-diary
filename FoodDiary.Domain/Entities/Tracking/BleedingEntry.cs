@@ -40,12 +40,15 @@ public sealed class BleedingEntry : Entity<BleedingEntryId> {
 
     public void Update(CycleFlowLevel flow, int? painImpact, string? notes, bool clearNotes) {
         EnsureDefined(flow, nameof(flow));
+        int? normalizedPainImpact = painImpact.HasValue ? CycleProfile.NormalizeIntensity(painImpact.Value, nameof(painImpact)) : null;
+        string? normalizedNotes = notes is not null ? CycleProfile.NormalizeNotes(notes) : Notes;
+
         Flow = flow;
-        PainImpact = painImpact.HasValue ? CycleProfile.NormalizeIntensity(painImpact.Value, nameof(painImpact)) : null;
+        PainImpact = normalizedPainImpact;
         if (clearNotes) {
             Notes = null;
         } else if (notes is not null) {
-            Notes = CycleProfile.NormalizeNotes(notes);
+            Notes = normalizedNotes;
         }
         SetModified();
     }

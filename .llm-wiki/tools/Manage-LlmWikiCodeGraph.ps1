@@ -21,7 +21,8 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $scriptPath = Join-Path $PSScriptRoot 'code-graph.mjs'
-if ($Action -notin @('build', 'build-plan', 'status') -and -not $SkipRefresh) {
+$insideReadOnlySnapshot = -not [string]::IsNullOrWhiteSpace([string]$env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT)
+if ($Action -notin @('build', 'build-plan', 'status') -and -not $SkipRefresh -and -not $insideReadOnlySnapshot) {
     $refreshOutput = & node $scriptPath build
     if ($LASTEXITCODE -ne 0) { throw "Code graph incremental refresh failed with exit code $LASTEXITCODE." }
 }

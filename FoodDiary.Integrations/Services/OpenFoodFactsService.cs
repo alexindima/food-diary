@@ -26,6 +26,7 @@ internal sealed class OpenFoodFactsService(
     internal const long MaxSearchCacheSizeBytes = 16 * 1024 * 1024;
     internal const int MaxConcurrentSearches = 16;
     internal const int MaxInFlightSearches = 128;
+    internal const int MaxSearchQueryLength = 256;
     private static readonly TimeSpan SearchCacheTtl = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan StaleSearchCacheTtl = TimeSpan.FromHours(6);
     private static readonly TimeSpan SearchOperationTimeout = TimeSpan.FromSeconds(15);
@@ -107,8 +108,13 @@ internal sealed class OpenFoodFactsService(
         int limit = 10,
         CancellationToken cancellationToken = default) {
         cancellationToken.ThrowIfCancellationRequested();
+        string normalizedQuery = query?.Trim() ?? string.Empty;
+        if (normalizedQuery.Length is 0 or > MaxSearchQueryLength) {
+            return [];
+        }
+
         int normalizedLimit = Math.Clamp(limit, 1, 50);
-        string cacheKey = GetSearchCacheKey(query, normalizedLimit);
+        string cacheKey = GetSearchCacheKey(normalizedQuery, normalizedLimit);
         if (TryGetCachedSearch(cacheKey, SearchCacheTtl, out IReadOnlyList<OpenFoodFactsProductModel> freshProducts)) {
             return freshProducts;
         }
@@ -123,11 +129,11 @@ internal sealed class OpenFoodFactsService(
             int reservedCount = Interlocked.Increment(ref _inFlightSearchCount);
             if (reservedCount > MaxInFlightSearches) {
                 Interlocked.Decrement(ref _inFlightSearchCount);
-                return await SearchProviderAsync(query, normalizedLimit, cacheKey, cancellationToken).ConfigureAwait(false);
+                return await SearchProviderAsync(normalizedQuery, normalizedLimit, cacheKey, cancellationToken).ConfigureAwait(false);
             }
 
             var candidate = new Lazy<Task<IReadOnlyList<OpenFoodFactsProductModel>>>(
-                () => SearchProviderAsync(query, normalizedLimit, cacheKey),
+                () => SearchProviderAsync(normalizedQuery, normalizedLimit, cacheKey),
                 LazyThreadSafetyMode.ExecutionAndPublication);
             if (!InFlightSearches.TryAdd(cacheKey, candidate)) {
                 Interlocked.Decrement(ref _inFlightSearchCount);

@@ -244,7 +244,9 @@ public sealed class NpgsqlInboundMailStore(
                         ? null
                         : await reader.GetFieldValueAsync<byte[]>(7, cancellationToken).ConfigureAwait(false);
                     string? rawMime = rawMimeBytes is null ? null : Encoding.UTF8.GetString(rawMimeBytes);
-                    DmarcReportPreview? dmarcReport = rawMime is null ? null : dmarcReportParser.TryParse(rawMime);
+                    DmarcReportPreview? dmarcReport = rawMime is null
+                        ? null
+                        : dmarcReportParser.TryParse(rawMime, cancellationToken);
 
                     details = new InboundMailMessageDetails(
                         reader.GetGuid(0),
@@ -334,7 +336,8 @@ public sealed class NpgsqlInboundMailStore(
         CancellationToken cancellationToken) {
         const string sql = """
                            insert into mailinbox_daily_ingestion_usage (usage_date, message_count, raw_bytes)
-                           values (@usage_date, 1, @raw_bytes)
+                           select @usage_date, 1, @raw_bytes
+                           where @raw_bytes <= @max_raw_bytes
                            on conflict (usage_date) do update
                            set message_count = mailinbox_daily_ingestion_usage.message_count + 1,
                                raw_bytes = mailinbox_daily_ingestion_usage.raw_bytes + excluded.raw_bytes

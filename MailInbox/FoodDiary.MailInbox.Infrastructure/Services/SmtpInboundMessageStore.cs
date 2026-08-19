@@ -47,8 +47,14 @@ public sealed class SmtpInboundMessageStore(
             }
 
             byte[] rawBytes = buffer.ToArray();
-            MimeMessage message = await ParseMessageAsync(rawBytes, cancellationToken).ConfigureAwait(false);
-            if (message.BodyParts.Take(_options.MaxMimeParts + 1).Count() > _options.MaxMimeParts) {
+            MimeMessage message;
+            try {
+                message = await ParseMessageAsync(
+                    rawBytes,
+                    _options.MaxMimeParts,
+                    _options.MaxMimeDepth,
+                    cancellationToken).ConfigureAwait(false);
+            } catch (MimeStructureLimitExceededException) {
                 MailInboxTelemetry.RecordIngestion("mime_part_limit", Stopwatch.GetElapsedTime(startedAt), messageSize);
                 return new SmtpResponse(SmtpReplyCode.TransactionFailed, "MIME part limit exceeded.");
             }
@@ -108,13 +114,28 @@ public sealed class SmtpInboundMessageStore(
 
     public void Dispose() => _processingSlots.Dispose();
 
-    private static async Task<MimeMessage> ParseMessageAsync(byte[] rawBytes, CancellationToken cancellationToken) {
+    private static async Task<MimeMessage> ParseMessageAsync(
+        byte[] rawBytes,
+        int maxMimeParts,
+        int maxMimeDepth,
+        CancellationToken cancellationToken) {
         var stream = new MemoryStream(rawBytes);
         await using (stream.ConfigureAwait(false)) {
-            return await MimeMessage.LoadAsync(stream, cancellationToken).ConfigureAwait(false);
+            ParserOptions parserOptions = ParserOptions.Default.Clone();
+            parserOptions.MaxMimeDepth = maxMimeDepth;
+            var parser = new MimeParser(parserOptions, stream, MimeFormat.Entity);
+            int mimePartCount = 0;
+            parser.MimeEntityBegin += (_, _) => {
+                if (Interlocked.Increment(ref mimePartCount) > maxMimeParts) {
+                    throw new MimeStructureLimitExceededException();
+                }
+            };
+            return await parser.ParseMessageAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 
     private static string? Truncate(string? value, int maxCharacters) =>
         value is null || value.Length <= maxCharacters ? value : value[..maxCharacters];
+
+    private sealed class MimeStructureLimitExceededException : Exception;
 }

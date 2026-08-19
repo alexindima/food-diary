@@ -51,14 +51,16 @@ public sealed class YooKassaBillingGateway(
         }
 
         YooKassaPayment payment = paymentResponse.Value;
-        if (string.IsNullOrWhiteSpace(payment.Confirmation?.ConfirmationUrl)) {
+        string? confirmationUrl = payment.Confirmation?.ConfirmationUrl;
+        if (string.IsNullOrWhiteSpace(payment.Id) ||
+            !BillingUrlValidator.IsAbsoluteHttps(confirmationUrl)) {
             return Result.Failure<BillingCheckoutSessionModel>(
-                Errors.Billing.ProviderOperationFailed(Provider, "YooKassa confirmation URL is missing."));
+                Errors.Billing.ProviderOperationFailed(Provider, "YooKassa payment identifier or confirmation URL is invalid."));
         }
 
         return Result.Success(new BillingCheckoutSessionModel(
             payment.Id,
-            payment.Confirmation.ConfirmationUrl,
+            confirmationUrl!,
             request.UserId.ToString(),
             amount,
             request.Plan));
@@ -102,6 +104,11 @@ public sealed class YooKassaBillingGateway(
         }
 
         YooKassaPayment payment = paymentResponse.Value;
+        if (string.IsNullOrWhiteSpace(payment.Id)) {
+            return Result.Failure<BillingRecurringPaymentModel>(
+                Errors.Billing.ProviderOperationFailed(Provider, "YooKassa payment identifier is missing."));
+        }
+
         string status = payment.Paid && string.Equals(payment.Status, "succeeded", StringComparison.OrdinalIgnoreCase)
             ? "active"
             : "past_due";
@@ -138,9 +145,9 @@ public sealed class YooKassaBillingGateway(
         YooKassaNotification? notification;
         try {
             notification = JsonSerializer.Deserialize<YooKassaNotification>(payload, JsonOptions);
-        } catch (JsonException ex) {
+        } catch (JsonException) {
             return Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.WebhookValidationFailed(ex.Message));
+                Errors.Billing.WebhookValidationFailed("YooKassa webhook payload is invalid."));
         }
 
         if (notification?.Object?.Id is null ||

@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Identity.Authentication.Commands.Login;
 
@@ -15,6 +16,9 @@ public sealed class LoginCommandValidator : AbstractValidator<LoginCommand> {
         RuleFor(x => x.Password)
             .NotEmpty()
             .WithErrorCode("Validation.Required")
-            .WithMessage("Password is required");
+            .WithMessage("Password is required")
+            .MaximumLength(AuthenticationInputLimits.MaximumPasswordLength)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"Password must not exceed {AuthenticationInputLimits.MaximumPasswordLength} characters");
     }
 }

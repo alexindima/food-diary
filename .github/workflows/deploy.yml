@@ -376,7 +376,9 @@ jobs:
           $SCP_CMD nginx.conf root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx.conf
           $SCP_CMD nginx/sites-enabled/fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/fooddiary.club
           $SCP_CMD nginx/sites-enabled/grafana.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/grafana.fooddiary.club
+          $SCP_CMD nginx/sites-enabled/mail.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/mail.fooddiary.club
           $SCP_CMD nginx/sites-enabled/storybook.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/storybook.fooddiary.club
+          $SCP_CMD scripts/restart-mail-inbox-after-certificate-renewal.sh root@${{ env.SERVER_IP }}:/etc/letsencrypt/renewal-hooks/deploy/restart-fooddiary-mail-inbox.sh
 
           DEPLOY_COMMIT_SHA="${{ env.SOURCE_COMMIT_SHA }}"
 
@@ -391,6 +393,8 @@ jobs:
           fi
 
           cd /opt/fooddiary
+
+          chmod 0755 /etc/letsencrypt/renewal-hooks/deploy/restart-fooddiary-mail-inbox.sh
 
           cp /etc/fooddiary/fooddiary.env .env
           printf '\nAPI_IMAGE_REF=%s\nINITIALIZER_IMAGE_REF=%s\nTELEGRAM_BOT_IMAGE_REF=%s\nJOB_MANAGER_IMAGE_REF=%s\nMAIL_RELAY_IMAGE_REF=%s\nMAIL_RELAY_INITIALIZER_IMAGE_REF=%s\nMAIL_INBOX_IMAGE_REF=%s\nMAIL_INBOX_INITIALIZER_IMAGE_REF=%s\nCLIENT_IMAGE_REF=%s\nAPI_IMAGE_TAG=%s\nDEPLOY_COMMIT_SHA=%s\n' \

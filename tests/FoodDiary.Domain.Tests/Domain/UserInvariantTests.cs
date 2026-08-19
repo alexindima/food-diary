@@ -860,13 +860,13 @@ public class UserInvariantTests {
     }
 
     [Fact]
-    public void UpdatePreferences_WithWhitespaceDashboardLayout_NormalizesToEmptyString() {
+    public void UpdatePreferences_WithWhitespaceDashboardLayout_NormalizesToNull() {
         var user = User.Create("test@example.com", "hash");
         user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: "{\"layout\":\"compact\"}"));
 
         user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: "   "));
 
-        Assert.Equal(string.Empty, user.DashboardLayoutJson);
+        Assert.Null(user.DashboardLayoutJson);
         Assert.NotNull(user.ModifiedOnUtc);
     }
 

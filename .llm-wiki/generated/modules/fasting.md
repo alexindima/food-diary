@@ -125,6 +125,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Fasting/FastingInsightBuilderTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Fasting/FastingNotificationPlannerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Fasting/FastingTelemetryCleanupServiceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/FastingModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/FastingCheckInInvariantTests.cs`
@@ -132,7 +133,9 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/FastingPlanInvariantTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/FastingSessionInvariantTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/FastingTelemetryEventTests.cs`
+- [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/FastingTelemetryEventRepositoryIntegrationTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.JobManager.Tests/FastingNotificationJobTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.JobManager.Tests/FastingTelemetryCleanupJobTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/FastingHttpMappingsTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/FastingTelemetrySummaryServiceTests.cs`
 - [integration] `tests/FoodDiary.Web.Api.IntegrationTests/FastingApiIntegrationTests.cs`

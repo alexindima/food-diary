@@ -39,6 +39,7 @@ internal sealed class UserAuthenticationIdentityService(
             return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.InvalidCredentials);
         }
 
+        UpgradePasswordHashIfNeeded(user, password);
         user.RecordAuthenticationActivity(authenticatedAtUtc);
         await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
         return Result.Success(ToAuthenticationPrincipal(user, authenticatedAtUtc));
@@ -304,6 +305,7 @@ internal sealed class UserAuthenticationIdentityService(
         }
 
         user.Restore(restoredAtUtc);
+        UpgradePasswordHashIfNeeded(user, password);
         user.RecordAuthenticationActivity(restoredAtUtc);
         await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
         return Result.Success(ToAuthenticationPrincipal(user, restoredAtUtc));
@@ -348,6 +350,16 @@ internal sealed class UserAuthenticationIdentityService(
         User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         Error? error = CurrentUserAccessPolicy.EnsureCanAccess(user);
         return error is not null ? Result.Failure<User>(error) : Result.Success(user!);
+    }
+
+    private void UpgradePasswordHashIfNeeded(User user, string password) {
+        if (passwordHasher.NeedsRehash(user.Password)) {
+            bool mustChangePassword = user.MustChangePassword;
+            user.UpdatePassword(passwordHasher.Hash(password));
+            if (mustChangePassword) {
+                user.RequirePasswordChange();
+            }
+        }
     }
 
     internal static UserAuthenticationPrincipalModel ToAuthenticationPrincipal(User user, DateTime authenticatedAtUtc) {

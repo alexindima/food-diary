@@ -449,6 +449,18 @@ public sealed class OpenFoodFactsServiceTests {
     }
 
     [Fact]
+    public async Task SearchAsync_WhenQueryExceedsLimit_ReturnsEmptyWithoutProviderRequest() {
+        var handler = new CountingHttpMessageHandler("""{"products": []}""");
+        OpenFoodFactsService service = CreateService(handler);
+
+        IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync(
+            new string('x', OpenFoodFactsService.MaxSearchQueryLength + 1));
+
+        Assert.Empty(result);
+        Assert.Equal(0, handler.RequestCount);
+    }
+
+    [Fact]
     public async Task SearchAsync_WhenCallerCancels_PropagatesCancellation() {
         using var cancellationTokenSource = new CancellationTokenSource();
         await cancellationTokenSource.CancelAsync();

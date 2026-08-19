@@ -3,9 +3,11 @@ using FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
 using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDiary.Presentation.Api.Features.Dietologist;
@@ -17,6 +19,8 @@ public sealed class DietologistInvitationsController(ISender mediator) : Authori
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.SecretVerificationRateLimitPolicyName)]
     [BlockImpersonatedAccess]
     public Task<IActionResult> Accept([FromCurrentUser] Guid userId, [FromBody] AcceptInvitationHttpRequest request) =>
         HandleNoContent(request.ToCommand(userId));
@@ -24,6 +28,8 @@ public sealed class DietologistInvitationsController(ISender mediator) : Authori
     [HttpPost("decline")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.SecretVerificationRateLimitPolicyName)]
     [BlockImpersonatedAccess]
     public Task<IActionResult> Decline([FromCurrentUser] Guid userId, [FromBody] DeclineInvitationHttpRequest request) =>
         HandleNoContent(request.ToCommand(userId));

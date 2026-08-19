@@ -46,6 +46,14 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
             CreatePartition(settings.TestDelivery, $"test-delivery:{GetPartitionKey(context)}"));
         options.AddPolicy<string>(PresentationPolicyNames.WearableRateLimitPolicyName, context =>
             CreatePartition(settings.Wearable, $"wearable:{GetPartitionKey(context)}"));
+        options.AddPolicy<string>(PresentationPolicyNames.FoodDataRateLimitPolicyName, context =>
+            CreatePartition(settings.FoodData, $"food-data:{GetPartitionKey(context)}"));
+        options.AddPolicy<string>(PresentationPolicyNames.SecretVerificationRateLimitPolicyName, context =>
+            CreatePartition(settings.SecretVerification, $"secret-verification:{GetPartitionKey(context)}"));
+        options.AddPolicy<string>(PresentationPolicyNames.BillingRateLimitPolicyName, context =>
+            CreatePartition(settings.Billing, $"billing:{GetPartitionKey(context)}"));
+        options.AddPolicy<string>(PresentationPolicyNames.ExportRateLimitPolicyName, context =>
+            CreatePartition(settings.Export, $"export:{GetPartitionKey(context)}"));
     }
 
     private static RateLimitPartition<string> CreatePartition(

@@ -29,13 +29,22 @@ if (-not (Test-Path -LiteralPath $catalogPath)) {
 
 $queryCacheEntry = $null
 if ($Format -eq 'Json') {
+    $cacheRelevantPaths = @(
+        @($ScopePath) + $(if (-not [string]::IsNullOrWhiteSpace($Module)) {
+            @("FoodDiary.Application/$Module", "FoodDiary.Application.$Module")
+        }) | Where-Object { $_ } | Sort-Object -Unique
+    )
     $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'context' -Arguments @{
         Module = $Module
         Query = $Query
         ScopePath = @($ScopePath)
         ChangeType = $ChangeType
         Limit = $Limit
-    }
+    } -RelevantPath $cacheRelevantPaths -DependencyPath @(
+        '.llm-wiki/generated/repository-catalog.json'
+        '.llm-wiki/generated/csharp-symbol-index.json'
+        '.llm-wiki/generated/frontend-index.json'
+    )
     $cachedContext = Read-LlmWikiQueryCache -Entry $queryCacheEntry
     if ($null -ne $cachedContext) {
         Write-Output $cachedContext
@@ -64,20 +73,35 @@ function Get-SearchScore {
         return 0
     }
 
-    $normalizedText = ($Text -creplace '([a-z0-9])([A-Z])', '$1 $2').ToLowerInvariant()
+    $normalizedText = $Text.ToLowerInvariant()
+    if ($searchNeedsCamelCaseExpansion) {
+        $normalizedText = $Text -creplace '([a-z0-9])([A-Z])', '$1 $2'
+        $normalizedText = $normalizedText.ToLowerInvariant()
+    }
     $score = 0
     foreach ($token in $Tokens) {
-        $tokenPattern = "(^|[^\p{L}\p{Nd}])$([regex]::Escape($token))([^\p{L}\p{Nd}]|$)"
-        if ($normalizedText -match $tokenPattern -or
-            ($token.Length -ge 4 -and $normalizedText.Contains($token))) {
+        $tokenMatched = $token.Length -ge 4 -and $normalizedText.Contains($token)
+        if (-not $tokenMatched -and $token.Length -lt 4) {
+            $searchStart = 0
+            while ($searchStart -lt $normalizedText.Length) {
+                $matchIndex = $normalizedText.IndexOf($token, $searchStart, [StringComparison]::Ordinal)
+                if ($matchIndex -lt 0) { break }
+                $matchEnd = $matchIndex + $token.Length
+                $leftBoundary = $matchIndex -eq 0 -or -not [char]::IsLetterOrDigit($normalizedText[$matchIndex - 1])
+                $rightBoundary = $matchEnd -eq $normalizedText.Length -or -not [char]::IsLetterOrDigit($normalizedText[$matchEnd])
+                if ($leftBoundary -and $rightBoundary) {
+                    $tokenMatched = $true
+                    break
+                }
+                $searchStart = $matchIndex + 1
+            }
+        }
+        if ($tokenMatched) {
             $score += $TokenWeight
         }
     }
 
-    $fullQuery = @($Module, $Query) |
-        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
-        ForEach-Object { $_.ToLowerInvariant() }
-    foreach ($phrase in $fullQuery) {
+    foreach ($phrase in $searchPhrases) {
         if ($normalizedText.Contains($phrase)) {
             $score += $ExactWeight
         }
@@ -134,6 +158,11 @@ $tokens = @(
         Where-Object { $_.Length -ge 2 } |
         Sort-Object -Unique
 )
+$searchPhrases = @($Module, $Query) |
+    Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+    ForEach-Object { $_.ToLowerInvariant() }
+$searchNeedsCamelCaseExpansion = @($tokens | Where-Object { $_.Length -lt 4 }).Count -gt 0 -or
+    @($searchPhrases | Where-Object { $_ -match '\s' }).Count -gt 0
 $frontendOnlyScope = $ChangeType -eq 'Frontend' -and
     ($scopePaths.Count -eq 0 -or @($scopePaths | Where-Object { $_ -notmatch '^FoodDiary\.Web\.Client/' }).Count -eq 0)
 $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
@@ -515,14 +544,48 @@ $testRoots = if ($ChangeType -eq 'Frontend') {
         Join-Path $repositoryRoot 'MailInbox/tests'
     )
 }
-$testFiles = @(
-    foreach ($testRoot in $testRoots) {
-        if (Test-Path -LiteralPath $testRoot) {
+$existingTestRoots = @($testRoots | Where-Object { Test-Path -LiteralPath $_ -PathType Container })
+$testSearchStopwords = @(
+    'add', 'assess', 'assessment', 'audit', 'benchmark', 'change', 'changes', 'current',
+    'fooddiary', 'implement', 'implementation', 'project', 'reliability', 'repository',
+    'scope', 'scoped', 'service', 'test', 'tests'
+)
+$testSearchTokens = @(
+    @($tokens) + @($scopePaths | ForEach-Object { [regex]::Matches($_, '[\p{L}\p{N}]+') | ForEach-Object { $_.Value.ToLowerInvariant() } }) |
+        Where-Object { $_.Length -ge 3 -and $_ -notin $testSearchStopwords } |
+        Sort-Object -Unique
+)
+$testFiles = @()
+if ($existingTestRoots.Count -gt 0 -and $testSearchTokens.Count -gt 0) {
+    $candidatePaths = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    $trackedTestPaths = @(& git -C $repositoryRoot ls-files -- 'tests/**/*.cs' 'MailRelay/tests/**/*.cs' 'MailInbox/tests/**/*.cs')
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate tracked backend test files.' }
+    foreach ($trackedTestPath in $trackedTestPaths) {
+        $normalizedTestPath = $trackedTestPath.Replace('\', '/')
+        if (@($testSearchTokens | Where-Object { $normalizedTestPath.IndexOf($_, [StringComparison]::OrdinalIgnoreCase) -ge 0 }).Count -gt 0) {
+            $null = $candidatePaths.Add($normalizedTestPath)
+        }
+    }
+    $ripgrep = Get-Command rg -ErrorAction SilentlyContinue
+    if ($null -ne $ripgrep) {
+        $testPattern = @($testSearchTokens | ForEach-Object { [regex]::Escape($_) }) -join '|'
+        $contentMatches = @(& $ripgrep.Source --files-with-matches --ignore-case --glob '*.cs' --glob '!**/obj/**' --glob '!**/bin/**' -- $testPattern @existingTestRoots)
+        if ($LASTEXITCODE -notin @(0, 1)) { throw 'Unable to search focused backend test candidates.' }
+        foreach ($contentMatch in $contentMatches) {
+            $null = $candidatePaths.Add((ConvertTo-RepositoryPath $contentMatch))
+        }
+    } else {
+        foreach ($trackedTestPath in $trackedTestPaths) { $null = $candidatePaths.Add($trackedTestPath.Replace('\', '/')) }
+    }
+    $testFiles = @($candidatePaths | ForEach-Object { Get-Item -LiteralPath (Join-Path $repositoryRoot $_) -ErrorAction SilentlyContinue })
+} elseif ($existingTestRoots.Count -gt 0) {
+    $testFiles = @(
+        foreach ($testRoot in $existingTestRoots) {
             Get-ChildItem -LiteralPath $testRoot -Recurse -File -Filter '*.cs' |
                 Where-Object { $_.FullName -notmatch '[\\/](obj|bin)[\\/]' }
         }
-    }
-)
+    )
+}
 foreach ($testFile in $testFiles) {
     $path = ConvertTo-RepositoryPath $testFile.FullName
     $pathScore = Get-SearchScore $path $tokens 12 24

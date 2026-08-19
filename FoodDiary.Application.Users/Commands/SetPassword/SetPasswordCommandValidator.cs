@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Users.Commands.SetPassword;
 
@@ -18,8 +19,11 @@ public sealed class SetPasswordCommandValidator : AbstractValidator<SetPasswordC
             .NotEmpty()
             .WithErrorCode("Validation.Required")
             .WithMessage("New password is required")
-            .MinimumLength(6)
+            .MinimumLength(AuthenticationInputLimits.MinimumPasswordLength)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("New password must be at least 6 characters");
+            .WithMessage($"New password must be at least {AuthenticationInputLimits.MinimumPasswordLength} characters")
+            .MaximumLength(AuthenticationInputLimits.MaximumPasswordLength)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"New password must not exceed {AuthenticationInputLimits.MaximumPasswordLength} characters");
     }
 }

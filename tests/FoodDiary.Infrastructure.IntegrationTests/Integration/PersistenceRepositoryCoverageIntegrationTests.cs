@@ -1668,7 +1668,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         FastingSessionId sessionId,
         DateTime now) {
         var repository = new FastingTelemetryEventRepository(context);
-        await repository.AddAsync(new FastingTelemetryEventRecord(
+        var currentRecord = new FastingTelemetryEventRecord(
             Name: "fasting.started",
             OccurredAtUtc: now,
             SessionId: sessionId.Value.ToString(),
@@ -1686,10 +1686,12 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             EnergyLevel: 4,
             MoodLevel: 5,
             SymptomsCount: 1,
-            HadNotes: true));
+            HadNotes: true);
+        await repository.AddAsync(currentRecord);
+        await repository.AddAsync(currentRecord with { OccurredAtUtc = now.AddMinutes(1) });
         await context.SaveChangesAsync();
 
-        Assert.Single(await repository.GetSinceAsync(now.AddMinutes(-1)));
+        Assert.Single(await repository.GetRangeAsync(now.AddMinutes(-1), now));
     }
     private static Product CreateProduct(UserId userId, string name) =>
         Product.Create(

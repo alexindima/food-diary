@@ -4,10 +4,12 @@ using FoodDiary.Presentation.Api.Features.Billing.Mappings;
 using FoodDiary.Presentation.Api.Features.Billing.Requests;
 using FoodDiary.Presentation.Api.Features.Billing.Responses;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDiary.Presentation.Api.Features.Billing;
@@ -35,6 +37,8 @@ public sealed class BillingController(ISender mediator) : AuthorizedController(m
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.BillingRateLimitPolicyName)]
     [BlockImpersonatedAccess]
     [EnableIdempotency(requireKey: true)]
     public Task<IActionResult> CreateCheckoutSession(
@@ -46,6 +50,8 @@ public sealed class BillingController(ISender mediator) : AuthorizedController(m
     [ProducesResponseType<PortalSessionHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.BillingRateLimitPolicyName)]
     [BlockImpersonatedAccess]
     [EnableIdempotency]
     public Task<IActionResult> CreatePortalSession([FromCurrentUser] Guid userId) =>

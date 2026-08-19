@@ -18,9 +18,12 @@ dependencies, Angular features/routes/symbols/localization, ranked
 implementation files, and recommended verification commands.
 
 JSON callers reuse an exact content-addressed result keyed by the query
-arguments and the complete HEAD/worktree snapshot. Any source or generated-index
-edit changes that snapshot; unchanged orchestration calls avoid reparsing the
-catalog and symbol indexes. Text output remains an uncached interactive view.
+arguments, HEAD, relevant worktree paths, and the catalog/symbol/frontend index
+hashes. `-ScopePath` supplies the explicit cache boundary; `-Module` derives the
+corresponding application project paths. An unrelated edit no longer invalidates
+the query, while an edit inside the scope or a dependent-index change does.
+Unchanged orchestration calls avoid reparsing the catalog and symbol indexes.
+Text output remains an uncached interactive view.
 
 ## Examples
 
@@ -69,7 +72,8 @@ repository obligations and use an evidence bundle when those obligations need
 an auditable task handoff.
 
 HTTP matches come from the generated literal attribute-route catalog. Test
-matches additionally search test source paths and contents at query time.
+matches use `rg` to preselect semantic/path candidates, then read and rank only
+those test sources; environments without `rg` retain the complete-scan fallback.
 
 Frontend API discovery is strongest for direct literal calls. When a feature
 service inherits request helpers or composes endpoint suffixes through a base

@@ -40,6 +40,20 @@ public static class ApiOptionsServiceCollectionExtensions {
                 .AddOptions<ApiHttpsRedirectionOptions>()
                 .BindConfiguration(ApiHttpsRedirectionOptions.SectionName)
                 .ValidateOnStart();
+            services.AddRateLimitingOptions();
+            services
+                .AddOptions<ApiOutputCacheOptions>()
+                .BindConfiguration(ApiOutputCacheOptions.SectionName)
+                .Validate(ApiOutputCacheOptions.HasValidAdminAiUsage,
+                    "OutputCache:AdminAiUsage:ExpirationSeconds must be greater than zero.")
+                .Validate(ApiOutputCacheOptions.HasValidUserScoped,
+                    "OutputCache:UserScoped:ExpirationSeconds must be greater than zero.")
+                .ValidateOnStart();
+
+            return services;
+        }
+
+        private void AddRateLimitingOptions() {
             services
                 .AddOptions<ApiRateLimitingOptions>()
                 .BindConfiguration(ApiRateLimitingOptions.SectionName)
@@ -57,17 +71,15 @@ public static class ApiOptionsServiceCollectionExtensions {
                     "RateLimiting:TestDelivery requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .Validate(ApiRateLimitingOptions.HasValidWearable,
                     "RateLimiting:Wearable requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+                .Validate(ApiRateLimitingOptions.HasValidFoodData,
+                    "RateLimiting:FoodData requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+                .Validate(ApiRateLimitingOptions.HasValidSecretVerification,
+                    "RateLimiting:SecretVerification requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+                .Validate(ApiRateLimitingOptions.HasValidBilling,
+                    "RateLimiting:Billing requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+                .Validate(ApiRateLimitingOptions.HasValidExport,
+                    "RateLimiting:Export requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .ValidateOnStart();
-            services
-                .AddOptions<ApiOutputCacheOptions>()
-                .BindConfiguration(ApiOutputCacheOptions.SectionName)
-                .Validate(ApiOutputCacheOptions.HasValidAdminAiUsage,
-                    "OutputCache:AdminAiUsage:ExpirationSeconds must be greater than zero.")
-                .Validate(ApiOutputCacheOptions.HasValidUserScoped,
-                    "OutputCache:UserScoped:ExpirationSeconds must be greater than zero.")
-                .ValidateOnStart();
-
-            return services;
         }
 
         private IServiceCollection AddTelemetryAndAuthOptions() {

@@ -110,16 +110,24 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         if (settings.ReproductiveState.HasValue) {
             EnsureDefined(settings.ReproductiveState.Value, nameof(settings.ReproductiveState));
         }
-        EnsureClearConflict(settings.ClearNotes, NormalizeNotes(settings.Notes), nameof(settings.ClearNotes), nameof(settings.Notes));
+        string? normalizedNotes = NormalizeNotes(settings.Notes);
+        EnsureClearConflict(settings.ClearNotes, normalizedNotes, nameof(settings.ClearNotes), nameof(settings.Notes));
 
-        Goal = settings.Goal ?? Goal;
-        ReproductiveState = settings.ReproductiveState ?? ReproductiveState;
-        Mode = settings.Goal.HasValue || settings.ReproductiveState.HasValue
-            ? ModeFromGoalAndState(Goal, ReproductiveState)
+        CycleTrackingGoal goal = settings.Goal ?? Goal;
+        CycleReproductiveState reproductiveState = settings.ReproductiveState ?? ReproductiveState;
+        CycleTrackingMode mode = settings.Goal.HasValue || settings.ReproductiveState.HasValue
+            ? ModeFromGoalAndState(goal, reproductiveState)
             : settings.Mode;
-        AverageCycleLength = NormalizeCycleLength(settings.AverageCycleLength ?? AverageCycleLength);
-        AveragePeriodLength = NormalizePeriodLength(settings.AveragePeriodLength ?? AveragePeriodLength);
-        LutealLength = NormalizeLutealLength(settings.LutealLength ?? LutealLength);
+        int averageCycleLength = NormalizeCycleLength(settings.AverageCycleLength ?? AverageCycleLength);
+        int averagePeriodLength = NormalizePeriodLength(settings.AveragePeriodLength ?? AveragePeriodLength);
+        int lutealLength = NormalizeLutealLength(settings.LutealLength ?? LutealLength);
+
+        Goal = goal;
+        ReproductiveState = reproductiveState;
+        Mode = mode;
+        AverageCycleLength = averageCycleLength;
+        AveragePeriodLength = averagePeriodLength;
+        LutealLength = lutealLength;
         IsRegular = settings.IsRegular ?? IsRegular;
         IsOnboardingComplete = settings.IsOnboardingComplete ?? IsOnboardingComplete;
         ShowFertilityEstimates = settings.ShowFertilityEstimates ?? ShowFertilityEstimates;
@@ -128,7 +136,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         if (settings.ClearNotes) {
             Notes = null;
         } else if (settings.Notes is not null) {
-            Notes = NormalizeNotes(settings.Notes);
+            Notes = normalizedNotes;
         }
         Confidence = CalculateConfidence();
 

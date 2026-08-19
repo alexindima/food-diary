@@ -8,6 +8,7 @@ namespace FoodDiary.Domain.Entities.Social;
 
 public sealed class ContentReport : AggregateRoot<ContentReportId> {
     private const int ReasonMaxLength = 1000;
+    private const int AdminNoteMaxLength = 2000;
 
     public UserId UserId { get; private set; }
     public User User { get; private set; } = null!;
@@ -47,15 +48,19 @@ public sealed class ContentReport : AggregateRoot<ContentReportId> {
     }
 
     public void MarkReviewed(string? adminNote) {
+        string? normalizedAdminNote = DomainGuard.OptionalText(adminNote, AdminNoteMaxLength, nameof(adminNote));
+
         Status = ReportStatus.Reviewed;
-        AdminNote = adminNote?.Trim();
+        AdminNote = normalizedAdminNote;
         ReviewedAtUtc = DomainTime.UtcNow;
         SetModified();
     }
 
     public void MarkDismissed(string? adminNote) {
+        string? normalizedAdminNote = DomainGuard.OptionalText(adminNote, AdminNoteMaxLength, nameof(adminNote));
+
         Status = ReportStatus.Dismissed;
-        AdminNote = adminNote?.Trim();
+        AdminNote = normalizedAdminNote;
         ReviewedAtUtc = DomainTime.UtcNow;
         SetModified();
     }

@@ -77,6 +77,12 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
     }
 
     public MealPlanDay AddDay(int dayNumber) {
+        if (dayNumber <= 0 || dayNumber > DurationDays) {
+            throw new ArgumentOutOfRangeException(
+                nameof(dayNumber),
+                string.Create(CultureInfo.InvariantCulture, $"Day number must be between 1 and the plan duration ({DurationDays})."));
+        }
+
         if (_days.Exists(d => d.DayNumber == dayNumber)) {
             throw new InvalidOperationException(string.Create(CultureInfo.InvariantCulture, $"Day {dayNumber} already exists in this plan."));
         }

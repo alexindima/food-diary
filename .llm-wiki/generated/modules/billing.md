@@ -110,6 +110,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/BillingInvariantTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Integrations/BillingProviderGatewayAccessorTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Integrations/BillingPublicConfigProviderTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/BillingGatewayResilienceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/BillingGatewayTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.JobManager.Tests/BillingRecoveryJobsTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/BillingControllerTests.cs`

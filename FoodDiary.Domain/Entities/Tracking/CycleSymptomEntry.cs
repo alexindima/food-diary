@@ -47,12 +47,16 @@ public sealed class CycleSymptomEntry : Entity<CycleSymptomEntryId> {
     }
 
     public void Update(int intensity, IReadOnlyCollection<string> tags, string? note, bool clearNote) {
-        Intensity = CycleProfile.NormalizeIntensity(intensity, nameof(intensity));
-        TagsJson = NormalizeTags(tags);
+        int normalizedIntensity = CycleProfile.NormalizeIntensity(intensity, nameof(intensity));
+        string normalizedTags = NormalizeTags(tags);
+        string? normalizedNote = note is not null ? CycleProfile.NormalizeNotes(note) : Note;
+
+        Intensity = normalizedIntensity;
+        TagsJson = normalizedTags;
         if (clearNote) {
             Note = null;
         } else if (note is not null) {
-            Note = CycleProfile.NormalizeNotes(note);
+            Note = normalizedNote;
         }
         SetModified();
     }

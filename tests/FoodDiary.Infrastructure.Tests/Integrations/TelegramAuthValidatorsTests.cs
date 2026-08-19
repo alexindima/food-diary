@@ -46,6 +46,27 @@ public sealed class TelegramAuthValidatorsTests {
     }
 
     [Fact]
+    public void ValidateInitData_WithFuturePayload_ReturnsInvalidDataFailure() {
+        long authDate = new DateTimeOffset(NowUtc.AddMinutes(10)).ToUnixTimeSeconds();
+        TelegramAuthValidator validator = CreateInitDataValidator();
+
+        Result<TelegramInitData> result = validator.ValidateInitData(CreateSignedInitData(authDate));
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
+    }
+
+    [Fact]
+    public void ValidateInitData_WithOutOfRangeTimestamp_ReturnsInvalidDataFailure() {
+        TelegramAuthValidator validator = CreateInitDataValidator();
+
+        Result<TelegramInitData> result = validator.ValidateInitData(CreateSignedInitData(long.MaxValue));
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
+    }
+
+    [Fact]
     public void ValidateInitData_WithInvalidHash_ReturnsFailure() {
         long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
         TelegramAuthValidator validator = CreateInitDataValidator();
@@ -179,6 +200,27 @@ public sealed class TelegramAuthValidatorsTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramAuthExpired", result.Error.Code);
+    }
+
+    [Fact]
+    public void ValidateLoginWidget_WithFuturePayload_ReturnsInvalidDataFailure() {
+        long authDate = new DateTimeOffset(NowUtc.AddMinutes(10)).ToUnixTimeSeconds();
+        TelegramLoginWidgetValidator validator = CreateWidgetValidator();
+
+        Result<TelegramInitData> result = validator.ValidateLoginWidget(CreateSignedWidgetData(authDate));
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
+    }
+
+    [Fact]
+    public void ValidateLoginWidget_WithOutOfRangeTimestamp_ReturnsInvalidDataFailure() {
+        TelegramLoginWidgetValidator validator = CreateWidgetValidator();
+
+        Result<TelegramInitData> result = validator.ValidateLoginWidget(CreateSignedWidgetData(long.MaxValue));
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
     }
 
     [Theory]

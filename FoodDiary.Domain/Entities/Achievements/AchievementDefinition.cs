@@ -60,9 +60,16 @@ public sealed class AchievementDefinition : Entity<AchievementDefinitionId> {
         string icon,
         int sortOrder,
         bool isActive) {
+        int nextVersion = GetNextVersion();
         Apply(category, metric, threshold, titleRu, titleEn, descriptionRu, descriptionEn, icon, sortOrder, isActive);
-        Version++;
+        Version = nextVersion;
         SetModified();
+    }
+
+    private int GetNextVersion() {
+        return Version == int.MaxValue
+            ? throw new InvalidOperationException("Achievement definition version limit has been reached.")
+            : Version + 1;
     }
 
     private void Apply(
@@ -83,14 +90,21 @@ public sealed class AchievementDefinition : Entity<AchievementDefinitionId> {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(threshold);
         ArgumentOutOfRangeException.ThrowIfNegative(sortOrder);
 
-        Category = NormalizeCode(category, CategoryMaxLength, nameof(category));
+        string normalizedCategory = NormalizeCode(category, CategoryMaxLength, nameof(category));
+        string normalizedTitleRu = NormalizeRequired(titleRu, TitleMaxLength, nameof(titleRu));
+        string normalizedTitleEn = NormalizeRequired(titleEn, TitleMaxLength, nameof(titleEn));
+        string normalizedDescriptionRu = NormalizeRequired(descriptionRu, DescriptionMaxLength, nameof(descriptionRu));
+        string normalizedDescriptionEn = NormalizeRequired(descriptionEn, DescriptionMaxLength, nameof(descriptionEn));
+        string normalizedIcon = NormalizeCode(icon, IconMaxLength, nameof(icon));
+
+        Category = normalizedCategory;
         Metric = metric;
         Threshold = threshold;
-        TitleRu = NormalizeRequired(titleRu, TitleMaxLength, nameof(titleRu));
-        TitleEn = NormalizeRequired(titleEn, TitleMaxLength, nameof(titleEn));
-        DescriptionRu = NormalizeRequired(descriptionRu, DescriptionMaxLength, nameof(descriptionRu));
-        DescriptionEn = NormalizeRequired(descriptionEn, DescriptionMaxLength, nameof(descriptionEn));
-        Icon = NormalizeCode(icon, IconMaxLength, nameof(icon));
+        TitleRu = normalizedTitleRu;
+        TitleEn = normalizedTitleEn;
+        DescriptionRu = normalizedDescriptionRu;
+        DescriptionEn = normalizedDescriptionEn;
+        Icon = normalizedIcon;
         SortOrder = sortOrder;
         IsActive = isActive;
     }

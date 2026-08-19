@@ -90,7 +90,7 @@ public partial class UsersFeatureTests {
     [Fact]
     public void UserMappings_ToModel_WithInvalidDashboardLayoutJson_IgnoresLayout() {
         var user = User.Create("invalid-layout@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: "{invalid-json"));
+        typeof(User).GetProperty(nameof(User.DashboardLayoutJson))!.SetValue(user, "{invalid-json");
 
         UserModel model = user.ToModel();
 

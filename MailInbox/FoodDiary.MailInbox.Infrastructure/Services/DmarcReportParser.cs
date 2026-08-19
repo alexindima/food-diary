@@ -12,15 +12,22 @@ public sealed class DmarcReportParser {
     private const int MaxDmarcAttachmentBytes = 5 * 1024 * 1024;
     private const int MaxDmarcXmlCharacters = 2 * 1024 * 1024;
     private const int MaxZipXmlEntries = 4;
+    private const int MaxDmarcXmlDocuments = 4;
+    private const int MaxDmarcTotalAttachmentBytes = 10 * 1024 * 1024;
+    private const int MaxDmarcTotalXmlCharacters = 7 * 1024 * 1024;
+    private const int MaxDmarcRecords = 10_000;
 
-    public DmarcReportPreview? TryParse(string rawMime) {
+    public DmarcReportPreview? TryParse(string rawMime, CancellationToken cancellationToken = default) {
+        var budget = new DmarcParseBudget(cancellationToken);
         try {
-            foreach (string xml in ExtractXmlPayloads(rawMime)) {
-                DmarcReportPreview? report = TryParseXml(xml);
+            foreach (string xml in ExtractXmlPayloads(rawMime, budget)) {
+                DmarcReportPreview? report = TryParseXml(xml, budget);
                 if (report is not null) {
                     return report;
                 }
             }
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            throw;
         } catch (Exception) {
             return null;
         }
@@ -28,10 +35,12 @@ public sealed class DmarcReportParser {
         return null;
     }
 
-    private static IEnumerable<string> ExtractXmlPayloads(string rawMime) {
+    private static IEnumerable<string> ExtractXmlPayloads(string rawMime, DmarcParseBudget budget) {
+        budget.ThrowIfCancellationRequested();
         using var stream = new MemoryStream(Encoding.UTF8.GetBytes(rawMime));
         var message = MimeMessage.Load(stream);
         foreach (MimePart part in message.BodyParts.OfType<MimePart>()) {
+            budget.ThrowIfCancellationRequested();
             string fileName = part.FileName ?? string.Empty;
             string contentType = part.ContentType.MimeType;
             if (part.Content is null) {
@@ -40,6 +49,7 @@ public sealed class DmarcReportParser {
 
             using var content = new MemoryStream();
             part.Content.DecodeTo(content);
+            budget.AddAttachmentBytes(content.Length);
             if (content.Length > MaxDmarcAttachmentBytes) {
                 continue;
             }
@@ -48,7 +58,7 @@ public sealed class DmarcReportParser {
 
             if (fileName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
                 contentType.Equals("application/zip", StringComparison.OrdinalIgnoreCase)) {
-                foreach (string xml in ExtractZipXmlPayloads(bytes)) {
+                foreach (string xml in ExtractZipXmlPayloads(bytes, budget)) {
                     yield return xml;
                 }
 
@@ -58,19 +68,21 @@ public sealed class DmarcReportParser {
             if (fileName.EndsWith(".gz", StringComparison.OrdinalIgnoreCase) ||
                 contentType.Equals("application/gzip", StringComparison.OrdinalIgnoreCase) ||
                 contentType.Equals("application/x-gzip", StringComparison.OrdinalIgnoreCase)) {
-                yield return DecompressGzip(bytes);
+                budget.StartXmlDocument();
+                yield return budget.CompleteXmlDocument(DecompressGzip(bytes, budget));
                 continue;
             }
 
             if (fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) ||
                 contentType.Equals("application/xml", StringComparison.OrdinalIgnoreCase) ||
                 contentType.Equals("text/xml", StringComparison.OrdinalIgnoreCase)) {
-                yield return Encoding.UTF8.GetString(bytes);
+                budget.StartXmlDocument();
+                yield return budget.CompleteXmlDocument(Encoding.UTF8.GetString(bytes));
             }
         }
     }
 
-    private static IEnumerable<string> ExtractZipXmlPayloads(byte[] bytes) {
+    private static IEnumerable<string> ExtractZipXmlPayloads(byte[] bytes, DmarcParseBudget budget) {
         using var stream = new MemoryStream(bytes);
         using var archive = new ZipArchive(stream, ZipArchiveMode.Read);
         IEnumerable<ZipArchiveEntry> xmlEntries = archive.Entries
@@ -78,22 +90,25 @@ public sealed class DmarcReportParser {
             .Take(MaxZipXmlEntries);
 
         foreach (ZipArchiveEntry entry in xmlEntries) {
+            budget.ThrowIfCancellationRequested();
             if (entry.Length > MaxDmarcXmlCharacters) {
                 continue;
             }
 
+            budget.StartXmlDocument();
             using Stream entryStream = entry.Open();
-            yield return ReadTextWithLimit(entryStream);
+            yield return budget.CompleteXmlDocument(ReadTextWithLimit(entryStream, budget));
         }
     }
 
-    private static string DecompressGzip(byte[] bytes) {
+    private static string DecompressGzip(byte[] bytes, DmarcParseBudget budget) {
         using var input = new MemoryStream(bytes);
         using var gzip = new GZipStream(input, CompressionMode.Decompress);
-        return ReadTextWithLimit(gzip);
+        return ReadTextWithLimit(gzip, budget);
     }
 
-    private static DmarcReportPreview? TryParseXml(string xml) {
+    private static DmarcReportPreview? TryParseXml(string xml, DmarcParseBudget budget) {
+        budget.ThrowIfCancellationRequested();
         XDocument document;
         try {
             using var reader = XmlReader.Create(
@@ -116,9 +131,14 @@ public sealed class DmarcReportParser {
         XElement? metadata = root.Elements().FirstOrDefault(static element => IsElement(element, "report_metadata"));
         XElement? policy = root.Elements().FirstOrDefault(static element => IsElement(element, "policy_published"));
         XElement? dateRange = metadata?.Elements().FirstOrDefault(static element => IsElement(element, "date_range"));
-        DmarcReportRecordPreview[] records = [.. root.Elements()
+        XElement[] recordElements = [.. root.Elements()
             .Where(static element => IsElement(element, "record"))
-            .Select(ParseRecord)];
+            .Take(MaxDmarcRecords + 1)];
+        if (recordElements.Length > MaxDmarcRecords) {
+            throw new InvalidDataException("DMARC record count exceeds the maximum allowed size.");
+        }
+
+        DmarcReportRecordPreview[] records = [.. recordElements.Select(ParseRecord)];
 
         return new DmarcReportPreview(
             GetChildValue(metadata, "org_name"),
@@ -165,13 +185,14 @@ public sealed class DmarcReportParser {
             ? DateTimeOffset.FromUnixTimeSeconds(result)
             : null;
 
-    private static string ReadTextWithLimit(Stream stream) {
+    private static string ReadTextWithLimit(Stream stream, DmarcParseBudget budget) {
         using var reader = new StreamReader(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true, leaveOpen: false);
         var builder = new StringBuilder();
         char[] buffer = new char[8192];
         int read;
 
         while ((read = reader.Read(buffer, 0, buffer.Length)) > 0) {
+            budget.ThrowIfCancellationRequested();
             if (builder.Length + read > MaxDmarcXmlCharacters) {
                 throw new InvalidDataException("DMARC XML payload exceeds the maximum allowed size.");
             }
@@ -180,5 +201,40 @@ public sealed class DmarcReportParser {
         }
 
         return builder.ToString();
+    }
+
+    private sealed class DmarcParseBudget(CancellationToken cancellationToken) {
+        private long _attachmentBytes;
+        private int _xmlCharacters;
+        private int _xmlDocuments;
+
+        public void ThrowIfCancellationRequested() => cancellationToken.ThrowIfCancellationRequested();
+
+        public void AddAttachmentBytes(long bytes) {
+            _attachmentBytes = checked(_attachmentBytes + bytes);
+            if (_attachmentBytes > MaxDmarcTotalAttachmentBytes) {
+                throw new InvalidDataException("DMARC attachments exceed the total allowed size.");
+            }
+        }
+
+        public void StartXmlDocument() {
+            ThrowIfCancellationRequested();
+            if (++_xmlDocuments > MaxDmarcXmlDocuments) {
+                throw new InvalidDataException("DMARC XML document count exceeds the maximum allowed size.");
+            }
+        }
+
+        public string CompleteXmlDocument(string xml) {
+            if (xml.Length > MaxDmarcXmlCharacters) {
+                throw new InvalidDataException("DMARC XML payload exceeds the maximum allowed size.");
+            }
+
+            _xmlCharacters = checked(_xmlCharacters + xml.Length);
+            if (_xmlCharacters > MaxDmarcTotalXmlCharacters) {
+                throw new InvalidDataException("DMARC XML payloads exceed the total allowed size.");
+            }
+
+            return xml;
+        }
     }
 }

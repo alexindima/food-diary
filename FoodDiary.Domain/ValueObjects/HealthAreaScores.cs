@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using FoodDiary.Domain.Common;
 
 namespace FoodDiary.Domain.ValueObjects;
 
@@ -13,6 +14,11 @@ public readonly record struct HealthAreaScores(
     public static HealthAreaScores Calculate(
         IReadOnlyDictionary<int, double> nutrientAmounts,
         IReadOnlyDictionary<int, double> dailyValues) {
+        ArgumentNullException.ThrowIfNull(nutrientAmounts);
+        ArgumentNullException.ThrowIfNull(dailyValues);
+        EnsureNonNegativeFiniteValues(nutrientAmounts, nameof(nutrientAmounts));
+        EnsureNonNegativeFiniteValues(dailyValues, nameof(dailyValues));
+
         return new HealthAreaScores(
             CalculateArea(HeartNutrientIds, nutrientAmounts, dailyValues, SodiumPenaltyId),
             CalculateArea(BoneNutrientIds, nutrientAmounts, dailyValues),
@@ -91,5 +97,11 @@ public readonly record struct HealthAreaScores(
         };
 
         return new HealthAreaScore(score, grade);
+    }
+
+    private static void EnsureNonNegativeFiniteValues(IReadOnlyDictionary<int, double> values, string paramName) {
+        foreach ((int _, double value) in values) {
+            DomainGuard.NonNegativeFinite(value, paramName);
+        }
     }
 }

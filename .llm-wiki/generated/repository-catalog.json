@@ -3736,17 +3736,17 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/email-templates",
-            "line": 19
+            "line": 21
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/admin/email-templates/{key:maxlength(64)}/{locale:maxlength(10)}",
-            "line": 24
+            "line": 26
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/admin/email-templates/test",
-            "line": 33
+            "line": 35
           }
         ]
       },
@@ -4059,22 +4059,22 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/billing/overview",
-            "line": 19
+            "line": 21
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/billing/trial",
-            "line": 25
+            "line": 27
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/billing/checkout-session",
-            "line": 33
+            "line": 35
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/billing/portal-session",
-            "line": 45
+            "line": 49
           }
         ]
       },
@@ -4350,32 +4350,32 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/dietologist/accept",
-            "line": 16
+            "line": 18
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/dietologist/decline",
-            "line": 24
+            "line": 28
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/current-user",
-            "line": 31
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/accept-current-user",
             "line": 37
           },
           {
             "verb": "POST",
+            "route": "/api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/accept-current-user",
+            "line": 43
+          },
+          {
+            "verb": "POST",
             "route": "/api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/decline-current-user",
-            "line": 45
+            "line": 51
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/dietologist/invitation/{invitationId:guid}",
-            "line": 53
+            "line": 59
           }
         ]
       },
@@ -4468,17 +4468,17 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/export/diary",
-            "line": 15
+            "line": 17
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/export/cycle",
-            "line": 27
+            "line": 31
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/export/cycle/sensitive",
-            "line": 36
+            "line": 42
           }
         ]
       },
@@ -4924,12 +4924,12 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/open-food-facts/products/{barcode}",
-            "line": 13
+            "line": 16
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/open-food-facts/products",
-            "line": 18
+            "line": 21
           }
         ]
       },
@@ -4988,7 +4988,7 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/products/suggestions",
-            "line": 14
+            "line": 17
           }
         ]
       },
@@ -5169,27 +5169,27 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/usda/foods",
-            "line": 14
+            "line": 16
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/usda/foods/{fdcId:int}",
-            "line": 21
+            "line": 24
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/usda/products/{productId:guid}/link",
-            "line": 26
+            "line": 30
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/usda/products/{productId:guid}/link",
-            "line": 34
+            "line": 38
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/usda/daily-micronutrients",
-            "line": 41
+            "line": 45
           }
         ]
       },
@@ -5277,12 +5277,12 @@
           {
             "verb": "PATCH",
             "route": "/api/v{version:apiVersion}/users/password",
-            "line": 15
+            "line": 17
           },
           {
             "verb": "PATCH",
             "route": "/api/v{version:apiVersion}/users/password/set",
-            "line": 23
+            "line": 27
           }
         ]
       },

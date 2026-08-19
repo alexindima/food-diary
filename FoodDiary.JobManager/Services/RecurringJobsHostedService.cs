@@ -21,7 +21,8 @@ public sealed class RecurringJobsHostedService(
     IOptions<ClientTaskReminderOptions> clientTaskReminderOptions,
     IOptions<WeeklyGoalReminderOptions> weeklyGoalReminderOptions,
     ILogger<RecurringJobsHostedService> logger,
-    IOptions<AchievementEvaluationOutboxOptions>? achievementEvaluationOutboxOptions = null) : IHostedService {
+    IOptions<AchievementEvaluationOutboxOptions>? achievementEvaluationOutboxOptions = null,
+    IOptions<FastingTelemetryCleanupOptions>? fastingTelemetryCleanupOptions = null) : IHostedService {
     private static readonly TimeSpan RegistrationRetryDelay = TimeSpan.FromSeconds(1);
 
     public async Task StartAsync(CancellationToken cancellationToken) {
@@ -68,6 +69,7 @@ public sealed class RecurringJobsHostedService(
         NotificationCleanupOptions notificationSettings = notificationCleanupOptions.Value;
         UserLoginEventCleanupOptions userLoginEventSettings = userLoginEventCleanupOptions.Value;
         MarketingAttributionCleanupOptions marketingAttributionSettings = marketingAttributionCleanupOptions.Value;
+        FastingTelemetryCleanupOptions fastingTelemetrySettings = fastingTelemetryCleanupOptions?.Value ?? new();
         UserCleanupOptions userSettings = userCleanupOptions.Value;
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.ImageAssetsCleanup,
@@ -107,10 +109,7 @@ public sealed class RecurringJobsHostedService(
             RecurringJobIds.UserLoginEventsCleanup,
             Job.FromExpression<UserLoginEventCleanupJob>(job => job.Execute(CancellationToken.None)),
             ResolveCron(userLoginEventSettings.Cron, "0 3 * * *"));
-        recurringJobManager.AddOrUpdate(
-            RecurringJobIds.MarketingAttributionCleanup,
-            Job.FromExpression<MarketingAttributionCleanupJob>(job => job.Execute(CancellationToken.None)),
-            ResolveCron(marketingAttributionSettings.Cron, "30 3 * * *"));
+        RegisterTelemetryCleanupJobs(marketingAttributionSettings, fastingTelemetrySettings);
         RegisterReminderJobs();
         recurringJobRegistrationVerifier.EnsureRegistered(RecurringJobIds.All);
     }
@@ -135,6 +134,19 @@ public sealed class RecurringJobsHostedService(
             RecurringJobIds.PaddleNotificationRecovery,
             Job.FromExpression<PaddleNotificationRecoveryJob>(job => job.Execute(CancellationToken.None)),
             "17 * * * *");
+    }
+
+    private void RegisterTelemetryCleanupJobs(
+        MarketingAttributionCleanupOptions marketingAttributionSettings,
+        FastingTelemetryCleanupOptions fastingTelemetrySettings) {
+        recurringJobManager.AddOrUpdate(
+            RecurringJobIds.MarketingAttributionCleanup,
+            Job.FromExpression<MarketingAttributionCleanupJob>(job => job.Execute(CancellationToken.None)),
+            ResolveCron(marketingAttributionSettings.Cron, "30 3 * * *"));
+        recurringJobManager.AddOrUpdate(
+            RecurringJobIds.FastingTelemetryCleanup,
+            Job.FromExpression<FastingTelemetryCleanupJob>(job => job.Execute(CancellationToken.None)),
+            ResolveCron(fastingTelemetrySettings.Cron, "45 3 * * *"));
     }
 
     private void RegisterAchievementOutboxJob(AchievementEvaluationOutboxOptions settings) =>

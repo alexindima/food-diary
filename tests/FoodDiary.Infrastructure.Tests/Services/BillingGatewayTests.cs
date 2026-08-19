@@ -288,9 +288,9 @@ public sealed class BillingGatewayTests {
     }
 
     [Fact]
-    public async Task PaddleCreateCheckoutSession_WhenMatchingReadyTransactionExists_ReusesItWithoutPost() {
+    public async Task PaddleCreateCheckoutSession_WhenReadyTransactionHasPreviousReference_ReusesItWithoutPost() {
         var userId = Guid.NewGuid();
-        string checkoutReference = $"{userId:N}:monthly";
+        const string checkoutReference = "previous-request-id";
         var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent($$"""
                 {
@@ -318,7 +318,7 @@ public sealed class BillingGatewayTests {
             }));
 
         Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
-            new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "monthly", "ctm_123"),
+            new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "monthly", "ctm_123", "new-request-id"),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess, result.Error.Message);
@@ -389,22 +389,41 @@ public sealed class BillingGatewayTests {
             string.Equals(request.RequestUri?.AbsolutePath, "/customers", StringComparison.Ordinal));
     }
 
+    [Fact]
+    public async Task PaddleCreateCheckoutSession_WhenMatchedCustomerIdIsMissing_FailsWithoutCreatingCustomer() {
+        var userId = Guid.NewGuid();
+        var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent(JsonSerializer.Serialize(new {
+                data = new[] { new { id = "", custom_data = new { user_id = userId.ToString() } } },
+            })),
+        });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+                PremiumMonthlyPriceId = "pri_monthly",
+                PremiumYearlyPriceId = "pri_yearly",
+                CheckoutUrl = "https://app.example/billing/paddle",
+            }));
+
+        Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "monthly", ExistingCustomerId: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+        Assert.Single(handler.Requests);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task PaddleCreateCheckoutSession_WhenRecoveryLookupsFail_CreatesCustomerAndTransaction(bool throwNetworkError) {
+    public async Task PaddleCreateCheckoutSession_WhenCustomerRecoveryLookupFails_FailsWithoutCreatingAnything(bool throwNetworkError) {
         object lookupFailure = throwNetworkError
             ? new HttpRequestException("lookup failed")
             : new HttpResponseMessage(HttpStatusCode.BadGateway) { Content = JsonContent("{}") };
-        var handler = new ScriptedHttpMessageHandler(
-            lookupFailure,
-            new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent("""{"data":{"id":"ctm_new"}}""") },
-            throwNetworkError
-                ? new HttpRequestException("lookup failed")
-                : new HttpResponseMessage(HttpStatusCode.BadGateway) { Content = JsonContent("{}") },
-            new HttpResponseMessage(HttpStatusCode.OK) {
-                Content = JsonContent("""{"data":{"id":"txn_new","checkout":{"url":"https://checkout.paddle.com/txn_new"}}}"""),
-            });
+        var handler = new ScriptedHttpMessageHandler(lookupFailure);
         var gateway = new PaddleBillingGateway(
             new HttpClient(handler),
             MsOptions.Create(new PaddleOptions {
@@ -419,9 +438,37 @@ public sealed class BillingGatewayTests {
             new BillingCheckoutSessionRequestModel(Guid.NewGuid(), "buyer@example.com", "monthly", ExistingCustomerId: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess, result.Error.Message);
-        Assert.Equal("txn_new", result.Value.SessionId);
-        Assert.Equal(4, handler.RequestCount);
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+        Assert.Equal(1, handler.RequestCount);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task PaddleCreateCheckoutSession_WhenTransactionRecoveryLookupFails_FailsWithoutCreatingTransaction(
+        bool throwNetworkError) {
+        object lookupFailure = throwNetworkError
+            ? new HttpRequestException("lookup failed")
+            : new HttpResponseMessage(HttpStatusCode.BadGateway) { Content = JsonContent("{}") };
+        var handler = new ScriptedHttpMessageHandler(lookupFailure);
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+                PremiumMonthlyPriceId = "pri_monthly",
+                PremiumYearlyPriceId = "pri_yearly",
+                CheckoutUrl = "https://app.example/billing/paddle",
+            }));
+
+        Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(Guid.NewGuid(), "buyer@example.com", "monthly", "ctm_123"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+        Assert.Equal(1, handler.RequestCount);
     }
 
     [Fact]
@@ -511,6 +558,30 @@ public sealed class BillingGatewayTests {
     }
 
     [Fact]
+    public async Task PaddleCreateCheckoutSession_WhenCreatedCustomerIdIsMissing_ReturnsFailure() {
+        var handler = new RecordingHttpMessageHandler(
+            EmptyPaddleListResponse(),
+            new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent("""{"data":{"id":""}}""") });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+                PremiumMonthlyPriceId = "pri_monthly",
+                PremiumYearlyPriceId = "pri_yearly",
+                CheckoutUrl = "https://app.example/billing/paddle",
+            }));
+
+        Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(Guid.NewGuid(), "buyer@example.com", "monthly", ExistingCustomerId: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+        Assert.Equal(2, handler.Requests.Count);
+    }
+
+    [Fact]
     public async Task PaddleCreateCheckoutSession_WhenCheckoutUrlMissing_ReturnsProviderOperationFailure() {
         var handler = new RecordingHttpMessageHandler(
             EmptyPaddleListResponse(),
@@ -533,7 +604,32 @@ public sealed class BillingGatewayTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
-        Assert.Contains("checkout URL is missing", result.Error.Message, StringComparison.Ordinal);
+        Assert.Contains("identifier or checkout URL is invalid", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task PaddleCreateCheckoutSession_WhenTransactionIdIsMissing_ReturnsProviderOperationFailure() {
+        var handler = new RecordingHttpMessageHandler(
+            EmptyPaddleListResponse(),
+            new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = JsonContent("""{"data":{"id":"","checkout":{"url":"https://checkout.paddle.com/txn"}}}"""),
+            });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+                PremiumMonthlyPriceId = "pri_monthly",
+                PremiumYearlyPriceId = "pri_yearly",
+                CheckoutUrl = "https://app.example/billing/paddle",
+            }));
+
+        Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(Guid.NewGuid(), "buyer@example.com", "monthly", "ctm_123"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
     }
 
     [Fact]
@@ -586,8 +682,8 @@ public sealed class BillingGatewayTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
-        Assert.Contains("400 Bad Request", result.Error.Message, StringComparison.Ordinal);
-        Assert.Contains("invalid customer", result.Error.Message, StringComparison.Ordinal);
+        Assert.Contains("HTTP status 400", result.Error.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("invalid customer", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -672,7 +768,7 @@ public sealed class BillingGatewayTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
-        Assert.Contains("portal URL is missing", result.Error.Message, StringComparison.Ordinal);
+        Assert.Contains("portal URL is invalid", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -694,7 +790,8 @@ public sealed class BillingGatewayTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
-        Assert.Contains("502 Bad Gateway", result.Error.Message, StringComparison.Ordinal);
+        Assert.Contains("HTTP status 502", result.Error.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("upstream", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -1103,11 +1200,12 @@ public sealed class BillingGatewayTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
-        Assert.Contains("400 Bad Request", result.Error.Message, StringComparison.Ordinal);
+        Assert.Contains("HTTP status 400", result.Error.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("bad payment", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
-    public async Task YooKassaCreateCheckoutSession_WhenErrorBodyIsLong_NormalizesAndBoundsSummary() {
+    public async Task YooKassaCreateCheckoutSession_WhenErrorBodyContainsSensitiveText_DoesNotExposeIt() {
         string providerBody = new string('x', 400) + "\r\nsecret-tail";
         var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.BadRequest) {
             ReasonPhrase = "Bad Request",
@@ -1124,9 +1222,10 @@ public sealed class BillingGatewayTests {
         Assert.Multiple(() => {
             Assert.True(result.IsFailure);
             Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+            Assert.DoesNotContain(new string('x', 20), result.Error.Message, StringComparison.Ordinal);
             Assert.DoesNotContain("secret-tail", result.Error.Message, StringComparison.Ordinal);
             Assert.DoesNotContain('\n', result.Error.Message);
-            Assert.InRange(result.Error.Message.Length, 0, 280);
+            Assert.Contains("HTTP status 400", result.Error.Message, StringComparison.Ordinal);
         });
     }
 
@@ -1193,7 +1292,31 @@ public sealed class BillingGatewayTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
-        Assert.Contains("confirmation URL is missing", result.Error.Message, StringComparison.Ordinal);
+        Assert.Contains("identifier or confirmation URL is invalid", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task YooKassaCreateCheckoutSession_WhenPaymentIdIsMissing_ReturnsFailure() {
+        var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent("""
+                {
+                  "id": "",
+                  "status": "pending",
+                  "paid": false,
+                  "confirmation": { "confirmation_url": "https://checkout.example/payment" }
+                }
+                """),
+        });
+        var gateway = new YooKassaBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(ValidYooKassaOptions()));
+
+        Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(Guid.NewGuid(), "buyer@example.com", "monthly", ExistingCustomerId: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
     }
 
     [Fact]
@@ -1326,7 +1449,8 @@ public sealed class BillingGatewayTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
-        Assert.Contains("502 Bad Gateway", result.Error.Message, StringComparison.Ordinal);
+        Assert.Contains("HTTP status 502", result.Error.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("upstream", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -1579,6 +1703,37 @@ public sealed class BillingGatewayTests {
         Assert.Equal("billing-renewal:test", handler.LastRequest.Headers.GetValues("Idempotence-Key").Single());
         Assert.Contains("\"renewal\":\"true\"", handler.LastRequestBody, StringComparison.Ordinal);
         Assert.Contains("\"payment_method_id\":\"pm_123\"", handler.LastRequestBody, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task YooKassaCreateRecurringPayment_WhenPaymentIdIsMissing_ReturnsFailure() {
+        var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent("""
+                {
+                  "id": "",
+                  "status": "succeeded",
+                  "paid": true,
+                  "payment_method": { "id": "pm_123" }
+                }
+                """),
+        });
+        var gateway = new YooKassaBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(ValidYooKassaOptions()));
+
+        Result<BillingRecurringPaymentModel> result = await gateway.CreateRecurringPaymentAsync(
+            new BillingRecurringPaymentRequestModel(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                "customer",
+                "pm_123",
+                "monthly",
+                CurrentPeriodEndUtc: null,
+                IdempotenceKey: "billing-renewal:test"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
     }
 
     [Fact]
@@ -2041,6 +2196,28 @@ public sealed class BillingGatewayTests {
     }
 
     [Fact]
+    public async Task StripeCreateCheckoutSession_WhenProviderReturnsUnsafeUrl_ReturnsFailure() {
+        RecordingHttpMessageHandler handler = new(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent("""{"id":"cs_unsafe","object":"checkout.session","url":"javascript:alert(1)"}"""),
+        });
+
+        await WithStripeHttpClientAsync(handler, async () => {
+            StripeBillingGateway gateway = CreateConfiguredStripeGateway(handler);
+
+            Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+                new BillingCheckoutSessionRequestModel(
+                    Guid.NewGuid(),
+                    "buyer@example.com",
+                    "monthly",
+                    ExistingCustomerId: "cus_existing"),
+                CancellationToken.None).ConfigureAwait(false);
+
+            Assert.True(result.IsFailure);
+            Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+        }).ConfigureAwait(true);
+    }
+
+    [Fact]
     public async Task StripeCreatePortalSession_WhenProviderNotConfigured_ReturnsProviderNotConfigured() {
         var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions()));
 
@@ -2290,7 +2467,7 @@ public sealed class BillingGatewayTests {
             PortalReturnUrl = "https://app.example/portal",
         }));
 
-    private static StripeBillingGateway CreateConfiguredStripeGateway(RecordingHttpMessageHandler handler) =>
+    private static StripeBillingGateway CreateConfiguredStripeGateway(HttpMessageHandler handler) =>
         new(
             MsOptions.Create(new StripeOptions {
                 SecretKey = StripeTestApiKey,
@@ -2303,7 +2480,7 @@ public sealed class BillingGatewayTests {
             }),
             CreateStripeClient(handler));
 
-    private static IStripeClient CreateStripeClient(RecordingHttpMessageHandler handler) =>
+    private static IStripeClient CreateStripeClient(HttpMessageHandler handler) =>
         new StripeClient(
             StripeTestApiKey,
             httpClient: new SystemNetHttpClient(new HttpClient(handler)));

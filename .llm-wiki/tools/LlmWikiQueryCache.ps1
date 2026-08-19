@@ -26,10 +26,12 @@ function Get-LlmWikiQueryCacheEntry {
     param(
         [Parameter(Mandatory)][string]$RepositoryRoot,
         [Parameter(Mandatory)][string]$Namespace,
-        [Parameter(Mandatory)][hashtable]$Arguments
+        [Parameter(Mandatory)][hashtable]$Arguments,
+        [string[]]$RelevantPath,
+        [string[]]$DependencyPath
     )
 
-    $snapshot = Get-LlmWikiChangeSetSnapshot -RepositoryRoot $RepositoryRoot
+    $snapshot = Get-LlmWikiChangeSetSnapshot -RepositoryRoot $RepositoryRoot -RelevantPath $RelevantPath
     $head = [string]$snapshot.head
     $workspacePaths = [string[]]@($snapshot.changedPaths)
     $argumentJson = [ordered]@{}
@@ -37,21 +39,55 @@ function Get-LlmWikiQueryCacheEntry {
         $value = $Arguments[$key]
         $argumentJson[$key] = if ($value -is [Management.Automation.SwitchParameter]) { [bool]$value } else { $value }
     }
+    $argumentMaterial = $argumentJson | ConvertTo-Json -Depth 8 -Compress
+    $argumentFingerprint = Get-LlmWikiSha256 $argumentMaterial
+    $dependencyMaterial = [Collections.Generic.List[string]]::new()
+    foreach ($dependency in @($DependencyPath | Where-Object { $_ } | Sort-Object -Unique)) {
+        $normalizedDependency = ([string]$dependency).Replace('\', '/')
+        $dependencyMaterial.Add("$normalizedDependency=$(Get-LlmWikiFileSha256 (Join-Path $RepositoryRoot $normalizedDependency))")
+    }
+    $dependencyFingerprint = Get-LlmWikiSha256 $(if ($dependencyMaterial.Count -gt 0) { $dependencyMaterial -join "`n" } else { '<none>' })
     $material = [Collections.Generic.List[string]]::new()
-    $material.Add('schema=1')
+    $material.Add('schema=2')
     $material.Add("namespace=$Namespace")
     $material.Add("head=$head")
     $material.Add("changeSet=$($snapshot.fingerprint)")
+    $material.Add("dependencies=$dependencyFingerprint")
     $material.Add("pwsh=$($PSVersionTable.PSVersion)")
-    $material.Add(($argumentJson | ConvertTo-Json -Depth 8 -Compress))
+    $material.Add($argumentMaterial)
     $fingerprint = Get-LlmWikiSha256 ($material -join "`n")
     $gitDirectory = (& git -C $RepositoryRoot rev-parse --absolute-git-dir).Trim()
     if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve Git directory for the Wiki query cache.' }
     $cacheDirectory = Join-Path $gitDirectory "llm-wiki/query-cache/$Namespace"
+    $metadataPath = Join-Path $cacheDirectory "latest-$argumentFingerprint.meta"
+    $missReason = 'cold cache; no prior entry for these arguments'
+    if (Test-Path -LiteralPath $metadataPath -PathType Leaf) {
+        try {
+            $previous = Get-Content -LiteralPath $metadataPath -Raw | ConvertFrom-Json
+            $missReason = if ([string]$previous.head -cne $head) {
+                'Git HEAD changed'
+            } elseif ([string]$previous.changeSetFingerprint -cne [string]$snapshot.fingerprint) {
+                'relevant workspace paths changed'
+            } elseif ([string]$previous.dependencyFingerprint -cne $dependencyFingerprint) {
+                'dependent Wiki indexes changed'
+            } else {
+                'matching cache result is missing or expired'
+            }
+        } catch {
+            $missReason = 'cache diagnostic metadata is unreadable'
+        }
+    }
     return [pscustomobject]@{
         fingerprint = $fingerprint
         path = Join-Path $cacheDirectory "$fingerprint.json"
+        metadataPath = $metadataPath
+        head = $head
+        changeSetFingerprint = [string]$snapshot.fingerprint
+        dependencyFingerprint = $dependencyFingerprint
+        argumentFingerprint = $argumentFingerprint
+        missReason = $missReason
         workspacePathCount = $workspacePaths.Count
+        relevantPaths = @($snapshot.relevantPaths)
     }
 }
 
@@ -82,6 +118,15 @@ function Write-LlmWikiQueryCache {
     try {
         [IO.File]::WriteAllText($temporaryPath, $Content, [Text.UTF8Encoding]::new($false))
         Move-Item -LiteralPath $temporaryPath -Destination $Entry.path -Force
+        $metadata = [ordered]@{
+            schemaVersion = 1
+            head = [string]$Entry.head
+            changeSetFingerprint = [string]$Entry.changeSetFingerprint
+            dependencyFingerprint = [string]$Entry.dependencyFingerprint
+            argumentFingerprint = [string]$Entry.argumentFingerprint
+            recordedAtUtc = [DateTime]::UtcNow.ToString('o')
+        } | ConvertTo-Json -Compress
+        [IO.File]::WriteAllText($Entry.metadataPath, $metadata + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
     } finally {
         Remove-Item -LiteralPath $temporaryPath -Force -ErrorAction SilentlyContinue
     }

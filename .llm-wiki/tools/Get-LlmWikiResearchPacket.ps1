@@ -37,7 +37,13 @@ $queryCacheEntry = $null
 $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'research' -Arguments @{
     Objective = $Objective; BaseRef = $BaseRef; HeadRef = $HeadRef
     ChangedPath = @($ChangedPath); ProposedPath = @($ProposedPath); Purpose = $Purpose; Limit = $Limit; Module = $Module; Compact = [bool]$Compact; SkipHistory = [bool]$SkipHistory
-}
+} -RelevantPath @($(if (@($ProposedPath).Count -gt 0) { $ProposedPath } else { $ChangedPath })) -DependencyPath @(
+    '.llm-wiki/policies/query-indexes.json'
+    '.llm-wiki/generated/csharp-symbol-index.json'
+    '.llm-wiki/generated/frontend-index.json'
+    '.llm-wiki/generated/quality-index.json'
+    '.llm-wiki/generated/code-graph.sqlite'
+)
 $cachedResearch = Read-LlmWikiQueryCache -Entry $queryCacheEntry
 if ($null -ne $cachedResearch) {
     if ($Format -eq 'Json') { Write-Output $cachedResearch } else {
@@ -48,6 +54,7 @@ if ($null -ne $cachedResearch) {
     }
     exit 0
 }
+Write-Host "Research cache miss: $($queryCacheEntry.missReason); relevant-workspace-paths=$($queryCacheEntry.workspacePathCount)."
 $common = @{ Objective = $Objective; BaseRef = $BaseRef; Format = 'Json'; Limit = $Limit }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
 if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $ChangedPath }
@@ -113,7 +120,8 @@ $precedents = if ($historyDeferred) {
 
 $failureKnowledgePath = Join-Path (Split-Path -Parent $PSScriptRoot) 'knowledge/failures.json'
 $failureKnowledge = Get-Content -LiteralPath $failureKnowledgePath -Raw | ConvertFrom-Json
-$objectiveTokens = @([regex]::Matches($Objective.ToLowerInvariant(), '[\p{L}\p{Nd}]{4,}') | ForEach-Object Value | Sort-Object -Unique)
+$failureStopwords = @('fooddiary', 'project', 'service', 'repository', 'current', 'change', 'changes')
+$objectiveTokens = @([regex]::Matches($Objective.ToLowerInvariant(), '[\p{L}\p{Nd}]{4,}') | ForEach-Object Value | Where-Object { $_ -notin $failureStopwords } | Sort-Object -Unique)
 $failureMatches = @(
     foreach ($entry in @($failureKnowledge.entries)) {
         $text = ($entry | ConvertTo-Json -Depth 6 -Compress).ToLowerInvariant()
@@ -122,7 +130,7 @@ $failureMatches = @(
             $pattern = $_
             @($scopePaths | Where-Object { $_ -match $pattern }).Count -gt 0
         })
-        if ($matches.Count -eq 0 -and $pathMatches.Count -eq 0) { continue }
+        if ($matches.Count -lt 2 -and $pathMatches.Count -eq 0) { continue }
         [pscustomobject][ordered]@{
             id = $entry.id
             symptom = $entry.symptom
@@ -164,13 +172,13 @@ if (@($ProposedPath).Count -gt 0) {
         $graphResearch = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphResearch.ps1') `
             -Objective $Objective `
             -ProposedPath @($ProposedPath) `
-            -Limit ([Math]::Max(20, $Limit)) `
+            -Limit $Limit `
             -Format Json | ConvertFrom-Json
         $runtimeFlowEvidence = [pscustomobject][ordered]@{
             status = 'available'
             sourcePaths = @($graphResearch.matchedPaths)
-            downstreamConsumers = @($graphResearch.downstreamConsumers)
-            dependencies = @($graphResearch.dependencies)
+            downstreamConsumers = @($graphResearch.downstreamConsumers | Select-Object -First $Limit)
+            dependencies = @($graphResearch.dependencies | Select-Object -First $Limit)
             confidence = [string]$graphResearch.confidence
         }
     } catch {
@@ -184,6 +192,34 @@ if (@($ProposedPath).Count -gt 0) {
             recoveryCommand = './.llm-wiki/wiki.ps1 graph-build; rerun research with the same -PlannedPath'
         }
     }
+}
+
+if (@($ProposedPath).Count -gt 0) {
+    $normalizedPlannedPaths = @($ProposedPath | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') })
+    $graphEvidencePaths = @(
+        @($runtimeFlowEvidence.sourcePaths) +
+        @(Get-ObjectPropertyValues @($runtimeFlowEvidence.downstreamConsumers) 'path') +
+        @(Get-ObjectPropertyValues @($runtimeFlowEvidence.dependencies) 'path') |
+            Where-Object { $_ } |
+            ForEach-Object { ([string]$_).Replace('\', '/') } |
+            Sort-Object -Unique
+    )
+    function Test-ScopedResearchPath([string]$CandidatePath, [switch]$AllowAncestor) {
+        if ([string]::IsNullOrWhiteSpace($CandidatePath)) { return $false }
+        $candidate = $CandidatePath.Replace('\', '/').TrimEnd('/')
+        if ($candidate -in $graphEvidencePaths) { return $true }
+        foreach ($plannedPath in $normalizedPlannedPaths) {
+            if ($candidate -eq $plannedPath -or $candidate.StartsWith("$plannedPath/", [StringComparison]::OrdinalIgnoreCase)) { return $true }
+            if ($AllowAncestor -and ($candidate -eq 'AGENTS.md' -or $plannedPath.StartsWith("$candidate/", [StringComparison]::OrdinalIgnoreCase))) { return $true }
+        }
+        return $false
+    }
+    $contextFrontendRoutes = @($contextFrontendRoutes | Where-Object {
+        $_.PSObject.Properties['path'] -and (Test-ScopedResearchPath ([string]$_.path))
+    })
+    $contextAgentGuides = @($contextAgentGuides | Where-Object {
+        $_.PSObject.Properties['path'] -and (Test-ScopedResearchPath ([string]$_.path) -AllowAncestor)
+    })
 }
 
 $extractionDelta = $null
@@ -294,8 +330,8 @@ $result = [pscustomobject][ordered]@{
             requiresReview = $workflow.profile -eq 'critical'
         }
     }
-    precedents = @($precedents.precedents)
-    knownFailures = $failureMatches
+    precedents = @($precedents.precedents | Select-Object -First $Limit)
+    knownFailures = @($failureMatches | Select-Object -First $Limit)
     extractionDelta = $extractionDelta
     openQuestions = @($openQuestions)
     readiness = [pscustomobject][ordered]@{
@@ -323,7 +359,39 @@ $result = [pscustomobject][ordered]@{
     }
 }
 
+$result | Add-Member -NotePropertyName outputContract -NotePropertyValue ([pscustomobject][ordered]@{
+    compact = [bool]$Compact
+    limit = $Limit
+    maxCharacters = $(if ($Compact) { 30000 } else { $null })
+    truncated = $false
+})
 $resultJson = $result | ConvertTo-Json -Depth 12
+if ($Compact -and $resultJson.Length -gt 30000) {
+    $result.outputContract.truncated = $true
+    $compactLimit = [Math]::Min(3, $Limit)
+    $result.discovery.runtimeFlow.downstreamConsumers = @($result.discovery.runtimeFlow.downstreamConsumers | Select-Object -First $compactLimit)
+    $result.discovery.runtimeFlow.dependencies = @($result.discovery.runtimeFlow.dependencies | Select-Object -First $compactLimit)
+    $result.discovery.routes = @($result.discovery.routes | Select-Object -First $compactLimit)
+    $result.discovery.dependencyInjection = @($result.discovery.dependencyInjection | Select-Object -First $compactLimit)
+    $result.discovery.focusedTests = @($result.discovery.focusedTests | Select-Object -First $compactLimit)
+    $result.discovery.guides = @($result.discovery.guides | Select-Object -First $compactLimit)
+    $result.discovery.wikiPages = @($result.discovery.wikiPages | Select-Object -First $compactLimit)
+    $result.precedents = @($result.precedents | Select-Object -First $compactLimit)
+    $result.knownFailures = @($result.knownFailures | Select-Object -First $compactLimit)
+    foreach ($lane in $result.researchLanes) { $lane.sources = @($lane.sources | Select-Object -First $compactLimit) }
+    $result.boundaries.runtime = @($result.boundaries.runtime | Select-Object -First $compactLimit)
+    $result.extractionDelta = $null
+    $resultJson = $result | ConvertTo-Json -Depth 12
+}
+if ($Compact -and $resultJson.Length -gt 30000) {
+    $result.discovery.runtimeFlow.downstreamConsumers = @($result.discovery.runtimeFlow.downstreamConsumers | Select-Object -First 1)
+    $result.discovery.runtimeFlow.dependencies = @($result.discovery.runtimeFlow.dependencies | Select-Object -First 1)
+    $result.precedents = @()
+    $result.knownFailures = @()
+    $result.boundaries.runtime = @()
+    $resultJson = $result | ConvertTo-Json -Depth 12
+}
+if ($Compact -and $resultJson.Length -gt 30000) { throw "Compact research exceeded its 30000-character output contract: $($resultJson.Length)." }
 Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $resultJson
 if ($Format -eq 'Json') {
     Write-Output $resultJson

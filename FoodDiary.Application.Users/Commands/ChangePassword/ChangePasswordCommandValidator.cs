@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Users.Commands.ChangePassword;
 
@@ -16,16 +17,22 @@ public sealed class ChangePasswordCommandValidator : AbstractValidator<ChangePas
         RuleFor(x => x.CurrentPassword)
             .NotEmpty()
             .WithErrorCode("Validation.Required")
-            .WithMessage("Current password is required");
+            .WithMessage("Current password is required")
+            .MaximumLength(AuthenticationInputLimits.MaximumPasswordLength)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"Current password must not exceed {AuthenticationInputLimits.MaximumPasswordLength} characters");
 
         RuleFor(x => x.NewPassword)
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithErrorCode("Validation.Required")
             .WithMessage("New password is required")
-            .MinimumLength(6)
+            .MinimumLength(AuthenticationInputLimits.MinimumPasswordLength)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("New password must be at least 6 characters");
+            .WithMessage($"New password must be at least {AuthenticationInputLimits.MinimumPasswordLength} characters")
+            .MaximumLength(AuthenticationInputLimits.MaximumPasswordLength)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"New password must not exceed {AuthenticationInputLimits.MaximumPasswordLength} characters");
 
         RuleFor(x => x)
             .Must(command => !string.Equals(command.CurrentPassword, command.NewPassword, StringComparison.Ordinal))

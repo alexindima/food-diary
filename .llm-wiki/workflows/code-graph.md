@@ -87,8 +87,12 @@ Exact backend traces can opt into the graph through the existing facade:
   -Fast
 ```
 
-The fast trace route refreshes the graph, uses it only when an exact symbol
-exists, and falls back to the established semantic trace when it does not.
+The fast trace route reads the already-prewarmed graph without performing a
+hidden refresh, uses exact symbols or high/medium ranked candidates to establish
+scope, and falls back to the established semantic trace when graph evidence is
+insufficient. Read-only snapshots copy the SQLite database (and active WAL when
+present) as a content-addressed dependency, so graph queries remain isolated
+without seeing an empty ignored `.artifacts` tree.
 Fast research requires an explicit module or planned path and returns bounded
 source, dependency, and downstream-consumer evidence. Its boundary report keeps
 the logical module, current project, physical source root, and target-project

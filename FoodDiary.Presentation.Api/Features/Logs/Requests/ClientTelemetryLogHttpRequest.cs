@@ -22,6 +22,8 @@ public sealed record ClientTelemetryLogHttpRequest(
     string? BuildVersion = null,
     string? Stack = null,
     JsonElement? Details = null) : IValidatableObject {
-    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
-        ClientTelemetryLogHttpRequestValidation.Validate(this);
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) {
+        TimeProvider timeProvider = validationContext.GetService(typeof(TimeProvider)) as TimeProvider ?? TimeProvider.System;
+        return ClientTelemetryLogHttpRequestValidation.Validate(this, timeProvider.GetUtcNow());
+    }
 }

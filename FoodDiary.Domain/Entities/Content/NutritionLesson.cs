@@ -35,6 +35,8 @@ public sealed class NutritionLesson : Entity<NutritionLessonId> {
         int sortOrder = 0) {
         DomainGuard.Defined(category, nameof(category));
         DomainGuard.Defined(difficulty, nameof(difficulty));
+        EnsurePositiveReadMinutes(estimatedReadMinutes);
+        ArgumentOutOfRangeException.ThrowIfNegative(sortOrder);
         var lesson = new NutritionLesson {
             Id = NutritionLessonId.New(),
             Title = NormalizeRequired(title, TitleMaxLength, nameof(title)),
@@ -43,8 +45,8 @@ public sealed class NutritionLesson : Entity<NutritionLessonId> {
             Locale = NormalizeRequired(locale, LocaleMaxLength, nameof(locale)).ToLowerInvariant(),
             Category = category,
             Difficulty = difficulty,
-            EstimatedReadMinutes = Math.Max(1, estimatedReadMinutes),
-            SortOrder = Math.Max(0, sortOrder),
+            EstimatedReadMinutes = estimatedReadMinutes,
+            SortOrder = sortOrder,
         };
         lesson.SetCreated();
         return lesson;
@@ -61,12 +63,14 @@ public sealed class NutritionLesson : Entity<NutritionLessonId> {
         int sortOrder) {
         DomainGuard.Defined(category, nameof(category));
         DomainGuard.Defined(difficulty, nameof(difficulty));
+        EnsurePositiveReadMinutes(estimatedReadMinutes);
+        ArgumentOutOfRangeException.ThrowIfNegative(sortOrder);
         string newTitle = NormalizeRequired(title, TitleMaxLength, nameof(title));
         string newContent = NormalizeRequired(content, ContentMaxLength, nameof(content));
         string? newSummary = NormalizeOptional(summary, SummaryMaxLength);
         string newLocale = NormalizeRequired(locale, LocaleMaxLength, nameof(locale)).ToLowerInvariant();
-        int newReadMinutes = Math.Max(1, estimatedReadMinutes);
-        int newSortOrder = Math.Max(0, sortOrder);
+        int newReadMinutes = estimatedReadMinutes;
+        int newSortOrder = sortOrder;
 
         if (string.Equals(Title, newTitle, StringComparison.Ordinal) &&
             string.Equals(Content, newContent, StringComparison.Ordinal) &&
@@ -107,6 +111,12 @@ public sealed class NutritionLesson : Entity<NutritionLessonId> {
         }
 
         string trimmed = value.Trim();
-        return trimmed.Length > maxLength ? trimmed[..maxLength] : trimmed;
+        return trimmed.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"Must be at most {maxLength} characters."))
+            : trimmed;
+    }
+
+    private static void EnsurePositiveReadMinutes(int estimatedReadMinutes) {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(estimatedReadMinutes);
     }
 }

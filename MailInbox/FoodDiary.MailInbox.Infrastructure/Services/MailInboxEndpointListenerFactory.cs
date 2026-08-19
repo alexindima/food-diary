@@ -2,7 +2,6 @@ using System.Collections.Concurrent;
 using System.IO.Pipelines;
 using System.Net;
 using System.Security.Authentication;
-using System.Security.Cryptography;
 using FoodDiary.MailInbox.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using SmtpServer;
@@ -53,7 +52,7 @@ public sealed class MailInboxEndpointListenerFactory(IOptions<MailInboxSmtpOptio
         private static string GetSourceKey(ISessionContext context) {
             if (context.Properties.TryGetValue(EndpointListener.RemoteEndPointKey, out object? value) &&
                 value is IPEndPoint endpoint) {
-                return Convert.ToHexString(SHA256.HashData(endpoint.Address.GetAddressBytes()));
+                return MailInboxNetworkIdentity.GetKey(endpoint.Address);
             }
 
             return "unknown";

@@ -850,7 +850,7 @@ switch ($Command) {
         if ($filteredGraphTrace) {
             $graphArguments = @{
                 Action = 'trace'; Query = $Query; Limit = [Math]::Min($Limit, 30); Format = 'Json'
-                SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module
+                SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module; SkipRefresh = $true
             }
             $graphProbe = & (Join-Path $toolsRoot 'Manage-LlmWikiCodeGraph.ps1') @graphArguments | ConvertFrom-Json
             $graphSymbols = [object[]]@($graphProbe.symbols)
@@ -2625,9 +2625,28 @@ switch ($Command) {
         }
     }
     default {
+        if (-not $Detailed) {
+            Write-Host 'FoodDiary LLM Wiki'
+            Write-Host ''
+            Write-Host 'Primary workflow:'
+            Write-Host "  ./.llm-wiki/wiki.ps1 develop -Intent '<task>' [-PlannedPath <path[]>]"
+            Write-Host "  ./.llm-wiki/wiki.ps1 start -Intent '<large task>' [-PlannedPath <path[]>]"
+            Write-Host '  ./.llm-wiki/wiki.ps1 next|status [-WorkspacePath <task>]'
+            Write-Host "  ./.llm-wiki/wiki.ps1 research -Intent '<task>' [-PlannedPath <path[]>]"
+            Write-Host '  ./.llm-wiki/wiki.ps1 brief|trace|test-plan|qa'
+            Write-Host '  ./.llm-wiki/wiki.ps1 delivery-status|delivery-finalize -WorkspacePath <task>'
+            Write-Host '  ./.llm-wiki/wiki.ps1 completion|update [-ChangedPath <path[]>]'
+            Write-Host '  ./.llm-wiki/wiki.ps1 verify-fast|verify|verify-full'
+            Write-Host '  ./.llm-wiki/wiki.ps1 failures [-Query <text>]'
+            Write-Host ''
+            Write-Host 'Administrative and compatibility commands:'
+            Write-Host '  ./.llm-wiki/wiki.ps1 help -Detailed'
+            break
+        }
+
         Write-Host 'FoodDiary LLM Wiki'
         Write-Host ''
-        Write-Host 'Usage:'
+        Write-Host 'Detailed command catalog:'
         Write-Host "  ./.llm-wiki/wiki.ps1 update [-AffectedOnly] [-Verify] [-ReviewReason '<rationale>'] [-BaseRef <ref>] [-ChangedPath <path[]>]  # one-command stale-index recovery + explicit review + resumable verify"
         Write-Host "  ./.llm-wiki/wiki.ps1 completion [-Reason '<grouped source-review rationale>'] [-ChangedPath <path[]>]  # update -> reviews -> resumable verify"
         Write-Host "  ./.llm-wiki/wiki.ps1 repair-verify ...  # compatibility alias for completion"

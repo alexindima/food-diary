@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using FoodDiary.Integrations.Billing;
 using FoodDiary.Integrations.Options;
 using MsOptions = Microsoft.Extensions.Options.Options;
@@ -120,6 +121,32 @@ public sealed class PaddleNotificationRecoveryServiceTests {
         PaddleNotificationRecoveryResult result = await service.ReplayFailedAsync(CancellationToken.None);
 
         Assert.Equal(new PaddleNotificationRecoveryResult(0, 0, WasLimited: true), result);
+    }
+
+    [Fact]
+    public async Task ReplayFailedAsync_WhenDataIsNull_ThrowsControlledInvalidResponseError() {
+        var service = new PaddleNotificationRecoveryService(
+            new HttpClient(new QueueHandler(JsonResponse("""{"data":null}"""))),
+            MsOptions.Create(ValidOptions()));
+
+        JsonException exception = await Assert.ThrowsAsync<JsonException>(() =>
+            service.ReplayFailedAsync(CancellationToken.None));
+
+        Assert.Contains("response data was missing", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ReplayFailedAsync_WhenNotificationIdIsMissing_ThrowsControlledInvalidResponseError() {
+        var service = new PaddleNotificationRecoveryService(
+            new HttpClient(new QueueHandler(JsonResponse("""
+                {"data":[{"id":null,"origin":"event","replayed_at":null}]}
+                """))),
+            MsOptions.Create(ValidOptions()));
+
+        JsonException exception = await Assert.ThrowsAsync<JsonException>(() =>
+            service.ReplayFailedAsync(CancellationToken.None));
+
+        Assert.Contains("identifier was missing", exception.Message, StringComparison.Ordinal);
     }
 
     [Theory]

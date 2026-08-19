@@ -2,9 +2,11 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Usda.Mappings;
 using FoodDiary.Presentation.Api.Features.Usda.Requests;
 using FoodDiary.Presentation.Api.Features.Usda.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace FoodDiary.Presentation.Api.Features.Usda;
 
@@ -12,6 +14,7 @@ namespace FoodDiary.Presentation.Api.Features.Usda;
 [Route("api/v{version:apiVersion}/usda")]
 public sealed class UsdaController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("foods")]
+    [EnableRateLimiting(PresentationPolicyNames.FoodDataRateLimitPolicyName)]
     [ProducesResponseType<IReadOnlyList<UsdaFoodHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> Search(
         [FromQuery] string search,
@@ -19,6 +22,7 @@ public sealed class UsdaController(ISender mediator) : AuthorizedController(medi
         HandleOk(UsdaHttpMappings.ToQuery(search, limit), static value => value.ToHttpResponse());
 
     [HttpGet("foods/{fdcId:int}")]
+    [EnableRateLimiting(PresentationPolicyNames.FoodDataRateLimitPolicyName)]
     [ProducesResponseType<UsdaFoodDetailHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetDetail(int fdcId) =>
         HandleOk(UsdaHttpMappings.ToQuery(fdcId), static value => value.ToHttpResponse());

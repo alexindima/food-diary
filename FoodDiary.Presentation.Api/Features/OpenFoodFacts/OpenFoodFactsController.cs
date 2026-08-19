@@ -1,14 +1,17 @@
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.OpenFoodFacts.Mappings;
 using FoodDiary.Presentation.Api.Features.OpenFoodFacts.Responses;
+using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace FoodDiary.Presentation.Api.Features.OpenFoodFacts;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/open-food-facts")]
+[EnableRateLimiting(PresentationPolicyNames.FoodDataRateLimitPolicyName)]
 public sealed class OpenFoodFactsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("products/{barcode}")]
     [ProducesResponseType<OpenFoodFactsProductHttpResponse>(StatusCodes.Status200OK)]

@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Identity.Authentication.Commands.Register;
 
@@ -16,8 +17,11 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
             .NotEmpty()
             .WithErrorCode("Validation.Required")
             .WithMessage("Password is required")
-            .MinimumLength(6)
+            .MinimumLength(AuthenticationInputLimits.MinimumPasswordLength)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("Password must be at least 6 characters");
+            .WithMessage($"Password must be at least {AuthenticationInputLimits.MinimumPasswordLength} characters")
+            .MaximumLength(AuthenticationInputLimits.MaximumPasswordLength)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"Password must not exceed {AuthenticationInputLimits.MaximumPasswordLength} characters");
     }
 }

@@ -124,30 +124,30 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
     }
 
     public void Complete(DateTime endedAtUtc) {
-        EnsureTerminalTransition();
-        EndedAtUtc = NormalizeTimestamp(endedAtUtc, nameof(endedAtUtc));
+        EnsureActiveTransition("completed");
+        EndedAtUtc = NormalizeTerminalTimestamp(endedAtUtc, nameof(endedAtUtc));
         Status = FastingOccurrenceStatus.Completed;
         SetModified();
     }
 
     public void Interrupt(DateTime endedAtUtc) {
-        EnsureTerminalTransition();
-        EndedAtUtc = NormalizeTimestamp(endedAtUtc, nameof(endedAtUtc));
+        EnsureActiveTransition("interrupted");
+        EndedAtUtc = NormalizeTerminalTimestamp(endedAtUtc, nameof(endedAtUtc));
         Status = FastingOccurrenceStatus.Interrupted;
         SetModified();
     }
 
     public void Skip(DateTime endedAtUtc) {
-        EnsureTerminalTransition();
-        EndedAtUtc = NormalizeTimestamp(endedAtUtc, nameof(endedAtUtc));
+        EnsureNonFinalTransition("skipped");
+        EndedAtUtc = NormalizeTerminalTimestamp(endedAtUtc, nameof(endedAtUtc));
         Status = FastingOccurrenceStatus.Skipped;
         SetModified();
     }
 
     public void Postpone(DateTime postponedAtUtc, DateTime nextScheduledForUtc) {
-        EnsureTerminalTransition();
+        EnsureNonFinalTransition("postponed");
 
-        DateTime normalizedPostponedAt = NormalizeTimestamp(postponedAtUtc, nameof(postponedAtUtc));
+        DateTime normalizedPostponedAt = NormalizeTerminalTimestamp(postponedAtUtc, nameof(postponedAtUtc));
         DateTime normalizedNextScheduledFor = NormalizeTimestamp(nextScheduledForUtc, nameof(nextScheduledForUtc));
         if (normalizedNextScheduledFor <= normalizedPostponedAt) {
             throw new ArgumentOutOfRangeException(nameof(nextScheduledForUtc), "The next scheduled time must be later than the postponement time.");
@@ -212,23 +212,46 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
         IEnumerable<string>? symptoms,
         string? checkInNotes,
         DateTime checkedInAtUtc) {
+        EnsureActiveTransition("checked in");
         EnsureCheckInScale(hungerLevel, nameof(hungerLevel));
         EnsureCheckInScale(energyLevel, nameof(energyLevel));
         EnsureCheckInScale(moodLevel, nameof(moodLevel));
 
+        string? normalizedSymptoms = NormalizeSymptoms(symptoms);
+        string? normalizedCheckInNotes = NormalizeCheckInNotes(checkInNotes);
+        DateTime normalizedCheckedInAt = NormalizeTimestamp(checkedInAtUtc, nameof(checkedInAtUtc));
+        if (normalizedCheckedInAt < StartedAtUtc) {
+            throw new ArgumentOutOfRangeException(nameof(checkedInAtUtc), "Check-in timestamp cannot be earlier than the occurrence start timestamp.");
+        }
+
         HungerLevel = hungerLevel;
         EnergyLevel = energyLevel;
         MoodLevel = moodLevel;
-        Symptoms = NormalizeSymptoms(symptoms);
-        CheckInNotes = NormalizeCheckInNotes(checkInNotes);
-        CheckInAtUtc = NormalizeTimestamp(checkedInAtUtc, nameof(checkedInAtUtc));
+        Symptoms = normalizedSymptoms;
+        CheckInNotes = normalizedCheckInNotes;
+        CheckInAtUtc = normalizedCheckedInAt;
         SetModified();
     }
 
-    private void EnsureTerminalTransition() {
-        if (Status is FastingOccurrenceStatus.Completed or FastingOccurrenceStatus.Interrupted or FastingOccurrenceStatus.Skipped) {
-            throw new InvalidOperationException("Cannot change a finalized fasting occurrence.");
+    private void EnsureActiveTransition(string action) {
+        if (Status != FastingOccurrenceStatus.Active) {
+            throw new InvalidOperationException($"Only active fasting occurrences can be {action}.");
         }
+    }
+
+    private void EnsureNonFinalTransition(string action) {
+        if (Status is FastingOccurrenceStatus.Completed or FastingOccurrenceStatus.Interrupted or FastingOccurrenceStatus.Skipped) {
+            throw new InvalidOperationException($"A finalized fasting occurrence cannot be {action}.");
+        }
+    }
+
+    private DateTime NormalizeTerminalTimestamp(DateTime value, string paramName) {
+        DateTime normalized = NormalizeTimestamp(value, paramName);
+        if (normalized < StartedAtUtc) {
+            throw new ArgumentOutOfRangeException(paramName, "End timestamp cannot be earlier than the occurrence start timestamp.");
+        }
+
+        return normalized;
     }
 
     private static void EnsurePlanId(FastingPlanId planId) {

@@ -197,6 +197,24 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
     }
 
     [RequiresDockerFact]
+    public async Task SaveAsync_WhenFirstMessageExceedsDailyByteQuota_RollsBackMessageAndUsage() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        NpgsqlInboundMailStore store = CreateStore(
+            dataSource,
+            new MailInboxStorageOptions { MaxRawBytesPerDay = 1 });
+
+        Exception exception = await Assert.ThrowsAnyAsync<Exception>(
+            () => store.SaveAsync(
+                CreateMessage("larger-than-daily-quota", new DateTimeOffset(2026, 6, 18, 9, 0, 0, TimeSpan.Zero)),
+                CancellationToken.None));
+
+        Assert.Equal("InboundMailStorageQuotaExceededException", exception.GetType().Name);
+        Assert.Equal(0, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_messages"));
+        Assert.Equal(0, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_daily_ingestion_usage"));
+    }
+
+    [RequiresDockerFact]
     public async Task PurgeExpiredAsync_RemovesContentBeforeDeletingOlderMetadata() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
@@ -228,6 +246,19 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         InboundMailMessageDetails? currentDetails = await store.GetMessageDetailsAsync(current.Id, CancellationToken.None);
         Assert.NotNull(currentDetails);
         Assert.NotNull(currentDetails.RawMime);
+    }
+
+    [RequiresDockerFact]
+    public async Task PurgeExpiredAsync_WhenMetadataCutoffIsNewerThanContentCutoff_Throws() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        NpgsqlInboundMailStore store = CreateStore(dataSource);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => store.PurgeExpiredAsync(
+            contentCutoffUtc: new DateTimeOffset(2026, 5, 1, 0, 0, 0, TimeSpan.Zero),
+            metadataCutoffUtc: new DateTimeOffset(2026, 5, 2, 0, 0, 0, TimeSpan.Zero),
+            batchSize: 10,
+            CancellationToken.None));
     }
 
     [RequiresDockerFact]

@@ -51,6 +51,21 @@ public sealed class FrontendObservabilityIntegrationTests(ApiWebApplicationFacto
     }
 
     [Fact]
+    public async Task LogsEndpoint_WithFutureTimestamp_ReturnsBadRequest() {
+        HttpClient client = apiFactory.CreateClient();
+
+        HttpResponseMessage response = await client.PostAsJsonAsync(
+            "/api/v1/logs",
+            new ClientTelemetryLogHttpRequest(
+                Category: "http_request",
+                Name: "api.request",
+                Level: "info",
+                Timestamp: DateTime.UtcNow.AddDays(1).ToString("O")));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
     public async Task LogsEndpoint_WithPayloadAboveLimit_ReturnsPayloadTooLarge() {
         HttpClient client = apiFactory.CreateClient();
         string payload = $$"""

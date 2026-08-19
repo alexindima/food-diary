@@ -137,18 +137,21 @@ public sealed class MealItem : Entity<MealItemId> {
         double? totalCarbs,
         double? totalFiber,
         double? totalAlcohol) {
-        int normalizedServings = servings <= 0 ? 1 : servings;
+        if (servings <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(servings), "Servings must be positive.");
+        }
+
         ApplySnapshot(
             name,
             imageUrl,
             "serving",
             1,
-            (totalCalories ?? 0) / normalizedServings,
-            (totalProteins ?? 0) / normalizedServings,
-            (totalFats ?? 0) / normalizedServings,
-            (totalCarbs ?? 0) / normalizedServings,
-            (totalFiber ?? 0) / normalizedServings,
-            (totalAlcohol ?? 0) / normalizedServings);
+            (totalCalories ?? 0) / servings,
+            (totalProteins ?? 0) / servings,
+            (totalFats ?? 0) / servings,
+            (totalCarbs ?? 0) / servings,
+            (totalFiber ?? 0) / servings,
+            (totalAlcohol ?? 0) / servings);
     }
 
     public void UpdateAmount(double amount) {
@@ -215,16 +218,27 @@ public sealed class MealItem : Entity<MealItemId> {
         double carbsPerBase,
         double fiberPerBase,
         double alcoholPerBase) {
-        SnapshotName = NormalizeOptionalText(name, SnapshotNameMaxLength, nameof(name));
-        SnapshotImageUrl = NormalizeOptionalText(imageUrl, SnapshotImageUrlMaxLength, nameof(imageUrl));
-        SnapshotUnit = NormalizeOptionalText(unit, SnapshotUnitMaxLength, nameof(unit));
-        SnapshotBaseAmount = ValidateAmount(baseAmount, nameof(baseAmount));
-        SnapshotCaloriesPerBase = ValidateNonNegative(caloriesPerBase, nameof(caloriesPerBase));
-        SnapshotProteinsPerBase = ValidateNonNegative(proteinsPerBase, nameof(proteinsPerBase));
-        SnapshotFatsPerBase = ValidateNonNegative(fatsPerBase, nameof(fatsPerBase));
-        SnapshotCarbsPerBase = ValidateNonNegative(carbsPerBase, nameof(carbsPerBase));
-        SnapshotFiberPerBase = ValidateNonNegative(fiberPerBase, nameof(fiberPerBase));
-        SnapshotAlcoholPerBase = ValidateNonNegative(alcoholPerBase, nameof(alcoholPerBase));
+        string? normalizedName = NormalizeOptionalText(name, SnapshotNameMaxLength, nameof(name));
+        string? normalizedImageUrl = NormalizeOptionalText(imageUrl, SnapshotImageUrlMaxLength, nameof(imageUrl));
+        string? normalizedUnit = NormalizeOptionalText(unit, SnapshotUnitMaxLength, nameof(unit));
+        double normalizedBaseAmount = ValidateAmount(baseAmount, nameof(baseAmount));
+        double normalizedCalories = ValidateNonNegative(caloriesPerBase, nameof(caloriesPerBase));
+        double normalizedProteins = ValidateNonNegative(proteinsPerBase, nameof(proteinsPerBase));
+        double normalizedFats = ValidateNonNegative(fatsPerBase, nameof(fatsPerBase));
+        double normalizedCarbs = ValidateNonNegative(carbsPerBase, nameof(carbsPerBase));
+        double normalizedFiber = ValidateNonNegative(fiberPerBase, nameof(fiberPerBase));
+        double normalizedAlcohol = ValidateNonNegative(alcoholPerBase, nameof(alcoholPerBase));
+
+        SnapshotName = normalizedName;
+        SnapshotImageUrl = normalizedImageUrl;
+        SnapshotUnit = normalizedUnit;
+        SnapshotBaseAmount = normalizedBaseAmount;
+        SnapshotCaloriesPerBase = normalizedCalories;
+        SnapshotProteinsPerBase = normalizedProteins;
+        SnapshotFatsPerBase = normalizedFats;
+        SnapshotCarbsPerBase = normalizedCarbs;
+        SnapshotFiberPerBase = normalizedFiber;
+        SnapshotAlcoholPerBase = normalizedAlcohol;
         SetModified();
     }
 

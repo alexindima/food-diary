@@ -5,7 +5,7 @@
     "hostedServices": 10,
     "httpClients": 12,
     "webhooks": 20,
-    "recurringJobRegistrations": 15
+    "recurringJobRegistrations": 16
   },
   "composeServices": [
     {
@@ -370,6 +370,11 @@
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.FastingNotifications",
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+    },
+    {
+      "api": "recurringJobManager.AddOrUpdate",
+      "detail": "RecurringJobIds.FastingTelemetryCleanup",
       "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
     },
     {

@@ -81,7 +81,7 @@ public sealed class BillingPublicConfigProvider(
         !string.IsNullOrWhiteSpace(options.ClientSideToken) &&
         !string.IsNullOrWhiteSpace(options.PremiumMonthlyPriceId) &&
         !string.IsNullOrWhiteSpace(options.PremiumYearlyPriceId) &&
-        Uri.IsWellFormedUriString(options.CheckoutUrl, UriKind.Absolute) &&
+        BillingUrlValidator.IsAbsoluteHttps(options.CheckoutUrl) &&
         PaddleOptions.HasMatchingEnvironment(options);
 
     private static bool HasValidStripeCheckoutConfiguration(StripeOptions options) =>
@@ -89,9 +89,9 @@ public sealed class BillingPublicConfigProvider(
         !string.IsNullOrWhiteSpace(options.WebhookSecret) &&
         !string.IsNullOrWhiteSpace(options.PremiumMonthlyPriceId) &&
         !string.IsNullOrWhiteSpace(options.PremiumYearlyPriceId) &&
-        Uri.IsWellFormedUriString(options.SuccessUrl, UriKind.Absolute) &&
-        Uri.IsWellFormedUriString(options.CancelUrl, UriKind.Absolute) &&
-        Uri.IsWellFormedUriString(options.PortalReturnUrl, UriKind.Absolute);
+        BillingUrlValidator.IsAbsoluteHttps(options.SuccessUrl) &&
+        BillingUrlValidator.IsAbsoluteHttps(options.CancelUrl) &&
+        BillingUrlValidator.IsAbsoluteHttps(options.PortalReturnUrl);
 
     private static string? NullIfEmpty(string? value) =>
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();

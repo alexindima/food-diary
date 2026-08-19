@@ -205,6 +205,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     }
 
     public void UpdateIdentity(ProductIdentityUpdate update) {
+        ValidateIdentityUpdate(update);
         UpdateCoreIdentity(
             update.Name,
             update.Barcode,
@@ -219,6 +220,27 @@ public sealed class Product : AggregateRoot<ProductId> {
             update.ClearDescription,
             update.Comment,
             update.ClearComment);
+    }
+
+    private static void ValidateIdentityUpdate(ProductIdentityUpdate update) {
+        string? normalizedBarcode = NormalizeOptionalText(update.Barcode, BarcodeMaxLength, nameof(update.Barcode));
+        string? normalizedBrand = NormalizeOptionalText(update.Brand, BrandMaxLength, nameof(update.Brand));
+        string? normalizedCategory = NormalizeOptionalText(update.Category, CategoryMaxLength, nameof(update.Category));
+        string? normalizedDescription = NormalizeOptionalText(update.Description, DescriptionMaxLength, nameof(update.Description));
+        string? normalizedComment = NormalizeOptionalText(update.Comment, CommentMaxLength, nameof(update.Comment));
+
+        EnsureClearConflict(update.ClearBarcode, normalizedBarcode, nameof(update.ClearBarcode), nameof(update.Barcode));
+        EnsureClearConflict(update.ClearBrand, normalizedBrand, nameof(update.ClearBrand), nameof(update.Brand));
+        EnsureClearConflict(update.ClearCategory, normalizedCategory, nameof(update.ClearCategory), nameof(update.Category));
+        EnsureClearConflict(update.ClearDescription, normalizedDescription, nameof(update.ClearDescription), nameof(update.Description));
+        EnsureClearConflict(update.ClearComment, normalizedComment, nameof(update.ClearComment), nameof(update.Comment));
+
+        if (update.Name is not null) {
+            NormalizeRequiredName(update.Name);
+        }
+        if (update.ProductType.HasValue) {
+            DomainGuard.Defined(update.ProductType.Value, nameof(update.ProductType));
+        }
     }
 
     public void UpdateMeasurement(

@@ -1,6 +1,8 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Recipes.Recipes.Common;
 using FoodDiary.Application.Abstractions.Nutrition.Common;
+using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Recipes.Recipes.Services;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
@@ -48,6 +50,36 @@ public partial class RecipesFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("itself", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task RecipeIngredientAccessValidator_WithIndirectCycle_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var nestedRecipe = Recipe.Create(userId, "Nested", servings: 1);
+        nestedRecipe.AddStep(1, "Mix").AddNestedRecipeIngredient(recipeId, 1);
+        var lookup = new GraphRecipeLookupService([
+            TestRecipeOverview.From(nestedRecipe, userId),
+        ]);
+        var step = new RecipeStepInput(
+            Order: 1,
+            Description: "Mix",
+            Title: null,
+            ImageUrl: null,
+            ImageAssetId: null,
+            Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: nestedRecipe.Id.Value, Amount: 1)]);
+
+        Result result = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
+            [step],
+            recipeId,
+            userId,
+            new AllowAllProductLookupService(),
+            lookup,
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("circular", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -170,6 +202,22 @@ public partial class RecipesFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class GraphRecipeLookupService(IEnumerable<RecipeOverviewReadItem> recipes) : IRecipeLookupService {
+        private readonly IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> _recipes = recipes.ToDictionary(recipe => recipe.Id);
+
+        public Task<IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem>> GetAccessibleByIdsAsync(
+            IEnumerable<RecipeId> ids,
+            UserId userId,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> result = ids
+                .Distinct()
+                .Where(_recipes.ContainsKey)
+                .ToDictionary(id => id, id => _recipes[id]);
+            return Task.FromResult(result);
+        }
     }
 
 }

@@ -25,7 +25,7 @@ public sealed class StripeOptions {
         !string.IsNullOrWhiteSpace(options.WebhookSecret) &&
         !string.IsNullOrWhiteSpace(options.PremiumMonthlyPriceId) &&
         !string.IsNullOrWhiteSpace(options.PremiumYearlyPriceId) &&
-        Uri.IsWellFormedUriString(options.SuccessUrl, UriKind.Absolute) &&
-        Uri.IsWellFormedUriString(options.CancelUrl, UriKind.Absolute) &&
-        Uri.IsWellFormedUriString(options.PortalReturnUrl, UriKind.Absolute);
+        Billing.BillingUrlValidator.IsAbsoluteHttps(options.SuccessUrl) &&
+        Billing.BillingUrlValidator.IsAbsoluteHttps(options.CancelUrl) &&
+        Billing.BillingUrlValidator.IsAbsoluteHttps(options.PortalReturnUrl);
 }

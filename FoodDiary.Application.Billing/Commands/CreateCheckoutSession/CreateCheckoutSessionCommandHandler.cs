@@ -9,6 +9,8 @@ using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 
@@ -62,7 +64,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
                 user.Email,
                 plan,
                 existingSubscription?.ExternalCustomerId,
-                ResolveIdempotencyKey(request.IdempotencyKey)),
+                ResolveIdempotencyKey(request.IdempotencyKey, userId, plan)),
             cancellationToken).ConfigureAwait(false);
         if (sessionResult.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(sessionResult.Error);
@@ -108,10 +110,14 @@ public sealed class CreateCheckoutSessionCommandHandler(
             : billingProviderGatewayAccessor.GetProviderOrDefault(normalizedProvider);
     }
 
-    private static string ResolveIdempotencyKey(string? idempotencyKey) =>
-        string.IsNullOrWhiteSpace(idempotencyKey)
-            ? Guid.NewGuid().ToString("N")
-            : idempotencyKey.Trim();
+    private static string ResolveIdempotencyKey(string? idempotencyKey, UserId userId, string plan) {
+        if (!string.IsNullOrWhiteSpace(idempotencyKey)) {
+            return idempotencyKey.Trim();
+        }
+
+        byte[] fallbackHash = SHA256.HashData(Encoding.UTF8.GetBytes($"{userId.Value:N}:{plan}"));
+        return $"checkout-{Convert.ToHexString(fallbackHash).ToLowerInvariant()}";
+    }
 
     private static bool IsPaidPremiumActive(BillingSubscription? subscription, DateTime nowUtc) {
         if (subscription is null || string.IsNullOrWhiteSpace(subscription.Status)) {

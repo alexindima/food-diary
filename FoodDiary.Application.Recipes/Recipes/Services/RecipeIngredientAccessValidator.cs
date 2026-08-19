@@ -51,11 +51,67 @@ public static class RecipeIngredientAccessValidator {
         }
 
         IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> recipes = await recipeLookupService.GetAccessibleByIdsAsync(nestedRecipeIds, userId, cancellationToken).ConfigureAwait(false);
-        return recipes.Count == nestedRecipeIds.Count
-            ? Result.Success()
-            : Result.Failure(Errors.Validation.Invalid(
+        if (recipes.Count != nestedRecipeIds.Count) {
+            return Result.Failure(Errors.Validation.Invalid(
                 nameof(RecipeIngredientInput.NestedRecipeId),
                 "Nested recipe not found or you do not have access to it."));
+        }
+
+        return recipeId.HasValue
+            ? await EnsureNoIndirectCycleAsync(recipeId.Value, recipes.Values, userId, recipeLookupService, cancellationToken).ConfigureAwait(false)
+            : Result.Success();
+    }
+
+    private static async Task<Result> EnsureNoIndirectCycleAsync(
+        RecipeId recipeId,
+        IEnumerable<RecipeOverviewReadItem> initialRecipes,
+        UserId userId,
+        IRecipeLookupService recipeLookupService,
+        CancellationToken cancellationToken) {
+        var visited = new HashSet<RecipeId>();
+        IReadOnlyCollection<RecipeOverviewReadItem> currentRecipes = [.. initialRecipes];
+
+        while (currentRecipes.Count > 0) {
+            var nextIds = new HashSet<RecipeId>();
+            foreach (RecipeOverviewReadItem recipe in currentRecipes) {
+                if (!visited.Add(recipe.Id)) {
+                    continue;
+                }
+
+                foreach (Guid nestedIdValue in recipe.Steps
+                    .SelectMany(step => step.Ingredients)
+                    .Where(ingredient => ingredient.NestedRecipeId.HasValue)
+                    .Select(ingredient => ingredient.NestedRecipeId!.Value)) {
+                    var nestedId = new RecipeId(nestedIdValue);
+                    if (nestedId == recipeId) {
+                        return Result.Failure(Errors.Validation.Invalid(
+                            nameof(RecipeIngredientInput.NestedRecipeId),
+                            "Nested recipes would create a circular dependency."));
+                    }
+
+                    if (!visited.Contains(nestedId)) {
+                        nextIds.Add(nestedId);
+                    }
+                }
+            }
+
+            if (nextIds.Count == 0) {
+                return Result.Success();
+            }
+
+            IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> nextRecipes = await recipeLookupService
+                .GetAccessibleByIdsAsync(nextIds, userId, cancellationToken)
+                .ConfigureAwait(false);
+            if (nextRecipes.Count != nextIds.Count) {
+                return Result.Failure(Errors.Validation.Invalid(
+                    nameof(RecipeIngredientInput.NestedRecipeId),
+                    "Nested recipe dependency not found or you do not have access to it."));
+            }
+
+            currentRecipes = [.. nextRecipes.Values];
+        }
+
+        return Result.Success();
     }
 
     private static Result<IReadOnlyList<ProductId>> ParseProductIds(IReadOnlyList<RecipeStepInput> steps) =>

@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3345,
-    "symbols": 3354,
-    "interfaceImplementationLinks": 233,
-    "dependencyInjectionRegistrations": 234,
+    "sourceFiles": 3356,
+    "symbols": 3366,
+    "interfaceImplementationLinks": 234,
+    "dependencyInjectionRegistrations": 235,
     "kinds": {
-      "class": 1727,
-      "enum": 56,
-      "interface": 414,
+      "class": 1737,
+      "enum": 57,
+      "interface": 415,
       "record": 1041,
       "record struct": 116
     },
@@ -26,13 +26,13 @@
       "Controller": 90,
       "Entity": 84,
       "Event": 19,
-      "Factory": 10,
+      "Factory": 11,
       "Handler": 9,
       "LookupRepository": 3,
       "Mapper": 8,
       "Mapping": 4,
-      "Options": 60,
-      "Other": 1258,
+      "Options": 61,
+      "Other": 1263,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -40,8 +40,8 @@
       "Repository": 104,
       "Request": 132,
       "Response": 174,
-      "Service": 273,
-      "Validator": 192,
+      "Service": 275,
+      "Validator": 195,
       "ValueObject": 126,
       "WriteRepository": 46
     }
@@ -640,6 +640,13 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Authentication/Common/AccountCreatedMessage.cs",
+      "line": 2
+    },
+    {
+      "name": "AuthenticationInputLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Authentication/Common/AuthenticationInputLimits.cs",
       "line": 2
     },
     {
@@ -4532,7 +4539,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommandValidator.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "DeleteAdminLessonCommand",
@@ -4665,7 +4672,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "StartAdminImpersonationCommand",
@@ -5568,7 +5575,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "CreateCheckoutSessionCommandValidator",
@@ -5785,7 +5792,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Application.Billing/Services/BillingRenewalService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "BillingUserContextService",
@@ -6940,7 +6947,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Dietologist/Commands/AcceptInvitation/AcceptInvitationCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "AcceptInvitationForCurrentUserCommand",
@@ -7123,6 +7130,13 @@
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Dietologist/Commands/DeclineInvitation/DeclineInvitationCommandHandler.cs",
       "line": 15
+    },
+    {
+      "name": "DeclineInvitationCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Dietologist/Commands/DeclineInvitation/DeclineInvitationCommandValidator.cs",
+      "line": 5
     },
     {
       "name": "DeclineInvitationForCurrentUserCommand",
@@ -7913,7 +7927,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "ExportDiaryDateRangePolicy",
@@ -8455,6 +8469,13 @@
       "line": 2
     },
     {
+      "name": "FastingTelemetryCleanupService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.Application.Fasting/Services/FastingTelemetryCleanupService.cs",
+      "line": 2
+    },
+    {
       "name": "FastingTelemetrySummaryReadService",
       "kind": "class",
       "role": "Service",
@@ -8480,6 +8501,13 @@
       "kind": "interface",
       "role": "Other",
       "path": "FoodDiary.Application.Fasting/Services/IFastingNotificationScheduler.cs",
+      "line": 2
+    },
+    {
+      "name": "IFastingTelemetryCleanupService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "FoodDiary.Application.Fasting/Services/IFastingTelemetryCleanupService.cs",
       "line": 2
     },
     {
@@ -9159,7 +9187,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "GoogleLoginCommand",
@@ -9243,7 +9271,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "RefreshTokenCommand",
@@ -9285,7 +9313,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "RequestPasswordResetCommand",
@@ -9348,7 +9376,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "TelegramBotAuthCommand",
@@ -9432,7 +9460,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "AdminSsoStartModel",
@@ -12372,7 +12400,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "DeleteUserCommand",
@@ -12428,7 +12456,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "UpdateDesiredWaistCommand",
@@ -13128,7 +13156,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "IChangeSetSnapshotService",
@@ -13345,7 +13373,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Domain/Common/DomainGuard.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "AchievementDefinition",
@@ -13394,7 +13422,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "BillingPaymentKinds",
@@ -13415,14 +13443,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "BillingWebhookEvent",
       "kind": "class",
       "role": "Event",
       "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "DailyAdvice",
@@ -13464,7 +13492,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "Recommendation",
@@ -13898,7 +13926,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Users/User.Profile.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "User",
@@ -13919,7 +13947,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "UserRole",
@@ -14381,7 +14409,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/FoodQualityScore.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "GenderCode",
@@ -14409,7 +14437,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/HealthAreaScores.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "AchievementDefinitionId",
@@ -16845,7 +16873,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Tracking/FastingTelemetryEventRepository.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "HydrationEntryRepository",
@@ -17170,6 +17198,20 @@
       "line": 14
     },
     {
+      "name": "TelegramAuthTimestampValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Integrations/Authentication/TelegramAuthTimestampValidator.cs",
+      "line": 2
+    },
+    {
+      "name": "Status",
+      "kind": "enum",
+      "role": "Other",
+      "path": "FoodDiary.Integrations/Authentication/TelegramAuthTimestampValidator.cs",
+      "line": 4
+    },
+    {
       "name": "TelegramAuthValidator",
       "kind": "class",
       "role": "Validator",
@@ -17189,6 +17231,13 @@
       "role": "Other",
       "path": "FoodDiary.Integrations/Billing/BillingPublicConfigProvider.cs",
       "line": 8
+    },
+    {
+      "name": "BillingUrlValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Integrations/Billing/BillingUrlValidator.cs",
+      "line": 2
     },
     {
       "name": "ConfigurableBillingProviderGatewayAccessor",
@@ -17230,7 +17279,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Billing/StripeBillingGateway.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "YooKassaApiClient",
@@ -17436,11 +17485,25 @@
       "line": 7
     },
     {
+      "name": "OpenAiErrorMetadata",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiErrorMetadata.cs",
+      "line": 6
+    },
+    {
       "name": "OpenAiFoodClient",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
       "line": 17
+    },
+    {
+      "name": "OpenAiRequestFactory",
+      "kind": "class",
+      "role": "Factory",
+      "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiRequestFactory.cs",
+      "line": 5
     },
     {
       "name": "OpenFoodFactsService",
@@ -17601,6 +17664,20 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.JobManager/Services/FastingNotificationOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingTelemetryCleanupJob",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.JobManager/Services/FastingTelemetryCleanupJob.cs",
+      "line": 7
+    },
+    {
+      "name": "FastingTelemetryCleanupOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "FoodDiary.JobManager/Services/FastingTelemetryCleanupOptions.cs",
       "line": 2
     },
     {
@@ -17958,7 +18035,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Admin/AdminEmailTemplatesController.cs",
-      "line": 18
+      "line": 20
     },
     {
       "name": "AdminLessonsController",
@@ -18154,14 +18231,14 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/AdminUserCreateHttpRequest.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "AdminUserSetPasswordHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/AdminUserSetPasswordHttpRequest.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "AdminUserUpdateHttpRequest",
@@ -18735,7 +18812,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Billing/BillingController.cs",
-      "line": 18
+      "line": 20
     },
     {
       "name": "BillingWebhookController",
@@ -19148,7 +19225,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistInvitationsController.cs",
-      "line": 15
+      "line": 17
     },
     {
       "name": "DietologistHttpMappings",
@@ -19183,7 +19260,7 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/Requests/AcceptInvitationHttpRequest.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "BulkCreateRecommendationsHttpRequest",
@@ -19225,7 +19302,7 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/Requests/DeclineInvitationHttpRequest.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "DietologistPermissionsHttpRequest",
@@ -19414,7 +19491,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Export/ExportController.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "ExportHttpMappings",
@@ -19428,7 +19505,7 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Export/Requests/SensitiveCycleExportHttpRequest.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "FastingController",
@@ -20177,7 +20254,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/OpenFoodFacts/OpenFoodFactsController.cs",
-      "line": 12
+      "line": 15
     },
     {
       "name": "OpenFoodFactsProductHttpResponse",
@@ -20219,7 +20296,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Products/ProductSuggestionsController.cs",
-      "line": 13
+      "line": 16
     },
     {
       "name": "CreateProductHttpRequest",
@@ -20660,7 +20737,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Usda/UsdaController.cs",
-      "line": 13
+      "line": 15
     },
     {
       "name": "UserHttpMappings",
@@ -20688,14 +20765,14 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Users/Requests/ChangePasswordHttpRequest.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "SetPasswordHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Users/Requests/SetPasswordHttpRequest.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "UpdateDesiredWaistHttpRequest",
@@ -20793,7 +20870,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Users/UsersPasswordController.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "WaistGoalsController",
@@ -21577,7 +21654,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 54
+      "line": 82
     },
     {
       "name": "CorsOptionsSetup",
@@ -21997,7 +22074,7 @@
       "kind": "class",
       "role": "Factory",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxEndpointListenerFactory.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "MailInboxFixedWindowRateLimiter",
@@ -22012,6 +22089,13 @@
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs",
       "line": 11
+    },
+    {
+      "name": "MailInboxNetworkIdentity",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxNetworkIdentity.cs",
+      "line": 4
     },
     {
       "name": "MailInboxRetentionHostedService",
@@ -22032,7 +22116,7 @@
       "kind": "class",
       "role": "Service",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs",
-      "line": 10
+      "line": 13
     },
     {
       "name": "NpgsqlExtensions",
@@ -24179,6 +24263,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IFastingTelemetryCleanupService",
+      "interfacePath": "FoodDiary.Application.Fasting/Services/IFastingTelemetryCleanupService.cs",
+      "implementation": "FastingTelemetryCleanupService",
+      "implementationPath": "FoodDiary.Application.Fasting/Services/FastingTelemetryCleanupService.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IFastingTelemetryEventRepository",
       "interfacePath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventRepository.cs",
       "implementation": "FastingTelemetryEventRepository",
@@ -25455,11 +25546,18 @@
       "line": 16
     },
     {
+      "service": "IFastingTelemetryCleanupService",
+      "implementation": "FastingTelemetryCleanupService",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.Application.Fasting/DependencyInjection.cs",
+      "line": 17
+    },
+    {
       "service": "IFastingNotificationScheduler",
       "implementation": "FastingNotificationScheduler",
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Fasting/DependencyInjection.cs",
-      "line": 17
+      "line": 18
     },
     {
       "service": "IFavoriteMealReadService",
@@ -26607,7 +26705,7 @@
       "implementation": "ConfigurableBillingProviderGatewayAccessor",
       "lifetime": "Scoped",
       "path": "FoodDiary.Integrations/DependencyInjection.Billing.cs",
-      "line": 28
+      "line": 30
     },
     {
       "service": "IAdminMailInboxReader",
@@ -26621,14 +26719,14 @@
       "implementation": "WebPushNotificationSender",
       "lifetime": "Scoped",
       "path": "FoodDiary.Integrations/DependencyInjection.Notifications.cs",
-      "line": 14
+      "line": 15
     },
     {
       "service": "IWebPushConfigurationProvider",
       "implementation": "WebPushNotificationSender",
       "lifetime": "Scoped",
       "path": "FoodDiary.Integrations/DependencyInjection.Notifications.cs",
-      "line": 15
+      "line": 16
     },
     {
       "service": "IObjectStorageClient",
@@ -26656,14 +26754,14 @@
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 93
+      "line": 98
     },
     {
       "service": "IJobExecutionStateTracker",
       "implementation": "JobExecutionStateTracker",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 114
+      "line": 120
     },
     {
       "service": "INotificationTextRenderer",

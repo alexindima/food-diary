@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using System.Text.Json;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Results;
@@ -35,61 +36,80 @@ public sealed class StripeBillingGateway(
             return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
         }
 
+        try {
+            return await CreateCheckoutSessionCoreAsync(request, cancellationToken).ConfigureAwait(false);
+        } catch (Exception exception) when (IsProviderRequestFailure(exception, cancellationToken)) {
+            return Result.Failure<BillingCheckoutSessionModel>(
+                Errors.Billing.ProviderOperationFailed(Provider, "Stripe request could not be completed."));
+        }
+    }
+
+    private async Task<Result<BillingCheckoutSessionModel>> CreateCheckoutSessionCoreAsync(
+        BillingCheckoutSessionRequestModel request,
+        CancellationToken cancellationToken) {
         string idempotencyKey = ResolveIdempotencyKey(request.IdempotencyKey);
-        string? customerId = request.ExistingCustomerId;
-        if (string.IsNullOrWhiteSpace(customerId)) {
-            var customerService = new CustomerService(stripeClient);
-            Customer customer = await customerService.CreateAsync(
-                new CustomerCreateOptions {
-                    Email = request.Email,
-                    Metadata = new Dictionary<string, string>(StringComparer.Ordinal) {
-                        ["user_id"] = request.UserId.ToString(),
-                    },
-                },
-                new RequestOptions {
-                    IdempotencyKey = $"{idempotencyKey}:customer",
-                },
-                cancellationToken: cancellationToken).ConfigureAwait(false);
-            customerId = customer.Id;
+        Result<string> customerResult = await ResolveCustomerIdAsync(request, idempotencyKey, cancellationToken).ConfigureAwait(false);
+        if (customerResult.IsFailure) {
+            return Result.Failure<BillingCheckoutSessionModel>(customerResult.Error);
         }
 
+        string customerId = customerResult.Value;
         string priceId = ResolvePriceId(request.Plan);
         var sessionService = new CheckoutSessionService(stripeClient);
         CheckoutSession session = await sessionService.CreateAsync(
-            new CheckoutSessionCreateOptions {
-                Mode = "subscription",
-                Customer = customerId,
-                SuccessUrl = _options.SuccessUrl,
-                CancelUrl = _options.CancelUrl,
-                LineItems = [
-                    new CheckoutSessionLineItemOptions {
-                        Price = priceId,
-                        Quantity = 1,
-                    },
-                ],
+            CreateCheckoutOptions(request, customerId, priceId),
+            new RequestOptions { IdempotencyKey = $"{idempotencyKey}:session" },
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+        if (string.IsNullOrWhiteSpace(session.Id) || !BillingUrlValidator.IsAbsoluteHttps(session.Url)) {
+            return Result.Failure<BillingCheckoutSessionModel>(
+                Errors.Billing.ProviderOperationFailed(Provider, "Stripe checkout session identifier or URL is invalid."));
+        }
+
+        return Result.Success(new BillingCheckoutSessionModel(session.Id, session.Url, customerId, priceId, request.Plan));
+    }
+
+    private async Task<Result<string>> ResolveCustomerIdAsync(
+        BillingCheckoutSessionRequestModel request,
+        string idempotencyKey,
+        CancellationToken cancellationToken) {
+        if (!string.IsNullOrWhiteSpace(request.ExistingCustomerId)) {
+            return Result.Success(request.ExistingCustomerId);
+        }
+
+        var customerService = new CustomerService(stripeClient);
+        Customer customer = await customerService.CreateAsync(
+            new CustomerCreateOptions {
+                Email = request.Email,
+                Metadata = new Dictionary<string, string>(StringComparer.Ordinal) { ["user_id"] = request.UserId.ToString() },
+            },
+            new RequestOptions { IdempotencyKey = $"{idempotencyKey}:customer" },
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+        return string.IsNullOrWhiteSpace(customer.Id)
+            ? Result.Failure<string>(Errors.Billing.ProviderOperationFailed(Provider, "Stripe customer identifier is missing."))
+            : Result.Success(customer.Id);
+    }
+
+    private CheckoutSessionCreateOptions CreateCheckoutOptions(
+        BillingCheckoutSessionRequestModel request,
+        string customerId,
+        string priceId) =>
+        new() {
+            Mode = "subscription",
+            Customer = customerId,
+            SuccessUrl = _options.SuccessUrl,
+            CancelUrl = _options.CancelUrl,
+            LineItems = [new CheckoutSessionLineItemOptions { Price = priceId, Quantity = 1 }],
+            Metadata = new Dictionary<string, string>(StringComparer.Ordinal) {
+                ["user_id"] = request.UserId.ToString(),
+                ["plan"] = request.Plan,
+            },
+            SubscriptionData = new CheckoutSessionSubscriptionDataOptions {
                 Metadata = new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["user_id"] = request.UserId.ToString(),
                     ["plan"] = request.Plan,
                 },
-                SubscriptionData = new CheckoutSessionSubscriptionDataOptions {
-                    Metadata = new Dictionary<string, string>(StringComparer.Ordinal) {
-                        ["user_id"] = request.UserId.ToString(),
-                        ["plan"] = request.Plan,
-                    },
-                },
             },
-            new RequestOptions {
-                IdempotencyKey = $"{idempotencyKey}:session",
-            },
-            cancellationToken: cancellationToken).ConfigureAwait(false);
-
-        return Result.Success(new BillingCheckoutSessionModel(
-            session.Id,
-            session.Url ?? string.Empty,
-            customerId!,
-            priceId,
-            request.Plan));
-    }
+        };
 
     public async Task<Result<BillingPortalSessionModel>> CreatePortalSessionAsync(
         BillingPortalSessionRequestModel request,
@@ -98,15 +118,25 @@ public sealed class StripeBillingGateway(
             return Result.Failure<BillingPortalSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
         }
 
-        var portalSessionService = new BillingPortalSessionService(stripeClient);
-        Stripe.BillingPortal.Session portalSession = await portalSessionService.CreateAsync(
-            new BillingPortalSessionCreateOptions {
-                Customer = request.CustomerId,
-                ReturnUrl = _options.PortalReturnUrl,
-            },
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+        try {
+            var portalSessionService = new BillingPortalSessionService(stripeClient);
+            Stripe.BillingPortal.Session portalSession = await portalSessionService.CreateAsync(
+                new BillingPortalSessionCreateOptions {
+                    Customer = request.CustomerId,
+                    ReturnUrl = _options.PortalReturnUrl,
+                },
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        return Result.Success(new BillingPortalSessionModel(portalSession.Url));
+            if (!BillingUrlValidator.IsAbsoluteHttps(portalSession.Url)) {
+                return Result.Failure<BillingPortalSessionModel>(
+                    Errors.Billing.ProviderOperationFailed(Provider, "Stripe portal session URL is invalid."));
+            }
+
+            return Result.Success(new BillingPortalSessionModel(portalSession.Url));
+        } catch (Exception exception) when (IsProviderRequestFailure(exception, cancellationToken)) {
+            return Result.Failure<BillingPortalSessionModel>(
+                Errors.Billing.ProviderOperationFailed(Provider, "Stripe request could not be completed."));
+        }
     }
 
     public async Task<Result<BillingWebhookEventModel?>> ParseWebhookEventAsync(
@@ -125,9 +155,15 @@ public sealed class StripeBillingGateway(
             return Result.Failure<BillingWebhookEventModel?>(Errors.Validation.Required(nameof(signatureHeader)));
         }
 
+        Event stripeEvent;
         try {
-            Event stripeEvent = EventUtility.ConstructEvent(payload, signatureHeader, _options.WebhookSecret);
+            stripeEvent = EventUtility.ConstructEvent(payload, signatureHeader, _options.WebhookSecret);
+        } catch (Exception exception) when (exception is StripeException or JsonException or ArgumentException or FormatException or InvalidOperationException or NullReferenceException) {
+            return Result.Failure<BillingWebhookEventModel?>(
+                Errors.Billing.WebhookValidationFailed("Stripe webhook payload or signature is invalid."));
+        }
 
+        try {
             return stripeEvent.Type switch {
                 "customer.subscription.created" => Result.Success<BillingWebhookEventModel?>(MapSubscriptionEvent((Subscription)stripeEvent.Data.Object!, stripeEvent)),
                 "customer.subscription.updated" => Result.Success<BillingWebhookEventModel?>(MapSubscriptionEvent((Subscription)stripeEvent.Data.Object!, stripeEvent)),
@@ -136,8 +172,12 @@ public sealed class StripeBillingGateway(
                     await MapCheckoutCompletedEventAsync((CheckoutSession)stripeEvent.Data.Object!, stripeEvent, cancellationToken).ConfigureAwait(false)),
                 _ => Result.Success<BillingWebhookEventModel?>(value: null),
             };
-        } catch (Exception ex) when (ex is StripeException or InvalidCastException or InvalidOperationException or NullReferenceException) {
-            return Result.Failure<BillingWebhookEventModel?>(Errors.Billing.WebhookValidationFailed(ex.Message));
+        } catch (Exception exception) when (IsProviderRequestFailure(exception, cancellationToken)) {
+            return Result.Failure<BillingWebhookEventModel?>(
+                Errors.Billing.ProviderOperationFailed(Provider, "Stripe request could not be completed."));
+        } catch (Exception exception) when (exception is InvalidCastException or InvalidOperationException or NullReferenceException) {
+            return Result.Failure<BillingWebhookEventModel?>(
+                Errors.Billing.WebhookValidationFailed("Stripe webhook price or structure is invalid."));
         }
     }
 
@@ -212,13 +252,17 @@ public sealed class StripeBillingGateway(
         return null;
     }
 
+    private static bool IsProviderRequestFailure(Exception exception, CancellationToken cancellationToken) =>
+        !cancellationToken.IsCancellationRequested &&
+        exception is StripeException or HttpRequestException or TimeoutException or OperationCanceledException;
+
     private bool IsConfiguredForCheckout() =>
         !string.IsNullOrWhiteSpace(_options.SecretKey) &&
         !string.IsNullOrWhiteSpace(_options.PremiumMonthlyPriceId) &&
         !string.IsNullOrWhiteSpace(_options.PremiumYearlyPriceId) &&
-        Uri.IsWellFormedUriString(_options.SuccessUrl, UriKind.Absolute) &&
-        Uri.IsWellFormedUriString(_options.CancelUrl, UriKind.Absolute) &&
-        Uri.IsWellFormedUriString(_options.PortalReturnUrl, UriKind.Absolute);
+        BillingUrlValidator.IsAbsoluteHttps(_options.SuccessUrl) &&
+        BillingUrlValidator.IsAbsoluteHttps(_options.CancelUrl) &&
+        BillingUrlValidator.IsAbsoluteHttps(_options.PortalReturnUrl);
 
     private bool IsConfiguredForWebhook() =>
         !string.IsNullOrWhiteSpace(_options.SecretKey) &&

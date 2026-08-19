@@ -9,6 +9,10 @@ public sealed class MailInboxSmtpOptions {
 
     public int Port { get; init; } = 2525;
 
+    public string CertificatePath { get; init; } = string.Empty;
+
+    public string PrivateKeyPath { get; init; } = string.Empty;
+
     public int MaxMessageSizeBytes { get; init; } = 10 * 1024 * 1024;
 
     public int MaxConcurrentConnections { get; init; } = 32;
@@ -33,6 +37,8 @@ public sealed class MailInboxSmtpOptions {
 
     public int MaxMimeParts { get; init; } = 100;
 
+    public int MaxMimeDepth { get; init; } = 20;
+
     public int MaxExtractedBodyCharacters { get; init; } = 1_000_000;
 
     public string[] AllowedRecipients { get; init; } = [
@@ -55,12 +61,16 @@ public sealed class MailInboxSmtpOptions {
             MaxTrackedRateLimitKeys: > 0,
             MaxRecipientsPerMessage: > 0,
             MaxMimeParts: > 0,
+            MaxMimeDepth: > 0,
             MaxExtractedBodyCharacters: > 0,
         } &&
                options.MaxConcurrentConnectionsPerIp <= options.MaxConcurrentConnections &&
                options.ProcessingQueueTimeout > TimeSpan.Zero &&
                options.SessionTimeout > TimeSpan.Zero &&
                !string.IsNullOrWhiteSpace(options.ServerName) &&
+               (!options.Enabled ||
+                (!string.IsNullOrWhiteSpace(options.CertificatePath) &&
+                 !string.IsNullOrWhiteSpace(options.PrivateKeyPath))) &&
                options.AllowedRecipients.Length > 0 &&
                options.AllowedRecipients.All(static value => !string.IsNullOrWhiteSpace(value) && value.Contains('@', StringComparison.Ordinal));
     }

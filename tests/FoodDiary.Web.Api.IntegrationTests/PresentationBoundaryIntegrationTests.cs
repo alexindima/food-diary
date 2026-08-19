@@ -151,6 +151,61 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task SecretVerificationRateLimit_IsPartitionedByAuthenticatedUser() {
+        await using WebApplicationFactory<Program> limitedFactory = testAuthFactory.WithWebHostBuilder(builder => {
+            builder.ConfigureAppConfiguration((_, configBuilder) => {
+                configBuilder.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                    ["RateLimiting:SecretVerification:PermitLimit"] = "1",
+                    ["RateLimiting:SecretVerification:WindowSeconds"] = "60",
+                });
+            });
+        });
+        HttpClient firstUserClient = CreateTestUserClient(limitedFactory, Guid.NewGuid());
+        HttpClient secondUserClient = CreateTestUserClient(limitedFactory, Guid.NewGuid());
+        var request = new ChangePasswordHttpRequest("current-password", "different-password");
+
+        HttpResponseMessage firstUserInitial = await firstUserClient.PatchAsJsonAsync("/api/v1/users/password", request);
+        HttpResponseMessage secondUserInitial = await secondUserClient.PatchAsJsonAsync("/api/v1/users/password", request);
+        HttpResponseMessage firstUserLimited = await firstUserClient.PatchAsJsonAsync("/api/v1/users/password", request);
+        ErrorPayload? payload = await firstUserLimited.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Multiple(
+            () => Assert.NotEqual(HttpStatusCode.TooManyRequests, firstUserInitial.StatusCode),
+            () => Assert.NotEqual(HttpStatusCode.TooManyRequests, secondUserInitial.StatusCode),
+            () => Assert.Equal(HttpStatusCode.TooManyRequests, firstUserLimited.StatusCode),
+            () => Assert.NotNull(firstUserLimited.Headers.RetryAfter),
+            () => Assert.Equal("RateLimit.Exceeded", payload?.Error),
+            () => Assert.False(string.IsNullOrWhiteSpace(payload?.TraceId)));
+    }
+
+    [Fact]
+    public async Task FoodDataRateLimit_IsPartitionedByAuthenticatedUser() {
+        await using WebApplicationFactory<Program> limitedFactory = testAuthFactory.WithWebHostBuilder(builder => {
+            builder.ConfigureAppConfiguration((_, configBuilder) => {
+                configBuilder.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                    ["RateLimiting:FoodData:PermitLimit"] = "1",
+                    ["RateLimiting:FoodData:WindowSeconds"] = "60",
+                });
+            });
+        });
+        HttpClient firstUserClient = CreateTestUserClient(limitedFactory, Guid.NewGuid());
+        HttpClient secondUserClient = CreateTestUserClient(limitedFactory, Guid.NewGuid());
+
+        HttpResponseMessage firstUserInitial = await firstUserClient.GetAsync("/api/v1/products/suggestions?search=");
+        HttpResponseMessage secondUserInitial = await secondUserClient.GetAsync("/api/v1/products/suggestions?search=");
+        HttpResponseMessage firstUserLimited = await firstUserClient.GetAsync("/api/v1/products/suggestions?search=");
+        ErrorPayload? payload = await firstUserLimited.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Multiple(
+            () => Assert.NotEqual(HttpStatusCode.TooManyRequests, firstUserInitial.StatusCode),
+            () => Assert.NotEqual(HttpStatusCode.TooManyRequests, secondUserInitial.StatusCode),
+            () => Assert.Equal(HttpStatusCode.TooManyRequests, firstUserLimited.StatusCode),
+            () => Assert.NotNull(firstUserLimited.Headers.RetryAfter),
+            () => Assert.Equal("RateLimit.Exceeded", payload?.Error),
+            () => Assert.False(string.IsNullOrWhiteSpace(payload?.TraceId)));
+    }
+
+    [Fact]
     public async Task TelegramBotAuth_WithoutConfiguredSecret_ReturnsInternalServerErrorContractWithTraceId() {
         HttpClient client = apiFactory.CreateClient();
 
@@ -759,6 +814,30 @@ public sealed class PresentationBoundaryIntegrationTests(
         KestrelServerOptions options = apiFactory.Services.GetRequiredService<IOptions<KestrelServerOptions>>().Value;
 
         Assert.Equal(1024 * 1024, options.Limits.MaxRequestBodySize);
+    }
+
+    [Fact]
+    public async Task SwaggerJson_ResourceAndSecretLimitedActions_DocumentTooManyRequests() {
+        HttpClient client = apiFactory.CreateClient();
+        using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
+        JsonElement paths = json.RootElement.GetProperty("paths");
+        (string Path, string Method)[] operations = [
+            ("/api/v{version}/users/password", "patch"),
+            ("/api/v{version}/export/diary", "get"),
+            ("/api/v{version}/export/cycle", "get"),
+            ("/api/v{version}/export/cycle/sensitive", "post"),
+            ("/api/v{version}/dietologist/accept", "post"),
+            ("/api/v{version}/dietologist/decline", "post"),
+            ("/api/v{version}/billing/checkout-session", "post"),
+            ("/api/v{version}/billing/portal-session", "post"),
+            ("/api/v{version}/admin/email-templates/test", "post"),
+        ];
+
+        foreach ((string path, string method) in operations) {
+            Assert.True(
+                paths.GetProperty(path).GetProperty(method).GetProperty("responses").TryGetProperty("429", out _),
+                $"{method.ToUpperInvariant()} {path} must document HTTP 429.");
+        }
     }
 
     [Fact]

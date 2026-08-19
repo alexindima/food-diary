@@ -11,6 +11,28 @@ namespace FoodDiary.Web.Api.Tests.Extensions;
 [ExcludeFromCodeCoverage]
 public sealed class ApiHostOptionsConfigurationTests {
     [Fact]
+    public void ApiRateLimitingOptions_ResourceAndSecretPolicies_RequireValidWindows() {
+        var valid = new ApiRateLimitingOptions();
+        var invalidSecretVerification = new ApiRateLimitingOptions {
+            SecretVerification = new ApiRateLimitingOptions.FixedWindowPolicyOptions(),
+        };
+        var invalidBilling = new ApiRateLimitingOptions {
+            Billing = new ApiRateLimitingOptions.FixedWindowPolicyOptions(),
+        };
+        var invalidExport = new ApiRateLimitingOptions {
+            Export = new ApiRateLimitingOptions.FixedWindowPolicyOptions(),
+        };
+
+        Assert.Multiple(
+            () => Assert.True(ApiRateLimitingOptions.HasValidSecretVerification(valid)),
+            () => Assert.True(ApiRateLimitingOptions.HasValidBilling(valid)),
+            () => Assert.True(ApiRateLimitingOptions.HasValidExport(valid)),
+            () => Assert.False(ApiRateLimitingOptions.HasValidSecretVerification(invalidSecretVerification)),
+            () => Assert.False(ApiRateLimitingOptions.HasValidBilling(invalidBilling)),
+            () => Assert.False(ApiRateLimitingOptions.HasValidExport(invalidExport)));
+    }
+
+    [Fact]
     public void AddApiServices_WithoutCorsOrigins_FailsOptionsValidation() {
         var services = new ServiceCollection();
         IConfigurationRoot configuration = new ConfigurationBuilder()
@@ -67,6 +89,14 @@ public sealed class ApiHostOptionsConfigurationTests {
                 ["RateLimiting:TestDelivery:WindowSeconds"] = "92",
                 ["RateLimiting:Wearable:PermitLimit"] = "8",
                 ["RateLimiting:Wearable:WindowSeconds"] = "93",
+                ["RateLimiting:FoodData:PermitLimit"] = "29",
+                ["RateLimiting:FoodData:WindowSeconds"] = "94",
+                ["RateLimiting:SecretVerification:PermitLimit"] = "3",
+                ["RateLimiting:SecretVerification:WindowSeconds"] = "95",
+                ["RateLimiting:Billing:PermitLimit"] = "9",
+                ["RateLimiting:Billing:WindowSeconds"] = "96",
+                ["RateLimiting:Export:PermitLimit"] = "6",
+                ["RateLimiting:Export:WindowSeconds"] = "97",
                 ["OutputCache:AdminAiUsage:ExpirationSeconds"] = "30",
             })
             .Build();
@@ -101,6 +131,14 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Equal(92, rateLimiting.TestDelivery.WindowSeconds);
         Assert.Equal(8, rateLimiting.Wearable.PermitLimit);
         Assert.Equal(93, rateLimiting.Wearable.WindowSeconds);
+        Assert.Equal(29, rateLimiting.FoodData.PermitLimit);
+        Assert.Equal(94, rateLimiting.FoodData.WindowSeconds);
+        Assert.Equal(3, rateLimiting.SecretVerification.PermitLimit);
+        Assert.Equal(95, rateLimiting.SecretVerification.WindowSeconds);
+        Assert.Equal(9, rateLimiting.Billing.PermitLimit);
+        Assert.Equal(96, rateLimiting.Billing.WindowSeconds);
+        Assert.Equal(6, rateLimiting.Export.PermitLimit);
+        Assert.Equal(97, rateLimiting.Export.WindowSeconds);
         Assert.Equal(30, outputCache.AdminAiUsage.ExpirationSeconds);
         Assert.Equal(2, forwardedHeadersOptions.ForwardLimit);
         Assert.True(forwardedHeadersOptions.ForwardedHeaders.HasFlag(ForwardedHeaders.XForwardedHost));
@@ -208,6 +246,29 @@ public sealed class ApiHostOptionsConfigurationTests {
         };
 
         bool valid = ApiRateLimitingOptions.HasValidWearable(options);
+
+        Assert.Equal(expected, valid);
+    }
+
+    [Theory]
+    [InlineData(30, 60, 0, true)]
+    [InlineData(0, 60, 0, false)]
+    [InlineData(30, 0, 0, false)]
+    [InlineData(30, 60, -1, false)]
+    public void ApiRateLimitingOptions_HasValidFoodData_ReturnsExpectedResult(
+        int permitLimit,
+        int windowSeconds,
+        int queueLimit,
+        bool expected) {
+        var options = new ApiRateLimitingOptions {
+            FoodData = new ApiRateLimitingOptions.FixedWindowPolicyOptions {
+                PermitLimit = permitLimit,
+                WindowSeconds = windowSeconds,
+                QueueLimit = queueLimit,
+            },
+        };
+
+        bool valid = ApiRateLimitingOptions.HasValidFoodData(options);
 
         Assert.Equal(expected, valid);
     }

@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Identity.Authentication.Commands.VerifyEmail;
 
@@ -12,6 +13,9 @@ public sealed class VerifyEmailCommandValidator : AbstractValidator<VerifyEmailC
         RuleFor(x => x.Token)
             .NotEmpty()
             .WithErrorCode("Validation.Required")
-            .WithMessage("token is required.");
+            .WithMessage("token is required.")
+            .MaximumLength(AuthenticationInputLimits.MaximumOpaqueTokenLength)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"token must not exceed {AuthenticationInputLimits.MaximumOpaqueTokenLength} characters.");
     }
 }

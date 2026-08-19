@@ -36,9 +36,10 @@ public sealed class MailInboxMailboxFilter(
             return Task.FromResult(false);
         }
 
+        string sourceAddress = GetSourceAddress(context);
         if (!rateLimiter.TryAcquire(
                 "ip",
-                GetSourceAddress(context),
+                sourceAddress,
                 _options.MaxMessagesPerIpPerHour,
                 RateLimitWindow)) {
             MailInboxTelemetry.RecordAdmission("ip_rate_limited");
@@ -47,7 +48,7 @@ public sealed class MailInboxMailboxFilter(
 
         if (!rateLimiter.TryAcquire(
                 "sender",
-                from.AsAddress(),
+                string.Concat(sourceAddress, "\n", from.AsAddress()),
                 _options.MaxMessagesPerSenderPerHour,
                 RateLimitWindow)) {
             MailInboxTelemetry.RecordAdmission("sender_rate_limited");
@@ -118,7 +119,7 @@ public sealed class MailInboxMailboxFilter(
         if (context is not null &&
             context.Properties.TryGetValue(EndpointListener.RemoteEndPointKey, out object? value) &&
             value is IPEndPoint endpoint) {
-            return endpoint.Address.ToString();
+            return MailInboxNetworkIdentity.GetKey(endpoint.Address);
         }
 
         return "unknown";

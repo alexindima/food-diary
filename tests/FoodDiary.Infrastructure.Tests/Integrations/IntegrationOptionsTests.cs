@@ -1,3 +1,4 @@
+using FoodDiary.Integrations.Billing;
 using FoodDiary.Integrations.Options;
 
 namespace FoodDiary.Infrastructure.Tests.Integrations;
@@ -178,6 +179,8 @@ public sealed class IntegrationOptionsTests {
     [InlineData("199.00", "bad", "RUB", "https://example.com/return", false)]
     [InlineData("199.00", "1990.00", "", "https://example.com/return", false)]
     [InlineData("199.00", "1990.00", "RUB", "return", false)]
+    [InlineData("199.00", "1990.00", "RUB", "http://example.com/return", false)]
+    [InlineData("199.00", "1990.00", "RUB", "javascript:alert(1)", false)]
     public void YooKassaOptions_HasValidCheckoutConfiguration_ValidatesRequiredCheckoutFields(
         string monthlyAmount,
         string yearlyAmount,
@@ -194,6 +197,16 @@ public sealed class IntegrationOptionsTests {
         };
 
         Assert.Equal(expected, YooKassaOptions.HasValidCheckoutConfiguration(options));
+    }
+
+    [Theory]
+    [InlineData("https://checkout.example/path", true)]
+    [InlineData("http://checkout.example/path", false)]
+    [InlineData("javascript:alert(1)", false)]
+    [InlineData("/relative", false)]
+    [InlineData("https://user:password@checkout.example/path", false)]
+    public void BillingUrlValidator_IsAbsoluteHttps_RejectsUnsafeNavigationUrls(string url, bool expected) {
+        Assert.Equal(expected, BillingUrlValidator.IsAbsoluteHttps(url));
     }
 
     [Theory]

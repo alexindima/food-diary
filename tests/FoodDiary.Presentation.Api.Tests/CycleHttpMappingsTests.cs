@@ -197,7 +197,13 @@ public sealed class CycleHttpMappingsTests {
         var userId = Guid.NewGuid();
         var bleedingId = Guid.NewGuid();
         var episodeId = Guid.NewGuid();
+        var activeConsentId = Guid.NewGuid();
+        var revokedConsentId = Guid.NewGuid();
+        var revisionId = Guid.NewGuid();
         var startDate = new DateOnly(2026, 4, 1);
+        DateTime generatedAtUtc = new(2026, 4, 2, 12, 0, 0, DateTimeKind.Utc);
+        DateTime grantedAtUtc = generatedAtUtc.AddDays(-2);
+        DateTime revokedAtUtc = generatedAtUtc.AddDays(-1);
         var model = new CycleModel(
             cycleId,
             userId,
@@ -249,6 +255,37 @@ public sealed class CycleHttpMappingsTests {
                     startDate.AddDays(4),
                     MenstrualEpisodeStatus.Confirmed,
                     ExcludedFromPredictions: true),
+            ],
+            Goal: CycleTrackingGoal.TryingToConceive,
+            ReproductiveState: CycleReproductiveState.Postpartum,
+            HideFromDashboard: true,
+            Consents: [
+                new CycleConsentModel(
+                    activeConsentId,
+                    CycleConsentPurpose.CycleTracking,
+                    grantedAtUtc,
+                    RevokedAtUtc: null),
+                new CycleConsentModel(
+                    revokedConsentId,
+                    CycleConsentPurpose.FertilitySignals,
+                    grantedAtUtc,
+                    revokedAtUtc),
+            ],
+            PredictionRevisions: [
+                new CyclePredictionRevisionModel(
+                    revisionId,
+                    generatedAtUtc,
+                    startDate.AddDays(27),
+                    startDate.AddDays(29),
+                    "High",
+                    "Sufficient",
+                    "Consistent",
+                    CompletedCycleCount: 6,
+                    CalibrationSampleCount: 4,
+                    HistoricalCoveragePercent: 92.5,
+                    MeanAbsoluteErrorDays: 1.25,
+                    ["calibrated", "stable_pattern"],
+                    "period-v2.1"),
             ]);
 
         CycleHttpResponse response = model.ToHttpResponse();
@@ -268,6 +305,9 @@ public sealed class CycleHttpMappingsTests {
         Assert.Equal("Medium", response.Predictions.Confidence);
         Assert.Equal(4, response.Predictions.UsedEpisodeCount);
         Assert.Equal(1, response.Predictions.ExcludedEpisodeCount);
+        Assert.Equal((int)CycleTrackingGoal.TryingToConceive, response.Goal);
+        Assert.Equal((int)CycleReproductiveState.Postpartum, response.ReproductiveState);
+        Assert.True(response.HideFromDashboard);
         MenstrualEpisodeHttpResponse episode = Assert.Single(response.MenstrualEpisodes);
         Assert.Multiple(
             () => Assert.Equal(episodeId, episode.Id),
@@ -276,6 +316,38 @@ public sealed class CycleHttpMappingsTests {
             () => Assert.Equal(ToUtcDateTime(startDate.AddDays(4)), episode.EndDate),
             () => Assert.Equal((int)MenstrualEpisodeStatus.Confirmed, episode.Status),
             () => Assert.True(episode.ExcludedFromPredictions));
+        IReadOnlyCollection<CycleConsentHttpResponse> consents = Assert.IsAssignableFrom<IReadOnlyCollection<CycleConsentHttpResponse>>(response.Consents);
+        Assert.Collection(
+            consents,
+            consent => Assert.Multiple(
+                () => Assert.Equal(activeConsentId, consent.Id),
+                () => Assert.Equal((int)CycleConsentPurpose.CycleTracking, consent.Purpose),
+                () => Assert.Equal(grantedAtUtc, consent.GrantedAtUtc),
+                () => Assert.Null(consent.RevokedAtUtc),
+                () => Assert.True(consent.IsActive)),
+            consent => Assert.Multiple(
+                () => Assert.Equal(revokedConsentId, consent.Id),
+                () => Assert.Equal((int)CycleConsentPurpose.FertilitySignals, consent.Purpose),
+                () => Assert.Equal(grantedAtUtc, consent.GrantedAtUtc),
+                () => Assert.Equal(revokedAtUtc, consent.RevokedAtUtc),
+                () => Assert.False(consent.IsActive)));
+        IReadOnlyCollection<CyclePredictionRevisionHttpResponse> revisions = Assert.IsAssignableFrom<IReadOnlyCollection<CyclePredictionRevisionHttpResponse>>(
+            response.PredictionRevisions);
+        CyclePredictionRevisionHttpResponse revision = Assert.Single(revisions);
+        Assert.Multiple(
+            () => Assert.Equal(revisionId, revision.Id),
+            () => Assert.Equal(generatedAtUtc, revision.GeneratedAtUtc),
+            () => Assert.Equal(ToUtcDateTime(startDate.AddDays(27)), revision.NextPeriodStartFrom),
+            () => Assert.Equal(ToUtcDateTime(startDate.AddDays(29)), revision.NextPeriodStartTo),
+            () => Assert.Equal("High", revision.Confidence),
+            () => Assert.Equal("Sufficient", revision.DataSufficiency),
+            () => Assert.Equal("Consistent", revision.PatternConsistency),
+            () => Assert.Equal(6, revision.CompletedCycleCount),
+            () => Assert.Equal(4, revision.CalibrationSampleCount),
+            () => Assert.Equal(92.5, revision.HistoricalCoveragePercent),
+            () => Assert.Equal(1.25, revision.MeanAbsoluteErrorDays),
+            () => Assert.Equal(["calibrated", "stable_pattern"], revision.ReasonCodes),
+            () => Assert.Equal("period-v2.1", revision.AlgorithmVersion));
     }
 
     [Fact]

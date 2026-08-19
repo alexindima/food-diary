@@ -18,7 +18,7 @@ public sealed class MailInboxRetentionHostedService(
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
         while (!stoppingToken.IsCancellationRequested) {
             try {
-                await PurgeAsync(stoppingToken).ConfigureAwait(false);
+                await DrainExpiredAsync(stoppingToken).ConfigureAwait(false);
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                 return;
             } catch (Exception exception) {
@@ -54,5 +54,23 @@ public sealed class MailInboxRetentionHostedService(
         }
 
         return result;
+    }
+
+    internal async Task<InboundMailRetentionResult> DrainExpiredAsync(CancellationToken cancellationToken) {
+        int totalContentPurged = 0;
+        int totalMetadataDeleted = 0;
+        InboundMailRetentionResult batch;
+        do {
+            batch = await PurgeAsync(cancellationToken).ConfigureAwait(false);
+            totalContentPurged = checked(totalContentPurged + batch.ContentPurgedCount);
+            totalMetadataDeleted = checked(totalMetadataDeleted + batch.MetadataDeletedCount);
+            if (batch.ContentPurgedCount == _options.CleanupBatchSize ||
+                batch.MetadataDeletedCount == _options.CleanupBatchSize) {
+                await Task.Yield();
+            }
+        } while (batch.ContentPurgedCount == _options.CleanupBatchSize ||
+                 batch.MetadataDeletedCount == _options.CleanupBatchSize);
+
+        return new InboundMailRetentionResult(totalContentPurged, totalMetadataDeleted);
     }
 }

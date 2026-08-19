@@ -38,16 +38,9 @@ internal sealed class PaddleApiClient(HttpClient httpClient, PaddleOptions optio
             cancellationToken).ConfigureAwait(false);
         try {
             if (!response.IsSuccessStatusCode) {
-                string error = await BoundedHttpContentReader.ReadAsStringAsync(
-                    response.Content,
-                    BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
-                    BoundedHttpContentReader.DefaultReadTimeout,
-                    cancellationToken).ConfigureAwait(false);
                 return Result.Failure<TResponse>(Errors.Billing.ProviderOperationFailed(
                     BillingProviderNames.Paddle,
-                    string.Create(
-                        CultureInfo.InvariantCulture,
-                        $"{(int)response.StatusCode} {response.ReasonPhrase}: {BoundedHttpContentReader.NormalizeErrorSummary(error)}").Trim()));
+                    $"Paddle returned HTTP status {((int)response.StatusCode).ToString(CultureInfo.InvariantCulture)}."));
             }
 
             PaddleEnvelope<TResponse>? envelope = await BoundedHttpContentReader.ReadFromJsonAsync<PaddleEnvelope<TResponse>>(

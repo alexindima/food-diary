@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Export.Models;
 
 namespace FoodDiary.Application.Export.Queries.ExportCycle;
@@ -29,6 +30,10 @@ public sealed class ExportCycleQueryValidator : AbstractValidator<ExportCycleQue
             .NotEmpty()
             .When(x => x.Scope == CycleExportScope.Sensitive)
             .WithErrorCode("Validation.Required")
-            .WithMessage("Current password is required for a sensitive cycle export.");
+            .WithMessage("Current password is required for a sensitive cycle export.")
+            .MaximumLength(AuthenticationInputLimits.MaximumPasswordLength)
+            .When(x => x.Scope == CycleExportScope.Sensitive)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"Current password must not exceed {AuthenticationInputLimits.MaximumPasswordLength} characters.");
     }
 }

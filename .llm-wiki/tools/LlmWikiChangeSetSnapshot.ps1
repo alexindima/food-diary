@@ -4,13 +4,38 @@ if (-not (Get-Command Invoke-LlmWikiGitPathList -ErrorAction SilentlyContinue)) 
 
 function Get-LlmWikiChangeSetSnapshot {
     [CmdletBinding()]
-    param([Parameter(Mandatory)][string]$RepositoryRoot)
+    param(
+        [Parameter(Mandatory)][string]$RepositoryRoot,
+        [string[]]$RelevantPath
+    )
 
     $head = (& git -C $RepositoryRoot rev-parse HEAD).Trim()
     if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve HEAD for the Wiki change-set snapshot.' }
-    $workspacePaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') -FailureMessage 'Unable to resolve modified paths for the Wiki change-set snapshot.')
-    $workspacePaths += @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to resolve untracked paths for the Wiki change-set snapshot.')
+    $normalizedRelevantPaths = @($RelevantPath | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') } | Sort-Object -Unique)
+    $gitPathspecs = if ($normalizedRelevantPaths.Count -gt 0) {
+        @($normalizedRelevantPaths + @('.llm-wiki/tools', '.llm-wiki/policies', '.llm-wiki/wiki.ps1') | Sort-Object -Unique)
+    } else {
+        @()
+    }
+    $diffArguments = @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') + @($gitPathspecs)
+    $untrackedArguments = @('ls-files', '--others', '--exclude-standard', '--') + @($gitPathspecs)
+    $workspacePaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments $diffArguments -FailureMessage 'Unable to resolve modified paths for the Wiki change-set snapshot.')
+    $workspacePaths += @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments $untrackedArguments -FailureMessage 'Unable to resolve untracked paths for the Wiki change-set snapshot.')
     $workspacePaths = @($workspacePaths | Sort-Object -Unique)
+    if ($normalizedRelevantPaths.Count -gt 0) {
+        $workspacePaths = @($workspacePaths | Where-Object {
+            $candidate = ([string]$_).Replace('\', '/').TrimEnd('/')
+            if ($candidate.StartsWith('.llm-wiki/tools/', [StringComparison]::OrdinalIgnoreCase) -or
+                $candidate.StartsWith('.llm-wiki/policies/', [StringComparison]::OrdinalIgnoreCase) -or
+                $candidate -eq '.llm-wiki/wiki.ps1') { return $true }
+            foreach ($relevantPath in $normalizedRelevantPaths) {
+                if ($candidate -eq $relevantPath -or
+                    $candidate.StartsWith("$relevantPath/", [StringComparison]::OrdinalIgnoreCase) -or
+                    $relevantPath.StartsWith("$candidate/", [StringComparison]::OrdinalIgnoreCase)) { return $true }
+            }
+            return $false
+        })
+    }
 
     $material = [Collections.Generic.List[string]]::new()
     $material.Add("head=$head")
@@ -34,5 +59,6 @@ function Get-LlmWikiChangeSetSnapshot {
         fingerprint = $fingerprint
         changedPaths = [string[]]$workspacePaths
         createdAtUtc = [DateTime]::UtcNow.ToString('o')
+        relevantPaths = [string[]]$normalizedRelevantPaths
     }
 }

@@ -116,11 +116,14 @@ public sealed class ClientTaskHandlerTests {
             new CreateClientTaskCommand(null, Guid.Empty, "", new string('x', 2001), null));
         TestValidationResult<CreateClientTaskCommand> valid = validator.TestValidate(
             new CreateClientTaskCommand(null, Guid.NewGuid(), new string('x', 200), null, null));
+        TestValidationResult<CreateClientTaskCommand> unspecifiedDueAt = validator.TestValidate(
+            new CreateClientTaskCommand(null, Guid.NewGuid(), "Task", null, new DateTime(2026, 8, 19)));
 
         Assert.Multiple(
             () => invalid.ShouldHaveValidationErrorFor(command => command.ClientUserId),
             () => invalid.ShouldHaveValidationErrorFor(command => command.Title),
             () => invalid.ShouldHaveValidationErrorFor(command => command.Details),
+            () => unspecifiedDueAt.ShouldHaveValidationErrorFor(command => command.DueAtUtc),
             () => valid.ShouldNotHaveAnyValidationErrors());
     }
 

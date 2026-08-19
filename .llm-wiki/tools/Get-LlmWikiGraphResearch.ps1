@@ -19,22 +19,48 @@ if ($paths.Length -eq 0) {
 }
 $manager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'
 $stopwatch = [Diagnostics.Stopwatch]::StartNew()
-$graphLimit = [Math]::Min(500, [Math]::Max(100, $Limit * 20))
+$graphLimit = [Math]::Min(100, [Math]::Max($Limit, $Limit * 4))
 $impact = & $manager impact -ChangedPath $paths -Limit $graphLimit -Format Json | ConvertFrom-Json
 $stopwatch.Stop()
-$matchedPaths = [object[]]@($impact.paths | Sort-Object -Unique)
-$downstream = [object[]]@($impact.consumers | Group-Object path | ForEach-Object {
+$genericSymbols = @('Unit', 'DependencyInjection', 'Result')
+function Get-PathAffinity([string]$Path) {
+    $normalized = $Path.Replace('\', '/').TrimEnd('/')
+    foreach ($requestedPath in $paths) {
+        $scope = $requestedPath.Replace('\', '/').TrimEnd('/')
+        if ($normalized -eq $scope -or $normalized.StartsWith("$scope/", [StringComparison]::OrdinalIgnoreCase)) { return 3 }
+        $scopeProject = ($scope -split '/', 2)[0]
+        if ($normalized.StartsWith("$scopeProject/", [StringComparison]::OrdinalIgnoreCase)) { return 2 }
+    }
+    return 1
+}
+function Select-BoundedGraphPath([object[]]$Items) {
+    @($Items | ForEach-Object {
+        $meaningfulSymbols = @($_.symbols | Where-Object { $_ -notin $genericSymbols } | Sort-Object -Unique | Select-Object -First 8)
+        [pscustomobject][ordered]@{
+            path = $_.path
+            symbols = $meaningfulSymbols
+            affinity = Get-PathAffinity ([string]$_.path)
+            genericOnly = $meaningfulSymbols.Count -eq 0
+        }
+    } | Sort-Object @{ Expression = 'genericOnly'; Ascending = $true }, @{ Expression = 'affinity'; Descending = $true }, path | Select-Object -First $Limit | ForEach-Object {
+        [pscustomobject][ordered]@{ path = $_.path; symbols = @($_.symbols) }
+    })
+}
+$matchedPaths = [object[]]@($impact.paths | Sort-Object @{ Expression = { Get-PathAffinity ([string]$_) }; Descending = $true }, @{ Expression = { [string]$_ }; Ascending = $true } | Select-Object -First $Limit)
+$downstreamCandidates = [object[]]@($impact.consumers | Group-Object path | ForEach-Object {
     [pscustomobject][ordered]@{
         path = $_.Name
         symbols = @($_.Group.symbol | Sort-Object -Unique)
     }
-} | Sort-Object path)
-$dependencies = [object[]]@($impact.references | Group-Object declarationPath | ForEach-Object {
+})
+$dependencyCandidates = [object[]]@($impact.references | Group-Object declarationPath | ForEach-Object {
     [pscustomobject][ordered]@{
         path = $_.Name
         symbols = @($_.Group.symbol | Sort-Object -Unique)
     }
-} | Sort-Object path)
+})
+$downstream = [object[]]@(Select-BoundedGraphPath $downstreamCandidates)
+$dependencies = [object[]]@(Select-BoundedGraphPath $dependencyCandidates)
 $logicalModule = if (-not [string]::IsNullOrWhiteSpace($Module)) { $Module } else {
     $firstBoundary = [string]@($paths)[0]
     $match = [regex]::Match($firstBoundary.Replace('\','/'), '^FoodDiary\.Application(?:/|\.)(?<module>[^/]+)')
@@ -54,7 +80,7 @@ $result = [pscustomobject][ordered]@{
         targetProjectCandidate = $targetProjectCandidate
     }
     matchedPaths = $matchedPaths
-    declarations = @($impact.declaredSymbols)
+    declarations = @($impact.declaredSymbols | Where-Object { $_ -notin $genericSymbols } | Select-Object -First $Limit)
     downstreamConsumers = $downstream
     dependencies = $dependencies
     durationMs = $stopwatch.ElapsedMilliseconds

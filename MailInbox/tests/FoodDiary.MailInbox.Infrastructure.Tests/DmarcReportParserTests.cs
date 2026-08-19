@@ -174,6 +174,98 @@ public sealed class DmarcReportParserTests {
     }
 
     [Fact]
+    public void TryParse_WhenMessageExceedsAggregateDocumentBudget_ReturnsNullBeforeValidReport() {
+        MimePart[] attachments = [
+            CreateGzipAttachment("<not-feedback id=\"1\" />"),
+            CreateGzipAttachment("<not-feedback id=\"2\" />"),
+            CreateGzipAttachment("<not-feedback id=\"3\" />"),
+            CreateGzipAttachment("<not-feedback id=\"4\" />"),
+            CreateGzipReportAttachment(),
+        ];
+        string rawMime = CreateRawMessage(attachments);
+        var parser = new DmarcReportParser();
+
+        DmarcReportPreview? report = parser.TryParse(rawMime);
+
+        Assert.Null(report);
+    }
+
+    [Fact]
+    public void TryParse_WhenAggregateExpandedCharactersExceedBudget_ReturnsNull() {
+        const int documentCharacters = 1_900_000;
+        string rawMime = CreateRawMessage(
+            CreateGzipAttachment(new string('a', documentCharacters)),
+            CreateGzipAttachment(new string('b', documentCharacters)),
+            CreateGzipAttachment(new string('c', documentCharacters)),
+            CreateGzipAttachment(new string('d', documentCharacters)));
+        var parser = new DmarcReportParser();
+
+        DmarcReportPreview? report = parser.TryParse(rawMime);
+
+        Assert.Null(report);
+    }
+
+    [Fact]
+    public void TryParse_WhenDirectXmlExceedsPerDocumentLimit_ReturnsNull() {
+        string rawMime = CreateRawMessage(new MimePart("application", "xml") {
+            FileName = "report.xml",
+            Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes(new string('a', (2 * 1024 * 1024) + 1)))),
+            ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+            ContentTransferEncoding = ContentEncoding.Base64,
+        });
+        var parser = new DmarcReportParser();
+
+        DmarcReportPreview? report = parser.TryParse(rawMime);
+
+        Assert.Null(report);
+    }
+
+    [Fact]
+    public void TryParse_WhenDecodedAttachmentsExceedAggregateBudget_ReturnsNull() {
+        MimePart[] attachments = [.. Enumerable.Range(0, 3)
+            .Select(_ => new MimePart("application", "octet-stream") {
+                FileName = "data.bin",
+                Content = new MimeContent(new MemoryStream(new byte[4 * 1024 * 1024])),
+                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                ContentTransferEncoding = ContentEncoding.Base64,
+            })];
+        string rawMime = CreateRawMessage(attachments);
+        var parser = new DmarcReportParser();
+
+        DmarcReportPreview? report = parser.TryParse(rawMime);
+
+        Assert.Null(report);
+    }
+
+    [Fact]
+    public void TryParse_WhenReportContainsTooManyRecords_ReturnsNull() {
+        string records = string.Concat(Enumerable.Repeat("<record />", 10_001));
+        string xml = $"<feedback>{records}</feedback>";
+        string rawMime = CreateRawMessage(new MimePart("application", "xml") {
+            FileName = "report.xml",
+            Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes(xml))),
+            ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+            ContentTransferEncoding = ContentEncoding.Base64,
+        });
+        var parser = new DmarcReportParser();
+
+        DmarcReportPreview? report = parser.TryParse(rawMime);
+
+        Assert.Null(report);
+    }
+
+    [Fact]
+    public void TryParse_WhenCancellationIsRequested_PropagatesCancellation() {
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+        var parser = new DmarcReportParser();
+
+        Assert.Throws<OperationCanceledException>(() => parser.TryParse(
+            "From: sender@example.com\r\nSubject: Hello\r\n\r\nPlain message",
+            cts.Token));
+    }
+
+    [Fact]
     public void TryParse_WhenZipXmlEntryIsTooLarge_ReturnsNull() {
         string rawMime = CreateRawMessage(CreateZipAttachment("report.xml", new string('a', (2 * 1024 * 1024) + 1)));
         var parser = new DmarcReportParser();

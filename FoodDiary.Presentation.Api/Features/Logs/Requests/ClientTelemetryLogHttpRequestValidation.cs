@@ -12,8 +12,11 @@ internal static class ClientTelemetryLogHttpRequestValidation {
     private const int DetailsMaxPropertyNameLength = 64;
     private const int DetailsMaxStringLength = 512;
     private const int DetailsMaxArrayLength = 16;
+    private static readonly TimeSpan MaxFutureTimestampSkew = TimeSpan.FromMinutes(5);
 
-    public static IReadOnlyList<ValidationResult> Validate(ClientTelemetryLogHttpRequest request) {
+    public static IReadOnlyList<ValidationResult> Validate(
+        ClientTelemetryLogHttpRequest request,
+        DateTimeOffset utcNow) {
         List<ValidationResult> failures = [];
         ValidateRequired(request.Category, 32, nameof(request.Category), failures);
         ValidateRequired(request.Name, 64, nameof(request.Name), failures);
@@ -44,8 +47,10 @@ internal static class ClientTelemetryLogHttpRequestValidation {
             request.Timestamp,
             CultureInfo.InvariantCulture,
             DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
-            out _)) {
+            out DateTimeOffset timestamp)) {
             failures.Add(new ValidationResult("Telemetry timestamp must be a valid date and time.", [nameof(request.Timestamp)]));
+        } else if (timestamp > utcNow.Add(MaxFutureTimestampSkew)) {
+            failures.Add(new ValidationResult("Telemetry timestamp is too far in the future.", [nameof(request.Timestamp)]));
         }
 
         if (request.DurationMs is { } durationMs && (!double.IsFinite(durationMs) || durationMs is < 0 or > 600_000)) {

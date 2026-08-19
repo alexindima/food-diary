@@ -122,6 +122,29 @@ public sealed class OptionsValidationTests {
         Assert.Equal(expected, MarketingAttributionCleanupOptions.HasValidConfiguration(options));
     }
 
+    [Theory]
+    [InlineData(true, 90, 500, "45 3 * * *", true)]
+    [InlineData(false, 0, 0, "", true)]
+    [InlineData(true, 0, 500, "45 3 * * *", false)]
+    [InlineData(true, 90, 0, "45 3 * * *", false)]
+    [InlineData(true, 90, 500, "", false)]
+    [InlineData(true, 90, 500, " ", false)]
+    public void FastingTelemetryCleanupOptions_ReturnExpectedValidationResult(
+        bool enabled,
+        int retentionDays,
+        int batchSize,
+        string cron,
+        bool expected) {
+        var options = new FastingTelemetryCleanupOptions {
+            Enabled = enabled,
+            RetentionDays = retentionDays,
+            BatchSize = batchSize,
+            Cron = cron,
+        };
+
+        Assert.Equal(expected, FastingTelemetryCleanupOptions.HasValidConfiguration(options));
+    }
+
     [Fact]
     public void BillingRenewalOptions_WhenDisabled_PassesValidation() {
         var options = new BillingRenewalOptions {

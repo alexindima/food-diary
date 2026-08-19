@@ -60,21 +60,17 @@ public class ContentInvariantTests {
     }
 
     [Fact]
-    public void NutritionLesson_Create_WithZeroEstimatedReadMinutes_ClampsTo1() {
-        var lesson = NutritionLesson.Create(
+    public void NutritionLesson_Create_WithZeroEstimatedReadMinutes_Throws() {
+        Assert.Throws<ArgumentOutOfRangeException>(() => NutritionLesson.Create(
             "Title", "Content", summary: null, "en",
-            LessonCategory.Macronutrients, LessonDifficulty.Beginner, 0);
-
-        Assert.Equal(1, lesson.EstimatedReadMinutes);
+            LessonCategory.Macronutrients, LessonDifficulty.Beginner, 0));
     }
 
     [Fact]
-    public void NutritionLesson_Create_WithNegativeSortOrder_ClampsTo0() {
-        var lesson = NutritionLesson.Create(
+    public void NutritionLesson_Create_WithNegativeSortOrder_Throws() {
+        Assert.Throws<ArgumentOutOfRangeException>(() => NutritionLesson.Create(
             "Title", "Content", summary: null, "en",
-            LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, -1);
-
-        Assert.Equal(0, lesson.SortOrder);
+            LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, -1));
     }
 
     [Fact]
@@ -87,13 +83,11 @@ public class ContentInvariantTests {
     }
 
     [Fact]
-    public void NutritionLesson_Create_TruncatesLongSummary() {
+    public void NutritionLesson_Create_WithLongSummary_Throws() {
         string longSummary = new('s', 600);
-        var lesson = NutritionLesson.Create(
+        Assert.Throws<ArgumentOutOfRangeException>(() => NutritionLesson.Create(
             "Title", "Content", longSummary, "en",
-            LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5);
-
-        Assert.Equal(512, lesson.Summary!.Length);
+            LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5));
     }
 
     [Fact]
@@ -140,8 +134,8 @@ public class ContentInvariantTests {
             "RU",
             LessonCategory.Micronutrients,
             LessonDifficulty.Advanced,
-            estimatedReadMinutes: 0,
-            sortOrder: -1);
+            estimatedReadMinutes: 6,
+            sortOrder: 2);
 
         Assert.Multiple(
             () => Assert.Equal("New title", lesson.Title),
@@ -150,8 +144,8 @@ public class ContentInvariantTests {
             () => Assert.Equal("ru", lesson.Locale),
             () => Assert.Equal(LessonCategory.Micronutrients, lesson.Category),
             () => Assert.Equal(LessonDifficulty.Advanced, lesson.Difficulty),
-            () => Assert.Equal(1, lesson.EstimatedReadMinutes),
-            () => Assert.Equal(0, lesson.SortOrder));
+            () => Assert.Equal(6, lesson.EstimatedReadMinutes),
+            () => Assert.Equal(2, lesson.SortOrder));
         Assert.NotNull(lesson.ModifiedOnUtc);
     }
 
@@ -174,8 +168,8 @@ public class ContentInvariantTests {
     }
 
     [Fact]
-    public void DailyAdvice_Create_NormalizesValuesAndClampsWeight() {
-        var advice = DailyAdvice.Create("  Drink water  ", "  ru-RU  ", weight: 0, tag: "  hydration  ");
+    public void DailyAdvice_Create_NormalizesValues() {
+        var advice = DailyAdvice.Create("  Drink water  ", "  ru-RU  ", weight: 1, tag: "  hydration  ");
 
         Assert.Multiple(
             () => Assert.NotEqual(DailyAdviceId.Empty, advice.Id),
@@ -192,6 +186,7 @@ public class ContentInvariantTests {
         Assert.Throws<ArgumentException>(() => DailyAdvice.Create("Advice", " "));
         Assert.Throws<ArgumentOutOfRangeException>(() => DailyAdvice.Create(new string('v', 513), "en"));
         Assert.Throws<ArgumentOutOfRangeException>(() => DailyAdvice.Create("Advice", "de"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => DailyAdvice.Create("Advice", "en", weight: 0));
         Assert.Throws<ArgumentOutOfRangeException>(() => DailyAdvice.Create("Advice", "en", tag: new string('t', 65)));
     }
 
@@ -208,12 +203,12 @@ public class ContentInvariantTests {
     public void DailyAdvice_Update_WithDifferentValues_NormalizesAndSetsModifiedOnUtc() {
         var advice = DailyAdvice.Create("Advice", "en", weight: 2, tag: "tag");
 
-        advice.Update(value: "  New advice  ", locale: "ru", weight: 0, tag: "  new-tag  ");
+        advice.Update(value: "  New advice  ", locale: "ru", weight: 3, tag: "  new-tag  ");
 
         Assert.Multiple(
             () => Assert.Equal("New advice", advice.Value),
             () => Assert.Equal("ru", advice.Locale),
-            () => Assert.Equal(1, advice.Weight),
+            () => Assert.Equal(3, advice.Weight),
             () => Assert.Equal("new-tag", advice.Tag));
         Assert.NotNull(advice.ModifiedOnUtc);
     }
@@ -238,6 +233,7 @@ public class ContentInvariantTests {
         Assert.Throws<ArgumentException>(() => advice.Update(locale: " "));
         Assert.Throws<ArgumentOutOfRangeException>(() => advice.Update(value: new string('v', 513)));
         Assert.Throws<ArgumentOutOfRangeException>(() => advice.Update(locale: "de"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => advice.Update(weight: 0));
         Assert.Throws<ArgumentOutOfRangeException>(() => advice.Update(tag: new string('t', 65)));
     }
 

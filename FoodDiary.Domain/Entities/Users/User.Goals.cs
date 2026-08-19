@@ -91,11 +91,10 @@ public sealed partial class User {
 
     public WeightGoal StartWeightGoal(double targetWeight, double startWeight, DateTime startedAtUtc) {
         EnsureNotDeleted();
-        DateTime nowUtc = startedAtUtc.ToUniversalTime();
-        WeightGoal? activeGoal = _weightGoals.SingleOrDefault(goal => goal.Status == WeightGoalStatus.Active);
-        activeGoal?.Replace(nowUtc, startWeight);
+        var goal = WeightGoal.Start(Id, targetWeight, startWeight, startedAtUtc);
+        WeightGoal? activeGoal = _weightGoals.SingleOrDefault(candidate => candidate.Status == WeightGoalStatus.Active);
+        activeGoal?.Replace(goal.StartedAtUtc, startWeight);
 
-        var goal = WeightGoal.Start(Id, targetWeight, startWeight, nowUtc);
         _weightGoals.Add(goal);
         UpdateDesiredWeight(targetWeight);
         return goal;
@@ -117,11 +116,10 @@ public sealed partial class User {
 
     public WaistGoal StartWaistGoal(double targetWaist, double startWaist, DateTime startedAtUtc) {
         EnsureNotDeleted();
-        DateTime nowUtc = startedAtUtc.ToUniversalTime();
-        WaistGoal? activeGoal = _waistGoals.SingleOrDefault(goal => goal.Status == WaistGoalStatus.Active);
-        activeGoal?.Replace(nowUtc, startWaist);
+        var goal = WaistGoal.Start(Id, targetWaist, startWaist, startedAtUtc);
+        WaistGoal? activeGoal = _waistGoals.SingleOrDefault(candidate => candidate.Status == WaistGoalStatus.Active);
+        activeGoal?.Replace(goal.StartedAtUtc, startWaist);
 
-        var goal = WaistGoal.Start(Id, targetWaist, startWaist, nowUtc);
         _waistGoals.Add(goal);
         UpdateDesiredWaist(targetWaist);
         return goal;

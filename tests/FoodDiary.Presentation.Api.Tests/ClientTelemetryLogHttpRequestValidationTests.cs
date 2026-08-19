@@ -105,6 +105,30 @@ public sealed class ClientTelemetryLogHttpRequestValidationTests {
             error => error.MemberNames.Contains(member, StringComparer.Ordinal)));
     }
 
+    [Fact]
+    public void Validate_WithTimestampBeyondClockSkew_IsInvalid() {
+        DateTimeOffset nowUtc = new(2026, 6, 30, 10, 15, 0, TimeSpan.Zero);
+        ClientTelemetryLogHttpRequest request = CreateValidRequest() with {
+            Timestamp = nowUtc.AddMinutes(5).AddTicks(1).ToString("O"),
+        };
+
+        IReadOnlyList<ValidationResult> errors = Validate(request, nowUtc);
+
+        Assert.Contains(errors, error => error.MemberNames.Contains("Timestamp", StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public void Validate_WithTimestampAtClockSkewBoundary_IsValid() {
+        DateTimeOffset nowUtc = new(2026, 6, 30, 10, 15, 0, TimeSpan.Zero);
+        ClientTelemetryLogHttpRequest request = CreateValidRequest() with {
+            Timestamp = nowUtc.AddMinutes(5).ToString("O"),
+        };
+
+        IReadOnlyList<ValidationResult> errors = Validate(request, nowUtc);
+
+        Assert.Empty(errors);
+    }
+
     [Theory]
     [InlineData(-1)]
     [InlineData(600_001)]
@@ -142,6 +166,27 @@ public sealed class ClientTelemetryLogHttpRequestValidationTests {
     private static ClientTelemetryLogHttpRequest CreateValidRequest() =>
         new("http_request", "api.request", "info", DateTimeOffset.UtcNow.ToString("O"));
 
-    private static IReadOnlyList<ValidationResult> Validate(ClientTelemetryLogHttpRequest request) =>
-        [.. request.Validate(new ValidationContext(request))];
+    private static IReadOnlyList<ValidationResult> Validate(
+        ClientTelemetryLogHttpRequest request,
+        DateTimeOffset? utcNow = null) {
+        TimeProvider timeProvider = utcNow.HasValue
+            ? new FixedTimeProvider(utcNow.Value)
+            : TimeProvider.System;
+        var validationContext = new ValidationContext(
+            request,
+            new TimeProviderServiceProvider(timeProvider),
+            items: null);
+        return [.. request.Validate(validationContext)];
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider(DateTimeOffset utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => utcNow;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class TimeProviderServiceProvider(TimeProvider timeProvider) : IServiceProvider {
+        public object? GetService(Type serviceType) =>
+            serviceType == typeof(TimeProvider) ? timeProvider : null;
+    }
 }

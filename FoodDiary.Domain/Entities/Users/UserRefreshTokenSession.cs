@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -60,9 +61,13 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
         }
 
         DateTime normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
+        EnsureNotBeforeLastRotation(normalizedNow, nameof(nowUtc));
+        string normalizedRefreshTokenHash = NormalizeRequiredText(refreshTokenHash, nameof(refreshTokenHash), 512);
+        DateTime? previousTokenValidUntilUtc = NormalizePreviousTokenValidUntil(normalizedNow, previousTokenGracePeriod);
+
         PreviousRefreshTokenHash = RefreshTokenHash;
-        PreviousRefreshTokenValidUntilUtc = NormalizePreviousTokenValidUntil(normalizedNow, previousTokenGracePeriod);
-        RefreshTokenHash = NormalizeRequiredText(refreshTokenHash, nameof(refreshTokenHash), 512);
+        PreviousRefreshTokenValidUntilUtc = previousTokenValidUntilUtc;
+        RefreshTokenHash = normalizedRefreshTokenHash;
         RememberMe = rememberMe;
         LastRotatedAtUtc = normalizedNow;
         SetModified(normalizedNow);
@@ -74,6 +79,7 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
         }
 
         DateTime normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
+        EnsureNotBeforeLastRotation(normalizedNow, nameof(nowUtc));
         RevokedAtUtc = normalizedNow;
         PreviousRefreshTokenHash = null;
         PreviousRefreshTokenValidUntilUtc = null;
@@ -86,7 +92,9 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
         }
 
         string trimmed = value.Trim();
-        return trimmed.Length <= maxLength ? trimmed : trimmed[..maxLength];
+        return trimmed.Length > maxLength
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
+            : trimmed;
     }
 
     private static string? NormalizeOptionalText(string? value, int maxLength) {
@@ -100,6 +108,12 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
 
     private static DateTime NormalizeUtcTimestamp(DateTime value, string paramName) {
         return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.") : value.ToUniversalTime();
+    }
+
+    private void EnsureNotBeforeLastRotation(DateTime value, string paramName) {
+        if (value < LastRotatedAtUtc) {
+            throw new ArgumentOutOfRangeException(paramName, "Timestamp cannot be earlier than the last token rotation.");
+        }
     }
 
     private static DateTime? NormalizePreviousTokenValidUntil(DateTime nowUtc, TimeSpan gracePeriod) =>

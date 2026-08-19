@@ -99,8 +99,11 @@ priorities, parallel-safety, graph dependencies, and dominance rules. Its
 regression verifies that every tracked Wiki tool maps to a smoke group and that
 every non-fallback group has an execution handler.
 
-Parallel smoke gives every worker a run-local fixture sandbox and validates that
-the final Git status matches the pre-run status. On failure it writes a
+Parallel smoke gives every worker a run-local fixture sandbox and redirects
+`TEMP`/`TMP` plus task IDs into that owned run directory. Cleanup validates exact
+sandbox paths before removal. A concurrent change elsewhere in the shared
+worktree is reported but is not attributed to the smoke run merely because it
+appeared between two global status snapshots. On failure the runner writes a
 cancellation receipt, allows a grace interval, then terminates remaining process
 trees. Code-graph prewarm reports its cache-miss reason, duration estimate,
 heartbeat, timeout, and diagnostic log path before worker fan-out.

@@ -250,7 +250,9 @@ public partial class BillingFeatureTests {
         Assert.Equal(0, renewalGateway.CreatePaymentCallCount);
         Assert.Equal("past_due", subscription.Status);
         Assert.Equal(Now.AddHours(1), subscription.NextBillingAttemptUtc);
-        Assert.Equal("Renewal skipped because subscription billing details are incomplete.", subscription.ProviderMetadataJson);
+        Assert.Equal(
+            "{\"reason\":\"Renewal skipped because subscription billing details are incomplete.\"}",
+            subscription.ProviderMetadataJson);
         Assert.False(subscription.PremiumRoleManagedByBilling);
         Assert.False(user.HasRole(RoleNames.Premium));
     }

@@ -1,0 +1,15 @@
+server {
+    listen 80;
+    server_name mail.fooddiary.club;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/fooddiary.club;
+        default_type text/plain;
+    }
+
+    location / {
+        return 404;
+    }
+
+    access_log off;
+}

@@ -445,7 +445,6 @@ public partial class FastingFeatureTests {
         var user = User.Create("fasting-intermittent-future@example.com", "hash");
         var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, FixedNow.AddHours(1));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(1), 1, 16);
-        occurrence.UpdateCheckIn(2, 4, 4, ["ok"], "checked", FixedNow);
         AttachNavigation(occurrence, plan, user);
         var notificationRepo = new InMemorySchedulerNotificationRepository();
         var notificationPusher = new RecordingNotificationPusher();

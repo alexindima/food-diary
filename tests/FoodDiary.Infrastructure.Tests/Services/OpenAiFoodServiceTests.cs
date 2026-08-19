@@ -69,6 +69,35 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     [Fact]
+    public void BuildVisionRequest_WhenTemplateContainsDescriptionPlaceholder_IncludesHintOnce() {
+        object request = OpenAiRequestFactory.BuildVisionRequest(
+            "vision-model",
+            "https://cdn.example.com/meal.webp",
+            "en",
+            "salmon salad",
+            VisionPrompt,
+            maxOutputTokens: 512);
+
+        string json = JsonSerializer.Serialize(request);
+
+        Assert.Equal(1, json.Split("User hint:", StringSplitOptions.None).Length - 1);
+        Assert.Equal(1, json.Split("salmon salad", StringSplitOptions.None).Length - 1);
+    }
+
+    [Fact]
+    public void BuildNutritionRequest_WhenTemplateContainsItemsPlaceholder_IncludesItemsOnce() {
+        object request = OpenAiRequestFactory.BuildNutritionRequest(
+            "text-model",
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
+            NutritionPrompt,
+            maxOutputTokens: 512);
+
+        string json = JsonSerializer.Serialize(request);
+
+        Assert.Equal(1, json.Split("Apple", StringSplitOptions.None).Length - 1);
+    }
+
+    [Fact]
     public async Task GetAnalyzeFoodImageTokenBudgetAsync_ReservesLargerPrimaryOrFallbackInputCount() {
         var handler = new DelegateHttpMessageHandler((attempt, request) => {
             Assert.Equal("/v1/responses/input_tokens", request.RequestUri?.AbsolutePath);
@@ -308,7 +337,8 @@ public sealed class OpenAiFoodServiceTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Ai.OpenAiFailed", result.Error.Code);
-        Assert.Contains("fallback rejected", result.Error.Message, StringComparison.Ordinal);
+        Assert.Contains("provider_error", result.Error.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("fallback rejected", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -416,7 +446,8 @@ public sealed class OpenAiFoodServiceTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Ai.OpenAiFailed", result.Error.Code);
-        Assert.Contains("bad text", result.Error.Message, StringComparison.Ordinal);
+        Assert.Contains("provider_error", result.Error.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("bad text", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -603,10 +634,13 @@ public sealed class OpenAiFoodServiceTests {
     [Theory]
     [InlineData("", "empty")]
     [InlineData("""{"error":{"type":"invalid_request_error","code":"bad_code","message":"Bad request."}}""", "bad_code")]
-    [InlineData("""{"error":{}}""", "response body unavailable")]
-    [InlineData("not-json", "response body unavailable")]
-    [InlineData("null", "response body unavailable")]
-    public async Task CalculateNutritionAsync_WhenErrorBodyVaries_ReturnsSanitizedSummary(string responseBody, string expectedSummary) {
+    [InlineData("""{"error":{}}""", "provider_error")]
+    [InlineData("""{"error":"provider supplied secret"}""", "provider_error")]
+    [InlineData("not-json", "response_metadata_unavailable")]
+    [InlineData("null", "response_metadata_unavailable")]
+    public async Task CalculateNutritionAsync_WhenErrorBodyVaries_ReturnsDiagnosticMetadataWithoutProviderMessage(
+        string responseBody,
+        string expectedSummary) {
         using var httpClient = new HttpClient(new SequenceHttpMessageHandler(new Queue<HttpResponseMessage>([
             new(HttpStatusCode.BadRequest) {
                 Content = new StringContent(responseBody),
@@ -621,6 +655,8 @@ public sealed class OpenAiFoodServiceTests {
 
         Assert.True(result.IsFailure);
         Assert.Contains(expectedSummary, result.Error.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("Bad request.", result.Error.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("provider supplied secret", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -702,7 +738,8 @@ public sealed class OpenAiFoodServiceTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Ai.OpenAiFailed", result.Error.Code);
-        Assert.Contains("Request rejected.", result.Error.Message, StringComparison.Ordinal);
+        Assert.Contains("type=invalid_request_error", result.Error.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("Request rejected.", result.Error.Message, StringComparison.Ordinal);
         Assert.DoesNotContain("salmon salad", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("debugPrompt", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }

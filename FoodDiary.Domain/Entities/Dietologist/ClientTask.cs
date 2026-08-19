@@ -42,7 +42,7 @@ public sealed class ClientTask : Entity<ClientTaskId> {
             ClientUserId = clientUserId,
             Title = normalizedTitle,
             Details = normalizedDetails,
-            DueAtUtc = dueAtUtc?.ToUniversalTime(),
+            DueAtUtc = NormalizeOptionalUtc(dueAtUtc, nameof(dueAtUtc)),
             Status = ClientTaskStatus.Open,
         };
         task.SetCreated();
@@ -68,7 +68,7 @@ public sealed class ClientTask : Entity<ClientTaskId> {
             return;
         }
 
-        DueReminderSentAtUtc = sentAtUtc.ToUniversalTime();
+        DueReminderSentAtUtc = NormalizeRequiredUtc(sentAtUtc, nameof(sentAtUtc));
         SetModified();
     }
 
@@ -106,5 +106,15 @@ public sealed class ClientTask : Entity<ClientTaskId> {
         return normalized.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, maxLength, "Value is too long.")
             : normalized;
+    }
+
+    private static DateTime NormalizeRequiredUtc(DateTime value, string paramName) {
+        return value.Kind == DateTimeKind.Unspecified
+            ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.")
+            : value.ToUniversalTime();
+    }
+
+    private static DateTime? NormalizeOptionalUtc(DateTime? value, string paramName) {
+        return value.HasValue ? NormalizeRequiredUtc(value.Value, paramName) : null;
     }
 }

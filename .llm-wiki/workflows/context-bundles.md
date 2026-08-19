@@ -28,8 +28,9 @@ Every bundle is protected by the [context security](context-security.md) trust a
 prompt-injection assessment before excerpts are persisted.
 
 Bundle creation delegates ranked repository discovery to the shared context
-resolver. Repeated bundles with identical discovery arguments and the same
-HEAD/worktree snapshot reuse its content-addressed JSON result; bundle-specific
+resolver. Repeated bundles with identical discovery arguments, HEAD, relevant
+scope content, and dependent context indexes reuse its content-addressed JSON
+result. Unrelated worktree edits do not evict scoped discovery; bundle-specific
 security, learning, provenance, and integrity checks still run normally.
 
 Create a task-specific bundle after its packet is current:

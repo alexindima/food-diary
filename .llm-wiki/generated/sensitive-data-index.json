@@ -6,12 +6,12 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1473,
-    "credential": 153,
-    "identity": 153,
-    "health": 663,
-    "financial": 203,
-    "privateContent": 301,
+    "candidateFields": 1478,
+    "credential": 155,
+    "identity": 154,
+    "health": 664,
+    "financial": 201,
+    "privateContent": 304,
     "boundaryFiles": 184,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
@@ -351,7 +351,14 @@
       "name": "TokenHash",
       "type": "string",
       "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 14
+      "line": 18
+    },
+    {
+      "category": "credential",
+      "name": "TokenHashMaxLength",
+      "type": "tokenHash,",
+      "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
+      "line": 49
     },
     {
       "category": "credential",
@@ -442,42 +449,42 @@
       "name": "RefreshTokenHash",
       "type": "string",
       "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 8
+      "line": 9
     },
     {
       "category": "credential",
       "name": "PreviousRefreshTokenHash",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 15
+      "line": 16
     },
     {
       "category": "credential",
       "name": "PreviousRefreshTokenValidUntilUtc",
       "type": "DateTime?",
       "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 16
+      "line": 17
     },
     {
       "category": "credential",
       "name": "UserRefreshTokenSession",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 40
+      "line": 41
     },
     {
       "category": "credential",
       "name": "AccessToken",
       "type": "string",
       "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 13
+      "line": 16
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 14
+      "line": 17
     },
     {
       "category": "credential",
@@ -736,14 +743,14 @@
       "name": "TemporaryPassword",
       "type": "string?",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/AdminUserCreateHttpRequest.cs",
-      "line": 9
+      "line": 12
     },
     {
       "category": "credential",
       "name": "NewPassword",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/AdminUserSetPasswordHttpRequest.cs",
-      "line": 3
+      "line": 7
     },
     {
       "category": "credential",
@@ -862,42 +869,42 @@
       "name": "Token",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/Requests/AcceptInvitationHttpRequest.cs",
-      "line": 3
+      "line": 8
     },
     {
       "category": "credential",
       "name": "Token",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/Requests/DeclineInvitationHttpRequest.cs",
-      "line": 3
+      "line": 8
     },
     {
       "category": "credential",
       "name": "CurrentPassword",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Export/Requests/SensitiveCycleExportHttpRequest.cs",
-      "line": 6
+      "line": 9
     },
     {
       "category": "credential",
       "name": "CurrentPassword",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Users/Requests/ChangePasswordHttpRequest.cs",
-      "line": 4
+      "line": 7
     },
     {
       "category": "credential",
       "name": "NewPassword",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Users/Requests/ChangePasswordHttpRequest.cs",
-      "line": 5
+      "line": 8
     },
     {
       "category": "credential",
       "name": "NewPassword",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Users/Requests/SetPasswordHttpRequest.cs",
-      "line": 3
+      "line": 7
     },
     {
       "category": "credential",
@@ -947,6 +954,13 @@
       "type": "string",
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
       "line": 262
+    },
+    {
+      "category": "credential",
+      "name": "SecretVerification",
+      "type": "FixedWindowPolicyOptions",
+      "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
+      "line": 46
     },
     {
       "category": "credential",
@@ -1790,87 +1804,66 @@
     },
     {
       "category": "financial",
-      "name": "CurrencyMaxLength",
-      "type": "currency,",
+      "name": "Amount",
+      "type": "decimal?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 92
-    },
-    {
-      "category": "financial",
-      "name": "CurrencyMaxLength",
-      "type": "payoutCurrency,",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 96
-    },
-    {
-      "category": "financial",
-      "name": "CurrencyMaxLength",
-      "type": "currency,",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 141
-    },
-    {
-      "category": "financial",
-      "name": "CurrencyMaxLength",
-      "type": "payoutCurrency,",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 142
+      "line": 187
     },
     {
       "category": "financial",
       "name": "ExternalCustomerId",
       "type": "string",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 16
+      "line": 17
     },
     {
       "category": "financial",
       "name": "ExternalSubscriptionId",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 17
+      "line": 18
     },
     {
       "category": "financial",
       "name": "ExternalPaymentMethodId",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 18
+      "line": 19
     },
     {
       "category": "financial",
       "name": "NextBillingAttemptUtc",
       "type": "DateTime?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 28
+      "line": 29
     },
     {
       "category": "financial",
       "name": "PremiumRoleManagedByBilling",
       "type": "bool",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 33
+      "line": 34
     },
     {
       "category": "financial",
       "name": "BillingSubscription",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 48
+      "line": 49
     },
     {
       "category": "financial",
       "name": "BillingWebhookEvent",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 40
+      "line": 41
     },
     {
       "category": "financial",
       "name": "BillingWebhookEvent",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 62
+      "line": 63
     },
     {
       "category": "financial",
@@ -1933,7 +1926,7 @@
       "name": "BaseAmount",
       "type": "BaseUnit,",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 471
+      "line": 493
     },
     {
       "category": "financial",
@@ -2052,77 +2045,77 @@
       "name": "CustomerId",
       "type": "string",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 620
+      "line": 661
     },
     {
       "category": "financial",
       "name": "Checkout",
       "type": "TransactionCheckoutRequest",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 623
+      "line": 664
     },
     {
       "category": "financial",
       "name": "Checkout",
       "type": "TransactionCheckoutResponse?",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 634
+      "line": 675
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "AmountRequest",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 271
+      "line": 278
     },
     {
       "category": "financial",
       "name": "SavePaymentMethod",
       "type": "bool",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 274
+      "line": 281
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "AmountRequest",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 279
+      "line": 286
     },
     {
       "category": "financial",
       "name": "PaymentMethodId",
       "type": "string",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 281
+      "line": 288
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 287
+      "line": 294
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "AmountResponse?",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 301
+      "line": 308
     },
     {
       "category": "financial",
       "name": "PaymentMethod",
       "type": "PaymentMethodResponse?",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 303
+      "line": 310
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string?",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 310
+      "line": 317
     },
     {
       "category": "financial",
@@ -2185,7 +2178,7 @@
       "name": "BillingRenewal",
       "type": "UsersCleanup,",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 23
+      "line": 24
     },
     {
       "category": "financial",
@@ -2508,6 +2501,13 @@
       "type": "IReadOnlyList<WebPushSubscriptionHttpResponse>",
       "path": "FoodDiary.Presentation.Api/Features/Users/Responses/ProfileOverviewHttpResponse.cs",
       "line": 9
+    },
+    {
+      "category": "financial",
+      "name": "Billing",
+      "type": "FixedWindowPolicyOptions",
+      "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
+      "line": 51
     },
     {
       "category": "health",
@@ -4873,56 +4873,56 @@
       "name": "NutritionLesson",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Content/NutritionLesson.cs",
-      "line": 38
+      "line": 40
     },
     {
       "category": "health",
       "name": "ShareWeight",
       "type": "bool",
       "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 20
+      "line": 24
     },
     {
       "category": "health",
       "name": "ShareWaist",
       "type": "bool",
       "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 21
+      "line": 25
     },
     {
       "category": "health",
       "name": "ShareHydration",
       "type": "bool",
       "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 23
+      "line": 27
     },
     {
       "category": "health",
       "name": "ShareFasting",
       "type": "bool",
       "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 24
+      "line": 28
     },
     {
       "category": "health",
       "name": "ShareFasting",
       "type": "ShareProfile,",
       "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 101
+      "line": 104
     },
     {
       "category": "health",
       "name": "ShareHydration",
       "type": "ShareGoals,",
       "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 101
+      "line": 104
     },
     {
       "category": "health",
       "name": "ShareWaist",
       "type": "ShareWeight,",
       "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 101
+      "line": 104
     },
     {
       "category": "health",
@@ -5048,7 +5048,7 @@
       "name": "ManualCalories",
       "type": "IsNutritionAutoCalculated,",
       "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
-      "line": 478
+      "line": 505
     },
     {
       "category": "health",
@@ -6001,6 +6001,13 @@
       "type": "double?",
       "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
       "line": 216
+    },
+    {
+      "category": "health",
+      "name": "FastingTelemetryCleanup",
+      "type": "MarketingAttributionCleanup,",
+      "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
+      "line": 34
     },
     {
       "category": "health",
@@ -7715,7 +7722,14 @@
       "name": "DietologistEmail",
       "type": "string",
       "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 13
+      "line": 17
+    },
+    {
+      "category": "identity",
+      "name": "EmailMaxLength",
+      "type": "dietologistEmail,",
+      "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
+      "line": 47
     },
     {
       "category": "identity",
@@ -7736,7 +7750,7 @@
       "name": "UserAgentMaxLength",
       "type": "userAgent,",
       "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 66
+      "line": 65
     },
     {
       "category": "identity",
@@ -7806,14 +7820,14 @@
       "name": "IpAddress",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 11
+      "line": 12
     },
     {
       "category": "identity",
       "name": "UserAgent",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 12
+      "line": 13
     },
     {
       "category": "identity",
@@ -7869,7 +7883,7 @@
       "name": "Email",
       "type": "string",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 610
+      "line": 651
     },
     {
       "category": "identity",
@@ -7890,7 +7904,7 @@
       "name": "Email",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/AdminUserCreateHttpRequest.cs",
-      "line": 4
+      "line": 7
     },
     {
       "category": "identity",
@@ -9311,7 +9325,7 @@
       "name": "SnapshotImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-      "line": 219
+      "line": 222
     },
     {
       "category": "privateContent",
@@ -9371,17 +9385,24 @@
     },
     {
       "category": "privateContent",
+      "name": "CommentMaxLength",
+      "type": "update.Comment,",
+      "path": "FoodDiary.Domain/Entities/Products/Product.cs",
+      "line": 230
+    },
+    {
+      "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 295
+      "line": 317
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 484
+      "line": 506
     },
     {
       "category": "privateContent",
@@ -9421,23 +9442,37 @@
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
+      "type": "update.Comment,",
+      "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
+      "line": 127
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrlMaxLength",
+      "type": "update.ImageUrl,",
+      "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
+      "line": 129
+    },
+    {
+      "category": "privateContent",
+      "name": "CommentMaxLength",
       "type": "comment,",
       "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
-      "line": 265
+      "line": 292
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
-      "line": 330
+      "line": 357
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
-      "line": 449
+      "line": 476
     },
     {
       "category": "privateContent",
@@ -9465,7 +9500,7 @@
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "FoodDiary.Domain/Entities/Recipes/RecipeStep.cs",
-      "line": 84
+      "line": 88
     },
     {
       "category": "privateContent",
@@ -9801,14 +9836,14 @@
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 375
+      "line": 381
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 392
+      "line": 398
     },
     {
       "category": "privateContent",
@@ -11688,8 +11723,6 @@
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",
-        "errorMessage",
-        "errorText",
         "imageUrl",
         "promptTemplate",
         "text"
@@ -11705,8 +11738,6 @@
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",
-        "errorMessage",
-        "errorText",
         "imageUrl",
         "promptTemplate",
         "text"

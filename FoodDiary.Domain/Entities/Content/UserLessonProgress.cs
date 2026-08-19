@@ -20,6 +20,10 @@ public sealed class UserLessonProgress : Entity<UserLessonProgressId> {
             throw new ArgumentException("UserId is required.", nameof(userId));
         }
 
+        if (lessonId == NutritionLessonId.Empty) {
+            throw new ArgumentException("LessonId is required.", nameof(lessonId));
+        }
+
         var progress = new UserLessonProgress {
             Id = UserLessonProgressId.New(),
             UserId = userId,

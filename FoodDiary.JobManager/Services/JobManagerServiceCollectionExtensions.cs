@@ -33,6 +33,11 @@ public static class JobManagerServiceCollectionExtensions {
                 .Validate(MarketingAttributionCleanupOptions.HasValidConfiguration,
                     "MarketingAttributionCleanup configuration requires positive RetentionDays/BatchSize and a non-empty Cron when enabled.")
                 .ValidateOnStart();
+            services.AddOptions<FastingTelemetryCleanupOptions>()
+                .Bind(configuration.GetSection(FastingTelemetryCleanupOptions.SectionName))
+                .Validate(FastingTelemetryCleanupOptions.HasValidConfiguration,
+                    "FastingTelemetryCleanup configuration requires positive RetentionDays/BatchSize and a non-empty Cron when enabled.")
+                .ValidateOnStart();
             services.AddOptions<NotificationCleanupOptions>()
                 .Bind(configuration.GetSection(NotificationCleanupOptions.SectionName))
                 .Validate(NotificationCleanupOptions.HasValidConfiguration,
@@ -104,6 +109,7 @@ public static class JobManagerServiceCollectionExtensions {
             services.AddTransient<UserCleanupJob>();
             services.AddTransient<UserLoginEventCleanupJob>();
             services.AddTransient<MarketingAttributionCleanupJob>();
+            services.AddTransient<FastingTelemetryCleanupJob>();
             services.AddTransient<ClientTaskReminderJob>();
             services.AddTransient<WeeklyGoalReminderJob>();
             services.AddScoped<ClientTaskDueReminderProcessor>();

@@ -9,6 +9,8 @@ using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.TestHelper;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace FoodDiary.Application.Tests.Billing;
 
@@ -116,6 +118,10 @@ public partial class BillingFeatureTests {
         Assert.Equal("customer_new", subscription.ExternalCustomerId);
         Assert.Equal("price_yearly", subscription.ExternalPriceId);
         Assert.Equal("yearly", subscription.Plan);
+        byte[] expectedKeyHash = SHA256.HashData(Encoding.UTF8.GetBytes($"{user.Id.Value:N}:yearly"));
+        Assert.Equal(
+            $"checkout-{Convert.ToHexString(expectedKeyHash).ToLowerInvariant()}",
+            gateway.LastCheckoutRequest?.IdempotencyKey);
         BillingPayment payment = Assert.Single(paymentRepository.Payments);
         Assert.Equal(subscription.Id, payment.BillingSubscriptionId);
         Assert.Equal("session_new", payment.ExternalPaymentId);

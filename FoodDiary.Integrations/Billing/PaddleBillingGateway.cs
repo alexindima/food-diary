@@ -32,41 +32,53 @@ public sealed class PaddleBillingGateway(
             return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
         }
 
-        string? customerId = request.ExistingCustomerId;
-        if (string.IsNullOrWhiteSpace(customerId)) {
-            customerId = await FindExistingCustomerIdAsync(request, cancellationToken).ConfigureAwait(false);
-        }
-        if (string.IsNullOrWhiteSpace(customerId)) {
-            Result<string> customerResult = await CreateCustomerAsync(request, cancellationToken).ConfigureAwait(false);
-            if (customerResult.IsFailure) {
-                return Result.Failure<BillingCheckoutSessionModel>(customerResult.Error);
+        try {
+            string? customerId = request.ExistingCustomerId;
+            if (string.IsNullOrWhiteSpace(customerId)) {
+                Result<string?> existingCustomerResult = await FindExistingCustomerIdAsync(request, cancellationToken).ConfigureAwait(false);
+                if (existingCustomerResult.IsFailure) {
+                    return Result.Failure<BillingCheckoutSessionModel>(existingCustomerResult.Error);
+                }
+
+                customerId = existingCustomerResult.Value;
+            }
+            if (string.IsNullOrWhiteSpace(customerId)) {
+                Result<string> customerResult = await CreateCustomerAsync(request, cancellationToken).ConfigureAwait(false);
+                if (customerResult.IsFailure) {
+                    return Result.Failure<BillingCheckoutSessionModel>(customerResult.Error);
+                }
+
+                customerId = customerResult.Value;
             }
 
-            customerId = customerResult.Value;
-        }
+            string priceId = ResolvePriceId(request.Plan);
+            Result<CreateTransactionResponse> transactionResponse = await GetOrCreateTransactionAsync(
+                request,
+                customerId,
+                priceId,
+                cancellationToken).ConfigureAwait(false);
+            if (transactionResponse.IsFailure) {
+                return Result.Failure<BillingCheckoutSessionModel>(transactionResponse.Error);
+            }
 
-        string priceId = ResolvePriceId(request.Plan);
-        Result<CreateTransactionResponse> transactionResponse = await GetOrCreateTransactionAsync(
-            request,
-            customerId,
-            priceId,
-            cancellationToken).ConfigureAwait(false);
-        if (transactionResponse.IsFailure) {
-            return Result.Failure<BillingCheckoutSessionModel>(transactionResponse.Error);
-        }
+            CreateTransactionResponse transaction = transactionResponse.Value;
+            string? checkoutUrl = transaction.Checkout?.Url;
+            if (string.IsNullOrWhiteSpace(transaction.Id) ||
+                !BillingUrlValidator.IsAbsoluteHttps(checkoutUrl)) {
+                return Result.Failure<BillingCheckoutSessionModel>(
+                    Errors.Billing.ProviderOperationFailed(Provider, "Paddle transaction identifier or checkout URL is invalid."));
+            }
 
-        CreateTransactionResponse transaction = transactionResponse.Value;
-        if (string.IsNullOrWhiteSpace(transaction.Checkout?.Url)) {
+            return Result.Success(new BillingCheckoutSessionModel(
+                transaction.Id,
+                checkoutUrl!,
+                customerId,
+                priceId,
+                request.Plan));
+        } catch (Exception exception) when (IsAmbiguousNetworkFailure(exception, cancellationToken)) {
             return Result.Failure<BillingCheckoutSessionModel>(
-                Errors.Billing.ProviderOperationFailed(Provider, "Paddle transaction checkout URL is missing."));
+                Errors.Billing.ProviderOperationFailed(Provider, "Paddle request could not be completed."));
         }
-
-        return Result.Success(new BillingCheckoutSessionModel(
-            transaction.Id,
-            transaction.Checkout.Url,
-            customerId,
-            priceId,
-            request.Plan));
     }
 
     private async Task<Result<CreateTransactionResponse>> GetOrCreateTransactionAsync(
@@ -75,11 +87,16 @@ public sealed class PaddleBillingGateway(
         string priceId,
         CancellationToken cancellationToken) {
         string checkoutReference = CreateCheckoutReference(request);
-        CreateTransactionResponse? recoveredTransaction = await FindRecoverableTransactionAsync(
+        Result<CreateTransactionResponse?> recoveryResult = await FindRecoverableTransactionAsync(
             request,
             customerId,
             checkoutReference,
             cancellationToken).ConfigureAwait(false);
+        if (recoveryResult.IsFailure) {
+            return Result.Failure<CreateTransactionResponse>(recoveryResult.Error);
+        }
+
+        CreateTransactionResponse? recoveredTransaction = recoveryResult.Value;
         Result<CreateTransactionResponse> transactionResponse;
         if (recoveredTransaction is not null) {
             transactionResponse = Result.Success(recoveredTransaction);
@@ -102,12 +119,13 @@ public sealed class PaddleBillingGateway(
                         new TransactionCheckoutRequest(_options.CheckoutUrl)),
                     cancellationToken).ConfigureAwait(false);
             } catch (Exception ex) when (IsAmbiguousNetworkFailure(ex, cancellationToken)) {
-                recoveredTransaction = await FindRecoverableTransactionAsync(
+                recoveryResult = await FindRecoverableTransactionAsync(
                     request,
                     customerId,
                     checkoutReference,
                     cancellationToken).ConfigureAwait(false);
-                transactionResponse = recoveredTransaction is null
+                recoveredTransaction = recoveryResult.IsSuccess ? recoveryResult.Value : null;
+                transactionResponse = recoveryResult.IsFailure || recoveredTransaction is null
                     ? Result.Failure<CreateTransactionResponse>(Errors.Billing.ProviderOperationFailed(
                         Provider,
                         "Paddle transaction creation result is unknown; retry checkout to recover it safely."))
@@ -124,22 +142,27 @@ public sealed class PaddleBillingGateway(
             return Result.Failure<BillingPortalSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
         }
 
-        Result<CreateCustomerPortalSessionResponse> sessionResponse = await _apiClient.SendAsync<CreateCustomerPortalSessionResponse>(
-            HttpMethod.Post,
-            $"customers/{request.CustomerId}/portal-sessions",
-            new { },
-            cancellationToken).ConfigureAwait(false);
-        if (sessionResponse.IsFailure) {
-            return Result.Failure<BillingPortalSessionModel>(sessionResponse.Error);
-        }
+        try {
+            Result<CreateCustomerPortalSessionResponse> sessionResponse = await _apiClient.SendAsync<CreateCustomerPortalSessionResponse>(
+                HttpMethod.Post,
+                $"customers/{request.CustomerId}/portal-sessions",
+                new { },
+                cancellationToken).ConfigureAwait(false);
+            if (sessionResponse.IsFailure) {
+                return Result.Failure<BillingPortalSessionModel>(sessionResponse.Error);
+            }
 
-        string? url = sessionResponse.Value.Urls?.General?.Overview;
-        if (string.IsNullOrWhiteSpace(url)) {
+            string? url = sessionResponse.Value.Urls?.General?.Overview;
+            if (!BillingUrlValidator.IsAbsoluteHttps(url)) {
+                return Result.Failure<BillingPortalSessionModel>(
+                    Errors.Billing.ProviderOperationFailed(Provider, "Paddle customer portal URL is invalid."));
+            }
+
+            return Result.Success(new BillingPortalSessionModel(url!));
+        } catch (Exception exception) when (IsAmbiguousNetworkFailure(exception, cancellationToken)) {
             return Result.Failure<BillingPortalSessionModel>(
-                Errors.Billing.ProviderOperationFailed(Provider, "Paddle customer portal URL is missing."));
+                Errors.Billing.ProviderOperationFailed(Provider, "Paddle request could not be completed."));
         }
-
-        return Result.Success(new BillingPortalSessionModel(url));
     }
 
     public Task<Result<BillingWebhookEventModel?>> ParseWebhookEventAsync(
@@ -191,9 +214,15 @@ public sealed class PaddleBillingGateway(
             }
 
             return Task.FromResult(Result.Success<BillingWebhookEventModel?>(CreateWebhookEvent(root, data, eventType, customerId, subscriptionId)));
-        } catch (Exception ex) when (ex is JsonException or InvalidOperationException or FormatException) {
+        } catch (JsonException) {
             return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.WebhookValidationFailed(ex.Message)));
+                Errors.Billing.WebhookValidationFailed("Paddle webhook payload is invalid.")));
+        } catch (InvalidOperationException) {
+            return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(
+                Errors.Billing.WebhookValidationFailed("Paddle webhook price or structure is invalid.")));
+        } catch (FormatException) {
+            return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(
+                Errors.Billing.WebhookValidationFailed("Paddle webhook numeric value is invalid.")));
         }
     }
 
@@ -355,61 +384,73 @@ public sealed class PaddleBillingGateway(
                     ["user_id"] = request.UserId.ToString(),
                 }),
             cancellationToken).ConfigureAwait(false);
-        return customerResponse.IsFailure ? Result.Failure<string>(customerResponse.Error) : Result.Success(customerResponse.Value.Id);
+        if (customerResponse.IsFailure) {
+            return Result.Failure<string>(customerResponse.Error);
+        }
+
+        return string.IsNullOrWhiteSpace(customerResponse.Value.Id)
+            ? Result.Failure<string>(Errors.Billing.ProviderOperationFailed(Provider, "Paddle customer identifier is missing."))
+            : Result.Success(customerResponse.Value.Id);
     }
 
-    private async Task<string?> FindExistingCustomerIdAsync(
+    private async Task<Result<string?>> FindExistingCustomerIdAsync(
         BillingCheckoutSessionRequestModel request,
         CancellationToken cancellationToken) {
-        try {
-            string path = $"customers?email={Uri.EscapeDataString(request.Email)}&per_page=30";
-            Result<IReadOnlyList<CreateCustomerResponse>> result = await _apiClient.SendAsync<IReadOnlyList<CreateCustomerResponse>>(
-                HttpMethod.Get,
-                path,
-                body: null,
-                cancellationToken).ConfigureAwait(false);
-            if (result.IsFailure) {
-                return null;
-            }
-
-            string userId = request.UserId.ToString();
-            return result.Value.FirstOrDefault(customer =>
-                customer.CustomData?.TryGetValue("user_id", out string? value) == true &&
-                string.Equals(value, userId, StringComparison.OrdinalIgnoreCase))?.Id;
-        } catch (Exception ex) when (IsAmbiguousNetworkFailure(ex, cancellationToken)) {
-            return null;
+        string path = $"customers?email={Uri.EscapeDataString(request.Email)}&per_page=30";
+        Result<IReadOnlyList<CreateCustomerResponse>> result = await _apiClient.SendAsync<IReadOnlyList<CreateCustomerResponse>>(
+            HttpMethod.Get,
+            path,
+            body: null,
+            cancellationToken).ConfigureAwait(false);
+        if (result.IsFailure) {
+            return Result.Failure<string?>(result.Error);
         }
+
+        string userId = request.UserId.ToString();
+        CreateCustomerResponse? customer = result.Value.FirstOrDefault(candidate =>
+            candidate.CustomData?.TryGetValue("user_id", out string? value) == true &&
+            string.Equals(value, userId, StringComparison.OrdinalIgnoreCase));
+        if (customer is not null && string.IsNullOrWhiteSpace(customer.Id)) {
+            return Result.Failure<string?>(
+                Errors.Billing.ProviderOperationFailed(Provider, "Paddle customer identifier is missing."));
+        }
+
+        return Result.Success(customer?.Id);
     }
 
-    private async Task<CreateTransactionResponse?> FindRecoverableTransactionAsync(
+    private async Task<Result<CreateTransactionResponse?>> FindRecoverableTransactionAsync(
         BillingCheckoutSessionRequestModel request,
         string customerId,
         string checkoutReference,
         CancellationToken cancellationToken) {
-        try {
-            string path = $"transactions?customer_id={Uri.EscapeDataString(customerId)}&origin=api&per_page=30";
-            Result<IReadOnlyList<CreateTransactionResponse>> result = await _apiClient.SendAsync<IReadOnlyList<CreateTransactionResponse>>(
-                HttpMethod.Get,
-                path,
-                body: null,
-                cancellationToken).ConfigureAwait(false);
-            if (result.IsFailure) {
-                return null;
-            }
+        string path = $"transactions?customer_id={Uri.EscapeDataString(customerId)}&origin=api&per_page=30";
+        Result<IReadOnlyList<CreateTransactionResponse>> result = await _apiClient.SendAsync<IReadOnlyList<CreateTransactionResponse>>(
+            HttpMethod.Get,
+            path,
+            body: null,
+            cancellationToken).ConfigureAwait(false);
+        if (result.IsFailure) {
+            return Result.Failure<CreateTransactionResponse?>(result.Error);
+        }
 
-            string userId = request.UserId.ToString();
-            return result.Value.FirstOrDefault(transaction =>
+        string userId = request.UserId.ToString();
+        IEnumerable<CreateTransactionResponse> candidates = result.Value.Where(transaction =>
                 transaction.Status is "draft" or "ready" &&
-                !string.IsNullOrWhiteSpace(transaction.Checkout?.Url) &&
                 transaction.CustomData?.TryGetValue("user_id", out string? storedUserId) == true &&
                 string.Equals(storedUserId, userId, StringComparison.OrdinalIgnoreCase) &&
                 transaction.CustomData.TryGetValue("plan", out string? storedPlan) &&
-                string.Equals(storedPlan, request.Plan, StringComparison.OrdinalIgnoreCase) &&
-                transaction.CustomData.TryGetValue("checkout_reference", out string? storedReference) &&
-                string.Equals(storedReference, checkoutReference, StringComparison.Ordinal));
-        } catch (Exception ex) when (IsAmbiguousNetworkFailure(ex, cancellationToken)) {
-            return null;
+                string.Equals(storedPlan, request.Plan, StringComparison.OrdinalIgnoreCase));
+        CreateTransactionResponse? transaction = candidates.FirstOrDefault(candidate =>
+            candidate.CustomData?.TryGetValue("checkout_reference", out string? storedReference) == true &&
+            string.Equals(storedReference, checkoutReference, StringComparison.Ordinal)) ?? candidates.FirstOrDefault();
+        if (transaction is not null &&
+            (string.IsNullOrWhiteSpace(transaction.Id) ||
+             !BillingUrlValidator.IsAbsoluteHttps(transaction.Checkout?.Url))) {
+            return Result.Failure<CreateTransactionResponse?>(
+                Errors.Billing.ProviderOperationFailed(Provider, "Paddle recoverable transaction response is invalid."));
         }
+
+        return Result.Success(transaction);
     }
 
     private static string CreateCheckoutReference(BillingCheckoutSessionRequestModel request) =>
@@ -418,8 +459,8 @@ public sealed class PaddleBillingGateway(
             : request.IdempotencyKey.Trim();
 
     private static bool IsAmbiguousNetworkFailure(Exception exception, CancellationToken cancellationToken) =>
-        exception is HttpRequestException ||
-        (exception is TaskCanceledException && !cancellationToken.IsCancellationRequested);
+        !cancellationToken.IsCancellationRequested &&
+        exception is HttpRequestException or TimeoutException or OperationCanceledException;
 
     private bool TryVerifySignature(string payload, string signatureHeader, out string error) {
         error = string.Empty;
@@ -482,7 +523,7 @@ public sealed class PaddleBillingGateway(
         !string.IsNullOrWhiteSpace(_options.ApiBaseUrl) &&
         !string.IsNullOrWhiteSpace(_options.PremiumMonthlyPriceId) &&
         !string.IsNullOrWhiteSpace(_options.PremiumYearlyPriceId) &&
-        Uri.IsWellFormedUriString(_options.CheckoutUrl, UriKind.Absolute);
+        BillingUrlValidator.IsAbsoluteHttps(_options.CheckoutUrl);
 
     private bool IsConfiguredForPortal() =>
         !string.IsNullOrWhiteSpace(_options.ApiKey) &&

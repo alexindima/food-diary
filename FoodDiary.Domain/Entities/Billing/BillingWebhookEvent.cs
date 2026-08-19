@@ -1,4 +1,5 @@
 using System.Globalization;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 
 namespace FoodDiary.Domain.Entities.Billing;
@@ -45,8 +46,8 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
             ExternalObjectId = NormalizeOptional(externalObjectId, ExternalObjectIdMaxLength, nameof(externalObjectId)),
             Status = ReceivedStatus,
             ReceivedAtUtc = normalizedReceivedAtUtc,
-            PayloadJson = NormalizeOptional(payloadJson),
-            ParsedEventJson = NormalizeOptional(parsedEventJson),
+            PayloadJson = DomainGuard.OptionalJson(payloadJson, nameof(payloadJson)),
+            ParsedEventJson = DomainGuard.OptionalJson(parsedEventJson, nameof(parsedEventJson)),
         };
         webhookEvent.SetCreated(normalizedReceivedAtUtc);
         return webhookEvent;
@@ -68,14 +69,18 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
             Status = ProcessedStatus,
             ReceivedAtUtc = NormalizeRequiredUtc(processedAtUtc, nameof(processedAtUtc)),
             ProcessedAtUtc = NormalizeRequiredUtc(processedAtUtc, nameof(processedAtUtc)),
-            PayloadJson = NormalizeOptional(payloadJson),
+            PayloadJson = DomainGuard.OptionalJson(payloadJson, nameof(payloadJson)),
         };
         webhookEvent.SetCreated(webhookEvent.ReceivedAtUtc);
         return webhookEvent;
     }
 
     public void MarkProcessed(DateTime processedAtUtc) {
-        DateTime normalizedProcessedAt = NormalizeRequiredUtc(processedAtUtc, nameof(processedAtUtc));
+        if (string.Equals(Status, ProcessedStatus, StringComparison.Ordinal)) {
+            return;
+        }
+
+        DateTime normalizedProcessedAt = NormalizeTransitionTimestamp(processedAtUtc, nameof(processedAtUtc));
         Status = ProcessedStatus;
         ProcessedAtUtc = normalizedProcessedAt;
         ErrorMessage = null;
@@ -84,13 +89,20 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
     }
 
     public void MarkFailed(DateTime failedAtUtc, string errorMessage) {
-        DateTime normalizedFailedAtUtc = NormalizeRequiredUtc(failedAtUtc, nameof(failedAtUtc));
+        if (string.Equals(Status, ProcessedStatus, StringComparison.Ordinal)) {
+            throw new InvalidOperationException("A processed webhook event cannot be marked as failed.");
+        }
+
+        DateTime normalizedFailedAtUtc = NormalizeTransitionTimestamp(failedAtUtc, nameof(failedAtUtc));
         string normalizedError = NormalizeError(errorMessage);
-        AttemptCount++;
+        int nextAttemptCount = AttemptCount == int.MaxValue ? int.MaxValue : AttemptCount + 1;
+        int delayMinutes = Math.Min(60, 1 << Math.Min(nextAttemptCount - 1, 6));
+        DateTime nextAttemptAtUtc = normalizedFailedAtUtc.AddMinutes(delayMinutes);
+
+        AttemptCount = nextAttemptCount;
         Status = FailedStatus;
         ErrorMessage = normalizedError;
-        int delayMinutes = Math.Min(60, 1 << Math.Min(AttemptCount - 1, 6));
-        NextAttemptAtUtc = normalizedFailedAtUtc.AddMinutes(delayMinutes);
+        NextAttemptAtUtc = nextAttemptAtUtc;
         SetModified(normalizedFailedAtUtc);
     }
 
@@ -140,5 +152,13 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
 
     private static DateTime NormalizeRequiredUtc(DateTime value, string paramName) {
         return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.") : value.ToUniversalTime();
+    }
+
+    private DateTime NormalizeTransitionTimestamp(DateTime value, string paramName) {
+        DateTime normalized = NormalizeRequiredUtc(value, paramName);
+        DateTime earliestAllowed = ModifiedOnUtc ?? ReceivedAtUtc;
+        return normalized < earliestAllowed
+            ? throw new ArgumentOutOfRangeException(paramName, "Transition timestamp cannot be earlier than the previous webhook event timestamp.")
+            : normalized;
     }
 }

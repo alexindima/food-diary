@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Primitives;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -293,7 +294,11 @@ public sealed partial class User {
         string? language,
         string? theme,
         string? uiStyle) {
-        state = ApplyStringPreference(state, dashboardLayoutJson, NormalizeOptionalProfileText, static (current, value) => current with { DashboardLayoutJson = value });
+        state = ApplyStringPreference(
+            state,
+            dashboardLayoutJson,
+            value => DomainGuard.OptionalJson(value, nameof(dashboardLayoutJson)),
+            static (current, value) => current with { DashboardLayoutJson = value });
         state = ApplyStringPreference(state, language, value => NormalizeOptionalLanguage(value!, nameof(language)), static (current, value) => current with { Language = value });
         state = ApplyStringPreference(state, theme, value => NormalizeOptionalTheme(value!, nameof(theme)), static (current, value) => current with { Theme = value });
         return ApplyStringPreference(state, uiStyle, value => NormalizeOptionalUiStyle(value!, nameof(uiStyle)), static (current, value) => current with { UiStyle = value });

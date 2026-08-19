@@ -7,7 +7,6 @@ namespace FoodDiary.Integrations.Http;
 internal static class BoundedHttpContentReader {
     public const long DefaultMaxResponseBodyBytes = 1024 * 1024;
     public const int DefaultJsonMaxDepth = 32;
-    public const int DefaultErrorSummaryCharacters = 200;
     public static readonly TimeSpan DefaultReadTimeout = TimeSpan.FromSeconds(15);
 
     public static async Task<string> ReadAsStringAsync(
@@ -74,22 +73,6 @@ internal static class BoundedHttpContentReader {
         } catch (OperationCanceledException exception) when (!cancellationToken.IsCancellationRequested) {
             throw new TimeoutException("Upstream response body exceeded the configured read deadline.", exception);
         }
-    }
-
-    public static string NormalizeErrorSummary(string value) {
-        string compact = value.ReplaceLineEndings(" ").Trim();
-        var builder = new StringBuilder(Math.Min(compact.Length, DefaultErrorSummaryCharacters));
-        foreach (char character in compact) {
-            if (!char.IsControl(character)) {
-                builder.Append(character);
-            }
-
-            if (builder.Length == DefaultErrorSummaryCharacters) {
-                break;
-            }
-        }
-
-        return builder.Length == 0 ? "upstream error body unavailable" : builder.ToString();
     }
 
     private static InvalidDataException CreateTooLargeException() =>

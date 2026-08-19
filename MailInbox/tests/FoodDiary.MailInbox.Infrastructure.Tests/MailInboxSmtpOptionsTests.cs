@@ -13,14 +13,52 @@ namespace FoodDiary.MailInbox.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxSmtpOptionsTests {
+    [Theory]
+    [InlineData(null, true)]
+    [InlineData("", true)]
+    [InlineData("http://localhost:4317", true)]
+    [InlineData("relative", false)]
+    public void OpenTelemetryOptions_HasValidOtlpEndpoint_ReturnsExpectedResult(
+        string? endpoint,
+        bool expected) {
+        var options = new OpenTelemetryOptions {
+            Otlp = new OpenTelemetryOptions.OtlpOptions { Endpoint = endpoint },
+        };
+
+        Assert.Equal(expected, OpenTelemetryOptions.HasValidOtlpEndpoint(options));
+    }
+
     [Fact]
     public void HasValidConfiguration_WhenValuesAreValid_ReturnsTrue() {
         var options = new MailInboxSmtpOptions {
             ServerName = "mail.fooddiary.club",
             Port = 2525,
+            CertificatePath = "/certs/fullchain.pem",
+            PrivateKeyPath = "/certs/privkey.pem",
             MaxMessageSizeBytes = 1024,
             AllowedRecipients = ["admin@fooddiary.club"],
         };
+
+        Assert.True(MailInboxSmtpOptions.HasValidConfiguration(options));
+    }
+
+    [Theory]
+    [InlineData("", "/certs/privkey.pem")]
+    [InlineData("/certs/fullchain.pem", "")]
+    public void HasValidConfiguration_WhenEnabledCertificatePathIsMissing_ReturnsFalse(
+        string certificatePath,
+        string privateKeyPath) {
+        var options = new MailInboxSmtpOptions {
+            CertificatePath = certificatePath,
+            PrivateKeyPath = privateKeyPath,
+        };
+
+        Assert.False(MailInboxSmtpOptions.HasValidConfiguration(options));
+    }
+
+    [Fact]
+    public void HasValidConfiguration_WhenDisabledCertificatePathsAreMissing_ReturnsTrue() {
+        var options = new MailInboxSmtpOptions { Enabled = false };
 
         Assert.True(MailInboxSmtpOptions.HasValidConfiguration(options));
     }
@@ -236,5 +274,20 @@ public sealed class MailInboxSmtpOptionsTests {
         Assert.Multiple(
             () => Assert.Null(provider.GetService<MeterProvider>()),
             () => Assert.Null(provider.GetService<OpenTelemetry.Trace.TracerProvider>()));
+    }
+
+    [Fact]
+    public void AddMailInboxTelemetry_WhenEndpointIsInvalid_Throws() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["OpenTelemetry:Otlp:Endpoint"] = "relative",
+            })
+            .Build();
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(
+            () => services.AddMailInboxTelemetry(configuration));
+
+        Assert.Contains("absolute URI", exception.Message, StringComparison.Ordinal);
     }
 }

@@ -93,4 +93,20 @@ Invalid index mappings: $($invalidIndexMappings -join ', ')
 "@
 }
 
-Write-Host "LLM Wiki facade command catalog passed: $($declaredCommands.Count) declared command(s), one route each, plus default help."
+$compactHelp = @(& $wikiPath help 6>&1 | ForEach-Object { [string]$_ })
+$detailedHelp = @(& $wikiPath help -Detailed 6>&1 | ForEach-Object { [string]$_ })
+$compactCommandLines = @($compactHelp | Where-Object { $_ -match '^\s+\.\/\.llm-wiki\/wiki\.ps1 ' })
+$detailedCommandLines = @($detailedHelp | Where-Object { $_ -match '^\s+\.\/\.llm-wiki\/wiki\.ps1 ' })
+if ($compactCommandLines.Count -lt 8 -or $compactCommandLines.Count -gt 15 -or
+    $compactHelp -notcontains 'Administrative and compatibility commands:' -or
+    $compactHelp -notcontains '  ./.llm-wiki/wiki.ps1 help -Detailed' -or
+    $detailedHelp -notcontains 'Detailed command catalog:' -or
+    $detailedCommandLines.Count -le $compactCommandLines.Count) {
+    throw @"
+Wiki facade help tiers are inconsistent.
+Compact command lines: $($compactCommandLines.Count)
+Detailed command lines: $($detailedCommandLines.Count)
+"@
+}
+
+Write-Host "LLM Wiki facade command catalog passed: $($declaredCommands.Count) declared command(s), one route each, $($compactCommandLines.Count) primary help entries, and detailed compatibility help."

@@ -247,7 +247,7 @@ public sealed class DashboardSnapshotBuilderTests {
     [Fact]
     public async Task BuildAsync_WithInvalidDashboardLayoutJson_ReturnsSnapshotWithoutLayout() {
         var user = User.Create("dashboard-invalid-layout@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: "{"));
+        typeof(User).GetProperty(nameof(User.DashboardLayoutJson))!.SetValue(user, "{");
         DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
             new StubSender(),
             new AccessibleUserContextService(user),

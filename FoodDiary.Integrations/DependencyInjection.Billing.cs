@@ -20,9 +20,11 @@ public static partial class DependencyInjection {
         services.AddScoped<IBillingProviderGateway, StripeBillingGateway>();
         services.AddHttpClient<PaddleBillingGateway>(client => client.Timeout = TimeSpan.FromSeconds(30))
             .RemoveAllLoggers();
-        services.AddHttpClient<PaddleNotificationRecoveryService>(client => client.Timeout = TimeSpan.FromSeconds(30));
+        services.AddHttpClient<PaddleNotificationRecoveryService>(client => client.Timeout = TimeSpan.FromSeconds(30))
+            .RemoveAllLoggers();
         services.AddScoped<IBillingProviderGateway>(sp => sp.GetRequiredService<PaddleBillingGateway>());
-        services.AddHttpClient<YooKassaBillingGateway>(client => client.Timeout = TimeSpan.FromSeconds(30));
+        services.AddHttpClient<YooKassaBillingGateway>(client => client.Timeout = TimeSpan.FromSeconds(30))
+            .RemoveAllLoggers();
         services.AddScoped<IBillingProviderGateway>(sp => sp.GetRequiredService<YooKassaBillingGateway>());
         services.AddScoped<IBillingRecurringProviderGateway>(sp => sp.GetRequiredService<YooKassaBillingGateway>());
         services.AddScoped<IBillingProviderGatewayAccessor, ConfigurableBillingProviderGatewayAccessor>();

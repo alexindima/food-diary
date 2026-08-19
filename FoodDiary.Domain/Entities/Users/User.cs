@@ -511,8 +511,9 @@ public sealed partial class User : AggregateRoot<UserId> {
         ArgumentNullException.ThrowIfNull(roles);
         EnsureNotDeleted();
 
+        Role[] normalizedRoles = [.. roles.DistinctBy(role => role.Id)];
         RoleId[] requestedRoleIds = [
-            .. roles
+            .. normalizedRoles
                 .Select(role => role.Id)
                 .OrderBy(id => id.Value),
         ];
@@ -526,7 +527,7 @@ public sealed partial class User : AggregateRoot<UserId> {
             return;
         }
 
-        var nextRoles = roles
+        var nextRoles = normalizedRoles
             .Select(role => UserRole.Create(this, role))
             .ToList();
 
@@ -571,8 +572,10 @@ public sealed partial class User : AggregateRoot<UserId> {
         }
 
         DateTime normalizedStartedAt = NormalizeUtcTimestamp(startedAtUtc, nameof(startedAtUtc));
+        DateTime normalizedEndsAt = normalizedStartedAt.Add(duration);
+
         PremiumTrialStartedAtUtc = normalizedStartedAt;
-        PremiumTrialEndsAtUtc = normalizedStartedAt.Add(duration);
+        PremiumTrialEndsAtUtc = normalizedEndsAt;
 
         SetModified();
     }

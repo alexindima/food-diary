@@ -40,8 +40,9 @@ public sealed class AiPromptTemplate : Entity<AiPromptTemplateId> {
         bool changed = false;
 
         if (!string.Equals(PromptText, normalizedText, StringComparison.Ordinal)) {
+            int nextVersion = GetNextVersion();
             PromptText = normalizedText;
-            Version++;
+            Version = nextVersion;
             changed = true;
         }
 
@@ -53,6 +54,12 @@ public sealed class AiPromptTemplate : Entity<AiPromptTemplateId> {
         if (changed) {
             SetModified();
         }
+    }
+
+    private int GetNextVersion() {
+        return Version == int.MaxValue
+            ? throw new InvalidOperationException("Prompt template version limit has been reached.")
+            : Version + 1;
     }
 
     private static string NormalizeRequired(string value, int maxLength, string paramName) {

@@ -1,4 +1,5 @@
 using System.Globalization;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -10,7 +11,6 @@ public sealed class BillingPayment : Entity<Guid> {
     private const int PlanMaxLength = 32;
     private const int StatusMaxLength = 64;
     private const int KindMaxLength = 32;
-    private const int CurrencyMaxLength = 3;
 
     public UserId UserId { get; private set; }
     public Guid? BillingSubscriptionId { get; private set; }
@@ -88,18 +88,18 @@ public sealed class BillingPayment : Entity<Guid> {
             Plan = NormalizeOptional(plan, PlanMaxLength, nameof(plan)),
             Status = NormalizeRequired(status, StatusMaxLength, nameof(status)),
             Kind = NormalizeRequired(kind, KindMaxLength, nameof(kind)),
-            Amount = amount,
-            Currency = NormalizeOptional(currency, CurrencyMaxLength, nameof(currency)),
-            Tax = tax,
-            Fee = fee,
-            Earnings = earnings,
-            PayoutCurrency = NormalizeOptional(payoutCurrency, CurrencyMaxLength, nameof(payoutCurrency)),
-            PayoutEarnings = payoutEarnings,
+            Amount = DomainGuard.OptionalNumeric18Scale2(amount, nameof(amount)),
+            Currency = DomainGuard.OptionalCurrencyCode(currency, nameof(currency)),
+            Tax = DomainGuard.OptionalNumeric18Scale2(tax, nameof(tax)),
+            Fee = DomainGuard.OptionalNumeric18Scale2(fee, nameof(fee)),
+            Earnings = DomainGuard.OptionalNumeric18Scale2(earnings, nameof(earnings)),
+            PayoutCurrency = DomainGuard.OptionalCurrencyCode(payoutCurrency, nameof(payoutCurrency)),
+            PayoutEarnings = DomainGuard.OptionalNumeric18Scale2(payoutEarnings, nameof(payoutEarnings)),
             OccurredAtUtc = NormalizeOptionalUtc(occurredAtUtc, nameof(occurredAtUtc)),
             CurrentPeriodStartUtc = normalizedPeriodStart,
             CurrentPeriodEndUtc = normalizedPeriodEnd,
             WebhookEventId = NormalizeOptional(webhookEventId, ExternalIdMaxLength, nameof(webhookEventId)),
-            ProviderMetadataJson = NormalizeOptional(providerMetadataJson),
+            ProviderMetadataJson = DomainGuard.OptionalJson(providerMetadataJson, nameof(providerMetadataJson)),
         };
         payment.SetCreated();
         return payment;
@@ -138,14 +138,15 @@ public sealed class BillingPayment : Entity<Guid> {
         string? normalizedPlan = NormalizeOptional(plan, PlanMaxLength, nameof(plan)) ?? Plan;
         string normalizedStatus = NormalizeRequired(status, StatusMaxLength, nameof(status));
         string normalizedKind = NormalizeRequired(kind, KindMaxLength, nameof(kind));
-        string? normalizedCurrency = NormalizeOptional(currency, CurrencyMaxLength, nameof(currency)) ?? Currency;
-        string? normalizedPayoutCurrency = NormalizeOptional(payoutCurrency, CurrencyMaxLength, nameof(payoutCurrency)) ?? PayoutCurrency;
+        BillingPaymentAmounts normalizedAmounts = NormalizeAmounts(amount, tax, fee, earnings, payoutEarnings);
+        string? normalizedCurrency = DomainGuard.OptionalCurrencyCode(currency, nameof(currency)) ?? Currency;
+        string? normalizedPayoutCurrency = DomainGuard.OptionalCurrencyCode(payoutCurrency, nameof(payoutCurrency)) ?? PayoutCurrency;
         DateTime? normalizedOccurredAt = NormalizeOptionalUtc(occurredAtUtc, nameof(occurredAtUtc)) ?? OccurredAtUtc;
         DateTime? normalizedPeriodStart = NormalizeOptionalUtc(currentPeriodStartUtc, nameof(currentPeriodStartUtc)) ?? CurrentPeriodStartUtc;
         DateTime? normalizedPeriodEnd = NormalizeOptionalUtc(currentPeriodEndUtc, nameof(currentPeriodEndUtc)) ?? CurrentPeriodEndUtc;
         EnsureChronologicalRange(normalizedPeriodStart, normalizedPeriodEnd, nameof(currentPeriodStartUtc));
         string? normalizedWebhookEventId = NormalizeOptional(webhookEventId, ExternalIdMaxLength, nameof(webhookEventId)) ?? WebhookEventId;
-        string? normalizedMetadata = NormalizeOptional(providerMetadataJson) ?? ProviderMetadataJson;
+        string? normalizedMetadata = DomainGuard.OptionalJson(providerMetadataJson, nameof(providerMetadataJson)) ?? ProviderMetadataJson;
 
         BillingSubscriptionId = normalizedBillingSubscriptionId;
         ExternalCustomerId = normalizedCustomerId;
@@ -155,13 +156,13 @@ public sealed class BillingPayment : Entity<Guid> {
         Plan = normalizedPlan;
         Status = normalizedStatus;
         Kind = normalizedKind;
-        Amount = amount ?? Amount;
+        Amount = normalizedAmounts.Amount;
         Currency = normalizedCurrency;
-        Tax = tax ?? Tax;
-        Fee = fee ?? Fee;
-        Earnings = earnings ?? Earnings;
+        Tax = normalizedAmounts.Tax;
+        Fee = normalizedAmounts.Fee;
+        Earnings = normalizedAmounts.Earnings;
         PayoutCurrency = normalizedPayoutCurrency;
-        PayoutEarnings = payoutEarnings ?? PayoutEarnings;
+        PayoutEarnings = normalizedAmounts.PayoutEarnings;
         OccurredAtUtc = normalizedOccurredAt;
         CurrentPeriodStartUtc = normalizedPeriodStart;
         CurrentPeriodEndUtc = normalizedPeriodEnd;
@@ -169,6 +170,25 @@ public sealed class BillingPayment : Entity<Guid> {
         ProviderMetadataJson = normalizedMetadata;
         SetModified();
     }
+
+    private BillingPaymentAmounts NormalizeAmounts(
+        decimal? amount,
+        decimal? tax,
+        decimal? fee,
+        decimal? earnings,
+        decimal? payoutEarnings) => new(
+            DomainGuard.OptionalNumeric18Scale2(amount, nameof(amount)) ?? Amount,
+            DomainGuard.OptionalNumeric18Scale2(tax, nameof(tax)) ?? Tax,
+            DomainGuard.OptionalNumeric18Scale2(fee, nameof(fee)) ?? Fee,
+            DomainGuard.OptionalNumeric18Scale2(earnings, nameof(earnings)) ?? Earnings,
+            DomainGuard.OptionalNumeric18Scale2(payoutEarnings, nameof(payoutEarnings)) ?? PayoutEarnings);
+
+    private readonly record struct BillingPaymentAmounts(
+        decimal? Amount,
+        decimal? Tax,
+        decimal? Fee,
+        decimal? Earnings,
+        decimal? PayoutEarnings);
 
     private static string NormalizeProvider(string provider) {
         string normalized = NormalizeRequired(provider, ProviderMaxLength, nameof(provider));

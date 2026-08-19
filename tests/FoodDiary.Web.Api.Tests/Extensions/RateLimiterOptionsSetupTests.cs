@@ -74,6 +74,10 @@ public sealed class RateLimiterOptionsSetupTests {
     [InlineData(PresentationPolicyNames.MarketingAttributionRateLimitPolicyName)]
     [InlineData(PresentationPolicyNames.TestDeliveryRateLimitPolicyName)]
     [InlineData(PresentationPolicyNames.WearableRateLimitPolicyName)]
+    [InlineData(PresentationPolicyNames.FoodDataRateLimitPolicyName)]
+    [InlineData(PresentationPolicyNames.SecretVerificationRateLimitPolicyName)]
+    [InlineData(PresentationPolicyNames.BillingRateLimitPolicyName)]
+    [InlineData(PresentationPolicyNames.ExportRateLimitPolicyName)]
     public void Configure_DedicatedPolicyFactory_CreatesPartition(string policyName) {
         var options = new RateLimiterOptions();
         new RateLimiterOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiRateLimitingOptions())).Configure(options);

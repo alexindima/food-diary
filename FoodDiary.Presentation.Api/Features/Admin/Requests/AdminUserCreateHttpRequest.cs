@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+
 namespace FoodDiary.Presentation.Api.Features.Admin.Requests;
 
 public sealed record AdminUserCreateHttpRequest(
@@ -6,7 +9,7 @@ public sealed record AdminUserCreateHttpRequest(
     string? LastName,
     string? Language,
     string[] Roles,
-    string? TemporaryPassword,
+    [MaxLength(AuthenticationInputLimits.MaximumPasswordLength)] string? TemporaryPassword,
     bool GeneratePassword = true,
     bool IsEmailConfirmed = true,
     bool SendCredentialsEmail = true,

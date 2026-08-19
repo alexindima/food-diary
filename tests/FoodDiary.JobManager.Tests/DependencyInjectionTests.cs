@@ -40,7 +40,8 @@ public sealed class DependencyInjectionTests {
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<NotificationCleanupJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<UserCleanupJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<UserLoginEventCleanupJob>()),
-            () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<MarketingAttributionCleanupJob>()));
+            () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<MarketingAttributionCleanupJob>()),
+            () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<FastingTelemetryCleanupJob>()));
     }
 
     [Fact]
@@ -57,6 +58,7 @@ public sealed class DependencyInjectionTests {
             () => Assert.NotNull(provider.GetRequiredService<IOptions<UserCleanupOptions>>().Value),
             () => Assert.NotNull(provider.GetRequiredService<IOptions<UserLoginEventCleanupOptions>>().Value),
             () => Assert.NotNull(provider.GetRequiredService<IOptions<MarketingAttributionCleanupOptions>>().Value),
+            () => Assert.NotNull(provider.GetRequiredService<IOptions<FastingTelemetryCleanupOptions>>().Value),
             () => Assert.NotNull(provider.GetRequiredService<IOptions<NotificationCleanupOptions>>().Value),
             () => Assert.NotNull(provider.GetRequiredService<IOptions<BillingRenewalOptions>>().Value),
             () => Assert.NotNull(provider.GetRequiredService<IOptions<FastingNotificationOptions>>().Value),
@@ -156,6 +158,10 @@ public sealed class DependencyInjectionTests {
             ["MarketingAttributionCleanup:RetentionDays"] = "365",
             ["MarketingAttributionCleanup:BatchSize"] = "500",
             ["MarketingAttributionCleanup:Cron"] = "30 3 * * *",
+            ["FastingTelemetryCleanup:Enabled"] = "true",
+            ["FastingTelemetryCleanup:RetentionDays"] = "90",
+            ["FastingTelemetryCleanup:BatchSize"] = "500",
+            ["FastingTelemetryCleanup:Cron"] = "45 3 * * *",
             ["NotificationCleanup:TransientTypes:0"] = "FastingCheckInReminder",
             ["NotificationCleanup:TransientReadRetentionDays"] = "14",
             ["NotificationCleanup:TransientUnreadRetentionDays"] = "30",

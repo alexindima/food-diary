@@ -91,6 +91,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     }
 
     public void Update(RecipeUpdate update) {
+        ValidateUpdate(update);
         if (update.Visibility.HasValue) {
             DomainGuard.Defined(update.Visibility.Value, nameof(update.Visibility));
         }
@@ -118,6 +119,32 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
 
         if (changed) {
             SetModified();
+        }
+    }
+
+    private static void ValidateUpdate(RecipeUpdate update) {
+        string? normalizedDescription = NormalizeOptionalText(update.Description, DescriptionMaxLength, nameof(update.Description));
+        string? normalizedComment = NormalizeOptionalText(update.Comment, CommentMaxLength, nameof(update.Comment));
+        string? normalizedCategory = NormalizeOptionalText(update.Category, CategoryMaxLength, nameof(update.Category));
+        string? normalizedImageUrl = NormalizeOptionalText(update.ImageUrl, ImageUrlMaxLength, nameof(update.ImageUrl));
+
+        EnsureClearConflict(update.ClearDescription, normalizedDescription, nameof(update.ClearDescription), nameof(update.Description));
+        EnsureClearConflict(update.ClearComment, normalizedComment, nameof(update.ClearComment), nameof(update.Comment));
+        EnsureClearConflict(update.ClearCategory, normalizedCategory, nameof(update.ClearCategory), nameof(update.Category));
+        EnsureClearConflict(update.ClearImageUrl, normalizedImageUrl, nameof(update.ClearImageUrl), nameof(update.ImageUrl));
+        EnsureClearConflict(update.ClearImageAssetId, update.ImageAssetId, nameof(update.ClearImageAssetId), nameof(update.ImageAssetId));
+
+        if (update.Name is not null) {
+            NormalizeRequiredName(update.Name);
+        }
+        if (update.PrepTime.HasValue) {
+            NormalizeOptionalNonNegative(update.PrepTime, nameof(update.PrepTime));
+        }
+        if (update.CookTime.HasValue) {
+            NormalizeOptionalNonNegative(update.CookTime, nameof(update.CookTime));
+        }
+        if (update.Servings.HasValue) {
+            RequirePositive(update.Servings.Value, nameof(update.Servings));
         }
     }
 

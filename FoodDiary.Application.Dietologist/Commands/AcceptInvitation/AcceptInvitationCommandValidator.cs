@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
 
@@ -18,6 +19,9 @@ public sealed class AcceptInvitationCommandValidator : AbstractValidator<AcceptI
         RuleFor(x => x.Token)
             .NotEmpty()
             .WithErrorCode("Validation.Required")
-            .WithMessage("Token is required");
+            .WithMessage("Token is required")
+            .MaximumLength(AuthenticationInputLimits.MaximumOpaqueTokenLength)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage($"Token must not exceed {AuthenticationInputLimits.MaximumOpaqueTokenLength} characters");
     }
 }

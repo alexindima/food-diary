@@ -65,7 +65,7 @@ if (-not $parallelRunnerText.Contains('Parallel affected smoke aggregate cache h
     -not $parallelRunnerText.Contains("-Stage 'affected smoke'")) {
     throw 'Parallel smoke does not short-circuit an unchanged complete group set with one aggregate fingerprint.'
 }
-foreach ($observabilityContract in @('Code graph prewarm still running', 'CodeGraphTimeoutSeconds', 'graphPlan.reason', 'Diagnostic log', 'LLM_WIKI_SMOKE_SANDBOX', 'Request-SmokeCancellation', 'polluted the worktree')) {
+foreach ($observabilityContract in @('Code graph prewarm still running', 'CodeGraphTimeoutSeconds', 'graphPlan.reason', 'Diagnostic log', 'LLM_WIKI_SMOKE_SANDBOX', 'Request-SmokeCancellation', 'changed concurrently outside owned smoke sandboxes')) {
     if (-not $parallelRunnerText.Contains($observabilityContract)) {
         throw "Parallel smoke omitted observability/isolation contract '$observabilityContract'."
     }

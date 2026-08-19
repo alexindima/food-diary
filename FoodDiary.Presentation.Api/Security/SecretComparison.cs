@@ -9,10 +9,9 @@ public static class SecretComparison {
             return false;
         }
 
-        byte[] expectedBytes = Encoding.UTF8.GetBytes(expected);
-        byte[] actualBytes = Encoding.UTF8.GetBytes(actual);
+        byte[] expectedHash = SHA256.HashData(Encoding.UTF8.GetBytes(expected));
+        byte[] actualHash = SHA256.HashData(Encoding.UTF8.GetBytes(actual));
 
-        return expectedBytes.Length == actualBytes.Length &&
-               CryptographicOperations.FixedTimeEquals(expectedBytes, actualBytes);
+        return CryptographicOperations.FixedTimeEquals(expectedHash, actualHash);
     }
 }

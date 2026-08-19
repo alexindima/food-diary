@@ -26,9 +26,16 @@ public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> o
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
         }
 
-        DateTime authDateUtc = DateTimeOffset.FromUnixTimeSeconds(data.AuthDate).UtcDateTime;
-        DateTime expiresAt = authDateUtc.AddSeconds(_options.AuthTtlSeconds);
-        if (dateTimeProvider.GetUtcNow().UtcDateTime > expiresAt) {
+        TelegramAuthTimestampValidator.Status timestampStatus = TelegramAuthTimestampValidator.Validate(
+            data.AuthDate,
+            _options.AuthTtlSeconds,
+            dateTimeProvider.GetUtcNow().UtcDateTime,
+            out DateTime authDateUtc);
+        if (timestampStatus == TelegramAuthTimestampValidator.Status.Invalid) {
+            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
+        }
+
+        if (timestampStatus == TelegramAuthTimestampValidator.Status.Expired) {
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramAuthExpired);
         }
 

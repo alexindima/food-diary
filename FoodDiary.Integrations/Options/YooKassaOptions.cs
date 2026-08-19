@@ -25,7 +25,7 @@ public sealed class YooKassaOptions {
         IsValidAmount(options.PremiumMonthlyAmount) &&
         IsValidAmount(options.PremiumYearlyAmount) &&
         !string.IsNullOrWhiteSpace(options.Currency) &&
-        Uri.IsWellFormedUriString(options.ReturnUrl, UriKind.Absolute);
+        Billing.BillingUrlValidator.IsAbsoluteHttps(options.ReturnUrl);
 
     private static bool HasValidApiBaseUrl(string? value) =>
         Uri.TryCreate(value, UriKind.Absolute, out Uri? uri) &&

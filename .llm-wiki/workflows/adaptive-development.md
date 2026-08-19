@@ -45,7 +45,15 @@ For a non-trivial feature, prefer `./.llm-wiki/wiki.ps1 start -Intent <task> [-P
 
 Use `develop` as the read-oriented classifier when automatic workspace creation is not wanted.
 
-Read-oriented facade commands run under a shared index lock and byte-preserving guard for compiled Wiki, knowledge, and review files. An unexpected write is reverted and reported as a tool defect. When `-PlannedPath` is explicit, research and planning use that scope instead of inheriting an unrelated session baseline.
+Read-oriented facade commands run under a shared index lock in a content-addressed,
+isolated snapshot. The guard detects any source mutation inside that snapshot,
+fails the command, and discards the poisoned snapshot; it never restores or
+overwrites files in the caller's worktree. New snapshots are standalone shared
+clones under the OS-local temp directory, so they do not consume the repository's
+linked-worktree registrations. Safe snapshots are reused and bounded by a
+retention policy. When `-PlannedPath` is explicit, research and planning overlay
+and fingerprint only that scope plus Wiki tooling dependencies instead of
+inheriting an unrelated session baseline.
 
 For physical module extraction, use bounded source research and a compile proof:
 
@@ -242,8 +250,12 @@ scoped guides, Wiki pages, verified failure knowledge, and Git precedents. Every
 category exposes provenance. Current code, tests, accepted ADRs, current docs, and
 scoped `AGENTS.md` remain authoritative; indexes and history are navigation evidence.
 Structured research, brief, and test-plan results are cached only while the commit,
-arguments, and complete dirty-worktree content fingerprint are identical. This makes
-repeated adaptive composition fast without weakening freshness after an edit.
+normalized arguments, relevant dirty paths, and dependent Wiki indexes are
+identical. Unrelated worktree edits do not invalidate a scoped query. Cache misses
+report whether HEAD, relevant workspace content, dependent indexes, or the cached
+payload changed. Compact research enforces the public item limit on every lane,
+filters generic graph symbols and weak failure matches, and caps structured output
+at 30,000 characters.
 
 Git history can also be queried directly:
 

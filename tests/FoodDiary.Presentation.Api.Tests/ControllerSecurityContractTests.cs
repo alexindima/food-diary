@@ -1,11 +1,14 @@
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Admin;
+using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Ai;
 using FoodDiary.Presentation.Api.Features.Dietologist;
+using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 using FoodDiary.Presentation.Api.Features.Meals;
 using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
@@ -13,14 +16,19 @@ using FoodDiary.Presentation.Api.Features.Billing;
 using FoodDiary.Presentation.Api.Features.Dashboard;
 using FoodDiary.Presentation.Api.Features.Images;
 using FoodDiary.Presentation.Api.Features.Export;
+using FoodDiary.Presentation.Api.Features.Export.Requests;
 using FoodDiary.Presentation.Api.Features.Logs;
 using FoodDiary.Presentation.Api.Features.Marketing;
 using FoodDiary.Presentation.Api.Features.MealPlans;
 using FoodDiary.Presentation.Api.Features.Notifications;
+using FoodDiary.Presentation.Api.Features.OpenFoodFacts;
 using FoodDiary.Presentation.Api.Features.Products;
 using FoodDiary.Presentation.Api.Features.Recipes;
 using FoodDiary.Presentation.Api.Features.Version;
 using FoodDiary.Presentation.Api.Features.Wearables;
+using FoodDiary.Presentation.Api.Features.Usda;
+using FoodDiary.Presentation.Api.Features.Users;
+using FoodDiary.Presentation.Api.Features.Users.Requests;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
@@ -194,6 +202,29 @@ public sealed class ControllerSecurityContractTests {
     }
 
     [Fact]
+    public void SecretVerificationRequests_HaveExplicitTransportLengthConstraints() {
+        (Type RequestType, string ParameterName, int MaximumLength)[] expectations = [
+            (typeof(ChangePasswordHttpRequest), "CurrentPassword", AuthenticationInputLimits.MaximumPasswordLength),
+            (typeof(ChangePasswordHttpRequest), "NewPassword", AuthenticationInputLimits.MaximumPasswordLength),
+            (typeof(SetPasswordHttpRequest), "NewPassword", AuthenticationInputLimits.MaximumPasswordLength),
+            (typeof(AdminUserSetPasswordHttpRequest), "NewPassword", AuthenticationInputLimits.MaximumPasswordLength),
+            (typeof(AdminUserCreateHttpRequest), "TemporaryPassword", AuthenticationInputLimits.MaximumPasswordLength),
+            (typeof(SensitiveCycleExportHttpRequest), "CurrentPassword", AuthenticationInputLimits.MaximumPasswordLength),
+            (typeof(AcceptInvitationHttpRequest), "Token", AuthenticationInputLimits.MaximumOpaqueTokenLength),
+            (typeof(DeclineInvitationHttpRequest), "Token", AuthenticationInputLimits.MaximumOpaqueTokenLength),
+        ];
+
+        foreach ((Type requestType, string parameterName, int maximumLength) in expectations) {
+            ParameterInfo parameter = Assert.Single(requestType.GetConstructors())
+                .GetParameters()
+                .Single(item => string.Equals(item.Name, parameterName, StringComparison.OrdinalIgnoreCase));
+            MaxLengthAttribute attribute = Assert.IsType<MaxLengthAttribute>(
+                parameter.GetCustomAttribute<MaxLengthAttribute>());
+            Assert.Equal(maximumLength, attribute.Length);
+        }
+    }
+
+    [Fact]
     public void ImagesController_Actions_RequireCurrentUserBinding() {
         AssertHasFromCurrentUserParameter(typeof(ImagesController), nameof(ImagesController.GetUploadUrl));
         AssertHasFromCurrentUserParameter(typeof(ImagesController), nameof(ImagesController.Delete));
@@ -214,6 +245,50 @@ public sealed class ControllerSecurityContractTests {
             typeof(NotificationsController),
             nameof(NotificationsController.ScheduleTestNotification),
             PresentationPolicyNames.TestDeliveryRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(AdminEmailTemplatesController),
+            nameof(AdminEmailTemplatesController.SendTest),
+            PresentationPolicyNames.TestDeliveryRateLimitPolicyName);
+    }
+
+    [Fact]
+    public void SecretVerificationActions_UseDedicatedRateLimitPolicy() {
+        AssertActionRateLimit(
+            typeof(UsersPasswordController),
+            nameof(UsersPasswordController.ChangePassword),
+            PresentationPolicyNames.SecretVerificationRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(ExportController),
+            nameof(ExportController.ExportSensitiveCycle),
+            PresentationPolicyNames.SecretVerificationRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(DietologistInvitationsController),
+            nameof(DietologistInvitationsController.Accept),
+            PresentationPolicyNames.SecretVerificationRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(DietologistInvitationsController),
+            nameof(DietologistInvitationsController.Decline),
+            PresentationPolicyNames.SecretVerificationRateLimitPolicyName);
+    }
+
+    [Fact]
+    public void ExpensiveExportAndBillingActions_UseDedicatedRateLimitPolicies() {
+        AssertActionRateLimit(
+            typeof(ExportController),
+            nameof(ExportController.ExportDiary),
+            PresentationPolicyNames.ExportRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(ExportController),
+            nameof(ExportController.ExportCycle),
+            PresentationPolicyNames.ExportRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(BillingController),
+            nameof(BillingController.CreateCheckoutSession),
+            PresentationPolicyNames.BillingRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(BillingController),
+            nameof(BillingController.CreatePortalSession),
+            PresentationPolicyNames.BillingRateLimitPolicyName);
     }
 
     [Fact]
@@ -303,6 +378,20 @@ public sealed class ControllerSecurityContractTests {
         EnableIdempotencyAttribute idempotency = AssertSingleAttribute<EnableIdempotencyAttribute>(
             GetAction(typeof(WearablesController), nameof(WearablesController.Sync)));
         Assert.True(idempotency.RequireKey);
+    }
+
+    [Fact]
+    public void ProviderBackedFoodDataEndpoints_UseDedicatedRateLimit() {
+        AssertControllerRateLimit(typeof(OpenFoodFactsController), PresentationPolicyNames.FoodDataRateLimitPolicyName);
+        AssertControllerRateLimit(typeof(ProductSuggestionsController), PresentationPolicyNames.FoodDataRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(UsdaController),
+            nameof(UsdaController.Search),
+            PresentationPolicyNames.FoodDataRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(UsdaController),
+            nameof(UsdaController.GetDetail),
+            PresentationPolicyNames.FoodDataRateLimitPolicyName);
     }
 
     [Fact]

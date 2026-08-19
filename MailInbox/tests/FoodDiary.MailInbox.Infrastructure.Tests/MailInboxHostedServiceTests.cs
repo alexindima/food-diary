@@ -7,7 +7,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Diagnostics;
 using System.Globalization;
+using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Authentication;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 
 namespace FoodDiary.MailInbox.Infrastructure.Tests;
 
@@ -44,30 +49,142 @@ public sealed class MailInboxHostedServiceTests {
     }
 
     [Fact]
-    public async Task SmtpHostedService_WhenEnabled_StartsListenerUntilStopped() {
+    public async Task SmtpHostedService_WhenEnabled_AdvertisesAndNegotiatesStartTls() {
         int port = GetFreeTcpPort();
+        using CertificateFiles certificateFiles = CreateCertificateFiles("localhost");
         MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
             Enabled = true,
             ServerName = "localhost",
             Port = port,
+            CertificatePath = certificateFiles.CertificatePath,
+            PrivateKeyPath = certificateFiles.PrivateKeyPath,
             MaxMessageSizeBytes = 1024,
         });
 
         await service.StartAsync(CancellationToken.None);
         try {
             await WaitForPortAsync(port, CancellationToken.None);
+            using var client = new TcpClient();
+            await client.ConnectAsync(System.Net.IPAddress.Loopback, port, CancellationToken.None);
+            using (var reader = new StreamReader(
+                       client.GetStream(),
+                       Encoding.ASCII,
+                       detectEncodingFromByteOrderMarks: false,
+                       leaveOpen: true))
+            await using (var writer = new StreamWriter(
+                       client.GetStream(),
+                       Encoding.ASCII,
+                       leaveOpen: true) { AutoFlush = true, NewLine = "\r\n" }) {
+                Assert.StartsWith(
+                    "220",
+                    await reader.ReadLineAsync(CancellationToken.None),
+                    StringComparison.Ordinal);
+
+                await writer.WriteLineAsync("EHLO localhost");
+                IReadOnlyList<string> capabilities = await ReadSmtpResponseAsync(reader, "250");
+                Assert.Contains(capabilities, static line => line.Contains("STARTTLS", StringComparison.Ordinal));
+
+                await writer.WriteLineAsync("STARTTLS");
+                Assert.StartsWith(
+                    "220",
+                    await reader.ReadLineAsync(CancellationToken.None),
+                    StringComparison.Ordinal);
+            }
+
+            X509Certificate2? remoteCertificate = null;
+            await using var secureStream = new SslStream(
+                client.GetStream(),
+                leaveInnerStreamOpen: false,
+                (_, certificate, _, _) => {
+                    remoteCertificate = certificate is null
+                        ? null
+                        : X509CertificateLoader.LoadCertificate(certificate.GetRawCertData());
+                    return certificate is not null;
+                });
+            await secureStream.AuthenticateAsClientAsync(
+                new SslClientAuthenticationOptions {
+                    TargetHost = "localhost",
+                    EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13,
+                    CertificateRevocationCheckMode = X509RevocationMode.NoCheck,
+                },
+                CancellationToken.None);
+
+            using (remoteCertificate) {
+                Assert.True(secureStream.IsAuthenticated);
+                Assert.True(secureStream.IsEncrypted);
+                Assert.Contains(secureStream.SslProtocol, new[] { SslProtocols.Tls12, SslProtocols.Tls13 });
+                Assert.NotNull(remoteCertificate);
+                Assert.Equal(certificateFiles.Thumbprint, remoteCertificate.Thumbprint);
+            }
         } finally {
             await service.StopAsync(CancellationToken.None);
         }
     }
 
     [Fact]
+    public async Task SmtpHostedService_WhenCertificateDoesNotMatchServerName_FailsClosed() {
+        using CertificateFiles certificateFiles = CreateCertificateFiles("other.example");
+        MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
+            Enabled = true,
+            ServerName = "localhost",
+            Port = GetFreeTcpPort(),
+            CertificatePath = certificateFiles.CertificatePath,
+            PrivateKeyPath = certificateFiles.PrivateKeyPath,
+        });
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => InvokeExecuteAsync(service, CancellationToken.None));
+
+        Assert.Contains("does not match", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task SmtpHostedService_WhenCertificateFilesAreMissing_FailsClosed() {
+        string missingPath = Path.Combine(Path.GetTempPath(), $"missing-{Guid.NewGuid():N}.pem");
+        MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
+            Enabled = true,
+            ServerName = "localhost",
+            Port = GetFreeTcpPort(),
+            CertificatePath = missingPath,
+            PrivateKeyPath = missingPath,
+        });
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => InvokeExecuteAsync(service, CancellationToken.None));
+
+        Assert.Contains("could not be loaded", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task SmtpHostedService_WhenCertificateIsExpired_FailsClosed() {
+        using CertificateFiles certificateFiles = CreateCertificateFiles(
+            "localhost",
+            DateTimeOffset.UtcNow.AddDays(-2),
+            DateTimeOffset.UtcNow.AddDays(-1));
+        MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
+            Enabled = true,
+            ServerName = "localhost",
+            Port = GetFreeTcpPort(),
+            CertificatePath = certificateFiles.CertificatePath,
+            PrivateKeyPath = certificateFiles.PrivateKeyPath,
+        });
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => InvokeExecuteAsync(service, CancellationToken.None));
+
+        Assert.Contains("not currently valid", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task SmtpHostedService_WhenGlobalConnectionLimitIsReached_DelaysNextSessionUntilRelease() {
         int port = GetFreeTcpPort();
+        using CertificateFiles certificateFiles = CreateCertificateFiles("localhost");
         MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
             Enabled = true,
             ServerName = "localhost",
             Port = port,
+            CertificatePath = certificateFiles.CertificatePath,
+            PrivateKeyPath = certificateFiles.PrivateKeyPath,
             MaxMessageSizeBytes = 1024,
             MaxConcurrentConnections = 1,
             MaxConcurrentConnectionsPerIp = 1,
@@ -101,10 +218,13 @@ public sealed class MailInboxHostedServiceTests {
     [Fact]
     public async Task SmtpHostedService_WhenPerIpConnectionLimitIsReached_ClosesExcessSession() {
         int port = GetFreeTcpPort();
+        using CertificateFiles certificateFiles = CreateCertificateFiles("localhost");
         MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
             Enabled = true,
             ServerName = "localhost",
             Port = port,
+            CertificatePath = certificateFiles.CertificatePath,
+            PrivateKeyPath = certificateFiles.PrivateKeyPath,
             MaxMessageSizeBytes = 1024,
             MaxConcurrentConnections = 2,
             MaxConcurrentConnectionsPerIp = 1,
@@ -182,6 +302,39 @@ public sealed class MailInboxHostedServiceTests {
         Assert.True(store.CallCount >= 2);
     }
 
+    [Fact]
+    public async Task RetentionHostedService_WhenCanceledDuringPurge_StopsCleanly() {
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+        var service = new MailInboxRetentionHostedService(
+            new RecordingRetentionStore(expectedCallCount: 1, failuresBeforeSuccess: 0),
+            Microsoft.Extensions.Options.Options.Create(new MailInboxStorageOptions()),
+            FixedTime,
+            NullLogger<MailInboxRetentionHostedService>.Instance);
+
+        await InvokeExecuteAsync(service, cts.Token);
+    }
+
+    [Fact]
+    public async Task RetentionHostedService_DrainExpiredAsync_ContinuesUntilBothBatchesArePartial() {
+        var store = new DrainingRetentionStore([
+            new InboundMailRetentionResult(ContentPurgedCount: 2, MetadataDeletedCount: 2),
+            new InboundMailRetentionResult(ContentPurgedCount: 2, MetadataDeletedCount: 0),
+            new InboundMailRetentionResult(ContentPurgedCount: 1, MetadataDeletedCount: 0),
+        ]);
+        var service = new MailInboxRetentionHostedService(
+            store,
+            Microsoft.Extensions.Options.Options.Create(new MailInboxStorageOptions { CleanupBatchSize = 2 }),
+            FixedTime,
+            NullLogger<MailInboxRetentionHostedService>.Instance);
+
+        InboundMailRetentionResult result = await InvokeDrainExpiredAsync(service, CancellationToken.None);
+
+        Assert.Equal(5, result.ContentPurgedCount);
+        Assert.Equal(2, result.MetadataDeletedCount);
+        Assert.Equal(3, store.CallCount);
+    }
+
     private static int GetFreeTcpPort() {
         var listener = new TcpListener(System.Net.IPAddress.Loopback, port: 0);
         listener.Start();
@@ -189,6 +342,57 @@ public sealed class MailInboxHostedServiceTests {
             return ((System.Net.IPEndPoint)listener.LocalEndpoint).Port;
         } finally {
             listener.Stop();
+        }
+    }
+
+    private static CertificateFiles CreateCertificateFiles(
+        string dnsName,
+        DateTimeOffset? notBefore = null,
+        DateTimeOffset? notAfter = null) {
+        using var rsa = RSA.Create(2048);
+        var request = new CertificateRequest(
+            $"CN={dnsName}",
+            rsa,
+            HashAlgorithmName.SHA256,
+            RSASignaturePadding.Pkcs1);
+        var subjectAlternativeNames = new SubjectAlternativeNameBuilder();
+        subjectAlternativeNames.AddDnsName(dnsName);
+        request.CertificateExtensions.Add(subjectAlternativeNames.Build());
+        request.CertificateExtensions.Add(new X509BasicConstraintsExtension(
+            certificateAuthority: false,
+            hasPathLengthConstraint: false,
+            pathLengthConstraint: 0,
+            critical: true));
+        request.CertificateExtensions.Add(new X509KeyUsageExtension(
+            X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.KeyEncipherment,
+            critical: true));
+        OidCollection enhancedKeyUsages = [new Oid(
+            value: "1.3.6.1.5.5.7.3.1",
+            friendlyName: "TLS Web Server Authentication")];
+        request.CertificateExtensions.Add(new X509EnhancedKeyUsageExtension(enhancedKeyUsages, critical: true));
+
+        using X509Certificate2 certificate = request.CreateSelfSigned(
+            notBefore ?? DateTimeOffset.UtcNow.AddMinutes(-5),
+            notAfter ?? DateTimeOffset.UtcNow.AddDays(1));
+        string certificatePath = Path.GetTempFileName();
+        string privateKeyPath = Path.GetTempFileName();
+        File.WriteAllText(certificatePath, certificate.ExportCertificatePem());
+        File.WriteAllText(privateKeyPath, rsa.ExportPkcs8PrivateKeyPem());
+        return new CertificateFiles(certificatePath, privateKeyPath, certificate.Thumbprint);
+    }
+
+    private static async Task<IReadOnlyList<string>> ReadSmtpResponseAsync(
+        StreamReader reader,
+        string expectedCode) {
+        var lines = new List<string>();
+        while (true) {
+            string? line = await reader.ReadLineAsync(CancellationToken.None).ConfigureAwait(false);
+            Assert.NotNull(line);
+            Assert.StartsWith(expectedCode, line, StringComparison.Ordinal);
+            lines.Add(line);
+            if (line.Length < 4 || line[3] != '-') {
+                return lines;
+            }
         }
     }
 
@@ -237,6 +441,16 @@ public sealed class MailInboxHostedServiceTests {
         await ((Task)method.Invoke(service, [cancellationToken])!).ConfigureAwait(false);
     }
 
+    private static async Task<InboundMailRetentionResult> InvokeDrainExpiredAsync(
+        MailInboxRetentionHostedService service,
+        CancellationToken cancellationToken) {
+        System.Reflection.MethodInfo method = service.GetType().GetMethod(
+            "DrainExpiredAsync",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        return await ((Task<InboundMailRetentionResult>)method.Invoke(service, [cancellationToken])!)
+            .ConfigureAwait(false);
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class RecordingSchemaInitializer : IMailInboxSchemaInitializer {
         public bool Called { get; private set; }
@@ -252,6 +466,17 @@ public sealed class MailInboxHostedServiceTests {
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider : TimeProvider {
         public override DateTimeOffset GetUtcNow() => FixedNow;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record CertificateFiles(
+        string CertificatePath,
+        string PrivateKeyPath,
+        string Thumbprint) : IDisposable {
+        public void Dispose() {
+            File.Delete(CertificatePath);
+            File.Delete(PrivateKeyPath);
+        }
     }
 
     [ExcludeFromCodeCoverage]
@@ -334,6 +559,37 @@ public sealed class MailInboxHostedServiceTests {
             DateTimeOffset metadataCutoffUtc,
             int batchSize,
             CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class DrainingRetentionStore(IReadOnlyList<InboundMailRetentionResult> results) : IInboundMailStore {
+        private int _callCount;
+
+        public int CallCount => _callCount;
+
+        public Task<InboundMailRetentionResult> PurgeExpiredAsync(
+            DateTimeOffset contentCutoffUtc,
+            DateTimeOffset metadataCutoffUtc,
+            int batchSize,
+            CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            InboundMailRetentionResult result = results[_callCount++];
+            return Task.FromResult(result);
+        }
+
+        public Task<InboundMailSaveResult> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(
+            int limit,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<InboundMailMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<bool> MarkAsReadAsync(Guid id, DateTimeOffset readAtUtc, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
     }
 }

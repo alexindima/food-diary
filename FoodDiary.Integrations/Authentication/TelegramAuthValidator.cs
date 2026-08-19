@@ -46,9 +46,16 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
         }
 
-        DateTime authDateUtc = DateTimeOffset.FromUnixTimeSeconds(authDateSeconds).UtcDateTime;
-        DateTime expiresAt = authDateUtc.AddSeconds(_options.AuthTtlSeconds);
-        if (dateTimeProvider.GetUtcNow().UtcDateTime > expiresAt) {
+        TelegramAuthTimestampValidator.Status timestampStatus = TelegramAuthTimestampValidator.Validate(
+            authDateSeconds,
+            _options.AuthTtlSeconds,
+            dateTimeProvider.GetUtcNow().UtcDateTime,
+            out DateTime authDateUtc);
+        if (timestampStatus == TelegramAuthTimestampValidator.Status.Invalid) {
+            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
+        }
+
+        if (timestampStatus == TelegramAuthTimestampValidator.Status.Expired) {
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramAuthExpired);
         }
 
@@ -56,12 +63,7 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
         }
 
-        TelegramWebAppUser? user;
-        try {
-            user = JsonSerializer.Deserialize<TelegramWebAppUser>(userValues.ToString(), TelegramUserJsonOptions);
-        } catch {
-            return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
-        }
+        TelegramWebAppUser? user = DeserializeUser(userValues.ToString());
 
         if (user is not { Id: > 0 }) {
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
@@ -77,6 +79,14 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
             authDateUtc);
 
         return Result.Success(telegramInitData);
+    }
+
+    private static TelegramWebAppUser? DeserializeUser(string json) {
+        try {
+            return JsonSerializer.Deserialize<TelegramWebAppUser>(json, TelegramUserJsonOptions);
+        } catch (JsonException) {
+            return null;
+        }
     }
 
     private static string BuildDataCheckString(Dictionary<string, StringValues> parsed) {

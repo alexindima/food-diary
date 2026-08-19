@@ -14,6 +14,7 @@ public static class RecurringJobIds {
     public const string AchievementEvaluationOutbox = "achievement-evaluation-outbox";
     public const string UserLoginEventsCleanup = "user-login-events-cleanup";
     public const string MarketingAttributionCleanup = "marketing-attribution-cleanup";
+    public const string FastingTelemetryCleanup = "fasting-telemetry-cleanup";
     public const string ClientTaskReminders = "client-task-reminders";
     public const string WeeklyGoalReminders = "weekly-goal-reminders";
 
@@ -31,6 +32,7 @@ public static class RecurringJobIds {
         AchievementEvaluationOutbox,
         UserLoginEventsCleanup,
         MarketingAttributionCleanup,
+        FastingTelemetryCleanup,
         ClientTaskReminders,
         WeeklyGoalReminders,
     ];

@@ -32,6 +32,21 @@ public sealed class ChangeSetSnapshotServiceTests {
         Assert.True(ChangeSetSnapshotService.IsIgnoredWatcherPath(path));
     }
 
+    [Theory]
+    [InlineData("Shared/FoodDiary.Mediator/IMediator.cs", "Shared/FoodDiary.Mediator", true)]
+    [InlineData("Shared/FoodDiary.Mediator", "Shared/FoodDiary.Mediator/IMediator.cs", true)]
+    [InlineData("FoodDiary.Web.Client/src/app/app.ts", "Shared/FoodDiary.Mediator", false)]
+    [InlineData(".llm-wiki/generated/code-graph.sqlite", "Shared/FoodDiary.Mediator", false)]
+    [InlineData(".llm-wiki/tools/wiki-tool.ps1", ".llm-wiki", true)]
+    public void IsPathRelevantToScope_SeparatesUnrelatedChanges(
+        string path,
+        string scope,
+        bool expected) {
+        Assert.Equal(
+            expected,
+            ChangeSetSnapshotService.IsPathRelevantToScope(path, [scope]));
+    }
+
     [Fact]
     public async Task GetAsync_RevalidatesHeadWhenBranchReferenceChangesOutsideWatcherRoot() {
         string repositoryRoot = Path.Combine(

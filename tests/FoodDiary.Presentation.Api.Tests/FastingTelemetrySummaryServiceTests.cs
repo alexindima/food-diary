@@ -92,6 +92,34 @@ public sealed class FastingTelemetrySummaryServiceTests {
     }
 
     [Fact]
+    public async Task RecordAsync_WithFutureTimestamp_UsesCurrentUtcTimestamp() {
+        var repository = new InMemoryFastingTelemetryEventRepository();
+        DateTime nowUtc = new(2026, 6, 30, 10, 15, 0, DateTimeKind.Utc);
+
+        await RecordAsync(
+            repository,
+            CreateRequest("fasting.session.started", nowUtc.AddYears(10).ToString("O"), "{}"),
+            CancellationToken.None,
+            new FixedTimeProvider(nowUtc));
+
+        FastingTelemetryEventRecord record = Assert.Single(repository.Events);
+        Assert.Equal(nowUtc, record.OccurredAtUtc);
+    }
+
+    [Fact]
+    public async Task GetSummaryAsync_RequestsBoundedUtcWindow() {
+        var repository = new InMemoryFastingTelemetryEventRepository();
+        DateTime nowUtc = new(2026, 6, 30, 10, 15, 0, DateTimeKind.Utc);
+        GetFastingTelemetrySummaryQueryHandler handler = CreateHandler(repository, new FixedTimeProvider(nowUtc));
+
+        await handler.Handle(new GetFastingTelemetrySummaryQuery(24), CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(nowUtc.AddHours(-24), repository.RequestedFromUtc),
+            () => Assert.Equal(nowUtc, repository.RequestedToUtc));
+    }
+
+    [Fact]
     public async Task RecordAsync_WithNullDetails_RecordsEventWithoutDetailValues() {
         var repository = new InMemoryFastingTelemetryEventRepository();
 
@@ -200,8 +228,10 @@ public sealed class FastingTelemetrySummaryServiceTests {
             Details: details);
     }
 
-    private static GetFastingTelemetrySummaryQueryHandler CreateHandler(IFastingTelemetryEventRepository repository) =>
-        new(new FastingTelemetrySummaryReadService(repository, TimeProvider.System));
+    private static GetFastingTelemetrySummaryQueryHandler CreateHandler(
+        IFastingTelemetryEventRepository repository,
+        TimeProvider? timeProvider = null) =>
+        new(new FastingTelemetrySummaryReadService(repository, timeProvider ?? TimeProvider.System));
 
     private static async Task RecordAsync(
         IFastingTelemetryEventRepository repository,
@@ -228,14 +258,36 @@ public sealed class FastingTelemetrySummaryServiceTests {
         private readonly List<FastingTelemetryEventRecord> _events = [];
 
         public IReadOnlyList<FastingTelemetryEventRecord> Events => _events;
+        public DateTime? RequestedFromUtc { get; private set; }
+        public DateTime? RequestedToUtc { get; private set; }
 
         public Task AddAsync(FastingTelemetryEventRecord record, CancellationToken cancellationToken = default) {
             _events.Add(record);
             return Task.CompletedTask;
         }
 
-        public Task<IReadOnlyList<FastingTelemetryEventRecord>> GetSinceAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) {
-            return Task.FromResult<IReadOnlyList<FastingTelemetryEventRecord>>(_events.Where(x => x.OccurredAtUtc >= sinceUtc).ToList());
+        public Task<int> DeleteOlderThanAsync(
+            DateTime olderThanUtc,
+            int batchSize,
+            CancellationToken cancellationToken = default) {
+            FastingTelemetryEventRecord[] expiredEvents = [.. _events
+                .Where(item => item.OccurredAtUtc < olderThanUtc)
+                .Take(Math.Max(batchSize, 1))];
+            foreach (FastingTelemetryEventRecord expiredEvent in expiredEvents) {
+                _events.Remove(expiredEvent);
+            }
+
+            return Task.FromResult(expiredEvents.Length);
+        }
+
+        public Task<IReadOnlyList<FastingTelemetryEventRecord>> GetRangeAsync(
+            DateTime fromUtc,
+            DateTime toUtc,
+            CancellationToken cancellationToken = default) {
+            RequestedFromUtc = fromUtc;
+            RequestedToUtc = toUtc;
+            return Task.FromResult<IReadOnlyList<FastingTelemetryEventRecord>>(
+                _events.Where(x => x.OccurredAtUtc >= fromUtc && x.OccurredAtUtc <= toUtc).ToList());
         }
     }
 }

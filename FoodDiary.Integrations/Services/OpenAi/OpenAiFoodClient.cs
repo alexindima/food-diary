@@ -237,7 +237,7 @@ public sealed class OpenAiFoodClient(
             logger.LogWarning(
                 "OpenAI input token count request failed. Status={Status} Summary={Summary}",
                 (int)response.StatusCode,
-                SummarizeErrorBody(responseBody));
+                OpenAiErrorMetadata.Summarize(responseBody));
             return Result.Failure<long>(Errors.Ai.OpenAiFailed("OpenAI input token count request was rejected."));
         }
 
@@ -392,7 +392,7 @@ public sealed class OpenAiFoodClient(
         string? requestId = response.Headers.TryGetValues("x-request-id", out IEnumerable<string>? values)
             ? string.Join(',', values)
             : null;
-        string summary = SummarizeErrorBody(responseBody);
+        string summary = OpenAiErrorMetadata.Summarize(responseBody);
 
         if (response.StatusCode == HttpStatusCode.TooManyRequests) {
             if (attempt < MaxTransientRetries) {
@@ -435,208 +435,23 @@ public sealed class OpenAiFoodClient(
         string? userLanguage,
         string? description,
         string promptTemplate,
-        int maxOutputTokens) {
-        string language = string.IsNullOrWhiteSpace(userLanguage) ? "en" : userLanguage.Trim().ToLowerInvariant();
-        bool includeLocal = !string.Equals(language, "en", StringComparison.Ordinal);
-        string languageHint = includeLocal
-            ? $"Return nameEn in English and nameLocal in language '{language}'."
-            : "Return nameEn in English and set nameLocal to null.";
-        string descriptionHint = string.IsNullOrWhiteSpace(description)
-            ? string.Empty
-            : $"User hint: {description.Trim()}. ";
-        const string locationHint =
-            "For every visible food or drink, estimate its visual center in the image. " +
-            "Return centerX and centerY normalized from 0 at the left/top edge to 1 at the right/bottom edge, " +
-            "plus locationConfidence from 0 to 1. Use null for all three fields only when the item cannot be localized.";
-
-        string resolvedPrompt = promptTemplate
-            .Replace("{{languageHint}}", languageHint, StringComparison.Ordinal)
-            .Replace("{{descriptionHint}}", descriptionHint, StringComparison.Ordinal);
-
-        return new {
-            model,
-            max_output_tokens = maxOutputTokens,
-            input = new[] {
-                new {
-                    role = "user",
-                    content = new object[] {
-                        new {
-                            type = "input_text",
-                            text = descriptionHint + resolvedPrompt + " " + locationHint,
-                        },
-                        new {
-                            type = "input_image",
-                            image_url = imageUrl,
-                            detail = "high",
-                        },
-                    },
-                },
-            },
-            text = BuildFoodVisionTextFormat(),
-        };
-    }
+        int maxOutputTokens) =>
+        OpenAiRequestFactory.BuildVisionRequest(model, imageUrl, userLanguage, description, promptTemplate, maxOutputTokens);
 
     private static object BuildTextParseRequest(
         string model,
         string text,
         string? userLanguage,
         string promptTemplate,
-        int maxOutputTokens) {
-        string language = string.IsNullOrWhiteSpace(userLanguage) ? "en" : userLanguage.Trim().ToLowerInvariant();
-        bool includeLocal = !string.Equals(language, "en", StringComparison.Ordinal);
-        string languageHint = includeLocal
-            ? $"Return nameEn in English and nameLocal in language '{language}'."
-            : "Return nameEn in English and set nameLocal to null.";
-
-        string resolvedPrompt = promptTemplate
-            .Replace("{{userText}}", text, StringComparison.Ordinal)
-            .Replace("{{languageHint}}", languageHint, StringComparison.Ordinal);
-
-        return new {
-            model,
-            max_output_tokens = maxOutputTokens,
-            input = new[] {
-                new {
-                    role = "user",
-                    content = new object[] {
-                        new {
-                            type = "input_text",
-                            text = resolvedPrompt + " Set centerX, centerY, and locationConfidence to null because no image was provided.",
-                        },
-                    },
-                },
-            },
-            text = BuildFoodVisionTextFormat(),
-        };
-    }
-
-    private static object BuildFoodVisionTextFormat() {
-        return new {
-            format = new {
-                type = "json_schema",
-                name = "food_vision",
-                schema = new {
-                    type = "object",
-                    properties = new {
-                        items = new {
-                            type = "array",
-                            items = new {
-                                type = "object",
-                                properties = new {
-                                    nameEn = new { type = "string" },
-                                    nameLocal = new { type = new[] { "string", "null" } },
-                                    amount = new { type = "number" },
-                                    unit = new { type = "string" },
-                                    confidence = new { type = "number" },
-                                    centerX = new { type = new[] { "number", "null" }, minimum = 0, maximum = 1 },
-                                    centerY = new { type = new[] { "number", "null" }, minimum = 0, maximum = 1 },
-                                    locationConfidence = new { type = new[] { "number", "null" }, minimum = 0, maximum = 1 },
-                                },
-                                required = new[] {
-                                    "nameEn",
-                                    "nameLocal",
-                                    "amount",
-                                    "unit",
-                                    "confidence",
-                                    "centerX",
-                                    "centerY",
-                                    "locationConfidence",
-                                },
-                                additionalProperties = false,
-                            },
-                        },
-                    },
-                    required = new[] { "items" },
-                    additionalProperties = false,
-                },
-                strict = true,
-            },
-        };
-    }
+        int maxOutputTokens) =>
+        OpenAiRequestFactory.BuildTextParseRequest(model, text, userLanguage, promptTemplate, maxOutputTokens);
 
     private static object BuildNutritionRequest(
         string model,
         IReadOnlyList<FoodVisionItemModel> items,
         string promptTemplate,
-        int maxOutputTokens) {
-        var mappedItems = items.Select(item => new {
-            name = string.IsNullOrWhiteSpace(item.NameEn) ? item.NameLocal ?? "unknown" : item.NameEn,
-            amount = item.Amount,
-            unit = item.Unit,
-        });
-
-        string itemsJson = JsonSerializer.Serialize(new { items = mappedItems });
-        string resolvedPrompt = promptTemplate
-            .Replace("{{itemsJson}}", itemsJson, StringComparison.Ordinal);
-
-        return new {
-            model,
-            max_output_tokens = maxOutputTokens,
-            input = new[] {
-                new {
-                    role = "user",
-                    content = new object[] {
-                        new {
-                            type = "input_text",
-                            text = resolvedPrompt,
-                        },
-                        new {
-                            type = "input_text",
-                            text = itemsJson,
-                        },
-                    },
-                },
-            },
-            text = BuildFoodNutritionTextFormat(),
-        };
-    }
-
-    private static object BuildFoodNutritionTextFormat() {
-        return new {
-            format = new {
-                type = "json_schema",
-                name = "food_nutrition",
-                schema = new {
-                    type = "object",
-                    properties = new {
-                        calories = new { type = "number" },
-                        protein = new { type = "number" },
-                        fat = new { type = "number" },
-                        carbs = new { type = "number" },
-                        fiber = new { type = "number" },
-                        alcohol = new { type = "number" },
-                        items = new {
-                            type = "array",
-                            items = new {
-                                type = "object",
-                                properties = new {
-                                    name = new { type = "string" },
-                                    amount = new { type = "number" },
-                                    unit = new { type = "string" },
-                                    calories = new { type = "number" },
-                                    protein = new { type = "number" },
-                                    fat = new { type = "number" },
-                                    carbs = new { type = "number" },
-                                    fiber = new { type = "number" },
-                                    alcohol = new { type = "number" },
-                                },
-                                required = new[] {
-                                    "name", "amount", "unit",
-                                    "calories", "protein", "fat", "carbs", "fiber", "alcohol",
-                                },
-                                additionalProperties = false,
-                            },
-                        },
-                    },
-                    required = new[] {
-                        "calories", "protein", "fat", "carbs", "fiber", "alcohol", "items",
-                    },
-                    additionalProperties = false,
-                },
-                strict = true,
-            },
-        };
-    }
+        int maxOutputTokens) =>
+        OpenAiRequestFactory.BuildNutritionRequest(model, items, promptTemplate, maxOutputTokens);
 
     private static Result<FoodVisionModel> ParseVisionResponse(JsonDocument json) {
         string? text = ExtractOutputText(json);
@@ -647,8 +462,8 @@ public sealed class OpenAiFoodClient(
         try {
             FoodVisionModel? parsed = JsonSerializer.Deserialize<FoodVisionModel>(text, JsonOptions());
             return parsed is null ? Result.Failure<FoodVisionModel>(Errors.Ai.InvalidResponse("Vision response is empty.")) : Result.Success(parsed);
-        } catch (JsonException ex) {
-            return Result.Failure<FoodVisionModel>(Errors.Ai.InvalidResponse($"Vision JSON invalid: {ex.Message}"));
+        } catch (JsonException) {
+            return Result.Failure<FoodVisionModel>(Errors.Ai.InvalidResponse("Vision JSON invalid."));
         }
     }
 
@@ -661,8 +476,8 @@ public sealed class OpenAiFoodClient(
         try {
             FoodNutritionModel? parsed = JsonSerializer.Deserialize<FoodNutritionModel>(text, JsonOptions());
             return parsed is null ? Result.Failure<FoodNutritionModel>(Errors.Ai.InvalidResponse("Nutrition response is empty.")) : Result.Success(parsed);
-        } catch (JsonException ex) {
-            return Result.Failure<FoodNutritionModel>(Errors.Ai.InvalidResponse($"Nutrition JSON invalid: {ex.Message}"));
+        } catch (JsonException) {
+            return Result.Failure<FoodNutritionModel>(Errors.Ai.InvalidResponse("Nutrition JSON invalid."));
         }
     }
 
@@ -728,55 +543,4 @@ string.Equals(type.GetString(), "output_text", StringComparison.Ordinal) &&
         return delay > MaximumRetryDelay ? MaximumRetryDelay : delay;
     }
 
-    private static string SummarizeErrorBody(string responseBody) {
-        if (string.IsNullOrWhiteSpace(responseBody)) {
-            return "empty";
-        }
-
-        try {
-            var root = JsonNode.Parse(
-                responseBody,
-                documentOptions: new JsonDocumentOptions {
-                    MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
-                });
-            if (root != null) {
-                switch (root["error"]) {
-                    case JsonValue errorValue when errorValue.TryGetValue(out string? errorText):
-                        return TrimSummary(errorText);
-                    case JsonObject errorObject: {
-                            var parts = new List<string>();
-                            if (errorObject["type"] is JsonValue typeValue && typeValue.TryGetValue(out string? errorType) &&
-                                !string.IsNullOrWhiteSpace(errorType)) {
-                                parts.Add(errorType.Trim());
-                            }
-
-                            if (errorObject["code"] is JsonValue codeValue && codeValue.TryGetValue(out string? errorCode) &&
-                                !string.IsNullOrWhiteSpace(errorCode)) {
-                                parts.Add(errorCode.Trim());
-                            }
-
-                            if (errorObject["message"] is JsonValue messageValue &&
-                                messageValue.TryGetValue(out string? errorMessage) &&
-                                !string.IsNullOrWhiteSpace(errorMessage)) {
-                                parts.Add(errorMessage.Trim());
-                            }
-
-                            if (parts.Count > 0) {
-                                return TrimSummary(string.Join(": ", parts));
-                            }
-
-                            break;
-                        }
-                }
-            }
-        } catch (JsonException) {
-        }
-
-        return "response body unavailable";
-    }
-
-    private static string TrimSummary(string value) {
-        string compact = value.ReplaceLineEndings(" ").Trim();
-        return compact.Length <= 200 ? compact : compact[..200];
-    }
 }

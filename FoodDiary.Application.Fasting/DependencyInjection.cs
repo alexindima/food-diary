@@ -14,6 +14,7 @@ public static class DependencyInjection {
         services.AddScoped<IFastingAnalyticsService, FastingAnalyticsService>();
         services.AddScoped<IFastingReadService, FastingReadService>();
         services.AddScoped<IFastingTelemetrySummaryReadService, FastingTelemetrySummaryReadService>();
+        services.AddScoped<IFastingTelemetryCleanupService, FastingTelemetryCleanupService>();
         services.AddScoped<IFastingNotificationScheduler, FastingNotificationScheduler>();
 
         return services;

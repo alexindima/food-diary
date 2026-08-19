@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 151,
     "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 24,
+    "criticalSymbolsWithoutTestReferences": 25,
     "explicitDebtMarkers": 4
   },
   "projectDependencyViolations": [],
@@ -5465,6 +5465,14 @@
       "role": "Validator",
       "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListItemInputValidator.cs",
       "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
+      "name": "TelegramAuthTimestampValidator",
+      "role": "Validator",
+      "path": "FoodDiary.Integrations/Authentication/TelegramAuthTimestampValidator.cs",
+      "line": 2,
       "testReferenceCount": 0,
       "testReferences": []
     },

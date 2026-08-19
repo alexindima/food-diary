@@ -37,22 +37,15 @@ internal sealed class YooKassaApiClient(HttpClient httpClient, YooKassaOptions o
             request.Content = JsonContent.Create(body, options: JsonOptions);
         }
 
-        using HttpResponseMessage response = await httpClient.SendAsync(
-            request,
-            HttpCompletionOption.ResponseHeadersRead,
-            cancellationToken).ConfigureAwait(false);
         try {
+            using HttpResponseMessage response = await httpClient.SendAsync(
+                request,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode) {
-                string error = await BoundedHttpContentReader.ReadAsStringAsync(
-                    response.Content,
-                    BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
-                    BoundedHttpContentReader.DefaultReadTimeout,
-                    cancellationToken).ConfigureAwait(false);
                 return Result.Failure<TResponse>(Errors.Billing.ProviderOperationFailed(
                     BillingProviderNames.YooKassa,
-                    string.Create(
-                        CultureInfo.InvariantCulture,
-                        $"{(int)response.StatusCode} {response.ReasonPhrase}: {BoundedHttpContentReader.NormalizeErrorSummary(error)}").Trim()));
+                    $"YooKassa returned HTTP status {((int)response.StatusCode).ToString(CultureInfo.InvariantCulture)}."));
             }
 
             TResponse? result = await BoundedHttpContentReader.ReadFromJsonAsync<TResponse>(
@@ -66,6 +59,14 @@ internal sealed class YooKassaApiClient(HttpClient httpClient, YooKassaOptions o
                     BillingProviderNames.YooKassa,
                     "YooKassa returned an empty response."))
                 : Result.Success(result);
+        } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
+            return Result.Failure<TResponse>(Errors.Billing.ProviderOperationFailed(
+                BillingProviderNames.YooKassa,
+                "YooKassa request timed out."));
+        } catch (HttpRequestException) when (!cancellationToken.IsCancellationRequested) {
+            return Result.Failure<TResponse>(Errors.Billing.ProviderOperationFailed(
+                BillingProviderNames.YooKassa,
+                "YooKassa request could not be completed."));
         } catch (Exception exception) when (exception is InvalidDataException or TimeoutException or JsonException) {
             return Result.Failure<TResponse>(Errors.Billing.ProviderOperationFailed(
                 BillingProviderNames.YooKassa,

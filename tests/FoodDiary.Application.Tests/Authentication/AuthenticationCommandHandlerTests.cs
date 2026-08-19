@@ -50,8 +50,10 @@ public sealed partial class AuthenticationCommandHandlerTests {
             telegramAuthValidator ?? new StubTelegramAuthValidator(),
             replayGuard ?? new StubTelegramAssertionReplayGuard());
 
-    private static UserAuthenticationIdentityService CreateUserAuthenticationIdentityService(StubUserRepository userRepository) =>
-        new(userRepository, userRepository, userRepository, new StubPasswordHasher());
+    private static UserAuthenticationIdentityService CreateUserAuthenticationIdentityService(
+        StubUserRepository userRepository,
+        IPasswordHasher? passwordHasher = null) =>
+        new(userRepository, userRepository, userRepository, passwordHasher ?? new StubPasswordHasher());
 
     private static UserAuthenticationRegistrationService CreateUserAuthenticationRegistrationService(StubUserRepository userRepository) =>
         new(userRepository, userRepository, userRepository, new StubPasswordHasher());

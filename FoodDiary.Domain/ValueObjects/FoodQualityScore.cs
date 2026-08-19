@@ -1,10 +1,28 @@
 using System.Runtime.InteropServices;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Domain.ValueObjects;
 
 [StructLayout(LayoutKind.Auto)]
-public readonly record struct FoodQualityScore(int Score, FoodQualityGrade Grade) {
+public readonly record struct FoodQualityScore {
+    public int Score { get; }
+    public FoodQualityGrade Grade { get; }
+
+    public FoodQualityScore(int score, FoodQualityGrade grade) {
+        if (score is < 0 or > 100) {
+            throw new ArgumentOutOfRangeException(nameof(score), "Score must be between 0 and 100.");
+        }
+
+        FoodQualityGrade expectedGrade = GradeFor(score);
+        if (grade != expectedGrade) {
+            throw new ArgumentException("Grade must match the score range.", nameof(grade));
+        }
+
+        Score = score;
+        Grade = grade;
+    }
+
     public static FoodQualityScore Calculate(
         double caloriesPerBase,
         double proteinsPerBase,
@@ -13,6 +31,14 @@ public readonly record struct FoodQualityScore(int Score, FoodQualityGrade Grade
         double fiberPerBase,
         double alcoholPerBase,
         ProductType productType = ProductType.Unknown) {
+        DomainGuard.NonNegativeFinite(caloriesPerBase, nameof(caloriesPerBase));
+        DomainGuard.NonNegativeFinite(proteinsPerBase, nameof(proteinsPerBase));
+        DomainGuard.NonNegativeFinite(fatsPerBase, nameof(fatsPerBase));
+        DomainGuard.NonNegativeFinite(carbsPerBase, nameof(carbsPerBase));
+        DomainGuard.NonNegativeFinite(fiberPerBase, nameof(fiberPerBase));
+        DomainGuard.NonNegativeFinite(alcoholPerBase, nameof(alcoholPerBase));
+        DomainGuard.Defined(productType, nameof(productType));
+
         if (caloriesPerBase <= 0) {
             return new FoodQualityScore(50, FoodQualityGrade.Yellow);
         }
@@ -60,13 +86,17 @@ public readonly record struct FoodQualityScore(int Score, FoodQualityGrade Grade
         score += GetProductTypeModifier(productType);
 
         int finalScore = (int)Math.Round(Math.Clamp(score, 0, 100), MidpointRounding.ToEven);
-        FoodQualityGrade grade = finalScore switch {
+        FoodQualityGrade grade = GradeFor(finalScore);
+
+        return new FoodQualityScore(finalScore, grade);
+    }
+
+    private static FoodQualityGrade GradeFor(int score) {
+        return score switch {
             >= 67 => FoodQualityGrade.Green,
             >= 34 => FoodQualityGrade.Yellow,
             _ => FoodQualityGrade.Red,
         };
-
-        return new FoodQualityScore(finalScore, grade);
     }
 
     private static double GetProductTypeModifier(ProductType productType) {

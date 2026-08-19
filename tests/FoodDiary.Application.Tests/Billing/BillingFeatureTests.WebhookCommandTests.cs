@@ -204,7 +204,10 @@ public partial class BillingFeatureTests {
             "txn_invalid_queued",
             Now,
             "{}",
-            "{invalid-json");
+            "{}");
+        typeof(BillingWebhookEvent)
+            .GetProperty(nameof(BillingWebhookEvent.ParsedEventJson))!
+            .SetValue(inboxEvent, "{invalid-json");
         await webhookEventRepository.AddAsync(inboxEvent);
         var dateTimeProvider = new FixedDateTimeProvider(Now);
         var userRepository = new FakeUserRepository();

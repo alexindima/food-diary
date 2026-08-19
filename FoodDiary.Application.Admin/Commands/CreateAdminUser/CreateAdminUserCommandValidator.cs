@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FluentValidation;
@@ -24,9 +25,11 @@ public sealed class CreateAdminUserCommandValidator : AbstractValidator<CreateAd
             .Must(role => !string.IsNullOrWhiteSpace(role) && AllowedRoles.Contains(role.Trim()))
             .WithMessage("Unknown role.");
         RuleFor(command => command.TemporaryPassword)
-            .MinimumLength(6)
+            .MinimumLength(AuthenticationInputLimits.MinimumPasswordLength)
             .When(command => !command.GeneratePassword)
-            .WithMessage("Temporary password must be at least 6 characters.");
+            .WithMessage($"Temporary password must be at least {AuthenticationInputLimits.MinimumPasswordLength} characters.")
+            .MaximumLength(AuthenticationInputLimits.MaximumPasswordLength)
+            .WithMessage($"Temporary password must not exceed {AuthenticationInputLimits.MaximumPasswordLength} characters.");
         RuleFor(command => command.TemporaryPassword)
             .NotEmpty()
             .When(command => !command.GeneratePassword)

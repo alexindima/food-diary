@@ -40,7 +40,17 @@ if ($cacheEligible) {
         SkipTestPlan = [bool]$SkipTestPlan
         Limit = $Limit
     }
-    $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'task-brief' -Arguments $cacheArguments
+    $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'task-brief' -Arguments $cacheArguments `
+        -RelevantPath @($(if (@($ProposedPath).Count -gt 0) { $ProposedPath } else { $ChangedPath })) `
+        -DependencyPath @(
+            '.llm-wiki/policies/change-policy.json'
+            '.llm-wiki/policies/query-indexes.json'
+            '.llm-wiki/generated/repository-catalog.json'
+            '.llm-wiki/generated/csharp-symbol-index.json'
+            '.llm-wiki/generated/frontend-index.json'
+            '.llm-wiki/generated/quality-index.json'
+            '.llm-wiki/generated/code-graph.sqlite'
+        )
     $cachedBrief = Read-LlmWikiQueryCache -Entry $queryCacheEntry
     if ($null -ne $cachedBrief) {
         Write-Output $cachedBrief
