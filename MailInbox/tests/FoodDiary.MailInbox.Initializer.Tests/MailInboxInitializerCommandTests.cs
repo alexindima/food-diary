@@ -1,5 +1,6 @@
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Infrastructure.Options;
+using FoodDiary.MailInbox.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Reflection;
@@ -16,34 +17,28 @@ public sealed class MailInboxInitializerCommandTests {
     }
 
     [Theory]
-    [InlineData("status", null)]
-    [InlineData("update", "Host=localhost;Database=mailinbox")]
-    public void Parse_WithKnownCommand_ReturnsCommand(string name, string? connectionString) {
-        string[] args = connectionString is null
-            ? [name]
-            : [name, "--connection-string", connectionString];
-
-        object? command = Parse(args);
+    [InlineData("status")]
+    [InlineData("update")]
+    public void Parse_WithKnownCommand_ReturnsCommand(string name) {
+        object? command = Parse(name);
 
         Assert.NotNull(command);
         Assert.Equal(name, GetProperty<string>(command, "Name"));
-        Assert.Equal(connectionString, GetProperty<string?>(command, "ConnectionString"));
     }
 
-    [Fact]
-    public void Parse_WithShortConnectionStringOption_ReturnsCommand() {
-        object? command = Parse("update", "-c", "Host=localhost;Database=mailinbox");
+    [Theory]
+    [InlineData("--connection-string")]
+    [InlineData("-c")]
+    [InlineData("--connection-string=Host=localhost;Database=mailinbox;Password=secret")]
+    public void Parse_WhenConnectionStringOptionExists_Throws(string option) {
+        TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() =>
+            Parse("update", option, "Host=localhost;Database=mailinbox;Password=secret"));
 
-        Assert.NotNull(command);
-        Assert.Equal("update", GetProperty<string>(command, "Name"));
-        Assert.Equal("Host=localhost;Database=mailinbox", GetProperty<string?>(command, "ConnectionString"));
-    }
-
-    [Fact]
-    public void Parse_WhenConnectionStringValueIsMissing_Throws() {
-        TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() => Parse("update", "--connection-string"));
-
-        Assert.IsType<InvalidOperationException>(exception.InnerException);
+        InvalidOperationException innerException = Assert.IsType<InvalidOperationException>(exception.InnerException);
+        Assert.Multiple(
+            () => Assert.Equal("Unexpected argument.", innerException.Message),
+            () => Assert.DoesNotContain("Password", innerException.Message, StringComparison.OrdinalIgnoreCase),
+            () => Assert.DoesNotContain("secret", innerException.Message, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -60,9 +55,17 @@ public sealed class MailInboxInitializerCommandTests {
         services.AddMailInboxInitializerServices("Host=localhost;Database=fooddiary_mailinbox;Username=test;Password=test");
         using ServiceProvider provider = services.BuildServiceProvider();
 
-        Assert.NotNull(provider.GetRequiredService<IMailInboxSchemaInitializer>());
-        Assert.True(MailInboxStorageOptions.HasValidConfiguration(
-            provider.GetRequiredService<IOptions<MailInboxStorageOptions>>().Value));
+        DmarcReportParser parser = provider.GetRequiredService<DmarcReportParser>();
+        IMailInboxDmarcReportParser parserAbstraction = provider.GetRequiredService<IMailInboxDmarcReportParser>();
+        IMailInboxSchemaInitializer schemaInitializer = provider.GetRequiredService<IMailInboxSchemaInitializer>();
+        IMailInboxReadinessChecker readinessChecker = provider.GetRequiredService<IMailInboxReadinessChecker>();
+        MailInboxStorageOptions storageOptions = provider.GetRequiredService<IOptions<MailInboxStorageOptions>>().Value;
+
+        Assert.Multiple(
+            () => Assert.Same(parser, parserAbstraction),
+            () => Assert.NotNull(schemaInitializer),
+            () => Assert.NotNull(readinessChecker),
+            () => Assert.True(MailInboxStorageOptions.HasValidConfiguration(storageOptions)));
     }
 
     private static object? Parse(params string[] args) {

@@ -37,4 +37,6 @@ RUN apk add --no-cache \
     libverto=0.3.2-r2
 COPY --from=build /app/publish .
 
+USER $APP_UID
+
 ENTRYPOINT ["dotnet", "FoodDiary.MailInbox.Initializer.dll"]

@@ -4,9 +4,16 @@ using FoodDiary.MailInbox.Initializer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Npgsql;
 
-var command = InitializerCommand.Parse(args);
+InitializerCommand? command;
+try {
+    command = InitializerCommand.Parse(args);
+} catch (InvalidOperationException) {
+    Console.Error.WriteLine("MailInbox initializer failed: invalid command arguments.");
+    PrintUsage();
+    return 1;
+}
+
 if (command is null) {
     PrintUsage();
     return 1;
@@ -32,47 +39,50 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddEnvironmentVariables("FOODDIARY_");
 builder.Configuration.AddEnvironmentVariables("MAILINBOX_");
 
-if (!string.IsNullOrWhiteSpace(command.ConnectionString)) {
-    builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
-        ["ConnectionStrings:DefaultConnection"] = command.ConnectionString,
-    });
-}
-
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrWhiteSpace(connectionString)) {
     Console.Error.WriteLine(
-        "MailInbox initializer failed: DefaultConnection is not configured. Pass --connection-string, set ConnectionStrings__DefaultConnection, set FOODDIARY_ConnectionStrings__DefaultConnection, set MAILINBOX_ConnectionStrings__DefaultConnection, or provide appsettings in MailInbox/FoodDiary.MailInbox.WebApi.");
+        "MailInbox initializer failed: DefaultConnection is not configured. Set ConnectionStrings__DefaultConnection, set FOODDIARY_ConnectionStrings__DefaultConnection, set MAILINBOX_ConnectionStrings__DefaultConnection, use development user secrets, or provide appsettings in MailInbox/FoodDiary.MailInbox.WebApi.");
     return 1;
 }
 
 builder.Services.AddMailInboxInitializerServices(connectionString);
 
 using IHost host = builder.Build();
-AsyncServiceScope scope = host.Services.CreateAsyncScope();
-await using (scope.ConfigureAwait(false)) {
-    NpgsqlDataSource dataSource = scope.ServiceProvider.GetRequiredService<NpgsqlDataSource>();
-    IMailInboxSchemaInitializer schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailInboxSchemaInitializer>();
+try {
+    await host.StartAsync().ConfigureAwait(false);
+    AsyncServiceScope scope = host.Services.CreateAsyncScope();
+    await using (scope.ConfigureAwait(false)) {
+        IMailInboxReadinessChecker readinessChecker = scope.ServiceProvider.GetRequiredService<IMailInboxReadinessChecker>();
+        IMailInboxSchemaInitializer schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailInboxSchemaInitializer>();
+        IHostApplicationLifetime lifetime = scope.ServiceProvider.GetRequiredService<IHostApplicationLifetime>();
 
-    try {
-        await ExecuteAsync(command, dataSource, schemaInitializer).ConfigureAwait(false);
-        return 0;
-    } catch (Exception exception) {
-        Console.Error.WriteLine($"MailInbox initializer failed: {exception}");
-        return 1;
+        await ExecuteAsync(command, readinessChecker, schemaInitializer, lifetime.ApplicationStopping).ConfigureAwait(false);
     }
+
+    return 0;
+} catch (OperationCanceledException) {
+    Console.Error.WriteLine("MailInbox initializer canceled.");
+    return 1;
+} catch (Exception exception) {
+    Console.Error.WriteLine($"MailInbox initializer failed. ErrorType={exception.GetType().Name}");
+    return 1;
+} finally {
+    await host.StopAsync(CancellationToken.None).ConfigureAwait(false);
 }
 
 static async Task ExecuteAsync(
     InitializerCommand command,
-    NpgsqlDataSource dataSource,
-    IMailInboxSchemaInitializer schemaInitializer) {
+    IMailInboxReadinessChecker readinessChecker,
+    IMailInboxSchemaInitializer schemaInitializer,
+    CancellationToken cancellationToken) {
     switch (command.Name) {
         case "status":
-            await PrintStatusAsync(dataSource).ConfigureAwait(false);
+            await PrintStatusAsync(readinessChecker, cancellationToken).ConfigureAwait(false);
             break;
         case "update":
             Console.WriteLine("Updating MailInbox schema...");
-            await schemaInitializer.EnsureSchemaAsync(CancellationToken.None).ConfigureAwait(false);
+            await schemaInitializer.EnsureSchemaAsync(cancellationToken).ConfigureAwait(false);
             Console.WriteLine("MailInbox schema update completed.");
             break;
         default:
@@ -80,48 +90,18 @@ static async Task ExecuteAsync(
     }
 }
 
-static async Task PrintStatusAsync(NpgsqlDataSource dataSource) {
-    NpgsqlConnection connection = await dataSource.OpenConnectionAsync().ConfigureAwait(false);
-    await using (connection.ConfigureAwait(false)) {
-        string[] requiredTables = [
-            "mailinbox_messages",
-            "mailinbox_schema_migrations",
-        ];
-        var existingTables = new HashSet<string>(StringComparer.Ordinal);
-
-        const string sql = """
-                       select table_name
-                       from information_schema.tables
-                       where table_schema = 'public'
-                         and table_name = any(@tableNames);
-                       """;
-
-        var command = new NpgsqlCommand(sql, connection);
-        await using (command.ConfigureAwait(false)) {
-            command.Parameters.AddWithValue("tableNames", requiredTables);
-            NpgsqlDataReader reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
-            await using (reader.ConfigureAwait(false)) {
-                while (await reader.ReadAsync().ConfigureAwait(false)) {
-                    existingTables.Add(reader.GetString(0));
-                }
-
-                Console.WriteLine("Can connect:       True");
-                Console.WriteLine($"Required tables:   {requiredTables.Length}");
-                Console.WriteLine($"Existing tables:   {existingTables.Count}");
-
-                foreach (string table in requiredTables) {
-                    string state = existingTables.Contains(table) ? "present" : "missing";
-                    Console.WriteLine($"{state,-8} {table}");
-                }
-            }
-        }
-    }
+static async Task PrintStatusAsync(
+    IMailInboxReadinessChecker readinessChecker,
+    CancellationToken cancellationToken) {
+    await readinessChecker.CheckReadyAsync(cancellationToken).ConfigureAwait(false);
+    Console.WriteLine("Can connect:       True");
+    Console.WriteLine("Schema ready:      True");
 }
 
 static void PrintUsage() {
     Console.WriteLine("""
 Usage:
-  dotnet run --project MailInbox/FoodDiary.MailInbox.Initializer -- <command> [--connection-string "<value>"]
+  dotnet run --project MailInbox/FoodDiary.MailInbox.Initializer -- <command>
 
 Commands:
   status                  Show MailInbox schema status
@@ -130,7 +110,8 @@ Commands:
 Examples:
   dotnet run --project MailInbox/FoodDiary.MailInbox.Initializer -- status
   dotnet run --project MailInbox/FoodDiary.MailInbox.Initializer -- update
-  dotnet run --project MailInbox/FoodDiary.MailInbox.Initializer -- update --connection-string "Host=..."
+
+Configure ConnectionStrings__DefaultConnection through a protected environment or secret provider.
 """);
 }
 

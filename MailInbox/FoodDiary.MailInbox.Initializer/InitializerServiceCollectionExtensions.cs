@@ -14,8 +14,10 @@ internal static class InitializerServiceCollectionExtensions {
         services.AddOptions<MailInboxStorageOptions>();
         services.AddSingleton(_ => new NpgsqlDataSourceBuilder(connectionString).Build());
         services.AddSingleton<DmarcReportParser>();
+        services.AddSingleton<IMailInboxDmarcReportParser>(sp => sp.GetRequiredService<DmarcReportParser>());
         services.AddSingleton<NpgsqlInboundMailStore>();
         services.AddSingleton<IMailInboxSchemaInitializer>(sp => sp.GetRequiredService<NpgsqlInboundMailStore>());
+        services.AddSingleton<IMailInboxReadinessChecker, NpgsqlMailInboxReadinessChecker>();
 
         return services;
     }
