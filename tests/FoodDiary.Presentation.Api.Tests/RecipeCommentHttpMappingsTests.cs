@@ -44,13 +44,15 @@ public sealed class RecipeCommentHttpMappingsTests {
     [Fact]
     public void UpdateRecipeCommentRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
+        var recipeId = Guid.NewGuid();
         var commentId = Guid.NewGuid();
         var request = new UpdateRecipeCommentHttpRequest("Updated text");
 
-        UpdateRecipeCommentCommand command = request.ToCommand(userId, commentId);
+        UpdateRecipeCommentCommand command = request.ToCommand(userId, recipeId, commentId);
 
         Assert.Multiple(
             () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(recipeId, command.RecipeId),
             () => Assert.Equal(commentId, command.CommentId),
             () => Assert.Equal("Updated text", command.Text));
     }

@@ -182,17 +182,17 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "cf895737f6104b7e53f4d4591a28043a1dabd75dc7f6ded44c822d4dc812efbc"
+          "sha256": "7144e7b44ae5e8351591bbf79e673def83adc704f51d126dd23e8be5b630d658"
         },
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "7f6527f010e8d3634ee996587dd774323c7b92febfb4125267628a905bde5954"
+          "sha256": "b95221b3fe3740851e9caeb98a3cbd8f896efc302ef36e4a0c68d94357f0bce2"
         }
       ],
-      "reason": "Regenerated backend contract evidence from the current source and snapshots; API compatibility and backend contract review workflows remain the required review route for the detected API-related delta.",
+      "reason": "API compatibility check found zero breaking changes and one additive documented 400 response; backend and OpenAPI indexes were regenerated.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:15:12.4310798Z"
+      "gitHead": "05b718b0f11210e4e48c32cf4f88b71b80acb9be",
+      "reviewedAtUtc": "2026-08-19T10:53:13.7914826Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -201,13 +201,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "866c3db3539f5faf95863a1fbd06819e159ed45eafbd1fe0d2f2d0d1914fb62d"
+          "sha256": "e09aeafbf58f3cd65fa9689140d219c85ce33e2fd8d42e4bf838a31f378b2b2d"
         }
       ],
-      "reason": "Updated workflow contracts for detection-only standalone snapshots, scoped cache lineage, bounded compact research, trace scope ranking, and sandbox-owned smoke attribution; verify-full passed indexes and 28 focused groups before source-impact review.",
+      "reason": "Verified full solution build with warnings as errors, 709 architecture tests, 1449 domain tests, 2602 application tests, 883 infrastructure tests, and the PostgreSQL wearable race test.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:15:13.0563483Z"
+      "gitHead": "05b718b0f11210e4e48c32cf4f88b71b80acb9be",
+      "reviewedAtUtc": "2026-08-19T10:53:15.2095320Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -216,13 +216,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "4255f5e87edaf81fc1a7f0f7efd3ab9a6d362bb4473ee49e78b5f3db1a90deeb"
+          "sha256": "1aeb355aa6c9d8ee36b30053741967b35bb54e2d160d96ff01061331e58c9148"
         }
       ],
-      "reason": "Regenerated backend contract evidence from the current source and snapshots; API compatibility and backend contract review workflows remain the required review route for the detected API-related delta.",
+      "reason": "API compatibility check found zero breaking changes and one additive documented 400 response; backend and OpenAPI indexes were regenerated.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:15:13.9893709Z"
+      "gitHead": "05b718b0f11210e4e48c32cf4f88b71b80acb9be",
+      "reviewedAtUtc": "2026-08-19T10:53:17.9833701Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -461,13 +461,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "aa69f03540737d18d3538cbf9e7b8d4f1b183582b5f03b1e75306061040793ca"
+          "sha256": "0e6b62e619f42bac382b0b5311529c08656748f8b84ee7bc6970a429aca7d98a"
         }
       ],
-      "reason": "Updated workflow contracts for detection-only standalone snapshots, scoped cache lineage, bounded compact research, trace scope ranking, and sandbox-owned smoke attribution; verify-full passed indexes and 28 focused groups before source-impact review.",
+      "reason": "Verified full solution build with warnings as errors, 709 architecture tests, 1449 domain tests, 2602 application tests, 883 infrastructure tests, and the PostgreSQL wearable race test.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:15:16.7116698Z"
+      "gitHead": "05b718b0f11210e4e48c32cf4f88b71b80acb9be",
+      "reviewedAtUtc": "2026-08-19T10:53:21.0670053Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -756,13 +756,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "f99e3f14c88a18c224c2a737f560d2a9f53f53d269504c8c56705d0b5de28226"
+          "sha256": "5696207edec6453434d76e7d68a3d4289f459bf6c41678cc396232453a04098c"
         }
       ],
-      "reason": "Regenerated the sensitive-data index from the current worktree and confirmed the privacy/security workflow still covers the detected fields and boundaries.",
+      "reason": "Wearable concurrency hardening changes transaction coordination only; token protection, sensitive data fields, and storage schema remain unchanged, and the sensitive-data index was regenerated.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:15:19.2453650Z"
+      "gitHead": "05b718b0f11210e4e48c32cf4f88b71b80acb9be",
+      "reviewedAtUtc": "2026-08-19T10:53:24.2103011Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -817,13 +817,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3f3d83b3abb5a2e5fc033efe16cbe1784294bf5d99b93a9c7a464012a52ce3ba"
+          "sha256": "860b50e872210b8884b26660761f495dbd483b7d1a02761e1a71a575955a11bc"
         }
       ],
-      "reason": "Updated workflow contracts for detection-only standalone snapshots, scoped cache lineage, bounded compact research, trace scope ranking, and sandbox-owned smoke attribution; verify-full passed indexes and 28 focused groups before source-impact review.",
+      "reason": "Verified full solution build with warnings as errors, 709 architecture tests, 1449 domain tests, 2602 application tests, 883 infrastructure tests, and the PostgreSQL wearable race test.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:15:19.9768327Z"
+      "gitHead": "05b718b0f11210e4e48c32cf4f88b71b80acb9be",
+      "reviewedAtUtc": "2026-08-19T10:53:26.4338770Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1191,14 +1191,14 @@
       "pageSha256": "8439af4b89bf50398667ec91e06804d1fb6925969f3cfb30925553589f14ce9c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "d0a42f59ca9637b66d9a3eb9b329cc7202351943dc258ddf9036e767fe52eb09"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "f3eaa91281b361bac9afe8a0e0ea0f46caeecfc83a1f44f8931e5ed8231809c2"
         }
       ],
-      "reason": "Context scoring preserves the existing long-token substring and short-token Unicode-boundary semantics while avoiding repeated regex compilation; context-cache now enforces cold under 10 seconds and warm under 2 seconds, and both SLA and research-confidence regressions passed.",
+      "reason": "Generated catalog, domain-data, module, topology, and architecture-health artifacts were refreshed from the current verified sources; no manual narrative contract change is required.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:34:51.3805555Z"
+      "gitHead": "05b718b0f11210e4e48c32cf4f88b71b80acb9be",
+      "reviewedAtUtc": "2026-08-19T10:53:29.7696335Z"
     },
     {
       "pageId": "workflow.review-diff",

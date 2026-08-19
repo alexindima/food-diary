@@ -22,8 +22,8 @@ public static class RecipeCommentHttpMappings {
 
     extension(UpdateRecipeCommentHttpRequest request) {
         public UpdateRecipeCommentCommand ToCommand(
-        Guid userId, Guid commentId) =>
-                new(userId, commentId, request.Text);
+        Guid userId, Guid recipeId, Guid commentId) =>
+                new(userId, recipeId, commentId, request.Text);
     }
 
     public static DeleteRecipeCommentCommand ToDeleteCommand(Guid userId, Guid recipeId, Guid commentId) =>

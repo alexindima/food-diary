@@ -36,6 +36,49 @@ public partial class CyclesFeatureTests {
     }
 
     [Fact]
+    public void CycleMappings_ToModel_WithPersistedInferredEpisode_DoesNotAddSyntheticDuplicate() {
+        var profileId = Guid.NewGuid();
+        var episodeId = Guid.NewGuid();
+        var start = new DateOnly(2026, 2, 1);
+        var profile = new CycleProfileReadModel(
+            profileId,
+            UserId.New().Value,
+            CycleTrackingMode.PeriodTracking,
+            CycleConfidence.Medium,
+            start,
+            AverageCycleLength: 28,
+            AveragePeriodLength: 5,
+            LutealLength: 14,
+            IsRegular: true,
+            IsOnboardingComplete: true,
+            ShowFertilityEstimates: false,
+            DiscreetNotifications: false,
+            Notes: null,
+            BleedingEntries: [
+                new BleedingEntryReadModel(
+                    Guid.NewGuid(), profileId, start, BleedingType.Bleeding, CycleFlowLevel.Medium, PainImpact: null, Notes: null),
+                new BleedingEntryReadModel(
+                    Guid.NewGuid(), profileId, start.AddDays(1), BleedingType.Bleeding, CycleFlowLevel.Light, PainImpact: null, Notes: null),
+            ],
+            SymptomEntries: [],
+            Factors: [],
+            FertilitySignals: [],
+            MenstrualEpisodes: [
+                new MenstrualEpisodeReadModel(
+                    episodeId,
+                    profileId,
+                    start,
+                    start.AddDays(1),
+                    MenstrualEpisodeStatus.Inferred,
+                    ExcludedFromPredictions: false),
+            ]);
+
+        CycleModel model = profile.ToModel();
+
+        Assert.Equal(episodeId, Assert.Single(model.MenstrualEpisodes!).Id);
+    }
+
+    [Fact]
     public void CyclePredictionService_CalculatePredictions_WithNoCompletedCycles_ReturnsInsufficientData() {
         var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 4, 1), showFertilityEstimates: true);
 

@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3381,
-    "symbols": 3392,
+    "sourceFiles": 3383,
+    "symbols": 3393,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 235,
+    "dependencyInjectionRegistrations": 236,
     "kinds": {
       "class": 1760,
       "enum": 57,
-      "interface": 416,
+      "interface": 417,
       "record": 1043,
       "record struct": 116
     },
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 61,
-      "Other": 1281,
+      "Other": 1282,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -1320,20 +1320,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.HydrationEntry.cs",
       "line": 7
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Idempotency.cs",
-      "line": 4
-    },
-    {
-      "name": "Idempotency",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Idempotency.cs",
-      "line": 6
     },
     {
       "name": "Errors",
@@ -4395,6 +4381,13 @@
       "line": 2
     },
     {
+      "name": "IWearableTransactionRunner",
+      "kind": "interface",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableTransactionRunner.cs",
+      "line": 2
+    },
+    {
       "name": "WearableErrors",
       "kind": "class",
       "role": "Other",
@@ -6471,7 +6464,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "UpsertCycleFactorCommand",
@@ -7913,7 +7906,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "ExerciseEntryReadService",
@@ -11231,7 +11224,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommandValidator.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "CreateProductValuePreparer",
@@ -11336,7 +11329,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommandValidator.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "IProductSearchSuggestionProvider",
@@ -11735,7 +11728,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommandValidator.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "CreateRecipeValuePreparer",
@@ -11833,7 +11826,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandValidator.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "UpdateRecipeValuePreparer",
@@ -11889,14 +11882,14 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Recipes/Recipes/Common/Validators/RecipeIngredientInputValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "RecipeStepInputValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Recipes/Recipes/Common/Validators/RecipeStepInputValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "RecipeMappings",
@@ -13968,7 +13961,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Users/User.Credentials.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "User",
@@ -16523,21 +16516,21 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/FavoriteMeals/FavoriteMealRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "FavoriteProductRepository",
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "FavoriteRecipeRepository",
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "FoodDiaryDbContext",
@@ -16824,7 +16817,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/RecentItems/RecentItemRepository.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RecipeCommentRepository",
@@ -16894,7 +16887,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "CycleRepository",
@@ -17041,6 +17034,13 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Infrastructure/Persistence/Users/UserRoleMembershipService.cs",
+      "line": 7
+    },
+    {
+      "name": "EfWearableTransactionRunner",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Wearables/EfWearableTransactionRunner.cs",
       "line": 7
     },
     {
@@ -20184,14 +20184,14 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Meals/Requests/GetMealsHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "GetMealsOverviewHttpQuery",
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Meals/Requests/GetMealsOverviewHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "MealAiItemHttpRequest",
@@ -20443,14 +20443,14 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Products/Requests/GetProductsHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "GetProductsOverviewHttpQuery",
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Products/Requests/GetProductsOverviewHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "GetRecentProductsHttpQuery",
@@ -20611,14 +20611,14 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Recipes/Requests/GetRecipesHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "GetRecipesOverviewHttpQuery",
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Recipes/Requests/GetRecipesOverviewHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "RecipeIngredientHttpRequest",
@@ -21451,6 +21451,13 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Policies/PresentationPolicyNames.cs",
+      "line": 2
+    },
+    {
+      "name": "PresentationQueryLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Policies/PresentationQueryLimits.cs",
       "line": 2
     },
     {
@@ -26820,18 +26827,25 @@
       "line": 10
     },
     {
+      "service": "IWearableTransactionRunner",
+      "implementation": "EfWearableTransactionRunner",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Wearables.cs",
+      "line": 13
+    },
+    {
       "service": "IWearableSyncRepository",
       "implementation": "WearableSyncRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Wearables.cs",
-      "line": 13
+      "line": 14
     },
     {
       "service": "IWearableOAuthStateService",
       "implementation": "WearableOAuthStateService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Wearables.cs",
-      "line": 17
+      "line": 18
     },
     {
       "service": "IWeeklyGoalRepository",

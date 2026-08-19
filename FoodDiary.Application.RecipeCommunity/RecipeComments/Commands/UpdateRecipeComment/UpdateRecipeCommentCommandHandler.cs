@@ -24,10 +24,11 @@ public sealed class UpdateRecipeCommentCommandHandler(
             return CurrentUserAccessResolver.ToFailure<RecipeCommentModel>(userIdResult);
         }
 
+        var recipeId = (RecipeId)command.RecipeId;
         var commentId = (RecipeCommentId)command.CommentId;
         RecipeComment? comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken).ConfigureAwait(false);
 
-        if (comment is null) {
+        if (comment is null || comment.RecipeId != recipeId) {
             return Result.Failure<RecipeCommentModel>(Errors.RecipeComment.NotFound(command.CommentId));
         }
 

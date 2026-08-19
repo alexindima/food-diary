@@ -32,7 +32,7 @@ public class WearablesFeatureTests {
 
         var stateService = new StubWearableOAuthStateService();
         string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
-        var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
+        var handler = new ConnectWearableCommandHandler([client], repo, new SerializedWearableTransactionRunner(), stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
         Result<WearableConnectionModel> result = await handler.Handle(
             new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", state, RequestId, RequestHash),
             CancellationToken.None);
@@ -51,7 +51,7 @@ public class WearablesFeatureTests {
         var repo = new InMemoryWearableConnectionRepository();
         var stateService = new StubWearableOAuthStateService();
         string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
-        var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
+        var handler = new ConnectWearableCommandHandler([client], repo, new SerializedWearableTransactionRunner(), stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
         var command = new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", state, RequestId, RequestHash);
 
         Result<WearableConnectionModel> first = await handler.Handle(command, CancellationToken.None);
@@ -72,7 +72,7 @@ public class WearablesFeatureTests {
         var repo = new InMemoryWearableConnectionRepository();
         var stateService = new StubWearableOAuthStateService();
         string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
-        var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
+        var handler = new ConnectWearableCommandHandler([client], repo, new SerializedWearableTransactionRunner(), stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
         await handler.Handle(
             new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", state, RequestId, RequestHash),
             CancellationToken.None);
@@ -92,6 +92,7 @@ public class WearablesFeatureTests {
         var handler = new ConnectWearableCommandHandler(
             [],
             new InMemoryWearableConnectionRepository(),
+            new SerializedWearableTransactionRunner(),
             new StubWearableOAuthStateService(),
             CreateCurrentUserAccessService(),
             CreateTokenProtector());
@@ -108,6 +109,7 @@ public class WearablesFeatureTests {
         var handler = new ConnectWearableCommandHandler(
             [],
             new InMemoryWearableConnectionRepository(),
+            new SerializedWearableTransactionRunner(),
             new StubWearableOAuthStateService(),
             CreateCurrentUserAccessService(),
             CreateTokenProtector());
@@ -125,6 +127,7 @@ public class WearablesFeatureTests {
         var handler = new ConnectWearableCommandHandler(
             [],
             new InMemoryWearableConnectionRepository(),
+            new SerializedWearableTransactionRunner(),
             new StubWearableOAuthStateService(),
             CreateCurrentUserAccessService(),
             CreateTokenProtector());
@@ -143,7 +146,7 @@ public class WearablesFeatureTests {
         var userId = UserId.New();
         var stateService = new StubWearableOAuthStateService();
         string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
-        var handler = new ConnectWearableCommandHandler([client], new InMemoryWearableConnectionRepository(), stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
+        var handler = new ConnectWearableCommandHandler([client], new InMemoryWearableConnectionRepository(), new SerializedWearableTransactionRunner(), stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
 
         Result<WearableConnectionModel> result = await handler.Handle(
             new ConnectWearableCommand(userId.Value, "Fitbit", "bad-code", state, RequestId, RequestHash),
@@ -166,7 +169,7 @@ public class WearablesFeatureTests {
 
         var stateService = new StubWearableOAuthStateService();
         string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
-        var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
+        var handler = new ConnectWearableCommandHandler([client], repo, new SerializedWearableTransactionRunner(), stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
         Result<WearableConnectionModel> result = await handler.Handle(
             new ConnectWearableCommand(userId.Value, "Fitbit", "code", state, RequestId, RequestHash),
             CancellationToken.None);
@@ -190,7 +193,7 @@ public class WearablesFeatureTests {
 
         var stateService = new StubWearableOAuthStateService();
         string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
-        var handler = new ConnectWearableCommandHandler([client], repo, stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
+        var handler = new ConnectWearableCommandHandler([client], repo, new SerializedWearableTransactionRunner(), stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
         Result<WearableConnectionModel> result = await handler.Handle(
             new ConnectWearableCommand(userId.Value, "Fitbit", "code", state, RequestId, RequestHash),
             CancellationToken.None);
@@ -208,6 +211,35 @@ public class WearablesFeatureTests {
     }
 
     [Fact]
+    public async Task ConnectWearable_WhenDistinctRequestsRace_SerializesMutationAndKeepsSingleConnection() {
+        var userId = UserId.New();
+        var client = new StubWearableClient(WearableProvider.Fitbit, new WearableTokenResult(
+            "access-token", "refresh-token", "ext-user-123", DateTime.UtcNow.AddHours(1))) {
+            ExchangeDelay = TimeSpan.FromMilliseconds(25),
+        };
+        var repo = new InMemoryWearableConnectionRepository();
+        var stateService = new StubWearableOAuthStateService();
+        string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
+        var transactionRunner = new SerializedWearableTransactionRunner();
+        var handler = new ConnectWearableCommandHandler(
+            [client], repo, transactionRunner, stateService, CreateCurrentUserAccessService(), CreateTokenProtector());
+
+        Result<WearableConnectionModel>[] results = await Task.WhenAll(
+            handler.Handle(
+                new ConnectWearableCommand(userId.Value, "Fitbit", "first-code", state, RequestId, RequestHash),
+                CancellationToken.None),
+            handler.Handle(
+                new ConnectWearableCommand(userId.Value, "Fitbit", "second-code", state, new string('C', 64), new string('D', 64)),
+                CancellationToken.None));
+
+        Assert.All(results, ResultAssert.Success);
+        Assert.Multiple(
+            () => Assert.Equal(1, transactionRunner.MaxConcurrentOperations),
+            () => Assert.Single(repo.Connections),
+            () => Assert.Equal(2, client.ExchangeCodeCallCount));
+    }
+
+    [Fact]
     public async Task ConnectWearable_WithInvalidState_ReturnsFailureBeforeTokenExchange() {
         var userId = UserId.New();
         var client = new StubWearableClient(WearableProvider.Fitbit, new WearableTokenResult(
@@ -215,6 +247,7 @@ public class WearablesFeatureTests {
         var handler = new ConnectWearableCommandHandler(
             [client],
             new InMemoryWearableConnectionRepository(),
+            new SerializedWearableTransactionRunner(),
             new StubWearableOAuthStateService(),
             CreateCurrentUserAccessService(),
             CreateTokenProtector());
@@ -777,11 +810,16 @@ public class WearablesFeatureTests {
         public IReadOnlyList<WearableDataPoint> DataPoints { get; init; } = [];
         public Error? DataError { get; init; }
         public int ExchangeCodeCallCount { get; private set; }
+        public TimeSpan ExchangeDelay { get; init; }
 
         public string GetAuthorizationUrl(string state) => $"https://auth.example.com?state={state}";
-        public Task<WearableTokenResult?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default) {
+        public async Task<WearableTokenResult?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default) {
             ExchangeCodeCallCount++;
-            return Task.FromResult(tokenResult);
+            if (ExchangeDelay > TimeSpan.Zero) {
+                await Task.Delay(ExchangeDelay, cancellationToken);
+            }
+
+            return tokenResult;
         }
         public Task<WearableTokenResult?> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default) =>
             Task.FromResult(RefreshTokenResult);
@@ -810,6 +848,7 @@ public class WearablesFeatureTests {
         private readonly List<WearableConnection> _connections = [];
         public bool UpdateCalled { get; private set; }
         public int UpdateCallCount { get; private set; }
+        public IReadOnlyList<WearableConnection> Connections => _connections;
 
         public void Seed(WearableConnection connection) => _connections.Add(connection);
 
@@ -838,6 +877,29 @@ public class WearablesFeatureTests {
             UpdateCalled = true;
             UpdateCallCount++;
             return Task.CompletedTask;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class SerializedWearableTransactionRunner : IWearableTransactionRunner {
+        private readonly SemaphoreSlim _gate = new(1, 1);
+        private int _concurrentOperations;
+
+        public int MaxConcurrentOperations { get; private set; }
+
+        public async Task<TResult> ExecuteSerializedAsync<TResult>(
+            string serializationKey,
+            Func<CancellationToken, Task<TResult>> operation,
+            CancellationToken cancellationToken = default) {
+            await _gate.WaitAsync(cancellationToken);
+            try {
+                int concurrentOperations = Interlocked.Increment(ref _concurrentOperations);
+                MaxConcurrentOperations = Math.Max(MaxConcurrentOperations, concurrentOperations);
+                return await operation(cancellationToken);
+            } finally {
+                Interlocked.Decrement(ref _concurrentOperations);
+                _gate.Release();
+            }
         }
     }
 

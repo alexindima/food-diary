@@ -24,6 +24,21 @@ public sealed class BillingPublicConfigProviderTests {
     }
 
     [Fact]
+    public void GetPublicConfig_WithValidPaddlePrimaryAndOtherProviders_ListsAvailableProviders() {
+        BillingPublicConfigProvider provider = CreateProvider(
+            billing: new BillingOptions { Provider = BillingProviderNames.Paddle },
+            stripe: ValidStripeOptions(),
+            paddle: ValidPaddleOptions(),
+            yooKassa: ValidYooKassaOptions());
+
+        BillingPublicConfigModel config = provider.GetPublicConfig();
+
+        Assert.Equal(BillingProviderNames.Paddle, config.Provider);
+        Assert.Equal([BillingProviderNames.Paddle, BillingProviderNames.Stripe, BillingProviderNames.YooKassa], config.AvailableProviders);
+        Assert.Equal("test_paddle-client-token", config.PaddleClientToken);
+    }
+
+    [Fact]
     public void GetPublicConfig_WithPaddlePrimary_NormalizesProviderAndTrimsClientToken() {
         BillingPublicConfigProvider provider = CreateProvider(
             billing: new BillingOptions { Provider = " paddle " },

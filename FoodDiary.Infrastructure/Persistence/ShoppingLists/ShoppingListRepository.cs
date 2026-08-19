@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -99,6 +100,7 @@ public sealed class ShoppingListRepository(FoodDiaryDbContext context) : IShoppi
             .AsNoTracking()
             .Where(list => list.UserId == userId)
             .OrderByDescending(list => list.CreatedOnUtc)
+            .Take(PaginationPolicy.MaxCollectionSize)
             .Select(list => new ShoppingListSummaryReadModel(
                 list.Id.Value,
                 list.Name,

@@ -40,7 +40,7 @@ public sealed class RecipeCommentsController(ISender mediator) : AuthorizedContr
         Guid recipeId,
         Guid commentId,
         [FromBody] UpdateRecipeCommentHttpRequest request) =>
-        HandleOk(request.ToCommand(userId, commentId), static value => value.ToHttpResponse());
+        HandleOk(request.ToCommand(userId, recipeId, commentId), static value => value.ToHttpResponse());
 
     [HttpDelete("{commentId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

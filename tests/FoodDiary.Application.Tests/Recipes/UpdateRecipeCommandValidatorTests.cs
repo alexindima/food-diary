@@ -3,6 +3,7 @@ using FoodDiary.Application.Recipes.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Recipes.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Recipes;
 using FluentValidation.Results;
 
 namespace FoodDiary.Application.Tests.Recipes;
@@ -70,6 +71,27 @@ public class UpdateRecipeCommandValidatorTests {
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, nameof(UpdateRecipeCommand.ManualCalories), StringComparison.Ordinal));
         Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, nameof(UpdateRecipeCommand.ManualFats), StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithValuesBeyondDomainLimits_ReturnsValidationErrors() {
+        UpdateRecipeCommand command = CreateCommand(
+            Guid.NewGuid(),
+            RecipeId.New(),
+            [CreateStep(order: 1, "Step")]) with {
+            Name = new string('n', Recipe.NameMaxLength + 1),
+            Description = new string('d', Recipe.DescriptionMaxLength + 1),
+            Comment = new string('c', Recipe.CommentMaxLength + 1),
+            Category = new string('g', Recipe.CategoryMaxLength + 1),
+            ImageUrl = new string('i', Recipe.ImageUrlMaxLength + 1),
+        };
+
+        ValidationResult result = await new UpdateRecipeCommandValidator().ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(UpdateRecipeCommand.Name), StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(UpdateRecipeCommand.Description), StringComparison.Ordinal));
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(UpdateRecipeCommand.ImageUrl), StringComparison.Ordinal));
     }
 
     private static UpdateRecipeCommand CreateCommand(

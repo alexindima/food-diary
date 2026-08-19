@@ -15,6 +15,7 @@ internal sealed class UsdaFoodSearchService(
     HttpClient httpClient,
     IOptions<UsdaApiOptions> options,
     ILogger<UsdaFoodSearchService> logger) : IUsdaFoodSearchService {
+    private const int MaximumSearchResults = 200;
     private static readonly JsonSerializerOptions JsonOptions = new() {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -31,11 +32,12 @@ internal sealed class UsdaFoodSearchService(
             return [];
         }
 
+        int normalizedLimit = Math.Clamp(limit, 1, MaximumSearchResults);
         try {
             var requestBody = new UsdaSearchRequest(
                 query,
                 ["Branded"],
-                limit);
+                normalizedLimit);
 
             using var request = new HttpRequestMessage(HttpMethod.Post, $"{config.BaseUrl}/foods/search?api_key={config.ApiKey}") {
                 Content = JsonContent.Create(requestBody, options: JsonOptions),
@@ -53,7 +55,9 @@ internal sealed class UsdaFoodSearchService(
             }
 
             return result.Foods
-                .ConvertAll(f => new UsdaFoodModel(f.FdcId, f.Description, f.BrandName ?? f.FoodCategory));
+                .Take(normalizedLimit)
+                .Select(f => new UsdaFoodModel(f.FdcId, f.Description, f.BrandName ?? f.FoodCategory))
+                .ToList();
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {

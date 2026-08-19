@@ -31,6 +31,10 @@ public sealed class BillingPublicConfigProvider(
             AddProvider(providers, provider);
         }
 
+        if (HasValidStripeCheckoutConfiguration(stripeOptions.Value)) {
+            AddProvider(providers, BillingProviderNames.Stripe);
+        }
+
         if (HasValidPaddleCheckoutConfiguration(paddleOptions.Value)) {
             AddProvider(providers, BillingProviderNames.Paddle);
         }

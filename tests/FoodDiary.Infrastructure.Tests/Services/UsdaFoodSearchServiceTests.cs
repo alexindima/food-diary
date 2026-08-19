@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
@@ -16,6 +17,39 @@ public sealed class UsdaFoodSearchServiceTests {
         IReadOnlyList<UsdaFoodModel> result = await service.SearchBrandedAsync("milk");
 
         Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task SearchBrandedAsync_WhenProviderReturnsMoreThanLimit_TruncatesResult() {
+        const string json = """
+            {
+              "foods": [
+                { "fdcId": 1, "description": "Milk" },
+                { "fdcId": 2, "description": "Yogurt" },
+                { "fdcId": 3, "description": "Cheese" }
+              ]
+            }
+            """;
+        UsdaFoodSearchService service = CreateService(new SuccessHttpMessageHandler(json));
+
+        IReadOnlyList<UsdaFoodModel> result = await service.SearchBrandedAsync("dairy", limit: 2);
+
+        Assert.Equal([1, 2], result.Select(static food => food.FdcId));
+    }
+
+    [Theory]
+    [InlineData(0, 1)]
+    [InlineData(500, 200)]
+    public async Task SearchBrandedAsync_WhenLimitIsOutsideProviderRange_ClampsPageSize(
+        int limit,
+        int expectedPageSize) {
+        var handler = new RequestBodyRecordingHttpMessageHandler();
+        UsdaFoodSearchService service = CreateService(handler);
+
+        await service.SearchBrandedAsync("milk", limit);
+
+        using var request = JsonDocument.Parse(handler.RequestBody!);
+        Assert.Equal(expectedPageSize, request.RootElement.GetProperty("pageSize").GetInt32());
     }
 
     [Fact]
@@ -96,6 +130,25 @@ public sealed class UsdaFoodSearchServiceTests {
         Assert.Equal(48, result.Nutrients[0].AmountPer100G);
         Assert.Single(result.Portions);
         Assert.Equal(355, result.Portions[0].GramWeight);
+    }
+
+    [Fact]
+    public async Task GetFoodDetailAsync_WhenCategoryObjectMissing_UsesCategoryDescription() {
+        const string json = """
+            {
+              "fdcId": 539789,
+              "description": "Legacy food",
+              "foodCategoryDescription": "Legacy category",
+              "foodNutrients": [],
+              "foodPortions": []
+            }
+            """;
+        UsdaFoodSearchService service = CreateService(new SuccessHttpMessageHandler(json));
+
+        UsdaFoodDetailModel? result = await service.GetFoodDetailAsync(539789);
+
+        Assert.NotNull(result);
+        Assert.Equal("Legacy category", result.FoodCategory);
     }
 
     [Fact]
@@ -192,6 +245,20 @@ public sealed class UsdaFoodSearchServiceTests {
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
             });
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RequestBodyRecordingHttpMessageHandler : HttpMessageHandler {
+        public string? RequestBody { get; private set; }
+
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken) {
+            RequestBody = await request.Content!.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            return new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = new StringContent("""{"foods": []}"""),
+            };
         }
     }
 

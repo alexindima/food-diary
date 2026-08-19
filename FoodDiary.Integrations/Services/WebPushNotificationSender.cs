@@ -19,8 +19,10 @@ public sealed class WebPushNotificationSender(
     ILogger<WebPushNotificationSender> logger)
     : IWebPushNotificationSender, IWebPushConfigurationProvider {
     private const int MaximumConcurrentDeliveries = 4;
-    private static readonly TimeSpan DeliveryDeadline = TimeSpan.FromSeconds(35);
+    private static readonly TimeSpan DefaultDeliveryDeadline = TimeSpan.FromSeconds(35);
     private readonly WebPushOptions _options = optionsAccessor.Value;
+
+    internal TimeSpan DeliveryDeadline { get; init; } = DefaultDeliveryDeadline;
 
     public WebPushClientConfiguration GetClientConfiguration() {
         return new WebPushClientConfiguration(_options.Enabled && IsConfigured(), _options.PublicKey);

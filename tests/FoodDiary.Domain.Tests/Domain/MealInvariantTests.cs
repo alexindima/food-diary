@@ -105,7 +105,7 @@ public class MealInvariantTests {
         var nextAsset = ImageAssetId.New();
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow, imageUrl: "https://img", imageAssetId: initialAsset);
 
-        meal.UpdateImage("https://img", nextAsset);
+        meal.UpdateImage("https://img", imageAssetId: nextAsset);
 
         Assert.Equal(nextAsset, meal.ImageAssetId);
         Assert.NotNull(meal.ModifiedOnUtc);
@@ -119,6 +119,30 @@ public class MealInvariantTests {
 
         Assert.Equal("https://new", meal.ImageUrl);
         Assert.NotNull(meal.ModifiedOnUtc);
+    }
+
+    [Fact]
+    public void UpdateImage_WithExplicitClear_ClearsUrlAndAssetTogether() {
+        var meal = Meal.Create(
+            UserId.New(),
+            DateTime.UtcNow,
+            imageUrl: "https://old",
+            imageAssetId: ImageAssetId.New());
+
+        meal.UpdateImage(clearImageUrl: true, clearImageAssetId: true);
+
+        Assert.Multiple(
+            () => Assert.Null(meal.ImageUrl),
+            () => Assert.Null(meal.ImageAssetId),
+            () => Assert.NotNull(meal.ModifiedOnUtc));
+    }
+
+    [Fact]
+    public void UpdateImage_WithClearAndReplacement_Throws() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        Assert.Throws<ArgumentException>(() =>
+            meal.UpdateImage("https://new", clearImageUrl: true));
     }
 
     [Fact]
@@ -391,6 +415,17 @@ public class MealInvariantTests {
             TotalFiber: 1,
             TotalAlcohol: 0,
             IsAutoCalculated: true)));
+    }
+
+    [Theory]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    [InlineData(double.NegativeInfinity)]
+    public void ApplyNutrition_WithNonFiniteTotal_Throws(double value) {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => meal.ApplyNutrition(new MealNutritionUpdate(
+            value, 0, 0, 0, 0, 0, IsAutoCalculated: true)));
     }
 
     [Fact]

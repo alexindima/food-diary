@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities.Users;
@@ -76,6 +77,8 @@ public sealed partial class User {
         string normalizedTokenHash = NormalizeRequiredTokenHash(issue.TokenHash, nameof(issue.TokenHash));
         DateTime normalizedExpiresAtUtc = NormalizeUtcTimestamp(issue.ExpiresAtUtc, nameof(issue.ExpiresAtUtc));
         DateTime normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issue.IssuedAtUtc, nameof(issue.IssuedAtUtc));
+        EnsureIssuanceIsNotFuture(normalizedIssuedAtUtc, nameof(issue.IssuedAtUtc));
+        EnsureIssuanceDoesNotRegress(normalizedIssuedAtUtc, EmailConfirmationSentAtUtc, nameof(issue.IssuedAtUtc));
         EnsureFutureUtc(normalizedExpiresAtUtc, nameof(issue.ExpiresAtUtc));
         EnsureExpiresAfterIssuance(normalizedExpiresAtUtc, normalizedIssuedAtUtc, nameof(issue.ExpiresAtUtc));
         UserSecurityState nextState = GetSecurityState().WithEmailConfirmationToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
@@ -102,10 +105,24 @@ public sealed partial class User {
         string normalizedTokenHash = NormalizeRequiredTokenHash(issue.TokenHash, nameof(issue.TokenHash));
         DateTime normalizedExpiresAtUtc = NormalizeUtcTimestamp(issue.ExpiresAtUtc, nameof(issue.ExpiresAtUtc));
         DateTime normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issue.IssuedAtUtc, nameof(issue.IssuedAtUtc));
+        EnsureIssuanceIsNotFuture(normalizedIssuedAtUtc, nameof(issue.IssuedAtUtc));
+        EnsureIssuanceDoesNotRegress(normalizedIssuedAtUtc, PasswordResetSentAtUtc, nameof(issue.IssuedAtUtc));
         EnsureFutureUtc(normalizedExpiresAtUtc, nameof(issue.ExpiresAtUtc));
         EnsureExpiresAfterIssuance(normalizedExpiresAtUtc, normalizedIssuedAtUtc, nameof(issue.ExpiresAtUtc));
         UserSecurityState nextState = GetSecurityState().WithPasswordResetToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
         ApplySecurityState(nextState);
         SetModified(normalizedIssuedAtUtc);
+    }
+
+    private static void EnsureIssuanceIsNotFuture(DateTime issuedAtUtc, string paramName) {
+        if (issuedAtUtc > DomainTime.UtcNow) {
+            throw new ArgumentOutOfRangeException(paramName, "Issuance date cannot be in the future.");
+        }
+    }
+
+    private static void EnsureIssuanceDoesNotRegress(DateTime issuedAtUtc, DateTime? previousIssuedAtUtc, string paramName) {
+        if (previousIssuedAtUtc.HasValue && issuedAtUtc < previousIssuedAtUtc.Value) {
+            throw new ArgumentOutOfRangeException(paramName, "Issuance date cannot be earlier than the previous issuance date.");
+        }
     }
 }

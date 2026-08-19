@@ -14,6 +14,7 @@ namespace FoodDiary.Application.Wearables.Wearables.Commands.ConnectWearable;
 public sealed class ConnectWearableCommandHandler(
     IEnumerable<IWearableClient> wearableClients,
     IWearableConnectionWriteRepository connectionRepository,
+    IWearableTransactionRunner transactionRunner,
     IWearableOAuthStateService stateService,
     ICurrentUserAccessService currentUserAccessService,
     IWearableTokenProtector tokenProtector)
@@ -36,13 +37,25 @@ public sealed class ConnectWearableCommandHandler(
 
         WearableProvider provider = providerResult.Value;
 
+        string serializationKey = $"wearable-connect:{userIdResult.Value.Value:N}:{provider}";
+        return await transactionRunner.ExecuteSerializedAsync(
+            serializationKey,
+            token => ConnectAsync(command, userIdResult.Value, provider, token),
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<Result<WearableConnectionModel>> ConnectAsync(
+        ConnectWearableCommand command,
+        UserId userId,
+        WearableProvider provider,
+        CancellationToken cancellationToken) {
         WearableConnection? existing = await connectionRepository
-            .GetAsync(userIdResult.Value, provider, cancellationToken)
+            .GetAsync(userId, provider, cancellationToken)
             .ConfigureAwait(false);
         if (existing is not null && string.Equals(existing.LastConnectRequestId, command.RequestId, StringComparison.Ordinal)) {
             return string.Equals(existing.LastConnectRequestHash, command.RequestHash, StringComparison.Ordinal)
                 ? Result.Success(ToModel(existing))
-                : Result.Failure<WearableConnectionModel>(Errors.Idempotency.Conflict);
+                : Result.Failure<WearableConnectionModel>(WearableErrors.IdempotencyConflict);
         }
 
         IWearableClient? client = wearableClients.FirstOrDefault(c => c.Provider == provider);
@@ -50,7 +63,7 @@ public sealed class ConnectWearableCommandHandler(
             return Result.Failure<WearableConnectionModel>(Errors.Wearable.ProviderNotConfigured(command.Provider));
         }
 
-        if (!stateService.IsValidState(command.State, userIdResult.Value, provider)) {
+        if (!stateService.IsValidState(command.State, userId, provider)) {
             return Result.Failure<WearableConnectionModel>(Errors.Wearable.InvalidState);
         }
 
@@ -73,7 +86,7 @@ public sealed class ConnectWearableCommandHandler(
         }
 
         var connection = WearableConnection.Create(
-            userIdResult.Value,
+            userId,
             provider,
             tokenResult.ExternalUserId,
             protectedAccessToken,

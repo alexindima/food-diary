@@ -6,6 +6,15 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 [ExcludeFromCodeCoverage]
 public sealed class WebPushClientAdapterTests {
     [Fact]
+    public void Constructor_WithHttpClient_CreatesProductionAdapter() {
+        using var httpClient = new HttpClient();
+
+        var adapter = new WebPushClientAdapter(httpClient);
+
+        Assert.NotNull(adapter);
+    }
+
+    [Fact]
     public async Task SendNotificationAsync_WhenClientCompletes_CompletesAndForwardsArguments() {
         PushSubscription? capturedSubscription = null;
         string? capturedPayload = null;

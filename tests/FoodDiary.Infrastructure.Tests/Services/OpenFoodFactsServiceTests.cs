@@ -237,6 +237,29 @@ public sealed class OpenFoodFactsServiceTests {
     }
 
     [Fact]
+    public async Task SearchAsync_WhenProviderReturnsMoreThanLimit_TruncatesResult() {
+        const string json = """
+            {
+              "products": [
+                { "code": "111", "product_name": "Milk", "nutriments": {} },
+                { "code": "222", "product_name": "Yogurt", "nutriments": {} },
+                { "code": "333", "product_name": "Cheese", "nutriments": {} }
+              ]
+            }
+            """;
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
+
+        IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync(
+            $"limited-{Guid.NewGuid():N}",
+            limit: 2);
+
+        Assert.Equal(
+            ["111", "222"],
+            result.Select(static product => product.Barcode),
+            StringComparer.Ordinal);
+    }
+
+    [Fact]
     public async Task SearchAsync_ReturnsReadOnlyProductSnapshot() {
         const string json = """{"products":[{"code":"111","product_name":"Milk","nutriments":{}}]}""";
         OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));

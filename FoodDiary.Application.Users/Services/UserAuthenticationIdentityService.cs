@@ -110,7 +110,7 @@ internal sealed class UserAuthenticationIdentityService(
 
         if (string.IsNullOrWhiteSpace(user.PasswordResetTokenHash) ||
             !user.PasswordResetTokenExpiresAtUtc.HasValue ||
-            user.PasswordResetTokenExpiresAtUtc.Value < completedAtUtc ||
+            user.PasswordResetTokenExpiresAtUtc.Value <= completedAtUtc ||
             !passwordHasher.Verify(token, user.PasswordResetTokenHash)) {
             return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.InvalidToken);
         }
@@ -166,7 +166,7 @@ internal sealed class UserAuthenticationIdentityService(
 
         if (string.IsNullOrWhiteSpace(user.EmailConfirmationTokenHash) ||
             !user.EmailConfirmationTokenExpiresAtUtc.HasValue ||
-            user.EmailConfirmationTokenExpiresAtUtc.Value < verifiedAtUtc ||
+            user.EmailConfirmationTokenExpiresAtUtc.Value <= verifiedAtUtc ||
             !passwordHasher.Verify(token, user.EmailConfirmationTokenHash)) {
             return Result.Failure<bool>(Errors.Authentication.InvalidToken);
         }

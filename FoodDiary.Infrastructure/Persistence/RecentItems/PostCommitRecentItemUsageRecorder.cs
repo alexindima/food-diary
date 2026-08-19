@@ -6,7 +6,8 @@ namespace FoodDiary.Infrastructure.Persistence.RecentItems;
 
 public sealed class PostCommitRecentItemUsageRecorder(
     IRecentItemWriteRepository repository,
-    IPostCommitActionQueue postCommitActionQueue) : IRecentItemUsageRecorder {
+    IPostCommitActionQueue postCommitActionQueue,
+    IUnitOfWork unitOfWork) : IRecentItemUsageRecorder {
     public Task RegisterUsageAsync(
         UserId userId,
         IReadOnlyCollection<ProductId> productIds,
@@ -20,7 +21,12 @@ public sealed class PostCommitRecentItemUsageRecorder(
         RecipeId[] capturedRecipeIds = [.. recipeIds];
         postCommitActionQueue.Enqueue(
             "recent-items.register-usage",
-            token => repository.RegisterUsageAsync(userId, capturedProductIds, capturedRecipeIds, token));
+            async token => {
+                await repository.RegisterUsageAsync(userId, capturedProductIds, capturedRecipeIds, token).ConfigureAwait(false);
+                if (unitOfWork.HasPendingChanges) {
+                    await unitOfWork.SaveChangesAsync(token).ConfigureAwait(false);
+                }
+            });
         return Task.CompletedTask;
     }
 }

@@ -15,6 +15,7 @@ namespace FoodDiary.Presentation.Api.Features.Exercises;
 public sealed class ExercisesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<ExerciseEntryHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetAll(
         [FromCurrentUser] Guid userId,
         [FromQuery] DateTime dateFrom,

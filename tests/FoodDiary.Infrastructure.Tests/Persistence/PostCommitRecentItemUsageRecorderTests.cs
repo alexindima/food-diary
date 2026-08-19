@@ -11,12 +11,13 @@ public sealed class PostCommitRecentItemUsageRecorderTests {
     public async Task RegisterUsageAsync_WithItems_DefersWriteUntilPostCommitActionRuns() {
         IRecentItemWriteRepository repository = Substitute.For<IRecentItemWriteRepository>();
         IPostCommitActionQueue queue = Substitute.For<IPostCommitActionQueue>();
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
         Func<CancellationToken, Task>? capturedAction = null;
         queue.When(candidate => candidate.Enqueue(
                 "recent-items.register-usage",
                 Arg.Any<Func<CancellationToken, Task>>()))
             .Do(call => capturedAction = call.ArgAt<Func<CancellationToken, Task>>(1));
-        var recorder = new PostCommitRecentItemUsageRecorder(repository, queue);
+        var recorder = new PostCommitRecentItemUsageRecorder(repository, queue, unitOfWork);
         var userId = UserId.New();
         var productId = ProductId.New();
         var recipeId = RecipeId.New();
@@ -36,5 +37,31 @@ public sealed class PostCommitRecentItemUsageRecorderTests {
             Arg.Is<IReadOnlyCollection<ProductId>>(ids => ids.SequenceEqual(expectedProductIds)),
             Arg.Is<IReadOnlyCollection<RecipeId>>(ids => ids.SequenceEqual(expectedRecipeIds)),
             cancellationTokenSource.Token);
+        await unitOfWork.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
+    }
+
+    [Fact]
+    public async Task RegisterUsageAsync_WhenPostCommitWriteTracksChanges_SavesThem() {
+        IRecentItemWriteRepository repository = Substitute.For<IRecentItemWriteRepository>();
+        IPostCommitActionQueue queue = Substitute.For<IPostCommitActionQueue>();
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.HasPendingChanges.Returns(returnThis: true, returnThese: []);
+        Func<CancellationToken, Task>? capturedAction = null;
+        queue.When(candidate => candidate.Enqueue(
+                "recent-items.register-usage",
+                Arg.Any<Func<CancellationToken, Task>>()))
+            .Do(call => capturedAction = call.ArgAt<Func<CancellationToken, Task>>(1));
+        var recorder = new PostCommitRecentItemUsageRecorder(repository, queue, unitOfWork);
+
+        await recorder.RegisterUsageAsync(
+            userId: UserId.New(),
+            productIds: [ProductId.New()],
+            recipeIds: [],
+            cancellationToken: CancellationToken.None);
+
+        Assert.NotNull(capturedAction);
+        await capturedAction(CancellationToken.None);
+
+        await unitOfWork.Received(1).SaveChangesAsync(CancellationToken.None);
     }
 }

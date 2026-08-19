@@ -4,6 +4,7 @@ using FoodDiary.Application.Recipes.Recipes.Common;
 using FoodDiary.Application.Abstractions.Nutrition.Common;
 using FoodDiary.Application.Recipes.Recipes.Common.Validators;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Recipes.Recipes.Commands.UpdateRecipe;
 
@@ -30,9 +31,24 @@ public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecip
             .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Required")
             .WithMessage("RecipeId is required");
+
+        RuleFor(x => x.Name)
+            .MaximumLength(Recipe.NameMaxLength);
     }
 
     private void ConfigureBaseRecipeRules() {
+        RuleFor(x => x.Description)
+            .MaximumLength(Recipe.DescriptionMaxLength);
+
+        RuleFor(x => x.Comment)
+            .MaximumLength(Recipe.CommentMaxLength);
+
+        RuleFor(x => x.Category)
+            .MaximumLength(Recipe.CategoryMaxLength);
+
+        RuleFor(x => x.ImageUrl)
+            .MaximumLength(Recipe.ImageUrlMaxLength);
+
         RuleFor(x => x.Servings)
             .GreaterThan(0)
             .When(x => x.Servings.HasValue)

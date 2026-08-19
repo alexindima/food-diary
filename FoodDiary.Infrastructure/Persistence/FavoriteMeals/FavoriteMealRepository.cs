@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -110,6 +111,7 @@ public sealed class FavoriteMealRepository(FoodDiaryDbContext context) : IFavori
             .AsNoTracking()
             .Where(f => f.UserId == userId)
             .OrderByDescending(f => f.CreatedAtUtc)
+            .Take(PaginationPolicy.MaxCollectionSize)
             .Select(f => new FavoriteMealReadModel(
                 f.Id.Value,
                 f.MealId.Value,

@@ -136,6 +136,39 @@ public class ExercisesValidatorTests {
     }
 
     [Fact]
+    public async Task GetExerciseEntries_WithReversedRange_HasDateFromError() {
+        DateTime dateFrom = DateTime.UtcNow;
+        var query = new GetExerciseEntriesQuery(
+            Guid.NewGuid(), dateFrom, dateFrom.AddDays(-1));
+
+        TestValidationResult<GetExerciseEntriesQuery> result = await _getValidator.TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(q => q.DateFrom);
+    }
+
+    [Fact]
+    public async Task GetExerciseEntries_WithRangeBeyondMaximum_HasDateToError() {
+        DateTime dateFrom = DateTime.UtcNow.AddDays(-366);
+        var query = new GetExerciseEntriesQuery(
+            Guid.NewGuid(), dateFrom, dateFrom.AddDays(366));
+
+        TestValidationResult<GetExerciseEntriesQuery> result = await _getValidator.TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(q => q.DateTo);
+    }
+
+    [Fact]
+    public async Task GetExerciseEntries_AtMaximumRange_HasNoErrors() {
+        DateTime dateFrom = DateTime.UtcNow.AddDays(-365);
+        var query = new GetExerciseEntriesQuery(
+            Guid.NewGuid(), dateFrom, dateFrom.AddDays(365));
+
+        TestValidationResult<GetExerciseEntriesQuery> result = await _getValidator.TestValidateAsync(query);
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
     public async Task GetExerciseEntries_WithValidQuery_NoErrors() {
         var query = new GetExerciseEntriesQuery(
             Guid.NewGuid(), DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);

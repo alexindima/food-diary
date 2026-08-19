@@ -724,6 +724,43 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task Exercises_WithReversedDateRange_ReturnsValidationErrorContract() {
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+        HttpResponseMessage response = await client.GetAsync(
+            "/api/v1/exercises?dateFrom=2026-08-20T00:00:00Z&dateTo=2026-08-19T00:00:00Z");
+        ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Validation.Invalid", payload.Error);
+        Assert.NotNull(payload.Errors);
+        Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "dateFrom", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public async Task Products_WithOversizedSearch_ReturnsValidationErrorContract() {
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+        string search = new('s', PresentationQueryLimits.MaximumSearchLength + 1);
+
+        HttpResponseMessage response = await client.GetAsync(
+            $"/api/v1/products?search={Uri.EscapeDataString(search)}");
+        ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Validation.Invalid", payload.Error);
+        Assert.NotNull(payload.Errors);
+        Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "search", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public async Task UpdateDesiredWeight_WithInvalidValue_ReturnsValidationErrorContract() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);

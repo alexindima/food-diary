@@ -19,13 +19,13 @@ public sealed class Product : AggregateRoot<ProductId> {
     public const double MaxWeightOrVolumeNutrientPerBase = 100d;
     public const double MaxPieceCaloriesPerBase = 5000d;
     public const double MaxPieceNutrientPerBase = 1000d;
-    private const int NameMaxLength = 256;
-    private const int BarcodeMaxLength = 128;
-    private const int BrandMaxLength = 128;
-    private const int CategoryMaxLength = 128;
-    private const int DescriptionMaxLength = 2048;
-    private const int CommentMaxLength = DomainConstants.CommentMaxLength;
-    private const int ImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
+    public const int NameMaxLength = 256;
+    public const int BarcodeMaxLength = 128;
+    public const int BrandMaxLength = 128;
+    public const int CategoryMaxLength = 128;
+    public const int DescriptionMaxLength = 2048;
+    public const int CommentMaxLength = DomainConstants.CommentMaxLength;
+    public const int ImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
 
     public string? Barcode { get; private set; }
     public string Name { get; private set; } = string.Empty;

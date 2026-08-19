@@ -213,7 +213,7 @@ internal sealed class OpenFoodFactsService(
                 return [];
             }
 
-            IReadOnlyList<OpenFoodFactsProductModel> products = MapSearchProducts(result.Products);
+            IReadOnlyList<OpenFoodFactsProductModel> products = MapSearchProducts(result.Products, normalizedLimit);
             if (products.Count == 0) {
                 outcome = "empty";
             }
@@ -268,10 +268,13 @@ internal sealed class OpenFoodFactsService(
             _ => "failure",
         };
 
-    private static IReadOnlyList<OpenFoodFactsProductModel> MapSearchProducts(List<OffSearchProduct> products) {
+    private static IReadOnlyList<OpenFoodFactsProductModel> MapSearchProducts(
+        List<OffSearchProduct> products,
+        int limit) {
         OpenFoodFactsProductModel[] mappedProducts = [
             .. products
             .Where(p => !string.IsNullOrWhiteSpace(p.ProductName) && !string.IsNullOrWhiteSpace(p.Code))
+            .Take(limit)
             .Select(p => new OpenFoodFactsProductModel(
                 p.Code!,
                 p.ProductName!,

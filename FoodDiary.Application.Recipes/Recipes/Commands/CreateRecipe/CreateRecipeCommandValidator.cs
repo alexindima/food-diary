@@ -4,6 +4,7 @@ using FluentValidation;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Nutrition.Common;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Recipes.Recipes.Commands.CreateRecipe;
 
@@ -28,10 +29,24 @@ public sealed class CreateRecipeCommandValidator : AbstractValidator<CreateRecip
         RuleFor(x => x.Name)
             .NotEmpty()
             .WithErrorCode("Validation.Required")
-            .WithMessage("Name is required");
+            .WithMessage("Name is required")
+            .MaximumLength(Recipe.NameMaxLength)
+            .WithErrorCode("Validation.Invalid");
     }
 
     private void ConfigureBaseRecipeRules() {
+        RuleFor(x => x.Description)
+            .MaximumLength(Recipe.DescriptionMaxLength);
+
+        RuleFor(x => x.Comment)
+            .MaximumLength(Recipe.CommentMaxLength);
+
+        RuleFor(x => x.Category)
+            .MaximumLength(Recipe.CategoryMaxLength);
+
+        RuleFor(x => x.ImageUrl)
+            .MaximumLength(Recipe.ImageUrlMaxLength);
+
         RuleFor(x => x.Servings)
             .GreaterThan(0)
             .WithErrorCode("Validation.Invalid")

@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
 namespace FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 
@@ -54,7 +55,16 @@ public sealed class UpsertCycleDayCommandValidator : AbstractValidator<UpsertCyc
         public SymptomLogCommandModelValidator() {
             RuleFor(x => x.Category).Must(static category => Enum.IsDefined((CycleSymptomCategory)category));
             RuleFor(x => x.Intensity).InclusiveBetween(0, 10);
-            RuleFor(x => x.Tags).NotNull();
+            RuleFor(x => x.Tags)
+                .Cascade(CascadeMode.Stop)
+                .NotNull()
+                .Must(static tags => tags.Count <= CycleSymptomEntry.MaxTagsCount)
+                .WithMessage($"A maximum of {CycleSymptomEntry.MaxTagsCount} tags is allowed.");
+            RuleForEach(x => x.Tags)
+                .Cascade(CascadeMode.Stop)
+                .NotNull()
+                .NotEmpty()
+                .MaximumLength(CycleSymptomEntry.MaxTagLength);
             RuleFor(x => x)
                 .Must(x => !(x.ClearNote && !string.IsNullOrWhiteSpace(x.Note)))
                 .WithErrorCode("Validation.Invalid")

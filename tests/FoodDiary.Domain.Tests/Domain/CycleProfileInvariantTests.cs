@@ -304,6 +304,41 @@ public class CycleProfileInvariantTests {
     }
 
     [Fact]
+    public void CycleSymptomEntry_Create_WithNullTag_ThrowsArgumentException() {
+        Assert.Throws<ArgumentException>(() => CycleSymptomEntry.Create(
+            CycleProfileId.New(),
+            DateOnly.FromDateTime(DateTime.UtcNow),
+            CycleSymptomCategory.Bloating,
+            5,
+            [null!],
+            note: null));
+    }
+
+    [Fact]
+    public void CycleSymptomEntry_Create_WithTooManyTags_Throws() {
+        string[] tags = [.. Enumerable.Repeat("tag", CycleSymptomEntry.MaxTagsCount + 1)];
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => CycleSymptomEntry.Create(
+            CycleProfileId.New(),
+            DateOnly.FromDateTime(DateTime.UtcNow),
+            CycleSymptomCategory.Bloating,
+            5,
+            tags,
+            note: null));
+    }
+
+    [Fact]
+    public void CycleSymptomEntry_Create_WithOversizedTag_Throws() {
+        Assert.Throws<ArgumentOutOfRangeException>(() => CycleSymptomEntry.Create(
+            CycleProfileId.New(),
+            DateOnly.FromDateTime(DateTime.UtcNow),
+            CycleSymptomCategory.Bloating,
+            5,
+            [new string('t', CycleSymptomEntry.MaxTagLength + 1)],
+            note: null));
+    }
+
+    [Fact]
     public void CycleSymptomEntry_Update_WithNote_UpdatesNote() {
         var entry = CycleSymptomEntry.Create(
             CycleProfileId.New(),

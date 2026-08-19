@@ -82,24 +82,45 @@ internal static class WebPushSocketsHttpHandlerFactory {
             throw new HttpRequestException("Web push endpoint resolved to a non-public network address.");
         }
 
+        return await ConnectToAddressesAsync(
+            addresses,
+            context.DnsEndPoint.Port,
+            ConnectSocketAsync,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    internal static async ValueTask<Stream> ConnectToAddressesAsync(
+        IReadOnlyList<IPAddress> addresses,
+        int port,
+        Func<IPEndPoint, CancellationToken, ValueTask<Stream>> connectAsync,
+        CancellationToken cancellationToken) {
         Exception? lastException = null;
         foreach (IPAddress address in addresses) {
             cancellationToken.ThrowIfCancellationRequested();
-            var socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             try {
-                await socket.ConnectAsync(
-                    new IPEndPoint(address, context.DnsEndPoint.Port),
+                return await connectAsync(
+                    new IPEndPoint(address, port),
                     cancellationToken).ConfigureAwait(false);
-                return new NetworkStream(socket, ownsSocket: true);
             } catch (OperationCanceledException) {
-                socket.Dispose();
                 throw;
             } catch (Exception ex) when (ex is SocketException or IOException) {
-                socket.Dispose();
                 lastException = ex;
             }
         }
 
         throw new HttpRequestException("Unable to connect to the web push endpoint.", lastException);
+    }
+
+    private static async ValueTask<Stream> ConnectSocketAsync(
+        IPEndPoint endpoint,
+        CancellationToken cancellationToken) {
+        var socket = new Socket(endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        try {
+            await socket.ConnectAsync(endpoint, cancellationToken).ConfigureAwait(false);
+            return new NetworkStream(socket, ownsSocket: true);
+        } catch {
+            socket.Dispose();
+            throw;
+        }
     }
 }

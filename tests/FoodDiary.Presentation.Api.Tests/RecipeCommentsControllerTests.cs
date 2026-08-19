@@ -79,6 +79,7 @@ public sealed class RecipeCommentsControllerTests {
         Assert.Equal(comment.Id, response.Id);
         UpdateRecipeCommentCommand command = Assert.IsType<UpdateRecipeCommentCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
+        Assert.Equal(recipeId, command.RecipeId);
         Assert.Equal(commentId, command.CommentId);
         Assert.Equal("Updated text", command.Text);
     }

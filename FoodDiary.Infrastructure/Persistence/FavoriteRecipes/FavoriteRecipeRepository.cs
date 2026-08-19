@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -81,6 +82,7 @@ public sealed class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavo
             .AsNoTracking()
             .Where(f => f.UserId == userId)
             .OrderByDescending(f => f.CreatedAtUtc)
+            .Take(PaginationPolicy.MaxCollectionSize)
             .Select(f => new FavoriteRecipeReadModel(
                 f.Id.Value,
                 f.RecipeId.Value,

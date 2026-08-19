@@ -208,6 +208,31 @@ public sealed class ControllerSecurityContractTests {
     }
 
     [Fact]
+    public void CollectionQueryStrings_HaveExplicitTransportLengthConstraints() {
+        (Type QueryType, string PropertyName, int MaximumLength)[] expectations = [
+            (typeof(global::FoodDiary.Presentation.Api.Features.Products.Requests.GetProductsHttpQuery), "Search", PresentationQueryLimits.MaximumSearchLength),
+            (typeof(global::FoodDiary.Presentation.Api.Features.Products.Requests.GetProductsHttpQuery), "ProductTypes", PresentationQueryLimits.MaximumCsvFilterLength),
+            (typeof(global::FoodDiary.Presentation.Api.Features.Products.Requests.GetProductsOverviewHttpQuery), "Search", PresentationQueryLimits.MaximumSearchLength),
+            (typeof(global::FoodDiary.Presentation.Api.Features.Products.Requests.GetProductsOverviewHttpQuery), "ProductTypes", PresentationQueryLimits.MaximumCsvFilterLength),
+            (typeof(global::FoodDiary.Presentation.Api.Features.Recipes.Requests.GetRecipesHttpQuery), "Search", PresentationQueryLimits.MaximumSearchLength),
+            (typeof(global::FoodDiary.Presentation.Api.Features.Recipes.Requests.GetRecipesHttpQuery), "Category", PresentationQueryLimits.MaximumCategoryLength),
+            (typeof(global::FoodDiary.Presentation.Api.Features.Recipes.Requests.GetRecipesOverviewHttpQuery), "Search", PresentationQueryLimits.MaximumSearchLength),
+            (typeof(global::FoodDiary.Presentation.Api.Features.Recipes.Requests.GetRecipesOverviewHttpQuery), "Category", PresentationQueryLimits.MaximumCategoryLength),
+            (typeof(global::FoodDiary.Presentation.Api.Features.Meals.Requests.GetMealsHttpQuery), "MealTypes", PresentationQueryLimits.MaximumCsvFilterLength),
+            (typeof(global::FoodDiary.Presentation.Api.Features.Meals.Requests.GetMealsOverviewHttpQuery), "MealTypes", PresentationQueryLimits.MaximumCsvFilterLength),
+        ];
+
+        foreach ((Type queryType, string propertyName, int maximumLength) in expectations) {
+            ParameterInfo parameter = Assert.Single(queryType.GetConstructors())
+                .GetParameters()
+                .Single(item => string.Equals(item.Name, propertyName, StringComparison.OrdinalIgnoreCase));
+            MaxLengthAttribute attribute = Assert.IsType<MaxLengthAttribute>(
+                parameter.GetCustomAttribute<MaxLengthAttribute>());
+            Assert.Equal(maximumLength, attribute.Length);
+        }
+    }
+
+    [Fact]
     public void SecretVerificationRequests_HaveExplicitTransportLengthConstraints() {
         (Type RequestType, string ParameterName, int MaximumLength)[] expectations = [
             (typeof(ChangePasswordHttpRequest), "CurrentPassword", AuthenticationInputLimits.MaximumPasswordLength),

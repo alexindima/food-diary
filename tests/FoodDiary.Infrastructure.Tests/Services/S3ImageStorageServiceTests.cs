@@ -202,6 +202,23 @@ public sealed class S3ImageStorageServiceTests {
     }
 
     [Fact]
+    public async Task UnconfiguredStorage_DeleteAsync_WhenObjectKeyBlank_Completes() {
+        var service = new UnconfiguredImageStorageService();
+
+        await service.DeleteAsync("   ", CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task UnconfiguredStorage_DeleteAsync_WhenObjectKeyIsPresent_FailsClosed() {
+        var service = new UnconfiguredImageStorageService();
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.DeleteAsync("users/test/image.webp", CancellationToken.None));
+
+        Assert.Equal("Image storage is not configured.", exception.Message);
+    }
+
+    [Fact]
     public async Task ValidateUploadedObjectAsync_WhenObjectMetadataIsValid_ReturnsValid() {
         long? count = null;
         string? operation = null;
@@ -307,6 +324,18 @@ public sealed class S3ImageStorageServiceTests {
     }
 
     [Fact]
+    public async Task ValidateUploadedObjectAsync_WhenObjectContentDisappears_ReturnsNotFound() {
+        S3ImageStorageService service = CreateService(new MissingContentObjectStorageClient());
+
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync(
+            "users/test/image.webp",
+            CancellationToken.None);
+
+        Assert.False(result.IsValid);
+        Assert.Equal("not_found", result.ErrorCode);
+    }
+
+    [Fact]
     public async Task ValidateUploadedObjectAsync_WhenObjectIsEmpty_ReturnsEmpty() {
         S3ImageStorageService service = CreateService(new StubObjectStorageClient(new StoredObjectInfo(0, "image/webp")));
 
@@ -355,6 +384,31 @@ public sealed class S3ImageStorageServiceTests {
             () => Assert.Equal("validate", operation),
             () => Assert.Equal("failure", outcome),
             () => Assert.Equal(nameof(InvalidOperationException), errorType));
+    }
+
+    [Fact]
+    public async Task ValidateUploadedObjectAsync_WhenStorageReportsOversizedContent_ReturnsInvalidContent() {
+        S3ImageStorageService service = CreateService(
+            new ThrowingObjectStorageClient(new InvalidDataException("too large")));
+
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync(
+            "users/test/image.webp",
+            CancellationToken.None);
+
+        Assert.False(result.IsValid);
+        Assert.Equal("invalid_content", result.ErrorCode);
+    }
+
+    [Fact]
+    public async Task ValidateUploadedObjectAsync_WhenCallerCancels_PropagatesCancellation() {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+        S3ImageStorageService service = CreateService(new CanceledObjectStorageClient());
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            service.ValidateUploadedObjectAsync(
+                "users/test/image.webp",
+                cancellationTokenSource.Token));
     }
 
     private static S3ImageStorageService CreateService(IObjectStorageClient storageClient, string publicBaseUrl = "") {
@@ -486,6 +540,31 @@ public sealed class S3ImageStorageServiceTests {
     }
 
     [ExcludeFromCodeCoverage]
+    private sealed class MissingContentObjectStorageClient : IObjectStorageClient {
+        public string GetPreSignedUploadUrl(
+            string bucketName,
+            string key,
+            string contentType,
+            long contentLength,
+            DateTime expiresAt) => throw new NotSupportedException();
+
+        public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<StoredObjectInfo?> GetObjectInfoAsync(
+            string bucketName,
+            string key,
+            CancellationToken cancellationToken) =>
+            Task.FromResult<StoredObjectInfo?>(new StoredObjectInfo(1024, "image/webp"));
+
+        public Task<byte[]?> GetObjectBytesAsync(
+            string bucketName,
+            string key,
+            long maximumBytes,
+            CancellationToken cancellationToken) => Task.FromResult<byte[]?>(null);
+    }
+
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingObjectStorageClient(Exception exception) : IObjectStorageClient {
         public string GetPreSignedUploadUrl(
             string bucketName,
@@ -505,6 +584,32 @@ public sealed class S3ImageStorageServiceTests {
             string key,
             long maximumBytes,
             CancellationToken cancellationToken) => Task.FromException<byte[]?>(exception);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CanceledObjectStorageClient : IObjectStorageClient {
+        public string GetPreSignedUploadUrl(
+            string bucketName,
+            string key,
+            string contentType,
+            long contentLength,
+            DateTime expiresAt) => throw new NotSupportedException();
+
+        public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) =>
+            Task.FromCanceled(cancellationToken);
+
+        public Task<StoredObjectInfo?> GetObjectInfoAsync(
+            string bucketName,
+            string key,
+            CancellationToken cancellationToken) =>
+            Task.FromCanceled<StoredObjectInfo?>(cancellationToken);
+
+        public Task<byte[]?> GetObjectBytesAsync(
+            string bucketName,
+            string key,
+            long maximumBytes,
+            CancellationToken cancellationToken) =>
+            Task.FromCanceled<byte[]?>(cancellationToken);
     }
 
     [ExcludeFromCodeCoverage]

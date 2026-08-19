@@ -119,8 +119,8 @@ public static class CycleMappings {
                 end = bleedingDates[index];
             }
 
-            if (!persisted.Any(episode => episode.Status == global::FoodDiary.Domain.Enums.MenstrualEpisodeStatus.Confirmed &&
-                episode.StartDate >= start.AddDays(-2) && episode.StartDate <= end.AddDays(2))) {
+            if (!persisted.Any(episode =>
+                episode.StartDate <= end.AddDays(2) && (episode.EndDate ?? episode.StartDate) >= start.AddDays(-2))) {
                 persisted.Add(new MenstrualEpisodeModel(
                     Guid.Empty,
                     profile.Id,

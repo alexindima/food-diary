@@ -3,6 +3,7 @@ using FoodDiary.Application.Identity.Authentication.Commands.RequestPasswordRese
 using FoodDiary.Application.Identity.Authentication.Commands.RestoreAccount;
 using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Application.Identity.Authentication.Models;
 using FoodDiary.Application.Abstractions.Authentication.Common;
@@ -156,7 +157,32 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var user = User.Create("reset-expired-token@example.com", "secret");
         var dateTimeProvider = new StubDateTimeProvider();
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
-        user.SetPasswordResetToken(new UserTokenIssue("token", nowUtc.AddMinutes(-1), nowUtc.AddHours(-1)));
+        using (DomainTime.Override(new FixedDomainTimeProvider(nowUtc.AddHours(-1)))) {
+            user.SetPasswordResetToken(new UserTokenIssue("token", nowUtc.AddMinutes(-1), nowUtc.AddHours(-1)));
+        }
+        var tokenService = new StubAuthenticationTokenService();
+        ConfirmPasswordResetCommandHandler handler = CreateConfirmPasswordResetHandler(
+            new StubUserRepository(user),
+            dateTimeProvider,
+            tokenService);
+
+        Result<AuthenticationModel> result = await handler.Handle(
+            new ConfirmPasswordResetCommand(user.Id.Value, "token", "StrongPass123"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Null(tokenService.LastPrincipal);
+    }
+
+    [Fact]
+    public async Task ConfirmPasswordResetHandler_WhenTokenExpiresExactlyNow_ReturnsInvalidToken() {
+        var user = User.Create("reset-boundary-token@example.com", "secret");
+        var dateTimeProvider = new StubDateTimeProvider();
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
+        using (DomainTime.Override(new FixedDomainTimeProvider(nowUtc.AddHours(-1)))) {
+            user.SetPasswordResetToken(new UserTokenIssue("token", nowUtc, nowUtc.AddHours(-1)));
+        }
         var tokenService = new StubAuthenticationTokenService();
         ConfirmPasswordResetCommandHandler handler = CreateConfirmPasswordResetHandler(
             new StubUserRepository(user),
@@ -175,7 +201,10 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task ConfirmPasswordResetHandler_WhenTokenDoesNotMatch_ReturnsInvalidToken() {
         var user = User.Create("reset-bad-token@example.com", "secret");
-        user.SetPasswordResetToken(new UserTokenIssue("expected", DateTime.UtcNow.AddHours(1), DateTime.UtcNow));
+        DateTime issuedAtUtc = DateTime.UtcNow;
+        using (DomainTime.Override(new FixedDomainTimeProvider(issuedAtUtc))) {
+            user.SetPasswordResetToken(new UserTokenIssue("expected", issuedAtUtc.AddHours(1), issuedAtUtc));
+        }
         ConfirmPasswordResetCommandHandler handler = CreateConfirmPasswordResetHandler(new StubUserRepository(user));
 
         Result<AuthenticationModel> result = await handler.Handle(

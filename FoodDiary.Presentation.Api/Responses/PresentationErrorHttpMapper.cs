@@ -22,7 +22,7 @@ public static class PresentationErrorHttpMapper {
 
     public static ApiErrorHttpResponse MapResponse(Error error, string? traceId) {
         ErrorKind? kind = error.Kind ?? ErrorKindResolver.Resolve(error.Code);
-        bool isDiagnosticFailure = kind is ErrorKind.Internal or ErrorKind.ExternalFailure || kind is null;
+        bool isDiagnosticFailure = kind is ErrorKind.Internal or ErrorKind.ExternalFailure or null;
         string message = kind switch {
             ErrorKind.ExternalFailure => DependencyFailureMessage,
             ErrorKind.Internal or null => UnexpectedFailureMessage,

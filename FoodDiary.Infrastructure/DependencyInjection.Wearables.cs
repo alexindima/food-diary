@@ -10,6 +10,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IWearableConnectionRepository, WearableConnectionRepository>();
         services.AddScoped<IWearableConnectionReadRepository>(static provider => provider.GetRequiredService<IWearableConnectionRepository>());
         services.AddScoped<IWearableConnectionWriteRepository>(static provider => provider.GetRequiredService<IWearableConnectionRepository>());
+        services.AddScoped<IWearableTransactionRunner, EfWearableTransactionRunner>();
         services.AddScoped<IWearableSyncRepository, WearableSyncRepository>();
         services.AddScoped<IWearableSyncReadRepository>(static provider => provider.GetRequiredService<IWearableSyncRepository>());
         services.AddScoped<IWearableSyncReadModelRepository>(static provider => provider.GetRequiredService<IWearableSyncRepository>());

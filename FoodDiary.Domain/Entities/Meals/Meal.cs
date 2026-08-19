@@ -87,16 +87,30 @@ public sealed class Meal : AggregateRoot<MealId> {
         SetModified();
     }
 
-    public void UpdateImage(string? imageUrl, ImageAssetId? imageAssetId = null) {
+    public void UpdateImage(
+        string? imageUrl = null,
+        bool clearImageUrl = false,
+        ImageAssetId? imageAssetId = null,
+        bool clearImageAssetId = false) {
         MealDetailsState state = GetDetailsState();
         bool changed = false;
         string? normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
-        if (!string.Equals(state.ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
+
+        EnsureClearConflict(clearImageUrl, normalizedImageUrl, nameof(clearImageUrl), nameof(imageUrl));
+        EnsureClearConflict(clearImageAssetId, imageAssetId, nameof(clearImageAssetId), nameof(imageAssetId));
+
+        if (clearImageUrl && state.ImageUrl is not null) {
+            state = state with { ImageUrl = null };
+            changed = true;
+        } else if (imageUrl is not null && !string.Equals(state.ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
             state = state with { ImageUrl = normalizedImageUrl };
             changed = true;
         }
 
-        if (imageAssetId.HasValue && state.ImageAssetId != imageAssetId) {
+        if (clearImageAssetId && state.ImageAssetId is not null) {
+            state = state with { ImageAssetId = null };
+            changed = true;
+        } else if (imageAssetId.HasValue && state.ImageAssetId != imageAssetId) {
             state = state with { ImageAssetId = imageAssetId };
             changed = true;
         }
@@ -331,6 +345,10 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     private static double RequireNonNegative(double value, string paramName) {
+        if (!double.IsFinite(value)) {
+            throw new ArgumentOutOfRangeException(paramName, "Value must be a finite number.");
+        }
+
         return value < 0 ? throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.") : value;
     }
 
@@ -366,6 +384,12 @@ public sealed class Meal : AggregateRoot<MealId> {
     private static void EnsureUserId(UserId userId) {
         if (userId == UserId.Empty) {
             throw new ArgumentException("UserId is required.", nameof(userId));
+        }
+    }
+
+    private static void EnsureClearConflict<T>(bool clear, T? value, string clearParamName, string valueParamName) {
+        if (clear && value is not null) {
+            throw new ArgumentException($"{valueParamName} cannot be provided when {clearParamName} is true.", clearParamName);
         }
     }
 

@@ -5,9 +5,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Domain.ValueObjects;
 
 public readonly record struct RecipeStepContentState {
-    private const int TitleMaxLength = 256;
-    private const int InstructionMaxLength = 4000;
-    private const int ImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
+    public const int TitleMaxLength = 256;
+    public const int InstructionMaxLength = 4000;
+    public const int ImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
 
     public string? Title { get; }
     public string Instruction { get; }

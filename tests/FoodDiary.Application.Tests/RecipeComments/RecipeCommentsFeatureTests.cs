@@ -103,7 +103,7 @@ public class RecipeCommentsFeatureTests {
 
         var handler = new UpdateRecipeCommentCommandHandler(repo, CreateCurrentUserAccessService());
         Result<RecipeCommentModel> result = await handler.Handle(
-            new UpdateRecipeCommentCommand(userId.Value, comment.Id.Value, "New text"),
+            new UpdateRecipeCommentCommand(userId.Value, comment.RecipeId.Value, comment.Id.Value, "New text"),
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -120,7 +120,7 @@ public class RecipeCommentsFeatureTests {
 
         var handler = new UpdateRecipeCommentCommandHandler(repo, CreateCurrentUserAccessService());
         Result<RecipeCommentModel> result = await handler.Handle(
-            new UpdateRecipeCommentCommand(otherUserId.Value, comment.Id.Value, "Hacked"),
+            new UpdateRecipeCommentCommand(otherUserId.Value, comment.RecipeId.Value, comment.Id.Value, "Hacked"),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -132,7 +132,7 @@ public class RecipeCommentsFeatureTests {
         var handler = new UpdateRecipeCommentCommandHandler(new InMemoryRecipeCommentRepository(), CreateCurrentUserAccessService());
 
         Result<RecipeCommentModel> result = await handler.Handle(
-            new UpdateRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), "Text"),
+            new UpdateRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), Guid.NewGuid(), "Text"),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -144,11 +144,28 @@ public class RecipeCommentsFeatureTests {
         var handler = new UpdateRecipeCommentCommandHandler(new InMemoryRecipeCommentRepository(), CreateCurrentUserAccessService());
 
         Result<RecipeCommentModel> result = await handler.Handle(
-            new UpdateRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Text"),
+            new UpdateRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "Text"),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("RecipeComment.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpdateRecipeComment_WhenRecipeDoesNotMatch_ReturnsNotFound() {
+        var userId = UserId.New();
+        var comment = RecipeComment.Create(userId, RecipeId.New(), "Text");
+        var repository = new InMemoryRecipeCommentRepository();
+        repository.Seed(comment);
+        var handler = new UpdateRecipeCommentCommandHandler(repository, CreateCurrentUserAccessService());
+
+        Result<RecipeCommentModel> result = await handler.Handle(
+            new UpdateRecipeCommentCommand(userId.Value, Guid.NewGuid(), comment.Id.Value, "Updated"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("RecipeComment.NotFound", result.Error.Code);
+        Assert.Equal("Text", comment.Text);
     }
 
     [Fact]

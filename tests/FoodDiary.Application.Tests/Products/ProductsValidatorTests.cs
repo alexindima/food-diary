@@ -67,6 +67,25 @@ public class ProductsValidatorTests {
     }
 
     [Fact]
+    public async Task CreateProduct_WithTextBeyondDomainLimits_HasErrors() {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with {
+                Name = new string('n', Product.NameMaxLength + 1),
+                Barcode = new string('b', Product.BarcodeMaxLength + 1),
+                Brand = new string('r', Product.BrandMaxLength + 1),
+                Category = new string('c', Product.CategoryMaxLength + 1),
+                Description = new string('d', Product.DescriptionMaxLength + 1),
+                Comment = new string('m', Product.CommentMaxLength + 1),
+                ImageUrl = new string('i', Product.ImageUrlMaxLength + 1),
+            });
+
+        result.ShouldHaveValidationErrorFor(command => command.Name);
+        result.ShouldHaveValidationErrorFor(command => command.Barcode);
+        result.ShouldHaveValidationErrorFor(command => command.Description);
+        result.ShouldHaveValidationErrorFor(command => command.ImageUrl);
+    }
+
+    [Fact]
     public async Task CreateProduct_WithInvalidUnit_HasError() {
         TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
             ValidCreateProduct() with { BaseUnit = "invalid" });
@@ -268,6 +287,25 @@ public class ProductsValidatorTests {
 
         result.ShouldHaveValidationErrorFor(c => c.ProductId)
             .WithErrorCode("Validation.Required");
+    }
+
+    [Fact]
+    public async Task UpdateProduct_WithTextBeyondDomainLimits_HasErrors() {
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(
+            ValidUpdateProduct() with {
+                Name = new string('n', Product.NameMaxLength + 1),
+                Barcode = new string('b', Product.BarcodeMaxLength + 1),
+                Brand = new string('r', Product.BrandMaxLength + 1),
+                Category = new string('c', Product.CategoryMaxLength + 1),
+                Description = new string('d', Product.DescriptionMaxLength + 1),
+                Comment = new string('m', Product.CommentMaxLength + 1),
+                ImageUrl = new string('i', Product.ImageUrlMaxLength + 1),
+            });
+
+        result.ShouldHaveValidationErrorFor(command => command.Name);
+        result.ShouldHaveValidationErrorFor(command => command.Barcode);
+        result.ShouldHaveValidationErrorFor(command => command.Description);
+        result.ShouldHaveValidationErrorFor(command => command.ImageUrl);
     }
 
     [Theory]

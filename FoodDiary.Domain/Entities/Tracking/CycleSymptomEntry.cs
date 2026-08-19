@@ -6,6 +6,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Domain.Entities.Tracking;
 
 public sealed class CycleSymptomEntry : Entity<CycleSymptomEntryId> {
+    public const int MaxTagsCount = 16;
+    public const int MaxTagLength = 64;
+
     public CycleProfileId CycleProfileId { get; private set; }
     public DateOnly Date { get; private set; }
     public CycleSymptomCategory Category { get; private set; }
@@ -63,10 +66,21 @@ public sealed class CycleSymptomEntry : Entity<CycleSymptomEntryId> {
 
     private static string NormalizeTags(IReadOnlyCollection<string> tags) {
         ArgumentNullException.ThrowIfNull(tags);
+        if (tags.Count > MaxTagsCount) {
+            throw new ArgumentOutOfRangeException(nameof(tags), $"A maximum of {MaxTagsCount} tags is allowed.");
+        }
+
+        if (tags.Any(static tag => tag is null)) {
+            throw new ArgumentException("Tags cannot contain null values.", nameof(tags));
+        }
+
         string[] normalized = [
             .. tags
             .Select(tag => tag.Trim())
             .Where(tag => !string.IsNullOrWhiteSpace(tag))
+            .Select(tag => tag.Length > MaxTagLength
+                ? throw new ArgumentOutOfRangeException(nameof(tags), $"A tag must be at most {MaxTagLength} characters.")
+                : tag)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .Order(StringComparer.OrdinalIgnoreCase),
         ];

@@ -310,7 +310,9 @@ public sealed class WebPushNotificationSenderTests {
     private static WebPushNotificationSender CreateSender(
         RecordingSubscriptionRepository subscriptionRepository,
         IUserRepository userRepository,
-        WebPushOptions? options = null) {
+        WebPushOptions? options = null,
+        IWebPushClientAdapter? webPushClient = null,
+        TimeSpan? deliveryDeadline = null) {
         return new WebPushNotificationSender(
             CreateAudienceService(subscriptionRepository, userRepository),
             new StubNotificationTextRenderer(),
@@ -321,9 +323,11 @@ public sealed class WebPushNotificationSenderTests {
                 PrivateKey = "private",
                 DefaultUrl = "/",
             }),
-            new StubWebPushClientAdapter(),
+            webPushClient ?? new StubWebPushClientAdapter(),
             FixedTime,
-            NullLogger<WebPushNotificationSender>.Instance);
+            NullLogger<WebPushNotificationSender>.Instance) {
+            DeliveryDeadline = deliveryDeadline ?? TimeSpan.FromSeconds(35),
+        };
     }
 
     [Fact]
@@ -403,6 +407,86 @@ public sealed class WebPushNotificationSenderTests {
         Assert.Equal(1, webPushClient.SendCalls);
         Assert.Empty(subscriptionRepository.DeletedSubscriptions);
     }
+
+    [Fact]
+    public async Task SendAsync_WhenPushClientFailsUnexpectedly_ContinuesWithoutDeletingSubscription() {
+        var user = User.Create("failed-push@example.com", "hash");
+        user.UpdatePreferences(new UserPreferenceUpdate(
+            PushNotificationsEnabled: true,
+            FastingPushNotificationsEnabled: true));
+        WebPushSubscription subscription = CreateActiveSubscription(user, "failed");
+        var repository = new RecordingSubscriptionRepository([subscription]);
+        var webPushClient = new StubWebPushClientAdapter(new InvalidOperationException("transport failed"));
+        WebPushNotificationSender sender = CreateSender(
+            repository,
+            new SingleUserRepository(user),
+            webPushClient: webPushClient);
+
+        await sender.SendAsync(
+            Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}"),
+            CancellationToken.None);
+
+        Assert.Equal(1, webPushClient.SendCalls);
+        Assert.Empty(repository.DeletedSubscriptions);
+    }
+
+    [Fact]
+    public async Task SendAsync_WhenCallerCancelsDuringDelivery_PropagatesCancellation() {
+        var user = User.Create("canceled-push@example.com", "hash");
+        user.UpdatePreferences(new UserPreferenceUpdate(
+            PushNotificationsEnabled: true,
+            FastingPushNotificationsEnabled: true));
+        WebPushSubscription subscription = CreateActiveSubscription(user, "cancel");
+        var repository = new RecordingSubscriptionRepository([subscription]);
+        var webPushClient = new BlockingWebPushClientAdapter();
+        WebPushNotificationSender sender = CreateSender(
+            repository,
+            new SingleUserRepository(user),
+            webPushClient: webPushClient);
+        using var cancellationTokenSource = new CancellationTokenSource();
+
+        Task sendTask = sender.SendAsync(
+            Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}"),
+            cancellationTokenSource.Token);
+        await webPushClient.Started.Task.WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System);
+        await cancellationTokenSource.CancelAsync();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => sendTask);
+        Assert.Empty(repository.DeletedSubscriptions);
+    }
+
+    [Fact]
+    public async Task SendAsync_WhenDeliveryDeadlineExpires_ReturnsWithoutDeletingSubscription() {
+        var user = User.Create("deadline-push@example.com", "hash");
+        user.UpdatePreferences(new UserPreferenceUpdate(
+            PushNotificationsEnabled: true,
+            FastingPushNotificationsEnabled: true));
+        WebPushSubscription subscription = CreateActiveSubscription(user, "deadline");
+        var repository = new RecordingSubscriptionRepository([subscription]);
+        var webPushClient = new BlockingWebPushClientAdapter();
+        WebPushNotificationSender sender = CreateSender(
+            repository,
+            new SingleUserRepository(user),
+            webPushClient: webPushClient,
+            deliveryDeadline: TimeSpan.FromMilliseconds(25));
+
+        await sender.SendAsync(
+            Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}"),
+            CancellationToken.None);
+
+        Assert.True(webPushClient.Started.Task.IsCompleted);
+        Assert.Empty(repository.DeletedSubscriptions);
+    }
+
+    private static WebPushSubscription CreateActiveSubscription(User user, string suffix) =>
+        WebPushSubscription.Create(
+            user.Id,
+            $"https://push.example.com/subscriptions/{suffix}",
+            "p256",
+            "auth",
+            FixedNow.AddMinutes(30),
+            "en",
+            "Chrome");
 
     private static T InvokePrivate<T>(object instance, string methodName, params object[] args) {
         System.Reflection.MethodInfo method = instance.GetType().GetMethod(
@@ -586,6 +670,20 @@ public sealed class WebPushNotificationSenderTests {
             return exception is null
                 ? Task.CompletedTask
                 : Task.FromException(exception);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class BlockingWebPushClientAdapter : IWebPushClientAdapter {
+        public TaskCompletionSource Started { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public async Task SendNotificationAsync(
+            PushSubscription subscription,
+            string payload,
+            VapidDetails vapidDetails,
+            CancellationToken cancellationToken) {
+            Started.TrySetResult();
+            await Task.Delay(Timeout.InfiniteTimeSpan, FixedTime, cancellationToken);
         }
     }
 }

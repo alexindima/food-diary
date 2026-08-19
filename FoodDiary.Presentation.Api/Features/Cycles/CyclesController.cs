@@ -25,7 +25,7 @@ public sealed class CyclesController(ISender mediator) : AuthorizedController(me
         [FromCurrentUser] Guid userId,
         [FromQuery] DateTime dateFrom,
         [FromQuery] DateTime dateTo) =>
-        HandleOk(userId.ToNutritionSummaryQuery(dateFrom, dateTo), static value => value is null ? null : value.ToHttpResponse());
+        HandleOk(userId.ToNutritionSummaryQuery(dateFrom, dateTo), static value => value?.ToHttpResponse());
 
     [HttpPost]
     [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]

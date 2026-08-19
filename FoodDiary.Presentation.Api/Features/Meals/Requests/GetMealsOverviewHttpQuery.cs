@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using FoodDiary.Presentation.Api.Policies;
+
 namespace FoodDiary.Presentation.Api.Features.Meals.Requests;
 
 public sealed record GetMealsOverviewHttpQuery(
@@ -6,7 +9,7 @@ public sealed record GetMealsOverviewHttpQuery(
     DateTime? DateFrom = null,
     DateTime? DateTo = null,
     int FavoriteLimit = 10,
-    string? MealTypes = null,
+    [MaxLength(PresentationQueryLimits.MaximumCsvFilterLength)] string? MealTypes = null,
     double? CaloriesFrom = null,
     double? CaloriesTo = null,
     bool? HasImage = null,

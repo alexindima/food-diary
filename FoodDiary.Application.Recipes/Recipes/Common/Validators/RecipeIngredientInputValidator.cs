@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Recipes.Recipes.Common.Validators;
 
@@ -6,7 +7,10 @@ internal sealed class RecipeIngredientInputValidator : AbstractValidator<RecipeI
     public RecipeIngredientInputValidator() {
         RuleFor(x => x.Amount)
             .GreaterThan(0)
-            .WithMessage("Ingredient amount must be greater than zero");
+            .WithMessage("Ingredient amount must be greater than zero")
+            .LessThanOrEqualTo(RecipeIngredient.MaxAmount)
+            .WithMessage(FormattableString.Invariant(
+                $"Ingredient amount must not exceed {RecipeIngredient.MaxAmount}"));
 
         RuleFor(x => x)
             .Must(input => input.ProductId.HasValue ^ input.NestedRecipeId.HasValue)

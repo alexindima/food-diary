@@ -32,4 +32,9 @@ public static class WearableErrors {
         "Wearable.InvalidState",
         "Wearable authentication state is invalid or expired.",
         Kind: ErrorKind.Unauthorized);
+
+    public static Error IdempotencyConflict => new(
+        "Idempotency.Conflict",
+        "The idempotency key was already used with a different request.",
+        Kind: ErrorKind.Conflict);
 }

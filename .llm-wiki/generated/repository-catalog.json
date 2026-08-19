@@ -4446,17 +4446,17 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/exercises",
-            "line": 24
+            "line": 25
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/exercises/{id:guid}",
-            "line": 33
+            "line": 34
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/exercises/{id:guid}",
-            "line": 43
+            "line": 44
           }
         ]
       },

@@ -17,7 +17,12 @@ internal static class UpdateMealApplier {
         meal.UpdateDate(command.Date);
         meal.UpdateMealType(values.MealType);
         meal.UpdateComment(command.Comment);
-        meal.UpdateImage(values.ImageAsset?.Url ?? command.ImageUrl, values.ImageAssetId);
+        string? imageUrl = values.ImageAsset?.Url ?? command.ImageUrl;
+        meal.UpdateImage(
+            imageUrl,
+            clearImageUrl: imageUrl is null,
+            imageAssetId: values.ImageAssetId,
+            clearImageAssetId: values.ImageAssetId is null);
 
         Result satietyValidation = SatietyLevelValidator.Validate(
             command.PreMealSatietyLevel,

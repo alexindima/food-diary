@@ -13,6 +13,7 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Users.Common;
@@ -21,7 +22,16 @@ using FoodDiary.Application.Users.Services;
 namespace FoodDiary.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
-public sealed partial class AuthenticationCommandHandlerTests {
+public sealed partial class AuthenticationCommandHandlerTests : IDisposable {
+    private readonly IDisposable _domainTimeScope;
+
+    public AuthenticationCommandHandlerTests() {
+        _domainTimeScope = DomainTime.Override(new StubDateTimeProvider());
+    }
+
+    public void Dispose() {
+        _domainTimeScope.Dispose();
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class NullAuditLogger : IAuditLogger {
@@ -136,6 +146,11 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : TimeProvider {
         public override DateTimeOffset GetUtcNow() => new(new(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedDomainTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 
     [ExcludeFromCodeCoverage]

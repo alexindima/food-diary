@@ -2,6 +2,7 @@ using FoodDiary.Application.Identity.Authentication.Commands.ResendEmailVerifica
 using FoodDiary.Application.Identity.Authentication.Commands.VerifyEmail;
 using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Tests.Authentication;
@@ -77,7 +78,28 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var user = User.Create("expired-token@example.com", "secret");
         var dateTimeProvider = new StubDateTimeProvider();
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
-        user.SetEmailConfirmationToken(new UserTokenIssue("token", nowUtc.AddMinutes(-1), nowUtc.AddHours(-1)));
+        using (DomainTime.Override(new FixedDomainTimeProvider(nowUtc.AddHours(-1)))) {
+            user.SetEmailConfirmationToken(new UserTokenIssue("token", nowUtc.AddMinutes(-1), nowUtc.AddHours(-1)));
+        }
+        VerifyEmailCommandHandler handler = CreateVerifyEmailHandler(new StubUserRepository(user), dateTimeProvider);
+
+        Result result = await handler.Handle(
+            new VerifyEmailCommand(user.Id.Value, "token"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.False(user.IsEmailConfirmed);
+    }
+
+    [Fact]
+    public async Task VerifyEmailHandler_WhenTokenExpiresExactlyNow_ReturnsInvalidToken() {
+        var user = User.Create("boundary-token@example.com", "secret");
+        var dateTimeProvider = new StubDateTimeProvider();
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
+        using (DomainTime.Override(new FixedDomainTimeProvider(nowUtc.AddHours(-1)))) {
+            user.SetEmailConfirmationToken(new UserTokenIssue("token", nowUtc, nowUtc.AddHours(-1)));
+        }
         VerifyEmailCommandHandler handler = CreateVerifyEmailHandler(new StubUserRepository(user), dateTimeProvider);
 
         Result result = await handler.Handle(
@@ -92,7 +114,10 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task VerifyEmailHandler_WhenTokenDoesNotMatch_ReturnsInvalidToken() {
         var user = User.Create("bad-token@example.com", "secret");
-        user.SetEmailConfirmationToken(new UserTokenIssue("expected", DateTime.UtcNow.AddHours(1), DateTime.UtcNow));
+        DateTime issuedAtUtc = DateTime.UtcNow;
+        using (DomainTime.Override(new FixedDomainTimeProvider(issuedAtUtc))) {
+            user.SetEmailConfirmationToken(new UserTokenIssue("expected", issuedAtUtc.AddHours(1), issuedAtUtc));
+        }
         VerifyEmailCommandHandler handler = CreateVerifyEmailHandler(new StubUserRepository(user));
 
         Result result = await handler.Handle(
@@ -187,7 +212,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task ResendEmailVerificationHandler_WhenSentRecently_ReturnsCooldownFailure() {
         var user = User.Create("cooldown@example.com", "secret");
-        user.SetEmailConfirmationToken(new UserTokenIssue("old-hash", DateTime.UtcNow.AddHours(1), new StubDateTimeProvider().GetUtcNow().UtcDateTime.AddSeconds(-30)));
+        DateTime nowUtc = new StubDateTimeProvider().GetUtcNow().UtcDateTime;
+        user.SetEmailConfirmationToken(new UserTokenIssue("old-hash", nowUtc.AddHours(1), nowUtc.AddSeconds(-30)));
         ResendEmailVerificationCommandHandler handler = CreateResendEmailVerificationHandler(user, new StubEmailSender());
 
         Result result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);

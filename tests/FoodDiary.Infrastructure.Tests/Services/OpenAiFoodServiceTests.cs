@@ -1,5 +1,6 @@
 using System.Diagnostics.Metrics;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text.Json;
 using FoodDiary.Application.Abstractions.Ai.Common;
@@ -161,6 +162,142 @@ public sealed class OpenAiFoodServiceTests {
         Assert.Equal("Ai.InvalidResponse", result.Error.Code);
     }
 
+    [Theory]
+    [InlineData("vision")]
+    [InlineData("text")]
+    [InlineData("nutrition")]
+    public async Task TokenBudgetOperations_WhenApiKeyIsMissing_FailWithoutRequest(string operation) {
+        var handler = new CountingHttpMessageHandler(_ => CreateTokenCountResponse(10));
+        using var httpClient = new HttpClient(handler);
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions());
+
+        Result result = operation switch {
+            "vision" => await client.GetAnalyzeFoodImageTokenBudgetAsync(
+                "https://cdn.example.com/meal.webp",
+                "en",
+                description: null,
+                VisionPrompt,
+                CancellationToken.None),
+            "text" => await client.GetParseFoodTextTokenBudgetAsync(
+                "apple 100g",
+                "en",
+                TextPrompt,
+                CancellationToken.None),
+            _ => await client.GetCalculateNutritionTokenBudgetAsync(
+                [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
+                NutritionPrompt,
+                CancellationToken.None),
+        };
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.OpenAiFailed", result.Error.Code);
+        Assert.Equal(0, handler.CallCount);
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    public async Task GetAnalyzeFoodImageTokenBudgetAsync_WhenTokenCountFails_PropagatesFailure(
+        int failingAttempt) {
+        var handler = new DelegateHttpMessageHandler((attempt, _) =>
+            attempt == failingAttempt
+                ? new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("not-json") }
+                : CreateTokenCountResponse(100));
+        using var httpClient = new HttpClient(handler);
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key",
+            VisionModel = "vision-primary",
+            VisionFallbackModel = "vision-fallback",
+        });
+
+        Result<AiProviderTokenBudget> result = await client.GetAnalyzeFoodImageTokenBudgetAsync(
+            "https://cdn.example.com/meal.webp",
+            "en",
+            description: null,
+            VisionPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.InvalidResponse", result.Error.Code);
+        Assert.Equal(failingAttempt, handler.CallCount);
+    }
+
+    [Fact]
+    public async Task GetParseFoodTextTokenBudgetAsync_WhenTransportFails_ReturnsProviderFailure() {
+        using var httpClient = new HttpClient(new ThrowingHttpMessageHandler(new HttpRequestException("boom")));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key",
+            TextModel = "text-model",
+        });
+
+        Result<AiProviderTokenBudget> result = await client.GetParseFoodTextTokenBudgetAsync(
+            "apple 100g",
+            "en",
+            TextPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.OpenAiFailed", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetParseFoodTextTokenBudgetAsync_WhenRequestTimesOut_ReturnsProviderFailure() {
+        using var httpClient = new HttpClient(new ThrowingHttpMessageHandler(new TaskCanceledException("timeout")));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key",
+            TextModel = "text-model",
+        });
+
+        Result<AiProviderTokenBudget> result = await client.GetParseFoodTextTokenBudgetAsync(
+            "apple 100g",
+            "en",
+            TextPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.OpenAiFailed", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetParseFoodTextTokenBudgetAsync_WhenResponseIsOversized_FailsClosed() {
+        using var httpClient = new HttpClient(new CountingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = new ByteArrayContent(new byte[(1024 * 1024) + 1]),
+        }));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key",
+            TextModel = "text-model",
+        });
+
+        Result<AiProviderTokenBudget> result = await client.GetParseFoodTextTokenBudgetAsync(
+            "apple 100g",
+            "en",
+            TextPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.InvalidResponse", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetParseFoodTextTokenBudgetAsync_WhenProviderRejectsRequest_ReturnsProviderFailure() {
+        using var httpClient = new HttpClient(new CountingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.BadRequest) {
+            Content = new StringContent("""{"error":{"type":"invalid_request_error"}}"""),
+        }));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key",
+            TextModel = "text-model",
+        });
+
+        Result<AiProviderTokenBudget> result = await client.GetParseFoodTextTokenBudgetAsync(
+            "apple 100g",
+            "en",
+            TextPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.OpenAiFailed", result.Error.Code);
+    }
+
     [Fact]
     public async Task CalculateNutritionAsync_WhenTransportFails_ReturnsOpenAiFailedError() {
         long? requestCount = null;
@@ -215,6 +352,59 @@ public sealed class OpenAiFoodServiceTests {
         Assert.Equal("vision", result.Value.Operation);
         Assert.Equal("vision-primary", result.Value.Model);
         Assert.Equal(18, result.Value.Usage?.TotalTokens);
+    }
+
+    [Fact]
+    public async Task CalculateNutritionAsync_WhenRateLimitRetriesAreExhausted_ReturnsFailure() {
+        var handler = new DelegateHttpMessageHandler((_, _) => {
+            var response = new HttpResponseMessage(HttpStatusCode.TooManyRequests) {
+                Content = new StringContent("""{"error":"temporary"}"""),
+            };
+            response.Headers.RetryAfter = new RetryConditionHeaderValue(TimeSpan.Zero);
+            return response;
+        });
+        using var httpClient = new HttpClient(handler);
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key",
+            TextModel = "text-model",
+        });
+
+        Result<OpenAiFoodClientResponse<FoodNutritionModel>> result = await client.CalculateNutritionAsync(
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
+            NutritionPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.OpenAiFailed", result.Error.Code);
+        Assert.Equal(3, handler.CallCount);
+    }
+
+    [Fact]
+    public async Task CalculateNutritionAsync_WhenRetryAfterDateIsPast_RetriesImmediately() {
+        var handler = new DelegateHttpMessageHandler((attempt, _) => {
+            if (attempt > 1) {
+                return CreateNutritionSuccessResponse();
+            }
+
+            var response = new HttpResponseMessage(HttpStatusCode.TooManyRequests) {
+                Content = new StringContent("""{"error":"temporary"}"""),
+            };
+            response.Headers.RetryAfter = new RetryConditionHeaderValue(DateTimeOffset.UtcNow.AddMinutes(-1));
+            return response;
+        });
+        using var httpClient = new HttpClient(handler);
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key",
+            TextModel = "text-model",
+        });
+
+        Result<OpenAiFoodClientResponse<FoodNutritionModel>> result = await client.CalculateNutritionAsync(
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
+            NutritionPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        Assert.Equal(2, handler.CallCount);
     }
 
     [Fact]
@@ -793,6 +983,32 @@ public sealed class OpenAiFoodServiceTests {
     [InlineData("""{"usage":{"output_tokens":7}}""")]
     public void ExtractUsage_WhenRequiredTokenCountIsMissing_ReturnsNull(string payload) {
         using var json = JsonDocument.Parse(payload);
+
+        Assert.Null(InvokePrivateStatic<AiUsageTokens?>("ExtractUsage", json));
+    }
+
+    [Theory]
+    [InlineData("""{"usage":{"input_tokens":12,"output_tokens":7,"total_tokens":"bad"}}""")]
+    [InlineData("""{"usage":{"input_tokens":12,"output_tokens":7,"total_tokens":-1}}""")]
+    public void ExtractUsage_WhenTotalTokenCountIsInvalid_ReturnsNull(string payload) {
+        using var json = JsonDocument.Parse(payload);
+
+        Assert.Null(InvokePrivateStatic<AiUsageTokens?>("ExtractUsage", json));
+    }
+
+    [Fact]
+    public void ExtractUsage_WhenTotalTokenCountIsMissing_ComputesTotal() {
+        using var json = JsonDocument.Parse("""{"usage":{"input_tokens":12,"output_tokens":7}}""");
+
+        AiUsageTokens? usage = InvokePrivateStatic<AiUsageTokens?>("ExtractUsage", json);
+
+        Assert.Equal(new AiUsageTokens(12, 7, 19), usage);
+    }
+
+    [Fact]
+    public void ExtractUsage_WhenComputedTotalOverflows_ReturnsNull() {
+        using var json = JsonDocument.Parse(
+            """{"usage":{"input_tokens":2147483647,"output_tokens":2147483647}}""");
 
         Assert.Null(InvokePrivateStatic<AiUsageTokens?>("ExtractUsage", json));
     }

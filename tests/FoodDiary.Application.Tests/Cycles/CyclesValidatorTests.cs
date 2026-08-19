@@ -6,6 +6,7 @@ using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Tests.Cycles;
 
@@ -124,6 +125,39 @@ public class CyclesValidatorTests {
             CreateDayCommand(symptoms: [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 3, null!, Note: null, ClearNote: false)]));
 
         result.ShouldHaveValidationErrorFor("Symptoms[0].Tags");
+    }
+
+    [Fact]
+    public async Task UpsertCycleDay_WithNullTagElement_HasError() {
+        TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
+            CreateDayCommand(symptoms: [new SymptomLogCommandModel(
+                (int)CycleSymptomCategory.Pain, 3, [null!], Note: null, ClearNote: false)]));
+
+        result.ShouldHaveValidationErrorFor("Symptoms[0].Tags[0]");
+    }
+
+    [Fact]
+    public async Task UpsertCycleDay_WithTooManyTags_HasError() {
+        string[] tags = [.. Enumerable.Range(0, CycleSymptomEntry.MaxTagsCount + 1)
+            .Select(index => FormattableString.Invariant($"tag-{index}"))];
+        TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
+            CreateDayCommand(symptoms: [new SymptomLogCommandModel(
+                (int)CycleSymptomCategory.Pain, 3, tags, Note: null, ClearNote: false)]));
+
+        result.ShouldHaveValidationErrorFor("Symptoms[0].Tags");
+    }
+
+    [Fact]
+    public async Task UpsertCycleDay_WithOversizedTag_HasError() {
+        TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
+            CreateDayCommand(symptoms: [new SymptomLogCommandModel(
+                (int)CycleSymptomCategory.Pain,
+                3,
+                [new string('t', CycleSymptomEntry.MaxTagLength + 1)],
+                Note: null,
+                ClearNote: false)]));
+
+        result.ShouldHaveValidationErrorFor("Symptoms[0].Tags[0]");
     }
 
     [Fact]

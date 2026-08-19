@@ -3546,6 +3546,7 @@
           "HasRequestBody": false,
           "ResponseCodes": [
             "200",
+            "400",
             "401",
             "500"
           ],

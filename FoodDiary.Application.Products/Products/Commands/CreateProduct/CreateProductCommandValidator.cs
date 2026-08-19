@@ -1,5 +1,6 @@
 using FluentValidation;
 using FoodDiary.Application.Products.Products.Common;
+using FoodDiary.Domain.Entities.Products;
 
 namespace FoodDiary.Application.Products.Products.Commands.CreateProduct;
 
@@ -23,7 +24,16 @@ public sealed class CreateProductCommandValidator : AbstractValidator<CreateProd
         RuleFor(x => x.Name)
             .NotEmpty()
             .WithErrorCode("Validation.Required")
-            .WithMessage("Name is required");
+            .WithMessage("Name is required")
+            .MaximumLength(Product.NameMaxLength)
+            .WithErrorCode("Validation.Invalid");
+
+        RuleFor(x => x.Barcode).MaximumLength(Product.BarcodeMaxLength);
+        RuleFor(x => x.Brand).MaximumLength(Product.BrandMaxLength);
+        RuleFor(x => x.Category).MaximumLength(Product.CategoryMaxLength);
+        RuleFor(x => x.Description).MaximumLength(Product.DescriptionMaxLength);
+        RuleFor(x => x.Comment).MaximumLength(Product.CommentMaxLength);
+        RuleFor(x => x.ImageUrl).MaximumLength(Product.ImageUrlMaxLength);
     }
 
     private void ConfigureEnumRules() {

@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using FoodDiary.Presentation.Api.Policies;
+
 namespace FoodDiary.Presentation.Api.Features.Products.Requests;
 
 public sealed record GetProductsOverviewHttpQuery(
@@ -5,9 +8,9 @@ public sealed record GetProductsOverviewHttpQuery(
     int Limit = 10,
     int RecentLimit = 10,
     int FavoriteLimit = 10,
-    string? Search = null,
+    [MaxLength(PresentationQueryLimits.MaximumSearchLength)] string? Search = null,
     bool IncludePublic = true,
-    string? ProductTypes = null,
+    [MaxLength(PresentationQueryLimits.MaximumCsvFilterLength)] string? ProductTypes = null,
     double? CaloriesFrom = null,
     double? CaloriesTo = null,
     bool? HasImage = null);

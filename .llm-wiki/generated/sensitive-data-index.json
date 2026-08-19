@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1478,
-    "credential": 155,
-    "identity": 154,
+    "candidateFields": 1481,
+    "credential": 157,
+    "identity": 155,
     "health": 664,
     "financial": 201,
     "privateContent": 304,
-    "boundaryFiles": 184,
+    "boundaryFiles": 185,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -359,6 +359,13 @@
       "type": "tokenHash,",
       "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
       "line": 49
+    },
+    {
+      "category": "credential",
+      "name": "PasswordResetSentAtUtc",
+      "type": "normalizedIssuedAtUtc,",
+      "path": "FoodDiary.Domain/Entities/Users/User.Credentials.cs",
+      "line": 109
     },
     {
       "category": "credential",
@@ -723,6 +730,13 @@
       "type": "string",
       "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
       "line": 7
+    },
+    {
+      "category": "credential",
+      "name": "CancellationToken",
+      "type": "Func<IPEndPoint,",
+      "path": "FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs",
+      "line": 95
     },
     {
       "category": "credential",
@@ -2157,21 +2171,21 @@
       "name": "Amount",
       "type": "double?",
       "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "line": 191
+      "line": 195
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "double?",
       "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "line": 213
+      "line": 217
     },
     {
       "category": "financial",
       "name": "InvalidSubscriptions",
       "type": "List<WebPushDeliverySubscription>",
       "path": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
-      "line": 69
+      "line": 71
     },
     {
       "category": "financial",
@@ -4971,21 +4985,21 @@
       "name": "IsNutritionAutoCalculated",
       "type": "Id,",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 213
+      "line": 227
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
       "type": "ImageAssetId,",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 271
+      "line": 285
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "IsNutritionAutoCalculated,",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 294
+      "line": 308
     },
     {
       "category": "health",
@@ -5132,14 +5146,14 @@
       "name": "CycleProfileId",
       "type": "CycleProfileId",
       "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
-      "line": 9
+      "line": 12
     },
     {
       "category": "health",
       "name": "CycleProfile",
       "type": "CycleProfile",
       "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
-      "line": 16
+      "line": 19
     },
     {
       "category": "health",
@@ -6000,7 +6014,7 @@
       "name": "GramWeight",
       "type": "double?",
       "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "line": 216
+      "line": 220
     },
     {
       "category": "health",
@@ -7754,6 +7768,13 @@
     },
     {
       "category": "identity",
+      "name": "EmailConfirmationSentAtUtc",
+      "type": "normalizedIssuedAtUtc,",
+      "path": "FoodDiary.Domain/Entities/Users/User.Credentials.cs",
+      "line": 81
+    },
+    {
+      "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
@@ -9038,7 +9059,7 @@
       "name": "CommentId",
       "type": "Guid",
       "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommand.cs",
-      "line": 9
+      "line": 10
     },
     {
       "category": "privateContent",
@@ -9276,14 +9297,14 @@
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 93
+      "line": 97
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "Comment,",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 269
+      "line": 283
     },
     {
       "category": "privateContent",
@@ -9836,14 +9857,14 @@
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 399
+      "line": 402
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 416
+      "line": 419
     },
     {
       "category": "privateContent",
@@ -10487,6 +10508,13 @@
       "path": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
       "categories": [
         "financial"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs",
+      "categories": [
+        "credential"
       ],
       "fieldCount": 1
     },
@@ -11710,7 +11738,7 @@
   "potentialLogging": [
     {
       "path": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
-      "line": 49,
+      "line": 51,
       "fieldNames": [
         "InvalidSubscriptions"
       ]

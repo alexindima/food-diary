@@ -3,6 +3,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Events;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -325,6 +326,27 @@ public class UserInvariantTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             user.SetPasswordResetToken("hash", issuedAtUtc, issuedAtUtc));
+    }
+
+    [Fact]
+    public void SetEmailConfirmationToken_WithFutureIssuance_Throws() {
+        var nowUtc = new DateTime(2026, 8, 19, 12, 0, 0, DateTimeKind.Utc);
+        using IDisposable scope = DomainTime.Override(new FixedTimeProvider(nowUtc));
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.SetEmailConfirmationToken("hash", nowUtc.AddHours(2), nowUtc.AddMinutes(1)));
+    }
+
+    [Fact]
+    public void SetPasswordResetToken_WithRegressedIssuance_Throws() {
+        var nowUtc = new DateTime(2026, 8, 19, 12, 0, 0, DateTimeKind.Utc);
+        using IDisposable scope = DomainTime.Override(new FixedTimeProvider(nowUtc));
+        var user = User.Create("test@example.com", "hash");
+        user.SetPasswordResetToken("first", nowUtc.AddHours(2), nowUtc.AddMinutes(-1));
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.SetPasswordResetToken("second", nowUtc.AddHours(2), nowUtc.AddMinutes(-2)));
     }
 
     [Fact]
@@ -1491,4 +1513,9 @@ public class UserInvariantTests {
             ipAddress: "127.0.0.1",
             userAgent: "test",
             DateTime.UtcNow);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
+    }
 }

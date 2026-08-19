@@ -1,16 +1,22 @@
 using FluentValidation;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Recipes.Recipes.Common.Validators;
 
 internal sealed class RecipeStepInputValidator : AbstractValidator<RecipeStepInput> {
     public RecipeStepInputValidator() {
         RuleFor(x => x.Title)
-            .MaximumLength(120)
-            .WithMessage("Step title must be 120 characters or less");
+            .MaximumLength(RecipeStepContentState.TitleMaxLength)
+            .WithMessage($"Step title must be {RecipeStepContentState.TitleMaxLength} characters or less");
 
         RuleFor(x => x.Description)
             .NotEmpty()
-            .WithMessage("Step description is required");
+            .WithMessage("Step description is required")
+            .MaximumLength(RecipeStepContentState.InstructionMaxLength)
+            .WithMessage($"Step description must be {RecipeStepContentState.InstructionMaxLength} characters or less");
+
+        RuleFor(x => x.ImageUrl)
+            .MaximumLength(RecipeStepContentState.ImageUrlMaxLength);
 
         RuleFor(x => x.Ingredients)
             .NotNull()

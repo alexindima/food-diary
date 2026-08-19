@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Domain.Entities.Recipes;
 
 public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
-    private const double MaxAmount = 1_000_000d;
+    public const double MaxAmount = 1_000_000d;
     private const double ComparisonEpsilon = 0.000001d;
 
     public RecipeStepId RecipeStepId { get; private set; }

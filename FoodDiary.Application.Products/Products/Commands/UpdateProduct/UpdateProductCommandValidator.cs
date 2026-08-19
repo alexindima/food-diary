@@ -1,5 +1,6 @@
 using FluentValidation;
 using FoodDiary.Application.Products.Products.Common;
+using FoodDiary.Domain.Entities.Products;
 using System.Linq.Expressions;
 
 namespace FoodDiary.Application.Products.Products.Commands.UpdateProduct;
@@ -26,6 +27,14 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
             .NotEqual(Guid.Empty)
             .WithErrorCode("Validation.Required")
             .WithMessage("ProductId is required");
+
+        RuleFor(x => x.Name).MaximumLength(Product.NameMaxLength);
+        RuleFor(x => x.Barcode).MaximumLength(Product.BarcodeMaxLength);
+        RuleFor(x => x.Brand).MaximumLength(Product.BrandMaxLength);
+        RuleFor(x => x.Category).MaximumLength(Product.CategoryMaxLength);
+        RuleFor(x => x.Description).MaximumLength(Product.DescriptionMaxLength);
+        RuleFor(x => x.Comment).MaximumLength(Product.CommentMaxLength);
+        RuleFor(x => x.ImageUrl).MaximumLength(Product.ImageUrlMaxLength);
     }
 
     private void ConfigureNutritionRules() {

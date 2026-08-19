@@ -6,5 +6,6 @@ namespace FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.UpdateRe
 
 public record UpdateRecipeCommentCommand(
     Guid? UserId,
+    Guid RecipeId,
     Guid CommentId,
     string Text) : ICommand<Result<RecipeCommentModel>>, IUserRequest;

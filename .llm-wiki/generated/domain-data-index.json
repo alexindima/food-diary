@@ -4,7 +4,7 @@
     "domainTypes": 259,
     "entities": 78,
     "valueObjects": 112,
-    "invariants": 463,
+    "invariants": 470,
     "persistenceMappings": 86,
     "indexes": 151,
     "relationships": 100
@@ -2712,49 +2712,63 @@
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(item)",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 152
+      "line": 166
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(items)",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 174
+      "line": 188
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"AI session item cannot be null.\", nameof(items))).ToState()))",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 179
+      "line": 193
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(level), \"Satiety level must be in range [1, 5].\")",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 325
+      "line": 339
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be a finite number.\")",
+      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
+      "line": 349
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be non-negative.\") : value",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 334
+      "line": 352
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 362
+      "line": 380
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 368
+      "line": 386
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException($\"{valueParamName} cannot be provided when {clearParamName} is true.\", clearParamName)",
+      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
+      "line": 392
     },
     {
       "area": "FoodDiary",
@@ -3678,21 +3692,42 @@
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(tags)",
       "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
-      "line": 65
+      "line": 68
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(tags), $\"A maximum of {MaxTagsCount} tags is allowed.\")",
+      "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "line": 70
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Tags cannot contain null values.\", nameof(tags))",
+      "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "line": 74
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(tags), $\"A tag must be at most {MaxTagLength} characters.\")",
+      "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "line": 82
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"CycleProfileId is required.\", nameof(cycleProfileId))",
       "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
-      "line": 79
+      "line": 93
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be one of the supported values.\")",
       "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
-      "line": 86
+      "line": 100
     },
     {
       "area": "FoodDiary",
@@ -4316,6 +4351,20 @@
       "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Role name must be at most {NameMaxLength} characters.\")",
       "path": "FoodDiary.Domain/Entities/Users/Role.cs",
       "line": 34
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Issuance date cannot be in the future.\")",
+      "path": "FoodDiary.Domain/Entities/Users/User.Credentials.cs",
+      "line": 119
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Issuance date cannot be earlier than the previous issuance date.\")",
+      "path": "FoodDiary.Domain/Entities/Users/User.Credentials.cs",
+      "line": 125
     },
     {
       "area": "FoodDiary",
