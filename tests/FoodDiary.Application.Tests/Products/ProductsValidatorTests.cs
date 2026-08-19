@@ -114,6 +114,18 @@ public class ProductsValidatorTests {
     }
 
     [Theory]
+    [InlineData("g", 50)]
+    [InlineData("ml", 1)]
+    [InlineData("pcs", 100)]
+    public async Task CreateProduct_WithNonCanonicalBaseAmount_HasError(string baseUnit, double baseAmount) {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with { BaseUnit = baseUnit, BaseAmount = baseAmount });
+
+        result.ShouldHaveValidationErrorFor(c => c.BaseAmount)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Theory]
     [InlineData("g", Product.MaxWeightOrVolumeDefaultPortionAmount + 1)]
     [InlineData("ml", Product.MaxWeightOrVolumeDefaultPortionAmount + 1)]
     [InlineData("pcs", Product.MaxPieceDefaultPortionAmount + 1)]
@@ -287,6 +299,27 @@ public class ProductsValidatorTests {
 
         result.ShouldHaveValidationErrorFor(c => c.ProductId)
             .WithErrorCode("Validation.Required");
+    }
+
+    [Fact]
+    public async Task UpdateProduct_WithWhitespaceName_HasRequiredError() {
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(
+            ValidUpdateProduct() with { Name = "   " });
+
+        result.ShouldHaveValidationErrorFor(c => c.Name)
+            .WithErrorCode("Validation.Required");
+    }
+
+    [Theory]
+    [InlineData("g", 50)]
+    [InlineData("ml", 1)]
+    [InlineData("pcs", 100)]
+    public async Task UpdateProduct_WithNonCanonicalBaseAmount_HasError(string baseUnit, double baseAmount) {
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator().TestValidateAsync(
+            ValidUpdateProduct() with { BaseUnit = baseUnit, BaseAmount = baseAmount });
+
+        result.ShouldHaveValidationErrorFor(c => c.BaseAmount)
+            .WithErrorCode("Validation.Invalid");
     }
 
     [Fact]

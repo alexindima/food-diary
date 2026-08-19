@@ -14,6 +14,10 @@ internal static class ProductCommandValidation {
     public static bool BeValidProductType(string? productType) =>
         productType is not null && SharedEnumValueParser.CanParseDefined<ProductType>(productType);
 
+    public static bool BeCanonicalBaseAmount(string? unit, double amount) =>
+        !SharedEnumValueParser.TryParse(unit, out MeasurementUnit parsedUnit) ||
+        Product.IsCanonicalBaseAmount(parsedUnit, amount);
+
     public static bool BeWithinDefaultPortionLimit(string? unit, double amount) =>
         !SharedEnumValueParser.TryParse(unit, out MeasurementUnit parsedUnit) ||
         amount <= Product.GetMaxDefaultPortionAmount(parsedUnit);

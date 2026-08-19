@@ -3041,26 +3041,19 @@
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 448
+      "line": 455
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 467
+      "line": 474
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 556
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
       "line": 563
     },
@@ -3070,6 +3063,13 @@
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
       "line": 570
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
+      "path": "FoodDiary.Domain/Entities/Products/Product.cs",
+      "line": 577
     },
     {
       "area": "FoodDiary",

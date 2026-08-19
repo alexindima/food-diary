@@ -1,7 +1,11 @@
 using FoodDiary.MailRelay.Application.Abstractions;
 using FoodDiary.Results;
-using FoodDiary.MailRelay.Application.Emails.Commands;
-using FoodDiary.MailRelay.Application.Emails.Queries;
+using FoodDiary.MailRelay.Application.Emails.Commands.CreateMailRelaySuppression;
+using FoodDiary.MailRelay.Application.Emails.Commands.EnqueueMailRelayEmail;
+using FoodDiary.MailRelay.Application.Emails.Commands.IngestMailRelayDeliveryEvent;
+using FoodDiary.MailRelay.Application.Emails.Commands.IngestManyMailRelayDeliveryEvents;
+using FoodDiary.MailRelay.Application.Emails.Commands.RemoveMailRelaySuppression;
+using FoodDiary.MailRelay.Application.Emails.Queries.GetMailRelaySuppressions;
 using FoodDiary.MailRelay.Application.Health;
 using FoodDiary.MailRelay.Application.Emails.Models;
 using FoodDiary.MailRelay.Application.Queue.Models;

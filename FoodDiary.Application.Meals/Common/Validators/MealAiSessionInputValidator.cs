@@ -24,7 +24,16 @@ public sealed class MealAiSessionInputValidator : AbstractValidator<MealAiSessio
             .WithErrorCode("Validation.Invalid")
             .WithMessage($"Notes must be at most {NotesMaxLength} characters.");
 
+        RuleFor(x => x.Items)
+            .NotNull()
+            .WithErrorCode("Validation.Required")
+            .WithMessage("AI session items are required.");
+
         RuleForEach(x => x.Items)
+            .Cascade(CascadeMode.Stop)
+            .NotNull()
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("AI session items must not contain null elements.")
             .SetValidator(new MealAiItemInputValidator());
     }
 }

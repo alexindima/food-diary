@@ -208,28 +208,61 @@ public sealed class ControllerSecurityContractTests {
     }
 
     [Fact]
-    public void CollectionQueryStrings_HaveExplicitTransportLengthConstraints() {
-        (Type QueryType, string PropertyName, int MaximumLength)[] expectations = [
-            (typeof(global::FoodDiary.Presentation.Api.Features.Products.Requests.GetProductsHttpQuery), "Search", PresentationQueryLimits.MaximumSearchLength),
-            (typeof(global::FoodDiary.Presentation.Api.Features.Products.Requests.GetProductsHttpQuery), "ProductTypes", PresentationQueryLimits.MaximumCsvFilterLength),
-            (typeof(global::FoodDiary.Presentation.Api.Features.Products.Requests.GetProductsOverviewHttpQuery), "Search", PresentationQueryLimits.MaximumSearchLength),
-            (typeof(global::FoodDiary.Presentation.Api.Features.Products.Requests.GetProductsOverviewHttpQuery), "ProductTypes", PresentationQueryLimits.MaximumCsvFilterLength),
-            (typeof(global::FoodDiary.Presentation.Api.Features.Recipes.Requests.GetRecipesHttpQuery), "Search", PresentationQueryLimits.MaximumSearchLength),
-            (typeof(global::FoodDiary.Presentation.Api.Features.Recipes.Requests.GetRecipesHttpQuery), "Category", PresentationQueryLimits.MaximumCategoryLength),
-            (typeof(global::FoodDiary.Presentation.Api.Features.Recipes.Requests.GetRecipesOverviewHttpQuery), "Search", PresentationQueryLimits.MaximumSearchLength),
-            (typeof(global::FoodDiary.Presentation.Api.Features.Recipes.Requests.GetRecipesOverviewHttpQuery), "Category", PresentationQueryLimits.MaximumCategoryLength),
-            (typeof(global::FoodDiary.Presentation.Api.Features.Meals.Requests.GetMealsHttpQuery), "MealTypes", PresentationQueryLimits.MaximumCsvFilterLength),
-            (typeof(global::FoodDiary.Presentation.Api.Features.Meals.Requests.GetMealsOverviewHttpQuery), "MealTypes", PresentationQueryLimits.MaximumCsvFilterLength),
+    public void PresentationQueryStrings_HaveExplicitTransportLengthConstraints() {
+        var nullability = new NullabilityInfoContext();
+        Type[] queryTypes = [.. typeof(BaseApiController).Assembly
+            .GetTypes()
+            .Where(static type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true)
+            .Where(static type => type.Name.EndsWith("HttpQuery", StringComparison.Ordinal))];
+
+        ParameterInfo[] stringParameters = [.. queryTypes
+            .SelectMany(static type => Assert.Single(type.GetConstructors()).GetParameters())
+            .Where(static parameter => parameter.ParameterType == typeof(string))];
+
+        Assert.NotEmpty(stringParameters);
+        foreach (ParameterInfo parameter in stringParameters) {
+            Assert.NotNull(parameter.GetCustomAttribute<MaxLengthAttribute>());
+            if (nullability.Create(parameter).ReadState == NullabilityState.NotNull) {
+                Assert.NotNull(parameter.GetCustomAttribute<RequiredAttribute>());
+            }
+        }
+    }
+
+    [Fact]
+    public void ClosedSetQueryStrings_RejectUnknownValues() {
+        (Type QueryType, string ParameterName, string AcceptedValue)[] expectations = [
+            (typeof(global::FoodDiary.Presentation.Api.Features.Admin.Requests.GetAdminContentReportsHttpQuery), "Status", PresentationQueryValues.Pending),
+            (typeof(global::FoodDiary.Presentation.Api.Features.Admin.Requests.GetAdminUsersHttpQuery), "Status", PresentationQueryValues.Active),
+            (typeof(global::FoodDiary.Presentation.Api.Features.Lessons.Requests.GetLessonsHttpQuery), "Category", PresentationQueryValues.NutritionBasics),
+            (typeof(global::FoodDiary.Presentation.Api.Features.Lessons.Requests.GetLessonsHttpQuery), "Difficulty", PresentationQueryValues.Beginner),
+            (typeof(global::FoodDiary.Presentation.Api.Features.Lessons.Requests.GetLessonsHttpQuery), "Sort", PresentationQueryValues.Recommended),
+            (typeof(global::FoodDiary.Presentation.Api.Features.Recipes.Requests.ExploreRecipesHttpQuery), "SortBy", PresentationQueryValues.Newest),
+            (typeof(global::FoodDiary.Presentation.Api.Features.WaistEntries.Requests.GetWaistEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
+            (typeof(global::FoodDiary.Presentation.Api.Features.WeightEntries.Requests.GetWeightEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
         ];
 
-        foreach ((Type queryType, string propertyName, int maximumLength) in expectations) {
+        foreach ((Type queryType, string parameterName, string acceptedValue) in expectations) {
             ParameterInfo parameter = Assert.Single(queryType.GetConstructors())
                 .GetParameters()
-                .Single(item => string.Equals(item.Name, propertyName, StringComparison.OrdinalIgnoreCase));
-            MaxLengthAttribute attribute = Assert.IsType<MaxLengthAttribute>(
-                parameter.GetCustomAttribute<MaxLengthAttribute>());
-            Assert.Equal(maximumLength, attribute.Length);
+                .Single(item => string.Equals(item.Name, parameterName, StringComparison.OrdinalIgnoreCase));
+            AllowedQueryValuesAttribute attribute = Assert.IsType<AllowedQueryValuesAttribute>(
+                parameter.GetCustomAttribute<AllowedQueryValuesAttribute>());
+
+            Assert.Multiple(
+                () => Assert.True(attribute.IsValid(acceptedValue.ToUpperInvariant())),
+                () => Assert.False(attribute.IsValid("unsupported-value")));
         }
+    }
+
+    [Fact]
+    public void AllowedQueryValuesAttribute_HandlesOptionalAndNonStringValues() {
+        var attribute = new AllowedQueryValuesAttribute("one", "two");
+
+        Assert.Multiple(
+            () => Assert.True(attribute.IsValid(value: null)),
+            () => Assert.False(attribute.IsValid(42)),
+            () => Assert.Equal("The Query field must be one of: one, two.", attribute.FormatErrorMessage("Query")),
+            () => Assert.Equal(["one", "two"], attribute.Values));
     }
 
     [Fact]

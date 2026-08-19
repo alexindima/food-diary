@@ -173,6 +173,42 @@ public sealed class RecipeHttpMappingsTests {
     }
 
     [Fact]
+    public void CreateRecipeRequest_ToCommand_PreservesNullNestedElementsForApplicationValidation() {
+        var request = new CreateRecipeHttpRequest(
+            Name: "Soup",
+            Description: null,
+            Comment: null,
+            Category: null,
+            ImageUrl: null,
+            ImageAssetId: null,
+            PrepTime: null,
+            CookTime: null,
+            Servings: 1,
+            Visibility: "Private",
+            CalculateNutritionAutomatically: true,
+            ManualCalories: null,
+            ManualProteins: null,
+            ManualFats: null,
+            ManualCarbs: null,
+            ManualFiber: null,
+            ManualAlcohol: null,
+            Steps: [
+                null!,
+                new RecipeStepHttpRequest(
+                    Title: null,
+                    Description: "Mix",
+                    Ingredients: [null!],
+                    ImageUrl: null,
+                    ImageAssetId: null),
+            ]);
+
+        CreateRecipeCommand command = request.ToCommand(Guid.NewGuid());
+
+        Assert.Null(command.Steps[0]);
+        Assert.Null(command.Steps[1].Ingredients[0]);
+    }
+
+    [Fact]
     public void UpdateRecipeRequest_ToCommand_MapsNullableSteps() {
         var userId = Guid.NewGuid();
         var recipeId = Guid.NewGuid();

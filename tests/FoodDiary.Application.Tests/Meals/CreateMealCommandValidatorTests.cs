@@ -52,6 +52,40 @@ public class CreateMealCommandValidatorTests {
     }
 
     [Fact]
+    public async Task Validate_WhenMealItemsContainNull_HasErrorWithoutThrowing() {
+        CreateMealCommand command = CreateCommand(items: [null!]);
+
+        TestValidationResult<CreateMealCommand> result = await _validator.TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor("Items[0]");
+    }
+
+    [Fact]
+    public async Task Validate_WhenAiSessionsContainNull_HasErrorWithoutThrowing() {
+        CreateMealCommand command = CreateCommand(items: [], aiSessions: [null!]);
+
+        TestValidationResult<CreateMealCommand> result = await _validator.TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor("AiSessions[0]");
+    }
+
+    [Fact]
+    public async Task Validate_WhenAiSessionItemsContainNull_HasErrorWithoutThrowing() {
+        CreateMealCommand command = CreateCommand(
+            items: [],
+            aiSessions: [new MealAiSessionInput(
+                ImageAssetId: null,
+                Source: "Text",
+                RecognizedAtUtc: DateTime.UtcNow,
+                Notes: null,
+                Items: [null!])]);
+
+        TestValidationResult<CreateMealCommand> result = await _validator.TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor("AiSessions[0].Items[0]");
+    }
+
+    [Fact]
     public async Task Validate_WhenPreMealSatietyOutOfRange_HasError() {
         CreateMealCommand command = CreateCommand(preMealSatiety: -1);
         TestValidationResult<CreateMealCommand> result = await _validator.TestValidateAsync(command);

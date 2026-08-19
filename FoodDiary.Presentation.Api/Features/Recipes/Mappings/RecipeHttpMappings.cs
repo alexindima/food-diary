@@ -73,17 +73,21 @@ public static class RecipeHttpMappings {
 
     private static IReadOnlyList<RecipeStepInput> MapSteps(IReadOnlyList<RecipeStepHttpRequest> steps) =>
         steps.Select((step, index) =>
-                new RecipeStepInput(
-                    index + 1,
-                    step.Description,
-                    step.Title,
-                    step.ImageUrl,
-                    step.ImageAssetId,
-                    step.Ingredients
-                        .Select(ingredient => new RecipeIngredientInput(
-                            ingredient.ProductId,
-                            ingredient.NestedRecipeId,
-                            ingredient.Amount))
-                        .ToList()))
+                step is null
+                    ? null!
+                    : new RecipeStepInput(
+                        index + 1,
+                        step.Description,
+                        step.Title,
+                        step.ImageUrl,
+                        step.ImageAssetId,
+                        step.Ingredients?
+                            .Select(ingredient => ingredient is null
+                                ? null!
+                                : new RecipeIngredientInput(
+                                    ingredient.ProductId,
+                                    ingredient.NestedRecipeId,
+                                    ingredient.Amount))
+                            .ToList()!))
             .ToList();
 }

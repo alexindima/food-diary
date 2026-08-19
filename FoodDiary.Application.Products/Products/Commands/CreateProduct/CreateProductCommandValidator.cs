@@ -64,9 +64,13 @@ public sealed class CreateProductCommandValidator : AbstractValidator<CreateProd
 
     private void ConfigureMeasurementRules() {
         RuleFor(x => x.BaseAmount)
+            .Cascade(CascadeMode.Stop)
             .GreaterThan(0)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage("BaseAmount must be greater than 0");
+            .WithMessage("BaseAmount must be greater than 0")
+            .Must((command, amount) => ProductCommandValidation.BeCanonicalBaseAmount(command.BaseUnit, amount))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("BaseAmount must be 100 for G or Ml and 1 for Pcs");
 
         RuleFor(x => x.DefaultPortionAmount)
             .GreaterThan(0)

@@ -10,6 +10,12 @@ internal static class ProductUpdateLimitValidator {
         MeasurementUnit unit = values.Unit ?? product.BaseUnit;
         double maxNutrient = Product.GetMaxNutrientPerBase(unit);
 
+        if (command.BaseAmount.HasValue && !Product.IsCanonicalBaseAmount(unit, command.BaseAmount.Value)) {
+            return Result.Failure(Errors.Validation.Invalid(
+                nameof(command.BaseAmount),
+                "BaseAmount must be 100 for G or Ml and 1 for Pcs"));
+        }
+
         LimitCheck[] checks = [
             new(
                 nameof(command.DefaultPortionAmount),

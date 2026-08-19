@@ -96,7 +96,7 @@ internal sealed class OpenFoodFactsService(
         } catch (Exception ex) when (ex is HttpRequestException or OperationCanceledException or JsonException or InvalidDataException or TimeoutException) {
             outcome = ResolveFailureOutcome(ex, cancellationToken);
             errorType = ex.GetType().Name;
-            logger.LogWarning(ex, "Open Food Facts lookup failed for barcode '{Barcode}'", barcode);
+            logger.LogWarning(ex, "Open Food Facts lookup failed. BarcodeLength={BarcodeLength}", barcode.Length);
             return null;
         } finally {
             RecordRequestTelemetry(BarcodeLookupOperation, outcome, stopwatch, errorType);

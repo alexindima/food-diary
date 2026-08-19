@@ -33,7 +33,7 @@ public sealed class CreateMealCommandValidator : AbstractValidator<CreateMealCom
 
         RuleFor(c => c)
             .Must(c => c.Items is { Count: > 0 } ||
-                       (c.AiSessions is { Count: > 0 } && c.AiSessions.Any(s => s.Items.Count > 0)))
+                       (c.AiSessions is { Count: > 0 } && c.AiSessions.Any(s => s is { Items.Count: > 0 })))
             .WithErrorCode("Validation.Required")
             .WithMessage("At least one item or AI session with items is required.");
 
@@ -49,6 +49,11 @@ public sealed class CreateMealCommandValidator : AbstractValidator<CreateMealCom
     }
 
     private void ConfigureItemRules() {
+        RuleForEach(c => c.Items)
+            .NotNull()
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Meal items must not contain null elements.");
+
         RuleForEach(c => c.Items).ChildRules(item => {
             item.RuleFor(i => i)
                 .Must(i => i.ProductId.HasValue || i.RecipeId.HasValue)
@@ -67,6 +72,10 @@ public sealed class CreateMealCommandValidator : AbstractValidator<CreateMealCom
         });
 
         RuleForEach(c => c.AiSessions)
+            .Cascade(CascadeMode.Stop)
+            .NotNull()
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("AI sessions must not contain null elements.")
             .SetValidator(new MealAiSessionInputValidator());
     }
 

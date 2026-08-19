@@ -19,12 +19,17 @@ internal sealed class RecipeStepInputValidator : AbstractValidator<RecipeStepInp
             .MaximumLength(RecipeStepContentState.ImageUrlMaxLength);
 
         RuleFor(x => x.Ingredients)
+            .Cascade(CascadeMode.Stop)
             .NotNull()
             .WithMessage("Ingredients collection is required")
             .Must(ingredients => ingredients.Count > 0)
             .WithMessage("Each step must contain at least one ingredient");
 
         RuleForEach(x => x.Ingredients)
+            .Cascade(CascadeMode.Stop)
+            .NotNull()
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Ingredients must not contain null elements")
             .SetValidator(new RecipeIngredientInputValidator());
     }
 }

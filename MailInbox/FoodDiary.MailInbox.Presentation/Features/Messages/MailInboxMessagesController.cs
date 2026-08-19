@@ -1,5 +1,5 @@
-using FoodDiary.MailInbox.Application.Messages.Commands;
-using FoodDiary.MailInbox.Application.Messages.Queries;
+using FoodDiary.MailInbox.Application.Messages.Commands.MarkInboundMailMessageRead;
+using FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessageDetails;
 using FoodDiary.MailInbox.Presentation.Controllers;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Mappings;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Responses;

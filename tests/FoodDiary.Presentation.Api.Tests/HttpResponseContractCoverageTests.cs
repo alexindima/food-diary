@@ -1,3 +1,4 @@
+using System.Reflection;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
 using FoodDiary.Presentation.Api.Features.Ai.Responses;
 using FoodDiary.Presentation.Api.Features.Meals.Responses;
@@ -13,6 +14,30 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class HttpResponseContractCoverageTests {
+    [Fact]
+    public void AllConcreteHttpResponseContracts_CanBeConstructedAndRead() {
+        Type[] responseTypes = [.. typeof(GoalsHttpResponse).Assembly
+            .GetTypes()
+            .Where(static type =>
+                type is { IsAbstract: false, ContainsGenericParameters: false } &&
+                type.Name.EndsWith("HttpResponse", StringComparison.Ordinal))
+            .OrderBy(static type => type.FullName, StringComparer.Ordinal)];
+
+        Assert.NotEmpty(responseTypes);
+        foreach (Type responseType in responseTypes) {
+            ConstructorInfo constructor = responseType.GetConstructors()
+                .OrderByDescending(static candidate => candidate.GetParameters().Length)
+                .First();
+            object?[] arguments = [.. constructor.GetParameters().Select(static parameter => CreateValue(parameter.ParameterType, depth: 0))];
+            object response = constructor.Invoke(arguments);
+
+            foreach (PropertyInfo property in responseType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(static property => property.GetIndexParameters().Length == 0)) {
+                _ = property.GetValue(response);
+            }
+        }
+    }
+
     [Fact]
     public void GoalsHttpResponse_ExposesAllGoalFields() {
         var response = new GoalsHttpResponse(
@@ -337,5 +362,87 @@ public sealed class HttpResponseContractCoverageTests {
             () => Assert.Equal("Easy", lessonDetail.Difficulty),
             () => Assert.Equal(5, lessonDetail.EstimatedReadMinutes),
             () => Assert.True(lessonDetail.IsRead));
+    }
+
+    private static object? CreateValue(Type type, int depth) {
+        Type? nullableType = Nullable.GetUnderlyingType(type);
+        if (nullableType is not null) {
+            return null;
+        }
+
+        if (type == typeof(string)) {
+            return "value";
+        }
+
+        if (type == typeof(Guid)) {
+            return Guid.NewGuid();
+        }
+
+        if (type == typeof(DateTime)) {
+            return DateTime.UtcNow;
+        }
+
+        if (type == typeof(DateTimeOffset)) {
+            return DateTimeOffset.UtcNow;
+        }
+
+        if (type == typeof(DateOnly)) {
+            return DateOnly.FromDateTime(DateTime.UtcNow);
+        }
+
+        if (type == typeof(TimeOnly)) {
+            return TimeOnly.MinValue;
+        }
+
+        if (type.IsEnum || type.IsValueType) {
+            return Activator.CreateInstance(type);
+        }
+
+        if (type.IsArray) {
+            return Array.CreateInstance(type.GetElementType()!, 0);
+        }
+
+        if (type.IsGenericType && TryCreateCollection(type, out object? collection)) {
+            return collection;
+        }
+
+        if (depth >= 8) {
+            return null;
+        }
+
+        ConstructorInfo? constructor = type.GetConstructors()
+            .OrderByDescending(static candidate => candidate.GetParameters().Length)
+            .FirstOrDefault();
+        if (constructor is null) {
+            return null;
+        }
+
+        object?[] arguments = [.. constructor.GetParameters().Select(parameter => CreateValue(parameter.ParameterType, depth + 1))];
+        return constructor.Invoke(arguments);
+    }
+
+    private static bool TryCreateCollection(Type type, out object? collection) {
+        Type definition = type.GetGenericTypeDefinition();
+        if (definition == typeof(Dictionary<,>) || definition == typeof(IReadOnlyDictionary<,>) ||
+            definition == typeof(IDictionary<,>)) {
+            collection = Activator.CreateInstance(typeof(Dictionary<,>).MakeGenericType(type.GetGenericArguments()));
+            return true;
+        }
+
+        Type[] collectionDefinitions = [
+            typeof(IEnumerable<>),
+            typeof(IReadOnlyCollection<>),
+            typeof(IReadOnlyList<>),
+            typeof(ICollection<>),
+            typeof(IList<>),
+            typeof(List<>),
+        ];
+        if (collectionDefinitions.Contains(definition)) {
+            collection = Activator.CreateInstance(typeof(List<>).MakeGenericType(type.GetGenericArguments()[0]));
+            return true;
+        }
+
+        collection = null;
+        return false;
     }
 }

@@ -1,6 +1,13 @@
-global using FoodDiary.MailRelay.Application.Emails.Commands;
+global using FoodDiary.MailRelay.Application.Emails.Commands.CreateMailRelaySuppression;
+global using FoodDiary.MailRelay.Application.Emails.Commands.EnqueueMailRelayEmail;
+global using FoodDiary.MailRelay.Application.Emails.Commands.IngestMailRelayDeliveryEvent;
+global using FoodDiary.MailRelay.Application.Emails.Commands.IngestManyMailRelayDeliveryEvents;
+global using FoodDiary.MailRelay.Application.Emails.Commands.RemoveMailRelaySuppression;
 global using FoodDiary.MailRelay.Application.Emails.Models;
-global using FoodDiary.MailRelay.Application.Emails.Queries;
+global using FoodDiary.MailRelay.Application.Emails.Queries.GetMailRelayDeliveryEvents;
+global using FoodDiary.MailRelay.Application.Emails.Queries.GetMailRelayMessageDetails;
+global using FoodDiary.MailRelay.Application.Emails.Queries.GetMailRelayQueueStats;
+global using FoodDiary.MailRelay.Application.Emails.Queries.GetMailRelaySuppressions;
 global using FoodDiary.MailRelay.Application.Health;
 global using FoodDiary.MailRelay.Application.Options;
 global using FoodDiary.MailRelay.Domain.DeliveryEvents;

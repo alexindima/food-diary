@@ -17,6 +17,7 @@ namespace FoodDiary.Presentation.Api.Features.Admin;
 public sealed class AdminModerationController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<AdminContentReportHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetReports([FromQuery] GetAdminContentReportsHttpQuery query) =>
         HandleOk(query.ToQuery(), static value => value.ToHttpResponse());
 

@@ -59,6 +59,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 ## Cross-Repo Rules
 
 - Keep architecture feature-first and move legacy flat areas incrementally.
+- Place every application command and query slice in its own feature folder under `Commands/` or `Queries/`; do not put C# files directly in those folders.
 - Keep .NET shared build settings in root `Directory.Build.props`.
 - Keep nullable enabled in C# projects and align namespaces with folders.
 - Use K&R brace style for C# code (opening brace on the same line).

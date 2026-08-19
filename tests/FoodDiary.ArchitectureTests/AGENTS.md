@@ -12,6 +12,7 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 - `LayeringTests` protects primary FoodDiary layer direction.
 - `MailRelayArchitectureTests` and `MailInboxArchitectureTests` protect service-specific layer direction and runtime database separation.
 - `ApplicationGuardrailTests` protects application-layer conventions and prevents shared buckets from regrowing.
+- `RequestFolderConventionTests` requires every application command and query slice to live in its own feature folder.
 - `BusinessModuleBoundaryTests` protects governed vertical module ownership, EF configuration placement, and the explicit cross-module projection allowlist.
 - `AsyncMethodGuardrailTests` uses Roslyn syntax parsing for async suffix and cancellation-token rules.
 - `ClientPackageBoundaryTests` protects MailRelay/MailInbox client packages from server-side coupling.

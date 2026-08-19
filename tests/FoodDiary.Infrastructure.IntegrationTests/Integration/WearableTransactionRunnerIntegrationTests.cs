@@ -12,6 +12,23 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class WearableTransactionRunnerIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task ExecuteSerializedAsync_DoesNotHoldTransactionWhileOperationRuns() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var runner = new EfWearableTransactionRunner(context);
+
+        bool result = await runner.ExecuteSerializedAsync(
+            $"wearable-transaction-scope:{Guid.NewGuid():N}",
+            _ => {
+                Assert.Null(context.Database.CurrentTransaction);
+                return Task.FromResult(true);
+            },
+            CancellationToken.None);
+
+        Assert.True(result);
+        Assert.Null(context.Database.CurrentTransaction);
+    }
+
+    [RequiresDockerFact]
     public async Task ExecuteSerializedAsync_WhenConnectionCreationRaces_CreatesSingleConnection() {
         var user = User.Create("wearable-race@example.com", "hash");
         await using FoodDiaryDbContext seedContext = await databaseFixture.CreateDbContextAsync();

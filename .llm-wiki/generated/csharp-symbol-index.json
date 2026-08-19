@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3383,
-    "symbols": 3393,
+    "sourceFiles": 3385,
+    "symbols": 3395,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 236,
+    "dependencyInjectionRegistrations": 237,
     "kinds": {
-      "class": 1760,
+      "class": 1762,
       "enum": 57,
       "interface": 417,
       "record": 1043,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 61,
-      "Other": 1282,
+      "Other": 1284,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -17538,7 +17538,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Integrations/Options/WebPushOptions.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "YooKassaOptions",
@@ -17587,7 +17587,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "OpenAiRequestFactory",
@@ -18364,14 +18364,14 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/GetAdminBillingHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "GetAdminContentReportsHttpQuery",
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/GetAdminContentReportsHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "GetAdminDashboardHttpQuery",
@@ -18385,7 +18385,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/GetAdminImpersonationSessionsHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "GetAdminMailInboxMessagesHttpQuery",
@@ -18399,7 +18399,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/GetAdminUserLoginEventsHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "GetAdminUserLoginSummaryHttpQuery",
@@ -18420,7 +18420,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/GetAdminUsersHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "GetCollaborationAuditHttpQuery",
@@ -19211,14 +19211,14 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Dashboard/Requests/GetDailyAdviceHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "GetDashboardSnapshotHttpQuery",
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Dashboard/Requests/GetDashboardSnapshotHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "DailyAdviceHttpResponse",
@@ -19442,7 +19442,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/Requests/GetClientDashboardHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "InviteDietologistHttpRequest",
@@ -19995,7 +19995,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Lessons/LessonsController.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "LessonHttpMappings",
@@ -20009,7 +20009,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Lessons/Requests/GetLessonsHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "LessonDetailHttpResponse",
@@ -20597,7 +20597,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/Recipes/Requests/ExploreRecipesHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "GetRecentRecipesHttpQuery",
@@ -21052,7 +21052,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
-      "line": 16
+      "line": 18
     },
     {
       "name": "WaistEntryHttpMappings",
@@ -21087,7 +21087,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/WaistEntries/Requests/GetWaistEntriesHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "GetWaistHistoryPageSummaryHttpQuery",
@@ -21297,7 +21297,7 @@
       "kind": "record",
       "role": "Query",
       "path": "FoodDiary.Presentation.Api/Features/WeightEntries/Requests/GetWeightEntriesHttpQuery.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "GetWeightHistoryPageSummaryHttpQuery",
@@ -21447,6 +21447,13 @@
       "line": 2
     },
     {
+      "name": "AllowedQueryValuesAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Policies/AllowedQueryValuesAttribute.cs",
+      "line": 7
+    },
+    {
       "name": "PresentationPolicyNames",
       "kind": "class",
       "role": "Other",
@@ -21458,6 +21465,13 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Policies/PresentationQueryLimits.cs",
+      "line": 2
+    },
+    {
+      "name": "PresentationQueryValues",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Policies/PresentationQueryValues.cs",
       "line": 2
     },
     {
@@ -21968,42 +21982,42 @@
       "name": "MarkInboundMailMessageReadCommand",
       "kind": "record",
       "role": "Command",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageReadCommand.cs",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommand.cs",
       "line": 5
     },
     {
       "name": "MarkInboundMailMessageReadCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageReadCommandHandler.cs",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandHandler.cs",
       "line": 7
     },
     {
       "name": "MarkInboundMailMessageReadCommandValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageReadCommandValidator.cs",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandValidator.cs",
       "line": 4
     },
     {
       "name": "ReceiveInboundMailCommand",
       "kind": "record",
       "role": "Command",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMailCommand.cs",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommand.cs",
       "line": 6
     },
     {
       "name": "ReceiveInboundMailCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMailCommandHandler.cs",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommandHandler.cs",
       "line": 8
     },
     {
       "name": "ReceiveInboundMailCommandValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMailCommandValidator.cs",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommandValidator.cs",
       "line": 4
     },
     {
@@ -22066,35 +22080,35 @@
       "name": "GetInboundMailMessageDetailsQuery",
       "kind": "record",
       "role": "Query",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetailsQuery.cs",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQuery.cs",
       "line": 6
     },
     {
       "name": "GetInboundMailMessageDetailsQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetailsQueryHandler.cs",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQueryHandler.cs",
       "line": 8
     },
     {
       "name": "GetInboundMailMessagesQuery",
       "kind": "record",
       "role": "Query",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagesQuery.cs",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQuery.cs",
       "line": 6
     },
     {
       "name": "GetInboundMailMessagesQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagesQueryHandler.cs",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryHandler.cs",
       "line": 7
     },
     {
       "name": "GetInboundMailMessagesQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagesQueryValidator.cs",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryValidator.cs",
       "line": 4
     },
     {
@@ -22340,7 +22354,7 @@
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
-      "line": 138
+      "line": 119
     },
     {
       "name": "AuthorizedMailInboxEndpointBase",
@@ -22577,105 +22591,105 @@
       "name": "CreateMailRelaySuppressionCommand",
       "kind": "record",
       "role": "Command",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommand.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs",
       "line": 4
     },
     {
       "name": "CreateMailRelaySuppressionCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommandHandler.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandHandler.cs",
       "line": 4
     },
     {
       "name": "CreateMailRelaySuppressionCommandValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommandValidator.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandValidator.cs",
       "line": 4
     },
     {
       "name": "EnqueueMailRelayEmailCommand",
       "kind": "record",
       "role": "Command",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommand.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs",
       "line": 4
     },
     {
       "name": "EnqueueMailRelayEmailCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommandHandler.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandHandler.cs",
       "line": 4
     },
     {
       "name": "EnqueueMailRelayEmailCommandValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommandValidator.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
       "line": 4
     },
     {
       "name": "IngestMailRelayDeliveryEventCommand",
       "kind": "record",
       "role": "Command",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommand.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs",
       "line": 4
     },
     {
       "name": "IngestMailRelayDeliveryEventCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommandHandler.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandHandler.cs",
       "line": 4
     },
     {
       "name": "IngestMailRelayDeliveryEventCommandValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommandValidator.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
       "line": 4
     },
     {
       "name": "IngestManyMailRelayDeliveryEventsCommand",
       "kind": "record",
       "role": "Command",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommand.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs",
       "line": 4
     },
     {
       "name": "IngestManyMailRelayDeliveryEventsCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
       "line": 4
     },
     {
       "name": "IngestManyMailRelayDeliveryEventsCommandValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommandValidator.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandValidator.cs",
       "line": 4
     },
     {
       "name": "RemoveMailRelaySuppressionCommand",
       "kind": "record",
       "role": "Command",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommand.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
       "line": 4
     },
     {
       "name": "RemoveMailRelaySuppressionCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommandHandler.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandHandler.cs",
       "line": 4
     },
     {
       "name": "RemoveMailRelaySuppressionCommandValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommandValidator.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandValidator.cs",
       "line": 4
     },
     {
@@ -22696,77 +22710,77 @@
       "name": "GetMailRelayDeliveryEventsQuery",
       "kind": "record",
       "role": "Query",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQuery.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs",
       "line": 4
     },
     {
       "name": "GetMailRelayDeliveryEventsQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQueryHandler.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryHandler.cs",
       "line": 4
     },
     {
       "name": "GetMailRelayDeliveryEventsQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQueryValidator.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryValidator.cs",
       "line": 4
     },
     {
       "name": "GetMailRelayMessageDetailsQuery",
       "kind": "record",
       "role": "Query",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetailsQuery.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQuery.cs",
       "line": 4
     },
     {
       "name": "GetMailRelayMessageDetailsQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetailsQueryHandler.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryHandler.cs",
       "line": 4
     },
     {
       "name": "GetMailRelayMessageDetailsQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetailsQueryValidator.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryValidator.cs",
       "line": 4
     },
     {
       "name": "GetMailRelayQueueStatsQuery",
       "kind": "record",
       "role": "Query",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStatsQuery.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQuery.cs",
       "line": 4
     },
     {
       "name": "GetMailRelayQueueStatsQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStatsQueryHandler.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQueryHandler.cs",
       "line": 4
     },
     {
       "name": "GetMailRelaySuppressionsQuery",
       "kind": "record",
       "role": "Query",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQuery.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs",
       "line": 4
     },
     {
       "name": "GetMailRelaySuppressionsQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQueryHandler.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryHandler.cs",
       "line": 4
     },
     {
       "name": "GetMailRelaySuppressionsQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQueryValidator.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryValidator.cs",
       "line": 4
     },
     {
@@ -26978,21 +26992,21 @@
       "implementation": "UserIdProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 59
+      "line": 57
     },
     {
       "service": "IEmailVerificationNotifier",
       "implementation": "EmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 60
+      "line": 58
     },
     {
       "service": "INotificationPusher",
       "implementation": "NotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 61
+      "line": 59
     },
     {
       "service": "IAuthorizationMiddlewareResultHandler",
@@ -27042,6 +27056,13 @@
       "lifetime": "Singleton",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
       "line": 46
+    },
+    {
+      "service": "IMailInboxReadinessChecker",
+      "implementation": "NpgsqlMailInboxReadinessChecker",
+      "lifetime": "Singleton",
+      "path": "MailInbox/FoodDiary.MailInbox.Initializer/InitializerServiceCollectionExtensions.cs",
+      "line": 20
     },
     {
       "service": "IMailRelayDeliveryPolicy",

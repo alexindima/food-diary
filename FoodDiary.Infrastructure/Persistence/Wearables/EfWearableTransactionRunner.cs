@@ -13,25 +13,44 @@ internal sealed class EfWearableTransactionRunner(FoodDiaryDbContext context) : 
         ArgumentException.ThrowIfNullOrWhiteSpace(serializationKey);
         ArgumentNullException.ThrowIfNull(operation);
 
-        IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-        await using (transaction.ConfigureAwait(false)) {
-            await AcquireTransactionLockAsync(serializationKey, transaction, cancellationToken).ConfigureAwait(false);
+        await context.Database.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        bool lockAcquired = false;
+        try {
+            await ChangeSessionLockAsync(
+                "SELECT pg_advisory_lock(hashtextextended(@serialization_key, 0))",
+                serializationKey,
+                cancellationToken).ConfigureAwait(false);
+            lockAcquired = true;
+
             TResult result = await operation(cancellationToken).ConfigureAwait(false);
-            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+
+            IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await using (transaction.ConfigureAwait(false)) {
+                await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            }
+
             return result;
+        } finally {
+            try {
+                if (lockAcquired) {
+                    await ChangeSessionLockAsync(
+                        "SELECT pg_advisory_unlock(hashtextextended(@serialization_key, 0))",
+                        serializationKey,
+                        CancellationToken.None).ConfigureAwait(false);
+                }
+            } finally {
+                await context.Database.CloseConnectionAsync().ConfigureAwait(false);
+            }
         }
     }
 
-    private async Task AcquireTransactionLockAsync(
+    private async Task ChangeSessionLockAsync(
+        string commandText,
         string serializationKey,
-        IDbContextTransaction transaction,
         CancellationToken cancellationToken) {
         var connection = (NpgsqlConnection)context.Database.GetDbConnection();
-        var command = new NpgsqlCommand(
-            "SELECT pg_advisory_xact_lock(hashtextextended(@serialization_key, 0))",
-            connection,
-            (NpgsqlTransaction)transaction.GetDbTransaction());
+        var command = new NpgsqlCommand(commandText, connection);
         await using (command.ConfigureAwait(false)) {
             command.Parameters.AddWithValue("serialization_key", NpgsqlTypes.NpgsqlDbType.Text, serializationKey);
             await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);

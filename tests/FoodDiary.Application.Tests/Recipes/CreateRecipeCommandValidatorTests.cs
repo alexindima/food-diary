@@ -56,6 +56,28 @@ public class CreateRecipeCommandValidatorTests {
     }
 
     [Fact]
+    public async Task ValidateAsync_WithNullStep_ReturnsValidationErrorWithoutThrowing() {
+        var validator = new CreateRecipeCommandValidator();
+        CreateRecipeCommand command = CreateCommand(Guid.NewGuid(), [null!]);
+
+        ValidationResult result = await validator.ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Steps[0]", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithNullIngredient_ReturnsValidationErrorWithoutThrowing() {
+        RecipeStepInput step = CreateStep(order: 1, "Step") with { Ingredients = [null!] };
+        CreateRecipeCommand command = CreateCommand(Guid.NewGuid(), [step]);
+
+        ValidationResult result = await new CreateRecipeCommandValidator().ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Steps[0].Ingredients[0]", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task ValidateAsync_WithEmptySteps_ReturnsValidationError() {
         var validator = new CreateRecipeCommandValidator();
         CreateRecipeCommand command = CreateCommand(Guid.NewGuid(), []);

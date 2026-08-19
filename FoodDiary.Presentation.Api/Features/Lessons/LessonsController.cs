@@ -2,6 +2,7 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Lessons.Mappings;
 using FoodDiary.Presentation.Api.Features.Lessons.Responses;
 using FoodDiary.Presentation.Api.Features.Lessons.Requests;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ namespace FoodDiary.Presentation.Api.Features.Lessons;
 public sealed class LessonsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<LessonPageHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetAll(
         [FromCurrentUser] Guid userId,
         [FromQuery] GetLessonsHttpQuery query) =>

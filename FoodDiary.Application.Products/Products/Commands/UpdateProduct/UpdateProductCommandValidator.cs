@@ -28,7 +28,14 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
             .WithErrorCode("Validation.Required")
             .WithMessage("ProductId is required");
 
-        RuleFor(x => x.Name).MaximumLength(Product.NameMaxLength);
+        RuleFor(x => x.Name)
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty()
+            .WithErrorCode("Validation.Required")
+            .WithMessage("Name must not be empty")
+            .MaximumLength(Product.NameMaxLength)
+            .WithErrorCode("Validation.Invalid")
+            .When(x => x.Name is not null);
         RuleFor(x => x.Barcode).MaximumLength(Product.BarcodeMaxLength);
         RuleFor(x => x.Brand).MaximumLength(Product.BrandMaxLength);
         RuleFor(x => x.Category).MaximumLength(Product.CategoryMaxLength);
@@ -69,9 +76,13 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
 
     private void ConfigureMeasurementRules() {
         RuleFor(x => x.BaseAmount)
+            .Cascade(CascadeMode.Stop)
             .GreaterThan(0)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("BaseAmount must be greater than 0")
+            .Must((command, amount) => ProductCommandValidation.BeCanonicalBaseAmount(command.BaseUnit, amount!.Value))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("BaseAmount must be 100 for G or Ml and 1 for Pcs")
             .When(x => x.BaseAmount.HasValue);
 
         RuleFor(x => x.DefaultPortionAmount)

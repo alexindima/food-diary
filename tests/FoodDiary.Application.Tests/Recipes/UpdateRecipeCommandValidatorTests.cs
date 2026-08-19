@@ -94,6 +94,33 @@ public class UpdateRecipeCommandValidatorTests {
         Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, nameof(UpdateRecipeCommand.ImageUrl), StringComparison.Ordinal));
     }
 
+    [Fact]
+    public async Task ValidateAsync_WithWhitespaceName_ReturnsValidationError() {
+        UpdateRecipeCommand command = CreateCommand(
+            Guid.NewGuid(),
+            RecipeId.New(),
+            [CreateStep(order: 1, "Step")]) with {
+            Name = "   ",
+        };
+
+        ValidationResult result = await new UpdateRecipeCommandValidator().ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error =>
+            string.Equals(error.PropertyName, nameof(UpdateRecipeCommand.Name), StringComparison.Ordinal) &&
+            string.Equals(error.ErrorCode, "Validation.Required", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithNullStep_ReturnsValidationErrorWithoutThrowing() {
+        UpdateRecipeCommand command = CreateCommand(Guid.NewGuid(), RecipeId.New(), [null!]);
+
+        ValidationResult result = await new UpdateRecipeCommandValidator().ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Steps[0]", StringComparison.Ordinal));
+    }
+
     private static UpdateRecipeCommand CreateCommand(
         Guid userId,
         RecipeId recipeId,

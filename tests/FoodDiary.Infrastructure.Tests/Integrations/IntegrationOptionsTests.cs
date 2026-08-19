@@ -1,5 +1,6 @@
 using FoodDiary.Integrations.Billing;
 using FoodDiary.Integrations.Options;
+using WebPush;
 
 namespace FoodDiary.Infrastructure.Tests.Integrations;
 
@@ -183,17 +184,42 @@ public sealed class IntegrationOptionsTests {
 
     [Fact]
     public void WebPushOptions_WhenEnabled_RequiresCompleteAbsoluteSubject() {
-        var invalid = new WebPushOptions {
+        WebPushOptions valid = CreateValidWebPushOptions();
+        WebPushOptions missingKey = valid.WithPublicKey("");
+
+        Assert.True(WebPushOptions.HasValidConfiguration(valid));
+        Assert.False(WebPushOptions.HasValidConfiguration(missingKey));
+    }
+
+    [Fact]
+    public void WebPushOptions_WhenEnabled_RejectsMalformedVapidKeys() {
+        WebPushOptions valid = CreateValidWebPushOptions();
+        WebPushOptions invalidPublicKey = valid.WithPublicKey("public");
+        var invalidPrivateKey = new WebPushOptions {
+            Enabled = valid.Enabled,
+            Subject = valid.Subject,
+            PublicKey = valid.PublicKey,
+            PrivateKey = "private",
+            DefaultUrl = valid.DefaultUrl,
+        };
+
+        Assert.False(WebPushOptions.HasValidConfiguration(invalidPublicKey));
+        Assert.False(WebPushOptions.HasValidConfiguration(invalidPrivateKey));
+    }
+
+    [Fact]
+    public void WebPushOptions_WhenEnabled_RejectsMismatchedVapidKeyPair() {
+        VapidDetails firstPair = VapidHelper.GenerateVapidKeys();
+        VapidDetails secondPair = VapidHelper.GenerateVapidKeys();
+        var options = new WebPushOptions {
             Enabled = true,
             Subject = "mailto:admin@example.com",
-            PublicKey = "public",
-            PrivateKey = "private",
+            PublicKey = firstPair.PublicKey,
+            PrivateKey = secondPair.PrivateKey,
             DefaultUrl = "/",
         };
-        WebPushOptions missingKey = invalid.WithPublicKey("");
 
-        Assert.True(WebPushOptions.HasValidConfiguration(invalid));
-        Assert.False(WebPushOptions.HasValidConfiguration(missingKey));
+        Assert.False(WebPushOptions.HasValidConfiguration(options));
     }
 
     [Theory]
@@ -203,13 +229,7 @@ public sealed class IntegrationOptionsTests {
     [InlineData("file:///tmp/contact", false)]
     [InlineData("javascript:alert(1)", false)]
     public void WebPushOptions_WhenEnabled_ValidatesVapidSubject(string subject, bool expected) {
-        var options = new WebPushOptions {
-            Enabled = true,
-            Subject = subject,
-            PublicKey = "public",
-            PrivateKey = "private",
-            DefaultUrl = "/",
-        };
+        WebPushOptions options = CreateValidWebPushOptions(subject: subject);
 
         Assert.Equal(expected, WebPushOptions.HasValidConfiguration(options));
     }
@@ -223,15 +243,37 @@ public sealed class IntegrationOptionsTests {
     [InlineData("https://user:secret@app.example.com", false)]
     [InlineData("relative/path", false)]
     public void WebPushOptions_WhenEnabled_ValidatesDefaultNavigationUrl(string defaultUrl, bool expected) {
-        var options = new WebPushOptions {
-            Enabled = true,
-            Subject = "mailto:admin@example.com",
-            PublicKey = "public",
-            PrivateKey = "private",
-            DefaultUrl = defaultUrl,
-        };
+        WebPushOptions options = CreateValidWebPushOptions(defaultUrl: defaultUrl);
 
         Assert.Equal(expected, WebPushOptions.HasValidConfiguration(options));
+    }
+
+    [Fact]
+    public void StripeOptions_HasValidConfiguration_DoesNotRequireUnusedPublishableKey() {
+        var options = new StripeOptions {
+            SecretKey = "sk_test",
+            WebhookSecret = "whsec_test",
+            PremiumMonthlyPriceId = "price_monthly",
+            PremiumYearlyPriceId = "price_yearly",
+            SuccessUrl = "https://example.com/success",
+            CancelUrl = "https://example.com/cancel",
+            PortalReturnUrl = "https://example.com/portal",
+        };
+
+        Assert.True(StripeOptions.HasValidConfiguration(options));
+    }
+
+    private static WebPushOptions CreateValidWebPushOptions(
+        string subject = "mailto:admin@example.com",
+        string defaultUrl = "/") {
+        VapidDetails keys = VapidHelper.GenerateVapidKeys();
+        return new WebPushOptions {
+            Enabled = true,
+            Subject = subject,
+            PublicKey = keys.PublicKey,
+            PrivateKey = keys.PrivateKey,
+            DefaultUrl = defaultUrl,
+        };
     }
 
     [Theory]

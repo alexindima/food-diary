@@ -7,14 +7,14 @@
       "pageSha256": "c4bb6a75a90ab7c79f6a01e1fda3fe34b619a09e6123e4040fe43a566260875a",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "69225674a5df973e539a590f3bc883891881a98688291a49edd510521a701e98"
+          "path": "AGENTS.md",
+          "sha256": "242ba5c7b16402fb42532f2e644d9e58f5bed445650fa904672932c6d3a4bdf3"
         }
       ],
-      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
+      "reason": "Reviewed against the current root AGENTS.md on HEAD 6cf1cee22; repository navigation and source-authority guidance remain accurately represented.",
       "baseRef": "HEAD",
-      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
-      "reviewedAtUtc": "2026-08-17T15:56:42.3199922Z"
+      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
+      "reviewedAtUtc": "2026-08-19T12:52:25.6182862Z"
     },
     {
       "pageId": "module.mail-services",
@@ -97,14 +97,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/adr/README.md",
-          "sha256": "7c1d57181e4da4c3657cffa4a7bdd6486273d9871c30402db19b94ef10f85c8c"
+          "path": "AGENTS.md",
+          "sha256": "242ba5c7b16402fb42532f2e644d9e58f5bed445650fa904672932c6d3a4bdf3"
         }
       ],
-      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
+      "reason": "Reviewed against the current root AGENTS.md on HEAD 6cf1cee22; the documented authority hierarchy and compiled-navigation model remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
-      "reviewedAtUtc": "2026-08-17T04:01:37.7060835Z"
+      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
+      "reviewedAtUtc": "2026-08-19T12:52:27.5404339Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -182,17 +182,17 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "7144e7b44ae5e8351591bbf79e673def83adc704f51d126dd23e8be5b630d658"
+          "sha256": "91698ae76e30b39463f953f2ec1a77e1fcf98c79ea565c25bdbb7257003b2b12"
         },
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "b95221b3fe3740851e9caeb98a3cbd8f896efc302ef36e4a0c68d94357f0bce2"
+          "sha256": "f5d81a4f49841e532703dd87a9c8f60f2eb1ea225c3b0b603eaae4f54d384872"
         }
       ],
-      "reason": "API compatibility check found zero breaking changes and one additive documented 400 response; backend and OpenAPI indexes were regenerated.",
+      "reason": "API compatibility check reports 0 structural breaking changes and exactly three additive documented 400 responses; the full OpenAPI snapshot is updated and all 173 Web API integration tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "05b718b0f11210e4e48c32cf4f88b71b80acb9be",
-      "reviewedAtUtc": "2026-08-19T10:53:13.7914826Z"
+      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
+      "reviewedAtUtc": "2026-08-19T13:06:24.6978829Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -201,13 +201,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "e09aeafbf58f3cd65fa9689140d219c85ce33e2fd8d42e4bf838a31f378b2b2d"
+          "sha256": "edf50803ee749f17e41c6f868c75fe92338383a5638557696d4fac7fb716bc24"
         }
       ],
-      "reason": "Verified full solution build with warnings as errors, 709 architecture tests, 1449 domain tests, 2602 application tests, 883 infrastructure tests, and the PostgreSQL wearable race test.",
+      "reason": "Reviewed the freshly regenerated architecture-health index after the merge; the review workflow remains accurate and the index generator completed successfully.",
       "baseRef": "HEAD",
-      "gitHead": "05b718b0f11210e4e48c32cf4f88b71b80acb9be",
-      "reviewedAtUtc": "2026-08-19T10:53:15.2095320Z"
+      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
+      "reviewedAtUtc": "2026-08-19T12:53:00.5555474Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -216,13 +216,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "1aeb355aa6c9d8ee36b30053741967b35bb54e2d160d96ff01061331e58c9148"
+          "sha256": "772bc3c43846bf916ff1aad25877865401348f0c4bb33aeae1a5ec75b86ad46e"
         }
       ],
-      "reason": "API compatibility check found zero breaking changes and one additive documented 400 response; backend and OpenAPI indexes were regenerated.",
+      "reason": "Reviewed the freshly regenerated backend-contract index after the merge; the contract-review workflow remains accurate and the index generator completed successfully.",
       "baseRef": "HEAD",
-      "gitHead": "05b718b0f11210e4e48c32cf4f88b71b80acb9be",
-      "reviewedAtUtc": "2026-08-19T10:53:17.9833701Z"
+      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
+      "reviewedAtUtc": "2026-08-19T12:53:02.1373267Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -461,13 +461,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "0e6b62e619f42bac382b0b5311529c08656748f8b84ee7bc6970a429aca7d98a"
+          "sha256": "cf198f9826939880098916b7fd0797fbb75fd4ab8a86261bd1606b49a97a6198"
         }
       ],
-      "reason": "Verified full solution build with warnings as errors, 709 architecture tests, 1449 domain tests, 2602 application tests, 883 infrastructure tests, and the PostgreSQL wearable race test.",
+      "reason": "Reviewed the freshly regenerated domain-data index after the merge; the domain/data review workflow remains accurate and the index generator completed successfully.",
       "baseRef": "HEAD",
-      "gitHead": "05b718b0f11210e4e48c32cf4f88b71b80acb9be",
-      "reviewedAtUtc": "2026-08-19T10:53:21.0670053Z"
+      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
+      "reviewedAtUtc": "2026-08-19T12:53:03.4098436Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -756,13 +756,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "5696207edec6453434d76e7d68a3d4289f459bf6c41678cc396232453a04098c"
+          "sha256": "4e163fd1ba46f81921b60bf21b075179a8d57594ac490e1ba21c3a02fd45ba45"
         }
       ],
-      "reason": "Wearable concurrency hardening changes transaction coordination only; token protection, sensitive data fields, and storage schema remain unchanged, and the sensitive-data index was regenerated.",
+      "reason": "Sensitive-data diff contains only moved MailRelay query/command paths, removal of an obsolete initializer credential candidate, and line shifts in unchanged OpenAI transfer sites; no new sensitive fields, destinations, logging, or provider payloads were introduced.",
       "baseRef": "HEAD",
-      "gitHead": "05b718b0f11210e4e48c32cf4f88b71b80acb9be",
-      "reviewedAtUtc": "2026-08-19T10:53:24.2103011Z"
+      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
+      "reviewedAtUtc": "2026-08-19T12:59:21.7041759Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -817,13 +817,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "860b50e872210b8884b26660761f495dbd483b7d1a02761e1a71a575955a11bc"
+          "sha256": "d20cceb03dd849d75c5352d85f00ed43b6843067e487dab33d96d85e98b72e6f"
         }
       ],
-      "reason": "Verified full solution build with warnings as errors, 709 architecture tests, 1449 domain tests, 2602 application tests, 883 infrastructure tests, and the PostgreSQL wearable race test.",
+      "reason": "Regenerated quality and repository indexes match the current source graph; Presentation has 100% line and 89.49% branch coverage, with 776 Presentation tests and 710 architecture tests passing.",
       "baseRef": "HEAD",
-      "gitHead": "05b718b0f11210e4e48c32cf4f88b71b80acb9be",
-      "reviewedAtUtc": "2026-08-19T10:53:26.4338770Z"
+      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
+      "reviewedAtUtc": "2026-08-19T13:06:25.3867181Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1115,14 +1115,14 @@
       "pageSha256": "d09bef3a0319b7a8b848d8b35f4b8415ad8b349af18b18892057db2b6e63fca1",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "19d370c2e519b41051198b5d737ba1bb114d100b4acd64bce692ad344fc2f6c6"
+          "path": "AGENTS.md",
+          "sha256": "242ba5c7b16402fb42532f2e644d9e58f5bed445650fa904672932c6d3a4bdf3"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "Reviewed against the current root AGENTS.md on HEAD 6cf1cee22; the documented change-policy obligations remain consistent with repository guidance.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:29.6647403Z"
+      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
+      "reviewedAtUtc": "2026-08-19T12:52:33.6501156Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1192,13 +1192,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "f3eaa91281b361bac9afe8a0e0ea0f46caeecfc83a1f44f8931e5ed8231809c2"
+          "sha256": "d09d44d2e65356747b0d1a8e6138ab150213d83e98a368db8ec01cd1af513438"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "242ba5c7b16402fb42532f2e644d9e58f5bed445650fa904672932c6d3a4bdf3"
         }
       ],
-      "reason": "Generated catalog, domain-data, module, topology, and architecture-health artifacts were refreshed from the current verified sources; no manual narrative contract change is required.",
+      "reason": "Repository catalog changes are verified line-number shifts from the three documented 400 responses and the version-neutral attribute; the root guide addition accurately codifies the feature-folder convention enforced by the new architecture test.",
       "baseRef": "HEAD",
-      "gitHead": "05b718b0f11210e4e48c32cf4f88b71b80acb9be",
-      "reviewedAtUtc": "2026-08-19T10:53:29.7696335Z"
+      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
+      "reviewedAtUtc": "2026-08-19T13:06:39.1490685Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1206,14 +1210,14 @@
       "pageSha256": "2fef1c903c42193a33f6c3de3fc4c406a2a718ff38e942ad7944df0e74c713af",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "6e1ea9cae6b8cc9765a5d9dff313c5ac360af33609288bb776a1698a210f9793"
+          "path": "AGENTS.md",
+          "sha256": "242ba5c7b16402fb42532f2e644d9e58f5bed445650fa904672932c6d3a4bdf3"
         }
       ],
-      "reason": "The default help now exposes ten primary entries while help -Detailed retains all 358 validated routes; facade catalog regression and parser checks passed, so code-graph, index, review, and task-dispatch command semantics are unchanged.",
+      "reason": "Reviewed against the current root AGENTS.md on HEAD 6cf1cee22; diff-review routing and evidence expectations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:27:07.5591338Z"
+      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
+      "reviewedAtUtc": "2026-08-19T12:52:38.9497422Z"
     }
   ]
 }

@@ -1,7 +1,13 @@
+using System.ComponentModel.DataAnnotations;
+using FoodDiary.Presentation.Api.Policies;
+
 namespace FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
 
 public sealed record GetWeightEntriesHttpQuery(
     DateTime? DateFrom = null,
     DateTime? DateTo = null,
     int? Limit = null,
-    string Sort = "desc");
+    [Required, MaxLength(PresentationQueryLimits.MaximumSortLength)]
+    [AllowedQueryValues(
+        PresentationQueryValues.Ascending,
+        PresentationQueryValues.Descending)] string Sort = "desc");

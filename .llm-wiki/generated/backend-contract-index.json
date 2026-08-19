@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1050,
     "ambiguousContracts": 3,
-    "consumerEdges": 7367,
-    "productionConsumerEdges": 4459,
-    "testConsumerEdges": 2908,
+    "consumerEdges": 7372,
+    "productionConsumerEdges": 4462,
+    "testConsumerEdges": 2910,
     "consumedContracts": 1050,
     "unconsumedContracts": 0
   },
@@ -1830,7 +1830,7 @@
         "MailRelay"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs"
       ],
       "ambiguous": false
     },
@@ -3030,7 +3030,7 @@
         "MailRelay"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs"
       ],
       "ambiguous": false
     },
@@ -4598,7 +4598,7 @@
         "MailInbox"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetailsQuery.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQuery.cs"
       ],
       "ambiguous": false
     },
@@ -4614,7 +4614,7 @@
         "MailInbox"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagesQuery.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQuery.cs"
       ],
       "ambiguous": false
     },
@@ -4742,7 +4742,7 @@
         "MailRelay"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs"
       ],
       "ambiguous": false
     },
@@ -4758,7 +4758,7 @@
         "MailRelay"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetailsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQuery.cs"
       ],
       "ambiguous": false
     },
@@ -4774,7 +4774,7 @@
         "MailRelay"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStatsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQuery.cs"
       ],
       "ambiguous": false
     },
@@ -4790,7 +4790,7 @@
         "MailRelay"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs"
       ],
       "ambiguous": false
     },
@@ -9782,7 +9782,7 @@
         "MailRelay"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs"
       ],
       "ambiguous": false
     },
@@ -9814,7 +9814,7 @@
         "MailRelay"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs"
       ],
       "ambiguous": false
     },
@@ -13451,7 +13451,7 @@
         "MailInbox"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageReadCommand.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommand.cs"
       ],
       "ambiguous": false
     },
@@ -13995,7 +13995,7 @@
         "MailInbox"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMailCommand.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommand.cs"
       ],
       "ambiguous": false
     },
@@ -14459,7 +14459,7 @@
         "MailRelay"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs"
       ],
       "ambiguous": false
     },
@@ -22314,7 +22314,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ClientTelemetryLogHttpRequestValidationTests.cs",
       "isTest": true,
-      "referenceCount": 11
+      "referenceCount": 12
     },
     {
       "contract": "ClientTelemetryLogHttpRequest",
@@ -23986,10 +23986,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommandHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandHandler.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -23999,10 +23999,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommandValidator.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandValidator.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -24012,7 +24012,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
@@ -24025,7 +24025,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs",
@@ -24038,7 +24038,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs",
@@ -24051,7 +24051,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayEmailHttpMappingsTests.cs",
@@ -24064,7 +24064,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
@@ -24186,7 +24186,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Meals/CreateMealCommandValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 46
+      "referenceCount": 52
     },
     {
       "contract": "CreateMealCommand",
@@ -24225,7 +24225,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/MealHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "CreateMealHttpRequest",
@@ -24277,7 +24277,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/MealHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "CreateMealHttpRequest",
@@ -24511,7 +24511,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 12
+      "referenceCount": 13
     },
     {
       "contract": "CreateProductCommand",
@@ -24784,7 +24784,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Recipes/CreateRecipeCommandValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 12
+      "referenceCount": 14
     },
     {
       "contract": "CreateRecipeCommand",
@@ -24823,7 +24823,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/RecipeHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "CreateRecipeCommentCommand",
@@ -25018,7 +25018,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/RecipeHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "CreateRecipeHttpRequest",
@@ -25640,7 +25640,7 @@
         "MailRelay/FoodDiary.MailRelay.Domain/Emails/CreateSuppressionRequest.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommand.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -29277,10 +29277,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommandHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandHandler.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -29290,10 +29290,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommandValidator.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -29303,7 +29303,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
@@ -29316,7 +29316,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs",
@@ -29329,7 +29329,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs",
@@ -29342,7 +29342,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayEmailHttpMappingsTests.cs",
@@ -29355,7 +29355,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
@@ -29659,6 +29659,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Recipes/RecipeExploreController.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ExploreRecipesHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Recipes/Requests/ExploreRecipesHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -31885,6 +31898,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetAdminContentReportsHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Admin/Requests/GetAdminContentReportsHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetAdminContentReportsQuery",
       "roles": [
         "Query"
@@ -32897,6 +32923,19 @@
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdminHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "GetAdminUsersHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Admin/Requests/GetAdminUsersHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "GetAdminUsersQuery",
@@ -35530,10 +35569,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetailsQuery.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQuery.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetailsQueryHandler.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -35543,7 +35582,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetailsQuery.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQuery.cs"
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
@@ -35556,7 +35595,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetailsQuery.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQuery.cs"
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs",
@@ -35569,7 +35608,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetailsQuery.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQuery.cs"
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
@@ -35582,10 +35621,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagesQuery.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQuery.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagesQueryHandler.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryHandler.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -35595,10 +35634,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagesQuery.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQuery.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagesQueryValidator.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryValidator.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -35608,7 +35647,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagesQuery.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQuery.cs"
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Mappings/InboundMailHttpMappings.cs",
@@ -35621,7 +35660,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagesQuery.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQuery.cs"
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs",
@@ -35634,7 +35673,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagesQuery.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQuery.cs"
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
@@ -36053,6 +36092,19 @@
         "FoodDiary.Presentation.Api/Features/Lessons/Requests/GetLessonsHttpQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "GetLessonsHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Lessons/Requests/GetLessonsHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/LessonHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -36167,10 +36219,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQueryHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -36180,10 +36232,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQueryValidator.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryValidator.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -36193,7 +36245,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
@@ -36206,7 +36258,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs",
@@ -36219,10 +36271,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetailsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQuery.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetailsQueryHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -36232,10 +36284,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetailsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQuery.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetailsQueryValidator.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryValidator.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -36245,7 +36297,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetailsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQuery.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
@@ -36258,7 +36310,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetailsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQuery.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs",
@@ -36271,10 +36323,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStatsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQuery.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStatsQueryHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -36284,7 +36336,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStatsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQuery.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
@@ -36297,7 +36349,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStatsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQuery.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs",
@@ -36310,7 +36362,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStatsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQuery.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayEmailHttpMappingsTests.cs",
@@ -36323,7 +36375,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStatsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQuery.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
@@ -36336,10 +36388,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQueryHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -36349,10 +36401,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQueryValidator.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryValidator.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -36362,7 +36414,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
@@ -36375,7 +36427,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs",
@@ -36388,7 +36440,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs",
@@ -36401,7 +36453,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQuery.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
@@ -36755,19 +36807,6 @@
         "FoodDiary.Presentation.Api/Features/Meals/Requests/GetMealsHttpQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetMealsHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Presentation.Api/Features/Meals/Requests/GetMealsHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/MealHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -36796,19 +36835,6 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Meals/MealsController.cs",
       "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetMealsOverviewHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Presentation.Api/Features/Meals/Requests/GetMealsOverviewHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -37548,19 +37574,6 @@
         "FoodDiary.Presentation.Api/Features/Products/Requests/GetProductsHttpQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetProductsHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Presentation.Api/Features/Products/Requests/GetProductsHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ProductHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -37590,19 +37603,6 @@
       "consumerPath": "FoodDiary.Presentation.Api/Features/Products/ProductsController.cs",
       "isTest": false,
       "referenceCount": 1
-    },
-    {
-      "contract": "GetProductsOverviewHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Presentation.Api/Features/Products/Requests/GetProductsOverviewHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "GetProductsOverviewHttpQuery",
@@ -38302,19 +38302,6 @@
         "FoodDiary.Presentation.Api/Features/Recipes/Requests/GetRecipesHttpQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetRecipesHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Presentation.Api/Features/Recipes/Requests/GetRecipesHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/RecipeHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -38344,19 +38331,6 @@
       "consumerPath": "FoodDiary.Presentation.Api/Features/Recipes/RecipesController.cs",
       "isTest": false,
       "referenceCount": 1
-    },
-    {
-      "contract": "GetRecipesOverviewHttpQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Presentation.Api/Features/Recipes/Requests/GetRecipesOverviewHttpQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "GetRecipesOverviewHttpQuery",
@@ -39524,6 +39498,19 @@
         "FoodDiary.Presentation.Api/Features/WaistEntries/Requests/GetWaistEntriesHttpQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetWaistEntriesHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/WaistEntries/Requests/GetWaistEntriesHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/WaistEntryHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -40538,6 +40525,19 @@
         "FoodDiary.Presentation.Api/Features/WeightEntries/Requests/GetWeightEntriesHttpQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetWeightEntriesHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/WeightEntries/Requests/GetWeightEntriesHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/WeightEntryHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -41008,7 +41008,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/HttpResponseContractCoverageTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "GoogleLoginCommand",
@@ -64523,7 +64523,7 @@
         "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailStore.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageReadCommandHandler.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -64536,7 +64536,7 @@
         "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailStore.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMailCommandHandler.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -64549,7 +64549,7 @@
         "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailStore.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetailsQueryHandler.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -64562,7 +64562,7 @@
         "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailStore.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagesQueryHandler.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65251,9 +65251,35 @@
         "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/IMailInboxDmarcReportParser.cs"
       ],
       "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Initializer/InitializerServiceCollectionExtensions.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMailInboxDmarcReportParser",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/IMailInboxDmarcReportParser.cs"
+      ],
+      "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/MailInboxSmtpOptionsTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IMailInboxDmarcReportParser",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/IMailInboxDmarcReportParser.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Initializer.Tests/MailInboxInitializerCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IMailInboxDmarcReportParser",
@@ -65316,6 +65342,32 @@
         "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IMailInboxReadinessChecker.cs"
       ],
       "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Initializer/InitializerServiceCollectionExtensions.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMailInboxReadinessChecker",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IMailInboxReadinessChecker.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
+      "isTest": false,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IMailInboxReadinessChecker",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IMailInboxReadinessChecker.cs"
+      ],
+      "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -65332,6 +65384,19 @@
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/MailInboxSmtpOptionsTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IMailInboxReadinessChecker",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IMailInboxReadinessChecker.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Initializer.Tests/MailInboxInitializerCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IMailInboxSchemaInitializer",
@@ -65435,7 +65500,7 @@
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Initializer.Tests/MailInboxInitializerCommandTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IMailRelayClient",
@@ -68345,7 +68410,7 @@
         "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/IngestMailEventRequest.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommand.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -68358,7 +68423,7 @@
         "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/IngestMailEventRequest.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommand.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -68537,10 +68602,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommandHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandHandler.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -68550,10 +68615,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommandValidator.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -68563,7 +68628,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
@@ -68576,7 +68641,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs",
@@ -68589,7 +68654,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs",
@@ -68602,7 +68667,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayEmailHttpMappingsTests.cs",
@@ -68615,7 +68680,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
@@ -68667,10 +68732,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -68680,10 +68745,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommandValidator.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandValidator.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -68693,7 +68758,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
@@ -68706,7 +68771,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs",
@@ -68719,7 +68784,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs",
@@ -68732,7 +68797,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayEmailHttpMappingsTests.cs",
@@ -68745,7 +68810,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
@@ -68780,7 +68845,7 @@
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "InitializerCommand",
@@ -80863,7 +80928,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageReadCommand.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80876,7 +80941,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMailCommand.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80889,7 +80954,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetailsQuery.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80902,7 +80967,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagesQuery.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80954,7 +81019,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommand.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80967,7 +81032,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommand.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80980,7 +81045,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommand.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80993,7 +81058,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommand.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -81006,7 +81071,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommand.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -81019,7 +81084,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQuery.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -81032,7 +81097,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetailsQuery.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -81045,7 +81110,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStatsQuery.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -81058,7 +81123,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQuery.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -81942,7 +82007,7 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageReadCommandHandler.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -81955,7 +82020,7 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMailCommandHandler.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -81968,7 +82033,7 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetailsQueryHandler.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -81981,7 +82046,7 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagesQueryHandler.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -81994,7 +82059,7 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppressionCommandHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -82007,7 +82072,7 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommandHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -82020,7 +82085,7 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommandHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -82033,7 +82098,7 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -82046,7 +82111,7 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommandHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -82059,7 +82124,7 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQueryHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -82072,7 +82137,7 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetailsQueryHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -82085,7 +82150,7 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStatsQueryHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -82098,7 +82163,7 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQueryHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -97019,10 +97084,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageReadCommand.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommand.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageReadCommandHandler.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandHandler.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -97032,10 +97097,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageReadCommand.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommand.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageReadCommandValidator.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandValidator.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -97045,7 +97110,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageReadCommand.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommand.cs"
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
@@ -97058,7 +97123,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageReadCommand.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommand.cs"
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs",
@@ -97071,7 +97136,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageReadCommand.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommand.cs"
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
@@ -97401,7 +97466,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/MealHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "MealAiSessionHttpResponse",
@@ -98259,7 +98324,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs",
       "isTest": true,
-      "referenceCount": 28
+      "referenceCount": 30
     },
     {
       "contract": "OpenFoodFactsProductHttpResponse",
@@ -100243,10 +100308,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMailCommand.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommand.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMailCommandHandler.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommandHandler.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -100256,10 +100321,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMailCommand.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommand.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMailCommandValidator.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommandValidator.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100269,7 +100334,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMailCommand.cs"
+        "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommand.cs"
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs",
@@ -100285,7 +100350,7 @@
         "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/ReceiveInboundMailRequest.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMailCommand.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100298,7 +100363,7 @@
         "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/ReceiveInboundMailRequest.cs"
       ],
       "consumerArea": "MailInbox",
-      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMailCommandHandler.cs",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/ReceiveInboundMail/ReceiveInboundMailCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100794,7 +100859,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/RecipeHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "RecipeStepHttpRequest",
@@ -102014,7 +102079,7 @@
         "MailRelay/FoodDiary.MailRelay.Domain/Emails/RelayEmailMessageRequest.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommand.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -102492,10 +102557,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommandHandler.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandHandler.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -102505,10 +102570,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs"
       ],
       "consumerArea": "MailRelay",
-      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommandValidator.cs",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandValidator.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -102518,7 +102583,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
@@ -102531,7 +102596,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs",
@@ -102544,7 +102609,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs",
@@ -102557,7 +102622,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommand.cs"
+        "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs"
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
@@ -108165,7 +108230,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Meals/UpdateMealCommandValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 14
+      "referenceCount": 16
     },
     {
       "contract": "UpdateMealCommand",
@@ -108594,7 +108659,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.UpdateCommandTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 8
     },
     {
       "contract": "UpdateProductCommand",
@@ -108607,7 +108672,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 18
+      "referenceCount": 20
     },
     {
       "contract": "UpdateProductCommand",
@@ -108854,7 +108919,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 13
+      "referenceCount": 16
     },
     {
       "contract": "UpdateRecipeCommand",

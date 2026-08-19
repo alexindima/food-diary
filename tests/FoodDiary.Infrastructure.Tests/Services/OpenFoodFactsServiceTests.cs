@@ -19,8 +19,8 @@ public sealed class OpenFoodFactsServiceTests {
             {
               "status": 1,
               "product": {
-                "product_name": "ÐœÐ¾Ð»Ð¾ÐºÐ¾ 3.2%",
-                "brands": "ÐŸÑ€Ð¾ÑÑ‚Ð¾ÐºÐ²Ð°ÑˆÐ¸Ð½Ð¾",
+                "product_name": "Молоко 3.2%",
+                "brands": "Простоквашино",
                 "categories": "Dairy",
                 "image_url": "https://images.openfoodfacts.org/test.jpg",
                 "nutriments": {
@@ -39,8 +39,8 @@ public sealed class OpenFoodFactsServiceTests {
 
         Assert.NotNull(result);
         Assert.Equal("4600000000001", result.Barcode);
-        Assert.Equal("ÐœÐ¾Ð»Ð¾ÐºÐ¾ 3.2%", result.Name);
-        Assert.Equal("ÐŸÑ€Ð¾ÑÑ‚Ð¾ÐºÐ²Ð°ÑˆÐ¸Ð½Ð¾", result.Brand);
+        Assert.Equal("Молоко 3.2%", result.Name);
+        Assert.Equal("Простоквашино", result.Brand);
         Assert.Equal("Dairy", result.Category);
         Assert.Equal(60, result.CaloriesPer100G);
         Assert.Equal(3.2, result.ProteinsPer100G);
@@ -322,6 +322,20 @@ public sealed class OpenFoodFactsServiceTests {
 
         Assert.DoesNotContain(logger.Messages, message => message.Contains(query, StringComparison.Ordinal));
         Assert.Contains(logger.Messages, message => message.Contains($"QueryLength={query.Length}", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task GetByBarcodeAsync_WhenTransportFails_DoesNotLogRawBarcode() {
+        string barcode = $"private-barcode-{Guid.NewGuid():N}";
+        var logger = new RecordingLogger<OpenFoodFactsService>();
+        OpenFoodFactsService service = CreateService(
+            new ThrowingHttpMessageHandler(new HttpRequestException("network error")),
+            logger);
+
+        await service.GetByBarcodeAsync(barcode);
+
+        Assert.DoesNotContain(logger.Messages, message => message.Contains(barcode, StringComparison.Ordinal));
+        Assert.Contains(logger.Messages, message => message.Contains($"BarcodeLength={barcode.Length}", StringComparison.Ordinal));
     }
 
     [Fact]

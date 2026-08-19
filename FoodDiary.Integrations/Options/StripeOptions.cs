@@ -21,7 +21,6 @@ public sealed class StripeOptions {
 
     public static bool HasValidConfiguration(StripeOptions options) =>
         !string.IsNullOrWhiteSpace(options.SecretKey) &&
-        !string.IsNullOrWhiteSpace(options.PublishableKey) &&
         !string.IsNullOrWhiteSpace(options.WebhookSecret) &&
         !string.IsNullOrWhiteSpace(options.PremiumMonthlyPriceId) &&
         !string.IsNullOrWhiteSpace(options.PremiumYearlyPriceId) &&

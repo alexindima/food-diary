@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using FoodDiary.Presentation.Api.Policies;
+
 namespace FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 
 public sealed record GetClientDashboardHttpQuery(
@@ -6,5 +9,5 @@ public sealed record GetClientDashboardHttpQuery(
     DateTime? DateTo = null,
     int Page = 1,
     int PageSize = 10,
-    string Locale = "en",
+    [Required, MaxLength(PresentationQueryLimits.MaximumLocaleLength)] string Locale = "en",
     int TrendDays = 7);

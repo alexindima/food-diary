@@ -9,6 +9,7 @@ using FoodDiary.Results;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services.OpenAi;
 using Microsoft.Extensions.Logging.Abstractions;
+using Polly.CircuitBreaker;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
@@ -241,6 +242,25 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     [Fact]
+    public async Task GetParseFoodTextTokenBudgetAsync_WhenCircuitIsOpen_ReturnsProviderFailure() {
+        using var httpClient = new HttpClient(new ThrowingHttpMessageHandler(new BrokenCircuitException()));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key",
+            TextModel = "text-model",
+        });
+
+        Result<AiProviderTokenBudget> result = await client.GetParseFoodTextTokenBudgetAsync(
+            "apple",
+            "en",
+            TextPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.OpenAiFailed", result.Error.Code);
+        Assert.Contains("temporarily unavailable", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task GetParseFoodTextTokenBudgetAsync_WhenRequestTimesOut_ReturnsProviderFailure() {
         using var httpClient = new HttpClient(new ThrowingHttpMessageHandler(new TaskCanceledException("timeout")));
         OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
@@ -322,6 +342,29 @@ public sealed class OpenAiFoodServiceTests {
         Assert.Contains("transport error", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(1, requestCount);
         Assert.Equal("transport_error", outcome);
+    }
+
+    [Fact]
+    public async Task CalculateNutritionAsync_WhenCircuitIsOpen_ReturnsOpenAiFailedError() {
+        string? outcome = null;
+        using MeterListener listener = CreateIntegrationsListener(
+            onRequest: (_, tags) => outcome = GetTagValue(tags, "fooddiary.ai.outcome"),
+            onFallback: null);
+        using var httpClient = new HttpClient(new ThrowingHttpMessageHandler(new BrokenCircuitException()));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key",
+            TextModel = "text-model",
+        });
+
+        Result<OpenAiFoodClientResponse<FoodNutritionModel>> result = await client.CalculateNutritionAsync(
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
+            NutritionPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Ai.OpenAiFailed", result.Error.Code);
+        Assert.Contains("temporarily unavailable", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal("circuit_open", outcome);
     }
 
     [Fact]
@@ -518,6 +561,29 @@ public sealed class OpenAiFoodServiceTests {
         Assert.True(result.IsSuccess);
         Assert.Equal("vision-fallback", result.Value.Model);
         Assert.Equal(1, fallbackCount);
+    }
+
+    [Fact]
+    public async Task AnalyzeFoodImageAsync_WhenFallbackMatchesPrimary_DoesNotRepeatRequest() {
+        var handler = new DelegateHttpMessageHandler((_, _) => new HttpResponseMessage(HttpStatusCode.BadRequest) {
+            Content = new StringContent("{\"error\":\"request rejected\"}"),
+        });
+        using var httpClient = new HttpClient(handler);
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
+            ApiKey = "test-key",
+            VisionModel = "vision-model",
+            VisionFallbackModel = "vision-model",
+        });
+
+        Result<OpenAiFoodClientResponse<FoodVisionModel>> result = await client.AnalyzeFoodImageAsync(
+            "https://cdn.example.com/meal.webp",
+            "en",
+            description: null,
+            VisionPrompt,
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(1, handler.CallCount);
     }
 
     [Fact]

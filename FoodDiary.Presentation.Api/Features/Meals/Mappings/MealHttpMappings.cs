@@ -85,7 +85,7 @@ public static class MealHttpMappings {
             request.Resolution);
 
     private static List<MealItemInput> ToItemInputs(IReadOnlyList<MealItemHttpRequest>? requests) =>
-        requests?.Select(ToInput).ToList() ?? [];
+        requests?.Select(request => request is null ? null! : ToInput(request)).ToList() ?? [];
 
     extension(RepeatMealHttpRequest request) {
         public RepeatMealCommand ToRepeatCommand(Guid userId, Guid mealId) =>
@@ -93,8 +93,8 @@ public static class MealHttpMappings {
     }
 
     private static List<MealAiSessionInput> ToAiSessionInputs(IReadOnlyList<MealAiSessionHttpRequest>? requests) =>
-        requests?.Select(ToInput).ToList() ?? [];
+        requests?.Select(request => request is null ? null! : ToInput(request)).ToList() ?? [];
 
     private static List<MealAiItemInput> ToAiItemInputs(IReadOnlyList<MealAiItemHttpRequest>? requests) =>
-        requests?.Select(ToInput).ToList() ?? [];
+        requests?.Select(request => request is null ? null! : ToInput(request)).ToList() ?? [];
 }

@@ -33,7 +33,13 @@ public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecip
             .WithMessage("RecipeId is required");
 
         RuleFor(x => x.Name)
-            .MaximumLength(Recipe.NameMaxLength);
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty()
+            .WithErrorCode("Validation.Required")
+            .WithMessage("Name must not be empty")
+            .MaximumLength(Recipe.NameMaxLength)
+            .WithErrorCode("Validation.Invalid")
+            .When(x => x.Name is not null);
     }
 
     private void ConfigureBaseRecipeRules() {
@@ -103,6 +109,7 @@ public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecip
 
     private void ConfigureStepRules() {
         RuleFor(x => x.Steps)
+            .Cascade(CascadeMode.Stop)
             .NotNull()
             .WithErrorCode("Validation.Required")
             .WithMessage("Steps are required")
@@ -117,6 +124,10 @@ public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecip
             .WithMessage("Step order values must be unique");
 
         RuleForEach(x => x.Steps!)
+            .Cascade(CascadeMode.Stop)
+            .NotNull()
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Recipe steps must not contain null elements")
             .SetValidator(new RecipeStepInputValidator());
     }
 
@@ -164,6 +175,10 @@ public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecip
         command is { ManualCalories: not null, ManualProteins: not null, ManualFats: not null, ManualCarbs: not null, ManualFiber: not null };
 
     private static bool HaveUniqueEffectiveStepOrder(IReadOnlyList<RecipeStepInput> steps) {
+        if (steps.Any(static step => step is null)) {
+            return false;
+        }
+
         var orders = new HashSet<int>();
         return steps.Select((step, index) => step.Order > 0 ? step.Order : index + 1).All(orders.Add);
     }

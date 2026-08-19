@@ -1,5 +1,5 @@
 using FoodDiary.MailInbox.Application.Messages.Models;
-using FoodDiary.MailInbox.Application.Messages.Queries;
+using FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessages;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Responses;
 
 namespace FoodDiary.MailInbox.Presentation.Features.Messages.Mappings;

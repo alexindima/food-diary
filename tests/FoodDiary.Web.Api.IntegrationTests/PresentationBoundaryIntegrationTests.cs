@@ -760,6 +760,31 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "search", StringComparison.OrdinalIgnoreCase));
     }
 
+    [Theory]
+    [InlineData("/api/v1/weight-entries?sort=sideways", "sort")]
+    [InlineData("/api/v1/waist-entries?sort=sideways", "sort")]
+    [InlineData("/api/v1/lessons?category=unknown", "category")]
+    [InlineData("/api/v1/lessons?difficulty=unknown", "difficulty")]
+    [InlineData("/api/v1/lessons?sort=unknown", "sort")]
+    [InlineData("/api/v1/recipes/explore?sortBy=unknown", "sortBy")]
+    public async Task ClosedSetQueries_WithUnknownValue_ReturnValidationErrorContract(
+        string requestUri,
+        string expectedErrorKey) {
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+        HttpResponseMessage response = await client.GetAsync(requestUri);
+        ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Validation.Invalid", payload.Error);
+        Assert.NotNull(payload.Errors);
+        Assert.Contains(payload.Errors.Keys, key => string.Equals(key, expectedErrorKey, StringComparison.OrdinalIgnoreCase));
+    }
+
     [Fact]
     public async Task UpdateDesiredWeight_WithInvalidValue_ReturnsValidationErrorContract() {
         HttpClient client = apiFactory.CreateClient();
@@ -779,8 +804,10 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "desiredWeightKg", StringComparison.Ordinal));
     }
 
-    [Fact]
-    public async Task ApiVersion_ReturnsConfiguredBuildMetadata() {
+    [Theory]
+    [InlineData("/api/version")]
+    [InlineData("/api/v1/version")]
+    public async Task ApiVersion_ReturnsConfiguredBuildMetadata(string requestUri) {
         await using WebApplicationFactory<Program> versionedFactory = apiFactory.WithWebHostBuilder(builder => {
             builder.ConfigureAppConfiguration((_, configBuilder) => {
                 configBuilder.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
@@ -791,7 +818,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         });
         HttpClient client = versionedFactory.CreateClient();
 
-        HttpResponseMessage response = await client.GetAsync("/api/v1/version");
+        HttpResponseMessage response = await client.GetAsync(requestUri);
         ApiVersionPayload? payload = await response.Content.ReadFromJsonAsync<ApiVersionPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);

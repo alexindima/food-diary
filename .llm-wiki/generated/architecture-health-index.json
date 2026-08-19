@@ -5343,7 +5343,7 @@
     {
       "name": "EnqueueMailRelayEmailCommandValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommandValidator.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": []
@@ -5351,7 +5351,7 @@
     {
       "name": "GetMailRelayDeliveryEventsQueryValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQueryValidator.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": []
@@ -5359,7 +5359,7 @@
     {
       "name": "GetMailRelayMessageDetailsQueryValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetailsQueryValidator.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": []
@@ -5367,7 +5367,7 @@
     {
       "name": "GetMailRelaySuppressionsQueryValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQueryValidator.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": []
@@ -5391,7 +5391,7 @@
     {
       "name": "IngestMailRelayDeliveryEventCommandValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommandValidator.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": []

@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1481,
-    "credential": 157,
+    "candidateFields": 1480,
+    "credential": 156,
     "identity": 155,
     "health": 664,
     "financial": 201,
     "privateContent": 304,
-    "boundaryFiles": 185,
+    "boundaryFiles": 184,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -985,31 +985,24 @@
     },
     {
       "category": "credential",
-      "name": "ConnectionString",
-      "type": "string?",
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/InitializerCommand.cs",
-      "line": 3
-    },
-    {
-      "category": "credential",
       "name": "ConnectionStrings__DefaultConnection",
-      "type": "set",
+      "type": "Set",
       "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
-      "line": 44
+      "line": 45
     },
     {
       "category": "credential",
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
-      "line": 44
+      "line": 45
     },
     {
       "category": "credential",
       "name": "MAILINBOX_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
-      "line": 44
+      "line": 45
     },
     {
       "category": "credential",
@@ -1940,7 +1933,7 @@
       "name": "BaseAmount",
       "type": "BaseUnit,",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 493
+      "line": 500
     },
     {
       "category": "financial",
@@ -8148,21 +8141,21 @@
       "category": "identity",
       "name": "Email",
       "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommand.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
       "line": 5
     },
     {
       "category": "identity",
       "name": "Email",
       "type": "string?",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQuery.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs",
       "line": 5
     },
     {
       "category": "identity",
       "name": "Email",
       "type": "string?",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQuery.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs",
       "line": 5
     },
     {
@@ -9423,7 +9416,7 @@
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 506
+      "line": 513
     },
     {
       "category": "privateContent",
@@ -11552,13 +11545,6 @@
       "fieldCount": 1
     },
     {
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/InitializerCommand.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
       "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
       "categories": [
         "credential"
@@ -11573,21 +11559,21 @@
       "fieldCount": 2
     },
     {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppressionCommand.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
       "categories": [
         "identity"
       ],
       "fieldCount": 1
     },
     {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEventsQuery.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs",
       "categories": [
         "identity"
       ],
       "fieldCount": 1
     },
     {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressionsQuery.cs",
+      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs",
       "categories": [
         "identity"
       ],
@@ -11747,7 +11733,7 @@
   "externalTransfers": [
     {
       "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 206,
+      "line": 209,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",
@@ -11762,7 +11748,7 @@
     },
     {
       "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 329,
+      "line": 354,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",

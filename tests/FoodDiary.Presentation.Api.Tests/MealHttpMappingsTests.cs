@@ -114,6 +114,32 @@ public sealed class MealHttpMappingsTests {
     }
 
     [Fact]
+    public void CreateRequest_ToCommand_PreservesNullNestedElementsForApplicationValidation() {
+        var request = new CreateMealHttpRequest(
+            DateTime.UtcNow,
+            MealType: "Breakfast",
+            Comment: null,
+            ImageUrl: null,
+            ImageAssetId: null,
+            Items: [null!],
+            AiSessions: [
+                null!,
+                new MealAiSessionHttpRequest(
+                    ImageAssetId: null,
+                    Source: "Text",
+                    RecognizedAtUtc: DateTime.UtcNow,
+                    Notes: null,
+                    Items: [null!]),
+            ]);
+
+        CreateMealCommand command = request.ToCommand(Guid.NewGuid());
+
+        Assert.Null(command.Items[0]);
+        Assert.Null(command.AiSessions[0]);
+        Assert.Null(command.AiSessions[1].Items[0]);
+    }
+
+    [Fact]
     public void UpdateRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
         var mealId = Guid.NewGuid();

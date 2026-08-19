@@ -47,6 +47,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Metadata;
+using WebPush;
 
 namespace FoodDiary.Infrastructure.Tests;
 
@@ -759,6 +760,7 @@ public sealed class DependencyInjectionTests {
     }
 
     private static IConfiguration CreateValidIntegrationsConfiguration() {
+        VapidDetails vapidKeys = VapidHelper.GenerateVapidKeys();
         return CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["S3:AccessKeyId"] = "access",
             ["S3:SecretAccessKey"] = "secret",
@@ -796,8 +798,8 @@ public sealed class DependencyInjectionTests {
             ["YooKassa:ReturnUrl"] = "https://example.com/return",
             ["WebPush:Enabled"] = "true",
             ["WebPush:Subject"] = "https://example.com",
-            ["WebPush:PublicKey"] = "public",
-            ["WebPush:PrivateKey"] = "private",
+            ["WebPush:PublicKey"] = vapidKeys.PublicKey,
+            ["WebPush:PrivateKey"] = vapidKeys.PrivateKey,
             ["WebPush:DefaultUrl"] = "/",
             ["MailRelayClient:BaseUrl"] = "https://mail-relay.example.com",
             ["MailRelayClient:ApiKey"] = "relay-key",

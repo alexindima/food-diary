@@ -411,6 +411,40 @@ public partial class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateProductCommandHandler_WithNonCanonicalBaseAmountForCurrentUnit_ReturnsValidationFailure() {
+        var user = User.Create("update-product-base-amount@example.com", "hash");
+        var product = Product.Create(
+            user.Id,
+            name: "Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private);
+        var repository = new SingleProductRepository(product);
+        var handler = new UpdateProductCommandHandler(
+            repository,
+            repository,
+            new RecordingCleanupService(),
+            new StubUserRepository(user),
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+
+        Result<ProductModel> result = await handler.Handle(
+            CreateUpdateProductCommand(user.Id.Value, product.Id.Value) with { BaseAmount = 50 },
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains(nameof(UpdateProductCommand.BaseAmount), result.Error.Message, StringComparison.Ordinal);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
     public async Task UpdateProductCommandHandler_WithCurrentPieceUnitAndDefaultPortionAboveLimit_ReturnsValidationFailure() {
         var user = User.Create("update-product-piece-limit@example.com", "hash");
         var product = Product.Create(

@@ -1,9 +1,11 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 [ApiController]
+[ApiVersionNeutral]
 [Route("test/exceptions")]
 [ExcludeFromCodeCoverage]
 public sealed class TestExceptionController : ControllerBase {

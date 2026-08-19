@@ -88,6 +88,10 @@ public sealed class CreateRecipeCommandValidator : AbstractValidator<CreateRecip
             .WithMessage("Step order values must be unique");
 
         RuleForEach(x => x.Steps)
+            .Cascade(CascadeMode.Stop)
+            .NotNull()
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Recipe steps must not contain null elements")
             .SetValidator(new RecipeStepInputValidator());
     }
 
@@ -135,6 +139,10 @@ public sealed class CreateRecipeCommandValidator : AbstractValidator<CreateRecip
         command is { ManualCalories: not null, ManualProteins: not null, ManualFats: not null, ManualCarbs: not null, ManualFiber: not null };
 
     private static bool HaveUniqueEffectiveStepOrder(IReadOnlyList<RecipeStepInput> steps) {
+        if (steps.Any(static step => step is null)) {
+            return false;
+        }
+
         var orders = new HashSet<int>();
         return steps.Select((step, index) => step.Order > 0 ? step.Order : index + 1).All(orders.Add);
     }

@@ -16,6 +16,19 @@ namespace FoodDiary.Presentation.Api.Tests;
 [Collection(PresentationTelemetryCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class TelegramBotSecretAuthorizationFilterTests {
+    [Theory]
+    [InlineData("", true)]
+    [InlineData("   ", true)]
+    [InlineData("123456789012345", false)]
+    [InlineData("1234567890123456", true)]
+    public void TelegramBotAuthOptions_ValidatesOptionalSecretStrength(string apiSecret, bool expected) {
+        var options = new TelegramBotAuthOptions {
+            ApiSecret = apiSecret,
+        };
+
+        Assert.Equal(expected, TelegramBotAuthOptions.HasValidApiSecret(options));
+    }
+
     [Fact]
     public async Task OnAuthorizationAsync_WithoutConfiguredSecret_ReturnsServerErrorContract() {
         TelegramBotSecretAuthorizationFilter filter = CreateFilter(string.Empty);

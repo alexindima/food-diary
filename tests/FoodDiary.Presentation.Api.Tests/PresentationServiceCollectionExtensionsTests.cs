@@ -48,7 +48,7 @@ public sealed class PresentationServiceCollectionExtensionsTests {
 
         Assert.Multiple(
             () => Assert.IsType<UrlSegmentApiVersionReader>(options.ApiVersionReader),
-            () => Assert.True(options.AssumeDefaultVersionWhenUnspecified),
+            () => Assert.False(options.AssumeDefaultVersionWhenUnspecified),
             () => Assert.True(options.ReportApiVersions),
             () => Assert.Equal(new ApiVersion(1, 0), options.DefaultApiVersion));
     }

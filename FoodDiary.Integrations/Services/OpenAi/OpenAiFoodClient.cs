@@ -12,6 +12,7 @@ using FoodDiary.Integrations.Http;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Polly.CircuitBreaker;
 
 namespace FoodDiary.Integrations.Services.OpenAi;
 
@@ -80,7 +81,9 @@ public sealed class OpenAiFoodClient(
         string requestModel = _options.VisionModel;
         object request = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens);
         (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) response = await SendRequestAsync(request, operation, requestModel, cancellationToken).ConfigureAwait(false);
-        if (!response.IsSuccess && response.CanFallback) {
+        if (!response.IsSuccess &&
+            response.CanFallback &&
+            !string.Equals(_options.VisionFallbackModel, requestModel, StringComparison.Ordinal)) {
             IntegrationsTelemetry.AiFallbackCounter.Add(
                 1,
                 new KeyValuePair<string, object?>("fooddiary.ai.operation", operation),
@@ -213,9 +216,8 @@ public sealed class OpenAiFoodClient(
                 request,
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken).ConfigureAwait(false);
-        } catch (HttpRequestException ex) {
-            logger.LogWarning(ex, "OpenAI input token count request failed due to transport error.");
-            return Result.Failure<long>(Errors.Ai.OpenAiFailed("OpenAI input token count request failed."));
+        } catch (Exception ex) when (ex is HttpRequestException or BrokenCircuitException) {
+            return HandleInputTokenTransportFailure(ex);
         } catch (TaskCanceledException) when (!cancellationToken.IsCancellationRequested) {
             logger.LogWarning("OpenAI input token count request timed out.");
             return Result.Failure<long>(Errors.Ai.OpenAiFailed("OpenAI input token count request timed out."));
@@ -259,6 +261,16 @@ public sealed class OpenAiFoodClient(
         return Result.Failure<long>(Errors.Ai.InvalidResponse("OpenAI input token count response was invalid."));
     }
 
+    private Result<long> HandleInputTokenTransportFailure(Exception exception) {
+        if (exception is BrokenCircuitException) {
+            logger.LogWarning(exception, "OpenAI input token count circuit is open.");
+            return Result.Failure<long>(Errors.Ai.OpenAiFailed("OpenAI is temporarily unavailable."));
+        }
+
+        logger.LogWarning(exception, "OpenAI input token count request failed due to transport error.");
+        return Result.Failure<long>(Errors.Ai.OpenAiFailed("OpenAI input token count request failed."));
+    }
+
     private async Task<(bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback)> SendRequestAsync(
         object payload,
         string operation,
@@ -277,10 +289,8 @@ public sealed class OpenAiFoodClient(
                     request,
                     HttpCompletionOption.ResponseHeadersRead,
                     overallDeadline.Token).ConfigureAwait(false);
-            } catch (HttpRequestException ex) {
-                logger.LogWarning(ex, "OpenAI request failed due to transport error.");
-                RecordAiRequest(operation, model, "transport_error");
-                return (false, null, Errors.Ai.OpenAiFailed("OpenAI transport error."), false);
+            } catch (Exception ex) when (ex is HttpRequestException or BrokenCircuitException) {
+                return HandleResponseTransportFailure(ex, operation, model);
             } catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested) {
                 logger.LogWarning(ex, "OpenAI request timed out.");
                 RecordAiRequest(operation, model, "timeout");
@@ -323,6 +333,21 @@ public sealed class OpenAiFoodClient(
 
         RecordAiRequest(operation, model, "retry_exhausted");
         return (false, null, Errors.Ai.OpenAiFailed("OpenAI request failed after retries."), true);
+    }
+
+    private (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) HandleResponseTransportFailure(
+        Exception exception,
+        string operation,
+        string model) {
+        if (exception is BrokenCircuitException) {
+            logger.LogWarning(exception, "OpenAI request circuit is open.");
+            RecordAiRequest(operation, model, "circuit_open");
+            return (false, null, Errors.Ai.OpenAiFailed("OpenAI is temporarily unavailable."), false);
+        }
+
+        logger.LogWarning(exception, "OpenAI request failed due to transport error.");
+        RecordAiRequest(operation, model, "transport_error");
+        return (false, null, Errors.Ai.OpenAiFailed("OpenAI transport error."), false);
     }
 
     private HttpRequestMessage CreateResponseRequest(string requestBody) {

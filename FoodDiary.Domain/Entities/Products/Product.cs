@@ -436,6 +436,13 @@ public sealed class Product : AggregateRoot<ProductId> {
         return unit == MeasurementUnit.Pcs ? MaxPieceNutrientPerBase : MaxWeightOrVolumeNutrientPerBase;
     }
 
+    public static bool IsCanonicalBaseAmount(MeasurementUnit unit, double value) {
+        return Enum.IsDefined(typeof(MeasurementUnit), unit) &&
+               double.IsFinite(value) &&
+               value > 0 &&
+               AreClose(value, GetCanonicalBaseAmount(unit));
+    }
+
     private static double NormalizeDefaultPortionAmount(MeasurementUnit unit, double value, string paramName) {
         RequirePositive(value, paramName);
         EnsureDefaultPortionAmountWithinLimit(unit, value, paramName);

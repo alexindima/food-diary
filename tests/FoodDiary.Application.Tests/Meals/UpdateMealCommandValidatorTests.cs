@@ -24,6 +24,15 @@ public class UpdateMealCommandValidatorTests {
     }
 
     [Fact]
+    public async Task Validate_WhenMealItemsContainNull_HasErrorWithoutThrowing() {
+        UpdateMealCommand command = CreateCommand(items: [null!]);
+
+        TestValidationResult<UpdateMealCommand> result = await _validator.TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor("Items[0]");
+    }
+
+    [Fact]
     public async Task Validate_WhenManualItemAmountIsTooLarge_HasError() {
         UpdateMealCommand command = CreateCommand(items: [new MealItemInput(Guid.NewGuid(), RecipeId: null, 1_000_001)]);
         TestValidationResult<UpdateMealCommand> result = await _validator.TestValidateAsync(command);

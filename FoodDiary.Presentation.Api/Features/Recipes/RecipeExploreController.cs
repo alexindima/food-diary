@@ -14,6 +14,7 @@ namespace FoodDiary.Presentation.Api.Features.Recipes;
 public sealed class RecipeExploreController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<RecipeHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> Explore([FromCurrentUser] Guid userId, [FromQuery] ExploreRecipesHttpQuery query) =>
         HandleOk(query.ToExploreQuery(userId), static value => value.ToHttpResponse());
 }

@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Version.Responses;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodDiary.Presentation.Api.Features.Version;
 
 [ApiController]
+[ApiVersionNeutral]
 [AllowAnonymous]
 [Route("api")]
 [ApiExplorerSettings(IgnoreApi = true)]

@@ -3817,12 +3817,12 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/admin/moderation/{id:guid}/review",
-            "line": 23
+            "line": 24
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/admin/moderation/{id:guid}/dismiss",
-            "line": 29
+            "line": 30
           }
         ]
       },
@@ -4735,17 +4735,17 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/lessons",
-            "line": 14
+            "line": 15
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/lessons/{id:guid}",
-            "line": 21
+            "line": 23
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/lessons/{id:guid}/read",
-            "line": 28
+            "line": 30
           }
         ]
       },
@@ -5318,12 +5318,12 @@
           {
             "verb": "GET",
             "route": "/api/version",
-            "line": 17
+            "line": 19
           },
           {
             "verb": "GET",
             "route": "/api/v1/version",
-            "line": 18
+            "line": 20
           }
         ]
       },
