@@ -19,6 +19,9 @@ $fingerprint = Get-LlmWikiIndexInputFingerprint $RepositoryRoot @(
 )
 $artifactRoot = Join-Path $RepositoryRoot ".artifacts/llm-wiki/contract-reference-extractor/$fingerprint"
 $readyPath = Join-Path $artifactRoot 'ready.txt'
+$extractorOutputDirectory = Join-Path $artifactRoot 'bin/LlmWiki.ContractReferenceExtractor/release'
+$extractorDllPath = Join-Path $extractorOutputDirectory 'LlmWiki.ContractReferenceExtractor.dll'
+$extractorRuntimeConfigPath = Join-Path $extractorOutputDirectory 'LlmWiki.ContractReferenceExtractor.runtimeconfig.json'
 $lockRoot = Join-Path $RepositoryRoot '.artifacts/llm-wiki/contract-reference-extractor'
 $lockPath = Join-Path $lockRoot 'build.lock'
 $null = New-Item -ItemType Directory -Path $lockRoot -Force
@@ -34,22 +37,19 @@ while ($null -eq $lockStream) {
     }
 }
 try {
-    $extractorDll = @(Get-ChildItem -LiteralPath $artifactRoot -Recurse -File -Filter 'LlmWiki.ContractReferenceExtractor.dll' -ErrorAction SilentlyContinue | Select-Object -First 1)
-    if (-not (Test-Path -LiteralPath $readyPath -PathType Leaf) -or $extractorDll.Count -ne 1) {
+    if (-not (Test-Path -LiteralPath $readyPath -PathType Leaf) -or
+        -not (Test-Path -LiteralPath $extractorDllPath -PathType Leaf) -or
+        -not (Test-Path -LiteralPath $extractorRuntimeConfigPath -PathType Leaf)) {
         $buildOutput = & dotnet build $projectPath -c Release --artifacts-path $artifactRoot --nologo --verbosity quiet 2>&1 | Out-String
         if ($LASTEXITCODE -ne 0) { throw "Contract-reference extractor build failed.`n$($buildOutput.Trim())" }
-        $extractorDll = @(Get-ChildItem -LiteralPath $artifactRoot -Recurse -File -Filter 'LlmWiki.ContractReferenceExtractor.dll' | Select-Object -First 1)
-        if ($extractorDll.Count -ne 1) { throw 'Contract-reference extractor build produced no unique executable assembly.' }
+        if (-not (Test-Path -LiteralPath $extractorDllPath -PathType Leaf) -or
+            -not (Test-Path -LiteralPath $extractorRuntimeConfigPath -PathType Leaf)) {
+            throw 'Contract-reference extractor build produced no runnable framework-dependent application.'
+        }
         [IO.File]::WriteAllText($readyPath, $fingerprint + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
     }
 } finally {
     $lockStream.Dispose()
-    try {
-        Remove-Item -LiteralPath $lockPath -Force -ErrorAction Stop
-    } catch [IO.IOException] {
-        # Another extractor may have acquired the lock between Dispose and cleanup.
-        # That owner will remove the marker when its build section completes.
-    }
 }
 
 $payload = if ($BuildBackendIndex) {
@@ -67,7 +67,7 @@ $startInfo.RedirectStandardError = $true
 $startInfo.StandardInputEncoding = [Text.UTF8Encoding]::new($false)
 $startInfo.StandardOutputEncoding = [Text.UTF8Encoding]::new($false)
 $startInfo.StandardErrorEncoding = [Text.UTF8Encoding]::new($false)
-$startInfo.ArgumentList.Add($extractorDll[0].FullName)
+$startInfo.ArgumentList.Add($extractorDllPath)
 $startInfo.ArgumentList.Add($(if ($BuildBackendIndex) { '--backend-index' } else { '--stdin' }))
 $process = [Diagnostics.Process]::new()
 $process.StartInfo = $startInfo

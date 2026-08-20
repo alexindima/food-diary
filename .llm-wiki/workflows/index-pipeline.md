@@ -21,6 +21,7 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiFormattingReady.ps1
   - .llm-wiki/tools/Build-LlmWikiQualityIndex.ps1
   - .llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1
+  - .llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
   - .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1
@@ -274,6 +275,10 @@ and the generator falls back to the exact PowerShell regex when the compiled
 helper cannot build or execute. The focused regression compares comments,
 strings, overlapping names, Unicode, definition exclusion, and the full current
 repository output; `-RequireCompiledScanner` turns fallback into a test failure.
+The launcher executes the framework-dependent assembly from the exact `bin`
+artifact directory and requires its sibling runtime configuration before writing
+the ready marker. A stable lock file serializes publishers on both Windows and
+POSIX systems; intermediate `obj` assemblies are never executable candidates.
 Compiled Wiki helper projects remain tooling inputs only: catalog, symbol,
 backend-contract, quality, and architecture-health regressions reject
 `.llm-wiki/tools` entries as production evidence.
