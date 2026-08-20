@@ -30,8 +30,20 @@ public sealed class McpServerTests {
         Assert.True(expected.SequenceEqual(
             configuration.EnabledTools.Order(StringComparer.Ordinal),
             StringComparer.Ordinal));
-        Assert.True(configuration.Required);
-        Assert.Equal(["--build-if-stale"], configuration.ConfiguredArguments);
+        Assert.False(configuration.Required);
+        Assert.Equal(
+            [
+                "-NoLogo",
+                "-NoProfile",
+                "-NonInteractive",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "scripts\\Start-FoodDiaryDevelopmentMcp.ps1",
+                "-BuildMode",
+                "--build-if-stale",
+            ],
+            configuration.ConfiguredArguments);
         if (configuration.UsesConfiguredLauncher) {
             Assert.Equal(configuration.ConfiguredArguments, configuration.Arguments);
         } else {

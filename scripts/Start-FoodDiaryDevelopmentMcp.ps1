@@ -59,6 +59,18 @@ function Get-BuildIdentity {
     if (-not (Test-Path -LiteralPath $buildIdentityPath -PathType Leaf)) { return $null }
     try { return (Get-Content -LiteralPath $buildIdentityPath -Raw | ConvertFrom-Json) } catch { return $null }
 }
+function Get-Sha256Hash {
+    param([string]$Path)
+
+    $stream = [IO.File]::OpenRead($Path)
+    $hasher = [Security.Cryptography.SHA256]::Create()
+    try {
+        return ([BitConverter]::ToString($hasher.ComputeHash($stream)) -replace '-', '').ToLowerInvariant()
+    } finally {
+        $hasher.Dispose()
+        $stream.Dispose()
+    }
+}
 function Remove-StaleSessionDirectories {
     param([string]$SessionRoot)
 
@@ -170,7 +182,7 @@ try {
     $runtimeFingerprint = if ($null -ne $buildIdentity -and [string]$buildIdentity.sourceFingerprint -match '^[0-9a-f]{64}$') {
         [string]$buildIdentity.sourceFingerprint
     } else {
-        (Get-FileHash -LiteralPath $sourceAssembly -Algorithm SHA256).Hash.ToLowerInvariant()
+        Get-Sha256Hash -Path $sourceAssembly
     }
     $sessionDirectory = Join-Path $sessionRoot $runtimeFingerprint
     if (-not (Test-Path -LiteralPath (Join-Path $sessionDirectory 'FoodDiary.Development.Mcp.dll') -PathType Leaf)) {

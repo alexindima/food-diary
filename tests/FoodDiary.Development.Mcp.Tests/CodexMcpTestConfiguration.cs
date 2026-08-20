@@ -49,7 +49,10 @@ internal sealed record CodexMcpTestConfiguration(
         bool required = bool.Parse(values["required"]);
 
         bool usesConfiguredLauncher = true;
-        if (!OperatingSystem.IsWindows() && command.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase)) {
+        bool requiresPortableFallback = !OperatingSystem.IsWindows() &&
+                                        (command.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase) ||
+                                         string.Equals(command, "powershell.exe", StringComparison.OrdinalIgnoreCase));
+        if (requiresPortableFallback) {
             string configuration = new DirectoryInfo(AppContext.BaseDirectory).Parent?.Name ?? "Debug";
             string serverAssembly = Path.Combine(
                 repositoryRoot,

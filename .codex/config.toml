@@ -1,11 +1,11 @@
 [mcp_servers.fooddiary_development]
-command = "scripts\\Start-FoodDiaryDevelopmentMcp.cmd"
-args = ["--build-if-stale"]
+command = "powershell.exe"
+args = ["-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", "scripts\\Start-FoodDiaryDevelopmentMcp.ps1", "-BuildMode", "--build-if-stale"]
 cwd = "."
 startup_timeout_sec = 120
 tool_timeout_sec = 210
 enabled = true
-required = true
+required = false
 enabled_tools = ["get_change_context", "get_development_context", "trace_backend_flow", "get_test_plan", "get_server_status"]
 default_tools_approval_mode = "auto"
 
