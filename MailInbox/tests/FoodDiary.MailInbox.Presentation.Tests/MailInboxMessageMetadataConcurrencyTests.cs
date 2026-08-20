@@ -121,7 +121,7 @@ public sealed class MailInboxMessageMetadataConcurrencyTests {
 
     private static MailInboxMessageMetadataConcurrencyGate CreateGate(TimeSpan queueTimeout) =>
         new(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
-            ApiKey = ValidApiKey,
+            MetadataApiKey = ValidApiKey,
             MaxConcurrentMessageMetadataRequests = 1,
             MessageMetadataQueueTimeout = queueTimeout,
         }));
@@ -132,7 +132,7 @@ public sealed class MailInboxMessageMetadataConcurrencyTests {
         new(
             sender,
             Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
-                ApiKey = ValidApiKey,
+                MetadataApiKey = ValidApiKey,
                 MessageMetadataExecutionTimeout = executionTimeout,
             })) {
             ControllerContext = new ControllerContext {

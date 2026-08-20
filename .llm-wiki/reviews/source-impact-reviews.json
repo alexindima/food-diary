@@ -181,14 +181,14 @@
       "pageSha256": "41066a30ff014f0aa45610d740fa86faa28219567481c278dbc4e0650dce1cdb",
       "sources": [
         {
-          "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "ca97cda84ec4c00c0f6c7b388af4e4eebcd10c3765e06b60d2fdeab5fbd07f5a"
+          "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+          "sha256": "233cf377e65bdec7b96f606b0c0b3f072c2c588a74ffc272d6ec27424eb8c425"
         }
       ],
-      "reason": "Swagger output, HTTP routes, payloads, status codes, and snapshots are unchanged; the integration change only adds generic invariants for existing numeric query bounds and request/success schema completeness.",
+      "reason": "OpenAPI changes are additive optional MailInbox provenance and DMARC verification response fields; api-compat reports 0 breaking and 18 additive changes, and regenerated snapshots pass integration tests.",
       "baseRef": "HEAD",
-      "gitHead": "65ae2e2c1d4bdb0b1e73eed0ccea1ee761ea460c",
-      "reviewedAtUtc": "2026-08-20T00:07:47.4670282Z"
+      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
+      "reviewedAtUtc": "2026-08-20T15:58:10.4183114Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -212,13 +212,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "c2793da4017e3a0568458691b1bcdd981f51f30eb15ad820fc54fce26b9f4723"
+          "sha256": "cef9f2c33b30cf4137decc1109430bb72d1f6721076a53b7538d090cf00057c0"
         }
       ],
-      "reason": "MailInbox routes and payload schemas remain compatible; intentional 429 and server-timeout behavior for bounded metadata operations is covered by integration tests.",
+      "reason": "OpenAPI changes are additive optional MailInbox provenance and DMARC verification response fields; api-compat reports 0 breaking and 18 additive changes, and regenerated snapshots pass integration tests.",
       "baseRef": "HEAD",
-      "gitHead": "134d982543eb510e337fe44e21dc73f15e96d4cf",
-      "reviewedAtUtc": "2026-08-20T01:46:54.9665505Z"
+      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
+      "reviewedAtUtc": "2026-08-20T15:58:10.8686556Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -427,13 +427,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "64dc2a7266d0e8cc74cea94ee78e1efec479e466e763571fb6481151cf2a311a"
+          "sha256": "8ae65f0e567fee16c04dbe90f470c96e9f9daec0b66fb32d406b98a8697c759a"
         }
       ],
-      "reason": "New MailInbox concurrency and timeout options, fail-closed host validation, Docker defaults, and compose wiring were reviewed with configuration and container tests.",
+      "reason": "MailInbox deployment keeps one shared non-secret runtime role name for initializer and Web API; docker compose passes the same value, initializer remains ordered before Web API, and docker compose config validation plus 57 integration tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "134d982543eb510e337fe44e21dc73f15e96d4cf",
-      "reviewedAtUtc": "2026-08-20T01:46:26.9590119Z"
+      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
+      "reviewedAtUtc": "2026-08-20T17:02:50.4338479Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -752,13 +752,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "09058496c93f8d183b563f7bb0013b9cab1bc1913a574d64db7cd8cc47b51270"
+          "sha256": "ed76c7e7abf010131bb5fc553cbc47ac0e06b8b12c393eb1ed78b1532309ad05"
         }
       ],
-      "reason": "MailInbox API-key handling, private listener defaults, no-store responses, sanitized failures, and absence of committed secret values were reviewed.",
+      "reason": "The change reads only a role name and PostgreSQL privilege metadata; it does not expose, log, copy, or add runtime or initializer passwords, and initializer credentials remain unavailable to the Web API.",
       "baseRef": "HEAD",
-      "gitHead": "134d982543eb510e337fe44e21dc73f15e96d4cf",
-      "reviewedAtUtc": "2026-08-20T01:46:27.8596767Z"
+      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
+      "reviewedAtUtc": "2026-08-20T17:02:50.8263008Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -813,13 +813,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2de5653d883755c9c74b1a3ce236a9120d429e813d927ef837804d438c08c7dc"
+          "sha256": "8b1c901c4e9b9d3856d7b4d69e7609ad6f944159bd483972a62791072a1ace7f"
         }
       ],
-      "reason": "Git process environment isolation is covered by the inherited-hook-environment change-set regression and the complete Development MCP test suite.",
+      "reason": "The least-privilege boundary is covered by static Production configuration tests, live PostgreSQL privilege-drift tests, 57 MailInbox integration tests, 158 infrastructure tests, 13 initializer tests, and 710 architecture tests.",
       "baseRef": "HEAD",
-      "gitHead": "169d3c6cd9413c67ab91af697a979633585368e7",
-      "reviewedAtUtc": "2026-08-20T05:58:04.7067758Z"
+      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
+      "reviewedAtUtc": "2026-08-20T17:02:51.2997307Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -892,13 +892,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "65e40c9bfc16163893bcce8bd46cd4b990640d0e3a7b2a974776616b81357439"
+          "sha256": "253f53a575aa46e1f0be796a83a8c8c75741da291491f945ce6992c88e14ef88"
         }
       ],
-      "reason": "Reviewed the remaining affected navigation pages against their declared current sources; no workflow contract change beyond the documented cache, isolation, graph, and verification updates was required.",
+      "reason": "Reviewed generated catalog and runtime topology against the MailInbox compose, initializer, PostgreSQL TLS, runtime-role, SMTP quota, and admin DMARC changes; affected indexes were regenerated.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:15:21.1490266Z"
+      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
+      "reviewedAtUtc": "2026-08-20T13:44:46.7261889Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1059,17 +1059,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "80cb579cb7327f9ce49285cb12629e465ae8444f3d54839772632d3280ef035a"
+          "sha256": "6c3e5c97743cb1266fa8caadafdb7cc13ae2de3124838eb08606d6d049a05359"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "72a5b50288768639afb28e919b1e35cfed922e5dff0df96b757010a730c995c5"
+          "sha256": "466f9aab2c176dda77327a9ab71c64b6ece79311c98a55db96e70a9d42b22d05"
         }
       ],
-      "reason": "Compiled indexes were regenerated from the current combined worktree; Google Fit is absent from catalog, configuration, runtime, and frontend contracts, focused integration/API/frontend/architecture checks pass, and concurrent Export/MealPlanning/Results changes remain owned by their sessions.",
+      "reason": "Generated frontend indexes now trace the additive MailInbox verification fields and localized admin warning surface; no hand-authored architecture documentation change is needed.",
       "baseRef": "HEAD",
-      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
-      "reviewedAtUtc": "2026-08-18T19:54:31.1497115Z"
+      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
+      "reviewedAtUtc": "2026-08-20T15:58:20.7421208Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1173,13 +1173,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "80cb579cb7327f9ce49285cb12629e465ae8444f3d54839772632d3280ef035a"
+          "sha256": "6c3e5c97743cb1266fa8caadafdb7cc13ae2de3124838eb08606d6d049a05359"
         }
       ],
-      "reason": "Compiled indexes were regenerated from the current combined worktree; Google Fit is absent from catalog, configuration, runtime, and frontend contracts, focused integration/API/frontend/architecture checks pass, and concurrent Export/MealPlanning/Results changes remain owned by their sessions.",
+      "reason": "OpenAPI changes are additive optional MailInbox provenance and DMARC verification response fields; api-compat reports 0 breaking and 18 additive changes, and regenerated snapshots pass integration tests.",
       "baseRef": "HEAD",
-      "gitHead": "d14f5791a503e9b7f1fbc5d6c856454dbe76e9d3",
-      "reviewedAtUtc": "2026-08-18T19:54:29.1138868Z"
+      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
+      "reviewedAtUtc": "2026-08-20T15:58:11.1766434Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1188,13 +1188,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "0d1874071a1c764bc4a15093b48c7e50cc560919d7257e58189a005b7d643d3d"
+          "sha256": "8f9eca544b6b060d90ff70964cf5338b7849ca3b4f446a35cde4a6f46bc5a83e"
         }
       ],
-      "reason": "The regenerated repository catalog and query context were reviewed against the restored MailInbox host, presentation filters, tests, and project references.",
+      "reason": "Reviewed generated catalog and runtime topology against the MailInbox compose, initializer, PostgreSQL TLS, runtime-role, SMTP quota, and admin DMARC changes; affected indexes were regenerated.",
       "baseRef": "HEAD",
-      "gitHead": "134d982543eb510e337fe44e21dc73f15e96d4cf",
-      "reviewedAtUtc": "2026-08-20T01:46:28.7566555Z"
+      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
+      "reviewedAtUtc": "2026-08-20T13:44:46.3348745Z"
     },
     {
       "pageId": "workflow.review-diff",

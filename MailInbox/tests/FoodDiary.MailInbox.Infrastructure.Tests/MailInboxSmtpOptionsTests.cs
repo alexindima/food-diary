@@ -14,6 +14,18 @@ namespace FoodDiary.MailInbox.Infrastructure.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxSmtpOptionsTests {
     [Theory]
+    [InlineData("Host=database;Database=fooddiary_mailinbox;Username=postgres", true)]
+    [InlineData("Host=database;Database=FOODDIARY_MAILINBOX;Username=postgres", true)]
+    [InlineData("Host=database;Database=fooddiary;Username=postgres", false)]
+    [InlineData("invalid", false)]
+    [InlineData("", false)]
+    public void DatabaseConfiguration_TargetsRequiredDatabase_ReturnsExpectedResult(
+        string connectionString,
+        bool expected) {
+        Assert.Equal(expected, MailInboxDatabaseConfiguration.TargetsRequiredDatabase(connectionString));
+    }
+
+    [Theory]
     [InlineData(null, true)]
     [InlineData("", true)]
     [InlineData("http://localhost:4317", true)]
@@ -48,6 +60,32 @@ public sealed class MailInboxSmtpOptionsTests {
         Assert.True(MailInboxSmtpOptions.HasValidConfiguration(options));
     }
 
+    [Fact]
+    public void HasValidConfiguration_WhenPortIsMaximumValidValue_ReturnsTrue() {
+        var options = new MailInboxSmtpOptions {
+            Enabled = false,
+            Port = ushort.MaxValue,
+        };
+
+        Assert.True(MailInboxSmtpOptions.HasValidConfiguration(options));
+    }
+
+    [Theory]
+    [InlineData("0.0.0.0", true)]
+    [InlineData("127.0.0.1", true)]
+    [InlineData("::", true)]
+    [InlineData("::1", true)]
+    [InlineData("localhost", false)]
+    [InlineData("", false)]
+    public void HasValidConfiguration_ValidatesListenAddress(string listenAddress, bool expected) {
+        var options = new MailInboxSmtpOptions {
+            Enabled = false,
+            ListenAddress = listenAddress,
+        };
+
+        Assert.Equal(expected, MailInboxSmtpOptions.HasValidConfiguration(options));
+    }
+
     [Theory]
     [InlineData("", "/certs/privkey.pem")]
     [InlineData("/certs/fullchain.pem", "")]
@@ -71,6 +109,7 @@ public sealed class MailInboxSmtpOptionsTests {
 
     [Theory]
     [InlineData(0, 1024)]
+    [InlineData(65536, 1024)]
     [InlineData(2525, 0)]
     public void HasValidConfiguration_WhenRequiredNumericValueIsInvalid_ReturnsFalse(
         int port,
@@ -134,6 +173,33 @@ public sealed class MailInboxSmtpOptionsTests {
         Assert.False(MailInboxStorageOptions.HasValidConfiguration(options));
     }
 
+    [Fact]
+    public void StorageOptions_WhenUntrustedQuotaDoesNotReserveCapacity_AreInvalid() {
+        var options = new MailInboxStorageOptions {
+            MaxMessagesPerDay = 10,
+            MaxUntrustedMessagesPerDay = 10,
+            MaxRawBytesPerDay = 1024,
+            MaxUntrustedRawBytesPerDay = 1024,
+        };
+
+        Assert.False(MailInboxStorageOptions.HasValidConfiguration(options));
+    }
+
+    [Theory]
+    [InlineData("192.0.2.10", true)]
+    [InlineData("192.0.2.0/24", true)]
+    [InlineData("2001:db8::/64", true)]
+    [InlineData("0.0.0.0/0", false)]
+    [InlineData("invalid", false)]
+    public void HasValidConfiguration_ValidatesTrustedRelayNetworks(string network, bool expected) {
+        var options = new MailInboxSmtpOptions {
+            Enabled = false,
+            TrustedRelayNetworks = [network],
+        };
+
+        Assert.Equal(expected, MailInboxSmtpOptions.HasValidConfiguration(options));
+    }
+
     [Theory]
     [InlineData("")]
     [InlineData(" ")]
@@ -170,6 +236,7 @@ public sealed class MailInboxSmtpOptionsTests {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary_mailinbox;Username=postgres;Password=test",
                 ["MailInboxSmtp:Enabled"] = "false",
                 ["MailInboxSmtp:ServerName"] = "mail.fooddiary.club",
+                ["MailInboxSmtp:ListenAddress"] = "127.0.0.1",
                 ["MailInboxSmtp:Port"] = "2526",
                 ["MailInboxSmtp:MaxMessageSizeBytes"] = "4096",
                 ["MailInboxSmtp:MaxRawBytesPerIpPerHour"] = "32768",
@@ -192,6 +259,7 @@ public sealed class MailInboxSmtpOptionsTests {
         MailInboxSmtpOptions options = provider.GetRequiredService<IOptions<MailInboxSmtpOptions>>().Value;
         Assert.False(options.Enabled);
         Assert.Equal("mail.fooddiary.club", options.ServerName);
+        Assert.Equal("127.0.0.1", options.ListenAddress);
         Assert.Equal(2526, options.Port);
         Assert.Equal(4096, options.MaxMessageSizeBytes);
         Assert.Equal(32768, options.MaxRawBytesPerIpPerHour);
@@ -288,7 +356,7 @@ public sealed class MailInboxSmtpOptionsTests {
         Assert.NotNull(provider.GetRequiredService<OpenTelemetry.Trace.TracerProvider>());
 
         IHostedService[] hostedServices = [.. provider.GetServices<IHostedService>()];
-        Assert.Contains(hostedServices, static service => service is MailInboxSchemaInitializerHostedService);
+        Assert.DoesNotContain(hostedServices, static service => service.GetType().Name.Contains("SchemaInitializer", StringComparison.Ordinal));
         Assert.Contains(hostedServices, static service => service is MailInboxRetentionHostedService);
         Assert.Contains(hostedServices, static service => service is MailInboxSmtpHostedService);
     }

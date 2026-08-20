@@ -19,13 +19,20 @@ public static partial class DependencyInjection {
             options.ApiKey = section["ApiKey"] ?? string.Empty;
             options.Timeout = TimeSpan.FromSeconds(15);
         });
-        services.AddMailInboxClient(options => {
-            IConfigurationSection section = configuration.GetSection(MailInboxClientOptions.SectionName);
-            options.BaseUrl = section["BaseUrl"] ?? string.Empty;
-            options.ApiKey = section["ApiKey"] ?? string.Empty;
-            options.Timeout = TimeSpan.FromSeconds(15);
-        });
-        services.AddScoped<IAdminMailInboxReader, MailInboxClientAdminMailInboxReader>();
+
+        IConfigurationSection mailInboxSection = configuration.GetSection(MailInboxClientOptions.SectionName);
+        if (mailInboxSection.Exists()) {
+            services.AddMailInboxClient(options => {
+                options.BaseUrl = mailInboxSection["BaseUrl"] ?? string.Empty;
+                options.MetadataApiKey = mailInboxSection["MetadataApiKey"] ?? string.Empty;
+                options.ContentApiKey = mailInboxSection["ContentApiKey"] ?? string.Empty;
+                options.StateApiKey = mailInboxSection["StateApiKey"] ?? string.Empty;
+                options.Timeout = TimeSpan.FromSeconds(15);
+                options.AllowInsecureLoopback = mailInboxSection.GetValue<bool>("AllowInsecureLoopback");
+            });
+            services.AddScoped<IAdminMailInboxReader, MailInboxClientAdminMailInboxReader>();
+        }
+
         services.AddScoped<RelayEmailTransport>();
         services.AddScoped<IEmailTransport>(static sp => sp.GetRequiredService<RelayEmailTransport>());
     }

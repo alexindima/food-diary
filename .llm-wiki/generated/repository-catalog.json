@@ -5487,17 +5487,17 @@
           {
             "verb": "GET",
             "route": "/api/mail-inbox/messages",
-            "line": 21
+            "line": 22
           },
           {
             "verb": "GET",
             "route": "/api/mail-inbox/messages/{id:guid}",
-            "line": 33
+            "line": 35
           },
           {
             "verb": "POST",
             "route": "/api/mail-inbox/messages/{id:guid}/read",
-            "line": 41
+            "line": 49
           }
         ]
       },

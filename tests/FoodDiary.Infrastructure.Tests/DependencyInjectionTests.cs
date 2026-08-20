@@ -36,6 +36,7 @@ using FoodDiary.Integrations.Billing;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
 using FoodDiary.Integrations.Services.MailInbox;
+using FoodDiary.MailInbox.Client;
 using FoodDiary.Integrations.Services.OpenAi;
 using FoodDiary.Integrations.Wearables;
 using FoodDiary.MailRelay.Client.Options;
@@ -234,6 +235,23 @@ public sealed class DependencyInjectionTests {
         IReadOnlyList<IWearableClient> wearableClients = scope.ServiceProvider.GetServices<IWearableClient>().ToList();
         IWearableClient wearableClient = Assert.Single(wearableClients);
         Assert.Equal(WearableProvider.Fitbit, wearableClient.Provider);
+    }
+
+    [Fact]
+    public void AddIntegrations_WithoutMailInboxConfiguration_DoesNotRegisterMailInboxAccess() {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddSingleton(TimeProvider.System);
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(CreateValidIntegrationsConfiguration()
+                .AsEnumerable()
+                .Where(static pair => !pair.Key.StartsWith("MailInboxClient:", StringComparison.OrdinalIgnoreCase)))
+            .Build();
+
+        services.AddIntegrations(configuration);
+
+        Assert.DoesNotContain(services, static descriptor => descriptor.ServiceType == typeof(IMailInboxClient));
+        Assert.DoesNotContain(services, static descriptor => descriptor.ServiceType == typeof(IAdminMailInboxReader));
     }
 
     [Fact]
@@ -855,7 +873,9 @@ public sealed class DependencyInjectionTests {
             ["MailRelayClient:BaseUrl"] = "https://mail-relay.example.com",
             ["MailRelayClient:ApiKey"] = "relay-key",
             ["MailInboxClient:BaseUrl"] = "https://mail-inbox.example.com",
-            ["MailInboxClient:ApiKey"] = "inbox-key",
+            ["MailInboxClient:MetadataApiKey"] = "fedcba9876543210fedcba987654321a",
+            ["MailInboxClient:ContentApiKey"] = "fedcba9876543210fedcba987654321b",
+            ["MailInboxClient:StateApiKey"] = "fedcba9876543210fedcba987654321c",
             ["UsdaApi:ApiKey"] = "usda-key",
             ["OpenFoodFacts:UserAgent"] = "FoodDiaryTests/1.0",
             ["Fitbit:ClientId"] = "fitbit-client",

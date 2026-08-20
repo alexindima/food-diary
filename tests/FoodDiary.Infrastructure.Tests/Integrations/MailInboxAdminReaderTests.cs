@@ -20,7 +20,10 @@ public sealed class MailInboxAdminReaderTests {
                 "general",
                 "received",
                 ReadAtUtc: null,
-                receivedAtUtc),
+                receivedAtUtc,
+                EnvelopeFromAddress: "bounce@example.com",
+                IsTrustedRelay: true,
+                FromAddressIsVerified: false),
         ];
         IMailInboxClient client = Substitute.For<IMailInboxClient>();
         int? lastLimit = null;
@@ -40,6 +43,9 @@ public sealed class MailInboxAdminReaderTests {
         Assert.Equal("received", message.Status);
         Assert.Null(message.ReadAtUtc);
         Assert.Equal(receivedAtUtc, message.ReceivedAtUtc);
+        Assert.Equal("bounce@example.com", message.EnvelopeFromAddress);
+        Assert.True(message.IsTrustedRelay);
+        Assert.False(message.FromAddressIsVerified);
         Assert.Equal(25, lastLimit);
     }
 
@@ -48,6 +54,7 @@ public sealed class MailInboxAdminReaderTests {
         var id = Guid.NewGuid();
         DateTimeOffset receivedAtUtc = DateTimeOffset.UtcNow;
         DateTimeOffset contentPurgedAtUtc = receivedAtUtc.AddDays(30);
+        DmarcReportResponse dmarcReport = CreateDmarcReport(receivedAtUtc);
         InboundMailMessageDetailsResponse details = new(
             id,
             "message-id",
@@ -61,7 +68,12 @@ public sealed class MailInboxAdminReaderTests {
             "received",
             ReadAtUtc: null,
             receivedAtUtc,
-            contentPurgedAtUtc);
+            contentPurgedAtUtc,
+            dmarcReport,
+            EnvelopeFromAddress: "bounce@example.com",
+            IsTrustedRelay: true,
+            FromAddressIsVerified: false,
+            DmarcReportIsVerified: false);
         IMailInboxClient client = Substitute.For<IMailInboxClient>();
         Guid lastMessageId = Guid.Empty;
         client
@@ -78,6 +90,12 @@ public sealed class MailInboxAdminReaderTests {
         Assert.Equal("raw", result.RawMime);
         Assert.Equal("general", result.Category);
         Assert.Equal(contentPurgedAtUtc, result.ContentPurgedAtUtc);
+        Assert.Equal("report-1", result.DmarcReport?.ReportId);
+        Assert.Equal(4, Assert.Single(result.DmarcReport!.Records).Count);
+        Assert.Equal("bounce@example.com", result.EnvelopeFromAddress);
+        Assert.True(result.IsTrustedRelay);
+        Assert.False(result.FromAddressIsVerified);
+        Assert.False(result.DmarcReportIsVerified);
         Assert.Equal(id, lastMessageId);
     }
 
@@ -109,4 +127,24 @@ public sealed class MailInboxAdminReaderTests {
         Assert.True(result);
         Assert.Equal(id, lastReadMessageId);
     }
+
+    private static DmarcReportResponse CreateDmarcReport(DateTimeOffset receivedAtUtc) =>
+        new(
+            "google.com",
+            "report-1",
+            "fooddiary.club",
+            receivedAtUtc.AddDays(-1),
+            receivedAtUtc,
+            [new DmarcReportRecordResponse(
+                SourceIp: "192.0.2.1",
+                Count: 4,
+                Disposition: "none",
+                Dkim: "pass",
+                Spf: "pass",
+                HeaderFrom: "fooddiary.club",
+                EnvelopeFrom: null,
+                DkimDomain: "fooddiary.club",
+                DkimResult: "pass",
+                SpfDomain: "fooddiary.club",
+                SpfResult: "pass")]);
 }

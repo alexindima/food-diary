@@ -1,3 +1,4 @@
+using System.Net;
 using FoodDiary.MailInbox.Infrastructure.Services;
 
 namespace FoodDiary.MailInbox.Infrastructure.Options;
@@ -8,6 +9,8 @@ public sealed class MailInboxSmtpOptions {
     public bool Enabled { get; init; } = true;
 
     public string ServerName { get; init; } = "mail.fooddiary.club";
+
+    public string ListenAddress { get; init; } = IPAddress.Any.ToString();
 
     public int Port { get; init; } = 2525;
 
@@ -52,9 +55,11 @@ public sealed class MailInboxSmtpOptions {
         "support@fooddiary.club",
     ];
 
+    public string[] TrustedRelayNetworks { get; init; } = [];
+
     public static bool HasValidConfiguration(MailInboxSmtpOptions options) {
         return options is {
-            Port: > 0,
+            Port: > 0 and <= ushort.MaxValue,
             MaxMessageSizeBytes: > 0,
             MaxConcurrentConnections: > 0,
             MaxConcurrentConnectionsPerIp: > 0,
@@ -75,10 +80,12 @@ public sealed class MailInboxSmtpOptions {
                options.ProcessingQueueTimeout > TimeSpan.Zero &&
                options.SessionTimeout > TimeSpan.Zero &&
                !string.IsNullOrWhiteSpace(options.ServerName) &&
+               IPAddress.TryParse(options.ListenAddress, out _) &&
                (!options.Enabled ||
                 (!string.IsNullOrWhiteSpace(options.CertificatePath) &&
                  !string.IsNullOrWhiteSpace(options.PrivateKeyPath))) &&
                options.AllowedRecipients.Length > 0 &&
-               options.AllowedRecipients.All(static value => !string.IsNullOrWhiteSpace(value) && value.Contains('@', StringComparison.Ordinal));
+               options.AllowedRecipients.All(static value => !string.IsNullOrWhiteSpace(value) && value.Contains('@', StringComparison.Ordinal)) &&
+               options.TrustedRelayNetworks.All(MailInboxNetworkRange.IsValid);
     }
 }

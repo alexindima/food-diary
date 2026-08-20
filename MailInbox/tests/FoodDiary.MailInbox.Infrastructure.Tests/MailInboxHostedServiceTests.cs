@@ -19,21 +19,6 @@ namespace FoodDiary.MailInbox.Infrastructure.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxHostedServiceTests {
     [Fact]
-    public async Task SchemaInitializerHostedService_StartAsync_EnsuresSchema() {
-        using var cts = new CancellationTokenSource();
-        var initializer = new RecordingSchemaInitializer();
-        var service = new MailInboxSchemaInitializerHostedService(
-            initializer,
-            NullLogger<MailInboxSchemaInitializerHostedService>.Instance);
-
-        await service.StartAsync(cts.Token);
-        await service.StopAsync(CancellationToken.None);
-
-        Assert.True(initializer.Called);
-        Assert.Equal(cts.Token, initializer.CancellationToken);
-    }
-
-    [Fact]
     public async Task SmtpHostedService_WhenDisabled_CompletesWithoutStartingListener() {
         MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions { Enabled = false });
 
@@ -55,6 +40,7 @@ public sealed class MailInboxHostedServiceTests {
         MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
             Enabled = true,
             ServerName = "localhost",
+            ListenAddress = System.Net.IPAddress.Loopback.ToString(),
             Port = port,
             CertificatePath = certificateFiles.CertificatePath,
             PrivateKeyPath = certificateFiles.PrivateKeyPath,
@@ -182,6 +168,7 @@ public sealed class MailInboxHostedServiceTests {
         MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
             Enabled = true,
             ServerName = "localhost",
+            ListenAddress = System.Net.IPAddress.Loopback.ToString(),
             Port = port,
             CertificatePath = certificateFiles.CertificatePath,
             PrivateKeyPath = certificateFiles.PrivateKeyPath,
@@ -222,6 +209,7 @@ public sealed class MailInboxHostedServiceTests {
         MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
             Enabled = true,
             ServerName = "localhost",
+            ListenAddress = System.Net.IPAddress.Loopback.ToString(),
             Port = port,
             CertificatePath = certificateFiles.CertificatePath,
             PrivateKeyPath = certificateFiles.PrivateKeyPath,
@@ -450,18 +438,6 @@ public sealed class MailInboxHostedServiceTests {
             System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
         return await ((Task<InboundMailRetentionResult>)method.Invoke(service, [cancellationToken])!)
             .ConfigureAwait(false);
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingSchemaInitializer : IMailInboxSchemaInitializer {
-        public bool Called { get; private set; }
-        public CancellationToken CancellationToken { get; private set; }
-
-        public Task EnsureSchemaAsync(CancellationToken cancellationToken) {
-            Called = true;
-            CancellationToken = cancellationToken;
-            return Task.CompletedTask;
-        }
     }
 
     [ExcludeFromCodeCoverage]

@@ -1,3 +1,6 @@
+using System.Net;
+using System.Security.Cryptography;
+using Docker.DotNet.Models;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -17,10 +20,21 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
         }
 
         try {
+            string password = Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
             _container = new PostgreSqlBuilder("postgres:17-alpine")
                 .WithDatabase("fooddiary_tests")
                 .WithUsername("postgres")
-                .WithPassword("postgres")
+                .WithPassword(password)
+                .WithCreateParameterModifier(parameters => {
+                    parameters.HostConfig ??= new HostConfig();
+                    parameters.HostConfig.PortBindings ??= new Dictionary<string, IList<PortBinding>>(StringComparer.Ordinal);
+                    parameters.HostConfig.PortBindings["5432/tcp"] = [
+                        new PortBinding {
+                            HostIP = IPAddress.Loopback.ToString(),
+                            HostPort = "0",
+                        },
+                    ];
+                })
                 .Build();
 
             await _container.StartAsync().ConfigureAwait(false);

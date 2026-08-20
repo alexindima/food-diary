@@ -6,8 +6,8 @@
     "inputs": 1336,
     "outputs": 418,
     "apiCalls": 228,
-    "templatesWithTranslations": 268,
-    "translationKeys": 1510,
+    "templatesWithTranslations": 269,
+    "translationKeys": 1515,
     "consumerEdges": 980,
     "consumedComponents": 275,
     "unconsumedComponents": 151
@@ -15899,6 +15899,17 @@
         "ADMIN_BILLING.REVENUE.REVERSALS",
         "ADMIN_BILLING.REVENUE.TAX",
         "ADMIN_BILLING.REVENUE.TITLE"
+      ]
+    },
+    {
+      "feature": "admin-mail-inbox",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.html",
+      "keys": [
+        "ADMIN_MAIL_INBOX.DMARC_UNVERIFIED_WARNING",
+        "ADMIN_MAIL_INBOX.ENVELOPE_FROM",
+        "ADMIN_MAIL_INBOX.HEADER_FROM",
+        "ADMIN_MAIL_INBOX.PROVENANCE",
+        "ADMIN_MAIL_INBOX.UNVERIFIED_SHORT"
       ]
     },
     {

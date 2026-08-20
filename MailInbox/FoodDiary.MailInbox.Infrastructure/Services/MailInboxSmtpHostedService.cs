@@ -1,3 +1,4 @@
+using System.Net;
 using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -31,7 +32,7 @@ public sealed class MailInboxSmtpHostedService(
         ISmtpServerOptions serverOptions = new SmtpServerOptionsBuilder()
             .ServerName(_options.ServerName)
             .Endpoint(endpoint => endpoint
-                .Port(_options.Port)
+                .Endpoint(new IPEndPoint(IPAddress.Parse(_options.ListenAddress), _options.Port))
                 .Certificate(certificate)
                 .SupportedSslProtocols(SslProtocols.Tls12 | SslProtocols.Tls13)
                 .SessionTimeout(_options.SessionTimeout))
@@ -45,8 +46,9 @@ public sealed class MailInboxSmtpHostedService(
 
         var server = new SmtpServer.SmtpServer(serverOptions, serviceProvider);
         logger.LogInformation(
-            "Mail inbox SMTP listener starting with STARTTLS. ServerName={ServerName}; Port={Port}; CertificateExpiresUtc={CertificateExpiresUtc}; MaxMessageSizeBytes={MaxMessageSizeBytes}",
+            "Mail inbox SMTP listener starting with STARTTLS. ServerName={ServerName}; ListenAddress={ListenAddress}; Port={Port}; CertificateExpiresUtc={CertificateExpiresUtc}; MaxMessageSizeBytes={MaxMessageSizeBytes}",
             _options.ServerName,
+            _options.ListenAddress,
             _options.Port,
             certificate.NotAfter.ToUniversalTime(),
             _options.MaxMessageSizeBytes);

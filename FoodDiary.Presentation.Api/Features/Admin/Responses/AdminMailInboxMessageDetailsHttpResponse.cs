@@ -13,4 +13,9 @@ public sealed record AdminMailInboxMessageDetailsHttpResponse(
     string Status,
     DateTimeOffset? ReadAtUtc,
     DateTimeOffset ReceivedAtUtc,
-    DateTimeOffset? ContentPurgedAtUtc);
+    DateTimeOffset? ContentPurgedAtUtc,
+    AdminMailInboxDmarcReportHttpResponse? DmarcReport = null,
+    string? EnvelopeFromAddress = null,
+    bool IsTrustedRelay = false,
+    bool FromAddressIsVerified = false,
+    bool DmarcReportIsVerified = false);

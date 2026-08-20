@@ -1,3 +1,6 @@
+using System.Net;
+using System.Security.Cryptography;
+using Docker.DotNet.Models;
 using Npgsql;
 using Testcontainers.PostgreSql;
 
@@ -15,10 +18,21 @@ public sealed class MailInboxPostgresFixture : IAsyncLifetime {
         }
 
         try {
+            string password = Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
             _postgres = new PostgreSqlBuilder("postgres:17-alpine")
                 .WithDatabase("mailinbox_tests")
                 .WithUsername("postgres")
-                .WithPassword("postgres")
+                .WithPassword(password)
+                .WithCreateParameterModifier(parameters => {
+                    parameters.HostConfig ??= new HostConfig();
+                    parameters.HostConfig.PortBindings ??= new Dictionary<string, IList<PortBinding>>(StringComparer.Ordinal);
+                    parameters.HostConfig.PortBindings["5432/tcp"] = [
+                        new PortBinding {
+                            HostIP = IPAddress.Loopback.ToString(),
+                            HostPort = "0",
+                        },
+                    ];
+                })
                 .Build();
 
             await _postgres.StartAsync().ConfigureAwait(false);

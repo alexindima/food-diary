@@ -183,6 +183,34 @@ public sealed class NpgsqlInboundMailStore(
             end
             $migration$;
             """),
+        new(
+            "202608200001_reserve_trusted_ingestion_capacity",
+            """
+            alter table mailinbox_daily_ingestion_usage
+                add column if not exists untrusted_message_count bigint not null default 0,
+                add column if not exists untrusted_raw_bytes bigint not null default 0;
+            """),
+        new(
+            "202608200002_add_mail_authentication_provenance",
+            """
+            alter table mailinbox_messages
+                add column if not exists envelope_from_address text null,
+                add column if not exists is_trusted_relay boolean not null default false;
+
+            do $migration$
+            begin
+                if not exists (
+                    select 1 from pg_constraint
+                    where conname = 'ck_mailinbox_messages_envelope_from_address_length'
+                      and conrelid = 'mailinbox_messages'::regclass
+                ) then
+                    alter table mailinbox_messages
+                        add constraint ck_mailinbox_messages_envelope_from_address_length
+                        check (envelope_from_address is null or char_length(envelope_from_address) <= 320);
+                end if;
+            end
+            $migration$;
+            """),
     ];
     public async Task EnsureSchemaAsync(CancellationToken cancellationToken) {
         NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
@@ -204,10 +232,16 @@ public sealed class NpgsqlInboundMailStore(
         }
     }
 
+    public Task<InboundMailSaveResult> SaveAsync(
+        InboundMailMessage message,
+        CancellationToken cancellationToken) =>
+        SaveAsync(message, InboundMailAdmission.Untrusted, cancellationToken);
+
     public async Task<InboundMailSaveResult> SaveAsync(
         InboundMailMessage message,
+        InboundMailAdmission admission,
         CancellationToken cancellationToken) {
-        MailInboxStoredMessageLimits.ThrowIfInvalid(message);
+        MailInboxStoredMessageLimits.ThrowIfInvalid(message, admission);
         const string sql = """
                            insert into mailinbox_messages (
                                id,
@@ -221,6 +255,8 @@ public sealed class NpgsqlInboundMailStore(
                                ingestion_key,
                                deduplication_bucket_utc,
                                raw_size_bytes,
+                               envelope_from_address,
+                               is_trusted_relay,
                                status,
                                received_at_utc)
                            values (
@@ -235,6 +271,8 @@ public sealed class NpgsqlInboundMailStore(
                                @ingestion_key,
                                @deduplication_bucket_utc,
                                @raw_size_bytes,
+                               @envelope_from_address,
+                               @is_trusted_relay,
                                @status,
                                @received_at_utc)
                            on conflict (ingestion_key, deduplication_bucket_utc)
@@ -244,10 +282,10 @@ public sealed class NpgsqlInboundMailStore(
 
         Guid id = message.Id.Value;
         string recipientsJson = JsonSerializer.Serialize(message.ToRecipients, JsonOptions);
-        string ingestionKey = CalculateIngestionKey(message);
+        string ingestionKey = CalculateIngestionKey(message, admission);
         DateTimeOffset deduplicationBucketUtc = GetDeduplicationBucket(message.ReceivedAtUtc);
         long rawSizeBytes = message.RawMimeBytes.Length;
-        long accountedSizeBytes = CalculateAccountedSizeBytes(message, recipientsJson);
+        long accountedSizeBytes = CalculateAccountedSizeBytes(message, recipientsJson, admission);
         NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
@@ -283,6 +321,8 @@ public sealed class NpgsqlInboundMailStore(
                     command.Parameters.AddWithValue("ingestion_key", ingestionKey);
                     command.Parameters.AddWithValue("deduplication_bucket_utc", deduplicationBucketUtc);
                     command.Parameters.AddWithValue("raw_size_bytes", rawSizeBytes);
+                    command.Parameters.AddWithNullableValue("envelope_from_address", admission.EnvelopeFromAddress);
+                    command.Parameters.AddWithValue("is_trusted_relay", admission.IsTrustedRelay);
                     command.Parameters.AddWithValue("status", message.Status.Value);
                     command.Parameters.AddWithValue("received_at_utc", message.ReceivedAtUtc);
                     id = (Guid)(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false)
@@ -295,6 +335,7 @@ public sealed class NpgsqlInboundMailStore(
                         transaction,
                         message.ReceivedAtUtc,
                         accountedSizeBytes,
+                        admission,
                         cancellationToken).ConfigureAwait(false)) {
                     throw new InboundMailStorageQuotaExceededException();
                 }
@@ -343,7 +384,8 @@ public sealed class NpgsqlInboundMailStore(
 
     public async Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(int limit, CancellationToken cancellationToken) {
         const string sql = """
-                           select id, from_address, to_recipients_json::text, subject, status, read_at_utc, received_at_utc
+                           select id, from_address, to_recipients_json::text, subject, status, read_at_utc, received_at_utc,
+                               envelope_from_address, is_trusted_relay
                            from mailinbox_messages
                            order by received_at_utc desc
                            limit @limit;
@@ -366,9 +408,12 @@ public sealed class NpgsqlInboundMailStore(
                             recipients,
                             subject,
                             GetCategory(recipients, subject),
-                            reader.GetString(4),
-                            await reader.GetNullableDateTimeOffsetAsync(5, cancellationToken).ConfigureAwait(false),
-                            await reader.GetFieldValueAsync<DateTimeOffset>(6, cancellationToken).ConfigureAwait(false)));
+                             reader.GetString(4),
+                             await reader.GetNullableDateTimeOffsetAsync(5, cancellationToken).ConfigureAwait(false),
+                             await reader.GetFieldValueAsync<DateTimeOffset>(6, cancellationToken).ConfigureAwait(false),
+                             reader.GetNullableString(7),
+                             await reader.GetFieldValueAsync<bool>(8, cancellationToken).ConfigureAwait(false),
+                             FromAddressIsVerified: false));
                     }
                 }
             }
@@ -390,7 +435,8 @@ public sealed class NpgsqlInboundMailStore(
         Guid id,
         CancellationToken cancellationToken) {
         const string sql = """
-                           select id, message_id, from_address, to_recipients_json::text, subject, text_body, html_body, raw_mime, status, read_at_utc, received_at_utc, content_purged_at_utc
+                           select id, message_id, from_address, to_recipients_json::text, subject, text_body, html_body, raw_mime, status, read_at_utc, received_at_utc, content_purged_at_utc,
+                               envelope_from_address, is_trusted_relay
                            from mailinbox_messages
                            where id = @id;
                            """;
@@ -429,9 +475,13 @@ public sealed class NpgsqlInboundMailStore(
                         dmarcReport is null ? GetCategory(recipients, subject) : InboundMailMessageCategories.DmarcReport,
                         dmarcReport,
                         reader.GetString(8),
-                        await reader.GetNullableDateTimeOffsetAsync(9, cancellationToken).ConfigureAwait(false),
-                        await reader.GetFieldValueAsync<DateTimeOffset>(10, cancellationToken).ConfigureAwait(false),
-                        await reader.GetNullableDateTimeOffsetAsync(11, cancellationToken).ConfigureAwait(false));
+                         await reader.GetNullableDateTimeOffsetAsync(9, cancellationToken).ConfigureAwait(false),
+                         await reader.GetFieldValueAsync<DateTimeOffset>(10, cancellationToken).ConfigureAwait(false),
+                         await reader.GetNullableDateTimeOffsetAsync(11, cancellationToken).ConfigureAwait(false),
+                         reader.GetNullableString(12),
+                         await reader.GetFieldValueAsync<bool>(13, cancellationToken).ConfigureAwait(false),
+                         FromAddressIsVerified: false,
+                         DmarcReportIsVerified: false);
                 }
             }
         }
@@ -511,16 +561,35 @@ public sealed class NpgsqlInboundMailStore(
         NpgsqlTransaction transaction,
         DateTimeOffset receivedAtUtc,
         long accountedSizeBytes,
+        InboundMailAdmission admission,
         CancellationToken cancellationToken) {
         const string sql = """
-                           insert into mailinbox_daily_ingestion_usage (usage_date, message_count, raw_bytes)
-                           select @usage_date, 1, @accounted_bytes
+                           insert into mailinbox_daily_ingestion_usage (
+                               usage_date,
+                               message_count,
+                               raw_bytes,
+                               untrusted_message_count,
+                               untrusted_raw_bytes)
+                           select
+                               @usage_date,
+                               1,
+                               @accounted_bytes,
+                               @untrusted_message_increment,
+                               @untrusted_bytes_increment
                            where @accounted_bytes <= @max_raw_bytes
+                             and (@is_trusted_relay
+                                  or (@untrusted_message_increment <= @max_untrusted_messages
+                                      and @untrusted_bytes_increment <= @max_untrusted_raw_bytes))
                            on conflict (usage_date) do update
                            set message_count = mailinbox_daily_ingestion_usage.message_count + 1,
-                               raw_bytes = mailinbox_daily_ingestion_usage.raw_bytes + excluded.raw_bytes
+                               raw_bytes = mailinbox_daily_ingestion_usage.raw_bytes + excluded.raw_bytes,
+                               untrusted_message_count = mailinbox_daily_ingestion_usage.untrusted_message_count + excluded.untrusted_message_count,
+                               untrusted_raw_bytes = mailinbox_daily_ingestion_usage.untrusted_raw_bytes + excluded.untrusted_raw_bytes
                            where mailinbox_daily_ingestion_usage.message_count < @max_messages
                              and mailinbox_daily_ingestion_usage.raw_bytes + excluded.raw_bytes <= @max_raw_bytes
+                             and (@is_trusted_relay
+                                  or (mailinbox_daily_ingestion_usage.untrusted_message_count < @max_untrusted_messages
+                                      and mailinbox_daily_ingestion_usage.untrusted_raw_bytes + excluded.untrusted_raw_bytes <= @max_untrusted_raw_bytes))
                            returning true;
                            """;
         var command = new NpgsqlCommand(sql, connection, transaction);
@@ -529,6 +598,11 @@ public sealed class NpgsqlInboundMailStore(
             command.Parameters.AddWithValue("accounted_bytes", accountedSizeBytes);
             command.Parameters.AddWithValue("max_messages", _options.MaxMessagesPerDay);
             command.Parameters.AddWithValue("max_raw_bytes", _options.MaxRawBytesPerDay);
+            command.Parameters.AddWithValue("is_trusted_relay", admission.IsTrustedRelay);
+            command.Parameters.AddWithValue("untrusted_message_increment", admission.IsTrustedRelay ? 0 : 1);
+            command.Parameters.AddWithValue("untrusted_bytes_increment", admission.IsTrustedRelay ? 0L : accountedSizeBytes);
+            command.Parameters.AddWithValue("max_untrusted_messages", _options.GetMaxUntrustedMessagesPerDay());
+            command.Parameters.AddWithValue("max_untrusted_raw_bytes", _options.GetMaxUntrustedRawBytesPerDay());
             return await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false) is true;
         }
     }
@@ -604,8 +678,9 @@ public sealed class NpgsqlInboundMailStore(
         }
     }
 
-    private string CalculateIngestionKey(InboundMailMessage message) {
+    private string CalculateIngestionKey(InboundMailMessage message, InboundMailAdmission admission) {
         using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
+        AppendHashValue(hash, admission.EnvelopeFromAddress ?? string.Empty);
         AppendHashValue(hash, message.FromAddress ?? string.Empty);
         foreach (string recipient in message.ToRecipients
                      .Select(static value => value.Trim().ToLowerInvariant())
@@ -617,11 +692,15 @@ public sealed class NpgsqlInboundMailStore(
         return Convert.ToHexString(hash.GetHashAndReset());
     }
 
-    private static long CalculateAccountedSizeBytes(InboundMailMessage message, string recipientsJson) {
+    private static long CalculateAccountedSizeBytes(
+        InboundMailMessage message,
+        string recipientsJson,
+        InboundMailAdmission admission) {
         return checked(
             message.RawMimeBytes.Length +
             GetUtf8ByteCount(message.MessageId) +
             GetUtf8ByteCount(message.FromAddress) +
+            GetUtf8ByteCount(admission.EnvelopeFromAddress) +
             Encoding.UTF8.GetByteCount(recipientsJson) +
             GetUtf8ByteCount(message.Subject) +
             GetUtf8ByteCount(message.TextBody) +

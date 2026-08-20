@@ -115,7 +115,7 @@ public sealed class MailInboxReadinessConcurrencyTests {
 
     private static MailInboxReadinessConcurrencyGate CreateGate(TimeSpan queueTimeout) =>
         new(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
-            ApiKey = ValidApiKey,
+            MetadataApiKey = ValidApiKey,
             MaxConcurrentReadinessRequests = 1,
             ReadinessQueueTimeout = queueTimeout,
         }));
@@ -124,7 +124,7 @@ public sealed class MailInboxReadinessConcurrencyTests {
         new(
             sender,
             Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
-                ApiKey = ValidApiKey,
+                MetadataApiKey = ValidApiKey,
                 ReadinessExecutionTimeout = executionTimeout,
             })) {
             ControllerContext = new ControllerContext {

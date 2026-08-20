@@ -22,6 +22,13 @@ builder.Services
 
 WebApplication app = builder.Build();
 
+await MailInboxHostConfiguration.ValidateRuntimeDatabaseRoleAsync(
+        app.Services,
+        app.Configuration,
+        app.Environment,
+        app.Lifetime.ApplicationStopping)
+    .ConfigureAwait(false);
+
 app.MapMailInboxPresentation();
 
 await app.RunAsync().ConfigureAwait(false);

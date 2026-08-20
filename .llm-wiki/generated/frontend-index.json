@@ -1983,7 +1983,7 @@
       "role": "Component",
       "selector": "fd-admin-mail-inbox",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.ts",
-      "line": 31
+      "line": 32
     },
     {
       "name": "AdminModerationService",
@@ -5987,8 +5987,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 594,
-      "russianProperties": 594,
+      "englishProperties": 604,
+      "russianProperties": 604,
       "countsMatch": true
     },
     {

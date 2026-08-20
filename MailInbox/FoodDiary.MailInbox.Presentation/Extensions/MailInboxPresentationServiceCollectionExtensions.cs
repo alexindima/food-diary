@@ -18,7 +18,7 @@ public static class MailInboxPresentationServiceCollectionExtensions {
         services.AddScoped<MailInboxReadinessConcurrencyFilter>();
         services.AddOptions<MailInboxHttpOptions>()
             .Bind(configuration.GetSection(MailInboxHttpOptions.SectionName))
-            .Validate(MailInboxHttpOptions.HasValidApiKey, "MailInboxHttp configuration is invalid; API-key enforcement, key length, and bounded request limits are required.")
+            .Validate(MailInboxHttpOptions.HasValidApiKey, "MailInboxHttp configuration is invalid; distinct capability keys and bounded request limits are required.")
             .ValidateOnStart();
 
         services

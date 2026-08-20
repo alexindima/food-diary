@@ -67,9 +67,73 @@ public sealed class MailInboxHostConfigurationTests {
     [InlineData("Pwd=another-strong-production-password")]
     public void Validate_ProductionStrongPassword_Succeeds(string passwordSetting) {
         IConfiguration configuration = CreateConfiguration(
-            $"Host=database;Database=mailbox;Username=postgres;{passwordSetting}");
+            $"Host=database;Database=fooddiary_mailinbox;Username=mailinbox_runtime;{passwordSetting};SSL Mode=VerifyFull");
 
         MailInboxHostConfiguration.Validate(configuration, CreateEnvironment(Environments.Production));
+    }
+
+    [Theory]
+    [InlineData("postgres", "postgres", "must identify a dedicated mailinbox_* role")]
+    [InlineData("mailinbox_initializer", "mailinbox_runtime", "Username must match")]
+    public void Validate_ProductionUnsafeRuntimeRole_Throws(
+        string connectionRoleName,
+        string configuredRoleName,
+        string expectedMessage) {
+        IConfiguration configuration = CreateConfiguration(
+            $"Host=database;Database=fooddiary_mailinbox;Username={connectionRoleName};Password=strong-unique-production-password;SSL Mode=VerifyFull",
+            runtimeRoleName: configuredRoleName);
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
+            MailInboxHostConfiguration.Validate(configuration, CreateEnvironment(Environments.Production)));
+
+        Assert.Contains(expectedMessage, exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Validate_ProductionMatchingCustomRuntimeRole_Succeeds() {
+        IConfiguration configuration = CreateConfiguration(
+            "Host=database;Database=fooddiary_mailinbox;User ID=mailinbox_custom;Password=strong-unique-production-password;SSL Mode=VerifyFull",
+            runtimeRoleName: "mailinbox_custom");
+
+        MailInboxHostConfiguration.Validate(configuration, CreateEnvironment(Environments.Production));
+    }
+
+    [Fact]
+    public void Validate_ProductionSmtpWithoutTrustedRelay_Throws() {
+        IConfiguration configuration = CreateConfiguration(
+            "Host=database;Database=fooddiary_mailinbox;Username=mailinbox_runtime;Password=strong-unique-production-password;SSL Mode=VerifyFull",
+            includeTrustedRelay: false);
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
+            MailInboxHostConfiguration.Validate(configuration, CreateEnvironment(Environments.Production)));
+
+        Assert.Contains("TrustedRelayNetworks", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("Disable")]
+    [InlineData("Prefer")]
+    [InlineData("Require")]
+    [InlineData("VerifyCA")]
+    public void Validate_ProductionDatabaseTlsIsNotFullyVerified_Throws(string sslMode) {
+        IConfiguration configuration = CreateConfiguration(
+            $"Host=database;Database=fooddiary_mailinbox;Username=mailinbox_runtime;Password=strong-unique-production-password;SSL Mode={sslMode}");
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
+            MailInboxHostConfiguration.Validate(configuration, CreateEnvironment(Environments.Production)));
+
+        Assert.Contains("must use SSL Mode=VerifyFull", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Validate_ProductionWrongDatabase_Throws() {
+        IConfiguration configuration = CreateConfiguration(
+            "Host=database;Database=fooddiary;Username=postgres;Password=strong-unique-production-password");
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
+            MailInboxHostConfiguration.Validate(configuration, CreateEnvironment(Environments.Production)));
+
+        Assert.Contains("must target the dedicated 'fooddiary_mailinbox' database", exception.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -80,12 +144,22 @@ public sealed class MailInboxHostConfigurationTests {
         MailInboxHostConfiguration.Validate(configuration, CreateEnvironment(Environments.Development));
     }
 
-    private static IConfiguration CreateConfiguration(string connectionString) =>
-        new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
-                ["ConnectionStrings:DefaultConnection"] = connectionString,
-            })
+    private static IConfiguration CreateConfiguration(
+        string connectionString,
+        bool includeTrustedRelay = true,
+        string runtimeRoleName = "mailinbox_runtime") {
+        var values = new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = connectionString,
+            ["MailInboxRuntimeDatabase:RoleName"] = runtimeRoleName,
+        };
+        if (includeTrustedRelay) {
+            values["MailInboxSmtp:TrustedRelayNetworks:0"] = "192.0.2.10/32";
+        }
+
+        return new ConfigurationBuilder()
+            .AddInMemoryCollection(values)
             .Build();
+    }
 
     private static IHostEnvironment CreateEnvironment(string environmentName) =>
         new TestHostEnvironment {

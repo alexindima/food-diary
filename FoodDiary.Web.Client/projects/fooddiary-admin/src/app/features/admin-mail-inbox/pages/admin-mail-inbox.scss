@@ -122,6 +122,24 @@
     overflow-wrap: anywhere;
 }
 
+.mail-verification-warning,
+.dmarc-report__warning {
+    color: var(--fd-color-amber-500);
+    font-weight: var(--fd-font-weight-bold);
+}
+
+.mail-verification-warning {
+    display: block;
+}
+
+.dmarc-report__warning {
+    margin: 0;
+    padding: var(--fd-space-sm);
+    border: var(--fd-border-width) solid var(--fd-color-amber-500);
+    border-radius: var(--fd-radius-md);
+    background: var(--fd-bg-status-warning);
+}
+
 .dmarc-report {
     padding: var(--fd-space-md);
     border: var(--fd-border-width) solid var(--fd-color-border-status-success);

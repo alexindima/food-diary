@@ -116,8 +116,26 @@ public sealed class HttpResponseContractCoverageTests {
     public void AdminResponses_ExposeAuditAndMailFields() {
         DateTime now = DateTime.UtcNow;
         DateTimeOffset receivedAt = DateTimeOffset.UtcNow;
+        var dmarcReport = new AdminMailInboxDmarcReportHttpResponse(
+            "google.com",
+            "report-1",
+            "fooddiary.club",
+            receivedAt.AddDays(-1),
+            receivedAt,
+            [new AdminMailInboxDmarcRecordHttpResponse(
+                SourceIp: "192.0.2.1",
+                Count: 4,
+                Disposition: "none",
+                Dkim: "pass",
+                Spf: "pass",
+                HeaderFrom: "fooddiary.club",
+                EnvelopeFrom: null,
+                DkimDomain: "fooddiary.club",
+                DkimResult: "pass",
+                SpfDomain: "fooddiary.club",
+                SpfResult: "pass")]);
         var mailDetails = new AdminMailInboxMessageDetailsHttpResponse(
-            Guid.NewGuid(), "message-id", "from@example.com", ["to@example.com"], "Subject", "Text", "<p>Html</p>", "raw", "general", "received", receivedAt, receivedAt, ContentPurgedAtUtc: receivedAt.AddDays(30));
+            Guid.NewGuid(), "message-id", "from@example.com", ["to@example.com"], "Subject", "Text", "<p>Html</p>", "raw", "general", "received", receivedAt, receivedAt, ContentPurgedAtUtc: receivedAt.AddDays(30), DmarcReport: dmarcReport);
         var login = new AdminUserLoginEventHttpResponse(
             Guid.NewGuid(), Guid.NewGuid(), "user@example.com", "password", "127.0.0.1", "agent", "Chrome", "1", "Windows", "Desktop", now);
         var report = new AdminContentReportHttpResponse(Guid.NewGuid(), Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam", "Pending", AdminNote: "note", now, ReviewedAtUtc: now);
@@ -142,6 +160,8 @@ public sealed class HttpResponseContractCoverageTests {
             () => Assert.Equal(receivedAt, mailDetails.ReadAtUtc),
             () => Assert.Equal(receivedAt, mailDetails.ReceivedAtUtc),
             () => Assert.Equal(receivedAt.AddDays(30), mailDetails.ContentPurgedAtUtc),
+            () => Assert.Equal("report-1", mailDetails.DmarcReport?.ReportId),
+            () => Assert.Equal(4, Assert.Single(mailDetails.DmarcReport!.Records).Count),
             () => Assert.Equal("user@example.com", login.UserEmail),
             () => Assert.Equal("password", login.AuthProvider),
             () => Assert.Equal("127.0.0.1", login.MaskedIpAddress),

@@ -15,7 +15,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
 
-        Assert.Equal(5, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_schema_migrations"));
+        Assert.Equal(7, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_schema_migrations"));
         Assert.Equal(
             "read_at_utc",
             await GetScalarAsync<string>(
@@ -39,7 +39,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
                   and column_name = 'raw_mime'
                 """));
         Assert.Equal(
-            4,
+            5,
             await GetScalarAsync<long>(
                 dataSource,
                 """
@@ -49,6 +49,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
                   and conname in (
                       'ck_mailinbox_messages_message_id_length',
                       'ck_mailinbox_messages_from_address_length',
+                      'ck_mailinbox_messages_envelope_from_address_length',
                       'ck_mailinbox_messages_subject_length',
                       'ck_mailinbox_messages_recipients_limits')
                   and convalidated
@@ -63,7 +64,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
 
         await store.EnsureSchemaAsync(CancellationToken.None);
 
-        Assert.Equal(5, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_schema_migrations"));
+        Assert.Equal(7, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_schema_migrations"));
     }
 
     [RequiresDockerFact]
@@ -78,7 +79,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
                 .ConfigureAwait(false);
 
             Assert.Equal(
-                5,
+                7,
                 await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_schema_migrations")
                     .ConfigureAwait(false));
         }
@@ -100,7 +101,10 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
             "raw mime",
             receivedAt);
 
-        Guid id = (await store.SaveAsync(message, CancellationToken.None)).Id;
+        Guid id = (await store.SaveAsync(
+            message,
+            new InboundMailAdmission(IsTrustedRelay: true, EnvelopeFromAddress: "bounce@relay.example"),
+            CancellationToken.None)).Id;
         IReadOnlyList<InboundMailMessageSummary> summaries = await store.GetMessagesAsync(10, CancellationToken.None);
         InboundMailMessageDetails? details = await store.GetMessageDetailsAsync(id, CancellationToken.None);
 
@@ -108,9 +112,16 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         Assert.Equal(id, summaries[0].Id);
         Assert.Equal(InboundMailMessageCategories.DmarcReport, summaries[0].Category);
         Assert.Null(summaries[0].ReadAtUtc);
+        Assert.Equal("bounce@relay.example", summaries[0].EnvelopeFromAddress);
+        Assert.True(summaries[0].IsTrustedRelay);
+        Assert.False(summaries[0].FromAddressIsVerified);
         Assert.NotNull(details);
         Assert.Equal("raw mime", details.RawMime);
         Assert.Null(details.ReadAtUtc);
+        Assert.Equal("bounce@relay.example", details.EnvelopeFromAddress);
+        Assert.True(details.IsTrustedRelay);
+        Assert.False(details.FromAddressIsVerified);
+        Assert.False(details.DmarcReportIsVerified);
 
         var readAt = new DateTimeOffset(2026, 6, 14, 12, 0, 0, TimeSpan.FromHours(4));
         Assert.True(await store.MarkAsReadAsync(id, readAt, CancellationToken.None));
@@ -325,6 +336,39 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
     }
 
     [RequiresDockerFact]
+    public async Task SaveAsync_WhenUntrustedQuotaIsExhausted_PreservesCapacityForTrustedRelay() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        NpgsqlInboundMailStore store = CreateStore(
+            dataSource,
+            new MailInboxStorageOptions {
+                MaxMessagesPerDay = 2,
+                MaxUntrustedMessagesPerDay = 1,
+            });
+        var receivedAt = new DateTimeOffset(2026, 6, 18, 9, 0, 0, TimeSpan.Zero);
+        await store.SaveAsync(CreateMessage("untrusted-first", receivedAt), CancellationToken.None);
+
+        Exception exception = await Assert.ThrowsAnyAsync<Exception>(() =>
+            store.SaveAsync(CreateMessage("untrusted-second", receivedAt), CancellationToken.None));
+        Assert.Equal("InboundMailStorageQuotaExceededException", exception.GetType().Name);
+        InboundMailSaveResult trusted = await store.SaveAsync(
+            CreateMessage("trusted", receivedAt),
+            InboundMailAdmission.TrustedRelay,
+            CancellationToken.None);
+        long messageCount = await GetScalarAsync<long>(
+            dataSource,
+            "select message_count from mailinbox_daily_ingestion_usage");
+        long untrustedMessageCount = await GetScalarAsync<long>(
+            dataSource,
+            "select untrusted_message_count from mailinbox_daily_ingestion_usage");
+
+        Assert.Multiple(
+            () => Assert.False(trusted.WasDuplicate),
+            () => Assert.Equal(2, messageCount),
+            () => Assert.Equal(1, untrustedMessageCount));
+    }
+
+    [RequiresDockerFact]
     public async Task SaveAsync_WhenFirstMessageExceedsDailyByteQuota_RollsBackMessageAndUsage() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
@@ -482,6 +526,53 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
     }
 
     [RequiresDockerFact]
+    public async Task ReadinessChecker_WhenRequiredColumnIsMissing_Throws() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        await GetScalarAsync<int>(
+            dataSource,
+            "alter table mailinbox_messages drop column status; select 1;");
+        var checker = new NpgsqlMailInboxReadinessChecker(dataSource);
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => checker.CheckReadyAsync(CancellationToken.None));
+
+        Assert.Contains("schema is not ready", exception.Message, StringComparison.Ordinal);
+    }
+
+    [RequiresDockerFact]
+    public async Task ReadinessChecker_WhenPrimaryKeyIsMissing_Throws() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        await GetScalarAsync<int>(
+            dataSource,
+            "alter table mailinbox_messages drop constraint mailinbox_messages_pkey; select 1;");
+        var checker = new NpgsqlMailInboxReadinessChecker(dataSource);
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => checker.CheckReadyAsync(CancellationToken.None));
+
+        Assert.Contains("schema is not ready", exception.Message, StringComparison.Ordinal);
+    }
+
+    [RequiresDockerFact]
+    public async Task ReadinessChecker_WhenRequiredIndexTargetsWrongColumns_Throws() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        await GetScalarAsync<int>(
+            dataSource,
+            "drop index ux_mailinbox_messages_ingestion_window; " +
+            "create unique index ux_mailinbox_messages_ingestion_window on mailinbox_messages (id); " +
+            "select 1;");
+        var checker = new NpgsqlMailInboxReadinessChecker(dataSource);
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => checker.CheckReadyAsync(CancellationToken.None));
+
+        Assert.Contains("schema is not ready", exception.Message, StringComparison.Ordinal);
+    }
+
+    [RequiresDockerFact]
     public async Task ReadinessChecker_WhenMetadataConstraintIsMissing_Throws() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
@@ -497,18 +588,329 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
     }
 
     [RequiresDockerFact]
-    public async Task ReadinessChecker_WhenLatestMigrationRecordIsMissing_Throws() {
+    public async Task ReadinessChecker_WhenMetadataConstraintHasWrongExpression_Throws() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
         await GetScalarAsync<int>(
             dataSource,
-            "delete from mailinbox_schema_migrations where name = '202608190002_bound_persisted_mail_metadata'; select 1;");
+            "alter table mailinbox_messages drop constraint ck_mailinbox_messages_subject_length; " +
+            "alter table mailinbox_messages add constraint ck_mailinbox_messages_subject_length check (true); " +
+            "select 1;");
         var checker = new NpgsqlMailInboxReadinessChecker(dataSource);
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => checker.CheckReadyAsync(CancellationToken.None));
 
         Assert.Contains("schema is not ready", exception.Message, StringComparison.Ordinal);
+    }
+
+    [RequiresDockerFact]
+    public async Task ReadinessChecker_WhenLatestMigrationRecordIsMissing_Throws() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        await GetScalarAsync<int>(
+            dataSource,
+            "delete from mailinbox_schema_migrations where name = '202608200002_add_mail_authentication_provenance'; select 1;");
+        var checker = new NpgsqlMailInboxReadinessChecker(dataSource);
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => checker.CheckReadyAsync(CancellationToken.None));
+
+        Assert.Contains("schema is not ready", exception.Message, StringComparison.Ordinal);
+    }
+
+    [RequiresDockerFact]
+    public async Task RuntimeRoleProvisioner_GrantsDmlAndRejectsDdl() {
+        fixture.EnsureAvailable();
+        string connectionString = await fixture.CreateIsolatedDatabaseAsync().ConfigureAwait(false);
+        var migrationDataSource = NpgsqlDataSource.Create(connectionString);
+        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable migrationDataSourceLifetime =
+            migrationDataSource.ConfigureAwait(false);
+        await CreateStore(migrationDataSource).EnsureSchemaAsync(CancellationToken.None).ConfigureAwait(false);
+        string roleName = $"mailinbox_runtime_{Guid.NewGuid():N}";
+        const string password = "0123456789abcdef0123456789abcdef";
+        const string rotatedPassword = "fedcba9876543210fedcba9876543210";
+        var provisioner = new NpgsqlMailInboxRuntimeRoleProvisioner(migrationDataSource);
+        string quotedRole = new NpgsqlCommandBuilder().QuoteIdentifier(roleName);
+        string futureTableName = $"mailinbox_future_{Guid.NewGuid():N}";
+        string quotedFutureTable = new NpgsqlCommandBuilder().QuoteIdentifier(futureTableName);
+
+        try {
+            await provisioner.ProvisionAsync(roleName, password, CancellationToken.None).ConfigureAwait(false);
+            await GetScalarAsync<int>(
+                    migrationDataSource,
+                    $"grant create on schema public to {quotedRole}; select 1;")
+                .ConfigureAwait(false);
+            await provisioner.ProvisionAsync(roleName, rotatedPassword, CancellationToken.None).ConfigureAwait(false);
+            var runtimeBuilder = new NpgsqlConnectionStringBuilder(connectionString) {
+                Username = roleName,
+                Password = rotatedPassword,
+                Pooling = false,
+            };
+            var runtimeDataSource = NpgsqlDataSource.Create(runtimeBuilder.ConnectionString);
+            await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable runtimeDataSourceLifetime =
+                runtimeDataSource.ConfigureAwait(false);
+            var runtimeRoleValidator = new NpgsqlMailInboxRuntimeRoleValidator(runtimeDataSource);
+
+            await runtimeRoleValidator.ValidateAsync(roleName, CancellationToken.None).ConfigureAwait(false);
+
+            NpgsqlInboundMailStore runtimeStore = CreateStore(runtimeDataSource);
+            InboundMailSaveResult saved = await runtimeStore.SaveAsync(
+                    CreateMessage("runtime-dml", new DateTimeOffset(2026, 8, 20, 12, 0, 0, TimeSpan.Zero)),
+                    CancellationToken.None)
+                .ConfigureAwait(false);
+            InboundMailMessageDetails? details = await runtimeStore
+                .GetMessageDetailsAsync(saved.Id, CancellationToken.None)
+                .ConfigureAwait(false);
+            bool markedRead = await runtimeStore
+                .MarkAsReadAsync(saved.Id, DateTimeOffset.UtcNow, CancellationToken.None)
+                .ConfigureAwait(false);
+            bool noInherit = await GetScalarAsync<bool>(
+                    migrationDataSource,
+                    "select not rolinherit from pg_roles where rolname = @role_name",
+                    parameters => parameters.AddWithValue("role_name", roleName))
+                .ConfigureAwait(false);
+
+            Assert.Multiple(
+                () => Assert.Equal("runtime-dml", details?.Subject),
+                () => Assert.True(markedRead),
+                () => Assert.True(noInherit));
+
+            PostgresException migrationMutationException = await Assert.ThrowsAsync<PostgresException>(() =>
+                    GetScalarAsync<int>(
+                        runtimeDataSource,
+                        "update mailinbox_schema_migrations set applied_at_utc = applied_at_utc; select 1;"))
+                .ConfigureAwait(false);
+            Assert.Equal(PostgresErrorCodes.InsufficientPrivilege, migrationMutationException.SqlState);
+
+            await GetScalarAsync<int>(
+                    migrationDataSource,
+                    $"create table {quotedFutureTable} (id integer); select 1;")
+                .ConfigureAwait(false);
+            PostgresException futureTableException = await Assert.ThrowsAsync<PostgresException>(() =>
+                    GetScalarAsync<int>(runtimeDataSource, $"select count(*)::integer from {quotedFutureTable};"))
+                .ConfigureAwait(false);
+            Assert.Equal(PostgresErrorCodes.InsufficientPrivilege, futureTableException.SqlState);
+
+            await GetScalarAsync<int>(
+                    migrationDataSource,
+                    $"grant select on table {quotedFutureTable} to {quotedRole}; select 1;")
+                .ConfigureAwait(false);
+            InvalidOperationException overgrantedRoleException = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                    runtimeRoleValidator.ValidateAsync(roleName, CancellationToken.None))
+                .ConfigureAwait(false);
+            Assert.Contains("least-privilege grants", overgrantedRoleException.Message, StringComparison.Ordinal);
+            await GetScalarAsync<int>(
+                    migrationDataSource,
+                    $"revoke all privileges on table {quotedFutureTable} from {quotedRole}; select 1;")
+                .ConfigureAwait(false);
+
+            await GetScalarAsync<int>(
+                    migrationDataSource,
+                    $"alter role {quotedRole} superuser; select 1;")
+                .ConfigureAwait(false);
+            InvalidOperationException privilegedRoleException = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                    runtimeRoleValidator.ValidateAsync(roleName, CancellationToken.None))
+                .ConfigureAwait(false);
+            Assert.Contains("least-privilege grants", privilegedRoleException.Message, StringComparison.Ordinal);
+            await GetScalarAsync<int>(
+                    migrationDataSource,
+                    $"alter role {quotedRole} nosuperuser; select 1;")
+                .ConfigureAwait(false);
+
+            PostgresException exception = await Assert.ThrowsAsync<PostgresException>(() =>
+                GetScalarAsync<int>(runtimeDataSource, "create table forbidden_runtime_ddl (id integer); select 1;")).ConfigureAwait(false);
+            Assert.Equal(PostgresErrorCodes.InsufficientPrivilege, exception.SqlState);
+        } finally {
+            await GetScalarAsync<int>(
+                    migrationDataSource,
+                    $"drop table if exists {quotedFutureTable}; " +
+                    $"drop owned by {quotedRole}; drop role if exists {quotedRole}; select 1;")
+                .ConfigureAwait(false);
+        }
+    }
+
+    [RequiresDockerFact]
+    public async Task RuntimeRoleProvisioner_WhenExistingRoleHasMembership_RejectsReuse() {
+        fixture.EnsureAvailable();
+        string connectionString = await fixture.CreateIsolatedDatabaseAsync().ConfigureAwait(false);
+        var dataSource = NpgsqlDataSource.Create(connectionString);
+        await using (dataSource.ConfigureAwait(false)) {
+            string groupRoleName = $"mailinbox_group_{Guid.NewGuid():N}";
+            string runtimeRoleName = $"mailinbox_runtime_{Guid.NewGuid():N}";
+            string quotedGroupRole = new NpgsqlCommandBuilder().QuoteIdentifier(groupRoleName);
+            string quotedRuntimeRole = new NpgsqlCommandBuilder().QuoteIdentifier(runtimeRoleName);
+            var provisioner = new NpgsqlMailInboxRuntimeRoleProvisioner(dataSource);
+
+            try {
+                await GetScalarAsync<int>(
+                        dataSource,
+                        $"create role {quotedGroupRole}; create role {quotedRuntimeRole} login; " +
+                        $"grant {quotedGroupRole} to {quotedRuntimeRole}; select 1;")
+                    .ConfigureAwait(false);
+
+                InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                        provisioner.ProvisionAsync(
+                            runtimeRoleName,
+                            "0123456789abcdef0123456789abcdef",
+                            CancellationToken.None))
+                    .ConfigureAwait(false);
+
+                Assert.Contains("not provisioner-owned or has unsafe settings", exception.Message, StringComparison.Ordinal);
+            } finally {
+                await GetScalarAsync<int>(
+                        dataSource,
+                        $"revoke {quotedGroupRole} from {quotedRuntimeRole}; " +
+                        $"drop role if exists {quotedRuntimeRole}; drop role if exists {quotedGroupRole}; select 1;")
+                    .ConfigureAwait(false);
+            }
+        }
+    }
+
+    [RequiresDockerFact]
+    public async Task RuntimeRoleProvisioner_WhenExistingRoleOwnsObject_RejectsReuse() {
+        fixture.EnsureAvailable();
+        string connectionString = await fixture.CreateIsolatedDatabaseAsync().ConfigureAwait(false);
+        var dataSource = NpgsqlDataSource.Create(connectionString);
+        await using (dataSource.ConfigureAwait(false)) {
+            await CreateStore(dataSource).EnsureSchemaAsync(CancellationToken.None).ConfigureAwait(false);
+            string runtimeRoleName = $"mailinbox_runtime_{Guid.NewGuid():N}";
+            string tableName = $"owned_{Guid.NewGuid():N}";
+            string quotedRuntimeRole = new NpgsqlCommandBuilder().QuoteIdentifier(runtimeRoleName);
+            string quotedTable = new NpgsqlCommandBuilder().QuoteIdentifier(tableName);
+            var provisioner = new NpgsqlMailInboxRuntimeRoleProvisioner(dataSource);
+
+            try {
+                await GetScalarAsync<int>(
+                        dataSource,
+                        $"create role {quotedRuntimeRole} login; create table {quotedTable} (id integer); " +
+                        $"alter table {quotedTable} owner to {quotedRuntimeRole}; select 1;")
+                    .ConfigureAwait(false);
+
+                InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                        provisioner.ProvisionAsync(
+                            runtimeRoleName,
+                            "0123456789abcdef0123456789abcdef",
+                            CancellationToken.None))
+                    .ConfigureAwait(false);
+
+                Assert.Contains("not provisioner-owned or has unsafe settings", exception.Message, StringComparison.Ordinal);
+            } finally {
+                await GetScalarAsync<int>(
+                        dataSource,
+                        $"drop table if exists {quotedTable}; drop role if exists {quotedRuntimeRole}; select 1;")
+                    .ConfigureAwait(false);
+            }
+        }
+    }
+
+    [RequiresDockerFact]
+    public async Task RuntimeRoleProvisioner_WhenProvisionedRoleHasRoleSettings_RejectsReuse() {
+        fixture.EnsureAvailable();
+        string connectionString = await fixture.CreateIsolatedDatabaseAsync().ConfigureAwait(false);
+        var dataSource = NpgsqlDataSource.Create(connectionString);
+        await using (dataSource.ConfigureAwait(false)) {
+            await CreateStore(dataSource).EnsureSchemaAsync(CancellationToken.None).ConfigureAwait(false);
+            string runtimeRoleName = $"mailinbox_runtime_{Guid.NewGuid():N}";
+            string quotedRuntimeRole = new NpgsqlCommandBuilder().QuoteIdentifier(runtimeRoleName);
+            var provisioner = new NpgsqlMailInboxRuntimeRoleProvisioner(dataSource);
+
+            try {
+                await provisioner.ProvisionAsync(
+                        runtimeRoleName,
+                        "0123456789abcdef0123456789abcdef",
+                        CancellationToken.None)
+                    .ConfigureAwait(false);
+                await GetScalarAsync<int>(
+                        dataSource,
+                        $"alter role {quotedRuntimeRole} set search_path = public, pg_catalog; select 1;")
+                    .ConfigureAwait(false);
+
+                InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                        provisioner.ProvisionAsync(
+                            runtimeRoleName,
+                            "fedcba9876543210fedcba9876543210",
+                            CancellationToken.None))
+                    .ConfigureAwait(false);
+
+                Assert.Contains("not provisioner-owned or has unsafe settings", exception.Message, StringComparison.Ordinal);
+            } finally {
+                bool roleExists = await GetScalarAsync<bool>(
+                        dataSource,
+                        "select exists (select 1 from pg_roles where rolname = @role_name)",
+                        parameters => parameters.AddWithValue("role_name", runtimeRoleName))
+                    .ConfigureAwait(false);
+                if (roleExists) {
+                    await GetScalarAsync<int>(
+                            dataSource,
+                            $"alter role {quotedRuntimeRole} reset all; drop owned by {quotedRuntimeRole}; " +
+                            $"drop role {quotedRuntimeRole}; select 1;")
+                        .ConfigureAwait(false);
+                }
+            }
+        }
+    }
+
+    [RequiresDockerFact]
+    public async Task RuntimeRoleProvisioner_WhenProvisionedRoleHasCrossDatabaseGrant_RejectsReuse() {
+        fixture.EnsureAvailable();
+        string connectionString = await fixture.CreateIsolatedDatabaseAsync().ConfigureAwait(false);
+        var dataSource = NpgsqlDataSource.Create(connectionString);
+        await using (dataSource.ConfigureAwait(false)) {
+            await CreateStore(dataSource).EnsureSchemaAsync(CancellationToken.None).ConfigureAwait(false);
+            string runtimeRoleName = $"mailinbox_runtime_{Guid.NewGuid():N}";
+            string externalDatabaseName = $"mailinbox_external_{Guid.NewGuid():N}";
+            string quotedRuntimeRole = new NpgsqlCommandBuilder().QuoteIdentifier(runtimeRoleName);
+            string quotedExternalDatabase = new NpgsqlCommandBuilder().QuoteIdentifier(externalDatabaseName);
+            var provisioner = new NpgsqlMailInboxRuntimeRoleProvisioner(dataSource);
+
+            try {
+                await provisioner.ProvisionAsync(
+                        runtimeRoleName,
+                        "0123456789abcdef0123456789abcdef",
+                        CancellationToken.None)
+                    .ConfigureAwait(false);
+                await ExecuteNonQueryAsync(dataSource, $"create database {quotedExternalDatabase}").ConfigureAwait(false);
+                await ExecuteNonQueryAsync(
+                        dataSource,
+                        $"grant connect on database {quotedExternalDatabase} to {quotedRuntimeRole}")
+                    .ConfigureAwait(false);
+
+                InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                        provisioner.ProvisionAsync(
+                            runtimeRoleName,
+                            "fedcba9876543210fedcba9876543210",
+                            CancellationToken.None))
+                    .ConfigureAwait(false);
+
+                Assert.Contains("cross-database grants", exception.Message, StringComparison.Ordinal);
+            } finally {
+                bool externalDatabaseExists = await GetScalarAsync<bool>(
+                        dataSource,
+                        "select exists (select 1 from pg_database where datname = @database_name)",
+                        parameters => parameters.AddWithValue("database_name", externalDatabaseName))
+                    .ConfigureAwait(false);
+                if (externalDatabaseExists) {
+                    await ExecuteNonQueryAsync(
+                            dataSource,
+                            $"revoke connect on database {quotedExternalDatabase} from {quotedRuntimeRole}")
+                        .ConfigureAwait(false);
+                    await ExecuteNonQueryAsync(dataSource, $"drop database {quotedExternalDatabase}").ConfigureAwait(false);
+                }
+
+                bool roleExists = await GetScalarAsync<bool>(
+                        dataSource,
+                        "select exists (select 1 from pg_roles where rolname = @role_name)",
+                        parameters => parameters.AddWithValue("role_name", runtimeRoleName))
+                    .ConfigureAwait(false);
+                if (roleExists) {
+                    await GetScalarAsync<int>(
+                            dataSource,
+                            $"drop owned by {quotedRuntimeRole}; drop role {quotedRuntimeRole}; select 1;")
+                        .ConfigureAwait(false);
+                }
+            }
+        }
     }
 
     private async Task<NpgsqlDataSource> CreateDataSourceAsync() {
@@ -604,6 +1006,16 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
                 configureParameters?.Invoke(command.Parameters);
                 return (T)(await command.ExecuteScalarAsync().ConfigureAwait(false)
                            ?? throw new InvalidOperationException("Query did not return a value."));
+            }
+        }
+    }
+
+    private static async Task ExecuteNonQueryAsync(NpgsqlDataSource dataSource, string sql) {
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync().ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand(sql, connection);
+            await using (command.ConfigureAwait(false)) {
+                await command.ExecuteNonQueryAsync().ConfigureAwait(false);
             }
         }
     }

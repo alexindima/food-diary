@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "optionTypes": 55,
+    "optionTypes": 56,
     "configurationFiles": 7,
-    "configurationKeys": 247,
-    "environmentVariables": 178
+    "configurationKeys": 258,
+    "environmentVariables": 185
   },
   "optionTypes": [
     {
@@ -245,8 +245,11 @@
       "type": "MailInboxClientOptions",
       "section": "MailInboxClient",
       "properties": [
-        "ApiKey",
+        "AllowInsecureLoopback",
         "BaseUrl",
+        "ContentApiKey",
+        "MetadataApiKey",
+        "StateApiKey",
         "Timeout"
       ],
       "path": "MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs"
@@ -256,7 +259,10 @@
       "section": null,
       "properties": [
         "ConnectionString",
-        "IsProduction"
+        "IsProduction",
+        "IsSmtpEnabled",
+        "RuntimeRoleName",
+        "TrustedRelayNetworks"
       ],
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs"
     },
@@ -264,18 +270,31 @@
       "type": "MailInboxHttpOptions",
       "section": "MailInboxHttp",
       "properties": [
-        "ApiKey",
+        "ContentApiKey",
         "MaxConcurrentMessageDetailRequests",
         "MaxConcurrentMessageMetadataRequests",
         "MaxConcurrentReadinessRequests",
+        "MessageDetailExecutionTimeout",
         "MessageDetailQueueTimeout",
         "MessageMetadataExecutionTimeout",
         "MessageMetadataQueueTimeout",
+        "MetadataApiKey",
         "ReadinessExecutionTimeout",
         "ReadinessQueueTimeout",
-        "RequireApiKey"
+        "RequireApiKey",
+        "StateApiKey"
       ],
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs"
+    },
+    {
+      "type": "MailInboxRuntimeDatabaseOptions",
+      "section": "MailInboxRuntimeDatabase",
+      "properties": [
+        "Password",
+        "ProvisionRole",
+        "RoleName"
+      ],
+      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Options/MailInboxRuntimeDatabaseOptions.cs"
     },
     {
       "type": "MailInboxSmtpOptions",
@@ -284,6 +303,7 @@
         "AllowedRecipients",
         "CertificatePath",
         "Enabled",
+        "ListenAddress",
         "MaxConcurrentConnections",
         "MaxConcurrentConnectionsPerIp",
         "MaxConcurrentMessageProcessing",
@@ -301,7 +321,8 @@
         "PrivateKeyPath",
         "ProcessingQueueTimeout",
         "ServerName",
-        "SessionTimeout"
+        "SessionTimeout",
+        "TrustedRelayNetworks"
       ],
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxSmtpOptions.cs"
     },
@@ -316,6 +337,8 @@
         "MaxConcurrentMessageDetailReads",
         "MaxMessagesPerDay",
         "MaxRawBytesPerDay",
+        "MaxUntrustedMessagesPerDay",
+        "MaxUntrustedRawBytesPerDay",
         "MetadataRetention"
       ],
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxStorageOptions.cs"
@@ -727,7 +750,8 @@
       "keys": [
         "Cors:Origins",
         "Email:AllowedFrontendBaseUrls",
-        "Email:FrontendBaseUrl"
+        "Email:FrontendBaseUrl",
+        "MailInboxClient:AllowInsecureLoopback"
       ]
     },
     {
@@ -765,8 +789,10 @@
         "Logging:LogLevel:Default",
         "Logging:LogLevel:Microsoft.AspNetCore",
         "Logging:LogLevel:Microsoft.EntityFrameworkCore",
-        "MailInboxClient:ApiKey",
         "MailInboxClient:BaseUrl",
+        "MailInboxClient:ContentApiKey",
+        "MailInboxClient:MetadataApiKey",
+        "MailInboxClient:StateApiKey",
         "MailRelayClient:ApiKey",
         "MailRelayClient:BaseUrl",
         "OpenAi:ApiKey",
@@ -861,7 +887,8 @@
       "keys": [
         "ConnectionStrings:DefaultConnection",
         "Logging:LogLevel:Default",
-        "Logging:LogLevel:Microsoft.AspNetCore"
+        "Logging:LogLevel:Microsoft.AspNetCore",
+        "MailInboxSmtp:ListenAddress"
       ]
     },
     {
@@ -871,13 +898,18 @@
         "ConnectionStrings:DefaultConnection",
         "Logging:LogLevel:Default",
         "Logging:LogLevel:Microsoft.AspNetCore",
-        "MailInboxHttp:ApiKey",
+        "MailInboxHttp:ContentApiKey",
         "MailInboxHttp:MaxConcurrentMessageDetailRequests",
+        "MailInboxHttp:MessageDetailExecutionTimeout",
         "MailInboxHttp:MessageDetailQueueTimeout",
+        "MailInboxHttp:MetadataApiKey",
         "MailInboxHttp:RequireApiKey",
+        "MailInboxHttp:StateApiKey",
+        "MailInboxRuntimeDatabase:RoleName",
         "MailInboxSmtp:AllowedRecipients",
         "MailInboxSmtp:CertificatePath",
         "MailInboxSmtp:Enabled",
+        "MailInboxSmtp:ListenAddress",
         "MailInboxSmtp:MaxConcurrentConnections",
         "MailInboxSmtp:MaxConcurrentConnectionsPerIp",
         "MailInboxSmtp:MaxConcurrentMessageProcessing",
@@ -896,6 +928,7 @@
         "MailInboxSmtp:ProcessingQueueTimeout",
         "MailInboxSmtp:ServerName",
         "MailInboxSmtp:SessionTimeout",
+        "MailInboxSmtp:TrustedRelayNetworks",
         "MailInboxStorage:CleanupBatchSize",
         "MailInboxStorage:CleanupInterval",
         "MailInboxStorage:ContentRetention",
@@ -903,6 +936,8 @@
         "MailInboxStorage:MaxConcurrentMessageDetailReads",
         "MailInboxStorage:MaxMessagesPerDay",
         "MailInboxStorage:MaxRawBytesPerDay",
+        "MailInboxStorage:MaxUntrustedMessagesPerDay",
+        "MailInboxStorage:MaxUntrustedRawBytesPerDay",
         "MailInboxStorage:MetadataRetention",
         "OpenTelemetry:Otlp:Endpoint"
       ]
@@ -1038,17 +1073,23 @@
         "Jwt__RefreshTokenExpirationDays",
         "Jwt__RememberMeRefreshTokenExpirationDays",
         "Jwt__SecretKey",
+        "MAIL_INBOX_CONTENT_API_KEY",
         "MAIL_INBOX_HOST_BIND",
         "MAIL_INBOX_IMAGE_TAG",
         "MAIL_INBOX_INITIALIZER_IMAGE_TAG",
+        "MAIL_INBOX_METADATA_API_KEY",
         "MAIL_INBOX_PORT",
         "MAIL_INBOX_POSTGRES_DB",
         "MAIL_INBOX_POSTGRES_HOST_BIND",
         "MAIL_INBOX_POSTGRES_PASSWORD",
         "MAIL_INBOX_POSTGRES_PORT",
+        "MAIL_INBOX_POSTGRES_RUNTIME_PASSWORD",
+        "MAIL_INBOX_POSTGRES_RUNTIME_USER",
         "MAIL_INBOX_POSTGRES_USER",
         "MAIL_INBOX_SMTP_HOST_BIND",
         "MAIL_INBOX_SMTP_PORT",
+        "MAIL_INBOX_STATE_API_KEY",
+        "MAIL_INBOX_TRUSTED_RELAY_NETWORK",
         "MAIL_RELAY_DKIM_PRIVATE_KEY_FILE",
         "MAIL_RELAY_HOST_BIND",
         "MAIL_RELAY_IMAGE_TAG",
@@ -1066,6 +1107,7 @@
         "MailInboxSmtp__AllowedRecipients__3",
         "MailInboxSmtp__CertificatePath",
         "MailInboxSmtp__Enabled",
+        "MailInboxSmtp__ListenAddress",
         "MailInboxSmtp__MaxConcurrentConnections",
         "MailInboxSmtp__MaxConcurrentConnectionsPerIp",
         "MailInboxSmtp__MaxConcurrentMessageProcessing",

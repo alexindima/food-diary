@@ -68,7 +68,9 @@ public sealed class SmtpInboundMessageStoreTests {
 
         SmtpResponse response = await messageStore.SaveAsync(
             context: null!,
-            new TestMessageTransaction(["support@fooddiary.club"]),
+            new TestMessageTransaction(["support@fooddiary.club"]) {
+                From = new Mailbox("bounce", "relay.example"),
+            },
             new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(rawMime)),
             CancellationToken.None);
 
@@ -76,10 +78,33 @@ public sealed class SmtpInboundMessageStoreTests {
         Assert.NotNull(store.LastSaved);
         Assert.Equal("sender@example.com", store.LastSaved.FromAddress);
         Assert.Equal(["support@fooddiary.club"], store.LastSaved.ToRecipients);
+        Assert.Equal("bounce@relay.example", store.LastAdmission.EnvelopeFromAddress);
+        Assert.False(store.LastAdmission.IsTrustedRelay);
         Assert.Equal("Hello", store.LastSaved.Subject);
         Assert.Contains("plain text", store.LastSaved.TextBody, StringComparison.Ordinal);
         Assert.True(store.LastSaved.RawMimeBytes.Span.SequenceEqual(Encoding.UTF8.GetBytes(rawMime)));
         Assert.Equal(FixedNow, store.LastSaved.ReceivedAtUtc);
+    }
+
+    [Fact]
+    public async Task SaveAsync_WhenSourceMatchesTrustedRelayNetwork_UsesReservedAdmissionClass() {
+        var store = new RecordingInboundMailStore();
+        SmtpInboundMessageStore messageStore = CreateMessageStore(
+            store,
+            new MailInboxSmtpOptions {
+                TrustedRelayNetworks = ["192.0.2.0/24"],
+            });
+
+        SmtpResponse response = await messageStore.SaveAsync(
+            new TestSessionContext(IPAddress.Parse("192.0.2.42")),
+            new TestMessageTransaction(["support@fooddiary.club"]),
+            new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(CreateRawMime(includeToHeader: true))),
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(SmtpResponse.Ok.ReplyCode, response.ReplyCode),
+            () => Assert.True(store.LastAdmission.IsTrustedRelay),
+            () => Assert.Equal("sender@example.com", store.LastAdmission.EnvelopeFromAddress));
     }
 
     [Fact]
@@ -206,6 +231,24 @@ public sealed class SmtpInboundMessageStoreTests {
             context: null!,
             new TestMessageTransaction(["admin@fooddiary.club"]),
             new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(rawMime)),
+            CancellationToken.None);
+
+        Assert.Equal(SmtpReplyCode.TransactionFailed, response.ReplyCode);
+        Assert.Null(store.LastSaved);
+    }
+
+    [Fact]
+    public async Task SaveAsync_WhenEnvelopeSenderExceedsStoredMetadataLimit_RejectsBeforePersistence() {
+        var store = new RecordingInboundMailStore();
+        SmtpInboundMessageStore messageStore = CreateMessageStore(store);
+        var transaction = new TestMessageTransaction(["admin@fooddiary.club"]) {
+            From = new Mailbox(new string('s', 310), "example.com"),
+        };
+
+        SmtpResponse response = await messageStore.SaveAsync(
+            context: null!,
+            transaction,
+            new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(CreateRawMime(includeToHeader: true))),
             CancellationToken.None);
 
         Assert.Equal(SmtpReplyCode.TransactionFailed, response.ReplyCode);
@@ -551,9 +594,19 @@ public sealed class SmtpInboundMessageStoreTests {
     [ExcludeFromCodeCoverage]
     private sealed class RecordingInboundMailStore(bool wasDuplicate = false) : IInboundMailStore {
         public InboundMailMessage? LastSaved { get; private set; }
+        public InboundMailAdmission LastAdmission { get; private set; }
 
-        public Task<InboundMailSaveResult> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) {
+        public Task<InboundMailSaveResult> SaveAsync(
+            InboundMailMessage message,
+            CancellationToken cancellationToken) =>
+            SaveAsync(message, InboundMailAdmission.Untrusted, cancellationToken);
+
+        public Task<InboundMailSaveResult> SaveAsync(
+            InboundMailMessage message,
+            InboundMailAdmission admission,
+            CancellationToken cancellationToken) {
             LastSaved = message;
+            LastAdmission = admission;
             return Task.FromResult(new InboundMailSaveResult(Guid.NewGuid(), wasDuplicate));
         }
 

@@ -16,7 +16,10 @@ public static class InboundMailHttpMappings {
             message.Category,
             message.Status,
             message.ReadAtUtc,
-            message.ReceivedAtUtc);
+            message.ReceivedAtUtc,
+            message.EnvelopeFromAddress,
+            message.IsTrustedRelay,
+            message.FromAddressIsVerified);
 
     public static InboundMailMessageDetailsHttpResponse ToHttpResponse(this InboundMailMessageDetails message) =>
         new(
@@ -33,7 +36,11 @@ public static class InboundMailHttpMappings {
             message.Status,
             message.ReadAtUtc,
             message.ReceivedAtUtc,
-            message.ContentPurgedAtUtc);
+            message.ContentPurgedAtUtc,
+            message.EnvelopeFromAddress,
+            message.IsTrustedRelay,
+            message.FromAddressIsVerified,
+            message.DmarcReportIsVerified);
 
     public static IReadOnlyList<InboundMailMessageSummaryHttpResponse> ToHttpResponse(
         this IReadOnlyList<InboundMailMessageSummary> messages) =>

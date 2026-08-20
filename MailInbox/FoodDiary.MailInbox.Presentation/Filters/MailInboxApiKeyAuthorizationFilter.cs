@@ -9,7 +9,14 @@ namespace FoodDiary.MailInbox.Presentation.Filters;
 
 public sealed class MailInboxApiKeyAuthorizationFilter(IOptions<MailInboxHttpOptions> options) : IAuthorizationFilter {
     public void OnAuthorization(AuthorizationFilterContext context) {
-        if (MailInboxRequestAuthorizer.IsAuthorized(context.HttpContext.Request, options.Value)) {
+        RequireMailInboxPermissionAttribute? requirement = context.ActionDescriptor.EndpointMetadata
+            .OfType<RequireMailInboxPermissionAttribute>()
+            .SingleOrDefault();
+        if (requirement is not null &&
+            MailInboxRequestAuthorizer.IsAuthorized(
+                context.HttpContext.Request,
+                options.Value,
+                requirement.Permission)) {
             return;
         }
 

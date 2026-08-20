@@ -37,7 +37,10 @@ file static class MailInboxClientAdminMailInboxMappings {
             response.Category,
             response.Status,
             response.ReadAtUtc,
-            response.ReceivedAtUtc);
+            response.ReceivedAtUtc,
+            response.EnvelopeFromAddress,
+            response.IsTrustedRelay,
+            response.FromAddressIsVerified);
     }
 
     public static AdminMailInboxMessageDetailsModel ToModel(this InboundMailMessageDetailsResponse response) {
@@ -54,6 +57,34 @@ file static class MailInboxClientAdminMailInboxMappings {
             response.Status,
             response.ReadAtUtc,
             response.ReceivedAtUtc,
-            response.ContentPurgedAtUtc);
+            response.ContentPurgedAtUtc,
+            response.DmarcReport?.ToModel(),
+            response.EnvelopeFromAddress,
+            response.IsTrustedRelay,
+            response.FromAddressIsVerified,
+            response.DmarcReportIsVerified);
     }
+
+    private static AdminMailInboxDmarcReportModel ToModel(this DmarcReportResponse response) =>
+        new(
+            response.OrganizationName,
+            response.ReportId,
+            response.Domain,
+            response.DateRangeStartUtc,
+            response.DateRangeEndUtc,
+            response.Records.Select(static record => record.ToModel()).ToArray());
+
+    private static AdminMailInboxDmarcRecordModel ToModel(this DmarcReportRecordResponse response) =>
+        new(
+            response.SourceIp,
+            response.Count,
+            response.Disposition,
+            response.Dkim,
+            response.Spf,
+            response.HeaderFrom,
+            response.EnvelopeFrom,
+            response.DkimDomain,
+            response.DkimResult,
+            response.SpfDomain,
+            response.SpfResult);
 }

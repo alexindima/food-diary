@@ -26,6 +26,8 @@ public sealed class SmtpInboundMessageStore(
     private readonly HashSet<string> _allowedRecipients = options.Value.AllowedRecipients
         .Select(static address => address.Trim().ToLowerInvariant())
         .ToHashSet(StringComparer.Ordinal);
+    private readonly MailInboxNetworkRange[] _trustedRelayNetworks = [.. options.Value.TrustedRelayNetworks
+        .Select(MailInboxNetworkRange.Parse)];
     private readonly SemaphoreSlim _processingSlots = new(
         options.Value.MaxConcurrentMessageProcessing,
         options.Value.MaxConcurrentMessageProcessing);
@@ -57,9 +59,10 @@ public sealed class SmtpInboundMessageStore(
                 return SmtpResponse.SizeLimitExceeded;
             }
 
+            IPAddress? sourceAddress = GetSourceAddress(context);
             if (!rateLimiter.TryAcquire(
                     "ip-bytes",
-                    GetSourceAddress(context),
+                    sourceAddress is null ? "unknown" : MailInboxNetworkIdentity.GetKey(sourceAddress),
                     _options.MaxRawBytesPerIpPerHour,
                     TimeSpan.FromHours(1),
                     messageSize)) {
@@ -96,8 +99,14 @@ public sealed class SmtpInboundMessageStore(
 
             string? messageId = message.MessageId;
             string? fromAddress = message.From.Mailboxes.FirstOrDefault()?.Address;
+            string? envelopeFromAddress = GetEnvelopeFromAddress(transaction);
             string? subject = message.Subject;
-            if (!MailInboxStoredMessageLimits.IsWithinLimits(messageId, fromAddress, recipients, subject)) {
+            if (!MailInboxStoredMessageLimits.IsWithinLimits(
+                    messageId,
+                    fromAddress,
+                    recipients,
+                    subject,
+                    envelopeFromAddress)) {
                 MailInboxTelemetry.RecordIngestion(MailInboxIngestionOutcome.MetadataLimit, Stopwatch.GetElapsedTime(startedAt), messageSize);
                 return new SmtpResponse(SmtpReplyCode.TransactionFailed, "Message metadata exceeds the allowed limits.");
             }
@@ -112,7 +121,12 @@ public sealed class SmtpInboundMessageStore(
                 rawBytes,
                 timeProvider.GetUtcNow());
 
-            InboundMailSaveResult saveResult = await store.SaveAsync(inboundMessage, cancellationToken).ConfigureAwait(false);
+            bool isTrustedRelay = sourceAddress is not null &&
+                                  _trustedRelayNetworks.Any(range => range.Contains(sourceAddress));
+            var admission = new InboundMailAdmission(isTrustedRelay, envelopeFromAddress);
+            InboundMailSaveResult saveResult = await store
+                .SaveAsync(inboundMessage, admission, cancellationToken)
+                .ConfigureAwait(false);
 
             logger.LogInformation(
                 "Inbound email accepted. StoredId={StoredId}; RecipientCount={RecipientCount}; Duplicate={Duplicate}",
@@ -142,14 +156,22 @@ public sealed class SmtpInboundMessageStore(
 
     public void Dispose() => _processingSlots.Dispose();
 
-    private static string GetSourceAddress(ISessionContext? context) {
+    private static IPAddress? GetSourceAddress(ISessionContext? context) {
         if (context is not null &&
             context.Properties.TryGetValue(EndpointListener.RemoteEndPointKey, out object? value) &&
             value is IPEndPoint endpoint) {
-            return MailInboxNetworkIdentity.GetKey(endpoint.Address);
+            return endpoint.Address;
         }
 
-        return "unknown";
+        return null;
+    }
+
+    private static string? GetEnvelopeFromAddress(IMessageTransaction transaction) {
+        string user = transaction.From.User;
+        string host = transaction.From.Host;
+        return string.IsNullOrWhiteSpace(user) || string.IsNullOrWhiteSpace(host)
+            ? null
+            : $"{user.Trim()}@{host.Trim()}".ToLowerInvariant();
     }
 
     private static async Task<MimeMessage> ParseMessageAsync(

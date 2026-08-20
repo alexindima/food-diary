@@ -38,6 +38,7 @@ public static class MailInboxServiceCollectionExtensions {
         });
 
         services.AddSingleton<NpgsqlInboundMailStore>();
+        services.AddSingleton<NpgsqlMailInboxRuntimeRoleValidator>();
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton<DmarcReportParser>();
         services.AddSingleton<IMailInboxDmarcReportParser>(static sp => sp.GetRequiredService<DmarcReportParser>());
@@ -48,7 +49,6 @@ public static class MailInboxServiceCollectionExtensions {
         services.AddSingleton<MailInboxFixedWindowRateLimiter>();
         services.AddSingleton<MailInboxMailboxFilter>();
         services.AddSingleton<MailInboxEndpointListenerFactory>();
-        services.AddHostedService<MailInboxSchemaInitializerHostedService>();
         services.AddHostedService<MailInboxRetentionHostedService>();
         services.AddHostedService<MailInboxSmtpHostedService>();
 

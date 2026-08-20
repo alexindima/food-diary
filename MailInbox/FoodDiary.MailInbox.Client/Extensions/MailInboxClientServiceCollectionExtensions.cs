@@ -11,7 +11,9 @@ public static class MailInboxClientServiceCollectionExtensions {
         services.AddOptions<MailInboxClientOptions>()
             .Configure(configureOptions)
             .Validate(MailInboxClientOptions.HasValidBaseUrl,
-                "MailInbox client base URL must be an absolute URL.")
+                "MailInbox client base URL must be HTTPS without credentials, query, or fragment. Insecure HTTP is allowed only for loopback when explicitly enabled.")
+            .Validate(MailInboxClientOptions.HasValidApiKey,
+                "MailInbox client requires three distinct metadata, content, and state API keys containing between 32 and 256 characters each.")
             .Validate(static options => options.Timeout > TimeSpan.Zero,
                 "MailInbox client timeout must be greater than zero.")
             .ValidateOnStart();

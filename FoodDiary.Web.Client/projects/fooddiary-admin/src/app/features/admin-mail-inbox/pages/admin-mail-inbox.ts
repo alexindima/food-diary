@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 
@@ -23,7 +24,7 @@ const MAX_MAIL_INBOX_LIMIT = 200;
 
 @Component({
     selector: 'fd-admin-mail-inbox',
-    imports: [CommonModule, FdUiButtonComponent, FdUiInputComponent],
+    imports: [CommonModule, FdUiButtonComponent, FdUiInputComponent, TranslatePipe],
     templateUrl: './admin-mail-inbox.html',
     styleUrl: './admin-mail-inbox.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -79,11 +80,13 @@ export class AdminMailInboxComponent {
         return message.textBody ?? '';
     });
     protected readonly dmarcTotalMessages = computed(() => {
-        const report = this.selectedMessage()?.dmarcReport;
+        const message = this.selectedMessage();
+        const report = message?.dmarcReportIsVerified === true ? message.dmarcReport : null;
         return report?.records.reduce((total, record) => total + record.count, 0) ?? 0;
     });
     protected readonly dmarcProblemRecords = computed(() => {
-        const report = this.selectedMessage()?.dmarcReport;
+        const message = this.selectedMessage();
+        const report = message?.dmarcReportIsVerified === true ? message.dmarcReport : null;
         return report?.records.filter(record => record.dkim !== 'pass' || record.spf !== 'pass').length ?? 0;
     });
 

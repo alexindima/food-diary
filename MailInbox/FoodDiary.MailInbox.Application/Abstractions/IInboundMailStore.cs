@@ -6,6 +6,12 @@ namespace FoodDiary.MailInbox.Application.Abstractions;
 public interface IInboundMailStore {
     Task<InboundMailSaveResult> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken);
 
+    Task<InboundMailSaveResult> SaveAsync(
+        InboundMailMessage message,
+        InboundMailAdmission admission,
+        CancellationToken cancellationToken) =>
+        SaveAsync(message, cancellationToken);
+
     Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(int limit, CancellationToken cancellationToken);
 
     Task<InboundMailMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken);

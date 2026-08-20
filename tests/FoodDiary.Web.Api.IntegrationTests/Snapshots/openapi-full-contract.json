@@ -16705,6 +16705,122 @@
       ]
     },
     {
+      "Name": "AdminMailInboxDmarcRecordHttpResponse",
+      "Properties": [
+        {
+          "Name": "count",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "disposition",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "dkim",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "dkimDomain",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "dkimResult",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "envelopeFrom",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "headerFrom",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "sourceIp",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "spf",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "spfDomain",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "spfResult",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "AdminMailInboxDmarcReportHttpResponse",
+      "Properties": [
+        {
+          "Name": "dateRangeEndUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "dateRangeStartUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "domain",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "organizationName",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "records",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/AdminMailInboxDmarcRecordHttpResponse"
+        },
+        {
+          "Name": "reportId",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
       "Name": "AdminMailInboxMessageDetailsHttpResponse",
       "Properties": [
         {
@@ -16721,10 +16837,34 @@
           "Nullable": true
         },
         {
+          "Name": "dmarcReport",
+          "Required": false,
+          "Reference": "#/components/schemas/AdminMailInboxDmarcReportHttpResponse",
+          "Nullable": false
+        },
+        {
+          "Name": "dmarcReportIsVerified",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "envelopeFromAddress",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
           "Name": "fromAddress",
           "Required": false,
           "Type": "string",
           "Nullable": true
+        },
+        {
+          "Name": "fromAddressIsVerified",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
         },
         {
           "Name": "htmlBody",
@@ -16737,6 +16877,12 @@
           "Required": false,
           "Type": "string",
           "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "isTrustedRelay",
+          "Required": false,
+          "Type": "boolean",
           "Nullable": false
         },
         {
@@ -16802,16 +16948,34 @@
           "Nullable": true
         },
         {
+          "Name": "envelopeFromAddress",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
           "Name": "fromAddress",
           "Required": false,
           "Type": "string",
           "Nullable": true
         },
         {
+          "Name": "fromAddressIsVerified",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
           "Name": "id",
           "Required": false,
           "Type": "string",
           "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "isTrustedRelay",
+          "Required": false,
+          "Type": "boolean",
           "Nullable": false
         },
         {

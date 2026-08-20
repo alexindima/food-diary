@@ -53,6 +53,9 @@ internal static class TestConfiguration {
             ["RateLimiting:Billing:WindowSeconds"] = "60",
             ["RateLimiting:Export:PermitLimit"] = "1000",
             ["RateLimiting:Export:WindowSeconds"] = "60",
+            ["MailInboxClient:MetadataApiKey"] = "fedcba9876543210fedcba987654321a",
+            ["MailInboxClient:ContentApiKey"] = "fedcba9876543210fedcba987654321b",
+            ["MailInboxClient:StateApiKey"] = "fedcba9876543210fedcba987654321c",
         });
     }
 }

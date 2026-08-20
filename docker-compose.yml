@@ -29,7 +29,6 @@ services:
       InitialAdmin__Email: ${InitialAdmin__Email:-admin@fooddiary.club}
       InitialAdmin__Password: ${InitialAdmin__Password:-}
       MailRelayClient__BaseUrl: http://mail-relay:5088
-      MailInboxClient__BaseUrl: http://mail-inbox:5098
     depends_on:
       postgres:
         condition: service_healthy
@@ -74,6 +73,19 @@ services:
       - full
       - backend
 
+  mailinbox-postgres-tls-init:
+    image: ${MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF:-fooddiary-mailinbox-postgres-tls-init:local}
+    build:
+      context: .
+      dockerfile: MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile.postgres-tls-init
+    user: "0:0"
+    volumes:
+      - mailinbox-postgres-server-tls:/server
+      - mailinbox-postgres-client-ca:/trust
+    restart: "no"
+    profiles:
+      - mail-inbox
+
   mailinbox-postgres:
     image: postgres:17-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
     restart: unless-stopped
@@ -85,11 +97,30 @@ services:
       - "${MAIL_INBOX_POSTGRES_HOST_BIND:-127.0.0.1}:${MAIL_INBOX_POSTGRES_PORT:-5434}:5432"
     volumes:
       - mailinbox-postgres-data:/var/lib/postgresql/data
+      - mailinbox-postgres-server-tls:/run/postgresql-tls:ro
+      - ./MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf:/etc/postgresql/mailinbox-pg_hba.conf:ro
+    command:
+      - postgres
+      - -c
+      - ssl=on
+      - -c
+      - ssl_cert_file=/run/postgresql-tls/server.crt
+      - -c
+      - ssl_key_file=/run/postgresql-tls/server.key
+      - -c
+      - ssl_ca_file=/run/postgresql-tls/ca.crt
+      - -c
+      - ssl_min_protocol_version=TLSv1.2
+      - -c
+      - hba_file=/etc/postgresql/mailinbox-pg_hba.conf
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${MAIL_INBOX_POSTGRES_USER:-postgres} -d ${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox}"]
+      test: ["CMD-SHELL", "PGPASSWORD=\"$${POSTGRES_PASSWORD}\" psql \"host=mailinbox-postgres port=5432 dbname=$${POSTGRES_DB} user=$${POSTGRES_USER} sslmode=verify-full sslrootcert=/run/postgresql-tls/ca.crt\" -v ON_ERROR_STOP=1 -c 'select 1' >/dev/null"]
       interval: 180s
       timeout: 10s
       retries: 5
+    depends_on:
+      mailinbox-postgres-tls-init:
+        condition: service_completed_successfully
     profiles:
       - mail-inbox
 
@@ -102,7 +133,12 @@ services:
     env_file:
       - .env
     environment:
-      ConnectionStrings__DefaultConnection: Host=mailinbox-postgres;Port=5432;Database=${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox};Username=${MAIL_INBOX_POSTGRES_USER:-postgres};Password=${MAIL_INBOX_POSTGRES_PASSWORD:?Set MAIL_INBOX_POSTGRES_PASSWORD}
+      ConnectionStrings__DefaultConnection: Host=mailinbox-postgres;Port=5432;Database=${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox};Username=${MAIL_INBOX_POSTGRES_USER:-postgres};Password=${MAIL_INBOX_POSTGRES_PASSWORD:?Set MAIL_INBOX_POSTGRES_PASSWORD};SSL Mode=VerifyFull;Root Certificate=/run/mailinbox-postgres-ca/ca.crt
+      MailInboxRuntimeDatabase__ProvisionRole: "true"
+      MailInboxRuntimeDatabase__RoleName: ${MAIL_INBOX_POSTGRES_RUNTIME_USER:-mailinbox_runtime}
+      MailInboxRuntimeDatabase__Password: ${MAIL_INBOX_POSTGRES_RUNTIME_PASSWORD:?Set MAIL_INBOX_POSTGRES_RUNTIME_PASSWORD}
+    volumes:
+      - mailinbox-postgres-client-ca:/run/mailinbox-postgres-ca:ro
     depends_on:
       mailinbox-postgres:
         condition: service_healthy
@@ -161,8 +197,10 @@ services:
       BuildInfo__ImageTag: ${API_IMAGE_TAG:-unknown}
       MailRelayClient__BaseUrl: http://mail-relay:5088
       MailRelayClient__ApiKey: ${MailRelayClient__ApiKey:-}
-      MailInboxClient__BaseUrl: http://mail-inbox:5098
-      MailInboxClient__ApiKey: ${MailInboxClient__ApiKey:-}
+      MailInboxClient__BaseUrl: https://mail.fooddiary.club:5098
+      MailInboxClient__MetadataApiKey: ${MAIL_INBOX_METADATA_API_KEY:?Set MAIL_INBOX_METADATA_API_KEY}
+      MailInboxClient__ContentApiKey: ${MAIL_INBOX_CONTENT_API_KEY:?Set MAIL_INBOX_CONTENT_API_KEY}
+      MailInboxClient__StateApiKey: ${MAIL_INBOX_STATE_API_KEY:?Set MAIL_INBOX_STATE_API_KEY}
       DataProtection__KeyRingPath: /var/lib/fooddiary/data-protection-keys
     env_file:
       - .env
@@ -242,21 +280,29 @@ services:
       - "${MAIL_INBOX_HOST_BIND:-127.0.0.1}:${MAIL_INBOX_PORT:-5098}:5098"
       - "${MAIL_INBOX_SMTP_HOST_BIND:-0.0.0.0}:${MAIL_INBOX_SMTP_PORT:-2525}:2525"
     environment:
-      ConnectionStrings__DefaultConnection: Host=mailinbox-postgres;Port=5432;Database=${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox};Username=${MAIL_INBOX_POSTGRES_USER:-postgres};Password=${MAIL_INBOX_POSTGRES_PASSWORD:?Set MAIL_INBOX_POSTGRES_PASSWORD}
+      ConnectionStrings__DefaultConnection: Host=mailinbox-postgres;Port=5432;Database=${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox};Username=${MAIL_INBOX_POSTGRES_RUNTIME_USER:-mailinbox_runtime};Password=${MAIL_INBOX_POSTGRES_RUNTIME_PASSWORD:?Set MAIL_INBOX_POSTGRES_RUNTIME_PASSWORD};SSL Mode=VerifyFull;Root Certificate=/run/mailinbox-postgres-ca/ca.crt
+      MailInboxRuntimeDatabase__RoleName: ${MAIL_INBOX_POSTGRES_RUNTIME_USER:-mailinbox_runtime}
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
-      MailInboxHttp__ApiKey: ${MailInboxHttp__ApiKey:-}
+      ASPNETCORE_URLS: https://+:5098
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /run/mail-inbox-tls/fullchain.pem
+      ASPNETCORE_Kestrel__Certificates__Default__KeyPath: /run/mail-inbox-tls/privkey.pem
+      MailInboxHttp__MetadataApiKey: ${MAIL_INBOX_METADATA_API_KEY:?Set MAIL_INBOX_METADATA_API_KEY}
+      MailInboxHttp__ContentApiKey: ${MAIL_INBOX_CONTENT_API_KEY:?Set MAIL_INBOX_CONTENT_API_KEY}
+      MailInboxHttp__StateApiKey: ${MAIL_INBOX_STATE_API_KEY:?Set MAIL_INBOX_STATE_API_KEY}
       MailInboxSmtp__CertificatePath: /run/mail-inbox-tls/fullchain.pem
       MailInboxSmtp__PrivateKeyPath: /run/mail-inbox-tls/privkey.pem
+      MailInboxSmtp__TrustedRelayNetworks__0: ${MAIL_INBOX_TRUSTED_RELAY_NETWORK:?Set MAIL_INBOX_TRUSTED_RELAY_NETWORK}
     env_file:
       - .env
     volumes:
       - /etc/letsencrypt/live/mail.fooddiary.club:/run/letsencrypt/live/mail.fooddiary.club:ro
       - /etc/letsencrypt/archive/mail.fooddiary.club:/run/letsencrypt/archive/mail.fooddiary.club:ro
+      - mailinbox-postgres-client-ca:/run/mailinbox-postgres-ca:ro
     tmpfs:
       - /tmp:size=16m,mode=1777,nosuid,nodev
       - /run/mail-inbox-tls:size=1m,mode=0700,noexec,nosuid,nodev
     healthcheck:
-      test: ["CMD-SHELL", "su-exec \"$${APP_UID}:$${APP_UID}\" wget -qO- http://127.0.0.1:5098/health/ready >/dev/null || exit 1"]
+      test: ["CMD-SHELL", "su-exec \"$${APP_UID}:$${APP_UID}\" wget -qO- https://mail.fooddiary.club:5098/health/ready >/dev/null || exit 1"]
       interval: 180s
       timeout: 10s
       retries: 6
@@ -264,6 +310,10 @@ services:
     depends_on:
       mailinbox-db-init:
         condition: service_completed_successfully
+    networks:
+      default:
+        aliases:
+          - mail.fooddiary.club
     profiles:
       - mail-inbox
 
@@ -293,8 +343,6 @@ services:
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-change-me-local-password}
       MailRelayClient__BaseUrl: http://mail-relay:5088
       MailRelayClient__ApiKey: ${MailRelayClient__ApiKey:-}
-      MailInboxClient__BaseUrl: http://mail-inbox:5098
-      MailInboxClient__ApiKey: ${MailInboxClient__ApiKey:-}
     env_file:
       - .env
     depends_on:
@@ -337,4 +385,6 @@ volumes:
   postgres-data:
   mailrelay-postgres-data:
   mailinbox-postgres-data:
+  mailinbox-postgres-server-tls:
+  mailinbox-postgres-client-ca:
   api-data-protection-keys:

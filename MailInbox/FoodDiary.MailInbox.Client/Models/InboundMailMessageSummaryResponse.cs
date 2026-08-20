@@ -8,4 +8,7 @@ public sealed record InboundMailMessageSummaryResponse(
     string Category,
     string Status,
     DateTimeOffset? ReadAtUtc,
-    DateTimeOffset ReceivedAtUtc);
+    DateTimeOffset ReceivedAtUtc,
+    string? EnvelopeFromAddress = null,
+    bool IsTrustedRelay = false,
+    bool FromAddressIsVerified = false);

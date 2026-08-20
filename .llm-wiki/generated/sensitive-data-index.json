@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1491,
-    "credential": 159,
+    "candidateFields": 1496,
+    "credential": 164,
     "identity": 155,
     "health": 672,
     "financial": 201,
     "privateContent": 304,
-    "boundaryFiles": 185,
+    "boundaryFiles": 186,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -978,66 +978,101 @@
     },
     {
       "category": "credential",
-      "name": "ApiKey",
+      "name": "MetadataApiKey",
       "type": "string",
       "path": "MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
-      "line": 7
+      "line": 14
+    },
+    {
+      "category": "credential",
+      "name": "ContentApiKey",
+      "type": "string",
+      "path": "MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
+      "line": 15
+    },
+    {
+      "category": "credential",
+      "name": "StateApiKey",
+      "type": "string",
+      "path": "MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
+      "line": 16
+    },
+    {
+      "category": "credential",
+      "name": "Password",
+      "type": "string",
+      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Options/MailInboxRuntimeDatabaseOptions.cs",
+      "line": 12
     },
     {
       "category": "credential",
       "name": "ConnectionStrings__DefaultConnection",
       "type": "Set",
       "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
-      "line": 45
+      "line": 49
     },
     {
       "category": "credential",
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
-      "line": 45
+      "line": 49
     },
     {
       "category": "credential",
       "name": "MAILINBOX_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
-      "line": 45
+      "line": 49
     },
     {
       "category": "credential",
       "name": "RequireApiKey",
       "type": "bool",
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
-      "line": 8
+      "line": 13
     },
     {
       "category": "credential",
-      "name": "ApiKey",
+      "name": "MetadataApiKey",
       "type": "string",
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
-      "line": 9
+      "line": 14
+    },
+    {
+      "category": "credential",
+      "name": "ContentApiKey",
+      "type": "string",
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
+      "line": 15
+    },
+    {
+      "category": "credential",
+      "name": "StateApiKey",
+      "type": "string",
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
+      "line": 16
     },
     {
       "category": "credential",
       "name": "DbConnectionStringBuilder",
       "type": "new",
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "line": 47
+      "line": 89
     },
     {
       "category": "credential",
       "name": "DatabasePasswordKeys",
       "type": "in",
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "line": 67
+      "line": 129
     },
     {
       "category": "credential",
       "name": "ConnectionString",
       "type": "string?",
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "line": 95
+      "line": 157
     },
     {
       "category": "credential",
@@ -11619,6 +11654,13 @@
       "categories": [
         "credential"
       ],
+      "fieldCount": 3
+    },
+    {
+      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Options/MailInboxRuntimeDatabaseOptions.cs",
+      "categories": [
+        "credential"
+      ],
       "fieldCount": 1
     },
     {
@@ -11633,7 +11675,7 @@
       "categories": [
         "credential"
       ],
-      "fieldCount": 2
+      "fieldCount": 4
     },
     {
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",

@@ -14,7 +14,10 @@ public static class AdminMailInboxHttpResponseMappings {
                 model.Category,
                 model.Status,
                 model.ReadAtUtc,
-                model.ReceivedAtUtc);
+                model.ReceivedAtUtc,
+                model.EnvelopeFromAddress,
+                model.IsTrustedRelay,
+                model.FromAddressIsVerified);
         }
     }
 
@@ -33,7 +36,39 @@ public static class AdminMailInboxHttpResponseMappings {
                 model.Status,
                 model.ReadAtUtc,
                 model.ReceivedAtUtc,
-                model.ContentPurgedAtUtc);
+                model.ContentPurgedAtUtc,
+                model.DmarcReport?.ToHttpResponse(),
+                model.EnvelopeFromAddress,
+                model.IsTrustedRelay,
+                model.FromAddressIsVerified,
+                model.DmarcReportIsVerified);
         }
+    }
+
+    extension(AdminMailInboxDmarcReportModel model) {
+        private AdminMailInboxDmarcReportHttpResponse ToHttpResponse() =>
+            new(
+                model.OrganizationName,
+                model.ReportId,
+                model.Domain,
+                model.DateRangeStartUtc,
+                model.DateRangeEndUtc,
+                model.Records.Select(static record => record.ToHttpResponse()).ToArray());
+    }
+
+    extension(AdminMailInboxDmarcRecordModel model) {
+        private AdminMailInboxDmarcRecordHttpResponse ToHttpResponse() =>
+            new(
+                model.SourceIp,
+                model.Count,
+                model.Disposition,
+                model.Dkim,
+                model.Spf,
+                model.HeaderFrom,
+                model.EnvelopeFrom,
+                model.DkimDomain,
+                model.DkimResult,
+                model.SpfDomain,
+                model.SpfResult);
     }
 }

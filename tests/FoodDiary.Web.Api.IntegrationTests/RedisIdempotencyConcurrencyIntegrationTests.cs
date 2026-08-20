@@ -1,4 +1,6 @@
+using System.Net;
 using System.Runtime.CompilerServices;
+using Docker.DotNet.Models;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Web.Api.Services;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +13,7 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 public sealed class RedisIdempotencyConcurrencyIntegrationTests {
     [RequiresDockerFact]
     public async Task ReserveAsync_ConcurrentCallers_AcquireExactlyOneLeaseAndThenReplay() {
-        await using RedisContainer container = new RedisBuilder("redis:7-alpine").Build();
+        await using RedisContainer container = CreateRedisContainer();
         await container.StartAsync().ConfigureAwait(false);
         ConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(
             $"{container.GetConnectionString()},abortConnect=false").ConfigureAwait(false);
@@ -50,7 +52,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
 
     [RequiresDockerFact]
     public async Task CompleteAsync_WhenLeaseWasReacquired_RejectsStaleOwnerCompletion() {
-        await using RedisContainer container = new RedisBuilder("redis:7-alpine").Build();
+        await using RedisContainer container = CreateRedisContainer();
         await container.StartAsync().ConfigureAwait(false);
         ConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(
             $"{container.GetConnectionString()},abortConnect=false").ConfigureAwait(false);
@@ -147,4 +149,18 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
 
         throw new TimeoutException("Redis lease did not expire within the expected timeout.");
     }
+
+    private static RedisContainer CreateRedisContainer() =>
+        new RedisBuilder("redis:7-alpine")
+            .WithCreateParameterModifier(parameters => {
+                parameters.HostConfig ??= new HostConfig();
+                parameters.HostConfig.PortBindings ??= new Dictionary<string, IList<PortBinding>>(StringComparer.Ordinal);
+                parameters.HostConfig.PortBindings["6379/tcp"] = [
+                    new PortBinding {
+                        HostIP = IPAddress.Loopback.ToString(),
+                        HostPort = "0",
+                    },
+                ];
+            })
+            .Build();
 }

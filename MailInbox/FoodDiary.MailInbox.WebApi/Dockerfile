@@ -48,9 +48,9 @@ RUN sed -i 's/\r$//' /usr/local/bin/mail-inbox-entrypoint && \
 
 EXPOSE 5098
 EXPOSE 2525
-ENV ASPNETCORE_HTTP_PORTS=5098
+ENV ASPNETCORE_URLS=https://+:5098
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-HEALTHCHECK --interval=10s --timeout=5s --retries=6 --start-period=10s CMD if [ "$(id -u)" -eq 0 ]; then exec su-exec "$APP_UID:$APP_UID" wget -qO- http://127.0.0.1:5098/health/ready; else exec wget -qO- http://127.0.0.1:5098/health/ready; fi >/dev/null || exit 1
+HEALTHCHECK --interval=10s --timeout=5s --retries=6 --start-period=10s CMD if [ "$(id -u)" -eq 0 ]; then exec su-exec "$APP_UID:$APP_UID" wget -qO- --no-check-certificate https://127.0.0.1:5098/health/ready; else exec wget -qO- --no-check-certificate https://127.0.0.1:5098/health/ready; fi >/dev/null || exit 1
 
 USER $APP_UID
 

@@ -141,6 +141,7 @@ public sealed class MailInboxArchitectureTests {
                 "Services",
             ],
             ["MailInbox/FoodDiary.MailInbox.Initializer"] = [
+                "Options",
                 "Properties",
             ],
             ["MailInbox/FoodDiary.MailInbox.Presentation"] = [
@@ -318,6 +319,7 @@ public sealed class MailInboxArchitectureTests {
             Path.Combine("MailInbox", "FoodDiary.MailInbox.Infrastructure", "Options", "MailInboxSmtpOptions.cs"),
             Path.Combine("MailInbox", "FoodDiary.MailInbox.Infrastructure", "Options", "MailInboxStorageOptions.cs"),
             Path.Combine("MailInbox", "FoodDiary.MailInbox.Infrastructure", "Options", "OpenTelemetryOptions.cs"),
+            Path.Combine("MailInbox", "FoodDiary.MailInbox.Initializer", "Options", "MailInboxRuntimeDatabaseOptions.cs"),
             Path.Combine("MailInbox", "FoodDiary.MailInbox.Presentation", "Options", "MailInboxHttpOptions.cs"),
         };
 

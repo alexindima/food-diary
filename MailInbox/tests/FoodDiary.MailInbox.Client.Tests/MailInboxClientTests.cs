@@ -11,6 +11,37 @@ namespace FoodDiary.MailInbox.Client.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxClientTests {
     [Fact]
+    public async Task GetMessagesAsync_WhenPayloadContainsAuthenticationProvenance_ReturnsIt() {
+        var expected = new InboundMailMessageSummaryResponse(
+            Guid.NewGuid(),
+            "sender@example.com",
+            ["admin@fooddiary.club"],
+            "Hello",
+            "general",
+            "Received",
+            ReadAtUtc: null,
+            DateTimeOffset.UtcNow,
+            EnvelopeFromAddress: "bounce@relay.example",
+            IsTrustedRelay: true,
+            FromAddressIsVerified: false);
+        var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent.Create(new[] { expected }),
+        });
+        using var httpClient = new HttpClient(handler) {
+            BaseAddress = new Uri("https://inbox.example.test"),
+        };
+        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
+
+        InboundMailMessageSummaryResponse message = Assert.Single(
+            await client.GetMessagesAsync(limit: null, CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal("bounce@relay.example", message.EnvelopeFromAddress),
+            () => Assert.True(message.IsTrustedRelay),
+            () => Assert.False(message.FromAddressIsVerified));
+    }
+
+    [Fact]
     public async Task GetMessagesAsync_SendsApiKeyHeader() {
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent.Create(Array.Empty<InboundMailMessageSummaryResponse>()),
@@ -20,7 +51,7 @@ public sealed class MailInboxClientTests {
         };
         var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions {
             BaseUrl = "https://inbox.example.test",
-            ApiKey = "secret",
+            MetadataApiKey = "metadata-secret",
         }));
 
         IReadOnlyList<InboundMailMessageSummaryResponse> messages = await client.GetMessagesAsync(10, CancellationToken.None);
@@ -29,7 +60,7 @@ public sealed class MailInboxClientTests {
         Assert.Multiple(
             () => Assert.Equal(HttpMethod.Get, handler.Request?.Method),
             () => Assert.Equal("https://inbox.example.test/api/mail-inbox/messages?limit=10", handler.Request?.RequestUri?.ToString()),
-            () => Assert.Equal("secret", handler.Request?.Headers.GetValues("X-MailInbox-Api-Key").Single()));
+            () => Assert.Equal("metadata-secret", handler.Request?.Headers.GetValues("X-MailInbox-Api-Key").Single()));
     }
 
     [Fact]
@@ -79,11 +110,15 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions {
+            ContentApiKey = "content-secret",
+        }));
 
         InboundMailMessageDetailsResponse? message = await client.GetMessageAsync(Guid.Parse("11111111-1111-1111-1111-111111111111"), CancellationToken.None);
 
-        Assert.Null(message);
+        Assert.Multiple(
+            () => Assert.Null(message),
+            () => Assert.Equal("content-secret", handler.Request?.Headers.GetValues("X-MailInbox-Api-Key").Single()));
     }
 
     [Fact]
@@ -105,6 +140,24 @@ public sealed class MailInboxClientTests {
     [Fact]
     public async Task GetMessageAsync_WhenPayloadIsValid_ReturnsDetails() {
         var id = Guid.NewGuid();
+        var dmarcReport = new DmarcReportResponse(
+            "google.com",
+            "report-1",
+            "fooddiary.club",
+            DateTimeOffset.UtcNow.AddDays(-1),
+            DateTimeOffset.UtcNow,
+            [new DmarcReportRecordResponse(
+                SourceIp: "192.0.2.1",
+                Count: 4,
+                Disposition: "none",
+                Dkim: "pass",
+                Spf: "pass",
+                HeaderFrom: "fooddiary.club",
+                EnvelopeFrom: null,
+                DkimDomain: "fooddiary.club",
+                DkimResult: "pass",
+                SpfDomain: "fooddiary.club",
+                SpfResult: "pass")]);
         var expected = new InboundMailMessageDetailsResponse(
             id,
             "message-id",
@@ -118,7 +171,12 @@ public sealed class MailInboxClientTests {
             "Received",
             ReadAtUtc: null,
             DateTimeOffset.UtcNow,
-            ContentPurgedAtUtc: null);
+            ContentPurgedAtUtc: null,
+            dmarcReport,
+            EnvelopeFromAddress: "bounce@relay.example",
+            IsTrustedRelay: true,
+            FromAddressIsVerified: false,
+            DmarcReportIsVerified: false);
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent.Create(expected),
         });
@@ -135,7 +193,13 @@ public sealed class MailInboxClientTests {
             () => Assert.Equal(expected.MessageId, message.MessageId),
             () => Assert.Equal(expected.FromAddress, message.FromAddress),
             () => Assert.Equal(expected.ToRecipients, message.ToRecipients),
-            () => Assert.Equal(expected.RawMime, message.RawMime));
+            () => Assert.Equal(expected.RawMime, message.RawMime),
+            () => Assert.Equal("report-1", message.DmarcReport?.ReportId),
+            () => Assert.Equal(4, Assert.Single(message.DmarcReport!.Records).Count),
+            () => Assert.Equal("bounce@relay.example", message.EnvelopeFromAddress),
+            () => Assert.True(message.IsTrustedRelay),
+            () => Assert.False(message.FromAddressIsVerified),
+            () => Assert.False(message.DmarcReportIsVerified));
     }
 
     [Fact]
@@ -162,7 +226,7 @@ public sealed class MailInboxClientTests {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
         var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions {
-            ApiKey = "secret",
+            StateApiKey = "state-secret",
         }));
 
         bool result = await client.MarkMessageReadAsync(id, CancellationToken.None);
@@ -171,7 +235,7 @@ public sealed class MailInboxClientTests {
             () => Assert.True(result),
             () => Assert.Equal(HttpMethod.Post, handler.Request?.Method),
             () => Assert.Equal("https://inbox.example.test/api/mail-inbox/messages/11111111-1111-1111-1111-111111111111/read", handler.Request?.RequestUri?.ToString()),
-            () => Assert.Equal("secret", handler.Request?.Headers.GetValues("X-MailInbox-Api-Key").Single()));
+            () => Assert.Equal("state-secret", handler.Request?.Headers.GetValues("X-MailInbox-Api-Key").Single()));
     }
 
     [Fact]
@@ -214,15 +278,42 @@ public sealed class MailInboxClientTests {
     }
 
     [Theory]
-    [InlineData("https://inbox.example.test", true)]
-    [InlineData("not-a-url", false)]
-    [InlineData("", false)]
-    public void MailInboxClientOptions_HasValidBaseUrl_ReturnsExpectedResult(string baseUrl, bool expected) {
+    [InlineData("https://inbox.example.test", false, true)]
+    [InlineData("http://localhost:5098", true, true)]
+    [InlineData("http://127.0.0.1:5098", true, true)]
+    [InlineData("http://inbox.example.test", true, false)]
+    [InlineData("http://localhost:5098", false, false)]
+    [InlineData("ftp://inbox.example.test", false, false)]
+    [InlineData("https://user:password@inbox.example.test", false, false)]
+    [InlineData("https://inbox.example.test?secret=value", false, false)]
+    [InlineData("https://inbox.example.test#fragment", false, false)]
+    [InlineData("not-a-url", false, false)]
+    [InlineData("", false, false)]
+    public void MailInboxClientOptions_HasValidBaseUrl_ReturnsExpectedResult(
+        string baseUrl,
+        bool allowInsecureLoopback,
+        bool expected) {
         var options = new MailInboxClientOptions {
             BaseUrl = baseUrl,
+            AllowInsecureLoopback = allowInsecureLoopback,
         };
 
         Assert.Equal(expected, MailInboxClientOptions.HasValidBaseUrl(options));
+    }
+
+    [Theory]
+    [InlineData("", false)]
+    [InlineData("too-short", false)]
+    [InlineData("0123456789abcdef0123456789abcdea", false)]
+    [InlineData("fedcba9876543210fedcba987654321d", true)]
+    public void MailInboxClientOptions_HasValidApiKey_ReturnsExpectedResult(string apiKey, bool expected) {
+        var options = new MailInboxClientOptions {
+            MetadataApiKey = apiKey,
+            ContentApiKey = "fedcba9876543210fedcba987654321b",
+            StateApiKey = "fedcba9876543210fedcba987654321c",
+        };
+
+        Assert.Equal(expected, MailInboxClientOptions.HasValidApiKey(options));
     }
 
     [Fact]
@@ -230,7 +321,9 @@ public sealed class MailInboxClientTests {
         var services = new ServiceCollection();
         services.AddMailInboxClient(options => {
             options.BaseUrl = "https://inbox.example.test";
-            options.ApiKey = "secret";
+            options.MetadataApiKey = "fedcba9876543210fedcba987654321a";
+            options.ContentApiKey = "fedcba9876543210fedcba987654321b";
+            options.StateApiKey = "fedcba9876543210fedcba987654321c";
             options.Timeout = TimeSpan.FromSeconds(3);
         });
         using ServiceProvider provider = services.BuildServiceProvider();
@@ -244,6 +337,21 @@ public sealed class MailInboxClientTests {
             () => Assert.Equal(TimeSpan.FromSeconds(3), options.Timeout),
             () => Assert.Equal("https://inbox.example.test/", httpClient.BaseAddress?.ToString()),
             () => Assert.Equal(TimeSpan.FromSeconds(3), httpClient.Timeout));
+    }
+
+    [Fact]
+    public void AddMailInboxClient_WhenApiKeyIsInvalid_RejectsOptions() {
+        var services = new ServiceCollection();
+        services.AddMailInboxClient(options => {
+            options.BaseUrl = "https://inbox.example.test";
+            options.MetadataApiKey = "too-short";
+            options.ContentApiKey = "fedcba9876543210fedcba987654321b";
+            options.StateApiKey = "fedcba9876543210fedcba987654321c";
+        });
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        Assert.Throws<OptionsValidationException>(
+            () => provider.GetRequiredService<IOptions<MailInboxClientOptions>>().Value);
     }
 
     [ExcludeFromCodeCoverage]

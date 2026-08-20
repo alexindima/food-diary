@@ -18,7 +18,9 @@ public sealed class MailInboxWebApiFactory : WebApplicationFactory<global::Progr
         builder.ConfigureAppConfiguration((_, configuration) => {
             configuration.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=mailbox;Username=postgres;Password=integration-test-password",
-                ["MailInboxHttp:ApiKey"] = "integration-test-api-key-32-characters",
+                ["MailInboxHttp:MetadataApiKey"] = "fedcba9876543210fedcba987654321a",
+                ["MailInboxHttp:ContentApiKey"] = "fedcba9876543210fedcba987654321b",
+                ["MailInboxHttp:StateApiKey"] = "fedcba9876543210fedcba987654321c",
                 ["MailInboxSmtp:Enabled"] = "false",
             });
         });
@@ -27,7 +29,8 @@ public sealed class MailInboxWebApiFactory : WebApplicationFactory<global::Progr
             ServiceDescriptor[] hostedServices = [.. services
                 .Where(static descriptor =>
                     descriptor.ServiceType == typeof(IHostedService) &&
-                    descriptor.ImplementationType?.Assembly == typeof(MailInboxSchemaInitializerHostedService).Assembly)];
+                    (descriptor.ImplementationType == typeof(MailInboxRetentionHostedService) ||
+                     descriptor.ImplementationType == typeof(MailInboxSmtpHostedService)))];
 
             foreach (ServiceDescriptor hostedService in hostedServices) {
                 services.Remove(hostedService);

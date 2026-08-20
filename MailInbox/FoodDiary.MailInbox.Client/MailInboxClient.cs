@@ -21,7 +21,7 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
             ? string.Create(CultureInfo.InvariantCulture, $"/api/mail-inbox/messages?limit={limit.Value}"
 )
             : "/api/mail-inbox/messages";
-        using HttpRequestMessage request = CreateRequest(HttpMethod.Get, path);
+        using HttpRequestMessage request = CreateRequest(HttpMethod.Get, path, _options.MetadataApiKey);
         using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
@@ -42,7 +42,10 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
         CancellationToken cancellationToken) {
         EnsureBaseAddress();
 
-        using HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"/api/mail-inbox/messages/{id}");
+        using HttpRequestMessage request = CreateRequest(
+            HttpMethod.Get,
+            $"/api/mail-inbox/messages/{id}",
+            _options.ContentApiKey);
         using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         if (response.StatusCode == HttpStatusCode.NotFound) {
             return null;
@@ -67,7 +70,10 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
         CancellationToken cancellationToken) {
         EnsureBaseAddress();
 
-        using HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"/api/mail-inbox/messages/{id}/read");
+        using HttpRequestMessage request = CreateRequest(
+            HttpMethod.Post,
+            $"/api/mail-inbox/messages/{id}/read",
+            _options.StateApiKey);
         using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         if (response.StatusCode == HttpStatusCode.NotFound) {
             return false;
@@ -83,10 +89,10 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
         }
     }
 
-    private HttpRequestMessage CreateRequest(HttpMethod method, string path) {
+    private static HttpRequestMessage CreateRequest(HttpMethod method, string path, string apiKey) {
         var request = new HttpRequestMessage(method, path);
-        if (!string.IsNullOrWhiteSpace(_options.ApiKey)) {
-            request.Headers.TryAddWithoutValidation("X-MailInbox-Api-Key", _options.ApiKey);
+        if (!string.IsNullOrWhiteSpace(apiKey)) {
+            request.Headers.TryAddWithoutValidation("X-MailInbox-Api-Key", apiKey);
         }
 
         return request;

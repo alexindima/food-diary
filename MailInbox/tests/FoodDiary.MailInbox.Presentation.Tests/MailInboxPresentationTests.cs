@@ -17,6 +17,7 @@ using FoodDiary.MailInbox.Presentation.Features.Messages.Mappings;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Responses;
 using FoodDiary.MailInbox.Presentation.Options;
 using FoodDiary.MailInbox.Presentation.Responses;
+using FoodDiary.MailInbox.Presentation.Security;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -77,7 +78,11 @@ public sealed class MailInboxPresentationTests {
             "Received",
             ReadAtUtc: null,
             DateTimeOffset.UtcNow,
-            ContentPurgedAtUtc: null);
+            ContentPurgedAtUtc: null,
+            EnvelopeFromAddress: "bounce@relay.example",
+            IsTrustedRelay: true,
+            FromAddressIsVerified: false,
+            DmarcReportIsVerified: false);
 
         InboundMailMessageDetailsHttpResponse response = details.ToHttpResponse();
 
@@ -86,7 +91,11 @@ public sealed class MailInboxPresentationTests {
         Assert.Multiple(
             () => Assert.Equal("google.com", response.DmarcReport.OrganizationName),
             () => Assert.Equal("192.0.2.1", response.DmarcReport.Records.Single().SourceIp),
-            () => Assert.Equal("pass", response.DmarcReport.Records.Single().DkimResult));
+            () => Assert.Equal("pass", response.DmarcReport.Records.Single().DkimResult),
+            () => Assert.Equal("bounce@relay.example", response.EnvelopeFromAddress),
+            () => Assert.True(response.IsTrustedRelay),
+            () => Assert.False(response.FromAddressIsVerified),
+            () => Assert.False(response.DmarcReportIsVerified));
     }
 
     [Fact]
@@ -99,14 +108,20 @@ public sealed class MailInboxPresentationTests {
             InboundMailMessageCategories.DmarcReport,
             "Received",
             ReadAtUtc: null,
-            DateTimeOffset.UtcNow);
+            DateTimeOffset.UtcNow,
+            EnvelopeFromAddress: "bounce@relay.example",
+            IsTrustedRelay: true,
+            FromAddressIsVerified: false);
 
         InboundMailMessageSummaryHttpResponse response = summary.ToHttpResponse();
 
         Assert.Multiple(
             () => Assert.Equal(summary.Id, response.Id),
             () => Assert.Equal("dmarc-report", response.Category),
-            () => Assert.Equal("Received", response.Status));
+            () => Assert.Equal("Received", response.Status),
+            () => Assert.Equal("bounce@relay.example", response.EnvelopeFromAddress),
+            () => Assert.True(response.IsTrustedRelay),
+            () => Assert.False(response.FromAddressIsVerified));
     }
 
     [Fact]
@@ -134,7 +149,9 @@ public sealed class MailInboxPresentationTests {
         bool expected) {
         var options = new MailInboxHttpOptions {
             RequireApiKey = requireApiKey,
-            ApiKey = apiKey,
+            MetadataApiKey = apiKey,
+            ContentApiKey = "fedcba9876543210fedcba987654321b",
+            StateApiKey = "fedcba9876543210fedcba987654321c",
         };
 
         Assert.Equal(expected, MailInboxHttpOptions.HasValidApiKey(options));
@@ -356,7 +373,7 @@ public sealed class MailInboxPresentationTests {
     public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyIsMissing_ReturnsUnauthorized() {
         var filter = new MailInboxApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
             RequireApiKey = true,
-            ApiKey = "secret",
+            MetadataApiKey = "secret",
         }));
         AuthorizationFilterContext context = CreateAuthorizationContext();
 
@@ -371,7 +388,7 @@ public sealed class MailInboxPresentationTests {
     public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyRequirementIsDisabled_ReturnsUnauthorized() {
         var filter = new MailInboxApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
             RequireApiKey = false,
-            ApiKey = "secret",
+            MetadataApiKey = "secret",
         }));
         AuthorizationFilterContext context = CreateAuthorizationContext();
         context.HttpContext.Request.Headers["X-MailInbox-Api-Key"] = "secret";
@@ -385,7 +402,7 @@ public sealed class MailInboxPresentationTests {
     public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyMatches_AllowsRequest() {
         var filter = new MailInboxApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
             RequireApiKey = true,
-            ApiKey = "secret",
+            MetadataApiKey = "secret",
         }));
         AuthorizationFilterContext context = CreateAuthorizationContext();
         context.HttpContext.Request.Headers["X-MailInbox-Api-Key"] = "secret";
@@ -401,7 +418,9 @@ public sealed class MailInboxPresentationTests {
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["MailInboxHttp:RequireApiKey"] = "true",
-                ["MailInboxHttp:ApiKey"] = "0123456789abcdef0123456789abcdef",
+                ["MailInboxHttp:MetadataApiKey"] = "fedcba9876543210fedcba987654321a",
+                ["MailInboxHttp:ContentApiKey"] = "fedcba9876543210fedcba987654321b",
+                ["MailInboxHttp:StateApiKey"] = "fedcba9876543210fedcba987654321c",
             })
             .Build();
         services.AddLogging();
@@ -550,14 +569,16 @@ public sealed class MailInboxPresentationTests {
             new ActionContext(
                 new DefaultHttpContext(),
                 new RouteData(),
-                new ActionDescriptor()),
+                new ActionDescriptor {
+                    EndpointMetadata = [new RequireMailInboxPermissionAttribute(MailInboxPermission.Metadata)],
+                }),
             []);
 
     private static MailInboxHealthController CreateHealthController(ISender sender) =>
         new(
             sender,
             Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
-                ApiKey = "0123456789abcdef0123456789abcdef",
+                MetadataApiKey = "0123456789abcdef0123456789abcdef",
             })) {
             ControllerContext = CreateControllerContext(),
         };
@@ -566,7 +587,7 @@ public sealed class MailInboxPresentationTests {
         new(
             sender,
             Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
-                ApiKey = "0123456789abcdef0123456789abcdef",
+                MetadataApiKey = "0123456789abcdef0123456789abcdef",
             })) {
             ControllerContext = CreateControllerContext(),
         };

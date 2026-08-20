@@ -7,6 +7,40 @@ import { environment } from '../../../../environments/environment';
 import { AdminMailInboxService } from './admin-mail-inbox.service';
 
 const MESSAGE_LIMIT = 25;
+const DMARC_MESSAGE_COUNT = 4;
+const messageDetailsResponse = {
+    id: 'message-1',
+    fromAddress: 'user@example.com',
+    envelopeFromAddress: 'bounce@example.com',
+    isTrustedRelay: true,
+    fromAddressIsVerified: false,
+    toRecipients: ['admin@fooddiary.club'],
+    subject: 'Feedback',
+    category: 'general',
+    status: 'Received',
+    readAtUtc: null,
+    receivedAtUtc: '2026-04-25T21:37:55Z',
+    rawMime: 'raw',
+    contentPurgedAtUtc: null,
+    dmarcReportIsVerified: false,
+    dmarcReport: {
+        organizationName: 'google.com',
+        reportId: 'report-1',
+        domain: 'fooddiary.club',
+        dateRangeStartUtc: '2026-04-24T00:00:00Z',
+        dateRangeEndUtc: '2026-04-25T00:00:00Z',
+        records: [
+            {
+                sourceIp: '192.0.2.1',
+                count: DMARC_MESSAGE_COUNT,
+                disposition: 'none',
+                dkim: 'pass',
+                spf: 'pass',
+                headerFrom: 'fooddiary.club',
+            },
+        ],
+    },
+};
 
 describe('AdminMailInboxService', () => {
     let service: AdminMailInboxService;
@@ -32,6 +66,9 @@ describe('AdminMailInboxService', () => {
             {
                 id: 'message-1',
                 fromAddress: 'user@example.com',
+                envelopeFromAddress: 'bounce@example.com',
+                isTrustedRelay: true,
+                fromAddressIsVerified: false,
                 toRecipients: ['admin@fooddiary.club'],
                 subject: 'Feedback',
                 category: 'general',
@@ -55,22 +92,16 @@ describe('AdminMailInboxService', () => {
             expect(result.id).toBe('message-1');
             expect(result.rawMime).toBe('raw');
             expect(result.contentPurgedAtUtc).toBeNull();
+            expect(result.envelopeFromAddress).toBe('bounce@example.com');
+            expect(result.fromAddressIsVerified).toBe(false);
+            expect(result.dmarcReportIsVerified).toBe(false);
+            expect(result.dmarcReport?.reportId).toBe('report-1');
+            expect(result.dmarcReport?.records[0]?.count).toBe(DMARC_MESSAGE_COUNT);
         });
 
         const req = httpMock.expectOne(`${baseUrl}/message-1`);
         expect(req.request.method).toBe('GET');
-        req.flush({
-            id: 'message-1',
-            fromAddress: 'user@example.com',
-            toRecipients: ['admin@fooddiary.club'],
-            subject: 'Feedback',
-            category: 'general',
-            status: 'Received',
-            readAtUtc: null,
-            receivedAtUtc: '2026-04-25T21:37:55Z',
-            rawMime: 'raw',
-            contentPurgedAtUtc: null,
-        });
+        req.flush(messageDetailsResponse);
     });
 
     it('should mark one inbound message as read', () => {

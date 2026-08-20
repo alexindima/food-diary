@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "composeServices": 19,
-    "hostedServices": 10,
+    "composeServices": 22,
+    "hostedServices": 9,
     "httpClients": 12,
     "webhooks": 22,
     "recurringJobRegistrations": 16
@@ -54,6 +54,7 @@
       "image": "${MAIL_INBOX_IMAGE_REF:-ghcr.io/alexindima/food-diary/mail-inbox:local}",
       "dockerfile": "MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile",
       "dependsOn": [
+        "default",
         "mailinbox-db-init"
       ]
     },
@@ -78,12 +79,32 @@
       "name": "mailinbox-postgres",
       "image": "postgres:17-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73",
       "dockerfile": null,
+      "dependsOn": [
+        "mailinbox-postgres-tls-init"
+      ]
+    },
+    {
+      "name": "mailinbox-postgres-client-ca",
+      "image": null,
+      "dockerfile": null,
       "dependsOn": []
     },
     {
       "name": "mailinbox-postgres-data",
       "image": null,
       "dockerfile": null,
+      "dependsOn": []
+    },
+    {
+      "name": "mailinbox-postgres-server-tls",
+      "image": null,
+      "dockerfile": null,
+      "dependsOn": []
+    },
+    {
+      "name": "mailinbox-postgres-tls-init",
+      "image": "${MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF:-fooddiary-mailinbox-postgres-tls-init:local}",
+      "dockerfile": "MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile.postgres-tls-init",
       "dependsOn": []
     },
     {
@@ -150,11 +171,6 @@
       "name": "MailInboxRetentionHostedService",
       "baseType": "BackgroundService",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs"
-    },
-    {
-      "name": "MailInboxSchemaInitializerHostedService",
-      "baseType": "IHostedService",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSchemaInitializerHostedService.cs"
     },
     {
       "name": "MailInboxSmtpHostedService",

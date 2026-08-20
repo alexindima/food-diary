@@ -4,6 +4,7 @@ using FoodDiary.MailInbox.Presentation.Features.Messages;
 using FoodDiary.MailInbox.Presentation.Filters;
 using FoodDiary.MailInbox.Presentation.Options;
 using FoodDiary.MailInbox.Presentation.Responses;
+using FoodDiary.MailInbox.Presentation.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -29,11 +30,15 @@ public sealed class MailInboxPresentationSecurityTests {
             CreateOptions(requireApiKey: false),
             CreateOptions(apiKey: null!),
             CreateOptions(apiKey: "too-short"),
+            CreateOptions(apiKey: "0123456789abcdef0123456789abcdea"),
             CreateOptions(apiKey: new string('a', MailInboxHttpOptions.MaxApiKeyLength + 1)),
+            CreateOptions(contentApiKey: ValidApiKey),
             CreateOptions(maxConcurrentMessageDetailRequests: 0),
             CreateOptions(maxConcurrentMessageDetailRequests: 65),
             CreateOptions(messageDetailQueueTimeout: TimeSpan.Zero),
             CreateOptions(messageDetailQueueTimeout: TimeSpan.FromSeconds(31)),
+            CreateOptions(messageDetailExecutionTimeout: TimeSpan.Zero),
+            CreateOptions(messageDetailExecutionTimeout: TimeSpan.FromSeconds(31)),
             CreateOptions(maxConcurrentMessageMetadataRequests: 0),
             CreateOptions(maxConcurrentMessageMetadataRequests: 65),
             CreateOptions(messageMetadataQueueTimeout: TimeSpan.Zero),
@@ -73,13 +78,29 @@ public sealed class MailInboxPresentationSecurityTests {
             () => Assert.IsType<UnauthorizedObjectResult>(duplicate.Result));
     }
 
+    [Theory]
+    [InlineData(MailInboxPermission.Content)]
+    [InlineData(MailInboxPermission.State)]
+    public void ApiKeyFilter_MetadataCredentialCannotUseOtherCapabilities(MailInboxPermission permission) {
+        var filter = new MailInboxApiKeyAuthorizationFilter(
+            Microsoft.Extensions.Options.Options.Create(CreateOptions()));
+        AuthorizationFilterContext context = CreateAuthorizationContext(permission);
+        context.HttpContext.Request.Headers["X-MailInbox-Api-Key"] = ValidApiKey;
+
+        filter.OnAuthorization(context);
+
+        Assert.IsType<UnauthorizedObjectResult>(context.Result);
+    }
+
     [Fact]
     public void MessageRoutes_InheritApiKeyFilterAndDisableResponseCaching() {
         var services = new ServiceCollection();
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["MailInboxHttp:RequireApiKey"] = "true",
-                ["MailInboxHttp:ApiKey"] = ValidApiKey,
+                ["MailInboxHttp:MetadataApiKey"] = ValidApiKey,
+                ["MailInboxHttp:ContentApiKey"] = "fedcba9876543210fedcba987654321b",
+                ["MailInboxHttp:StateApiKey"] = "fedcba9876543210fedcba987654321c",
             })
             .Build();
         services.AddLogging();
@@ -162,8 +183,10 @@ public sealed class MailInboxPresentationSecurityTests {
     private static MailInboxHttpOptions CreateOptions(
         bool requireApiKey = true,
         string apiKey = ValidApiKey,
+        string contentApiKey = "fedcba9876543210fedcba987654321b",
         int maxConcurrentMessageDetailRequests = 2,
         TimeSpan? messageDetailQueueTimeout = null,
+        TimeSpan? messageDetailExecutionTimeout = null,
         int maxConcurrentMessageMetadataRequests = 4,
         TimeSpan? messageMetadataQueueTimeout = null,
         TimeSpan? messageMetadataExecutionTimeout = null,
@@ -172,9 +195,12 @@ public sealed class MailInboxPresentationSecurityTests {
         TimeSpan? readinessExecutionTimeout = null) =>
         new() {
             RequireApiKey = requireApiKey,
-            ApiKey = apiKey,
+            MetadataApiKey = apiKey,
+            ContentApiKey = contentApiKey,
+            StateApiKey = "fedcba9876543210fedcba987654321c",
             MaxConcurrentMessageDetailRequests = maxConcurrentMessageDetailRequests,
             MessageDetailQueueTimeout = messageDetailQueueTimeout ?? TimeSpan.FromSeconds(5),
+            MessageDetailExecutionTimeout = messageDetailExecutionTimeout ?? TimeSpan.FromSeconds(15),
             MaxConcurrentMessageMetadataRequests = maxConcurrentMessageMetadataRequests,
             MessageMetadataQueueTimeout = messageMetadataQueueTimeout ?? TimeSpan.FromMilliseconds(250),
             MessageMetadataExecutionTimeout = messageMetadataExecutionTimeout ?? TimeSpan.FromSeconds(5),
@@ -183,12 +209,15 @@ public sealed class MailInboxPresentationSecurityTests {
             ReadinessExecutionTimeout = readinessExecutionTimeout ?? TimeSpan.FromSeconds(5),
         };
 
-    private static AuthorizationFilterContext CreateAuthorizationContext() =>
+    private static AuthorizationFilterContext CreateAuthorizationContext(
+        MailInboxPermission permission = MailInboxPermission.Metadata) =>
         new(
             new ActionContext(
                 new DefaultHttpContext(),
                 new RouteData(),
-                new ActionDescriptor()),
+                new ActionDescriptor {
+                    EndpointMetadata = [new RequireMailInboxPermissionAttribute(permission)],
+                }),
             []);
 
     private static ExceptionContext CreateExceptionContext(Exception exception) {

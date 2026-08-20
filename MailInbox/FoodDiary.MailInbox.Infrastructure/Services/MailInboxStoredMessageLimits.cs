@@ -1,3 +1,4 @@
+using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Domain.Messages;
 
 namespace FoodDiary.MailInbox.Infrastructure.Services;
@@ -12,9 +13,11 @@ public static class MailInboxStoredMessageLimits {
         string? messageId,
         string? fromAddress,
         IReadOnlyCollection<string> recipients,
-        string? subject) =>
+        string? subject,
+        string? envelopeFromAddress = null) =>
         HasMaximumLength(messageId, MaxMessageIdCharacters) &&
         HasMaximumLength(fromAddress, MaxMailboxAddressCharacters) &&
+        HasMaximumLength(envelopeFromAddress, MaxMailboxAddressCharacters) &&
         HasMaximumLength(subject, MaxSubjectCharacters) &&
         recipients.Count is > 0 and <= MaxRecipients &&
         recipients.All(static recipient =>
@@ -24,6 +27,18 @@ public static class MailInboxStoredMessageLimits {
     public static void ThrowIfInvalid(InboundMailMessage message) {
         ArgumentNullException.ThrowIfNull(message);
         if (!IsWithinLimits(message.MessageId, message.FromAddress, message.ToRecipients, message.Subject)) {
+            throw new ArgumentException("Inbound mail metadata exceeds the persisted field limits.", nameof(message));
+        }
+    }
+
+    public static void ThrowIfInvalid(InboundMailMessage message, InboundMailAdmission admission) {
+        ArgumentNullException.ThrowIfNull(message);
+        if (!IsWithinLimits(
+                message.MessageId,
+                message.FromAddress,
+                message.ToRecipients,
+                message.Subject,
+                admission.EnvelopeFromAddress)) {
             throw new ArgumentException("Inbound mail metadata exceeds the persisted field limits.", nameof(message));
         }
     }

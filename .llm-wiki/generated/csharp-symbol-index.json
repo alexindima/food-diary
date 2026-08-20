@@ -8,21 +8,21 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3405,
-    "symbols": 3413,
+    "sourceFiles": 3418,
+    "symbols": 3426,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 238,
     "kinds": {
-      "class": 1775,
-      "enum": 60,
+      "class": 1780,
+      "enum": 61,
       "interface": 418,
-      "record": 1041,
-      "record struct": 119
+      "record": 1047,
+      "record struct": 120
     },
     "roles": {
       "Command": 158,
       "CommandHandler": 154,
-      "Configuration": 89,
+      "Configuration": 90,
       "Controller": 90,
       "Entity": 84,
       "Event": 19,
@@ -31,17 +31,17 @@
       "LookupRepository": 3,
       "Mapper": 8,
       "Mapping": 4,
-      "Options": 61,
-      "Other": 1301,
+      "Options": 62,
+      "Other": 1308,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
       "ReadRepository": 47,
       "Repository": 104,
       "Request": 132,
-      "Response": 174,
-      "Service": 276,
-      "Validator": 201,
+      "Response": 178,
+      "Service": 275,
+      "Validator": 202,
       "ValueObject": 129,
       "WriteRepository": 46
     }
@@ -304,6 +304,20 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminMailInboxDmarcRecordModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminMailInboxDmarcRecordModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminMailInboxDmarcReportModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminMailInboxDmarcReportModel.cs",
       "line": 2
     },
     {
@@ -18640,6 +18654,20 @@
       "line": 2
     },
     {
+      "name": "AdminMailInboxDmarcRecordHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminMailInboxDmarcRecordHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminMailInboxDmarcReportHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminMailInboxDmarcReportHttpResponse.cs",
+      "line": 2
+    },
+    {
       "name": "AdminMailInboxMessageDetailsHttpResponse",
       "kind": "record",
       "role": "Response",
@@ -22105,6 +22133,13 @@
       "line": 2
     },
     {
+      "name": "InboundMailAdmission",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailAdmission.cs",
+      "line": 2
+    },
+    {
       "name": "InboundMailMessageCategories",
       "kind": "class",
       "role": "Other",
@@ -22224,6 +22259,20 @@
       "line": 10
     },
     {
+      "name": "DmarcReportRecordResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "MailInbox/FoodDiary.MailInbox.Client/Models/DmarcReportRecordResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "DmarcReportResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "MailInbox/FoodDiary.MailInbox.Client/Models/DmarcReportResponse.cs",
+      "line": 2
+    },
+    {
       "name": "InboundMailMessageDetailsResponse",
       "kind": "record",
       "role": "Response",
@@ -22287,11 +22336,25 @@
       "line": 7
     },
     {
+      "name": "MailInboxDatabaseConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxDatabaseConfiguration.cs",
+      "line": 4
+    },
+    {
+      "name": "MailInboxNetworkRange",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxNetworkRange.cs",
+      "line": 5
+    },
+    {
       "name": "MailInboxSmtpOptions",
       "kind": "class",
       "role": "Options",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxSmtpOptions.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "MailInboxStorageOptions",
@@ -22371,25 +22434,18 @@
       "line": 10
     },
     {
-      "name": "MailInboxSchemaInitializerHostedService",
-      "kind": "class",
-      "role": "Service",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSchemaInitializerHostedService.cs",
-      "line": 6
-    },
-    {
       "name": "MailInboxSmtpHostedService",
       "kind": "class",
       "role": "Service",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "MailInboxStoredMessageLimits",
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxStoredMessageLimits.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "NpgsqlExtensions",
@@ -22413,6 +22469,20 @@
       "line": 5
     },
     {
+      "name": "NpgsqlMailInboxRuntimeRoleProvisioner",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleProvisioner.cs",
+      "line": 5
+    },
+    {
+      "name": "NpgsqlMailInboxRuntimeRoleValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleValidator.cs",
+      "line": 4
+    },
+    {
       "name": "SmtpInboundMessageStore",
       "kind": "class",
       "role": "Other",
@@ -22431,14 +22501,21 @@
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Initializer/InitializerServiceCollectionExtensions.cs",
-      "line": 8
+      "line": 10
+    },
+    {
+      "name": "MailInboxRuntimeDatabaseOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Options/MailInboxRuntimeDatabaseOptions.cs",
+      "line": 4
     },
     {
       "name": "Program",
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
-      "line": 119
+      "line": 155
     },
     {
       "name": "AuthorizedMailInboxEndpointBase",
@@ -22501,7 +22578,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "InboundMailHttpMappings",
@@ -22616,6 +22693,13 @@
       "line": 4
     },
     {
+      "name": "MailInboxPermission",
+      "kind": "enum",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Security/MailInboxPermission.cs",
+      "line": 2
+    },
+    {
       "name": "MailInboxRequestAuthorizer",
       "kind": "class",
       "role": "Other",
@@ -22623,18 +22707,25 @@
       "line": 8
     },
     {
+      "name": "RequireMailInboxPermissionAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Security/RequireMailInboxPermissionAttribute.cs",
+      "line": 4
+    },
+    {
       "name": "MailInboxHostConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "line": 4
+      "line": 7
     },
     {
       "name": "Program",
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/Program.cs",
-      "line": 30
+      "line": 37
     },
     {
       "name": "IMailRelayDeliveryPolicy",
@@ -27062,7 +27153,7 @@
       "implementation": "MailInboxClientAdminMailInboxReader",
       "lifetime": "Scoped",
       "path": "FoodDiary.Integrations/DependencyInjection.Mail.cs",
-      "line": 28
+      "line": 33
     },
     {
       "service": "IWebPushNotificationSender",
@@ -27188,14 +27279,14 @@
       "implementation": "NpgsqlMailInboxReadinessChecker",
       "lifetime": "Singleton",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
-      "line": 46
+      "line": 47
     },
     {
       "service": "IMailInboxReadinessChecker",
       "implementation": "NpgsqlMailInboxReadinessChecker",
       "lifetime": "Singleton",
       "path": "MailInbox/FoodDiary.MailInbox.Initializer/InitializerServiceCollectionExtensions.cs",
-      "line": 20
+      "line": 29
     },
     {
       "service": "IMailRelayDeliveryPolicy",

@@ -451,8 +451,26 @@ public sealed class AdminHttpMappingsTests {
         var device = new AdminUserLoginDeviceSummaryModel("Chrome|Windows", 3, now);
         var audit = new AdminUserRoleAuditEventReadModel(Guid.NewGuid(), Guid.NewGuid(), "Admin", "Added", Guid.NewGuid(), "actor@example.com", "manual", now);
         var report = new AdminContentReportModel(Guid.NewGuid(), Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam", "Pending", AdminNote: null, now, ReviewedAtUtc: null);
-        var mailSummary = new AdminMailInboxMessageSummaryModel(Guid.NewGuid(), "from@example.com", ["to@example.com"], "Subject", "general", "received", ReadAtUtc: null, offsetNow);
-        var mailDetails = new AdminMailInboxMessageDetailsModel(Guid.NewGuid(), "message-id", "from@example.com", ["to@example.com"], "Subject", "Text", "<p>Html</p>", "raw", "general", "received", ReadAtUtc: null, offsetNow, ContentPurgedAtUtc: offsetNow.AddDays(30));
+        var mailSummary = new AdminMailInboxMessageSummaryModel(Guid.NewGuid(), "from@example.com", ["to@example.com"], "Subject", "general", "received", ReadAtUtc: null, offsetNow, EnvelopeFromAddress: "bounce@example.com", IsTrustedRelay: true, FromAddressIsVerified: false);
+        var mailDmarcReport = new AdminMailInboxDmarcReportModel(
+            "google.com",
+            "report-1",
+            "fooddiary.club",
+            offsetNow.AddDays(-1),
+            offsetNow,
+            [new AdminMailInboxDmarcRecordModel(
+                SourceIp: "192.0.2.1",
+                Count: 4,
+                Disposition: "none",
+                Dkim: "pass",
+                Spf: "pass",
+                HeaderFrom: "fooddiary.club",
+                EnvelopeFrom: null,
+                DkimDomain: "fooddiary.club",
+                DkimResult: "pass",
+                SpfDomain: "fooddiary.club",
+                SpfResult: "pass")]);
+        var mailDetails = new AdminMailInboxMessageDetailsModel(Guid.NewGuid(), "message-id", "from@example.com", ["to@example.com"], "Subject", "Text", "<p>Html</p>", "raw", "general", "received", ReadAtUtc: null, offsetNow, ContentPurgedAtUtc: offsetNow.AddDays(30), DmarcReport: mailDmarcReport, EnvelopeFromAddress: "bounce@example.com", IsTrustedRelay: true, FromAddressIsVerified: false, DmarcReportIsVerified: false);
 
         Assert.Multiple(
             () => Assert.Equal("key", prompt.ToAiPromptHttpResponse().Key),
@@ -466,9 +484,16 @@ public sealed class AdminHttpMappingsTests {
             () => Assert.Equal("Admin", audit.ToHttpResponse().RoleName),
             () => Assert.Equal("Spam", report.ToHttpResponse().Reason),
             () => Assert.Equal("from@example.com", mailSummary.ToHttpResponse().FromAddress),
+            () => Assert.Equal("bounce@example.com", mailSummary.ToHttpResponse().EnvelopeFromAddress),
+            () => Assert.True(mailSummary.ToHttpResponse().IsTrustedRelay),
+            () => Assert.False(mailSummary.ToHttpResponse().FromAddressIsVerified),
             () => Assert.Equal("general", mailSummary.ToHttpResponse().Category),
             () => Assert.Equal("raw", mailDetails.ToHttpResponse().RawMime),
-            () => Assert.Equal(offsetNow.AddDays(30), mailDetails.ToHttpResponse().ContentPurgedAtUtc));
+            () => Assert.Equal(offsetNow.AddDays(30), mailDetails.ToHttpResponse().ContentPurgedAtUtc),
+            () => Assert.Equal("report-1", mailDetails.ToHttpResponse().DmarcReport?.ReportId),
+            () => Assert.Equal("bounce@example.com", mailDetails.ToHttpResponse().EnvelopeFromAddress),
+            () => Assert.False(mailDetails.ToHttpResponse().DmarcReportIsVerified),
+            () => Assert.Equal(4, Assert.Single(mailDetails.ToHttpResponse().DmarcReport!.Records).Count));
     }
 
     [Fact]

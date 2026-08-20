@@ -1,7 +1,9 @@
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.Infrastructure.Services;
+using FoodDiary.MailInbox.Initializer.Options;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 
@@ -51,21 +53,47 @@ public sealed class MailInboxInitializerCommandTests {
     [Fact]
     public void AddMailInboxInitializerServices_ResolvesSchemaInitializer() {
         var services = new ServiceCollection();
+        IConfiguration configuration = new ConfigurationBuilder().Build();
 
-        services.AddMailInboxInitializerServices("Host=localhost;Database=fooddiary_mailinbox;Username=test;Password=test");
+        services.AddMailInboxInitializerServices(
+            "Host=localhost;Database=fooddiary_mailinbox;Username=test;Password=test",
+            configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
 
         DmarcReportParser parser = provider.GetRequiredService<DmarcReportParser>();
         IMailInboxDmarcReportParser parserAbstraction = provider.GetRequiredService<IMailInboxDmarcReportParser>();
         IMailInboxSchemaInitializer schemaInitializer = provider.GetRequiredService<IMailInboxSchemaInitializer>();
         IMailInboxReadinessChecker readinessChecker = provider.GetRequiredService<IMailInboxReadinessChecker>();
+        NpgsqlMailInboxRuntimeRoleProvisioner runtimeRoleProvisioner =
+            provider.GetRequiredService<NpgsqlMailInboxRuntimeRoleProvisioner>();
         MailInboxStorageOptions storageOptions = provider.GetRequiredService<IOptions<MailInboxStorageOptions>>().Value;
 
         Assert.Multiple(
             () => Assert.Same(parser, parserAbstraction),
             () => Assert.NotNull(schemaInitializer),
             () => Assert.NotNull(readinessChecker),
+            () => Assert.NotNull(runtimeRoleProvisioner),
             () => Assert.True(MailInboxStorageOptions.HasValidConfiguration(storageOptions)));
+    }
+
+    [Theory]
+    [InlineData(false, "", "", true)]
+    [InlineData(true, "mailinbox_runtime", "0123456789abcdef0123456789abcdef", true)]
+    [InlineData(true, "pg_read_all_data", "0123456789abcdef0123456789abcdef", false)]
+    [InlineData(true, "Invalid-Role", "0123456789abcdef0123456789abcdef", false)]
+    [InlineData(true, "mailinbox_runtime", "too-short", false)]
+    public void RuntimeDatabaseOptions_ValidateExpectedConfiguration(
+        bool provisionRole,
+        string roleName,
+        string password,
+        bool expected) {
+        var options = new MailInboxRuntimeDatabaseOptions {
+            ProvisionRole = provisionRole,
+            RoleName = roleName,
+            Password = password,
+        };
+
+        Assert.Equal(expected, MailInboxRuntimeDatabaseOptions.HasValidConfiguration(options));
     }
 
     private static object? Parse(params string[] args) {

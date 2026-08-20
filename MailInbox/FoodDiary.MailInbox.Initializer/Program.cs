@@ -1,9 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Initializer;
+using FoodDiary.MailInbox.Initializer.Options;
+using FoodDiary.MailInbox.Infrastructure.Options;
+using FoodDiary.MailInbox.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 InitializerCommand? command;
 try {
@@ -46,7 +50,20 @@ if (string.IsNullOrWhiteSpace(connectionString)) {
     return 1;
 }
 
-builder.Services.AddMailInboxInitializerServices(connectionString);
+if (!MailInboxDatabaseConfiguration.TargetsRequiredDatabase(connectionString)) {
+    Console.Error.WriteLine(
+        $"MailInbox initializer failed: DefaultConnection must target the dedicated '{MailInboxDatabaseConfiguration.RequiredDatabaseName}' database.");
+    return 1;
+}
+
+if (builder.Environment.IsProduction() &&
+    !MailInboxDatabaseConfiguration.UsesAuthenticatedTls(connectionString)) {
+    Console.Error.WriteLine(
+        "MailInbox initializer failed: Production DefaultConnection must use SSL Mode=VerifyFull.");
+    return 1;
+}
+
+builder.Services.AddMailInboxInitializerServices(connectionString, builder.Configuration);
 
 using IHost host = builder.Build();
 try {
@@ -55,9 +72,19 @@ try {
     await using (scope.ConfigureAwait(false)) {
         IMailInboxReadinessChecker readinessChecker = scope.ServiceProvider.GetRequiredService<IMailInboxReadinessChecker>();
         IMailInboxSchemaInitializer schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailInboxSchemaInitializer>();
+        NpgsqlMailInboxRuntimeRoleProvisioner runtimeRoleProvisioner =
+            scope.ServiceProvider.GetRequiredService<NpgsqlMailInboxRuntimeRoleProvisioner>();
+        MailInboxRuntimeDatabaseOptions runtimeDatabaseOptions =
+            scope.ServiceProvider.GetRequiredService<IOptions<MailInboxRuntimeDatabaseOptions>>().Value;
         IHostApplicationLifetime lifetime = scope.ServiceProvider.GetRequiredService<IHostApplicationLifetime>();
 
-        await ExecuteAsync(command, readinessChecker, schemaInitializer, lifetime.ApplicationStopping).ConfigureAwait(false);
+        await ExecuteAsync(
+            command,
+            readinessChecker,
+            schemaInitializer,
+            runtimeRoleProvisioner,
+            runtimeDatabaseOptions,
+            lifetime.ApplicationStopping).ConfigureAwait(false);
     }
 
     return 0;
@@ -75,6 +102,8 @@ static async Task ExecuteAsync(
     InitializerCommand command,
     IMailInboxReadinessChecker readinessChecker,
     IMailInboxSchemaInitializer schemaInitializer,
+    NpgsqlMailInboxRuntimeRoleProvisioner runtimeRoleProvisioner,
+    MailInboxRuntimeDatabaseOptions runtimeDatabaseOptions,
     CancellationToken cancellationToken) {
     switch (command.Name) {
         case "status":
@@ -83,6 +112,13 @@ static async Task ExecuteAsync(
         case "update":
             Console.WriteLine("Updating MailInbox schema...");
             await schemaInitializer.EnsureSchemaAsync(cancellationToken).ConfigureAwait(false);
+            if (runtimeDatabaseOptions.ProvisionRole) {
+                await runtimeRoleProvisioner.ProvisionAsync(
+                    runtimeDatabaseOptions.RoleName,
+                    runtimeDatabaseOptions.Password,
+                    cancellationToken).ConfigureAwait(false);
+            }
+
             Console.WriteLine("MailInbox schema update completed.");
             break;
         default:

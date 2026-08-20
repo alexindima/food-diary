@@ -14,4 +14,8 @@ public sealed record InboundMailMessageDetailsHttpResponse(
     string Status,
     DateTimeOffset? ReadAtUtc,
     DateTimeOffset ReceivedAtUtc,
-    DateTimeOffset? ContentPurgedAtUtc);
+    DateTimeOffset? ContentPurgedAtUtc,
+    string? EnvelopeFromAddress = null,
+    bool IsTrustedRelay = false,
+    bool FromAddressIsVerified = false,
+    bool DmarcReportIsVerified = false);
