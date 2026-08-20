@@ -257,6 +257,17 @@ public sealed partial class User : AggregateRoot<UserId> {
     }
 
     private void ApplyGoalState(UserGoalState state) {
+        _ = new UserCalorieSchedule(
+            state.DailyCalorieTarget,
+            state.CalorieCyclingEnabled,
+            state.MondayCalories,
+            state.TuesdayCalories,
+            state.WednesdayCalories,
+            state.ThursdayCalories,
+            state.FridayCalories,
+            state.SaturdayCalories,
+            state.SundayCalories);
+
         DailyCalorieTarget = state.DailyCalorieTarget;
         ProteinTarget = state.ProteinTarget;
         FatTarget = state.FatTarget;

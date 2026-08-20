@@ -12,10 +12,10 @@ internal sealed class UsdaFoodConfiguration : IEntityTypeConfiguration<UsdaFood>
             .ValueGeneratedNever()
             .UsePropertyAccessMode(PropertyAccessMode.Property);
 
-        builder.Property(e => e.Description).HasMaxLength(512).IsRequired();
+        builder.Property(e => e.Description).HasMaxLength(UsdaFood.DescriptionMaxLength).IsRequired();
         builder.Property(e => e.FoodCategoryId)
             .UsePropertyAccessMode(PropertyAccessMode.Property);
-        builder.Property(e => e.FoodCategory).HasMaxLength(256);
+        builder.Property(e => e.FoodCategory).HasMaxLength(UsdaFood.FoodCategoryMaxLength);
 
         builder.HasIndex(e => e.Description)
             .HasMethod("gin")

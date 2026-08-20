@@ -475,6 +475,27 @@ public class CycleProfileInvariantTests {
     }
 
     [Fact]
+    public void ConsentTransitions_WithUnspecifiedTimestamp_ThrowWithoutChangingState() {
+        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 4, 1));
+        DateTime grantedAtUtc = new(2026, 4, 1, 12, 0, 0, DateTimeKind.Utc);
+        var unspecified = DateTime.SpecifyKind(grantedAtUtc.AddMinutes(1), DateTimeKind.Unspecified);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            profile.GrantConsent(CycleConsentPurpose.NutritionInsights, unspecified));
+        Assert.DoesNotContain(profile.Consents, item => item.Purpose == CycleConsentPurpose.NutritionInsights);
+
+        profile.GrantConsent(CycleConsentPurpose.NutritionInsights, grantedAtUtc);
+        CycleConsent consent = Assert.Single(
+            profile.Consents,
+            item => item.Purpose == CycleConsentPurpose.NutritionInsights);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            profile.RevokeConsent(CycleConsentPurpose.NutritionInsights, unspecified));
+        Assert.True(consent.IsActive);
+        Assert.Null(consent.RevokedAtUtc);
+    }
+
+    [Fact]
     public void UpsertFertilitySignal_ValidatesTemperature() {
         var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
         profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UnixEpoch);

@@ -751,6 +751,37 @@ public class UserInvariantTests {
             user.UpdateGoals(new UserGoalUpdate(MondayCalories: mondayCalories)));
     }
 
+    [Fact]
+    public void UpdateGoals_WithOverflowingWeeklyCalorieTarget_ThrowsWithoutChangingGoals() {
+        var user = User.Create("test@example.com", "hash");
+        user.UpdateGoals(dailyCalorieTarget: 2000);
+        DateTime? modifiedBeforeInvalidUpdate = user.ModifiedOnUtc;
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdateGoals(dailyCalorieTarget: double.MaxValue));
+
+        Assert.Multiple(
+            () => Assert.Equal(2000, user.DailyCalorieTarget),
+            () => Assert.Equal(modifiedBeforeInvalidUpdate, user.ModifiedOnUtc));
+    }
+
+    [Fact]
+    public void UpdateGoals_WithOverflowingDayTargets_ThrowsWithoutChangingGoals() {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdateGoals(new UserGoalUpdate(
+                CalorieCyclingEnabled: true,
+                MondayCalories: double.MaxValue,
+                TuesdayCalories: double.MaxValue)));
+
+        Assert.Multiple(
+            () => Assert.False(user.CalorieCyclingEnabled),
+            () => Assert.Null(user.MondayCalories),
+            () => Assert.Null(user.TuesdayCalories),
+            () => Assert.Null(user.ModifiedOnUtc));
+    }
+
     [Theory]
     [InlineData(-1d)]
     [InlineData(0d)]

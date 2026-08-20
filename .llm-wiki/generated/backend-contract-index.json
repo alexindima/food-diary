@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1048,
     "ambiguousContracts": 3,
-    "consumerEdges": 7377,
-    "productionConsumerEdges": 4458,
+    "consumerEdges": 7381,
+    "productionConsumerEdges": 4462,
     "testConsumerEdges": 2919,
     "consumedContracts": 1048,
     "unconsumedContracts": 0
@@ -58316,6 +58316,19 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/AchievementDefinitionId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/AiPromptTemplateId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -58343,6 +58356,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/BleedingEntryId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/ClientTaskId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -58862,6 +58888,19 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/RecommendationBulkDispatchId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/RecommendationCommentId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -58876,6 +58915,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/RecommendationId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/RecommendationTemplateId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -59124,7 +59176,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/StronglyTypedIdInvariantTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IExerciseEntryReadModelRepository",

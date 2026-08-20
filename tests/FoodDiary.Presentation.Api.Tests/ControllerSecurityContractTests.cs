@@ -260,6 +260,51 @@ public sealed class ControllerSecurityContractTests {
     }
 
     [Fact]
+    public void ProducesFileResponseAttribute_RequiresAtLeastOneContentType() {
+        ArgumentException exception = Assert.Throws<ArgumentException>(
+            static () => new ProducesFileResponseAttribute());
+
+        Assert.Equal("contentTypes", exception.ParamName);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("not-a-media-type")]
+    [InlineData(" text/csv")]
+    [InlineData("text/csv; charset=utf-8")]
+    [InlineData("text/*")]
+    [InlineData("*/*")]
+    public void ProducesFileResponseAttribute_RejectsInvalidContentType(string contentType) {
+        ArgumentException exception = Assert.Throws<ArgumentException>(
+            () => new ProducesFileResponseAttribute(contentType));
+
+        Assert.Equal("contentTypes", exception.ParamName);
+    }
+
+    [Fact]
+    public void ProducesFileResponseAttribute_RejectsCaseInsensitiveDuplicates() {
+        ArgumentException exception = Assert.Throws<ArgumentException>(
+            static () => new ProducesFileResponseAttribute("text/csv", "TEXT/CSV"));
+
+        Assert.Multiple(
+            () => Assert.Equal("contentTypes", exception.ParamName),
+            () => Assert.Contains("Duplicate", exception.Message, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ProducesFileResponseAttribute_RejectsNullContentTypes() {
+        Assert.Throws<ArgumentNullException>(
+            static () => new ProducesFileResponseAttribute(contentTypes: null!));
+    }
+
+    [Fact]
+    public void ProducesFileResponseAttribute_RejectsNullContentTypeEntry() {
+        Assert.Throws<ArgumentException>(
+            static () => new ProducesFileResponseAttribute([null!]));
+    }
+
+    [Fact]
     public void ClosedSetQueryStrings_RejectUnknownValues() {
         (Type QueryType, string ParameterName, string AcceptedValue)[] expectations = [
             (typeof(global::FoodDiary.Presentation.Api.Features.Admin.Requests.GetAdminContentReportsHttpQuery), "Status", PresentationQueryValues.Pending),

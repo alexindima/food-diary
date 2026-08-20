@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -43,9 +44,7 @@ public sealed class UserAchievement : Entity<UserAchievementId> {
             throw new ArgumentOutOfRangeException(nameof(definitionVersion), "Definition version must be positive.");
         }
 
-        DateTime normalizedEarnedAtUtc = earnedAtUtc.Kind == DateTimeKind.Unspecified
-            ? DateTime.SpecifyKind(earnedAtUtc, DateTimeKind.Utc)
-            : earnedAtUtc.ToUniversalTime();
+        DateTime normalizedEarnedAtUtc = DomainGuard.RequiredUtc(earnedAtUtc, nameof(earnedAtUtc));
 
         var achievement = new UserAchievement {
             Id = UserAchievementId.New(),

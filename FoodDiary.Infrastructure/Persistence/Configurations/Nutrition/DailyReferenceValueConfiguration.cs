@@ -15,9 +15,9 @@ internal sealed class DailyReferenceValueConfiguration : IEntityTypeConfiguratio
         builder.Property(e => e.Value)
             .UsePropertyAccessMode(PropertyAccessMode.Property);
 
-        builder.Property(e => e.Unit).HasMaxLength(32).IsRequired();
-        builder.Property(e => e.AgeGroup).HasMaxLength(64).IsRequired();
-        builder.Property(e => e.Gender).HasMaxLength(16).IsRequired();
+        builder.Property(e => e.Unit).HasMaxLength(DailyReferenceValue.UnitMaxLength).IsRequired();
+        builder.Property(e => e.AgeGroup).HasMaxLength(DailyReferenceValue.AgeGroupMaxLength).IsRequired();
+        builder.Property(e => e.Gender).HasMaxLength(DailyReferenceValue.GenderMaxLength).IsRequired();
 
         builder.HasIndex(e => new { e.NutrientId, e.AgeGroup, e.Gender }).IsUnique();
 

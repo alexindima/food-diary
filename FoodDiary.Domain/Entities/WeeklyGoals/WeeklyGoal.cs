@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -58,7 +59,7 @@ public sealed class WeeklyGoal : Entity<WeeklyGoalId> {
         DateTime modifiedAtUtc) {
         ValidateTargetDays(targetDays);
         ValidateReminder(reminderEnabled, reminderTimeMinutes, timeZoneOffsetMinutes);
-        DateTime normalizedModifiedAtUtc = NormalizeUtc(modifiedAtUtc);
+        DateTime normalizedModifiedAtUtc = DomainGuard.RequiredUtc(modifiedAtUtc, nameof(modifiedAtUtc));
 
         int? normalizedReminderTimeMinutes = reminderEnabled ? reminderTimeMinutes : null;
         int? normalizedTimeZoneOffsetMinutes = reminderEnabled ? timeZoneOffsetMinutes : null;
@@ -86,8 +87,41 @@ public sealed class WeeklyGoal : Entity<WeeklyGoalId> {
             throw new InvalidOperationException("A reminder cannot be marked for a goal with reminders disabled.");
         }
 
+        DateTime normalizedModifiedAtUtc = DomainGuard.RequiredUtc(modifiedAtUtc, nameof(modifiedAtUtc));
+        ValidateReminderLocalDate(localDate, normalizedModifiedAtUtc);
+        if (LastReminderLocalDate == localDate) {
+            return;
+        }
+
         LastReminderLocalDate = localDate;
-        SetModified(NormalizeUtc(modifiedAtUtc));
+        SetModified(normalizedModifiedAtUtc);
+    }
+
+    private void ValidateReminderLocalDate(DateOnly localDate, DateTime modifiedAtUtc) {
+        if (TimeZoneOffsetMinutes is not { } offsetMinutes) {
+            throw new InvalidOperationException("A reminder time zone offset is required.");
+        }
+
+        DateTime localTimestamp;
+        try {
+            localTimestamp = modifiedAtUtc.AddMinutes(offsetMinutes);
+        } catch (ArgumentOutOfRangeException) {
+            throw new ArgumentOutOfRangeException(
+                nameof(modifiedAtUtc),
+                modifiedAtUtc,
+                "The reminder timestamp cannot be represented in the configured time zone.");
+        }
+
+        var expectedLocalDate = DateOnly.FromDateTime(localTimestamp);
+        if (localDate != expectedLocalDate) {
+            throw new ArgumentOutOfRangeException(nameof(localDate), "Reminder date must match the timestamp in the configured time zone.");
+        }
+
+        var weekStart = DateOnly.FromDateTime(WeekStartUtc);
+        int dayOffset = localDate.DayNumber - weekStart.DayNumber;
+        if (dayOffset is < 0 or > 6) {
+            throw new ArgumentOutOfRangeException(nameof(localDate), "Reminder date must belong to the goal week.");
+        }
     }
 
     private static void EnsureUserId(UserId userId) {
@@ -97,18 +131,15 @@ public sealed class WeeklyGoal : Entity<WeeklyGoalId> {
     }
 
     private static DateTime NormalizeWeekStart(DateTime value) {
-        DateTime utc = NormalizeUtc(value).Date;
+        DateTime utc = value.Kind == DateTimeKind.Unspecified
+            ? DateTime.SpecifyKind(value.Date, DateTimeKind.Utc)
+            : value.ToUniversalTime().Date;
         if (utc.DayOfWeek != DayOfWeek.Monday) {
             throw new ArgumentOutOfRangeException(nameof(value), "Week start must be a Monday.");
         }
 
         return utc;
     }
-
-    private static DateTime NormalizeUtc(DateTime value) =>
-        value.Kind == DateTimeKind.Unspecified
-            ? DateTime.SpecifyKind(value, DateTimeKind.Utc)
-            : value.ToUniversalTime();
 
     private static void ValidateType(WeeklyGoalType type) {
         if (type != WeeklyGoalType.DiaryLogging) {

@@ -102,8 +102,8 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
             return FastingSessionStatus.Completed;
         }
 
-        DateTime targetReachedAtUtc = StartedAtUtc.AddHours(PlannedDurationHours);
-        return EndedAtUtc.Value >= targetReachedAtUtc
+        TimeSpan elapsed = EndedAtUtc.Value - StartedAtUtc;
+        return elapsed >= TimeSpan.FromHours(PlannedDurationHours)
             ? FastingSessionStatus.Completed
             : FastingSessionStatus.Interrupted;
     }

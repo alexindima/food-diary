@@ -99,7 +99,7 @@ public sealed class ReferenceDataInvariantTests {
 
     [Fact]
     public void UsdaFood_ExposesReadOnlyNavigationCollections() {
-        var food = new UsdaFood { FdcId = 1 };
+        var food = new UsdaFood { FdcId = 1, Description = "Apple" };
 
         Assert.Multiple(
             () => Assert.True(Assert.IsAssignableFrom<ICollection<UsdaFoodNutrient>>(food.FoodNutrients).IsReadOnly),
@@ -113,6 +113,9 @@ public sealed class ReferenceDataInvariantTests {
             Id = 1,
             NutrientId = 1,
             Value = value,
+            Unit = "g",
+            AgeGroup = "adult",
+            Gender = "all",
         });
     }
 
@@ -134,6 +137,7 @@ public sealed class ReferenceDataInvariantTests {
             Id = 1,
             FdcId = 1,
             Amount = value,
+            MeasureUnitName = "serving",
             GramWeight = 1,
         });
     }
@@ -145,6 +149,7 @@ public sealed class ReferenceDataInvariantTests {
             Id = 1,
             FdcId = 1,
             Amount = 1,
+            MeasureUnitName = "serving",
             GramWeight = value,
         });
     }
@@ -154,21 +159,35 @@ public sealed class ReferenceDataInvariantTests {
     [InlineData(-1)]
     public void UsdaReferenceEntities_WithNonPositiveIdentifiers_Throw(int identifier) {
         Assert.Multiple(
-            () => Assert.Throws<ArgumentOutOfRangeException>(() => new UsdaFood { FdcId = identifier }),
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => new UsdaFood {
+                FdcId = identifier,
+                Description = "Food",
+            }),
             () => Assert.Throws<ArgumentOutOfRangeException>(() => new UsdaFood {
                 FdcId = 1,
+                Description = "Food",
                 FoodCategoryId = identifier,
             }),
-            () => Assert.Throws<ArgumentOutOfRangeException>(() => new UsdaNutrient { Id = identifier }),
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => new UsdaNutrient {
+                Id = identifier,
+                Name = "Energy",
+                UnitName = "kcal",
+            }),
             () => Assert.Throws<ArgumentOutOfRangeException>(() => new DailyReferenceValue {
                 Id = identifier,
                 NutrientId = 1,
                 Value = 1,
+                Unit = "g",
+                AgeGroup = "adult",
+                Gender = "all",
             }),
             () => Assert.Throws<ArgumentOutOfRangeException>(() => new DailyReferenceValue {
                 Id = 1,
                 NutrientId = identifier,
                 Value = 1,
+                Unit = "g",
+                AgeGroup = "adult",
+                Gender = "all",
             }),
             () => Assert.Throws<ArgumentOutOfRangeException>(() => new UsdaFoodNutrient {
                 Id = identifier,
@@ -192,12 +211,14 @@ public sealed class ReferenceDataInvariantTests {
                 Id = identifier,
                 FdcId = 1,
                 Amount = 1,
+                MeasureUnitName = "serving",
                 GramWeight = 1,
             }),
             () => Assert.Throws<ArgumentOutOfRangeException>(() => new UsdaFoodPortion {
                 Id = 1,
                 FdcId = identifier,
                 Amount = 1,
+                MeasureUnitName = "serving",
                 GramWeight = 1,
             }));
     }
@@ -210,6 +231,9 @@ public sealed class ReferenceDataInvariantTests {
             Id = 1,
             NutrientId = 1,
             Value = value,
+            Unit = "g",
+            AgeGroup = "adult",
+            Gender = "all",
         });
     }
 
@@ -243,6 +267,7 @@ public sealed class ReferenceDataInvariantTests {
             Id = 1,
             FdcId = 1,
             Amount = value,
+            MeasureUnitName = "serving",
             GramWeight = 1,
         });
     }
@@ -255,7 +280,101 @@ public sealed class ReferenceDataInvariantTests {
             Id = 1,
             FdcId = 1,
             Amount = 1,
+            MeasureUnitName = "serving",
             GramWeight = value,
         });
+    }
+
+    [Fact]
+    public void RequiredTextValues_AreTrimmed() {
+        var food = new UsdaFood { FdcId = 1, Description = " Apple " };
+        var nutrient = new UsdaNutrient { Id = 1, Name = " Energy ", UnitName = " kcal " };
+        var portion = new UsdaFoodPortion {
+            Id = 1,
+            FdcId = 1,
+            Amount = 1,
+            MeasureUnitName = " serving ",
+            GramWeight = 100,
+        };
+        var dailyValue = new DailyReferenceValue {
+            Id = 1,
+            NutrientId = 1,
+            Value = 1,
+            Unit = " g ",
+            AgeGroup = " adult ",
+            Gender = " all ",
+        };
+
+        Assert.Multiple(
+            () => Assert.Equal("Apple", food.Description),
+            () => Assert.Equal("Energy", nutrient.Name),
+            () => Assert.Equal("kcal", nutrient.UnitName),
+            () => Assert.Equal("serving", portion.MeasureUnitName),
+            () => Assert.Equal("g", dailyValue.Unit),
+            () => Assert.Equal("adult", dailyValue.AgeGroup),
+            () => Assert.Equal("all", dailyValue.Gender));
+    }
+
+    [Fact]
+    public void RequiredTextValues_RejectBlankOrTooLongInput() {
+        Assert.Multiple(
+            () => Assert.Throws<ArgumentException>(() => new UsdaFood { FdcId = 1, Description = " " }),
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => new UsdaFood {
+                FdcId = 1,
+                Description = new string('d', UsdaFood.DescriptionMaxLength + 1),
+            }),
+            () => Assert.Throws<ArgumentException>(() => new UsdaNutrient { Id = 1, Name = " ", UnitName = "g" }),
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => new UsdaNutrient {
+                Id = 1,
+                Name = "Energy",
+                UnitName = new string('u', UsdaNutrient.UnitNameMaxLength + 1),
+            }),
+            () => Assert.Throws<ArgumentException>(() => new UsdaFoodPortion {
+                Id = 1,
+                FdcId = 1,
+                Amount = 1,
+                MeasureUnitName = " ",
+                GramWeight = 1,
+            }),
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => new DailyReferenceValue {
+                Id = 1,
+                NutrientId = 1,
+                Value = 1,
+                Unit = "g",
+                AgeGroup = "adult",
+                Gender = new string('g', DailyReferenceValue.GenderMaxLength + 1),
+            }));
+    }
+
+    [Fact]
+    public void OptionalTextValues_NormalizeBlankAndRejectTooLongInput() {
+        var food = new UsdaFood { FdcId = 1, Description = "Apple", FoodCategory = " " };
+        var portion = new UsdaFoodPortion {
+            Id = 1,
+            FdcId = 1,
+            Amount = 1,
+            MeasureUnitName = "serving",
+            GramWeight = 1,
+            PortionDescription = " ",
+            Modifier = " sliced ",
+        };
+
+        Assert.Multiple(
+            () => Assert.Null(food.FoodCategory),
+            () => Assert.Null(portion.PortionDescription),
+            () => Assert.Equal("sliced", portion.Modifier),
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => new UsdaFood {
+                FdcId = 1,
+                Description = "Apple",
+                FoodCategory = new string('c', UsdaFood.FoodCategoryMaxLength + 1),
+            }),
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => new UsdaFoodPortion {
+                Id = 1,
+                FdcId = 1,
+                Amount = 1,
+                MeasureUnitName = "serving",
+                GramWeight = 1,
+                PortionDescription = new string('p', UsdaFoodPortion.PortionDescriptionMaxLength + 1),
+            }));
     }
 }

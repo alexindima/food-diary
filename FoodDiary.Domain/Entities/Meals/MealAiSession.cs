@@ -64,10 +64,9 @@ public sealed class MealAiSession : Entity<MealAiSessionId> {
             if (item.MealAiSessionId != Id) {
                 throw new ArgumentException("AI item must be attached to this session before adding.", nameof(items));
             }
-
-            _items.Add(item);
         }
 
+        _items.AddRange(items);
         SetModified();
     }
 

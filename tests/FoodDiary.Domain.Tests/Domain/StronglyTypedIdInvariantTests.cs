@@ -17,9 +17,18 @@ public sealed class StronglyTypedIdInvariantTests {
             .Where(static type =>
                 type is { IsValueType: true, IsAbstract: false } &&
                 string.Equals(type.Namespace, "FoodDiary.Domain.ValueObjects.Ids", StringComparison.Ordinal) &&
-                typeof(IEntityId<Guid>).IsAssignableFrom(type))
+                type.Name.EndsWith("Id", StringComparison.Ordinal) &&
+                type.GetProperty("Value")?.PropertyType == typeof(Guid))
             .OrderBy(static type => type.Name, StringComparer.Ordinal)
             .Select(static type => new object[] { type });
+    }
+
+    [Theory]
+    [MemberData(nameof(StronglyTypedGuidIdTypes))]
+    public void StronglyTypedGuidId_ImplementsEntityIdContract(Type idType) {
+        Assert.True(
+            typeof(IEntityId<Guid>).IsAssignableFrom(idType),
+            $"{idType.FullName} must implement {typeof(IEntityId<Guid>).FullName}.");
     }
 
     [Theory]

@@ -40,17 +40,11 @@ public sealed class UserAchievementTests {
     }
 
     [Fact]
-    public void Create_WithUnspecifiedTimestamp_NormalizesToUtc() {
+    public void Create_WithUnspecifiedTimestamp_Throws() {
         var unspecified = DateTime.SpecifyKind(EarnedAtUtc, DateTimeKind.Unspecified);
 
-        var achievement = UserAchievement.Create(
-            UserId.New(),
-            "streak_3",
-            unspecified,
-            earnedValue: 3,
-            definitionVersion: 1);
-
-        Assert.Equal(DateTimeKind.Utc, achievement.EarnedAtUtc.Kind);
+        Assert.Throws<ArgumentOutOfRangeException>(() => UserAchievement.Create(
+            UserId.New(), "streak_3", unspecified, earnedValue: 3, definitionVersion: 1));
     }
 
     [Fact]

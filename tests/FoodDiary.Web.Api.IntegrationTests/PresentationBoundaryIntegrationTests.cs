@@ -1086,6 +1086,102 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
+    public async Task SwaggerJson_AllNumericQueryParameters_DocumentConsistentRanges() {
+        HttpClient client = apiFactory.CreateClient();
+        using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
+        JsonElement paths = json.RootElement.GetProperty("paths");
+        var violations = new List<string>();
+
+        foreach (JsonProperty path in paths.EnumerateObject()) {
+            foreach (JsonProperty operation in path.Value.EnumerateObject()) {
+                if (!operation.Value.TryGetProperty("parameters", out JsonElement parameters) ||
+                    parameters.ValueKind != JsonValueKind.Array) {
+                    continue;
+                }
+
+                foreach (JsonElement parameter in parameters.EnumerateArray()) {
+                    if (!parameter.TryGetProperty("in", out JsonElement location) ||
+                        !string.Equals(location.GetString(), "query", StringComparison.Ordinal) ||
+                        !parameter.TryGetProperty("schema", out JsonElement schema) ||
+                        !IsNumericSchema(schema)) {
+                        continue;
+                    }
+
+                    string name = parameter.GetProperty("name").GetString() ?? "<unnamed>";
+                    string label = $"{operation.Name.ToUpperInvariant()} {path.Name} query '{name}'";
+                    if (!schema.TryGetProperty("minimum", out JsonElement minimum) ||
+                        minimum.ValueKind != JsonValueKind.Number) {
+                        violations.Add($"{label} must document a numeric minimum.");
+                        continue;
+                    }
+
+                    double minimumValue = minimum.GetDouble();
+                    double? maximumValue = schema.TryGetProperty("maximum", out JsonElement maximum) &&
+                        maximum.ValueKind == JsonValueKind.Number
+                            ? maximum.GetDouble()
+                            : null;
+                    if (maximumValue is { } maximumBound && maximumBound < minimumValue) {
+                        violations.Add($"{label} maximum must not be less than its minimum.");
+                    }
+
+                    if (schema.TryGetProperty("default", out JsonElement defaultValue) &&
+                        defaultValue.ValueKind == JsonValueKind.Number) {
+                        double numericDefault = defaultValue.GetDouble();
+                        if (numericDefault < minimumValue
+                            || (maximumValue is { } upperBound && numericDefault > upperBound)) {
+                            violations.Add($"{label} default must be inside its documented range.");
+                        }
+                    }
+                }
+            }
+        }
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public async Task SwaggerJson_AllRequestAndSuccessMediaSchemas_HaveCompleteShapes() {
+        HttpClient client = apiFactory.CreateClient();
+        using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
+        JsonElement paths = json.RootElement.GetProperty("paths");
+        var violations = new List<string>();
+
+        foreach (JsonProperty path in paths.EnumerateObject()) {
+            foreach (JsonProperty operation in path.Value.EnumerateObject()) {
+                string operationLabel = $"{operation.Name.ToUpperInvariant()} {path.Name}";
+                if (operation.Value.TryGetProperty("requestBody", out JsonElement requestBody)) {
+                    if (requestBody.TryGetProperty("content", out JsonElement requestContent)) {
+                        AddIncompleteMediaSchemaViolations(
+                            violations,
+                            requestContent,
+                            $"{operationLabel} request body");
+                    } else {
+                        violations.Add($"{operationLabel} request body must document media types and schemas.");
+                    }
+                }
+
+                if (!operation.Value.TryGetProperty("responses", out JsonElement responses)) {
+                    continue;
+                }
+
+                foreach (JsonProperty response in responses.EnumerateObject()) {
+                    if (response.Name.Length != 3 || response.Name[0] != '2' ||
+                        !response.Value.TryGetProperty("content", out JsonElement responseContent)) {
+                        continue;
+                    }
+
+                    AddIncompleteMediaSchemaViolations(
+                        violations,
+                        responseContent,
+                        $"{operationLabel} response {response.Name}");
+                }
+            }
+        }
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public async Task SwaggerJson_DocumentsRequestArrayAndFileSchemaDetails() {
         HttpClient client = apiFactory.CreateClient();
         using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
@@ -1521,6 +1617,112 @@ public sealed class PresentationBoundaryIntegrationTests(
             items.ValueKind == JsonValueKind.Object ? GetSchemaReference(items) : null,
             additionalProperties.ValueKind == JsonValueKind.Object ? GetSchemaType(additionalProperties) : null,
             additionalProperties.ValueKind == JsonValueKind.Object ? GetSchemaReference(additionalProperties) : null);
+    }
+
+    private static bool IsNumericSchema(JsonElement schema) =>
+        GetSchemaTypes(schema).Any(static type => type is "integer" or "number");
+
+    private static void AddIncompleteMediaSchemaViolations(
+        ICollection<string> violations,
+        JsonElement content,
+        string owner) {
+        if (content.ValueKind != JsonValueKind.Object) {
+            violations.Add($"{owner} must document a media-type object.");
+            return;
+        }
+
+        int mediaTypeCount = 0;
+        foreach (JsonProperty mediaType in content.EnumerateObject()) {
+            mediaTypeCount++;
+            if (!mediaType.Value.TryGetProperty("schema", out JsonElement schema)) {
+                violations.Add($"{owner} media type '{mediaType.Name}' must document a schema.");
+                continue;
+            }
+
+            string? problem = GetIncompleteSchemaProblem(schema);
+            if (problem is not null) {
+                violations.Add($"{owner} media type '{mediaType.Name}' {problem}");
+            }
+        }
+
+        if (mediaTypeCount == 0) {
+            violations.Add($"{owner} must document at least one media type.");
+        }
+    }
+
+    private static string? GetIncompleteSchemaProblem(JsonElement schema) {
+        if (schema.ValueKind != JsonValueKind.Object) {
+            return "must use an object schema.";
+        }
+
+        if (GetSchemaReference(schema) is not null) {
+            return null;
+        }
+
+        bool hasComposition = false;
+        foreach (string compositionKeyword in new[] { "allOf", "anyOf", "oneOf" }) {
+            if (!schema.TryGetProperty(compositionKeyword, out JsonElement alternatives)) {
+                continue;
+            }
+
+            hasComposition = true;
+
+            if (alternatives.ValueKind != JsonValueKind.Array || alternatives.GetArrayLength() == 0) {
+                return $"must document at least one {compositionKeyword} schema.";
+            }
+
+            foreach (JsonElement alternative in alternatives.EnumerateArray()) {
+                string? alternativeProblem = GetIncompleteSchemaProblem(alternative);
+                if (alternativeProblem is not null) {
+                    return $"contains an incomplete {compositionKeyword} alternative that {alternativeProblem}";
+                }
+            }
+        }
+
+        if (hasComposition) {
+            return null;
+        }
+
+        string[] schemaTypes = GetSchemaTypes(schema);
+        if (schemaTypes.Length == 0 ||
+            schemaTypes.All(static type => string.Equals(type, "null", StringComparison.Ordinal))) {
+            return "must document a type, reference, or composed schema.";
+        }
+
+        if (schemaTypes.Contains("array", StringComparer.Ordinal)) {
+            if (!schema.TryGetProperty("items", out JsonElement items)) {
+                return "must document array items.";
+            }
+
+            string? itemProblem = GetIncompleteSchemaProblem(items);
+            if (itemProblem is not null) {
+                return $"contains incomplete array items that {itemProblem}";
+            }
+        }
+
+        if (schema.TryGetProperty("additionalProperties", out JsonElement additionalProperties) &&
+            additionalProperties.ValueKind == JsonValueKind.Object) {
+            string? valueProblem = GetIncompleteSchemaProblem(additionalProperties);
+            if (valueProblem is not null) {
+                return $"contains incomplete additional properties that {valueProblem}";
+            }
+        }
+
+        return null;
+    }
+
+    private static string[] GetSchemaTypes(JsonElement schema) {
+        if (!schema.TryGetProperty("type", out JsonElement type)) {
+            return [];
+        }
+
+        return type.ValueKind switch {
+            JsonValueKind.String => type.GetString() is { } value ? [value] : [],
+            JsonValueKind.Array => [.. type.EnumerateArray()
+                .Where(static value => value.ValueKind == JsonValueKind.String)
+                .Select(static value => value.GetString()!)],
+            _ => [],
+        };
     }
 
     private static string? GetSchemaType(JsonElement schema) {

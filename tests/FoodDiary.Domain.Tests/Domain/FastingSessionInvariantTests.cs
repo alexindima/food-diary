@@ -147,6 +147,17 @@ public class FastingSessionInvariantTests {
     }
 
     [Fact]
+    public void GetStatus_NearDateTimeUpperBoundary_DoesNotOverflow() {
+        var boundary = DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc);
+        var session = FastingSession.Create(UserId.New(), FastingProtocol.Fast24, 24, boundary);
+        session.End(boundary);
+
+        Assert.Multiple(
+            () => Assert.Equal(FastingSessionStatus.Interrupted, session.GetStatus()),
+            () => Assert.False(session.IsSuccessfulCompletion));
+    }
+
+    [Fact]
     public void End_WhenAlreadyCompleted_IsIdempotent() {
         var session = FastingSession.Create(
             UserId.New(), FastingProtocol.Fast16Eat8, 16, DateTime.UtcNow);

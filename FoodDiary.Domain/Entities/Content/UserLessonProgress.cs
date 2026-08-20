@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -28,9 +29,7 @@ public sealed class UserLessonProgress : Entity<UserLessonProgressId> {
             Id = UserLessonProgressId.New(),
             UserId = userId,
             LessonId = lessonId,
-            ReadAtUtc = readAtUtc.Kind == DateTimeKind.Unspecified
-                ? DateTime.SpecifyKind(readAtUtc, DateTimeKind.Utc)
-                : readAtUtc.ToUniversalTime(),
+            ReadAtUtc = DomainGuard.RequiredUtc(readAtUtc, nameof(readAtUtc)),
         };
         progress.SetCreated();
         return progress;

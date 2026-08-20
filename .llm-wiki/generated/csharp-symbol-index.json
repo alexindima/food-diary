@@ -13450,7 +13450,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "AdminImpersonationSession",
@@ -13541,7 +13541,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Content/UserLessonProgress.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ClientTask",
@@ -13772,7 +13772,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "CycleFactor",
@@ -14045,7 +14045,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "AchievementMetric",
@@ -14507,7 +14507,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/AchievementDefinitionId.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "AiPromptTemplateId",
@@ -14535,7 +14535,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/ClientTaskId.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "ContentReportId",
@@ -14815,7 +14815,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/RecommendationBulkDispatchId.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "RecommendationCommentId",
@@ -14836,7 +14836,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/RecommendationTemplateId.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "RoleId",

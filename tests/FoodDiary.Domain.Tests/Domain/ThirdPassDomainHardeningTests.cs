@@ -142,7 +142,7 @@ public sealed class ThirdPassDomainHardeningTests {
     }
 
     [Fact]
-    public void OverflowingTransitions_DoNotPartiallyMutateEntities() {
+    public void BoundaryTransitions_HandleOverflowWithoutPartialMutation() {
         var user = User.Create("trial-overflow@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -152,13 +152,14 @@ public sealed class ThirdPassDomainHardeningTests {
             () => Assert.Null(user.PremiumTrialEndsAtUtc));
 
         BillingWebhookEvent webhookEvent = CreateReceivedWebhookEvent();
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-            webhookEvent.MarkFailed(DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc), "failure"));
+        var boundary = DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc);
+        webhookEvent.MarkFailed(boundary, "failure");
         Assert.Multiple(
-            () => Assert.Equal(BillingWebhookEvent.ReceivedStatus, webhookEvent.Status),
-            () => Assert.Equal(0, webhookEvent.AttemptCount),
-            () => Assert.Null(webhookEvent.ErrorMessage),
-            () => Assert.Null(webhookEvent.NextAttemptAtUtc));
+            () => Assert.Equal(BillingWebhookEvent.FailedStatus, webhookEvent.Status),
+            () => Assert.Equal(1, webhookEvent.AttemptCount),
+            () => Assert.Equal("failure", webhookEvent.ErrorMessage),
+            () => Assert.Equal(boundary, webhookEvent.NextAttemptAtUtc),
+            () => Assert.Equal(boundary, webhookEvent.ModifiedOnUtc));
 
         BillingWebhookEvent saturatedEvent = CreateReceivedWebhookEvent();
         PropertyInfo attemptCountProperty = typeof(BillingWebhookEvent)

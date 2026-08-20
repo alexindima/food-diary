@@ -18,9 +18,9 @@ internal sealed class UsdaFoodPortionConfiguration : IEntityTypeConfiguration<Us
         builder.Property(e => e.GramWeight)
             .UsePropertyAccessMode(PropertyAccessMode.Property);
 
-        builder.Property(e => e.MeasureUnitName).HasMaxLength(128);
-        builder.Property(e => e.PortionDescription).HasMaxLength(256);
-        builder.Property(e => e.Modifier).HasMaxLength(128);
+        builder.Property(e => e.MeasureUnitName).HasMaxLength(UsdaFoodPortion.MeasureUnitNameMaxLength).IsRequired();
+        builder.Property(e => e.PortionDescription).HasMaxLength(UsdaFoodPortion.PortionDescriptionMaxLength);
+        builder.Property(e => e.Modifier).HasMaxLength(UsdaFoodPortion.ModifierMaxLength);
 
         builder.HasIndex(e => e.FdcId);
 

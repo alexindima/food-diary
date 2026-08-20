@@ -252,12 +252,11 @@ public class ContentInvariantTests {
     }
 
     [Fact]
-    public void UserLessonProgress_Create_WithUnspecifiedKind_SpecifiesAsUtc() {
+    public void UserLessonProgress_Create_WithUnspecifiedKind_Throws() {
         var unspecified = new DateTime(2026, 3, 15, 12, 0, 0, DateTimeKind.Unspecified);
-        var progress = UserLessonProgress.Create(UserId.New(), NutritionLessonId.New(), unspecified);
 
-        Assert.Equal(DateTimeKind.Utc, progress.ReadAtUtc.Kind);
-        Assert.Equal(unspecified, progress.ReadAtUtc, TimeSpan.FromSeconds(1));
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            UserLessonProgress.Create(UserId.New(), NutritionLessonId.New(), unspecified));
     }
 
     [Fact]

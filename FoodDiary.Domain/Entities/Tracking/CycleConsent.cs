@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -29,14 +30,14 @@ public sealed class CycleConsent : Entity<CycleConsentId> {
         var consent = new CycleConsent(CycleConsentId.New()) {
             CycleProfileId = cycleProfileId,
             Purpose = purpose,
-            GrantedAtUtc = NormalizeUtc(grantedAtUtc),
+            GrantedAtUtc = DomainGuard.RequiredUtc(grantedAtUtc, nameof(grantedAtUtc)),
         };
         consent.SetCreated();
         return consent;
     }
 
     internal bool Grant(DateTime grantedAtUtc) {
-        DateTime normalized = NormalizeUtc(grantedAtUtc);
+        DateTime normalized = DomainGuard.RequiredUtc(grantedAtUtc, nameof(grantedAtUtc));
         if (IsActive) {
             return false;
         }
@@ -56,7 +57,7 @@ public sealed class CycleConsent : Entity<CycleConsentId> {
             return;
         }
 
-        DateTime normalized = NormalizeUtc(revokedAtUtc);
+        DateTime normalized = DomainGuard.RequiredUtc(revokedAtUtc, nameof(revokedAtUtc));
         if (normalized < GrantedAtUtc) {
             throw new ArgumentOutOfRangeException(nameof(revokedAtUtc), "Revocation cannot precede consent grant.");
         }
@@ -64,11 +65,6 @@ public sealed class CycleConsent : Entity<CycleConsentId> {
         RevokedAtUtc = normalized;
         SetModified();
     }
-
-    private static DateTime NormalizeUtc(DateTime value) =>
-        value.Kind == DateTimeKind.Unspecified
-            ? DateTime.SpecifyKind(value, DateTimeKind.Utc)
-            : value.ToUniversalTime();
 
     private static void EnsureCycleProfileId(CycleProfileId cycleProfileId) {
         if (cycleProfileId == CycleProfileId.Empty) {

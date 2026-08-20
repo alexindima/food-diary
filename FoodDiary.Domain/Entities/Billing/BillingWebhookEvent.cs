@@ -97,7 +97,7 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
         string normalizedError = NormalizeError(errorMessage);
         int nextAttemptCount = AttemptCount == int.MaxValue ? int.MaxValue : AttemptCount + 1;
         int delayMinutes = Math.Min(60, 1 << Math.Min(nextAttemptCount - 1, 6));
-        DateTime nextAttemptAtUtc = normalizedFailedAtUtc.AddMinutes(delayMinutes);
+        DateTime nextAttemptAtUtc = AddMinutesSaturated(normalizedFailedAtUtc, delayMinutes);
 
         AttemptCount = nextAttemptCount;
         Status = FailedStatus;
@@ -160,5 +160,12 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
         return normalized < earliestAllowed
             ? throw new ArgumentOutOfRangeException(paramName, "Transition timestamp cannot be earlier than the previous webhook event timestamp.")
             : normalized;
+    }
+
+    private static DateTime AddMinutesSaturated(DateTime value, int minutes) {
+        DateTime latestBase = DateTime.MaxValue.AddMinutes(-minutes);
+        return value > latestBase
+            ? DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc)
+            : value.AddMinutes(minutes);
     }
 }

@@ -95,13 +95,13 @@ public class DomainModelGuardrailTests {
                 .Select((line, index) => new { path, index, line = line.Trim() }))
             .Where(static entry =>
                 entry.line.StartsWith("public readonly record struct ", StringComparison.Ordinal) &&
-                entry.line.Contains("Id(", StringComparison.Ordinal) &&
-                entry.line.Contains("IEntityId<", StringComparison.Ordinal))
+                entry.line.Contains("Id(Guid Value)", StringComparison.Ordinal))
             .Where(entry => !entry.path.StartsWith(idsRoot, StringComparison.OrdinalIgnoreCase) ||
                             !string.Equals(
                                 Path.GetFileNameWithoutExtension(entry.path),
                                 entry.line.Split(' ', StringSplitOptions.RemoveEmptyEntries)[4].Split('(')[0],
-                                StringComparison.Ordinal))
+                                StringComparison.Ordinal) ||
+                            !entry.line.Contains(": IEntityId<Guid>", StringComparison.Ordinal))
             .Select(entry => string.Create(
                 CultureInfo.InvariantCulture,
                 $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))

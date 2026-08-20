@@ -6,6 +6,10 @@ namespace FoodDiary.Domain.Entities.Usda;
 /// FDA Daily Reference Value for a nutrient. Used to compute % Daily Value.
 /// </summary>
 public sealed class DailyReferenceValue {
+    public const int UnitMaxLength = 32;
+    public const int AgeGroupMaxLength = 64;
+    public const int GenderMaxLength = 16;
+
     public int Id {
         get;
         init => field = DomainGuard.Positive(value, nameof(Id));
@@ -18,9 +22,18 @@ public sealed class DailyReferenceValue {
         get;
         init => field = DomainGuard.PositiveFinite(value, nameof(Value));
     }
-    public string Unit { get; init; } = string.Empty;
-    public string AgeGroup { get; init; } = string.Empty;
-    public string Gender { get; init; } = string.Empty;
+    public required string Unit {
+        get;
+        init => field = DomainGuard.RequiredText(value, UnitMaxLength, nameof(Unit));
+    }
+    public required string AgeGroup {
+        get;
+        init => field = DomainGuard.RequiredText(value, AgeGroupMaxLength, nameof(AgeGroup));
+    }
+    public required string Gender {
+        get;
+        init => field = DomainGuard.RequiredText(value, GenderMaxLength, nameof(Gender));
+    }
 
     public UsdaNutrient Nutrient { get; init; } = null!;
 }

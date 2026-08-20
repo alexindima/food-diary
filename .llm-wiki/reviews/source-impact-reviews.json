@@ -178,21 +178,17 @@
     {
       "pageId": "workflow-api-compatibility",
       "pagePath": ".llm-wiki/workflows/api-compatibility.md",
-      "pageSha256": "cd98e594f87b4a55e4b30f289d286334704562d489f085767fc62d58a25721d1",
+      "pageSha256": "41066a30ff014f0aa45610d740fa86faa28219567481c278dbc4e0650dce1cdb",
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "91698ae76e30b39463f953f2ec1a77e1fcf98c79ea565c25bdbb7257003b2b12"
-        },
-        {
-          "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "f5d81a4f49841e532703dd87a9c8f60f2eb1ea225c3b0b603eaae4f54d384872"
+          "sha256": "ca97cda84ec4c00c0f6c7b388af4e4eebcd10c3765e06b60d2fdeab5fbd07f5a"
         }
       ],
-      "reason": "API compatibility check reports 0 structural breaking changes and exactly three additive documented 400 responses; the full OpenAPI snapshot is updated and all 173 Web API integration tests pass.",
+      "reason": "Swagger output, HTTP routes, payloads, status codes, and snapshots are unchanged; the integration change only adds generic invariants for existing numeric query bounds and request/success schema completeness.",
       "baseRef": "HEAD",
-      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
-      "reviewedAtUtc": "2026-08-19T13:06:24.6978829Z"
+      "gitHead": "65ae2e2c1d4bdb0b1e73eed0ccea1ee761ea460c",
+      "reviewedAtUtc": "2026-08-20T00:07:47.4670282Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -216,13 +212,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "45f90ffea1b1022409e6c01a89dc010899565f05fb28840dc9a319a214a3ea60"
+          "sha256": "a883bd08ffd5af34e78a5a7e05880b1ff33de79474b3066dcf78148277b15a0e"
         }
       ],
-      "reason": "Regenerated and reviewed the OpenAPI contract after adding query bounds, request and response schema shapes, file media types, and explicit optional responses; focused and full integration tests pass.",
+      "reason": "Swagger output, HTTP routes, payloads, status codes, and snapshots are unchanged; the integration change only adds generic invariants for existing numeric query bounds and request/success schema completeness.",
       "baseRef": "HEAD",
-      "gitHead": "56693d6ebb798d0d8ea3877592e17dbaedd97c96",
-      "reviewedAtUtc": "2026-08-19T23:05:22.8465696Z"
+      "gitHead": "65ae2e2c1d4bdb0b1e73eed0ccea1ee761ea460c",
+      "reviewedAtUtc": "2026-08-20T00:07:48.2719614Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -461,13 +457,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "79465f84d054f6b9602f0bed6c8fc6fc32a8d1b9c86b7ae3dd625a1a6c3baa47"
+          "sha256": "87bf14839f9a8d9d1b83a36633aa288fc2fb126ffd4ad566f10700755301cb4f"
         }
       ],
-      "reason": "Domain-data and quality indexes reflect the stricter USDA and UTC invariants; domain, application, infrastructure, and architecture regression suites pass.",
+      "reason": "Generated domain-data and quality indexes were refreshed for the new Domain invariants and their regression tests; the focused Presentation build and 710 architecture tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "fe614150d2afa5f98ad3723ff106606e7522efa9",
-      "reviewedAtUtc": "2026-08-19T22:46:50.9672654Z"
+      "gitHead": "65ae2e2c1d4bdb0b1e73eed0ccea1ee761ea460c",
+      "reviewedAtUtc": "2026-08-20T00:08:11.1573165Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -756,13 +752,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d519ed98a5d6e8e27c2f5b9c66105c1b5802c3713fce42534538c2531560f5fb"
+          "sha256": "372f9cd64aa60a0c6edeb6be690898873bba809a86075e63451bab7cbe85fabf"
         }
       ],
-      "reason": "Reviewed the regenerated sensitive-data index against the current domain validation, integration option, storage service, and presentation changes; no new secret material or unsafe data exposure is introduced.",
+      "reason": "Domain changes only tighten constructor and value validation; no credentials, PII fields, logging, persistence destinations, exports, or provider-sharing boundaries changed.",
       "baseRef": "HEAD",
-      "gitHead": "56693d6ebb798d0d8ea3877592e17dbaedd97c96",
-      "reviewedAtUtc": "2026-08-19T23:06:32.0479270Z"
+      "gitHead": "65ae2e2c1d4bdb0b1e73eed0ccea1ee761ea460c",
+      "reviewedAtUtc": "2026-08-20T00:08:11.7247202Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -817,13 +813,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bf75c0eea2aa6982f79165e1699ddd9f4c8c75a0291b71f4be90d862fc4c122d"
+          "sha256": "cc7af166837a3c12708fdac2385382395dc68d5977ebed85a1aaba6980c37563"
         }
       ],
-      "reason": "Reviewed the quality index against focused presentation, host, integration, architecture, solution build, and coverage runs; targeted tests cover the new and previously under-covered behavior.",
+      "reason": "Generated domain-data and quality indexes were refreshed for the new Domain invariants and their regression tests; the focused Presentation build and 710 architecture tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "56693d6ebb798d0d8ea3877592e17dbaedd97c96",
-      "reviewedAtUtc": "2026-08-19T23:05:31.0869380Z"
+      "gitHead": "65ae2e2c1d4bdb0b1e73eed0ccea1ee761ea460c",
+      "reviewedAtUtc": "2026-08-20T00:08:12.5339052Z"
     },
     {
       "pageId": "workflow-release-readiness",

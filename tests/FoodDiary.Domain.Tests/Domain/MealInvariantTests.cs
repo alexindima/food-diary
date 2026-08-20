@@ -885,6 +885,8 @@ public class MealInvariantTests {
         TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() => addItemsMethod.Invoke(session, [listWithNull]));
 
         Assert.IsType<ArgumentException>(ex.InnerException);
+        Assert.Empty(session.Items);
+        Assert.Null(session.ModifiedOnUtc);
     }
 
     [Fact]

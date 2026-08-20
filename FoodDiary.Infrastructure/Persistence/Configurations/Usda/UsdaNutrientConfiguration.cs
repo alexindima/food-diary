@@ -12,7 +12,7 @@ internal sealed class UsdaNutrientConfiguration : IEntityTypeConfiguration<UsdaN
             .ValueGeneratedNever()
             .UsePropertyAccessMode(PropertyAccessMode.Property);
 
-        builder.Property(e => e.Name).HasMaxLength(256).IsRequired();
-        builder.Property(e => e.UnitName).HasMaxLength(32).IsRequired();
+        builder.Property(e => e.Name).HasMaxLength(UsdaNutrient.NameMaxLength).IsRequired();
+        builder.Property(e => e.UnitName).HasMaxLength(UsdaNutrient.UnitNameMaxLength).IsRequired();
     }
 }
