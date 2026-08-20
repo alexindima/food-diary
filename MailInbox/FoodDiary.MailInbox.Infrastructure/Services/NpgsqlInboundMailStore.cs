@@ -441,23 +441,32 @@ public sealed class NpgsqlInboundMailStore(
 
     public async Task<bool> MarkAsReadAsync(Guid id, DateTimeOffset readAtUtc, CancellationToken cancellationToken) {
         const string sql = """
-                           update mailinbox_messages
-                           set read_at_utc = coalesce(read_at_utc, @read_at_utc)
-                           where id = @id;
+                           with existing as materialized (
+                               select id
+                               from mailinbox_messages
+                               where id = @id
+                           ),
+                           updated as (
+                               update mailinbox_messages
+                               set read_at_utc = @read_at_utc
+                               where id = @id
+                                 and read_at_utc is null
+                               returning id
+                           )
+                           select exists(select 1 from existing)
+                               or exists(select 1 from updated);
                            """;
 
         NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        int affectedRows;
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("id", id);
                 command.Parameters.AddWithValue("read_at_utc", readAtUtc.ToUniversalTime());
-                affectedRows = await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                object? result = await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+                return result is true;
             }
         }
-
-        return affectedRows > 0;
     }
 
     public async Task<InboundMailRetentionResult> PurgeExpiredAsync(

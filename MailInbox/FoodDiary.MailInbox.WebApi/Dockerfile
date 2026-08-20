@@ -38,13 +38,21 @@ RUN apk add --no-cache \
     krb5-conf=1.0-r2 \
     krb5-libs=1.22.2-r1 \
     libcom_err=1.47.4-r0 \
-    libverto=0.3.2-r2
+    libverto=0.3.2-r2 \
+    su-exec=0.3-r0
 COPY --from=build /app/publish .
+COPY MailInbox/FoodDiary.MailInbox.WebApi/docker-entrypoint.sh /usr/local/bin/mail-inbox-entrypoint
+
+RUN sed -i 's/\r$//' /usr/local/bin/mail-inbox-entrypoint && \
+    chmod 0555 /usr/local/bin/mail-inbox-entrypoint
 
 EXPOSE 5098
 EXPOSE 2525
 ENV ASPNETCORE_HTTP_PORTS=5098
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-HEALTHCHECK --interval=10s --timeout=5s --retries=6 --start-period=10s CMD wget -qO- http://127.0.0.1:5098/health/ready >/dev/null || exit 1
+HEALTHCHECK --interval=10s --timeout=5s --retries=6 --start-period=10s CMD if [ "$(id -u)" -eq 0 ]; then exec su-exec "$APP_UID:$APP_UID" wget -qO- http://127.0.0.1:5098/health/ready; else exec wget -qO- http://127.0.0.1:5098/health/ready; fi >/dev/null || exit 1
 
-ENTRYPOINT ["dotnet", "FoodDiary.MailInbox.WebApi.dll"]
+USER $APP_UID
+
+ENTRYPOINT ["/usr/local/bin/mail-inbox-entrypoint"]
+CMD ["dotnet", "FoodDiary.MailInbox.WebApi.dll"]

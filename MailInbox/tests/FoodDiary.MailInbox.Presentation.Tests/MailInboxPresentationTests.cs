@@ -563,7 +563,11 @@ public sealed class MailInboxPresentationTests {
         };
 
     private static MailInboxMessagesController CreateMessagesController(ISender sender) =>
-        new(sender) {
+        new(
+            sender,
+            Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
+                ApiKey = "0123456789abcdef0123456789abcdef",
+            })) {
             ControllerContext = CreateControllerContext(),
         };
 

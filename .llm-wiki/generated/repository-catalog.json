@@ -2026,11 +2026,16 @@
           "MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
           "MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj",
           "MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj",
+          "MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
           {
             "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.AspNetCore.Mvc.Testing",
             "version": null
           },
           {
@@ -5482,17 +5487,17 @@
           {
             "verb": "GET",
             "route": "/api/mail-inbox/messages",
-            "line": 17
+            "line": 21
           },
           {
             "verb": "GET",
             "route": "/api/mail-inbox/messages/{id:guid}",
-            "line": 22
+            "line": 33
           },
           {
             "verb": "POST",
             "route": "/api/mail-inbox/messages/{id:guid}/read",
-            "line": 30
+            "line": 41
           }
         ]
       },

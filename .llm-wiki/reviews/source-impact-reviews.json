@@ -53,13 +53,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "615afbc2ec056d131bc9afeee66843dd8ade8cdf47696b83af1c4ef83ae987d0"
+          "sha256": "08eeb7e0309f00c6aa1767ab625fcce2f504a654c8321c8e4cc0b44c8e366fdc"
         }
       ],
-      "reason": "Reviewed against current sources: explicit Presentation references only make existing compile-time dependencies on Application.Abstractions, FoodDiary.Mediator, and FoodDiary.Results visible and preserve the inward dependency rule; the single global action filter owns bounded low-cardinality request telemetry, security decisions remain separate, and focused unit/integration/architecture tests cover the change.",
+      "reason": "The dependency matrix update intentionally permits the MailInbox integration-test host reference required for WebApplicationFactory coverage; production layer boundaries remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "1750267ba36c6a20435f2d9480466e74fc87ad2f",
-      "reviewedAtUtc": "2026-08-17T22:37:13.1066872Z"
+      "gitHead": "134d982543eb510e337fe44e21dc73f15e96d4cf",
+      "reviewedAtUtc": "2026-08-20T01:46:25.3931442Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -196,14 +196,14 @@
       "pageSha256": "f74e1b06fd3864499e0a28e359f979e552cb8fa51fa0da582148e417a7dfd065",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "edf50803ee749f17e41c6f868c75fe92338383a5638557696d4fac7fb716bc24"
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "08eeb7e0309f00c6aa1767ab625fcce2f504a654c8321c8e4cc0b44c8e366fdc"
         }
       ],
-      "reason": "Reviewed the freshly regenerated architecture-health index after the merge; the review workflow remains accurate and the index generator completed successfully.",
+      "reason": "The regenerated architecture-health index was reviewed against ProjectDependencyMatrixTests and the new MailInbox WebApi integration host coverage.",
       "baseRef": "HEAD",
-      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
-      "reviewedAtUtc": "2026-08-19T12:53:00.5555474Z"
+      "gitHead": "134d982543eb510e337fe44e21dc73f15e96d4cf",
+      "reviewedAtUtc": "2026-08-20T01:46:26.1517091Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -212,13 +212,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "bc2599fcd56a3adf414d669f3dc6e716edfa190bc7964c761798a8d81f6118bc"
+          "sha256": "c2793da4017e3a0568458691b1bcdd981f51f30eb15ad820fc54fce26b9f4723"
         }
       ],
-      "reason": "The regenerated backend contract index was reviewed; no routes or payload schemas changed, while JWT bearer acceptance was intentionally tightened to access tokens.",
+      "reason": "MailInbox routes and payload schemas remain compatible; intentional 429 and server-timeout behavior for bounded metadata operations is covered by integration tests.",
       "baseRef": "HEAD",
-      "gitHead": "ba1226f4d35e4928ae3f3e4db634d867c3f0a9e5",
-      "reviewedAtUtc": "2026-08-20T01:22:15.0975908Z"
+      "gitHead": "134d982543eb510e337fe44e21dc73f15e96d4cf",
+      "reviewedAtUtc": "2026-08-20T01:46:54.9665505Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -427,13 +427,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "9f583800d8cefe3bbbbe316eb8d391fc7bbb5e456c0afbb429e7d88ea0273db6"
+          "sha256": "64dc2a7266d0e8cc74cea94ee78e1efec479e466e763571fb6481151cf2a311a"
         }
       ],
-      "reason": "Reviewed the regenerated configuration and repository catalog indexes against the current option, persistence, domain, presentation, and test source changes included in this complete working-tree commit.",
+      "reason": "New MailInbox concurrency and timeout options, fail-closed host validation, Docker defaults, and compose wiring were reviewed with configuration and container tests.",
       "baseRef": "HEAD",
-      "gitHead": "56693d6ebb798d0d8ea3877592e17dbaedd97c96",
-      "reviewedAtUtc": "2026-08-19T23:06:31.7364394Z"
+      "gitHead": "134d982543eb510e337fe44e21dc73f15e96d4cf",
+      "reviewedAtUtc": "2026-08-20T01:46:26.9590119Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -752,13 +752,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "14dfed3063d8da1ff865a1bdcabde825aad3a5abe8392c51b908c12db8d913a8"
+          "sha256": "09058496c93f8d183b563f7bb0013b9cab1bc1913a574d64db7cd8cc47b51270"
         }
       ],
-      "reason": "JWT token purpose separation, atomic SSO code consumption, secret validation, password fallback removal, and bounded PDF image decoding were reviewed with focused tests.",
+      "reason": "MailInbox API-key handling, private listener defaults, no-store responses, sanitized failures, and absence of committed secret values were reviewed.",
       "baseRef": "HEAD",
-      "gitHead": "ba1226f4d35e4928ae3f3e4db634d867c3f0a9e5",
-      "reviewedAtUtc": "2026-08-20T01:22:15.9769013Z"
+      "gitHead": "134d982543eb510e337fe44e21dc73f15e96d4cf",
+      "reviewedAtUtc": "2026-08-20T01:46:27.8596767Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -813,13 +813,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "01da1119c2c693cae6fc32d3c7b303951528ac3738178c5f1fd3b2d7dbfca68a"
+          "sha256": "38477d64aa49c31150895cfc3f3a005aa7c821be6ca1feee8e6b502ec20aff34"
         }
       ],
-      "reason": "The regenerated domain-data and quality-risk indexes were reviewed against the new profile value objects, guardrails, and focused test coverage.",
+      "reason": "The regenerated quality index was reviewed against MailInbox presentation, infrastructure, integration, architecture, and Docker verification results.",
       "baseRef": "HEAD",
-      "gitHead": "ba1226f4d35e4928ae3f3e4db634d867c3f0a9e5",
-      "reviewedAtUtc": "2026-08-20T01:22:16.5569663Z"
+      "gitHead": "134d982543eb510e337fe44e21dc73f15e96d4cf",
+      "reviewedAtUtc": "2026-08-20T01:46:55.9505394Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1188,13 +1188,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "8491a440cd92af044b464280544a5b55f4450cad9326f9a1f8a0dd6260fbdb49"
+          "sha256": "0d1874071a1c764bc4a15093b48c7e50cc560919d7257e58189a005b7d643d3d"
         }
       ],
-      "reason": "The regenerated repository catalog and query context were reviewed against the central package manifest and Infrastructure project references.",
+      "reason": "The regenerated repository catalog and query context were reviewed against the restored MailInbox host, presentation filters, tests, and project references.",
       "baseRef": "HEAD",
-      "gitHead": "ba1226f4d35e4928ae3f3e4db634d867c3f0a9e5",
-      "reviewedAtUtc": "2026-08-20T01:22:16.9475371Z"
+      "gitHead": "134d982543eb510e337fe44e21dc73f15e96d4cf",
+      "reviewedAtUtc": "2026-08-20T01:46:28.7566555Z"
     },
     {
       "pageId": "workflow.review-diff",

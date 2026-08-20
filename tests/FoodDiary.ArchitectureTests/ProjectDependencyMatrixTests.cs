@@ -547,6 +547,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.MailInbox.Application",
                 "FoodDiary.MailInbox.Domain",
                 "FoodDiary.MailInbox.Infrastructure",
+                "FoodDiary.MailInbox.WebApi",
                 "FoodDiary.Testing",
             ],
             ["FoodDiary.MailInbox.Presentation.Tests"] = [

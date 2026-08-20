@@ -12,6 +12,8 @@ public static class MailInboxPresentationServiceCollectionExtensions {
         services.AddScoped<MailInboxApiKeyAuthorizationFilter>();
         services.AddSingleton<MailInboxMessageDetailConcurrencyGate>();
         services.AddScoped<MailInboxMessageDetailConcurrencyFilter>();
+        services.AddSingleton<MailInboxMessageMetadataConcurrencyGate>();
+        services.AddScoped<MailInboxMessageMetadataConcurrencyFilter>();
         services.AddSingleton<MailInboxReadinessConcurrencyGate>();
         services.AddScoped<MailInboxReadinessConcurrencyFilter>();
         services.AddOptions<MailInboxHttpOptions>()

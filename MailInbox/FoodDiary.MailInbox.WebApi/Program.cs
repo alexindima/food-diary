@@ -1,6 +1,7 @@
 using FoodDiary.MailInbox.Application;
 using FoodDiary.MailInbox.Infrastructure.Extensions;
 using FoodDiary.MailInbox.Presentation.Extensions;
+using FoodDiary.MailInbox.WebApi;
 using System.Diagnostics.CodeAnalysis;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,8 @@ if (!builder.Environment.IsDevelopment()) {
     builder.Configuration.AddUserSecrets<Program>(optional: true);
 }
 #endif
+
+builder.Services.AddMailInboxHostConfigurationValidation();
 
 builder.Services
     .AddMailInboxApplication()

@@ -12,6 +12,12 @@ public sealed class MailInboxHttpOptions {
 
     public TimeSpan MessageDetailQueueTimeout { get; init; } = TimeSpan.FromSeconds(5);
 
+    public int MaxConcurrentMessageMetadataRequests { get; init; } = 4;
+
+    public TimeSpan MessageMetadataQueueTimeout { get; init; } = TimeSpan.FromMilliseconds(250);
+
+    public TimeSpan MessageMetadataExecutionTimeout { get; init; } = TimeSpan.FromSeconds(5);
+
     public int MaxConcurrentReadinessRequests { get; init; } = 1;
 
     public TimeSpan ReadinessQueueTimeout { get; init; } = TimeSpan.FromMilliseconds(250);
@@ -25,6 +31,11 @@ public sealed class MailInboxHttpOptions {
                options.MaxConcurrentMessageDetailRequests is > 0 and <= 64 &&
                options.MessageDetailQueueTimeout > TimeSpan.Zero &&
                options.MessageDetailQueueTimeout <= TimeSpan.FromSeconds(30) &&
+               options.MaxConcurrentMessageMetadataRequests is > 0 and <= 64 &&
+               options.MessageMetadataQueueTimeout > TimeSpan.Zero &&
+               options.MessageMetadataQueueTimeout <= TimeSpan.FromSeconds(5) &&
+               options.MessageMetadataExecutionTimeout > TimeSpan.Zero &&
+               options.MessageMetadataExecutionTimeout <= TimeSpan.FromSeconds(30) &&
                options.MaxConcurrentReadinessRequests is > 0 and <= 4 &&
                options.ReadinessQueueTimeout > TimeSpan.Zero &&
                options.ReadinessQueueTimeout <= TimeSpan.FromSeconds(5) &&

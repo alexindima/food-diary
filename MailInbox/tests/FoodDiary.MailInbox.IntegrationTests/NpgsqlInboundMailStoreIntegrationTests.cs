@@ -115,11 +115,20 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         var readAt = new DateTimeOffset(2026, 6, 14, 12, 0, 0, TimeSpan.FromHours(4));
         Assert.True(await store.MarkAsReadAsync(id, readAt, CancellationToken.None));
         Assert.False(await store.MarkAsReadAsync(Guid.NewGuid(), readAt, CancellationToken.None));
+        string rowVersionAfterFirstRead = await GetScalarAsync<string>(
+            dataSource,
+            "select xmin::text from mailinbox_messages where id = @id",
+            parameters => parameters.AddWithValue("id", id));
         Assert.True(await store.MarkAsReadAsync(id, readAt.AddHours(1), CancellationToken.None));
+        string rowVersionAfterRepeatedRead = await GetScalarAsync<string>(
+            dataSource,
+            "select xmin::text from mailinbox_messages where id = @id",
+            parameters => parameters.AddWithValue("id", id));
 
         InboundMailMessageDetails? readDetails = await store.GetMessageDetailsAsync(id, CancellationToken.None);
         Assert.NotNull(readDetails);
         Assert.Equal(readAt.ToUniversalTime(), readDetails.ReadAtUtc);
+        Assert.Equal(rowVersionAfterFirstRead, rowVersionAfterRepeatedRead);
     }
 
     [RequiresDockerFact]

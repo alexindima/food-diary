@@ -80,7 +80,7 @@ services:
     environment:
       POSTGRES_DB: ${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox}
       POSTGRES_USER: ${MAIL_INBOX_POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${MAIL_INBOX_POSTGRES_PASSWORD:-change-me-local-password}
+      POSTGRES_PASSWORD: ${MAIL_INBOX_POSTGRES_PASSWORD:?Set MAIL_INBOX_POSTGRES_PASSWORD}
     ports:
       - "${MAIL_INBOX_POSTGRES_HOST_BIND:-127.0.0.1}:${MAIL_INBOX_POSTGRES_PORT:-5434}:5432"
     volumes:
@@ -102,7 +102,7 @@ services:
     env_file:
       - .env
     environment:
-      ConnectionStrings__DefaultConnection: Host=mailinbox-postgres;Port=5432;Database=${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox};Username=${MAIL_INBOX_POSTGRES_USER:-postgres};Password=${MAIL_INBOX_POSTGRES_PASSWORD:-change-me-local-password}
+      ConnectionStrings__DefaultConnection: Host=mailinbox-postgres;Port=5432;Database=${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox};Username=${MAIL_INBOX_POSTGRES_USER:-postgres};Password=${MAIL_INBOX_POSTGRES_PASSWORD:?Set MAIL_INBOX_POSTGRES_PASSWORD}
     depends_on:
       mailinbox-postgres:
         condition: service_healthy
@@ -228,19 +228,35 @@ services:
       context: .
       dockerfile: MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile
     restart: unless-stopped
+    user: "0:0"
+    read_only: true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    security_opt:
+      - no-new-privileges:true
     ports:
       - "${MAIL_INBOX_HOST_BIND:-127.0.0.1}:${MAIL_INBOX_PORT:-5098}:5098"
       - "${MAIL_INBOX_SMTP_HOST_BIND:-0.0.0.0}:${MAIL_INBOX_SMTP_PORT:-2525}:2525"
     environment:
-      ConnectionStrings__DefaultConnection: Host=mailinbox-postgres;Port=5432;Database=${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox};Username=${MAIL_INBOX_POSTGRES_USER:-postgres};Password=${MAIL_INBOX_POSTGRES_PASSWORD:-change-me-local-password}
+      ConnectionStrings__DefaultConnection: Host=mailinbox-postgres;Port=5432;Database=${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox};Username=${MAIL_INBOX_POSTGRES_USER:-postgres};Password=${MAIL_INBOX_POSTGRES_PASSWORD:?Set MAIL_INBOX_POSTGRES_PASSWORD}
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
       MailInboxHttp__ApiKey: ${MailInboxHttp__ApiKey:-}
+      MailInboxSmtp__CertificatePath: /run/mail-inbox-tls/fullchain.pem
+      MailInboxSmtp__PrivateKeyPath: /run/mail-inbox-tls/privkey.pem
     env_file:
       - .env
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /etc/letsencrypt/live/mail.fooddiary.club:/run/letsencrypt/live/mail.fooddiary.club:ro
+      - /etc/letsencrypt/archive/mail.fooddiary.club:/run/letsencrypt/archive/mail.fooddiary.club:ro
+    tmpfs:
+      - /tmp:size=16m,mode=1777,nosuid,nodev
+      - /run/mail-inbox-tls:size=1m,mode=0700,noexec,nosuid,nodev
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5098/health/ready >/dev/null || exit 1"]
+      test: ["CMD-SHELL", "su-exec \"$${APP_UID}:$${APP_UID}\" wget -qO- http://127.0.0.1:5098/health/ready >/dev/null || exit 1"]
       interval: 180s
       timeout: 10s
       retries: 6

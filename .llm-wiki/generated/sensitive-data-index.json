@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1488,
-    "credential": 156,
+    "candidateFields": 1491,
+    "credential": 159,
     "identity": 155,
     "health": 672,
     "financial": 201,
     "privateContent": 304,
-    "boundaryFiles": 184,
+    "boundaryFiles": 185,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -1017,6 +1017,27 @@
       "type": "string",
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
       "line": 9
+    },
+    {
+      "category": "credential",
+      "name": "DbConnectionStringBuilder",
+      "type": "new",
+      "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
+      "line": 47
+    },
+    {
+      "category": "credential",
+      "name": "DatabasePasswordKeys",
+      "type": "in",
+      "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
+      "line": 67
+    },
+    {
+      "category": "credential",
+      "name": "ConnectionString",
+      "type": "string?",
+      "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
+      "line": 95
     },
     {
       "category": "credential",
@@ -11613,6 +11634,13 @@
         "credential"
       ],
       "fieldCount": 2
+    },
+    {
+      "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 3
     },
     {
       "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",

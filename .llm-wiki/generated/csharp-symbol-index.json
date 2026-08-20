@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3399,
-    "symbols": 3408,
+    "sourceFiles": 3403,
+    "symbols": 3411,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 238,
     "kinds": {
-      "class": 1770,
+      "class": 1773,
       "enum": 60,
       "interface": 418,
       "record": 1041,
@@ -22,7 +22,7 @@
     "roles": {
       "Command": 158,
       "CommandHandler": 154,
-      "Configuration": 88,
+      "Configuration": 89,
       "Controller": 90,
       "Entity": 84,
       "Event": 19,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 61,
-      "Other": 1297,
+      "Other": 1299,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -22487,7 +22487,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
-      "line": 16
+      "line": 18
     },
     {
       "name": "InboundMailHttpMappings",
@@ -22553,6 +22553,20 @@
       "line": 5
     },
     {
+      "name": "MailInboxMessageMetadataConcurrencyFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageMetadataConcurrencyFilter.cs",
+      "line": 7
+    },
+    {
+      "name": "MailInboxMessageMetadataConcurrencyGate",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageMetadataConcurrencyGate.cs",
+      "line": 5
+    },
+    {
       "name": "MailInboxReadinessConcurrencyFilter",
       "kind": "class",
       "role": "Other",
@@ -22595,11 +22609,18 @@
       "line": 8
     },
     {
+      "name": "MailInboxHostConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
+      "line": 4
+    },
+    {
       "name": "Program",
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/Program.cs",
-      "line": 27
+      "line": 30
     },
     {
       "name": "IMailRelayDeliveryPolicy",

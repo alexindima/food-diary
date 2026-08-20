@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "optionTypes": 54,
+    "optionTypes": 55,
     "configurationFiles": 7,
     "configurationKeys": 247,
     "environmentVariables": 178
@@ -252,13 +252,25 @@
       "path": "MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs"
     },
     {
+      "type": "MailInboxHostConfigurationOptions",
+      "section": null,
+      "properties": [
+        "ConnectionString",
+        "IsProduction"
+      ],
+      "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs"
+    },
+    {
       "type": "MailInboxHttpOptions",
       "section": "MailInboxHttp",
       "properties": [
         "ApiKey",
         "MaxConcurrentMessageDetailRequests",
+        "MaxConcurrentMessageMetadataRequests",
         "MaxConcurrentReadinessRequests",
         "MessageDetailQueueTimeout",
+        "MessageMetadataExecutionTimeout",
+        "MessageMetadataQueueTimeout",
         "ReadinessExecutionTimeout",
         "ReadinessQueueTimeout",
         "RequireApiKey"
@@ -847,6 +859,7 @@
     {
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/appsettings.Development.json",
       "keys": [
+        "ConnectionStrings:DefaultConnection",
         "Logging:LogLevel:Default",
         "Logging:LogLevel:Microsoft.AspNetCore"
       ]
