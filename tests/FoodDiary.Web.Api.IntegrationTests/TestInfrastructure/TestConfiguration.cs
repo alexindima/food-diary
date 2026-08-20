@@ -1,0 +1,58 @@
+using Microsoft.Extensions.Configuration;
+
+namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
+
+[ExcludeFromCodeCoverage]
+internal static class TestConfiguration {
+    public static void Add(IConfigurationBuilder configurationBuilder) {
+        configurationBuilder.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
+            ["Jwt:Issuer"] = "fooddiary-tests",
+            ["Jwt:Audience"] = "fooddiary-tests",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "30",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
+            ["S3:AccessKeyId"] = "test-access-key",
+            ["S3:SecretAccessKey"] = "test-secret-key",
+            ["S3:Region"] = "us-east-1",
+            ["S3:Bucket"] = "fooddiary-integration-tests",
+            ["S3:ServiceUrl"] = "https://s3.test.local",
+            ["S3:PublicBaseUrl"] = "https://cdn.test.local",
+            ["Stripe:SecretKey"] = "sk_test_codex",
+            ["Stripe:PublishableKey"] = "pk_test_codex",
+            ["Stripe:WebhookSecret"] = "whsec_codex",
+            ["Stripe:PremiumMonthlyPriceId"] = "price_monthly_codex",
+            ["Stripe:PremiumYearlyPriceId"] = "price_yearly_codex",
+            ["Stripe:SuccessUrl"] = "https://example.com/billing/success",
+            ["Stripe:CancelUrl"] = "https://example.com/billing/cancel",
+            ["Stripe:PortalReturnUrl"] = "https://example.com/settings/billing",
+            ["Billing:Provider"] = "Stripe",
+            ["Paddle:ApiKey"] = "",
+            ["Paddle:ClientSideToken"] = "",
+            ["Paddle:WebhookSecretKey"] = "",
+            ["Paddle:NotificationSettingId"] = "",
+            ["Paddle:PremiumMonthlyPriceId"] = "",
+            ["Paddle:PremiumYearlyPriceId"] = "",
+            ["YooKassa:ShopId"] = "",
+            ["YooKassa:SecretKey"] = "",
+            ["YooKassa:PremiumMonthlyAmount"] = "",
+            ["YooKassa:PremiumYearlyAmount"] = "",
+            ["RateLimiting:Auth:PermitLimit"] = "1000",
+            ["RateLimiting:Auth:WindowSeconds"] = "60",
+            ["RateLimiting:Ai:PermitLimit"] = "1000",
+            ["RateLimiting:Ai:WindowSeconds"] = "60",
+            ["RateLimiting:TestDelivery:PermitLimit"] = "1000",
+            ["RateLimiting:TestDelivery:WindowSeconds"] = "60",
+            ["RateLimiting:Wearable:PermitLimit"] = "1000",
+            ["RateLimiting:Wearable:WindowSeconds"] = "60",
+            ["RateLimiting:FoodData:PermitLimit"] = "1000",
+            ["RateLimiting:FoodData:WindowSeconds"] = "60",
+            ["RateLimiting:SecretVerification:PermitLimit"] = "1000",
+            ["RateLimiting:SecretVerification:WindowSeconds"] = "60",
+            ["RateLimiting:Billing:PermitLimit"] = "1000",
+            ["RateLimiting:Billing:WindowSeconds"] = "60",
+            ["RateLimiting:Export:PermitLimit"] = "1000",
+            ["RateLimiting:Export:WindowSeconds"] = "60",
+        });
+    }
+}

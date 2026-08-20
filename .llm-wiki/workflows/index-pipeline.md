@@ -15,6 +15,7 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiPortable.ps1
   - .llm-wiki/tools/Test-LlmWikiLinux.ps1
   - .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1
+  - .llm-wiki/policies/affected-smoke-catalog.psd1
   - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
   - .llm-wiki/tools/Test-LlmWikiKnowledgeIsolation.ps1
   - .llm-wiki/tools/Test-LlmWikiFormattingReady.ps1
@@ -98,6 +99,11 @@ Focused smoke routing is declared in
 priorities, parallel-safety, graph dependencies, and dominance rules. Its
 regression verifies that every tracked Wiki tool maps to a smoke group and that
 every non-fallback group has an execution handler.
+
+Groups marked `ParallelSafe` run concurrently in priority order; the remaining
+groups run serially after that batch. Mutation fixtures and performance-sensitive
+SLA fixtures stay serial, so the context-cache cold-start budget is measured
+without contention from other smoke workers.
 
 Parallel smoke gives every worker a run-local fixture sandbox and redirects
 `TEMP`/`TMP` plus task IDs into that owned run directory. Cleanup validates exact

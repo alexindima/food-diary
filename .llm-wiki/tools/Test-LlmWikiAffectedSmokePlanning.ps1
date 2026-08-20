@@ -83,6 +83,9 @@ if ([string]$fullFocusedPlan.parallelGroups[0] -ne 'adaptive-evals') {
 if (@($fullFocusedPlan.serialGroups) -notcontains 'read-only-guard') {
     throw 'The read-only guard mutation fixture must remain isolated from parallel smoke groups.'
 }
+if (@($fullFocusedPlan.serialGroups) -notcontains 'context-bundle') {
+    throw 'The context-cache SLA fixture must remain isolated from parallel smoke groups.'
+}
 $productGroups = @(Get-Groups 'FoodDiary.Application/Users/Example.cs')
 if ($productGroups.Count -ne 0) { throw 'Product-only changes unexpectedly selected Wiki tool smoke.' }
 
