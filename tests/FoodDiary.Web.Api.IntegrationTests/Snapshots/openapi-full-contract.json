@@ -16843,12 +16843,6 @@
           "Nullable": false
         },
         {
-          "Name": "dmarcReportIsVerified",
-          "Required": false,
-          "Type": "boolean",
-          "Nullable": false
-        },
-        {
           "Name": "envelopeFromAddress",
           "Required": false,
           "Type": "string",
@@ -16859,12 +16853,6 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
-        },
-        {
-          "Name": "fromAddressIsVerified",
-          "Required": false,
-          "Type": "boolean",
-          "Nullable": false
         },
         {
           "Name": "htmlBody",
@@ -16958,12 +16946,6 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
-        },
-        {
-          "Name": "fromAddressIsVerified",
-          "Required": false,
-          "Type": "boolean",
-          "Nullable": false
         },
         {
           "Name": "id",

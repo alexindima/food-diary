@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3418,
-    "symbols": 3426,
+    "sourceFiles": 3419,
+    "symbols": 3427,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 238,
     "kinds": {
-      "class": 1780,
+      "class": 1781,
       "enum": 61,
       "interface": 418,
       "record": 1047,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 62,
-      "Other": 1308,
+      "Other": 1309,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -22406,11 +22406,11 @@
       "line": 12
     },
     {
-      "name": "MailInboxFixedWindowRateLimiter",
+      "name": "MailInboxLocalTlsHealthCheck",
       "kind": "class",
       "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxFixedWindowRateLimiter.cs",
-      "line": 7
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxLocalTlsHealthCheck.cs",
+      "line": 5
     },
     {
       "name": "MailInboxMailboxFilter",
@@ -22432,6 +22432,13 @@
       "role": "Service",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs",
       "line": 10
+    },
+    {
+      "name": "MailInboxSlidingWindowRateLimiter",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSlidingWindowRateLimiter.cs",
+      "line": 8
     },
     {
       "name": "MailInboxSmtpHostedService",
@@ -22725,7 +22732,7 @@
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/Program.cs",
-      "line": 37
+      "line": 47
     },
     {
       "name": "IMailRelayDeliveryPolicy",

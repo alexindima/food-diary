@@ -987,10 +987,9 @@
     "ADMIN_MAIL_INBOX": {
         "HEADER_FROM": "Header From",
         "ENVELOPE_FROM": "SMTP envelope sender",
-        "PROVENANCE": "Sender verification",
+        "PROVENANCE": "Source provenance",
         "TRUSTED_RELAY": "received through a trusted relay",
         "UNTRUSTED_RELAY": "relay is not trusted",
-        "HEADER_FROM_VERIFIED": "header sender verified",
         "HEADER_FROM_UNVERIFIED": "header sender not verified",
         "UNVERIFIED_SHORT": "unverified",
         "DMARC_UNVERIFIED_WARNING": "This DMARC report came from unverified message content. Treat the records as a preview only; totals and issue counts are intentionally not calculated."

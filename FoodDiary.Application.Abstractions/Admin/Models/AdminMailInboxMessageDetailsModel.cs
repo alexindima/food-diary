@@ -16,6 +16,4 @@ public sealed record AdminMailInboxMessageDetailsModel(
     DateTimeOffset? ContentPurgedAtUtc,
     AdminMailInboxDmarcReportModel? DmarcReport = null,
     string? EnvelopeFromAddress = null,
-    bool IsTrustedRelay = false,
-    bool FromAddressIsVerified = false,
-    bool DmarcReportIsVerified = false);
+    bool IsTrustedRelay = false);

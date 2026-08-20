@@ -292,6 +292,7 @@ services:
       MailInboxSmtp__CertificatePath: /run/mail-inbox-tls/fullchain.pem
       MailInboxSmtp__PrivateKeyPath: /run/mail-inbox-tls/privkey.pem
       MailInboxSmtp__TrustedRelayNetworks__0: ${MAIL_INBOX_TRUSTED_RELAY_NETWORK:?Set MAIL_INBOX_TRUSTED_RELAY_NETWORK}
+      MailInboxSmtp__AllowUntrustedSources: ${MAIL_INBOX_ALLOW_UNTRUSTED_SOURCES:-true}
     env_file:
       - .env
     volumes:
@@ -302,7 +303,7 @@ services:
       - /tmp:size=16m,mode=1777,nosuid,nodev
       - /run/mail-inbox-tls:size=1m,mode=0700,noexec,nosuid,nodev
     healthcheck:
-      test: ["CMD-SHELL", "su-exec \"$${APP_UID}:$${APP_UID}\" wget -qO- https://mail.fooddiary.club:5098/health/ready >/dev/null || exit 1"]
+      test: ["CMD", "dotnet", "FoodDiary.MailInbox.WebApi.dll", "--healthcheck"]
       interval: 180s
       timeout: 10s
       retries: 6

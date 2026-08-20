@@ -80,9 +80,7 @@ public sealed class MailInboxPresentationTests {
             DateTimeOffset.UtcNow,
             ContentPurgedAtUtc: null,
             EnvelopeFromAddress: "bounce@relay.example",
-            IsTrustedRelay: true,
-            FromAddressIsVerified: false,
-            DmarcReportIsVerified: false);
+            IsTrustedRelay: true);
 
         InboundMailMessageDetailsHttpResponse response = details.ToHttpResponse();
 
@@ -93,9 +91,7 @@ public sealed class MailInboxPresentationTests {
             () => Assert.Equal("192.0.2.1", response.DmarcReport.Records.Single().SourceIp),
             () => Assert.Equal("pass", response.DmarcReport.Records.Single().DkimResult),
             () => Assert.Equal("bounce@relay.example", response.EnvelopeFromAddress),
-            () => Assert.True(response.IsTrustedRelay),
-            () => Assert.False(response.FromAddressIsVerified),
-            () => Assert.False(response.DmarcReportIsVerified));
+            () => Assert.True(response.IsTrustedRelay));
     }
 
     [Fact]
@@ -110,8 +106,7 @@ public sealed class MailInboxPresentationTests {
             ReadAtUtc: null,
             DateTimeOffset.UtcNow,
             EnvelopeFromAddress: "bounce@relay.example",
-            IsTrustedRelay: true,
-            FromAddressIsVerified: false);
+            IsTrustedRelay: true);
 
         InboundMailMessageSummaryHttpResponse response = summary.ToHttpResponse();
 
@@ -120,8 +115,7 @@ public sealed class MailInboxPresentationTests {
             () => Assert.Equal("dmarc-report", response.Category),
             () => Assert.Equal("Received", response.Status),
             () => Assert.Equal("bounce@relay.example", response.EnvelopeFromAddress),
-            () => Assert.True(response.IsTrustedRelay),
-            () => Assert.False(response.FromAddressIsVerified));
+            () => Assert.True(response.IsTrustedRelay));
     }
 
     [Fact]
@@ -139,22 +133,19 @@ public sealed class MailInboxPresentationTests {
     }
 
     [Theory]
-    [InlineData(true, "0123456789abcdef0123456789abcdef", true)]
-    [InlineData(false, "0123456789abcdef0123456789abcdef", false)]
-    [InlineData(true, "", false)]
-    [InlineData(true, " ", false)]
-    public void MailInboxHttpOptions_HasValidApiKey_ReturnsExpectedResult(
-        bool requireApiKey,
+    [InlineData("0123456789abcdef0123456789abcdef", true)]
+    [InlineData("", false)]
+    [InlineData(" ", false)]
+    public void MailInboxHttpOptions_HasValidConfiguration_ReturnsExpectedResult(
         string apiKey,
         bool expected) {
         var options = new MailInboxHttpOptions {
-            RequireApiKey = requireApiKey,
             MetadataApiKey = apiKey,
             ContentApiKey = "fedcba9876543210fedcba987654321b",
             StateApiKey = "fedcba9876543210fedcba987654321c",
         };
 
-        Assert.Equal(expected, MailInboxHttpOptions.HasValidApiKey(options));
+        Assert.Equal(expected, MailInboxHttpOptions.HasValidConfiguration(options));
     }
 
     [Fact]
@@ -372,7 +363,6 @@ public sealed class MailInboxPresentationTests {
     [Fact]
     public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyIsMissing_ReturnsUnauthorized() {
         var filter = new MailInboxApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
-            RequireApiKey = true,
             MetadataApiKey = "secret",
         }));
         AuthorizationFilterContext context = CreateAuthorizationContext();
@@ -385,23 +375,8 @@ public sealed class MailInboxPresentationTests {
     }
 
     [Fact]
-    public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyRequirementIsDisabled_ReturnsUnauthorized() {
-        var filter = new MailInboxApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
-            RequireApiKey = false,
-            MetadataApiKey = "secret",
-        }));
-        AuthorizationFilterContext context = CreateAuthorizationContext();
-        context.HttpContext.Request.Headers["X-MailInbox-Api-Key"] = "secret";
-
-        filter.OnAuthorization(context);
-
-        Assert.IsType<UnauthorizedObjectResult>(context.Result);
-    }
-
-    [Fact]
     public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyMatches_AllowsRequest() {
         var filter = new MailInboxApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
-            RequireApiKey = true,
             MetadataApiKey = "secret",
         }));
         AuthorizationFilterContext context = CreateAuthorizationContext();
@@ -417,7 +392,6 @@ public sealed class MailInboxPresentationTests {
         var services = new ServiceCollection();
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
-                ["MailInboxHttp:RequireApiKey"] = "true",
                 ["MailInboxHttp:MetadataApiKey"] = "fedcba9876543210fedcba987654321a",
                 ["MailInboxHttp:ContentApiKey"] = "fedcba9876543210fedcba987654321b",
                 ["MailInboxHttp:StateApiKey"] = "fedcba9876543210fedcba987654321c",

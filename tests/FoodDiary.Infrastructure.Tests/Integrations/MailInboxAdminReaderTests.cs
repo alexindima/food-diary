@@ -22,8 +22,7 @@ public sealed class MailInboxAdminReaderTests {
                 ReadAtUtc: null,
                 receivedAtUtc,
                 EnvelopeFromAddress: "bounce@example.com",
-                IsTrustedRelay: true,
-                FromAddressIsVerified: false),
+                IsTrustedRelay: true),
         ];
         IMailInboxClient client = Substitute.For<IMailInboxClient>();
         int? lastLimit = null;
@@ -45,7 +44,6 @@ public sealed class MailInboxAdminReaderTests {
         Assert.Equal(receivedAtUtc, message.ReceivedAtUtc);
         Assert.Equal("bounce@example.com", message.EnvelopeFromAddress);
         Assert.True(message.IsTrustedRelay);
-        Assert.False(message.FromAddressIsVerified);
         Assert.Equal(25, lastLimit);
     }
 
@@ -71,9 +69,7 @@ public sealed class MailInboxAdminReaderTests {
             contentPurgedAtUtc,
             dmarcReport,
             EnvelopeFromAddress: "bounce@example.com",
-            IsTrustedRelay: true,
-            FromAddressIsVerified: false,
-            DmarcReportIsVerified: false);
+            IsTrustedRelay: true);
         IMailInboxClient client = Substitute.For<IMailInboxClient>();
         Guid lastMessageId = Guid.Empty;
         client
@@ -94,8 +90,6 @@ public sealed class MailInboxAdminReaderTests {
         Assert.Equal(4, Assert.Single(result.DmarcReport!.Records).Count);
         Assert.Equal("bounce@example.com", result.EnvelopeFromAddress);
         Assert.True(result.IsTrustedRelay);
-        Assert.False(result.FromAddressIsVerified);
-        Assert.False(result.DmarcReportIsVerified);
         Assert.Equal(id, lastMessageId);
     }
 

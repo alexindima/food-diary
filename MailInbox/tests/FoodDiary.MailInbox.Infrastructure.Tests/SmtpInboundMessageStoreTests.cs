@@ -42,7 +42,7 @@ public sealed class SmtpInboundMessageStoreTests {
         var messageStore = new SmtpInboundMessageStore(
             new RecordingInboundMailStore(),
             options,
-            new MailInboxFixedWindowRateLimiter(options, FixedTime),
+            new MailInboxSlidingWindowRateLimiter(options, FixedTime),
             FixedTime,
             NullLogger<SmtpInboundMessageStore>.Instance);
 
@@ -473,7 +473,7 @@ public sealed class SmtpInboundMessageStoreTests {
         return new SmtpInboundMessageStore(
             store,
             optionsWrapper,
-            new MailInboxFixedWindowRateLimiter(optionsWrapper, FixedTime),
+            new MailInboxSlidingWindowRateLimiter(optionsWrapper, FixedTime),
             FixedTime,
             NullLogger<SmtpInboundMessageStore>.Instance);
     }

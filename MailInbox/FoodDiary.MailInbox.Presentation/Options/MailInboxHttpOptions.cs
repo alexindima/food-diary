@@ -10,7 +10,6 @@ public sealed class MailInboxHttpOptions {
         "0123456789abcdef0123456789abcdec",
     };
 
-    public bool RequireApiKey { get; init; } = true;
     public string MetadataApiKey { get; init; } = string.Empty;
     public string ContentApiKey { get; init; } = string.Empty;
     public string StateApiKey { get; init; } = string.Empty;
@@ -33,9 +32,8 @@ public sealed class MailInboxHttpOptions {
 
     public TimeSpan ReadinessExecutionTimeout { get; init; } = TimeSpan.FromSeconds(5);
 
-    public static bool HasValidApiKey(MailInboxHttpOptions options) {
-        return options.RequireApiKey &&
-               HasValidKey(options.MetadataApiKey) &&
+    public static bool HasValidConfiguration(MailInboxHttpOptions options) {
+        return HasValidKey(options.MetadataApiKey) &&
                HasValidKey(options.ContentApiKey) &&
                HasValidKey(options.StateApiKey) &&
                !string.Equals(options.MetadataApiKey, options.ContentApiKey, StringComparison.Ordinal) &&

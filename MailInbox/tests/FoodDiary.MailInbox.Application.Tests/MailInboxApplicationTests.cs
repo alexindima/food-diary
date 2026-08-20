@@ -248,6 +248,7 @@ public sealed class MailInboxApplicationTests {
     [InlineData(MailInboxAdmissionOutcome.Accepted, "accepted")]
     [InlineData(MailInboxAdmissionOutcome.RecipientNotAllowed, "recipient_not_allowed")]
     [InlineData(MailInboxAdmissionOutcome.RecipientLimitExceeded, "recipient_limit_exceeded")]
+    [InlineData(MailInboxAdmissionOutcome.SourceNotTrusted, "source_not_trusted")]
     public void RecordAdmission_UsesStableBoundedOutcomeTag(
         MailInboxAdmissionOutcome outcome,
         string expectedTagValue) {

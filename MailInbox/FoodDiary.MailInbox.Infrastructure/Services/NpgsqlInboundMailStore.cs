@@ -412,8 +412,7 @@ public sealed class NpgsqlInboundMailStore(
                              await reader.GetNullableDateTimeOffsetAsync(5, cancellationToken).ConfigureAwait(false),
                              await reader.GetFieldValueAsync<DateTimeOffset>(6, cancellationToken).ConfigureAwait(false),
                              reader.GetNullableString(7),
-                             await reader.GetFieldValueAsync<bool>(8, cancellationToken).ConfigureAwait(false),
-                             FromAddressIsVerified: false));
+                             await reader.GetFieldValueAsync<bool>(8, cancellationToken).ConfigureAwait(false)));
                     }
                 }
             }
@@ -479,9 +478,7 @@ public sealed class NpgsqlInboundMailStore(
                          await reader.GetFieldValueAsync<DateTimeOffset>(10, cancellationToken).ConfigureAwait(false),
                          await reader.GetNullableDateTimeOffsetAsync(11, cancellationToken).ConfigureAwait(false),
                          reader.GetNullableString(12),
-                         await reader.GetFieldValueAsync<bool>(13, cancellationToken).ConfigureAwait(false),
-                         FromAddressIsVerified: false,
-                         DmarcReportIsVerified: false);
+                         await reader.GetFieldValueAsync<bool>(13, cancellationToken).ConfigureAwait(false));
                 }
             }
         }

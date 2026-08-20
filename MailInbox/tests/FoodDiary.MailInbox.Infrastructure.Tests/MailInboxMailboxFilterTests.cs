@@ -215,12 +215,46 @@ public sealed class MailInboxMailboxFilterTests {
     }
 
     [Fact]
+    public async Task CanAcceptFromAsync_WhenUntrustedSourcesAreDisabled_RejectsDirectDelivery() {
+        MailInboxMailboxFilter filter = CreateFilter(new MailInboxSmtpOptions {
+            AllowedRecipients = ["admin@fooddiary.club"],
+            AllowUntrustedSources = false,
+            TrustedRelayNetworks = ["192.0.2.0/24"],
+        });
+
+        bool canAccept = await filter.CanAcceptFromAsync(
+            new TestSessionContext(IPAddress.Parse("198.51.100.10")),
+            new Mailbox("sender", "example.com"),
+            size: 100,
+            CancellationToken.None);
+
+        Assert.False(canAccept);
+    }
+
+    [Fact]
+    public async Task CanAcceptFromAsync_WhenUntrustedSourcesAreDisabled_AcceptsTrustedRelay() {
+        MailInboxMailboxFilter filter = CreateFilter(new MailInboxSmtpOptions {
+            AllowedRecipients = ["admin@fooddiary.club"],
+            AllowUntrustedSources = false,
+            TrustedRelayNetworks = ["192.0.2.0/24"],
+        });
+
+        bool canAccept = await filter.CanAcceptFromAsync(
+            new TestSessionContext(IPAddress.Parse("192.0.2.10")),
+            new Mailbox("sender", "example.com"),
+            size: 100,
+            CancellationToken.None);
+
+        Assert.True(canAccept);
+    }
+
+    [Fact]
     public void RateLimiter_WhenTrackedKeyCapacityIsReached_ShardsOverflowByIdentity() {
         Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> options =
             Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
                 MaxTrackedRateLimitKeys = 2,
             });
-        var limiter = new MailInboxFixedWindowRateLimiter(options, TimeProvider.System);
+        var limiter = new MailInboxSlidingWindowRateLimiter(options, TimeProvider.System);
 
         Assert.True(limiter.TryAcquire("sender", "tracked", permitLimit: 1, TimeSpan.FromHours(1)));
         Assert.True(limiter.TryAcquire("sender", "overflow-a", permitLimit: 2, TimeSpan.FromHours(1)));
@@ -235,7 +269,7 @@ public sealed class MailInboxMailboxFilterTests {
         var timeProvider = new AdjustableTimeProvider();
         Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> options =
             Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions());
-        var limiter = new MailInboxFixedWindowRateLimiter(options, timeProvider);
+        var limiter = new MailInboxSlidingWindowRateLimiter(options, timeProvider);
         Assert.True(limiter.TryAcquire("ip", "192.0.2.10", permitLimit: 1, TimeSpan.FromHours(1)));
         Assert.False(limiter.TryAcquire("ip", "192.0.2.10", permitLimit: 1, TimeSpan.FromHours(1)));
 
@@ -245,13 +279,55 @@ public sealed class MailInboxMailboxFilterTests {
     }
 
     [Fact]
+    public void RateLimiter_BeforeOriginalAcquisitionExpires_DoesNotResetAtAClockBoundary() {
+        var timeProvider = new AdjustableTimeProvider();
+        Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> options =
+            Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions());
+        var limiter = new MailInboxSlidingWindowRateLimiter(options, timeProvider);
+        timeProvider.Advance(TimeSpan.FromMinutes(59));
+        Assert.True(limiter.TryAcquire("ip", "192.0.2.10", permitLimit: 1, TimeSpan.FromHours(1)));
+
+        timeProvider.Advance(TimeSpan.FromMinutes(2));
+
+        Assert.False(limiter.TryAcquire("ip", "192.0.2.10", permitLimit: 1, TimeSpan.FromHours(1)));
+        timeProvider.Advance(TimeSpan.FromMinutes(58));
+        Assert.True(limiter.TryAcquire("ip", "192.0.2.10", permitLimit: 1, TimeSpan.FromHours(1)));
+    }
+
+    [Fact]
+    public void RateLimiter_WhenEntryCapacityIsReached_CoalescesWithoutReleasingPermitsEarly() {
+        var timeProvider = new AdjustableTimeProvider();
+        Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> options =
+            Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
+                MaxMessagesPerIpPerHour = 2,
+            });
+        var limiter = new MailInboxSlidingWindowRateLimiter(options, timeProvider);
+        var window = TimeSpan.FromHours(1);
+        Assert.True(limiter.TryAcquire("ip-bytes", "192.0.2.10", permitLimit: 4, window));
+        timeProvider.Advance(TimeSpan.FromMinutes(1));
+        Assert.True(limiter.TryAcquire("ip-bytes", "192.0.2.10", permitLimit: 4, window));
+        timeProvider.Advance(TimeSpan.FromMinutes(1));
+        Assert.True(limiter.TryAcquire("ip-bytes", "192.0.2.10", permitLimit: 4, window));
+        timeProvider.Advance(TimeSpan.FromMinutes(1));
+        Assert.True(limiter.TryAcquire("ip-bytes", "192.0.2.10", permitLimit: 4, window));
+
+        timeProvider.Advance(TimeSpan.FromMinutes(57));
+        Assert.True(limiter.TryAcquire("ip-bytes", "192.0.2.10", permitLimit: 4, window));
+        timeProvider.Advance(TimeSpan.FromMinutes(1));
+
+        Assert.False(limiter.TryAcquire("ip-bytes", "192.0.2.10", permitLimit: 4, window, permits: 2));
+        timeProvider.Advance(TimeSpan.FromMinutes(59));
+        Assert.True(limiter.TryAcquire("ip-bytes", "192.0.2.10", permitLimit: 4, window, permits: 4));
+    }
+
+    [Fact]
     public void RateLimiter_WhenAddingNewKey_RemovesExpiredOtherWindows() {
         var timeProvider = new AdjustableTimeProvider();
         Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> options =
             Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
                 MaxTrackedRateLimitKeys = 2,
             });
-        var limiter = new MailInboxFixedWindowRateLimiter(options, timeProvider);
+        var limiter = new MailInboxSlidingWindowRateLimiter(options, timeProvider);
         Assert.True(limiter.TryAcquire("ip", "old", permitLimit: 1, TimeSpan.FromHours(1)));
         timeProvider.Advance(TimeSpan.FromHours(1));
 
@@ -265,7 +341,7 @@ public sealed class MailInboxMailboxFilterTests {
             Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
                 MaxTrackedRateLimitKeys = 1,
             });
-        var limiter = new MailInboxFixedWindowRateLimiter(options, TimeProvider.System);
+        var limiter = new MailInboxSlidingWindowRateLimiter(options, TimeProvider.System);
         Assert.True(limiter.TryAcquire("ip", "192.0.2.10", permitLimit: 1, TimeSpan.FromHours(1)));
 
         Assert.True(limiter.TryAcquire("sender", "sender@example.com", permitLimit: 1, TimeSpan.FromHours(1)));
@@ -289,7 +365,7 @@ public sealed class MailInboxMailboxFilterTests {
             Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
                 MaxTrackedRateLimitKeys = 2,
             });
-        var limiter = new MailInboxFixedWindowRateLimiter(options, TimeProvider.System, secret);
+        var limiter = new MailInboxSlidingWindowRateLimiter(options, TimeProvider.System, secret);
 
         Assert.True(limiter.TryAcquire("sender", "tracked@example.com", permitLimit: 1, TimeSpan.FromHours(1)));
         Assert.True(limiter.TryAcquire("sender", attacker, permitLimit: 1, TimeSpan.FromHours(1)));
@@ -300,7 +376,7 @@ public sealed class MailInboxMailboxFilterTests {
     public void RateLimiter_WhenPermitsWouldExceedBudget_RejectsWithoutPartialCharge() {
         Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> options =
             Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions());
-        var limiter = new MailInboxFixedWindowRateLimiter(options, TimeProvider.System);
+        var limiter = new MailInboxSlidingWindowRateLimiter(options, TimeProvider.System);
 
         Assert.True(limiter.TryAcquire("ip-bytes", "192.0.2.10", 100, TimeSpan.FromHours(1), permits: 60));
         Assert.False(limiter.TryAcquire("ip-bytes", "192.0.2.10", 100, TimeSpan.FromHours(1), permits: 50));
@@ -313,7 +389,7 @@ public sealed class MailInboxMailboxFilterTests {
             Microsoft.Extensions.Options.Options.Create(options);
         return new MailInboxMailboxFilter(
             optionsWrapper,
-            new MailInboxFixedWindowRateLimiter(optionsWrapper, TimeProvider.System));
+            new MailInboxSlidingWindowRateLimiter(optionsWrapper, TimeProvider.System));
     }
 
     private static int GetPublicShard(string scope, string value) {

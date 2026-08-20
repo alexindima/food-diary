@@ -389,7 +389,7 @@ public sealed class MailInboxHostedServiceTests {
     private static MailInboxSmtpHostedService CreateSmtpHostedService(MailInboxSmtpOptions options) {
         Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> optionsWrapper =
             Microsoft.Extensions.Options.Options.Create(options);
-        var rateLimiter = new MailInboxFixedWindowRateLimiter(optionsWrapper, TimeProvider.System);
+        var rateLimiter = new MailInboxSlidingWindowRateLimiter(optionsWrapper, TimeProvider.System);
         var messageStore = new SmtpInboundMessageStore(
             new ThrowingInboundMailStore(),
             optionsWrapper,

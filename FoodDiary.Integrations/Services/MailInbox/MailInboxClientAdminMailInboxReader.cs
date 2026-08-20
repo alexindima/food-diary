@@ -39,8 +39,7 @@ file static class MailInboxClientAdminMailInboxMappings {
             response.ReadAtUtc,
             response.ReceivedAtUtc,
             response.EnvelopeFromAddress,
-            response.IsTrustedRelay,
-            response.FromAddressIsVerified);
+            response.IsTrustedRelay);
     }
 
     public static AdminMailInboxMessageDetailsModel ToModel(this InboundMailMessageDetailsResponse response) {
@@ -60,9 +59,7 @@ file static class MailInboxClientAdminMailInboxMappings {
             response.ContentPurgedAtUtc,
             response.DmarcReport?.ToModel(),
             response.EnvelopeFromAddress,
-            response.IsTrustedRelay,
-            response.FromAddressIsVerified,
-            response.DmarcReportIsVerified);
+            response.IsTrustedRelay);
     }
 
     private static AdminMailInboxDmarcReportModel ToModel(this DmarcReportResponse response) =>

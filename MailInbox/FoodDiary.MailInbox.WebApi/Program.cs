@@ -1,10 +1,20 @@
 using FoodDiary.MailInbox.Application;
 using FoodDiary.MailInbox.Infrastructure.Extensions;
+using FoodDiary.MailInbox.Infrastructure.Services;
 using FoodDiary.MailInbox.Presentation.Extensions;
 using FoodDiary.MailInbox.WebApi;
 using System.Diagnostics.CodeAnalysis;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+if (args is ["--healthcheck"]) {
+    Environment.ExitCode = await MailInboxLocalTlsHealthCheck
+        .IsReadyAsync(builder.Configuration["MailInboxSmtp:ServerName"], CancellationToken.None)
+        .ConfigureAwait(false)
+        ? 0
+        : 1;
+    return;
+}
 
 #if DEBUG
 if (!builder.Environment.IsDevelopment()) {

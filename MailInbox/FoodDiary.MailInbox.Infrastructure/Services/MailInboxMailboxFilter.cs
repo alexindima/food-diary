@@ -11,7 +11,7 @@ namespace FoodDiary.MailInbox.Infrastructure.Services;
 
 public sealed class MailInboxMailboxFilter(
     IOptions<MailInboxSmtpOptions> options,
-    MailInboxFixedWindowRateLimiter rateLimiter) : MailboxFilter {
+    MailInboxSlidingWindowRateLimiter rateLimiter) : MailboxFilter {
     private const string MessageCountKey = "FoodDiary.MailInbox.MessageCount";
     private const string RecipientCountKey = "FoodDiary.MailInbox.RecipientCount";
     private static readonly TimeSpan RateLimitWindow = TimeSpan.FromHours(1);
@@ -19,6 +19,8 @@ public sealed class MailInboxMailboxFilter(
     private readonly HashSet<string> _allowedRecipients = options.Value.AllowedRecipients
         .Select(static value => value.Trim().ToLowerInvariant())
         .ToHashSet(StringComparer.OrdinalIgnoreCase);
+    private readonly MailInboxNetworkRange[] _trustedRelayNetworks = [.. options.Value.TrustedRelayNetworks
+        .Select(MailInboxNetworkRange.Parse)];
 
     public override Task<bool> CanAcceptFromAsync(
         ISessionContext context,
@@ -31,12 +33,19 @@ public sealed class MailInboxMailboxFilter(
             return Task.FromResult(false);
         }
 
+        IPAddress? remoteAddress = GetRemoteAddress(context);
+        if (!_options.AllowUntrustedSources &&
+            (remoteAddress is null || !_trustedRelayNetworks.Any(range => range.Contains(remoteAddress)))) {
+            MailInboxTelemetry.RecordAdmission(MailInboxAdmissionOutcome.SourceNotTrusted);
+            return Task.FromResult(false);
+        }
+
         if (!TryStartSessionMessage(context)) {
             MailInboxTelemetry.RecordAdmission(MailInboxAdmissionOutcome.SessionRateLimited);
             return Task.FromResult(false);
         }
 
-        string sourceAddress = GetSourceAddress(context);
+        string sourceAddress = remoteAddress is null ? "unknown" : MailInboxNetworkIdentity.GetKey(remoteAddress);
         if (!rateLimiter.TryAcquire(
                 "ip",
                 sourceAddress,
@@ -115,13 +124,13 @@ public sealed class MailInboxMailboxFilter(
     private static int GetCount(ISessionContext context, string key) =>
         context.Properties.TryGetValue(key, out object? value) && value is int count ? count : 0;
 
-    private static string GetSourceAddress(ISessionContext? context) {
+    private static IPAddress? GetRemoteAddress(ISessionContext? context) {
         if (context is not null &&
             context.Properties.TryGetValue(EndpointListener.RemoteEndPointKey, out object? value) &&
             value is IPEndPoint endpoint) {
-            return MailInboxNetworkIdentity.GetKey(endpoint.Address);
+            return endpoint.Address;
         }
 
-        return "unknown";
+        return null;
     }
 }

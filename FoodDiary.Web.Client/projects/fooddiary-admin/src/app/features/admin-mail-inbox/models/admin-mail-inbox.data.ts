@@ -3,7 +3,6 @@ export type AdminMailInboxMessageSummary = {
     fromAddress?: string | null;
     envelopeFromAddress?: string | null;
     isTrustedRelay: boolean;
-    fromAddressIsVerified: boolean;
     toRecipients: string[];
     subject?: string | null;
     category: string;
@@ -19,7 +18,6 @@ export type AdminMailInboxMessageDetails = AdminMailInboxMessageSummary & {
     rawMime?: string | null;
     contentPurgedAtUtc?: string | null;
     dmarcReport?: AdminMailInboxDmarcReport | null;
-    dmarcReportIsVerified: boolean;
 };
 
 export type AdminMailInboxDmarcReport = {

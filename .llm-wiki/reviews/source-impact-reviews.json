@@ -182,13 +182,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "233cf377e65bdec7b96f606b0c0b3f072c2c588a74ffc272d6ec27424eb8c425"
+          "sha256": "a61ebd512a10a2c222bbb06359e8091028d958b85e5b27bd309ba4770453c4b4"
         }
       ],
-      "reason": "OpenAPI changes are additive optional MailInbox provenance and DMARC verification response fields; api-compat reports 0 breaking and 18 additive changes, and regenerated snapshots pass integration tests.",
+      "reason": "Reviewed the intentional MailInbox admin contract break: removed always-false verification properties, updated every in-repository producer and consumer, regenerated the OpenAPI snapshot, and passed the focused contract test; the workflow guidance remains current.",
       "baseRef": "HEAD",
-      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
-      "reviewedAtUtc": "2026-08-20T15:58:10.4183114Z"
+      "gitHead": "57d59eb7271d3721a3fc1010502005c76625d3db",
+      "reviewedAtUtc": "2026-08-20T18:11:40.2780018Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -427,13 +427,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "8ae65f0e567fee16c04dbe90f470c96e9f9daec0b66fb32d406b98a8697c759a"
+          "sha256": "8b848bce19ef1fc0ab70f9074c1d7f0ddcfe8507a4c7307814a8aaf56b70cc9a"
         }
       ],
-      "reason": "MailInbox deployment keeps one shared non-secret runtime role name for initializer and Web API; docker compose passes the same value, initializer remains ordered before Web API, and docker compose config validation plus 57 integration tests passed.",
+      "reason": "Reviewed deployment impact: AllowUntrustedSources is explicitly wired in appsettings and Compose, the container health command is self-contained, and no package, database migration, or rollout-order change is required.",
       "baseRef": "HEAD",
-      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
-      "reviewedAtUtc": "2026-08-20T17:02:50.4338479Z"
+      "gitHead": "57d59eb7271d3721a3fc1010502005c76625d3db",
+      "reviewedAtUtc": "2026-08-20T18:12:02.5783708Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -752,13 +752,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "ed76c7e7abf010131bb5fc553cbc47ac0e06b8b12c393eb1ed78b1532309ad05"
+          "sha256": "07ec77f4d01231db8b082c681d1512903e17b341ddaa3b8192e508f38eeafa9a"
         }
       ],
-      "reason": "The change reads only a role name and PostgreSQL privilege metadata; it does not expose, log, copy, or add runtime or initializer passwords, and initializer credentials remain unavailable to the Web API.",
+      "reason": "Reviewed privacy impact: no new message data, secrets, addresses, or bodies are stored or tagged; the new admission outcome is bounded and the documentation clarifies provenance without exposing content.",
       "baseRef": "HEAD",
-      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
-      "reviewedAtUtc": "2026-08-20T17:02:50.8263008Z"
+      "gitHead": "57d59eb7271d3721a3fc1010502005c76625d3db",
+      "reviewedAtUtc": "2026-08-20T18:12:04.5613913Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -813,13 +813,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8b1c901c4e9b9d3856d7b4d69e7609ad6f944159bd483972a62791072a1ace7f"
+          "sha256": "71d21b33cd268597d3bd0b61a35bd0df9502224e14b9cf89868f6b670b12f507"
         }
       ],
-      "reason": "The least-privilege boundary is covered by static Production configuration tests, live PostgreSQL privilege-drift tests, 57 MailInbox integration tests, 158 infrastructure tests, 13 initializer tests, and 710 architecture tests.",
+      "reason": "Reviewed quality risk with exact sliding-window boundary and bounded-tail tests, 162 infrastructure tests, 58 integration tests, architecture guards, format checks, and frontend verification.",
       "baseRef": "HEAD",
-      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
-      "reviewedAtUtc": "2026-08-20T17:02:51.2997307Z"
+      "gitHead": "57d59eb7271d3721a3fc1010502005c76625d3db",
+      "reviewedAtUtc": "2026-08-20T18:12:05.6795532Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1059,17 +1059,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "6c3e5c97743cb1266fa8caadafdb7cc13ae2de3124838eb08606d6d049a05359"
+          "sha256": "9f9017fce1f9a78cc338316975b4a1cf37575110d5b436c1129ffd9054c384ef"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "466f9aab2c176dda77327a9ab71c64b6ece79311c98a55db96e70a9d42b22d05"
+          "sha256": "c20f2466c10879c0e89cd88e8d97d43d609090d456bd81689701770ed0462fe5"
         }
       ],
-      "reason": "Generated frontend indexes now trace the additive MailInbox verification fields and localized admin warning surface; no hand-authored architecture documentation change is needed.",
+      "reason": "Traced MailInbox behavior from SMTP admission through storage, HTTP DTOs, typed client, core integration mapping, OpenAPI, and the admin UI; all changed consumers and trust boundaries are covered.",
       "baseRef": "HEAD",
-      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
-      "reviewedAtUtc": "2026-08-20T15:58:20.7421208Z"
+      "gitHead": "57d59eb7271d3721a3fc1010502005c76625d3db",
+      "reviewedAtUtc": "2026-08-20T18:12:06.7720232Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1173,13 +1173,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "6c3e5c97743cb1266fa8caadafdb7cc13ae2de3124838eb08606d6d049a05359"
+          "sha256": "9f9017fce1f9a78cc338316975b4a1cf37575110d5b436c1129ffd9054c384ef"
         }
       ],
-      "reason": "OpenAPI changes are additive optional MailInbox provenance and DMARC verification response fields; api-compat reports 0 breaking and 18 additive changes, and regenerated snapshots pass integration tests.",
+      "reason": "Reviewed the admin contract update end to end: removed misleading verification flags, made unverified warnings unconditional, updated both locales, and passed admin tests and build.",
       "baseRef": "HEAD",
-      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
-      "reviewedAtUtc": "2026-08-20T15:58:11.1766434Z"
+      "gitHead": "57d59eb7271d3721a3fc1010502005c76625d3db",
+      "reviewedAtUtc": "2026-08-20T18:12:03.6258855Z"
     },
     {
       "pageId": "workflow.query-context",

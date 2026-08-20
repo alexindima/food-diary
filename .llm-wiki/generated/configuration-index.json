@@ -281,7 +281,6 @@
         "MetadataApiKey",
         "ReadinessExecutionTimeout",
         "ReadinessQueueTimeout",
-        "RequireApiKey",
         "StateApiKey"
       ],
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs"
@@ -300,6 +299,7 @@
       "type": "MailInboxSmtpOptions",
       "section": "MailInboxSmtp",
       "properties": [
+        "AllowUntrustedSources",
         "AllowedRecipients",
         "CertificatePath",
         "Enabled",
@@ -903,9 +903,9 @@
         "MailInboxHttp:MessageDetailExecutionTimeout",
         "MailInboxHttp:MessageDetailQueueTimeout",
         "MailInboxHttp:MetadataApiKey",
-        "MailInboxHttp:RequireApiKey",
         "MailInboxHttp:StateApiKey",
         "MailInboxRuntimeDatabase:RoleName",
+        "MailInboxSmtp:AllowUntrustedSources",
         "MailInboxSmtp:AllowedRecipients",
         "MailInboxSmtp:CertificatePath",
         "MailInboxSmtp:Enabled",

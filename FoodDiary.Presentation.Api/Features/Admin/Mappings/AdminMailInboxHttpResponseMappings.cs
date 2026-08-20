@@ -16,8 +16,7 @@ public static class AdminMailInboxHttpResponseMappings {
                 model.ReadAtUtc,
                 model.ReceivedAtUtc,
                 model.EnvelopeFromAddress,
-                model.IsTrustedRelay,
-                model.FromAddressIsVerified);
+                model.IsTrustedRelay);
         }
     }
 
@@ -39,9 +38,7 @@ public static class AdminMailInboxHttpResponseMappings {
                 model.ContentPurgedAtUtc,
                 model.DmarcReport?.ToHttpResponse(),
                 model.EnvelopeFromAddress,
-                model.IsTrustedRelay,
-                model.FromAddressIsVerified,
-                model.DmarcReportIsVerified);
+                model.IsTrustedRelay);
         }
     }
 

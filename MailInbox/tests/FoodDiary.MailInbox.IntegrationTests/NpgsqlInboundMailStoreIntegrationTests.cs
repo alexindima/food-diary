@@ -114,14 +114,11 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         Assert.Null(summaries[0].ReadAtUtc);
         Assert.Equal("bounce@relay.example", summaries[0].EnvelopeFromAddress);
         Assert.True(summaries[0].IsTrustedRelay);
-        Assert.False(summaries[0].FromAddressIsVerified);
         Assert.NotNull(details);
         Assert.Equal("raw mime", details.RawMime);
         Assert.Null(details.ReadAtUtc);
         Assert.Equal("bounce@relay.example", details.EnvelopeFromAddress);
         Assert.True(details.IsTrustedRelay);
-        Assert.False(details.FromAddressIsVerified);
-        Assert.False(details.DmarcReportIsVerified);
 
         var readAt = new DateTimeOffset(2026, 6, 14, 12, 0, 0, TimeSpan.FromHours(4));
         Assert.True(await store.MarkAsReadAsync(id, readAt, CancellationToken.None));

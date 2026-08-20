@@ -7,7 +7,7 @@
     "outputs": 418,
     "apiCalls": 228,
     "templatesWithTranslations": 269,
-    "translationKeys": 1515,
+    "translationKeys": 1516,
     "consumerEdges": 980,
     "consumedComponents": 275,
     "unconsumedComponents": 151
@@ -15908,6 +15908,7 @@
         "ADMIN_MAIL_INBOX.DMARC_UNVERIFIED_WARNING",
         "ADMIN_MAIL_INBOX.ENVELOPE_FROM",
         "ADMIN_MAIL_INBOX.HEADER_FROM",
+        "ADMIN_MAIL_INBOX.HEADER_FROM_UNVERIFIED",
         "ADMIN_MAIL_INBOX.PROVENANCE",
         "ADMIN_MAIL_INBOX.UNVERIFIED_SHORT"
       ]

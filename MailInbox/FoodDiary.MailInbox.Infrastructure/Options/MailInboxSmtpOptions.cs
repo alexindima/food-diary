@@ -57,6 +57,8 @@ public sealed class MailInboxSmtpOptions {
 
     public string[] TrustedRelayNetworks { get; init; } = [];
 
+    public bool AllowUntrustedSources { get; init; } = true;
+
     public static bool HasValidConfiguration(MailInboxSmtpOptions options) {
         return options is {
             Port: > 0 and <= ushort.MaxValue,

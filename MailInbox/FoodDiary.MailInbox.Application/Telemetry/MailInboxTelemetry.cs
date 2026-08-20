@@ -65,6 +65,7 @@ public static class MailInboxTelemetry {
         MailInboxAdmissionOutcome.Accepted => "accepted",
         MailInboxAdmissionOutcome.RecipientNotAllowed => "recipient_not_allowed",
         MailInboxAdmissionOutcome.RecipientLimitExceeded => "recipient_limit_exceeded",
+        MailInboxAdmissionOutcome.SourceNotTrusted => "source_not_trusted",
         _ => throw new ArgumentOutOfRangeException(nameof(outcome), outcome, message: null),
     };
 

@@ -24,10 +24,9 @@ public sealed class MailInboxPresentationSecurityTests {
 
     [Fact]
     public void MailInboxHttpOptions_RejectsUnsafeBounds() {
-        Assert.True(MailInboxHttpOptions.HasValidApiKey(CreateOptions()));
+        Assert.True(MailInboxHttpOptions.HasValidConfiguration(CreateOptions()));
 
         MailInboxHttpOptions[] invalidOptions = [
-            CreateOptions(requireApiKey: false),
             CreateOptions(apiKey: null!),
             CreateOptions(apiKey: "too-short"),
             CreateOptions(apiKey: "0123456789abcdef0123456789abcdea"),
@@ -53,7 +52,7 @@ public sealed class MailInboxPresentationSecurityTests {
             CreateOptions(readinessExecutionTimeout: TimeSpan.FromSeconds(31)),
         ];
 
-        Assert.All(invalidOptions, static options => Assert.False(MailInboxHttpOptions.HasValidApiKey(options)));
+        Assert.All(invalidOptions, static options => Assert.False(MailInboxHttpOptions.HasValidConfiguration(options)));
     }
 
     [Fact]
@@ -97,7 +96,6 @@ public sealed class MailInboxPresentationSecurityTests {
         var services = new ServiceCollection();
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
-                ["MailInboxHttp:RequireApiKey"] = "true",
                 ["MailInboxHttp:MetadataApiKey"] = ValidApiKey,
                 ["MailInboxHttp:ContentApiKey"] = "fedcba9876543210fedcba987654321b",
                 ["MailInboxHttp:StateApiKey"] = "fedcba9876543210fedcba987654321c",
@@ -181,7 +179,6 @@ public sealed class MailInboxPresentationSecurityTests {
     }
 
     private static MailInboxHttpOptions CreateOptions(
-        bool requireApiKey = true,
         string apiKey = ValidApiKey,
         string contentApiKey = "fedcba9876543210fedcba987654321b",
         int maxConcurrentMessageDetailRequests = 2,
@@ -194,7 +191,6 @@ public sealed class MailInboxPresentationSecurityTests {
         TimeSpan? readinessQueueTimeout = null,
         TimeSpan? readinessExecutionTimeout = null) =>
         new() {
-            RequireApiKey = requireApiKey,
             MetadataApiKey = apiKey,
             ContentApiKey = contentApiKey,
             StateApiKey = "fedcba9876543210fedcba987654321c",

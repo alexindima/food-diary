@@ -5,7 +5,10 @@ MailInbox accepts untrusted SMTP traffic and can receive personal data, attachme
 ## Admission and storage boundaries
 
 - The SMTP listener limits concurrent connections globally and per source address.
+- `MailInboxSmtp:AllowUntrustedSources=true` explicitly enables direct SMTP delivery from sources outside `TrustedRelayNetworks`; setting it to `false` creates a relay-only boundary and rejects other sources before they consume message-rate quota.
+- `TrustedRelayNetworks` records network provenance and reserves storage capacity. It does not authenticate the SMTP envelope sender or the MIME `From:` header. A trusted upstream relay is responsible for SPF/DKIM/DMARC authentication, alignment decisions, and removing untrusted `Authentication-Results` headers before forwarding.
 - Message admission is bounded per session, source address, envelope sender, and actual DATA bytes per source address. Source and sender values are hashed before they become in-memory rate-limit keys.
+- Per-source and per-envelope-sender limits use exact sliding windows, so a fixed-window boundary cannot temporarily double the configured budget.
 - Message size, persisted header fields, envelope recipient count, MIME part count, extracted body length, concurrent MIME processing, and concurrent message-detail parsing are bounded.
 - Daily message and accounted-storage quotas are updated atomically with the message insert. Accounted storage includes raw MIME and every separately persisted text/metadata copy. A quota rejection rolls back the insert and returns a temporary SMTP failure.
 - Raw MIME is stored as PostgreSQL `bytea`; the ingest path does not convert arbitrary MIME bytes to UTF-8 before persistence.
@@ -29,6 +32,8 @@ There is no implicit or indefinite legal hold. If a legal hold becomes necessary
 ## Access, export, and deletion
 
 Message lists and details are available only through the API-key-protected MailInbox HTTP boundary. Raw MIME is returned only by the authorized details endpoint and becomes unavailable after content purge.
+
+The HTTP API intentionally exposes envelope sender and trusted-relay provenance, but does not expose sender/report verification booleans until a real authentication result exists. Parsed DMARC data and MIME `From:` values are always presented as unverified previews.
 
 MailInbox messages are not keyed to a FoodDiary user and an email address is not sufficient proof of account ownership. Automated primary-account export or deletion therefore must not guess an association. A privacy request that names MailInbox content is handled as an authorized operational request against the isolated MailInbox store; normal retention remains the default deletion mechanism.
 

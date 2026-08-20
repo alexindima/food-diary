@@ -47,9 +47,7 @@
                                 </td>
                                 <td>
                                     {{ message.fromAddress || '-' }}
-                                    @if (!message.fromAddressIsVerified) {
-                                        <span class="mail-verification-warning">{{ 'ADMIN_MAIL_INBOX.UNVERIFIED_SHORT' | translate }}</span>
-                                    }
+                                    <span class="mail-verification-warning">{{ 'ADMIN_MAIL_INBOX.UNVERIFIED_SHORT' | translate }}</span>
                                 </td>
                                 <td>{{ message.subject || '(no subject)' }}</td>
                                 <td>
@@ -111,12 +109,7 @@
                                 (message.isTrustedRelay ? 'ADMIN_MAIL_INBOX.TRUSTED_RELAY' : 'ADMIN_MAIL_INBOX.UNTRUSTED_RELAY')
                                     | translate
                             }};
-                            {{
-                                (message.fromAddressIsVerified
-                                    ? 'ADMIN_MAIL_INBOX.HEADER_FROM_VERIFIED'
-                                    : 'ADMIN_MAIL_INBOX.HEADER_FROM_UNVERIFIED'
-                                ) | translate
-                            }}
+                            {{ 'ADMIN_MAIL_INBOX.HEADER_FROM_UNVERIFIED' | translate }}
                         </dd>
                     </div>
                     <div class="fd-grid fd-gap-xxs">
@@ -131,11 +124,9 @@
 
                 @if (message.dmarcReport; as report) {
                     <section class="dmarc-report fd-grid fd-gap-sm" aria-label="DMARC report summary">
-                        @if (!message.dmarcReportIsVerified) {
-                            <p class="dmarc-report__warning" role="alert">
-                                {{ 'ADMIN_MAIL_INBOX.DMARC_UNVERIFIED_WARNING' | translate }}
-                            </p>
-                        }
+                        <p class="dmarc-report__warning" role="alert">
+                            {{ 'ADMIN_MAIL_INBOX.DMARC_UNVERIFIED_WARNING' | translate }}
+                        </p>
                         <div class="dmarc-report__header fd-row fd-align-start fd-justify-between fd-gap-md">
                             <div>
                                 <h3 class="fd-ui-body">DMARC report</h3>
@@ -144,12 +135,6 @@
                                     {{ report.dateRangeStartUtc | date: 'mediumDate' }} - {{ report.dateRangeEndUtc | date: 'mediumDate' }}
                                 </p>
                             </div>
-                            @if (message.dmarcReportIsVerified) {
-                                <div class="dmarc-report__stats fd-row fd-gap-xs fd-justify-end fd-wrap fd-ui-caption-strong">
-                                    <span>{{ dmarcTotalMessages() }} messages</span>
-                                    <span>{{ dmarcProblemRecords() }} issues</span>
-                                </div>
-                            }
                         </div>
 
                         <div class="dmarc-report__table-wrap">

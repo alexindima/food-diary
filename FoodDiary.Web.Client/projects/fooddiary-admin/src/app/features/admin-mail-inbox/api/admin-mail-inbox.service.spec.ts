@@ -13,7 +13,6 @@ const messageDetailsResponse = {
     fromAddress: 'user@example.com',
     envelopeFromAddress: 'bounce@example.com',
     isTrustedRelay: true,
-    fromAddressIsVerified: false,
     toRecipients: ['admin@fooddiary.club'],
     subject: 'Feedback',
     category: 'general',
@@ -22,7 +21,6 @@ const messageDetailsResponse = {
     receivedAtUtc: '2026-04-25T21:37:55Z',
     rawMime: 'raw',
     contentPurgedAtUtc: null,
-    dmarcReportIsVerified: false,
     dmarcReport: {
         organizationName: 'google.com',
         reportId: 'report-1',
@@ -68,7 +66,6 @@ describe('AdminMailInboxService', () => {
                 fromAddress: 'user@example.com',
                 envelopeFromAddress: 'bounce@example.com',
                 isTrustedRelay: true,
-                fromAddressIsVerified: false,
                 toRecipients: ['admin@fooddiary.club'],
                 subject: 'Feedback',
                 category: 'general',
@@ -93,8 +90,6 @@ describe('AdminMailInboxService', () => {
             expect(result.rawMime).toBe('raw');
             expect(result.contentPurgedAtUtc).toBeNull();
             expect(result.envelopeFromAddress).toBe('bounce@example.com');
-            expect(result.fromAddressIsVerified).toBe(false);
-            expect(result.dmarcReportIsVerified).toBe(false);
             expect(result.dmarcReport?.reportId).toBe('report-1');
             expect(result.dmarcReport?.records[0]?.count).toBe(DMARC_MESSAGE_COUNT);
         });

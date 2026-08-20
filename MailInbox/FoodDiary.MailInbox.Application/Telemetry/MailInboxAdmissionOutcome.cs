@@ -8,4 +8,5 @@ public enum MailInboxAdmissionOutcome {
     Accepted = 4,
     RecipientNotAllowed = 5,
     RecipientLimitExceeded = 6,
+    SourceNotTrusted = 7,
 }

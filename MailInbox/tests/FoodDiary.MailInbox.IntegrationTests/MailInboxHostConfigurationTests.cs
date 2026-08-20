@@ -2,11 +2,26 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using FoodDiary.MailInbox.WebApi;
+using FoodDiary.MailInbox.Infrastructure.Services;
 
 namespace FoodDiary.MailInbox.IntegrationTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxHostConfigurationTests {
+    [Fact]
+    public async Task ContainerHealthCheck_InvalidServerName_ReturnsFalse() {
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["MailInboxSmtp:ServerName"] = "not a valid host name",
+            })
+            .Build();
+
+        bool isReady = await MailInboxLocalTlsHealthCheck
+            .IsReadyAsync(configuration["MailInboxSmtp:ServerName"], CancellationToken.None);
+
+        Assert.False(isReady);
+    }
+
     [Theory]
     [InlineData("Password=change-me-local-password")]
     [InlineData("Pwd=CHANGE-ME-LOCAL-PASSWORD")]

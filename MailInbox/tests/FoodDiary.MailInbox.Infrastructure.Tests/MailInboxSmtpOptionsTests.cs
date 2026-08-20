@@ -349,7 +349,7 @@ public sealed class MailInboxSmtpOptionsTests {
             provider.GetRequiredService<DmarcReportParser>(),
             provider.GetRequiredService<IMailInboxDmarcReportParser>());
         Assert.IsType<SmtpInboundMessageStore>(provider.GetRequiredService<SmtpInboundMessageStore>());
-        Assert.IsType<MailInboxFixedWindowRateLimiter>(provider.GetRequiredService<MailInboxFixedWindowRateLimiter>());
+        Assert.IsType<MailInboxSlidingWindowRateLimiter>(provider.GetRequiredService<MailInboxSlidingWindowRateLimiter>());
         Assert.IsType<MailInboxMailboxFilter>(provider.GetRequiredService<MailInboxMailboxFilter>());
         Assert.IsType<MailInboxEndpointListenerFactory>(provider.GetRequiredService<MailInboxEndpointListenerFactory>());
         Assert.NotNull(provider.GetRequiredService<MeterProvider>());

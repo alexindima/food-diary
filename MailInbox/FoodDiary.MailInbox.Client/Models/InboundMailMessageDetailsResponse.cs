@@ -16,6 +16,4 @@ public sealed record InboundMailMessageDetailsResponse(
     DateTimeOffset? ContentPurgedAtUtc,
     DmarcReportResponse? DmarcReport = null,
     string? EnvelopeFromAddress = null,
-    bool IsTrustedRelay = false,
-    bool FromAddressIsVerified = false,
-    bool DmarcReportIsVerified = false);
+    bool IsTrustedRelay = false);

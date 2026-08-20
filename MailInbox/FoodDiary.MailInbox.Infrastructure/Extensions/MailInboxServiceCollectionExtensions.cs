@@ -46,7 +46,7 @@ public static class MailInboxServiceCollectionExtensions {
         services.AddSingleton<IMailInboxSchemaInitializer>(static sp => sp.GetRequiredService<NpgsqlInboundMailStore>());
         services.AddSingleton<IMailInboxReadinessChecker, NpgsqlMailInboxReadinessChecker>();
         services.AddSingleton<SmtpInboundMessageStore>();
-        services.AddSingleton<MailInboxFixedWindowRateLimiter>();
+        services.AddSingleton<MailInboxSlidingWindowRateLimiter>();
         services.AddSingleton<MailInboxMailboxFilter>();
         services.AddSingleton<MailInboxEndpointListenerFactory>();
         services.AddHostedService<MailInboxRetentionHostedService>();

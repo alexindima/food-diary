@@ -79,17 +79,6 @@ export class AdminMailInboxComponent {
 
         return message.textBody ?? '';
     });
-    protected readonly dmarcTotalMessages = computed(() => {
-        const message = this.selectedMessage();
-        const report = message?.dmarcReportIsVerified === true ? message.dmarcReport : null;
-        return report?.records.reduce((total, record) => total + record.count, 0) ?? 0;
-    });
-    protected readonly dmarcProblemRecords = computed(() => {
-        const message = this.selectedMessage();
-        const report = message?.dmarcReportIsVerified === true ? message.dmarcReport : null;
-        return report?.records.filter(record => record.dkim !== 'pass' || record.spf !== 'pass').length ?? 0;
-    });
-
     public constructor() {
         this.loadMessages();
     }

@@ -10,5 +10,4 @@ public sealed record InboundMailMessageSummaryHttpResponse(
     DateTimeOffset? ReadAtUtc,
     DateTimeOffset ReceivedAtUtc,
     string? EnvelopeFromAddress = null,
-    bool IsTrustedRelay = false,
-    bool FromAddressIsVerified = false);
+    bool IsTrustedRelay = false);

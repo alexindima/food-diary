@@ -19,7 +19,7 @@ namespace FoodDiary.MailInbox.Infrastructure.Services;
 public sealed class SmtpInboundMessageStore(
     IInboundMailStore store,
     IOptions<MailInboxSmtpOptions> options,
-    MailInboxFixedWindowRateLimiter rateLimiter,
+    MailInboxSlidingWindowRateLimiter rateLimiter,
     TimeProvider timeProvider,
     ILogger<SmtpInboundMessageStore> logger) : MessageStore, IDisposable {
     private readonly MailInboxSmtpOptions _options = options.Value;

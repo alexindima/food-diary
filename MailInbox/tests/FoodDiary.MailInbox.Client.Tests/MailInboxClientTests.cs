@@ -22,8 +22,7 @@ public sealed class MailInboxClientTests {
             ReadAtUtc: null,
             DateTimeOffset.UtcNow,
             EnvelopeFromAddress: "bounce@relay.example",
-            IsTrustedRelay: true,
-            FromAddressIsVerified: false);
+            IsTrustedRelay: true);
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent.Create(new[] { expected }),
         });
@@ -37,8 +36,7 @@ public sealed class MailInboxClientTests {
 
         Assert.Multiple(
             () => Assert.Equal("bounce@relay.example", message.EnvelopeFromAddress),
-            () => Assert.True(message.IsTrustedRelay),
-            () => Assert.False(message.FromAddressIsVerified));
+            () => Assert.True(message.IsTrustedRelay));
     }
 
     [Fact]
@@ -174,9 +172,7 @@ public sealed class MailInboxClientTests {
             ContentPurgedAtUtc: null,
             dmarcReport,
             EnvelopeFromAddress: "bounce@relay.example",
-            IsTrustedRelay: true,
-            FromAddressIsVerified: false,
-            DmarcReportIsVerified: false);
+            IsTrustedRelay: true);
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent.Create(expected),
         });
@@ -197,9 +193,7 @@ public sealed class MailInboxClientTests {
             () => Assert.Equal("report-1", message.DmarcReport?.ReportId),
             () => Assert.Equal(4, Assert.Single(message.DmarcReport!.Records).Count),
             () => Assert.Equal("bounce@relay.example", message.EnvelopeFromAddress),
-            () => Assert.True(message.IsTrustedRelay),
-            () => Assert.False(message.FromAddressIsVerified),
-            () => Assert.False(message.DmarcReportIsVerified));
+            () => Assert.True(message.IsTrustedRelay));
     }
 
     [Fact]

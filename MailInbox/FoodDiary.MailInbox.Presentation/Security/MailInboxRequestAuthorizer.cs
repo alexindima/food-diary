@@ -12,8 +12,7 @@ internal static class MailInboxRequestAuthorizer {
         MailInboxHttpOptions options,
         MailInboxPermission permission) {
         string expectedApiKey = options.GetApiKey(permission);
-        if (!options.RequireApiKey ||
-            string.IsNullOrWhiteSpace(expectedApiKey) ||
+        if (string.IsNullOrWhiteSpace(expectedApiKey) ||
             !request.Headers.TryGetValue("X-MailInbox-Api-Key", out StringValues values) ||
             values.Count != 1 ||
             string.IsNullOrEmpty(values[0])) {
