@@ -54,6 +54,13 @@ public static class ApiAuthenticationServiceCollectionExtensions {
             ClockSkew = TimeSpan.Zero,
         };
         options.Events = new JwtBearerEvents {
+            OnTokenValidated = context => {
+                if (!JwtTokenUseValidator.IsAccessToken(context.Principal)) {
+                    context.Fail("The token is not an access token.");
+                }
+
+                return Task.CompletedTask;
+            },
             OnMessageReceived = context => {
                 ExtractSignalRAccessToken(context);
                 return Task.CompletedTask;

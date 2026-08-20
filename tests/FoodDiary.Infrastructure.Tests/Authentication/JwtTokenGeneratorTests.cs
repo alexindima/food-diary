@@ -1,5 +1,6 @@
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Infrastructure.Authentication;
 using FoodDiary.Infrastructure.Options;
@@ -10,18 +11,14 @@ namespace FoodDiary.Infrastructure.Tests.Authentication;
 [ExcludeFromCodeCoverage]
 public sealed class JwtTokenGeneratorTests {
     [Fact]
-    public void GenerateAndValidateToken_RoundTrip_Succeeds() {
+    public void ValidateToken_WithAccessToken_ReturnsNull() {
         var generator = new JwtTokenGenerator(CreateOptions(), new StubDateTimeProvider());
         var userId = UserId.New();
-        const string email = "user@example.com";
 
-        string token = generator.GenerateAccessToken(userId, email, ["Admin"]);
+        string token = generator.GenerateAccessToken(userId, "user@example.com", ["Admin"]);
         (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validated = generator.ValidateToken(token);
 
-        Assert.NotNull(validated);
-        Assert.Equal(userId, validated.Value.userId);
-        Assert.Equal(email, validated.Value.email);
-        Assert.False(validated.Value.rememberMe);
+        Assert.Null(validated);
     }
 
     [Fact]
@@ -39,10 +36,12 @@ public sealed class JwtTokenGeneratorTests {
         var userId = UserId.New();
 
         string token = generator.GenerateAccessToken(userId, "fallback@example.com", []);
-        (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validated = generator.ValidateToken(token);
+        JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
 
-        Assert.NotNull(validated);
-        Assert.Equal(userId, validated.Value.userId);
+        Assert.Equal(new DateTime(2030, 3, 28, 13, 0, 0, DateTimeKind.Utc), jwt.ValidTo);
+        Assert.Contains(jwt.Claims, claim =>
+            string.Equals(claim.Type, JwtTokenUseClaimNames.ClaimType, StringComparison.Ordinal) &&
+            string.Equals(claim.Value, JwtTokenUseClaimNames.Access, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -58,6 +57,10 @@ public sealed class JwtTokenGeneratorTests {
         Assert.Equal(now.AddDays(90), jwt.ValidTo);
         Assert.NotNull(validated);
         Assert.True(validated.Value.rememberMe);
+        Assert.Contains(jwt.Claims, claim =>
+            string.Equals(claim.Type, JwtTokenUseClaimNames.ClaimType, StringComparison.Ordinal) &&
+            string.Equals(claim.Value, JwtTokenUseClaimNames.Refresh, StringComparison.Ordinal));
+        Assert.DoesNotContain(jwt.Claims, claim => string.Equals(claim.Type, ClaimTypes.Role, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -136,6 +139,13 @@ public sealed class JwtTokenGeneratorTests {
             RefreshTokenExpirationDays = 7,
             RememberMeRefreshTokenExpirationDays = 90,
         }));
+    }
+
+    [Theory]
+    [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")]
+    [InlineData("abcabcabcabcabcabcabcabcabcabcab")]
+    public void HasValidSecretKey_WithLowCharacterDiversity_ReturnsFalse(string secretKey) {
+        Assert.False(JwtOptions.HasValidSecretKey(new JwtOptions { SecretKey = secretKey }));
     }
 
     [Theory]

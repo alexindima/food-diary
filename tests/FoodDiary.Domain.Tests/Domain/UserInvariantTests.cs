@@ -1234,6 +1234,23 @@ public class UserInvariantTests {
         Assert.Null(user.CalculateEstimatedTdee());
     }
 
+    [Theory]
+    [InlineData(500.0001d, 180d)]
+    [InlineData(80d, 300.0001d)]
+    [InlineData(double.MaxValue, 180d)]
+    [InlineData(80d, double.MaxValue)]
+    public void UpdatePersonalInfo_WithOutOfRangeBodyMeasurement_ThrowsWithoutChangingProfile(double weightKg, double heightCm) {
+        var user = User.Create("test@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(WeightKg: weightKg, HeightCm: heightCm)));
+
+        Assert.Multiple(
+            () => Assert.Null(user.WeightKg),
+            () => Assert.Null(user.HeightCm),
+            () => Assert.Null(user.ModifiedOnUtc));
+    }
+
     [Fact]
     public void CalculateBmr_WithMaleProfile_UsesMifflinStJeorFormula() {
         var user = User.Create("test@example.com", "hash");

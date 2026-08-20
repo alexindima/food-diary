@@ -644,6 +644,26 @@ public sealed class DiaryPdfGeneratorTests {
     }
 
     [Fact]
+    public void PrepareMealImage_WithOversizedSourceDimensions_ReturnsNullBeforeDecode() {
+        byte[] oversizedImage = CreatePngBytes(width: 10_001, height: 1);
+
+        byte[]? prepared = InvokePrivateStatic<byte[]?>("PrepareMealImage", oversizedImage);
+
+        Assert.Null(prepared);
+    }
+
+    [Fact]
+    public void CreateBoundedDecodeInfo_WithLargeLegitimateImage_BoundsDecodedAllocation() {
+        var sourceInfo = new SKImageInfo(4_000, 3_000);
+
+        SKImageInfo decodeInfo = InvokePrivateStatic<SKImageInfo>("CreateBoundedDecodeInfo", sourceInfo);
+
+        Assert.Multiple(
+            () => Assert.Equal(2_048, decodeInfo.Width),
+            () => Assert.Equal(1_536, decodeInfo.Height));
+    }
+
+    [Fact]
     public void TryReadDataUrl_WhenBase64IsTooLarge_ReturnsFalse() {
         string oversized = $"data:image/png;base64,{new string('A', 3 * 1024 * 1024)}";
 

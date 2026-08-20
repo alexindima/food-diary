@@ -113,13 +113,13 @@
       "sources": [
         {
           "path": "Directory.Packages.props",
-          "sha256": "c8b94953359370ada887685d09b33017549039ed7c5edb8cde14371182f1722f"
+          "sha256": "eeb453b0353c6cd0da3f783b4fd8e2b7a7ba57ef659cf131a4d6ec29ded26f61"
         }
       ],
-      "reason": "Analyzer package versions and synchronized lockfiles were reviewed; repository catalog semantics remain current.",
+      "reason": "Central package versions and Infrastructure package references were intentionally updated; the regenerated catalog was reviewed against Directory.Packages.props and FoodDiary.Infrastructure.csproj.",
       "baseRef": "HEAD",
-      "gitHead": "57da385c402997aca9e1bbb654296feb3acf233d",
-      "reviewedAtUtc": "2026-08-18T23:50:10.1150437Z"
+      "gitHead": "ba1226f4d35e4928ae3f3e4db634d867c3f0a9e5",
+      "reviewedAtUtc": "2026-08-20T01:21:57.2737256Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -212,13 +212,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "a883bd08ffd5af34e78a5a7e05880b1ff33de79474b3066dcf78148277b15a0e"
+          "sha256": "bc2599fcd56a3adf414d669f3dc6e716edfa190bc7964c761798a8d81f6118bc"
         }
       ],
-      "reason": "Swagger output, HTTP routes, payloads, status codes, and snapshots are unchanged; the integration change only adds generic invariants for existing numeric query bounds and request/success schema completeness.",
+      "reason": "The regenerated backend contract index was reviewed; no routes or payload schemas changed, while JWT bearer acceptance was intentionally tightened to access tokens.",
       "baseRef": "HEAD",
-      "gitHead": "65ae2e2c1d4bdb0b1e73eed0ccea1ee761ea460c",
-      "reviewedAtUtc": "2026-08-20T00:07:48.2719614Z"
+      "gitHead": "ba1226f4d35e4928ae3f3e4db634d867c3f0a9e5",
+      "reviewedAtUtc": "2026-08-20T01:22:15.0975908Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -457,13 +457,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "87bf14839f9a8d9d1b83a36633aa288fc2fb126ffd4ad566f10700755301cb4f"
+          "sha256": "7d09adbe74c90460f0c573af7e8629ad8a516df7a398c62ccb22680ad2f4d3e7"
         }
       ],
-      "reason": "Generated domain-data and quality indexes were refreshed for the new Domain invariants and their regression tests; the focused Presentation build and 710 architecture tests pass.",
+      "reason": "The regenerated domain-data and quality-risk indexes were reviewed against the new profile value objects, guardrails, and focused test coverage.",
       "baseRef": "HEAD",
-      "gitHead": "65ae2e2c1d4bdb0b1e73eed0ccea1ee761ea460c",
-      "reviewedAtUtc": "2026-08-20T00:08:11.1573165Z"
+      "gitHead": "ba1226f4d35e4928ae3f3e4db634d867c3f0a9e5",
+      "reviewedAtUtc": "2026-08-20T01:22:15.5107073Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -752,13 +752,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "372f9cd64aa60a0c6edeb6be690898873bba809a86075e63451bab7cbe85fabf"
+          "sha256": "14dfed3063d8da1ff865a1bdcabde825aad3a5abe8392c51b908c12db8d913a8"
         }
       ],
-      "reason": "Domain changes only tighten constructor and value validation; no credentials, PII fields, logging, persistence destinations, exports, or provider-sharing boundaries changed.",
+      "reason": "JWT token purpose separation, atomic SSO code consumption, secret validation, password fallback removal, and bounded PDF image decoding were reviewed with focused tests.",
       "baseRef": "HEAD",
-      "gitHead": "65ae2e2c1d4bdb0b1e73eed0ccea1ee761ea460c",
-      "reviewedAtUtc": "2026-08-20T00:08:11.7247202Z"
+      "gitHead": "ba1226f4d35e4928ae3f3e4db634d867c3f0a9e5",
+      "reviewedAtUtc": "2026-08-20T01:22:15.9769013Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -813,13 +813,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cc7af166837a3c12708fdac2385382395dc68d5977ebed85a1aaba6980c37563"
+          "sha256": "01da1119c2c693cae6fc32d3c7b303951528ac3738178c5f1fd3b2d7dbfca68a"
         }
       ],
-      "reason": "Generated domain-data and quality indexes were refreshed for the new Domain invariants and their regression tests; the focused Presentation build and 710 architecture tests pass.",
+      "reason": "The regenerated domain-data and quality-risk indexes were reviewed against the new profile value objects, guardrails, and focused test coverage.",
       "baseRef": "HEAD",
-      "gitHead": "65ae2e2c1d4bdb0b1e73eed0ccea1ee761ea460c",
-      "reviewedAtUtc": "2026-08-20T00:08:12.5339052Z"
+      "gitHead": "ba1226f4d35e4928ae3f3e4db634d867c3f0a9e5",
+      "reviewedAtUtc": "2026-08-20T01:22:16.5569663Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1188,13 +1188,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "0f904ae1c104a2e3b096d41a41a4657b023486d50d0592eb1acafeb0552d619e"
+          "sha256": "8491a440cd92af044b464280544a5b55f4450cad9326f9a1f8a0dd6260fbdb49"
         }
       ],
-      "reason": "Reviewed the regenerated configuration and repository catalog indexes against the current option, persistence, domain, presentation, and test source changes included in this complete working-tree commit.",
+      "reason": "The regenerated repository catalog and query context were reviewed against the central package manifest and Infrastructure project references.",
       "baseRef": "HEAD",
-      "gitHead": "56693d6ebb798d0d8ea3877592e17dbaedd97c96",
-      "reviewedAtUtc": "2026-08-19T23:06:32.3524005Z"
+      "gitHead": "ba1226f4d35e4928ae3f3e4db634d867c3f0a9e5",
+      "reviewedAtUtc": "2026-08-20T01:22:16.9475371Z"
     },
     {
       "pageId": "workflow.review-diff",

@@ -188,7 +188,6 @@ public sealed class DomainCoverageCompletionTests {
         }
 
         Assert.Multiple(
-            () => Assert.Equal(0, product.UsageCount),
             () => Assert.Null(product.UsdaFood),
             () => Assert.Null(mealPlan.User),
             () => Assert.Null(invitation.DietologistUser),

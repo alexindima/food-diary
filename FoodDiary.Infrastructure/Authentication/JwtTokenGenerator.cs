@@ -48,21 +48,42 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
     }
 
     public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) =>
-        GenerateToken(userId, email, roles, _accessTokenExpirationMinutes, expiresAtUtc: null, impersonation: null);
+        GenerateToken(
+            userId,
+            email,
+            roles,
+            JwtTokenUseClaimNames.Access,
+            _accessTokenExpirationMinutes,
+            expiresAtUtc: null,
+            impersonation: null);
 
     public string GenerateAccessToken(
         UserId userId,
         string email,
         IReadOnlyCollection<string> roles,
         DateTime? expiresAtUtc) =>
-        GenerateToken(userId, email, roles, _accessTokenExpirationMinutes, expiresAtUtc, impersonation: null);
+        GenerateToken(
+            userId,
+            email,
+            roles,
+            JwtTokenUseClaimNames.Access,
+            _accessTokenExpirationMinutes,
+            expiresAtUtc,
+            impersonation: null);
 
     public string GenerateAccessToken(
         UserId userId,
         string email,
         IReadOnlyCollection<string> roles,
         JwtImpersonationContext impersonation) =>
-        GenerateToken(userId, email, roles, _accessTokenExpirationMinutes, expiresAtUtc: null, impersonation);
+        GenerateToken(
+            userId,
+            email,
+            roles,
+            JwtTokenUseClaimNames.Access,
+            _accessTokenExpirationMinutes,
+            expiresAtUtc: null,
+            impersonation);
 
     public string GenerateRefreshToken(
         UserId userId,
@@ -73,7 +94,8 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
         GenerateToken(
             userId,
             email,
-            roles,
+            [],
+            JwtTokenUseClaimNames.Refresh,
             rememberMe ? _rememberMeRefreshTokenExpirationMinutes : _refreshTokenExpirationMinutes,
             expiresAtUtc: null,
             impersonation: null,
@@ -95,6 +117,12 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
             }, out SecurityToken? validatedToken);
 
             var jwtToken = (JwtSecurityToken)validatedToken;
+            if (!jwtToken.Claims.Any(static claim =>
+                    string.Equals(claim.Type, JwtTokenUseClaimNames.ClaimType, StringComparison.Ordinal) &&
+                    string.Equals(claim.Value, JwtTokenUseClaimNames.Refresh, StringComparison.Ordinal))) {
+                return null;
+            }
+
             var userIdValue = Guid.Parse(jwtToken.Claims.First(x => string.Equals(x.Type, ClaimTypes.NameIdentifier, StringComparison.Ordinal)).Value);
             string email = jwtToken.Claims.First(x => string.Equals(x.Type, ClaimTypes.Email, StringComparison.Ordinal)).Value;
             bool rememberMe = jwtToken.Claims.Any(static x =>
@@ -116,6 +144,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
         UserId userId,
         string email,
         IReadOnlyCollection<string> roles,
+        string tokenUse,
         int expirationMinutes,
         DateTime? expiresAtUtc,
         JwtImpersonationContext? impersonation,
@@ -127,6 +156,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
             new(ClaimTypes.NameIdentifier, userId.Value.ToString()),
             new(ClaimTypes.Email, email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(JwtTokenUseClaimNames.ClaimType, tokenUse),
         };
 
         if (impersonation is not null) {

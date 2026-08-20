@@ -29,6 +29,9 @@ describe('waist history WHT mapper', () => {
         expect(calculateWhtValue(HEIGHT_CM, null)).toBeNull();
         expect(calculateWhtValue(0, WAIST_CM)).toBeNull();
         expect(calculateWhtValue(HEIGHT_CM, 0)).toBeNull();
+        expect(calculateWhtValue(Number.NaN, WAIST_CM)).toBeNull();
+        expect(calculateWhtValue(HEIGHT_CM, Number.POSITIVE_INFINITY)).toBeNull();
+        expect(calculateWhtValue(Number.MIN_VALUE, WAIST_CM)).toBeNull();
     });
 
     it('builds status info by WHT range', () => {

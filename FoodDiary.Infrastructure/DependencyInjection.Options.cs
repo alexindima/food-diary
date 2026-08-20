@@ -19,7 +19,7 @@ public static partial class DependencyInjection {
         services.AddOptions<JwtOptions>()
             .Bind(configuration.GetSection(JwtOptions.SectionName))
             .Validate(JwtOptions.HasValidSecretKey,
-                $"{JwtOptions.SectionName}:SecretKey must be at least 32 characters long and must not use a repository placeholder.")
+                $"{JwtOptions.SectionName}:SecretKey must be at least 32 characters long, have sufficient character diversity, and must not use a repository placeholder.")
             .Validate(static options => !string.IsNullOrWhiteSpace(options.Issuer),
                 $"{JwtOptions.SectionName}:Issuer is required.")
             .Validate(static options => !string.IsNullOrWhiteSpace(options.Audience),

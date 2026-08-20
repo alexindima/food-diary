@@ -144,8 +144,8 @@ public sealed partial class User {
         DateTime? normalizedBirthDate = NormalizeOptionalUtcDate(birthDate);
 
         EnsureBirthDateIsNotFuture(normalizedBirthDate);
-        EnsurePositive(weight, nameof(weight));
-        EnsurePositive(height, nameof(height));
+        EnsureProfileWeight(weight, nameof(weight));
+        EnsureProfileHeight(height, nameof(height));
 
         UserPersonalProfileState state = GetPersonalProfileState();
         bool changed = false;

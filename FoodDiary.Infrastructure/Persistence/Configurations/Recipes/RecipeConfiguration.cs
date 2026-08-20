@@ -25,8 +25,6 @@ internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
 
         builder.Property(e => e.Visibility).HasDefaultValue(Visibility.Public);
         builder.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(value: true);
-        builder.Ignore(e => e.UsageCount);
-
         builder.HasOne(e => e.User)
             .WithMany(u => u.Recipes)
             .HasForeignKey(e => e.UserId);

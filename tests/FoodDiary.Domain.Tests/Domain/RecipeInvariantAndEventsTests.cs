@@ -152,7 +152,6 @@ public class RecipeInvariantAndEventsTests {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
 
         Assert.Multiple(
-            () => Assert.Equal(0, recipe.UsageCount),
             () => Assert.True(recipe.IsNutritionAutoCalculated),
             () => Assert.Null(recipe.TotalCalories),
             () => Assert.Null(recipe.ManualCalories));

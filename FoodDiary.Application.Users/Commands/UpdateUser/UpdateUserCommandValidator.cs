@@ -1,4 +1,6 @@
 using FluentValidation;
+using FoodDiary.Domain.ValueObjects;
+using System.Globalization;
 
 namespace FoodDiary.Application.Users.Commands.UpdateUser;
 
@@ -16,15 +18,17 @@ public sealed class UpdateUserCommandValidator : AbstractValidator<UpdateUserCom
         When(x => x.WeightKg.HasValue, () => {
             RuleFor(x => x.WeightKg)
                 .GreaterThan(0)
+                .LessThanOrEqualTo(ProfileWeightKg.MaxValue)
                 .WithErrorCode("Validation.Invalid")
-                .WithMessage("WeightKg must be greater than 0");
+                .WithMessage(string.Create(CultureInfo.InvariantCulture, $"WeightKg must be in range (0, {ProfileWeightKg.MaxValue}]"));
         });
 
         When(x => x.HeightCm.HasValue, () => {
             RuleFor(x => x.HeightCm)
                 .GreaterThan(0)
+                .LessThanOrEqualTo(ProfileHeightCm.MaxValue)
                 .WithErrorCode("Validation.Invalid")
-                .WithMessage("HeightCm must be greater than 0");
+                .WithMessage(string.Create(CultureInfo.InvariantCulture, $"HeightCm must be in range (0, {ProfileHeightCm.MaxValue}]"));
         });
 
         When(x => x.StepGoal.HasValue, () => {

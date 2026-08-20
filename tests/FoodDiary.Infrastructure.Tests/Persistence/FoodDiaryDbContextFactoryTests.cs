@@ -23,4 +23,25 @@ public sealed class FoodDiaryDbContextFactoryTests {
             Environment.SetEnvironmentVariable("APPDATA", previousAppData);
         }
     }
+
+    [Fact]
+    public void CreateDbContext_WithoutConfiguredConnectionString_DoesNotEmbedDefaultPassword() {
+        const string variableName = "FOODDIARY_CONNECTION_STRING";
+        string? previousValue = Environment.GetEnvironmentVariable(variableName);
+        string? previousAppData = Environment.GetEnvironmentVariable("APPDATA");
+        Environment.SetEnvironmentVariable(variableName, value: null);
+        Environment.SetEnvironmentVariable("APPDATA", Path.Combine(Path.GetTempPath(), $"fd-user-secrets-{Guid.NewGuid():N}"));
+
+        try {
+            using FoodDiaryDbContext context = new FoodDiaryDbContextFactory().CreateDbContext([]);
+
+            Assert.DoesNotContain(
+                expectedSubstring: "Password=",
+                actualString: context.Database.GetConnectionString(),
+                comparisonType: StringComparison.OrdinalIgnoreCase);
+        } finally {
+            Environment.SetEnvironmentVariable(variableName, previousValue);
+            Environment.SetEnvironmentVariable("APPDATA", previousAppData);
+        }
+    }
 }

@@ -8,16 +8,40 @@ internal sealed partial class DiaryPdfGenerator {
 
     private static byte[]? PrepareMealImage(byte[] imageBytes) {
         try {
-            using var image = SKBitmap.Decode(imageBytes);
+            SKImageInfo sourceInfo = SKBitmap.DecodeBounds(imageBytes);
+            if (!HasSafeImageDimensions(sourceInfo)) {
+                return null;
+            }
+
+            SKImageInfo decodeInfo = CreateBoundedDecodeInfo(sourceInfo);
+            using var image = SKBitmap.Decode(imageBytes, decodeInfo);
             if (image is null) {
                 return null;
             }
 
             using SKBitmap preparedImage = CreateCroppedBitmap(image, MealImageThumbnailSize, MealImageThumbnailSize);
             return EncodeMealImage(preparedImage);
-        } catch {
+        } catch (ArgumentException) {
+            return null;
+        } catch (InvalidOperationException) {
             return null;
         }
+    }
+
+    private static bool HasSafeImageDimensions(SKImageInfo info) =>
+        info.Width > 0 &&
+        info.Height > 0 &&
+        info.Width <= MaxMealImageSourceDimension &&
+        info.Height <= MaxMealImageSourceDimension &&
+        (long)info.Width * info.Height <= MaxMealImageSourcePixels;
+
+    private static SKImageInfo CreateBoundedDecodeInfo(SKImageInfo sourceInfo) {
+        double scale = Math.Min(
+            1d,
+            (double)MaxMealImageDecodeDimension / Math.Max(sourceInfo.Width, sourceInfo.Height));
+        int width = Math.Max(1, (int)Math.Round(sourceInfo.Width * scale, MidpointRounding.AwayFromZero));
+        int height = Math.Max(1, (int)Math.Round(sourceInfo.Height * scale, MidpointRounding.AwayFromZero));
+        return new SKImageInfo(width, height, SKColorType.Rgba8888, SKAlphaType.Premul);
     }
 
     private static byte[]? CreateMealImageCollage(IReadOnlyList<byte[]> images) {

@@ -15,7 +15,7 @@ public sealed class FoodDiaryDbContextFactory : IDesignTimeDbContextFactory<Food
         string connectionString =
             configuration.GetConnectionString("DefaultConnection") ??
             Environment.GetEnvironmentVariable("FOODDIARY_CONNECTION_STRING") ??
-            "Host=localhost;Database=food_diary;Username=postgres;Password=postgres";
+            "Host=localhost;Database=food_diary;Username=postgres";
 
         var optionsBuilder = new DbContextOptionsBuilder<FoodDiaryDbContext>();
         optionsBuilder.UseNpgsql(connectionString);

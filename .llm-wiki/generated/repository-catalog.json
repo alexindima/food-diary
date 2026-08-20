@@ -1166,22 +1166,6 @@
             "version": null
           },
           {
-            "name": "Microsoft.CodeAnalysis.Common",
-            "version": null
-          },
-          {
-            "name": "Microsoft.CodeAnalysis.CSharp",
-            "version": null
-          },
-          {
-            "name": "Microsoft.CodeAnalysis.CSharp.Workspaces",
-            "version": null
-          },
-          {
-            "name": "Microsoft.CodeAnalysis.Workspaces.MSBuild",
-            "version": null
-          },
-          {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
           },
@@ -1207,10 +1191,6 @@
           },
           {
             "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
-            "version": null
-          },
-          {
-            "name": "Newtonsoft.Json",
             "version": null
           },
           {

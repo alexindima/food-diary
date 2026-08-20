@@ -91,20 +91,18 @@ public class DomainModelGuardrailTests {
         string idsRoot = Path.Combine(domainRoot, "ValueObjects", "Ids");
 
         string[] violations = [.. SourceScanner.SourceFiles(domainRoot)
-            .SelectMany(path => File.ReadLines(path)
-                .Select((line, index) => new { path, index, line = line.Trim() }))
-            .Where(static entry =>
-                entry.line.StartsWith("public readonly record struct ", StringComparison.Ordinal) &&
-                entry.line.Contains("Id(Guid Value)", StringComparison.Ordinal))
-            .Where(entry => !entry.path.StartsWith(idsRoot, StringComparison.OrdinalIgnoreCase) ||
-                            !string.Equals(
-                                Path.GetFileNameWithoutExtension(entry.path),
-                                entry.line.Split(' ', StringSplitOptions.RemoveEmptyEntries)[4].Split('(')[0],
-                                StringComparison.Ordinal) ||
-                            !entry.line.Contains(": IEntityId<Guid>", StringComparison.Ordinal))
-            .Select(entry => string.Create(
+            .SelectMany(CSharpSyntaxReader.ReadTypeDeclarations)
+            .Where(static declaration => declaration.Name.EndsWith("Id", StringComparison.Ordinal))
+            .Where(declaration => !declaration.Path.StartsWith(idsRoot, StringComparison.OrdinalIgnoreCase) ||
+                                  !string.Equals(Path.GetFileNameWithoutExtension(declaration.Path), declaration.Name, StringComparison.Ordinal) ||
+                                  !declaration.IsRecordStruct ||
+                                  !declaration.IsPublic ||
+                                  !declaration.IsReadonly ||
+                                  !declaration.HasGuidValuePrimaryConstructor ||
+                                  !declaration.ImplementsGuidEntityId)
+            .Select(declaration => string.Create(
                 CultureInfo.InvariantCulture,
-                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+                $"{Path.GetRelativePath(root, declaration.Path)}:{declaration.Line}"))
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);

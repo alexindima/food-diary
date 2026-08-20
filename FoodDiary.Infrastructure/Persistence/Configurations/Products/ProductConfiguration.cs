@@ -25,8 +25,6 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
 
         builder.Property(e => e.Visibility).HasDefaultValue(Visibility.Public);
         builder.Property(e => e.ProductType).HasDefaultValue(ProductType.Unknown);
-        builder.Ignore(e => e.UsageCount);
-
         builder.HasOne<ImageAsset>()
             .WithMany()
             .HasForeignKey(e => e.ImageAssetId)

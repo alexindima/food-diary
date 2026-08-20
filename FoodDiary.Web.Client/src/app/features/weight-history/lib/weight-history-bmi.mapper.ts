@@ -31,13 +31,21 @@ export function buildBmiViewModel(heightCm: number | null, latestWeight: number 
 }
 
 export function calculateBmiValue(heightCm: number | null, latestWeight: number | null): number | null {
-    if (heightCm === null || latestWeight === null || heightCm <= 0 || latestWeight <= 0) {
+    if (
+        heightCm === null ||
+        latestWeight === null ||
+        !Number.isFinite(heightCm) ||
+        !Number.isFinite(latestWeight) ||
+        heightCm <= 0 ||
+        latestWeight <= 0
+    ) {
         return null;
     }
 
     const heightMeters = heightCm / CENTIMETERS_PER_METER;
     const bmi = latestWeight / (heightMeters * heightMeters);
-    return Math.round(bmi * WEIGHT_HISTORY_VALUE_ROUNDING_FACTOR) / WEIGHT_HISTORY_VALUE_ROUNDING_FACTOR;
+    const roundedBmi = Math.round(bmi * WEIGHT_HISTORY_VALUE_ROUNDING_FACTOR) / WEIGHT_HISTORY_VALUE_ROUNDING_FACTOR;
+    return Number.isFinite(roundedBmi) ? roundedBmi : null;
 }
 
 export function buildBmiSegments(): BmiSegmentViewModel[] {

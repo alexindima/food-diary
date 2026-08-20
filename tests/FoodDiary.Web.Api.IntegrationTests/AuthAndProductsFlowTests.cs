@@ -98,6 +98,25 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
     }
 
     [Fact]
+    public async Task Products_WithRefreshTokenAsBearer_ReturnsUnauthorized() {
+        HttpClient client = factory.CreateClient();
+        string email = $"api-tests-{Guid.NewGuid():N}@example.com";
+        HttpResponseMessage registerResponse = await client.PostAsJsonAsync(
+            "/api/v1/auth/register",
+            new RegisterHttpRequest(email, "Password123!", "en"));
+        Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
+
+        AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+        Assert.NotNull(authPayload);
+        Assert.False(string.IsNullOrWhiteSpace(authPayload.RefreshToken));
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.RefreshToken);
+        HttpResponseMessage response = await client.GetAsync("/api/v1/products");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
     public async Task UsersInfo_RequiresAuth_AndReturnsOkWithBearerToken() {
         HttpClient client = factory.CreateClient();
         HttpResponseMessage anonymousResponse = await client.GetAsync("/api/v1/users/info");

@@ -8,16 +8,16 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3391,
-    "symbols": 3401,
+    "sourceFiles": 3399,
+    "symbols": 3408,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 237,
+    "dependencyInjectionRegistrations": 238,
     "kinds": {
-      "class": 1766,
+      "class": 1770,
       "enum": 60,
-      "interface": 417,
+      "interface": 418,
       "record": 1041,
-      "record struct": 117
+      "record struct": 119
     },
     "roles": {
       "Command": 158,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 61,
-      "Other": 1293,
+      "Other": 1297,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -41,8 +41,8 @@
       "Request": 132,
       "Response": 174,
       "Service": 276,
-      "Validator": 200,
-      "ValueObject": 127,
+      "Validator": 201,
+      "ValueObject": 129,
       "WriteRepository": 46
     }
   },
@@ -573,6 +573,13 @@
       "line": 2
     },
     {
+      "name": "IAdminSsoCodeStore",
+      "kind": "interface",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs",
+      "line": 2
+    },
+    {
       "name": "IAdminSsoService",
       "kind": "interface",
       "role": "Service",
@@ -620,6 +627,13 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/JwtImpersonationContext.cs",
       "line": 4
+    },
+    {
+      "name": "JwtTokenUseClaimNames",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/JwtTokenUseClaimNames.cs",
+      "line": 2
     },
     {
       "name": "TelegramInitData",
@@ -12582,7 +12596,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandValidator.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "UpdateUserAppearanceCommand",
@@ -13968,7 +13982,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "User",
@@ -15021,6 +15035,20 @@
       "line": 6
     },
     {
+      "name": "ProfileHeightCm",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "FoodDiary.Domain/ValueObjects/ProfileHeightCm.cs",
+      "line": 4
+    },
+    {
+      "name": "ProfileWeightKg",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "FoodDiary.Domain/ValueObjects/ProfileWeightKg.cs",
+      "line": 4
+    },
+    {
       "name": "RecipeDetailsState",
       "kind": "record struct",
       "role": "ValueObject",
@@ -15228,7 +15256,14 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Infrastructure/Authentication/AdminSsoService.cs",
-      "line": 7
+      "line": 6
+    },
+    {
+      "name": "InMemoryAdminSsoCodeStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Authentication/InMemoryAdminSsoCodeStore.cs",
+      "line": 5
     },
     {
       "name": "JwtTokenGenerator",
@@ -21724,7 +21759,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 48
+      "line": 50
     },
     {
       "name": "ApiTelemetry",
@@ -21746,6 +21781,13 @@
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ImpersonationAccessGuardMiddleware.cs",
       "line": 10
+    },
+    {
+      "name": "JwtTokenUseValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Web.Api/Extensions/JwtTokenUseValidator.cs",
+      "line": 5
     },
     {
       "name": "RequestObservabilityMiddleware",
@@ -21907,6 +21949,13 @@
       "role": "Other",
       "path": "FoodDiary.Web.Api/Services/NotificationTestScheduler.cs",
       "line": 4
+    },
+    {
+      "name": "RedisAdminSsoCodeStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Web.Api/Services/RedisAdminSsoCodeStore.cs",
+      "line": 5
     },
     {
       "name": "RedisIdempotencyStore",
@@ -26365,46 +26414,53 @@
       "line": 19
     },
     {
+      "service": "IAdminSsoCodeStore",
+      "implementation": "InMemoryAdminSsoCodeStore",
+      "lifetime": "Singleton",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
+      "line": 20
+    },
+    {
       "service": "IAdminSsoService",
       "implementation": "AdminSsoService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 20
+      "line": 21
     },
     {
       "service": "ITelegramAssertionReplayGuard",
       "implementation": "TelegramAssertionReplayGuard",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 21
+      "line": 22
     },
     {
       "service": "IUserCleanupService",
       "implementation": "UserCleanupService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 22
+      "line": 23
     },
     {
       "service": "IEmailTemplateProvider",
       "implementation": "EmailTemplateProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 23
+      "line": 24
     },
     {
       "service": "IAiPromptProvider",
       "implementation": "AiPromptProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 24
+      "line": 25
     },
     {
       "service": "IAuditLogger",
       "implementation": "StructuredAuditLogger",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 25
+      "line": 26
     },
     {
       "service": "IBillingSubscriptionRepository",
@@ -27062,35 +27118,35 @@
       "implementation": "WearableTokenProtector",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 59
+      "line": 61
     },
     {
       "service": "INotificationTextRenderer",
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 102
+      "line": 104
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 103
+      "line": 105
     },
     {
       "service": "INotificationTestScheduler",
       "implementation": "NotificationTestScheduler",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 104
+      "line": 106
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 127
+      "line": 129
     },
     {
       "service": "IMailInboxReadinessChecker",

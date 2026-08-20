@@ -9,6 +9,8 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using DesiredWaistValueObject = FoodDiary.Domain.ValueObjects.DesiredWaistCm;
 using DesiredWeightValueObject = FoodDiary.Domain.ValueObjects.DesiredWeightKg;
+using ProfileHeightValueObject = FoodDiary.Domain.ValueObjects.ProfileHeightCm;
+using ProfileWeightValueObject = FoodDiary.Domain.ValueObjects.ProfileWeightKg;
 
 namespace FoodDiary.Domain.Entities.Users;
 
@@ -189,13 +191,23 @@ public sealed partial class User : AggregateRoot<UserId> {
         return DateTime.SpecifyKind(utcValue.Date, DateTimeKind.Utc);
     }
 
-    private static void EnsurePositive(double? value, string paramName) {
-        if (value.HasValue && (double.IsNaN(value.Value) || double.IsInfinity(value.Value))) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be a finite number.");
+    private static void EnsureProfileWeight(double? value, string paramName) {
+        ValidateProfileMeasurement(value, paramName, ProfileWeightValueObject.Create);
+    }
+
+    private static void EnsureProfileHeight(double? value, string paramName) {
+        ValidateProfileMeasurement(value, paramName, ProfileHeightValueObject.Create);
+    }
+
+    private static void ValidateProfileMeasurement<TValue>(double? value, string paramName, Func<double, TValue> factory) {
+        if (!value.HasValue) {
+            return;
         }
 
-        if (value is <= 0) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be positive.");
+        try {
+            _ = factory(value.Value);
+        } catch (ArgumentOutOfRangeException ex) {
+            throw new ArgumentOutOfRangeException(paramName, ex.Message);
         }
     }
 

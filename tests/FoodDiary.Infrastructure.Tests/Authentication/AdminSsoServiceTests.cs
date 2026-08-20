@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Authentication;
-using Microsoft.Extensions.Caching.Distributed;
 
 namespace FoodDiary.Infrastructure.Tests.Authentication;
 
@@ -22,8 +21,7 @@ public sealed class AdminSsoServiceTests {
 
     [Fact]
     public async Task ExchangeCodeAsync_WithValidCode_ReturnsUserId() {
-        var cache = new InMemoryDistributedCache();
-        AdminSsoService service = CreateService(cache);
+        AdminSsoService service = CreateService();
         var userId = UserId.New();
 
         AdminSsoCode created = await service.CreateCodeAsync(userId, CancellationToken.None);
@@ -53,8 +51,7 @@ public sealed class AdminSsoServiceTests {
 
     [Fact]
     public async Task ExchangeCodeAsync_ConsumesCode_SecondExchangeFails() {
-        var cache = new InMemoryDistributedCache();
-        AdminSsoService service = CreateService(cache);
+        AdminSsoService service = CreateService();
         var userId = UserId.New();
 
         AdminSsoCode created = await service.CreateCodeAsync(userId, CancellationToken.None);
@@ -64,40 +61,27 @@ public sealed class AdminSsoServiceTests {
         Assert.Null(secondExchange);
     }
 
-    private static AdminSsoService CreateService(InMemoryDistributedCache? cache = null) =>
-        new(cache ?? new InMemoryDistributedCache(), new StubDateTimeProvider());
+    [Fact]
+    public async Task ExchangeCodeAsync_WithConcurrentConsumers_AllowsExactlyOneExchange() {
+        AdminSsoService service = CreateService();
+        var userId = UserId.New();
+        AdminSsoCode created = await service.CreateCodeAsync(userId, CancellationToken.None);
+
+        UserId?[] results = await Task.WhenAll(Enumerable.Range(0, 32)
+            .Select(_ => service.ExchangeCodeAsync(created.Code, CancellationToken.None)));
+
+        UserId exchanged = Assert.Single(results.OfType<UserId>());
+        Assert.Equal(userId, exchanged);
+    }
+
+    private static AdminSsoService CreateService() {
+        var timeProvider = new StubDateTimeProvider();
+        return new AdminSsoService(new InMemoryAdminSsoCodeStore(timeProvider), timeProvider);
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : TimeProvider {
         public override DateTimeOffset GetUtcNow() => new(FixedUtcNow);
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class InMemoryDistributedCache : IDistributedCache {
-        private readonly Dictionary<string, byte[]> _store = new(StringComparer.Ordinal);
-
-        public byte[]? Get(string key) => _store.GetValueOrDefault(key);
-
-        public Task<byte[]?> GetAsync(string key, CancellationToken token = default) =>
-            Task.FromResult(_store.GetValueOrDefault(key));
-
-        public void Set(string key, byte[] value, DistributedCacheEntryOptions options) =>
-            _store[key] = value;
-
-        public Task SetAsync(string key, byte[] value, DistributedCacheEntryOptions options,
-            CancellationToken token = default) {
-            _store[key] = value;
-            return Task.CompletedTask;
-        }
-
-        public void Refresh(string key) { }
-        public Task RefreshAsync(string key, CancellationToken token = default) => Task.CompletedTask;
-
-        public void Remove(string key) => _store.Remove(key);
-
-        public Task RemoveAsync(string key, CancellationToken token = default) {
-            _store.Remove(key);
-            return Task.CompletedTask;
-        }
-    }
 }

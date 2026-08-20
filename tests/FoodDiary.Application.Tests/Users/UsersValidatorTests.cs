@@ -123,6 +123,26 @@ public class UsersValidatorTests {
     }
 
     [Fact]
+    public async Task UpdateUser_WithExcessiveWeight_HasError() {
+        var validator = new UpdateUserCommandValidator();
+        var command = new UpdateUserCommand(Guid.NewGuid(), Username: null, FirstName: null, LastName: null, BirthDate: null, Gender: null, WeightKg: 500.0001, HeightCm: null, ActivityLevel: null, StepGoal: null, HydrationGoal: null, Language: null, Theme: null, UiStyle: null, PushNotificationsEnabled: null, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, ProfileImage: null, ProfileImageAssetId: null, DashboardLayout: null, IsActive: null);
+
+        TestValidationResult<UpdateUserCommand> result = await validator.TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.WeightKg);
+    }
+
+    [Fact]
+    public async Task UpdateUser_WithExcessiveHeight_HasError() {
+        var validator = new UpdateUserCommandValidator();
+        var command = new UpdateUserCommand(Guid.NewGuid(), Username: null, FirstName: null, LastName: null, BirthDate: null, Gender: null, WeightKg: null, HeightCm: 300.0001, ActivityLevel: null, StepGoal: null, HydrationGoal: null, Language: null, Theme: null, UiStyle: null, PushNotificationsEnabled: null, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, ProfileImage: null, ProfileImageAssetId: null, DashboardLayout: null, IsActive: null);
+
+        TestValidationResult<UpdateUserCommand> result = await validator.TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.HeightCm);
+    }
+
+    [Fact]
     public async Task SetPassword_WithNullUserId_HasError() {
         TestValidationResult<SetPasswordCommand> result = await new SetPasswordCommandValidator().TestValidateAsync(
             new SetPasswordCommand(UserId: null, "new-password"));

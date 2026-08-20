@@ -17,6 +17,7 @@ public static partial class DependencyInjection {
     private static void AddAuthenticationInfrastructure(this IServiceCollection services) {
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
+        services.AddSingleton<IAdminSsoCodeStore, InMemoryAdminSsoCodeStore>();
         services.AddSingleton<IAdminSsoService, AdminSsoService>();
         services.AddScoped<ITelegramAssertionReplayGuard, TelegramAssertionReplayGuard>();
         services.AddScoped<IUserCleanupService, UserCleanupService>();

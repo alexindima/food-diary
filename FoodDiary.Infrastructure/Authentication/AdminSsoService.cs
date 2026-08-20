@@ -1,23 +1,20 @@
 using System.Security.Cryptography;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Domain.ValueObjects.Ids;
-using Microsoft.Extensions.Caching.Distributed;
 
 namespace FoodDiary.Infrastructure.Authentication;
 
-public sealed class AdminSsoService(IDistributedCache cache, TimeProvider dateTimeProvider) : IAdminSsoService {
-    private const string CachePrefix = "admin-sso:";
+public sealed class AdminSsoService(IAdminSsoCodeStore codeStore, TimeProvider dateTimeProvider) : IAdminSsoService {
     private static readonly TimeSpan CodeTtl = TimeSpan.FromMinutes(2);
 
     public async Task<AdminSsoCode> CreateCodeAsync(UserId userId, CancellationToken cancellationToken = default) {
         string code = GenerateCode();
         DateTime expiresAt = dateTimeProvider.GetUtcNow().UtcDateTime.Add(CodeTtl);
-        string key = CachePrefix + code;
 
-        await cache.SetStringAsync(
-            key,
+        await codeStore.StoreAsync(
+            code,
             userId.Value.ToString(),
-            new DistributedCacheEntryOptions { AbsoluteExpiration = new DateTimeOffset(expiresAt, TimeSpan.Zero) },
+            CodeTtl,
             cancellationToken).ConfigureAwait(false);
 
         return new AdminSsoCode(code, expiresAt);
@@ -28,13 +25,10 @@ public sealed class AdminSsoService(IDistributedCache cache, TimeProvider dateTi
             return null;
         }
 
-        string key = CachePrefix + code;
-        string? value = await cache.GetStringAsync(key, cancellationToken).ConfigureAwait(false);
+        string? value = await codeStore.ConsumeAsync(code, cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(value)) {
             return null;
         }
-
-        await cache.RemoveAsync(key, cancellationToken).ConfigureAwait(false);
 
         return Guid.TryParse(value, out Guid id) ? new UserId(id) : null;
     }

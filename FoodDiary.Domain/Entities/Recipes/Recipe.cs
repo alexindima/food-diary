@@ -40,7 +40,6 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public double? ManualFiber { get; private set; }
     public double? ManualAlcohol { get; private set; }
     public Visibility Visibility { get; private set; } = Visibility.Public;
-    public int UsageCount { get; private set; }
 
     public UserId UserId { get; private set; }
     public User User { get; private set; } = null!;

@@ -46,12 +46,13 @@ export function buildWhtViewModel(heightCm: number | null, waistCm: number | nul
 }
 
 export function calculateWhtValue(heightCm: number | null, waistCm: number | null): number | null {
-    if (heightCm === null || waistCm === null || heightCm <= 0 || waistCm <= 0) {
+    if (heightCm === null || waistCm === null || !Number.isFinite(heightCm) || !Number.isFinite(waistCm) || heightCm <= 0 || waistCm <= 0) {
         return null;
     }
 
     const ratio = waistCm / heightCm;
-    return Math.round(ratio * WAIST_HISTORY_RATIO_ROUNDING_FACTOR) / WAIST_HISTORY_RATIO_ROUNDING_FACTOR;
+    const roundedRatio = Math.round(ratio * WAIST_HISTORY_RATIO_ROUNDING_FACTOR) / WAIST_HISTORY_RATIO_ROUNDING_FACTOR;
+    return Number.isFinite(roundedRatio) ? roundedRatio : null;
 }
 
 export function buildWhtSegments(): WhtSegmentViewModel[] {

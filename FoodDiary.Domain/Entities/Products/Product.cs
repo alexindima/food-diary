@@ -45,7 +45,6 @@ public sealed class Product : AggregateRoot<ProductId> {
     public double CarbsPerBase { get; private set; }
     public double FiberPerBase { get; private set; }
     public double AlcoholPerBase { get; private set; }
-    public int UsageCount { get; private set; }
     public Visibility Visibility { get; private set; } = Visibility.Public;
     public int? UsdaFdcId { get; private set; }
 

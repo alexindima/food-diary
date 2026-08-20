@@ -33,6 +33,7 @@ using FoodDiary.Application.ContentReports;
 using FoodDiary.Application.Gamification;
 using FoodDiary.Application.Export;
 using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
@@ -42,6 +43,7 @@ using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Resources.Notifications;
 using FoodDiary.Resources.Reports;
 using FoodDiary.Web.Api.Services;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using StackExchange.Redis;
 
 namespace FoodDiary.Web.Api.Extensions;
@@ -125,6 +127,7 @@ public static class ApiServiceCollectionExtensions {
                 options.ConnectionMultiplexerFactory = () => Task.FromResult(redisConnection.Value);
             });
             services.AddSingleton<IIdempotencyStore, RedisIdempotencyStore>();
+            services.Replace(ServiceDescriptor.Singleton<IAdminSsoCodeStore, RedisAdminSsoCodeStore>());
 
             return services;
         }

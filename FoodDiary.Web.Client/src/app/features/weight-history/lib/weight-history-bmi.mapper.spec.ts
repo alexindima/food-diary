@@ -29,6 +29,10 @@ describe('weight history BMI mapper', () => {
         expect(calculateBmiValue(HEIGHT_CM, null)).toBeNull();
         expect(calculateBmiValue(0, WEIGHT_KG)).toBeNull();
         expect(calculateBmiValue(HEIGHT_CM, 0)).toBeNull();
+        expect(calculateBmiValue(Number.NaN, WEIGHT_KG)).toBeNull();
+        expect(calculateBmiValue(HEIGHT_CM, Number.POSITIVE_INFINITY)).toBeNull();
+        expect(calculateBmiValue(Number.MIN_VALUE, WEIGHT_KG)).toBeNull();
+        expect(calculateBmiValue(HEIGHT_CM, Number.MAX_VALUE)).toBeNull();
     });
 
     it('builds status info by BMI range', () => {

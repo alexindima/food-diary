@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1048,
+    "contracts": 1049,
     "ambiguousContracts": 3,
-    "consumerEdges": 7381,
-    "productionConsumerEdges": 4462,
-    "testConsumerEdges": 2919,
-    "consumedContracts": 1048,
+    "consumerEdges": 7387,
+    "productionConsumerEdges": 4467,
+    "testConsumerEdges": 2920,
+    "consumedContracts": 1049,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -6295,6 +6295,22 @@
       ],
       "definitionPaths": [
         "FoodDiary.Application.Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "IAdminSsoCodeStore",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
       ],
       "ambiguous": false
     },
@@ -42617,6 +42633,84 @@
       "referenceCount": 1
     },
     {
+      "contract": "IAdminSsoCodeStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Authentication/AdminSsoService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminSsoCodeStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Authentication/InMemoryAdminSsoCodeStore.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminSsoCodeStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminSsoCodeStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminSsoCodeStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Web.Api/Services/RedisAdminSsoCodeStore.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminSsoCodeStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Web.Api.Tests/Extensions/ExtensionsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IAdminSsoService",
       "roles": [
         "Service"
@@ -59161,7 +59255,7 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/DomainModelGuardrailTests.cs",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/CSharpSyntaxReader.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -101919,7 +102013,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/AuthAndProductsFlowTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 6
     },
     {
       "contract": "RegisterHttpRequest",
@@ -109602,7 +109696,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 8
     },
     {
       "contract": "UpdateUserCommand",

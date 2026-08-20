@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using System.Diagnostics;
 using System.Reflection;
 using System.Security.Claims;
@@ -7,6 +8,7 @@ using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Telemetry;
 using FoodDiary.Web.Api.Extensions;
+using FoodDiary.Web.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -222,6 +224,10 @@ public sealed class ExtensionsTests {
         RedisCacheOptions options = provider.GetRequiredService<IOptions<RedisCacheOptions>>().Value;
         Assert.Equal("localhost:6379", options.Configuration);
         Assert.Equal("fooddiary:", options.InstanceName);
+        ServiceDescriptor ssoStoreDescriptor = Assert.Single(
+            services,
+            descriptor => descriptor.ServiceType == typeof(IAdminSsoCodeStore));
+        Assert.Equal(typeof(RedisAdminSsoCodeStore), ssoStoreDescriptor.ImplementationType);
     }
 
     [Fact]

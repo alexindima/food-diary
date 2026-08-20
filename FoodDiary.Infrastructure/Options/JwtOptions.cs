@@ -27,6 +27,7 @@ public sealed class JwtOptions {
     public static bool HasValidSecretKey(JwtOptions options) {
         string value = options.SecretKey.Trim();
         return value.Length >= 32 &&
+               value.Distinct().Take(12).Count() >= 12 &&
                !value.Equals("change-me-via-user-secrets-or-env-32", StringComparison.OrdinalIgnoreCase) &&
                !value.Equals("change-me-local-jwt-secret-min-32", StringComparison.OrdinalIgnoreCase) &&
                !value.Equals("your-32-character-or-longer-secret-key", StringComparison.OrdinalIgnoreCase);

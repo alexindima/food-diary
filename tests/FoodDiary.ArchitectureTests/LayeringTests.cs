@@ -234,10 +234,6 @@ public class LayeringTests {
         string[] allowedPackages = [
             "BCrypt.Net-Next",
             "Microsoft.AspNetCore.DataProtection",
-            "Microsoft.CodeAnalysis.CSharp",
-            "Microsoft.CodeAnalysis.CSharp.Workspaces",
-            "Microsoft.CodeAnalysis.Common",
-            "Microsoft.CodeAnalysis.Workspaces.MSBuild",
             "Microsoft.EntityFrameworkCore",
             "Microsoft.EntityFrameworkCore.Design",
             "Microsoft.Extensions.Configuration",
@@ -245,7 +241,6 @@ public class LayeringTests {
             "Microsoft.Extensions.Configuration.UserSecrets",
             "Microsoft.Extensions.Http",
             "Microsoft.Extensions.Options.ConfigurationExtensions",
-            "Newtonsoft.Json",
             "Npgsql.EntityFrameworkCore.PostgreSQL",
             "QuestPDF",
             "SkiaSharp",

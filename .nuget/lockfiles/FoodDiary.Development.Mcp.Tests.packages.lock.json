@@ -10,9 +10,9 @@
       },
       "Meziantou.Analyzer": {
         "type": "Direct",
-        "requested": "[3.0.167, )",
-        "resolved": "3.0.167",
-        "contentHash": "+89C4lOxpn9fYGApExlQ+UZlxxxIjmCc7budUZnqi2AZPVjNMkMn/XU2zURaPczGHdLt7jLz/B/gv3nfdAUzZw=="
+        "requested": "[3.0.172, )",
+        "resolved": "3.0.172",
+        "contentHash": "6Kkqgaakp07Trl2Zz6YvqmeuTj4Q0qQe8o2AvrYvX28XH7n3wr8VBP/gvzbnXxgOirnd5n48craYnSLcMLe2tw=="
       },
       "Microsoft.NET.Test.Sdk": {
         "type": "Direct",
@@ -344,7 +344,7 @@
       },
       "Microsoft.Extensions.Configuration.Json": {
         "type": "CentralTransitive",
-        "requested": "[10.0.10, )",
+        "requested": "[10.0.11, )",
         "resolved": "10.0.10",
         "contentHash": "uvJ6sHwjgrkMEJOgiC76G0mcZGXerwyyWkwX34EOjCbxKG6TCtfAoqDKAMsCvEBf9HxjlGQEgqsSMOGCmGBf+A==",
         "dependencies": {
@@ -356,7 +356,7 @@
       },
       "Microsoft.Extensions.Configuration.UserSecrets": {
         "type": "CentralTransitive",
-        "requested": "[10.0.10, )",
+        "requested": "[10.0.11, )",
         "resolved": "10.0.10",
         "contentHash": "1s1sKFTk/Foam64JY6+m/diH8drL3Wx6V3gtSd5v1IEZtszZYyc1pW8uRnMblzpNiR0l0t8gGk7tXj3xHzFgdg==",
         "dependencies": {
