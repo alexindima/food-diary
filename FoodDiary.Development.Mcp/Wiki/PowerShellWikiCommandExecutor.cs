@@ -112,6 +112,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
                 StandardErrorEncoding = Encoding.UTF8,
             },
         };
+        GitProcessEnvironment.ClearLocalRepositoryVariables(process.StartInfo);
 
         process.StartInfo.ArgumentList.Add("-NoLogo");
         process.StartInfo.ArgumentList.Add("-NoProfile");

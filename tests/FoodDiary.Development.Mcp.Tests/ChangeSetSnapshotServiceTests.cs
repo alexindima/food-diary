@@ -97,6 +97,8 @@ public sealed class ChangeSetSnapshotServiceTests {
         foreach (string argument in arguments) {
             process.StartInfo.ArgumentList.Add(argument);
         }
+        FoodDiary.Development.Mcp.Infrastructure.GitProcessEnvironment
+            .ClearLocalRepositoryVariables(process.StartInfo);
         process.Start();
         string output = process.StandardOutput.ReadToEnd();
         string error = process.StandardError.ReadToEnd();

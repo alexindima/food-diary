@@ -72,6 +72,7 @@ internal static class RepositorySourceFingerprint {
                 CreateNoWindow = true,
             },
         };
+        GitProcessEnvironment.ClearLocalRepositoryVariables(process.StartInfo);
         foreach (string argument in arguments) {
             process.StartInfo.ArgumentList.Add(argument);
         }

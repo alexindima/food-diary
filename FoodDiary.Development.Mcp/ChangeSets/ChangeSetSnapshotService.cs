@@ -191,6 +191,7 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
                 CreateNoWindow = true,
             },
         };
+        GitProcessEnvironment.ClearLocalRepositoryVariables(process.StartInfo);
         process.StartInfo.ArgumentList.Add("-c");
         process.StartInfo.ArgumentList.Add("core.fsmonitor=false");
         foreach (string argument in arguments) {

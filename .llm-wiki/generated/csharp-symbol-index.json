@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3404,
-    "symbols": 3412,
+    "sourceFiles": 3405,
+    "symbols": 3413,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 238,
     "kinds": {
-      "class": 1774,
+      "class": 1775,
       "enum": 60,
       "interface": 418,
       "record": 1041,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 61,
-      "Other": 1300,
+      "Other": 1301,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -13297,6 +13297,13 @@
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Infrastructure/DevelopmentMcpSourceFingerprint.cs",
       "line": 5
+    },
+    {
+      "name": "GitProcessEnvironment",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Infrastructure/GitProcessEnvironment.cs",
+      "line": 4
     },
     {
       "name": "RepositoryRootResolver",

@@ -9,6 +9,27 @@ $sourceRepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $activeSnapshotRoot = [string]$env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 
+foreach ($variableName in @(
+    'GIT_ALTERNATE_OBJECT_DIRECTORIES'
+    'GIT_COMMON_DIR'
+    'GIT_CONFIG'
+    'GIT_CONFIG_COUNT'
+    'GIT_CONFIG_PARAMETERS'
+    'GIT_DIR'
+    'GIT_GRAFT_FILE'
+    'GIT_IMPLICIT_WORK_TREE'
+    'GIT_INDEX_FILE'
+    'GIT_INTERNAL_SUPER_PREFIX'
+    'GIT_NO_REPLACE_OBJECTS'
+    'GIT_OBJECT_DIRECTORY'
+    'GIT_PREFIX'
+    'GIT_REPLACE_REF_BASE'
+    'GIT_SHALLOW_FILE'
+    'GIT_WORK_TREE'
+)) {
+    Remove-Item -LiteralPath "Env:$variableName" -ErrorAction SilentlyContinue
+}
+
 function Get-RepositoryRelativePath {
     param(
         [Parameter(Mandatory)][string]$RepositoryRoot,
@@ -312,6 +333,10 @@ $snapshotLockPath = Join-Path $snapshotParent "$snapshotFingerprint.lock"
 $snapshotLock = $null
 $removeSnapshot = $false
 $snapshotCreated = $false
+$requiredSnapshotFiles = @(
+    '.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1'
+    '.llm-wiki/tools/LlmWikiGitPaths.ps1'
+)
 $previousSnapshotRoot = $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT
 $previousSourceRoot = $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT
 try {
@@ -327,12 +352,24 @@ try {
     }
     $snapshotIsReady = (Test-Path -LiteralPath $readyPath -PathType Leaf) -and
         (Test-Path -LiteralPath (Join-Path $snapshotRoot '.git'))
+    if ($snapshotIsReady) {
+        foreach ($requiredPath in $requiredSnapshotFiles) {
+            $sourceRequiredPath = Join-Path $sourceRepositoryRoot $requiredPath
+            $snapshotRequiredPath = Join-Path $snapshotRoot $requiredPath
+            if (-not (Test-Path -LiteralPath $snapshotRequiredPath -PathType Leaf) -or
+                (Get-FileHashOrMissing $snapshotRequiredPath) -cne (Get-FileHashOrMissing $sourceRequiredPath)) {
+                $snapshotIsReady = $false
+                break
+            }
+        }
+    }
     if (-not $snapshotIsReady) {
         $snapshotPrefix = [IO.Path]::GetFullPath($snapshotParent).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
         $resolvedSnapshotRoot = [IO.Path]::GetFullPath($snapshotRoot)
         if (-not $resolvedSnapshotRoot.StartsWith($snapshotPrefix, [StringComparison]::OrdinalIgnoreCase)) {
             throw "Refusing to prepare a read-only snapshot outside its cache root: $resolvedSnapshotRoot"
         }
+        Remove-Item -LiteralPath $readyPath -Force -ErrorAction SilentlyContinue
         if (Test-Path -LiteralPath $snapshotRoot) { Remove-Item -LiteralPath $snapshotRoot -Recurse -Force }
         $head = (& git -C $sourceRepositoryRoot rev-parse HEAD).Trim()
         if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve HEAD for the isolated read-only snapshot clone.' }

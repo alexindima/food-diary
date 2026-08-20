@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4420,
+    "productionFiles": 4421,
     "criticalSymbols": 568,
     "criticalSymbolsWithTestReferences": 542,
     "criticalSymbolsWithoutTestReferences": 26,
@@ -246,11 +246,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
-      "nonBlankLines": 306,
+      "nonBlankLines": 307,
       "decisionPoints": 46,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 75.12
+      "structuralRiskScore": 75.14
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
@@ -15912,11 +15912,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
-      "nonBlankLines": 306,
+      "nonBlankLines": 307,
       "decisionPoints": 46,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 75.12
+      "structuralRiskScore": 75.14
     },
     {
       "path": "FoodDiary.Development.Mcp/ChangeSets/IChangeSetSnapshotService.cs",
@@ -15991,6 +15991,14 @@
       "structuralRiskScore": 5.32
     },
     {
+      "path": "FoodDiary.Development.Mcp/Infrastructure/GitProcessEnvironment.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.04
+    },
+    {
       "path": "FoodDiary.Development.Mcp/Infrastructure/RepositoryRootResolver.cs",
       "nonBlankLines": 31,
       "decisionPoints": 4,
@@ -16000,11 +16008,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Infrastructure/RepositorySourceFingerprint.cs",
-      "nonBlankLines": 117,
+      "nonBlankLines": 118,
       "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.34
+      "structuralRiskScore": 20.36
     },
     {
       "path": "FoodDiary.Development.Mcp/Program.cs",
@@ -16080,11 +16088,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/PowerShellWikiCommandExecutor.cs",
-      "nonBlankLines": 228,
+      "nonBlankLines": 229,
       "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 36.06
+      "structuralRiskScore": 36.08
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandRequest.cs",

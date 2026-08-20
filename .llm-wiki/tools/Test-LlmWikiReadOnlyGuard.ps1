@@ -13,6 +13,7 @@ $dirtySentinel = Join-Path $repositoryRoot 'read-only-guard-worktree-smoke.tmp'
 $cleanSourceRelative = 'Shared/FoodDiary.Results/Result.cs'
 $cleanSource = Join-Path $repositoryRoot $cleanSourceRelative
 $cleanRepositoryRoot = Join-Path $fixtureRoot 'clean-repository'
+$cleanSnapshotParent = $null
 $writerJob = $null
 
 try {
@@ -88,6 +89,38 @@ Start-Sleep -Milliseconds 750
         throw 'Read-only guard did not preserve output when the scoped workspace overlay was empty.'
     }
 
+    $cleanRepositoryPathHasher = [Security.Cryptography.SHA256]::Create()
+    try {
+        $cleanRepositoryPathHash = $cleanRepositoryPathHasher.ComputeHash(
+            [Text.Encoding]::UTF8.GetBytes(([IO.Path]::GetFullPath($cleanRepositoryRoot)).ToLowerInvariant()))
+    } finally {
+        $cleanRepositoryPathHasher.Dispose()
+    }
+    $cleanRepositorySnapshotKey = (
+        ([BitConverter]::ToString($cleanRepositoryPathHash) -replace '-', '').ToLowerInvariant()
+    ).Substring(0, 16)
+    $snapshotTempRoot = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
+        Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)) 'Temp'
+    } else {
+        [IO.Path]::GetTempPath()
+    }
+    $cleanSnapshotParent = Join-Path $snapshotTempRoot "fooddiary-llm-wiki-read-only/$cleanRepositorySnapshotKey"
+    $cleanReadyFile = Get-ChildItem -LiteralPath $cleanSnapshotParent -Filter '*.ready' -File |
+        Sort-Object LastWriteTimeUtc -Descending |
+        Select-Object -First 1
+    if (-not $cleanReadyFile) { throw 'Read-only guard did not publish the clean snapshot readiness marker.' }
+    $cleanSnapshotRoot = Join-Path $cleanSnapshotParent $cleanReadyFile.BaseName
+    $cachedGuardPath = Join-Path $cleanSnapshotRoot '.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1'
+    Remove-Item -LiteralPath $cachedGuardPath -Force
+
+    $recoveredOutput = @(& (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
+        -ToolPath $cleanSafeTool `
+        -ToolArguments @{ ProposedPath = @('CleanScope') })
+    if ('read-only-clean-control' -notin $recoveredOutput -or
+        -not (Test-Path -LiteralPath $cachedGuardPath -PathType Leaf)) {
+        throw 'Read-only guard did not rebuild a cached snapshot whose required tooling was missing.'
+    }
+
     $productOnlyPlan = & (Join-Path $PSScriptRoot 'Invoke-LlmWikiAffectedSmoke.ps1') `
         -ChangedPath 'FoodDiary.Application/Users/Example.cs' `
         -Plan `
@@ -109,7 +142,10 @@ Start-Sleep -Milliseconds 750
     }
     Remove-Item -LiteralPath $protectedSentinel -Force -ErrorAction SilentlyContinue
     Remove-Item -LiteralPath $dirtySentinel -Force -ErrorAction SilentlyContinue
+    if ($cleanSnapshotParent) {
+        Remove-Item -LiteralPath $cleanSnapshotParent -Recurse -Force -ErrorAction SilentlyContinue
+    }
     Remove-Item -LiteralPath $fixtureRoot -Recurse -Force -ErrorAction SilentlyContinue
 }
 
-Write-Host 'LLM Wiki read-only guard regression passed: isolated mutations are rejected, concurrent dirty-file writes survive, clean sources remain untouched, and safe output is preserved.'
+Write-Host 'LLM Wiki read-only guard regression passed: isolated mutations are rejected, concurrent dirty-file writes survive, clean sources remain untouched, corrupt caches recover, and safe output is preserved.'

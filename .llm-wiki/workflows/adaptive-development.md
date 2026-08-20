@@ -51,7 +51,10 @@ fails the command, and discards the poisoned snapshot; it never restores or
 overwrites files in the caller's worktree. New snapshots are standalone shared
 clones under the OS-local temp directory, so they do not consume the repository's
 linked-worktree registrations. Safe snapshots are reused and bounded by a
-retention policy. When `-PlannedPath` is explicit, research and planning overlay
+retention policy. Git-local hook variables are cleared before addressing an
+explicit repository root, and a cached snapshot is rebuilt when its required
+guard tooling is missing or differs from the source checkout. When `-PlannedPath`
+is explicit, research and planning overlay
 and fingerprint only that scope plus Wiki tooling dependencies instead of
 inheriting an unrelated session baseline.
 A clean worktree, or a worktree whose changes are all outside that explicit

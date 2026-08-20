@@ -813,13 +813,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "38477d64aa49c31150895cfc3f3a005aa7c821be6ca1feee8e6b502ec20aff34"
+          "sha256": "2de5653d883755c9c74b1a3ce236a9120d429e813d927ef837804d438c08c7dc"
         }
       ],
-      "reason": "The regenerated quality index was reviewed against MailInbox presentation, infrastructure, integration, architecture, and Docker verification results.",
+      "reason": "Git process environment isolation is covered by the inherited-hook-environment change-set regression and the complete Development MCP test suite.",
       "baseRef": "HEAD",
-      "gitHead": "134d982543eb510e337fe44e21dc73f15e96d4cf",
-      "reviewedAtUtc": "2026-08-20T01:46:55.9505394Z"
+      "gitHead": "169d3c6cd9413c67ab91af697a979633585368e7",
+      "reviewedAtUtc": "2026-08-20T05:58:04.7067758Z"
     },
     {
       "pageId": "workflow-release-readiness",
