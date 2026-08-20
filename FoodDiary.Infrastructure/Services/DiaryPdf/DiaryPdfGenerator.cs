@@ -10,12 +10,24 @@ internal sealed partial class DiaryPdfGenerator(
     HttpClient httpClient,
     IDiaryPdfReportTextProvider textProvider,
     TimeProvider timeProvider) : IDiaryPdfGenerator {
+    private readonly TimeSpan _remoteImageDownloadTimeout = DefaultRemoteImageDownloadTimeout;
+    private readonly TimeSpan _remoteImageReportTimeout = DefaultRemoteImageReportTimeout;
+
     internal DiaryPdfGenerator()
         : this(new HttpClient { Timeout = TimeSpan.FromSeconds(5) }, new DefaultDiaryPdfReportTextProvider(), TimeProvider.System) {
     }
 
     internal DiaryPdfGenerator(HttpClient httpClient)
         : this(httpClient, new DefaultDiaryPdfReportTextProvider(), TimeProvider.System) {
+    }
+
+    internal DiaryPdfGenerator(
+        HttpClient httpClient,
+        TimeSpan remoteImageDownloadTimeout,
+        TimeSpan remoteImageReportTimeout)
+        : this(httpClient) {
+        _remoteImageDownloadTimeout = EnsurePositiveTimeout(remoteImageDownloadTimeout, nameof(remoteImageDownloadTimeout));
+        _remoteImageReportTimeout = EnsurePositiveTimeout(remoteImageReportTimeout, nameof(remoteImageReportTimeout));
     }
 
     public async Task<byte[]> GenerateAsync(
@@ -59,4 +71,9 @@ internal sealed partial class DiaryPdfGenerator(
 
         return document.GeneratePdf();
     }
+
+    private static TimeSpan EnsurePositiveTimeout(TimeSpan timeout, string parameterName) =>
+        timeout > TimeSpan.Zero
+            ? timeout
+            : throw new ArgumentOutOfRangeException(parameterName, timeout, "Timeout must be positive.");
 }

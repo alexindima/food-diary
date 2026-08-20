@@ -18,6 +18,7 @@ public static partial class DependencyInjection {
             .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
                 AllowAutoRedirect = false,
                 ConnectCallback = ConnectToAllowedRemoteImageEndpointAsync,
+                UseProxy = false,
             });
 
     }
@@ -26,7 +27,7 @@ public static partial class DependencyInjection {
         SocketsHttpConnectionContext context,
         CancellationToken cancellationToken) {
         IPAddress[] addresses = await ResolveRemoteImageHostAddressesAsync(context.DnsEndPoint.Host, cancellationToken).ConfigureAwait(false);
-        IPAddress publicAddress = addresses.FirstOrDefault(IsPublicAddress) ?? throw new HttpRequestException("Remote image host resolves only to private or loopback addresses.");
+        IPAddress publicAddress = addresses.FirstOrDefault(RemoteImageAddressPolicy.IsPublicAddress) ?? throw new HttpRequestException("Remote image host resolves only to private or loopback addresses.");
         return await ConnectRemoteImageSocketAsync(publicAddress, context.DnsEndPoint.Port, cancellationToken).ConfigureAwait(false);
     }
 
@@ -47,50 +48,18 @@ public static partial class DependencyInjection {
         }
     }
 
-    private static bool IsPublicAddress(IPAddress address) {
-        if (IPAddress.IsLoopback(address) ||
-            address.Equals(IPAddress.Any) ||
-            address.Equals(IPAddress.IPv6Any) ||
-            address.Equals(IPAddress.None) ||
-            address.Equals(IPAddress.IPv6None)) {
-            return false;
-        }
-
-        if (address.IsIPv4MappedToIPv6) {
-            address = address.MapToIPv4();
-        }
-
-        return IsPublicAddressCore(
-            address.AddressFamily,
-            address.GetAddressBytes(),
-            address.IsIPv6LinkLocal,
-            address.IsIPv6SiteLocal,
-            address.IsIPv6Multicast);
-    }
+    private static bool IsPublicAddress(IPAddress address) => RemoteImageAddressPolicy.IsPublicAddress(address);
 
     internal static bool IsPublicAddressCore(
         AddressFamily addressFamily,
         byte[] bytes,
         bool isIPv6LinkLocal,
         bool isIPv6SiteLocal,
-        bool isIPv6Multicast) {
-        switch (addressFamily) {
-            case AddressFamily.InterNetwork:
-                return bytes[0] != 10 &&
-                       bytes[0] != 127 &&
-                       !(bytes[0] == 172 && bytes[1] is >= 16 and <= 31) &&
-                       !(bytes[0] == 192 && bytes[1] == 168) &&
-                       !(bytes[0] == 169 && bytes[1] == 254) &&
-                       !(bytes[0] == 100 && bytes[1] is >= 64 and <= 127) &&
-                       bytes[0] != 0 &&
-                       !(bytes[0] >= 224);
-            case AddressFamily.InterNetworkV6:
-                return !isIPv6LinkLocal &&
-                       !isIPv6SiteLocal &&
-                       !isIPv6Multicast &&
-                       (bytes[0] & 0xfe) != 0xfc;
-            default:
-                return false;
-        }
-    }
+        bool isIPv6Multicast) =>
+        RemoteImageAddressPolicy.IsPublicAddressCore(
+            addressFamily,
+            bytes,
+            isIPv6LinkLocal,
+            isIPv6SiteLocal,
+            isIPv6Multicast);
 }

@@ -27,4 +27,6 @@ internal sealed partial class DiaryPdfGenerator {
     private const int MaxMealImagesPerReport = 60;
     private const int MaxIngredientImagesPerCollage = 4;
     private const int MaxParallelMealImageDownloads = 6;
+    private static readonly TimeSpan DefaultRemoteImageDownloadTimeout = TimeSpan.FromSeconds(5);
+    private static readonly TimeSpan DefaultRemoteImageReportTimeout = TimeSpan.FromSeconds(30);
 }

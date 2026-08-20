@@ -52,7 +52,13 @@ public sealed class EmailOutboxTests {
     [Fact]
     public async Task ProcessDueAsync_WhenSendSucceeds_MarksMessageProcessed() {
         await using FoodDiaryDbContext context = CreateContext();
-        var queuedMessage = EmailOutboxMessage.Create(CreateEmailMessage(), Now.AddMinutes(-1));
+        var queuedMessage = EmailOutboxMessage.Create(
+            CreateEmailMessage(
+                toAddresses: ["account-owner@example.com"],
+                subject: "Reset your account",
+                htmlBody: "<p>Temporary password: temporary-secret; token: reset-token</p>",
+                textBody: "Temporary password: temporary-secret; token: reset-token"),
+            Now.AddMinutes(-1));
         context.EmailOutbox.Add(queuedMessage);
         await context.SaveChangesAsync();
         var transport = new RecordingEmailTransport();
@@ -68,9 +74,15 @@ public sealed class EmailOutboxTests {
         EmailOutboxMessage message = Assert.Single(context.EmailOutbox);
         Assert.Multiple(
             () => Assert.Equal(1, processed),
-            () => Assert.Equal("Hello", Assert.Single(transport.Messages).Subject),
+            () => Assert.Equal("Reset your account", Assert.Single(transport.Messages).Subject),
+            () => Assert.Equal(["account-owner@example.com"], transport.Messages[0].ToAddresses),
+            () => Assert.Contains("temporary-secret", transport.Messages[0].HtmlBody, StringComparison.Ordinal),
             () => Assert.Equal($"fooddiary-email-outbox:{queuedMessage.Id:N}", transport.Messages[0].IdempotencyKey),
             () => Assert.NotNull(message.ProcessedOnUtc),
+            () => Assert.Equal("[]", message.ToAddressesJson),
+            () => Assert.Empty(message.Subject),
+            () => Assert.Empty(message.HtmlBody),
+            () => Assert.Null(message.TextBody),
             () => Assert.Null(message.LockedUntilUtc),
             () => Assert.Null(message.LockedBy),
             () => Assert.Null(message.LastError));
@@ -209,13 +221,18 @@ public sealed class EmailOutboxTests {
         int processed = await processor.ProcessDueAsync(batchSize: 10, CancellationToken.None);
 
         EmailOutboxMessage stored = Assert.Single(context.EmailOutbox);
+        var replayableMessage = stored.ToEmailMessage();
         Assert.Multiple(
             () => Assert.Equal(0, processed),
             () => Assert.Equal(OutboxProcessingPolicy.MaxAttemptCount, stored.AttemptCount),
             () => Assert.NotNull(stored.DeadLetteredOnUtc),
             () => Assert.Null(stored.LockedUntilUtc),
             () => Assert.Null(stored.LockedBy),
-            () => Assert.Equal("Outbox dispatch failed (InvalidOperationException).", stored.LastError));
+            () => Assert.Equal("Outbox dispatch failed (InvalidOperationException).", stored.LastError),
+            () => Assert.Equal(["recipient@example.com"], replayableMessage.ToAddresses),
+            () => Assert.Equal("Hello", replayableMessage.Subject),
+            () => Assert.Equal("<p>Hello</p>", replayableMessage.HtmlBody),
+            () => Assert.Equal("Hello", replayableMessage.TextBody));
     }
 
     [Fact]
@@ -506,14 +523,16 @@ public sealed class EmailOutboxTests {
         string fromAddress = "sender@example.com",
         string fromName = "Sender",
         IReadOnlyList<string>? toAddresses = null,
-        string subject = "Hello") =>
+        string subject = "Hello",
+        string htmlBody = "<p>Hello</p>",
+        string? textBody = "Hello") =>
         new(
             fromAddress,
             fromName,
             toAddresses ?? ["recipient@example.com"],
             subject,
-            "<p>Hello</p>",
-            "Hello");
+            htmlBody,
+            textBody);
 
     private static FoodDiaryDbContext CreateContext() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()

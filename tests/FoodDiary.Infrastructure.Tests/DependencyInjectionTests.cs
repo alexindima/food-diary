@@ -600,6 +600,40 @@ public sealed class DependencyInjectionTests {
         }
     }
 
+    [Theory]
+    [InlineData("192.0.0.1")]
+    [InlineData("198.18.0.1")]
+    public async Task ConnectToAllowedRemoteImageEndpointAsync_WhenReboundToSpecialUseAddress_RejectsConnection(string address) {
+        Func<string, CancellationToken, ValueTask<IPAddress[]>> originalResolver =
+            FoodDiary.Infrastructure.DependencyInjection.ResolveRemoteImageHostAddressesAsync;
+        Func<IPAddress, int, CancellationToken, ValueTask<Stream>> originalConnector =
+            FoodDiary.Infrastructure.DependencyInjection.ConnectRemoteImageSocketAsync;
+        bool connectorCalled = false;
+        try {
+            FoodDiary.Infrastructure.DependencyInjection.ResolveRemoteImageHostAddressesAsync =
+                (_, _) => ValueTask.FromResult<IPAddress[]>([IPAddress.Parse(address)]);
+            FoodDiary.Infrastructure.DependencyInjection.ConnectRemoteImageSocketAsync = (_, _, _) => {
+                connectorCalled = true;
+                return ValueTask.FromResult<Stream>(new MemoryStream());
+            };
+            SocketsHttpConnectionContext context = CreateSocketsHttpConnectionContext(
+                new DnsEndPoint("rebound.example.com", 443),
+                new HttpRequestMessage(HttpMethod.Get, "https://rebound.example.com/image.png"));
+
+            await Assert.ThrowsAsync<HttpRequestException>(async () => {
+                await InvokePrivateStatic<ValueTask<Stream>>(
+                    "ConnectToAllowedRemoteImageEndpointAsync",
+                    context,
+                    CancellationToken.None).ConfigureAwait(true);
+            }).ConfigureAwait(true);
+
+            Assert.False(connectorCalled);
+        } finally {
+            FoodDiary.Infrastructure.DependencyInjection.ResolveRemoteImageHostAddressesAsync = originalResolver;
+            FoodDiary.Infrastructure.DependencyInjection.ConnectRemoteImageSocketAsync = originalConnector;
+        }
+    }
+
     [Fact]
     public async Task ConnectRemoteImageSocketAsync_WhenListenerAcceptsConnection_ReturnsNetworkStream() {
         var listener = new TcpListener(IPAddress.Loopback, port: 0);
@@ -645,6 +679,9 @@ public sealed class DependencyInjectionTests {
     [InlineData("172.31.255.255", false)]
     [InlineData("172.32.0.1", true)]
     [InlineData("192.168.1.1", false)]
+    [InlineData("192.0.0.1", false)]
+    [InlineData("198.18.0.1", false)]
+    [InlineData("198.19.255.255", false)]
     [InlineData("169.254.1.1", false)]
     [InlineData("100.64.0.1", false)]
     [InlineData("100.127.255.255", false)]

@@ -73,6 +73,10 @@ public sealed class EmailOutboxMessage : IOutboxMessage {
 
     public void MarkProcessed(DateTime processedOnUtc) {
         ProcessedOnUtc = NormalizeUtc(processedOnUtc);
+        ToAddressesJson = "[]";
+        Subject = string.Empty;
+        HtmlBody = string.Empty;
+        TextBody = null;
         LockedUntilUtc = null;
         LockedBy = null;
         LastError = null;

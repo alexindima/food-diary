@@ -798,6 +798,66 @@ public sealed class DiaryPdfGeneratorTests {
     }
 
     [Fact]
+    public async Task LoadMealImageAsync_WhenResponseBodyStalls_StopsAtPerImageDeadline() {
+        var handler = new StallingImageHandler();
+        var generator = new DiaryPdfGenerator(
+            new HttpClient(handler),
+            remoteImageDownloadTimeout: TimeSpan.FromMilliseconds(50),
+            remoteImageReportTimeout: TimeSpan.FromSeconds(5));
+
+        byte[]? image = await InvokePrivateInstance<Task<byte[]?>>(
+                generator,
+                "LoadMealImageAsync",
+                "https://93.184.216.34/stalled.png",
+                CancellationToken.None)
+            .WaitAsync(TimeSpan.FromSeconds(2));
+
+        Assert.Null(image);
+        await handler.CancellationObserved.WaitAsync(TimeSpan.FromSeconds(2));
+    }
+
+    [Fact]
+    public async Task LoadMealImageAsync_WhenCallerCancels_PropagatesCancellation() {
+        var handler = new StallingImageHandler();
+        var generator = new DiaryPdfGenerator(
+            new HttpClient(handler),
+            remoteImageDownloadTimeout: TimeSpan.FromSeconds(5),
+            remoteImageReportTimeout: TimeSpan.FromSeconds(5));
+        using var cancellation = new CancellationTokenSource(TimeSpan.FromMilliseconds(50));
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            InvokePrivateInstance<Task<byte[]?>>(
+                generator,
+                "LoadMealImageAsync",
+                "https://93.184.216.34/stalled.png",
+                cancellation.Token));
+
+        await handler.CancellationObserved.WaitAsync(TimeSpan.FromSeconds(2));
+    }
+
+    [Fact]
+    public async Task LoadMealImagesAsync_WhenReportDeadlineExpires_ReturnsWithoutImages() {
+        var handler = new StallingImageHandler();
+        var generator = new DiaryPdfGenerator(
+            new HttpClient(handler),
+            remoteImageDownloadTimeout: TimeSpan.FromSeconds(5),
+            remoteImageReportTimeout: TimeSpan.FromMilliseconds(50));
+        var userId = UserId.New();
+        Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3);
+        meal.UpdateImage("https://93.184.216.34/stalled.png");
+
+        IReadOnlyDictionary<Guid, byte[]> images = await InvokePrivateInstance<Task<IReadOnlyDictionary<Guid, byte[]>>>(
+                generator,
+                "LoadMealImagesAsync",
+                (IReadOnlyList<MealProjectionReadModel>)[ToReadModel(meal)],
+                CancellationToken.None)
+            .WaitAsync(TimeSpan.FromSeconds(2));
+
+        Assert.Empty(images);
+        await handler.CancellationObserved.WaitAsync(TimeSpan.FromSeconds(2));
+    }
+
+    [Fact]
     public async Task LoadMealImagesAsync_WhenMealImageDecodes_ReturnsDictionaryEntry() {
         string dataUrl = $"data:image/png;base64,{Convert.ToBase64String(CreatePngBytes(width: 16, height: 16))}";
         var userId = UserId.New();
@@ -1138,6 +1198,47 @@ public sealed class DiaryPdfGeneratorTests {
             };
             return Task.FromResult(response);
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StallingImageHandler : HttpMessageHandler {
+        private readonly TaskCompletionSource _cancellationObserved = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task CancellationObserved => _cancellationObserved.Task;
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
+            Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
+                Content = new StreamContent(new StallingReadStream(_cancellationObserved)),
+            });
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StallingReadStream(TaskCompletionSource cancellationObserved) : Stream {
+        public override bool CanRead => true;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => 0;
+        public override long Position { get; set; }
+
+        public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) {
+            try {
+                await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+                return 0;
+            } finally {
+                cancellationObserved.TrySetResult();
+            }
+        }
+
+        public override void Flush() {
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+
+        public override void SetLength(long value) => throw new NotSupportedException();
+
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]

@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4419,
+    "productionFiles": 4420,
     "criticalSymbols": 568,
     "criticalSymbolsWithTestReferences": 542,
     "criticalSymbolsWithoutTestReferences": 26,
@@ -765,14 +765,6 @@
       "structuralRiskScore": 46.76
     },
     {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
-      "nonBlankLines": 78,
-      "decisionPoints": 30,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 46.56
-    },
-    {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.ts",
       "nonBlankLines": 218,
       "decisionPoints": 28,
@@ -811,6 +803,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
       "structuralRiskScore": 45.54
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.ts",
+      "nonBlankLines": 227,
+      "decisionPoints": 27,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 45.04
     }
   ],
   "files": [
@@ -18312,11 +18312,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
-      "nonBlankLines": 84,
-      "decisionPoints": 25,
+      "nonBlankLines": 55,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 39.18
+      "structuralRiskScore": 4.1
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
@@ -19592,11 +19592,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxMessage.cs",
-      "nonBlankLines": 100,
+      "nonBlankLines": 104,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11
+      "structuralRiskScore": 11.08
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxProcessor.cs",
@@ -20296,11 +20296,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageLoader.cs",
-      "nonBlankLines": 132,
-      "decisionPoints": 13,
+      "nonBlankLines": 147,
+      "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.14
+      "structuralRiskScore": 25.44
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
@@ -20312,11 +20312,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
-      "nonBlankLines": 78,
-      "decisionPoints": 30,
+      "nonBlankLines": 42,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 46.56
+      "structuralRiskScore": 15.84
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.LayoutComposer.cs",
@@ -20352,11 +20352,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Styles.cs",
-      "nonBlankLines": 29,
+      "nonBlankLines": 31,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.58
+      "structuralRiskScore": 0.62
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.SummaryLayout.cs",
@@ -20368,11 +20368,19 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
-      "nonBlankLines": 54,
+      "nonBlankLines": 68,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.08
+      "structuralRiskScore": 1.36
+    },
+    {
+      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/RemoteImageAddressPolicy.cs",
+      "nonBlankLines": 50,
+      "decisionPoints": 28,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 43
     },
     {
       "path": "FoodDiary.Infrastructure/Services/InfrastructureTelemetry.cs",

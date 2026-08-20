@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3403,
-    "symbols": 3411,
+    "sourceFiles": 3404,
+    "symbols": 3412,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 238,
     "kinds": {
-      "class": 1773,
+      "class": 1774,
       "enum": 60,
       "interface": 418,
       "record": 1041,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 61,
-      "Other": 1299,
+      "Other": 1300,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -17209,6 +17209,13 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.SummaryLayout.cs",
+      "line": 5
+    },
+    {
+      "name": "RemoteImageAddressPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/RemoteImageAddressPolicy.cs",
       "line": 5
     },
     {

@@ -8,13 +8,21 @@ internal sealed partial class DiaryPdfGenerator {
     private async Task<IReadOnlyDictionary<Guid, byte[]>> LoadMealImagesAsync(
         IReadOnlyList<MealProjectionReadModel> meals,
         CancellationToken cancellationToken) {
+        using var reportCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        reportCancellation.CancelAfter(_remoteImageReportTimeout);
+        CancellationToken reportCancellationToken = reportCancellation.Token;
         using var gate = new SemaphoreSlim(MaxParallelMealImageDownloads);
         var cache = new Dictionary<string, Lazy<Task<byte[]?>>>(StringComparer.Ordinal);
         Task<MealImageEntry>[] tasks = [.. meals
             .Take(MaxMealImagesPerReport)
-            .Select(meal => LoadMealImageEntryAsync(meal, cache, gate, cancellationToken))];
+            .Select(meal => LoadMealImageEntryAsync(meal, cache, gate, reportCancellationToken))];
 
-        MealImageEntry[] entries = await Task.WhenAll(tasks).ConfigureAwait(false);
+        MealImageEntry[] entries;
+        try {
+            entries = await Task.WhenAll(tasks).ConfigureAwait(false);
+        } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
+            return new Dictionary<Guid, byte[]>();
+        }
 
         return entries
             .Where(entry => entry.Image is not null)
@@ -104,17 +112,23 @@ internal sealed partial class DiaryPdfGenerator {
                 return PrepareMealImage(dataUrlBytes);
             }
 
-            if (!Uri.TryCreate(imageUrl, UriKind.Absolute, out Uri? uri) ||
-                !await IsAllowedRemoteImageUriAsync(uri, cancellationToken).ConfigureAwait(false)) {
+            if (!Uri.TryCreate(imageUrl, UriKind.Absolute, out Uri? uri)) {
                 return null;
             }
 
-            using HttpResponseMessage response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+            using var downloadCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            downloadCancellation.CancelAfter(_remoteImageDownloadTimeout);
+            CancellationToken downloadCancellationToken = downloadCancellation.Token;
+            if (!await IsAllowedRemoteImageUriAsync(uri, downloadCancellationToken).ConfigureAwait(false)) {
+                return null;
+            }
+
+            using HttpResponseMessage response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, downloadCancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode || response.Content.Headers.ContentLength > MaxMealImageBytes) {
                 return null;
             }
 
-            Stream stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+            Stream stream = await response.Content.ReadAsStreamAsync(downloadCancellationToken).ConfigureAwait(false);
             byte[] downloaded;
             await using (stream.ConfigureAwait(false)) {
                 var memory = new MemoryStream();
@@ -122,8 +136,8 @@ internal sealed partial class DiaryPdfGenerator {
                     byte[] buffer = new byte[81920];
                     int read;
 
-                    while ((read = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0) {
-                        await memory.WriteAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
+                    while ((read = await stream.ReadAsync(buffer, downloadCancellationToken).ConfigureAwait(false)) > 0) {
+                        await memory.WriteAsync(buffer.AsMemory(0, read), downloadCancellationToken).ConfigureAwait(false);
                         if (memory.Length > MaxMealImageBytes) {
                             return null;
                         }
@@ -134,7 +148,9 @@ internal sealed partial class DiaryPdfGenerator {
             }
 
             return downloaded.Length == 0 ? null : PrepareMealImage(downloaded);
-        } catch (Exception ex) when (ex is HttpRequestException or InvalidOperationException or TaskCanceledException or FormatException or IOException or SocketException) {
+        } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
+            return null;
+        } catch (Exception ex) when (ex is HttpRequestException or InvalidOperationException or FormatException or IOException or SocketException) {
             return null;
         }
     }
