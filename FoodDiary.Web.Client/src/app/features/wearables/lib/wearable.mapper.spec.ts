@@ -25,7 +25,7 @@ const SUMMARY: WearableDailySummary = {
     activeMinutes: 54,
     sleepMinutes: 455,
 };
-const PROVIDER_COUNT = 4;
+const PROVIDER_COUNT = 3;
 
 describe('wearable mapper', () => {
     it('builds provider rows with active connection only', () => {
