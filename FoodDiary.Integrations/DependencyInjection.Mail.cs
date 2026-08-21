@@ -12,6 +12,14 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Integrations;
 
 public static partial class DependencyInjection {
+    private static readonly string[] MailInboxClientConfigurationKeys = [
+        "BaseUrl",
+        "MetadataApiKey",
+        "ContentApiKey",
+        "StateApiKey",
+        "AllowInsecureLoopback",
+    ];
+
     private static void AddMailIntegrations(this IServiceCollection services, IConfiguration configuration) {
         services.AddMailRelayClient(options => {
             IConfigurationSection section = configuration.GetSection(MailRelayClientOptions.SectionName);
@@ -21,7 +29,7 @@ public static partial class DependencyInjection {
         });
 
         IConfigurationSection mailInboxSection = configuration.GetSection(MailInboxClientOptions.SectionName);
-        if (mailInboxSection.Exists()) {
+        if (MailInboxClientConfigurationKeys.Any(key => mailInboxSection[key] is not null)) {
             services.AddMailInboxClient(options => {
                 options.BaseUrl = mailInboxSection["BaseUrl"] ?? string.Empty;
                 options.MetadataApiKey = mailInboxSection["MetadataApiKey"] ?? string.Empty;

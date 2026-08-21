@@ -255,6 +255,37 @@ public sealed class DependencyInjectionTests {
     }
 
     [Fact]
+    public void AddIntegrations_WithOnlyLegacyMailInboxApiKey_DoesNotRegisterMailInboxAccess() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase) {
+                ["MailInboxClient:ApiKey"] = "legacy-key",
+            })
+            .Build();
+
+        services.AddIntegrations(configuration);
+
+        Assert.DoesNotContain(services, static descriptor => descriptor.ServiceType == typeof(IMailInboxClient));
+        Assert.DoesNotContain(services, static descriptor => descriptor.ServiceType == typeof(IAdminMailInboxReader));
+    }
+
+    [Fact]
+    public void AddIntegrations_WithIncompleteCurrentMailInboxConfiguration_PreservesOptionsValidation() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase) {
+                ["MailInboxClient:MetadataApiKey"] = "metadata-key",
+            })
+            .Build();
+
+        services.AddIntegrations(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        Assert.Throws<OptionsValidationException>(() =>
+            provider.GetRequiredService<IOptions<FoodDiary.MailInbox.Client.Options.MailInboxClientOptions>>().Value);
+    }
+
+    [Fact]
     public void AddIntegrations_ConfiguresNamedHttpClientTimeoutsAndHeaders() {
         var services = new ServiceCollection();
         services.AddLogging();
