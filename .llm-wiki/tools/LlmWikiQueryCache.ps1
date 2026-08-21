@@ -113,11 +113,12 @@ function Write-LlmWikiQueryCache {
         [ValidateRange(5, 500)][int]$Retain = 100
     )
     $directory = Split-Path -Parent $Entry.path
-    $null = New-Item -ItemType Directory -Path $directory -Force
+    $null = [IO.Directory]::CreateDirectory($directory)
     $temporaryPath = "$($Entry.path).$([guid]::NewGuid().ToString('N')).tmp"
+    $metadataTemporaryPath = "$($Entry.metadataPath).$([guid]::NewGuid().ToString('N')).tmp"
     try {
         [IO.File]::WriteAllText($temporaryPath, $Content, [Text.UTF8Encoding]::new($false))
-        Move-Item -LiteralPath $temporaryPath -Destination $Entry.path -Force
+        [IO.File]::Move($temporaryPath, $Entry.path, $true)
         $metadata = [ordered]@{
             schemaVersion = 1
             head = [string]$Entry.head
@@ -126,9 +127,11 @@ function Write-LlmWikiQueryCache {
             argumentFingerprint = [string]$Entry.argumentFingerprint
             recordedAtUtc = [DateTime]::UtcNow.ToString('o')
         } | ConvertTo-Json -Compress
-        [IO.File]::WriteAllText($Entry.metadataPath, $metadata + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+        [IO.File]::WriteAllText($metadataTemporaryPath, $metadata + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
+        [IO.File]::Move($metadataTemporaryPath, $Entry.metadataPath, $true)
     } finally {
         Remove-Item -LiteralPath $temporaryPath -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath $metadataTemporaryPath -Force -ErrorAction SilentlyContinue
     }
     $staleEntries = @(Get-ChildItem -LiteralPath $directory -Filter '*.json' -File | Sort-Object LastWriteTimeUtc -Descending | Select-Object -Skip $Retain)
     foreach ($staleEntry in $staleEntries) {

@@ -143,17 +143,17 @@
     {
       "pageId": "workflow-adaptive-development",
       "pagePath": ".llm-wiki/workflows/adaptive-development.md",
-      "pageSha256": "dfdbd4b839e14d170c467c21c2d3ffee09d6764f7186e3b54160b7ae083ae3d0",
+      "pageSha256": "826ee326e4250f90576d9326fc66400c9191d37492400b624acf9d4bc69f6d52",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "7f42e779250d6ce78b607441e5beb8a4bf02346d66d6a5cf61d3f888ad51db28"
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "8b03464ff06359d2a3ad3529e73a708b653268661f6975d51ea187df52fc3eb5"
         }
       ],
-      "reason": "Best-effort stale snapshot cleanup now clears an expected failed Git cleanup exit code so successful read-only tools remain successful; the read-only guard smoke passes.",
+      "reason": "Reviewed test ranking, bounded Git grep batching, atomic query-cache writes, explicit task deltas, unconditional receipt hashes, and facade routing against focused regressions plus the green Core audit.",
       "baseRef": "HEAD",
-      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
-      "reviewedAtUtc": "2026-08-21T04:28:54.2861701Z"
+      "gitHead": "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
+      "reviewedAtUtc": "2026-08-21T22:03:03.1068354Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -192,13 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "d2bb0516151c5da680ff22eaa9beacdce1456b62e3bc3afe86a34f724431bf6e"
+          "sha256": "97af21495391f881beb0a82d31f84217970ba96cb6a1849c879033e604a30e31"
         }
       ],
-      "reason": "Backend contract index was regenerated after test-only additions; no production HTTP routes, payloads, status codes, or API snapshots changed, and the generated delta represents test consumer coverage.",
+      "reason": "Reviewed regenerated backend contract consumer counts: only references in the concurrently edited test files increased; no production contract shape changed.",
       "baseRef": "HEAD",
-      "gitHead": "5ef761aec358fde8b27f29fd63516db9fbd1e9fe",
-      "reviewedAtUtc": "2026-08-21T12:39:07.9340074Z"
+      "gitHead": "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
+      "reviewedAtUtc": "2026-08-21T22:03:20.3633494Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -237,13 +237,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "667d6f376e5be0805c5e86ed7368dee3e60dcda75e2b01b22f1a4dfc2688fffd"
+          "sha256": "3b771699618b28fa70e9031a252bdb486edce26d50276033fbfe982ddca1f558"
         }
       ],
-      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
+      "reason": "Reviewed test ranking, bounded Git grep batching, atomic query-cache writes, explicit task deltas, unconditional receipt hashes, and facade routing against focused regressions plus the green Core audit.",
       "baseRef": "HEAD",
-      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-      "reviewedAtUtc": "2026-08-21T19:09:38.4016606Z"
+      "gitHead": "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
+      "reviewedAtUtc": "2026-08-21T22:03:03.9534538Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -360,18 +360,14 @@
       "pageSha256": "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+          "sha256": "6f5967f385622dc126b38dd499f6379b6f27d09564e81becca34d10a9a33e924"
         }
       ],
-      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+      "reason": "Reviewed requirement assessment purity and learning-related source links; assess is now read-only while explicit create and seal remain the only persistence paths.",
       "baseRef": "HEAD",
-      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-      "reviewedAtUtc": "2026-08-21T19:09:41.0235683Z"
+      "gitHead": "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
+      "reviewedAtUtc": "2026-08-21T22:03:04.2135649Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -440,17 +436,21 @@
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "e8c68f984278bf62d48eb57fdbbe50150acdd40bb94fc7724fadc32573c7bab9",
+      "pageSha256": "fb6ae4687c020a4c8bb6f4a47d37ba0c5aede515a055efc45e8e18ebfd3daa42",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "c16bcaca9daf9240471b1e2e7399e10d066ebffbb89bb6ad1a5590ff973174fb"
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "8b03464ff06359d2a3ad3529e73a708b653268661f6975d51ea187df52fc3eb5"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "3b771699618b28fa70e9031a252bdb486edce26d50276033fbfe982ddca1f558"
         }
       ],
-      "reason": "Reviewed dependent quality and workflow pages against the new FTS shadow smoke and graph fingerprint invalidation; their governed behavior remains accurate and the code-graph workflow documents the new lane.",
+      "reason": "Reviewed test ranking, bounded Git grep batching, atomic query-cache writes, explicit task deltas, unconditional receipt hashes, and facade routing against focused regressions plus the green Core audit.",
       "baseRef": "HEAD",
-      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
-      "reviewedAtUtc": "2026-08-21T03:26:15.1408522Z"
+      "gitHead": "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
+      "reviewedAtUtc": "2026-08-21T22:03:04.5022119Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -802,13 +802,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3146469543b48a6e6415cb4c352d915b20c30c0cb1c51321b855893412064126"
+          "sha256": "e0d76de642db60e1c0bac253d3d24a46f048b9bc35911a6a4500d967f8303690"
         }
       ],
-      "reason": "Quality and architecture indexes were regenerated for the new SQL search evals and neighboring test coverage; the strict 250-case SQL gate, 71 MCP tests, and affected code-graph smoke passed.",
+      "reason": "Reviewed regenerated quality metrics: only ExportDiaryDateRangePolicy complexity decreased with the concurrent application edit; hotspot semantics and thresholds remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5ef761aec358fde8b27f29fd63516db9fbd1e9fe",
-      "reviewedAtUtc": "2026-08-21T12:39:08.3690993Z"
+      "gitHead": "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
+      "reviewedAtUtc": "2026-08-21T22:03:20.9602091Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -964,13 +964,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "667d6f376e5be0805c5e86ed7368dee3e60dcda75e2b01b22f1a4dfc2688fffd"
+          "sha256": "3b771699618b28fa70e9031a252bdb486edce26d50276033fbfe982ddca1f558"
         }
       ],
-      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
+      "reason": "Reviewed test ranking, bounded Git grep batching, atomic query-cache writes, explicit task deltas, unconditional receipt hashes, and facade routing against focused regressions plus the green Core audit.",
       "baseRef": "HEAD",
-      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-      "reviewedAtUtc": "2026-08-21T19:09:48.5511188Z"
+      "gitHead": "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
+      "reviewedAtUtc": "2026-08-21T22:03:05.6829914Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -994,17 +994,17 @@
     {
       "pageId": "workflow-task-workspace",
       "pagePath": ".llm-wiki/workflows/task-workspace.md",
-      "pageSha256": "a8ae24482a03c1b60dded0be60c6d262106c7eeb20511caf3127b4ed8b9525f8",
+      "pageSha256": "19d360f7ae44b67345aa130aad1b1ab9d343d76912b945a5c75f9ce0627c3818",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
-          "sha256": "f585b3bfa501bf799c933f5951abc01973ab61a94cd0a7316143a73a37d93726"
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskContract.ps1",
+          "sha256": "fd2f02adaa4a2ce0f12e9f727c25927d5e679d07f808c5a6b6e87101b3a6f45f"
         }
       ],
-      "reason": "Evidence lineage now treats an execution artifact as optional under StrictMode, while preserving path and hash validation whenever an artifact is present; governed-delivery smoke and direct lineage validation pass.",
+      "reason": "Reviewed test ranking, bounded Git grep batching, atomic query-cache writes, explicit task deltas, unconditional receipt hashes, and facade routing against focused regressions plus the green Core audit.",
       "baseRef": "HEAD",
-      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
-      "reviewedAtUtc": "2026-08-21T04:33:02.7255062Z"
+      "gitHead": "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
+      "reviewedAtUtc": "2026-08-21T22:03:06.1394288Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1061,14 +1061,14 @@
       "pageSha256": "9cc76f52e65dc93eb463ced774f1826e3433f33fb3ac620b0a5c280a106fd88d",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+          "sha256": "6f5967f385622dc126b38dd499f6379b6f27d09564e81becca34d10a9a33e924"
         }
       ],
-      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
+      "reason": "Reviewed test ranking, bounded Git grep batching, atomic query-cache writes, explicit task deltas, unconditional receipt hashes, and facade routing against focused regressions plus the green Core audit.",
       "baseRef": "HEAD",
-      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-      "reviewedAtUtc": "2026-08-21T19:09:49.4407797Z"
+      "gitHead": "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
+      "reviewedAtUtc": "2026-08-21T22:03:06.6110122Z"
     },
     {
       "pageId": "workflow.change-policy",
@@ -1152,17 +1152,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "667d6f376e5be0805c5e86ed7368dee3e60dcda75e2b01b22f1a4dfc2688fffd"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "17f3fd3be7fefc41afb02f2933f045778188dfc9c46ebf721bf3003419830c36"
+          "sha256": "3b771699618b28fa70e9031a252bdb486edce26d50276033fbfe982ddca1f558"
         }
       ],
-      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
+      "reason": "Reviewed test ranking, bounded Git grep batching, atomic query-cache writes, explicit task deltas, unconditional receipt hashes, and facade routing against focused regressions plus the green Core audit.",
       "baseRef": "HEAD",
-      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-      "reviewedAtUtc": "2026-08-21T19:09:47.2909804Z"
+      "gitHead": "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
+      "reviewedAtUtc": "2026-08-21T22:03:05.3125067Z"
     }
   ]
 }

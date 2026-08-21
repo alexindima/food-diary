@@ -36,6 +36,11 @@ atomicity and testability, detects criteria that are too short, vague,
 compound, or near-duplicates, and compares coverage with the task packet's
 scopes, risk, review obligations, and changed resources.
 
+Assessment is read-only: it returns the current analysis without rewriting an
+existing `requirement-model.json`. Only explicit creation/sealing persists the
+hash-bound model, so downstream confidence and critique receipts cannot become
+stale merely because they inspected requirements with a different timestamp.
+
 Missing dimensions are recommendations rather than silent mutations. Apply
 the recommendations explicitly:
 

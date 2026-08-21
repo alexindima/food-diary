@@ -94,6 +94,49 @@ public partial class CyclesFeatureTests {
     }
 
     [Fact]
+    public async Task GetCycleNutritionSummaryQueryHandler_WithoutNutritionConsent_ReturnsConsentRequiredSummary() {
+        var user = User.Create("cycle-nutrition-consent-required@example.com", "hash");
+        DateOnly from = new(2026, 4, 1);
+        var profile = CycleProfile.Create(user.Id, from);
+        GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
+            new InMemoryCycleRepository(profile),
+            CreateStatisticsReadService([]),
+            CreateCurrentUserAccessService(user));
+
+        Result<CycleNutritionSummaryModel?> result = await handler.Handle(
+            new GetCycleNutritionSummaryQuery(user.Id.Value, from, from.AddDays(7)),
+            CancellationToken.None);
+
+        CycleNutritionSummaryModel summary = Assert.IsType<CycleNutritionSummaryModel>(ResultAssert.Success(result));
+        Assert.Multiple(
+            () => Assert.True(summary.ConsentRequired),
+            () => Assert.Equal("Unavailable", summary.DataSufficiency),
+            () => Assert.Contains("nutrition_consent_required", summary.ReasonCodes!, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task GetCycleNutritionSummaryQueryHandler_WithoutCompletedIntervals_ReturnsInsufficientSummary() {
+        var user = User.Create("cycle-nutrition-no-intervals@example.com", "hash");
+        DateOnly from = new(2026, 4, 1);
+        var profile = CycleProfile.Create(user.Id, from);
+        profile.GrantConsent(CycleConsentPurpose.NutritionInsights, DateTime.UtcNow);
+        GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
+            new InMemoryCycleRepository(profile),
+            CreateStatisticsReadService([]),
+            CreateCurrentUserAccessService(user));
+
+        Result<CycleNutritionSummaryModel?> result = await handler.Handle(
+            new GetCycleNutritionSummaryQuery(user.Id.Value, from, from.AddDays(7)),
+            CancellationToken.None);
+
+        CycleNutritionSummaryModel summary = Assert.IsType<CycleNutritionSummaryModel>(ResultAssert.Success(result));
+        Assert.Multiple(
+            () => Assert.False(summary.ConsentRequired),
+            () => Assert.Equal("Insufficient", summary.DataSufficiency),
+            () => Assert.Equal(0, summary.CompletedCyclesAnalyzed));
+    }
+
+    [Fact]
     public async Task GetCycleNutritionSummaryQueryHandler_WhenStatisticsFails_ReturnsFailure() {
         var user = User.Create("cycle-statistics-failure@example.com", "hash");
         var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));

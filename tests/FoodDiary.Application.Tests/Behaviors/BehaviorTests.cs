@@ -310,6 +310,36 @@ public class BehaviorTests {
     }
 
     [Fact]
+    public async Task PostCommitActionQueue_FlushAsync_WhenQueueIsEmpty_CompletesImmediately() {
+        var queue = new PostCommitActionQueue(NullLogger<PostCommitActionQueue>.Instance, TimeProvider.System);
+
+        await queue.FlushAsync();
+
+        Assert.False(queue.HasActions);
+    }
+
+    [Fact]
+    public async Task PostCommitActionQueue_FlushAsync_WhenCompletedActionConsumesBudget_DropsRemainingActions() {
+        var queue = new PostCommitActionQueue(
+            NullLogger<PostCommitActionQueue>.Instance,
+            TimeProvider.System,
+            actionTimeout: TimeSpan.FromSeconds(1),
+            flushTimeout: TimeSpan.FromMilliseconds(10),
+            maxActions: 3);
+        bool secondActionExecuted = false;
+        queue.Enqueue("test.ignores-cancellation", static _ => Task.Delay(TimeSpan.FromMilliseconds(50)));
+        queue.Enqueue("test.must-be-dropped", _ => {
+            secondActionExecuted = true;
+            return Task.CompletedTask;
+        });
+
+        await queue.FlushAsync();
+
+        Assert.False(secondActionExecuted);
+        Assert.False(queue.HasActions);
+    }
+
+    [Fact]
     public async Task PostCommitActionQueue_RecordsBoundedOutcomesDepthAndDuration() {
         var measurements = new ConcurrentBag<MetricMeasurement>();
         using var listener = new MeterListener {

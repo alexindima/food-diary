@@ -108,8 +108,11 @@ public sealed class FourthPassDomainHardeningTests {
         Assert.Equal(BillingWebhookEvent.FailedStatus, webhookEvent.Status);
 
         webhookEvent.MarkProcessed(Now.AddMinutes(2));
+        DateTime? modifiedAfterProcessing = webhookEvent.ModifiedOnUtc;
+        webhookEvent.MarkProcessed(Now.AddMinutes(3));
         Assert.Throws<InvalidOperationException>(() => webhookEvent.MarkFailed(Now.AddMinutes(3), "late failure"));
         Assert.Equal(BillingWebhookEvent.ProcessedStatus, webhookEvent.Status);
+        Assert.Equal(modifiedAfterProcessing, webhookEvent.ModifiedOnUtc);
     }
 
     [Fact]

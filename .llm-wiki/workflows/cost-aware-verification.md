@@ -28,6 +28,9 @@ expected failure cost and value density earlier without skipping required covera
 verification time, expected repair time, value density, and a bounded priority
 boost for every predicted check. Calibration compares the original estimate with
 later evidence duration and repair-attempt elapsed time; it never rewrites history.
+Verification always recomputes the receipt hash even when it has already found a
+schema or arithmetic defect, so compound tampering reports integrity drift instead
+of allowing an earlier validation issue to mask it.
 
 The model is policy-backed rather than learned silently. Update durations and boost
 limits in `workspace-policies.json`, then recreate affected derived artifacts.

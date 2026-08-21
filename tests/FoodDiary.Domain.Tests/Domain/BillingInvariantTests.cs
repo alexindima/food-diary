@@ -474,5 +474,101 @@ public sealed class BillingInvariantTests {
             BillingPayment.Create(UserId, billingSubscriptionId: null, BillingProviderNames.Stripe, "payment_1", externalCustomerId: null, externalSubscriptionId: null, externalPaymentMethodId: null, externalPriceId: null, plan: null, "active", " ", amount: null, currency: null, currentPeriodStartUtc: null, currentPeriodEndUtc: null, webhookEventId: null, providerMetadataJson: null));
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             BillingPayment.Create(UserId, billingSubscriptionId: null, BillingProviderNames.Stripe, "payment_1", externalCustomerId: null, externalSubscriptionId: null, externalPaymentMethodId: null, externalPriceId: null, plan: null, "active", BillingPaymentKinds.Webhook, amount: null, currency: null, new DateTime(2026, 4, 28), currentPeriodEndUtc: null, webhookEventId: null, providerMetadataJson: null));
+        Assert.Throws<ArgumentException>(() =>
+            CreatePaymentForUpdate(Guid.Empty));
     }
+
+    [Fact]
+    public void BillingPayment_ApplyProviderResult_UpdatesEveryProviderField() {
+        BillingPayment payment = CreatePaymentForUpdate();
+        var subscriptionId = Guid.NewGuid();
+        DateTime periodStart = Now.AddDays(1);
+        DateTime periodEnd = Now.AddMonths(1);
+
+        payment.ApplyProviderResult(
+            billingSubscriptionId: subscriptionId,
+            externalCustomerId: "customer_2",
+            externalSubscriptionId: "subscription_2",
+            externalPaymentMethodId: "method_2",
+            externalPriceId: "price_2",
+            plan: "annual",
+            status: "paid",
+            kind: "provider_result",
+            amount: 20m,
+            currency: "eur",
+            currentPeriodStartUtc: periodStart,
+            currentPeriodEndUtc: periodEnd,
+            webhookEventId: "event_2",
+            providerMetadataJson: "{\"updated\":true}",
+            tax: 2m,
+            fee: 1m,
+            earnings: 17m,
+            payoutCurrency: "usd",
+            payoutEarnings: 18m,
+            occurredAtUtc: Now);
+
+        Assert.Multiple(
+            () => Assert.Equal(subscriptionId, payment.BillingSubscriptionId),
+            () => Assert.Equal("customer_2", payment.ExternalCustomerId),
+            () => Assert.Equal("subscription_2", payment.ExternalSubscriptionId),
+            () => Assert.Equal("method_2", payment.ExternalPaymentMethodId),
+            () => Assert.Equal("price_2", payment.ExternalPriceId),
+            () => Assert.Equal("annual", payment.Plan),
+            () => Assert.Equal("paid", payment.Status),
+            () => Assert.Equal("provider_result", payment.Kind),
+            () => Assert.Equal(20m, payment.Amount),
+            () => Assert.Equal("EUR", payment.Currency),
+            () => Assert.Equal(2m, payment.Tax),
+            () => Assert.Equal(1m, payment.Fee),
+            () => Assert.Equal(17m, payment.Earnings),
+            () => Assert.Equal("USD", payment.PayoutCurrency),
+            () => Assert.Equal(18m, payment.PayoutEarnings),
+            () => Assert.Equal(Now, payment.OccurredAtUtc),
+            () => Assert.Equal(periodStart, payment.CurrentPeriodStartUtc),
+            () => Assert.Equal(periodEnd, payment.CurrentPeriodEndUtc),
+            () => Assert.Equal("event_2", payment.WebhookEventId),
+            () => Assert.Equal("{\"updated\":true}", payment.ProviderMetadataJson),
+            () => Assert.NotNull(payment.ModifiedOnUtc));
+    }
+
+    [Fact]
+    public void BillingPayment_ApplyProviderResult_WithEmptySubscriptionId_Throws() {
+        BillingPayment payment = CreatePaymentForUpdate();
+
+        Assert.Throws<ArgumentException>(() => payment.ApplyProviderResult(
+            billingSubscriptionId: Guid.Empty,
+            externalCustomerId: null,
+            externalSubscriptionId: null,
+            externalPaymentMethodId: null,
+            externalPriceId: null,
+            plan: null,
+            status: "paid",
+            kind: BillingPaymentKinds.Webhook,
+            amount: null,
+            currency: null,
+            currentPeriodStartUtc: null,
+            currentPeriodEndUtc: null,
+            webhookEventId: null,
+            providerMetadataJson: null));
+    }
+
+    private static BillingPayment CreatePaymentForUpdate(Guid? billingSubscriptionId = null) =>
+        BillingPayment.Create(
+            UserId,
+            billingSubscriptionId,
+            BillingProviderNames.Stripe,
+            "payment_1",
+            externalCustomerId: null,
+            externalSubscriptionId: null,
+            externalPaymentMethodId: null,
+            externalPriceId: null,
+            plan: null,
+            status: "pending",
+            kind: BillingPaymentKinds.Webhook,
+            amount: null,
+            currency: null,
+            currentPeriodStartUtc: null,
+            currentPeriodEndUtc: null,
+            webhookEventId: null,
+            providerMetadataJson: null);
 }

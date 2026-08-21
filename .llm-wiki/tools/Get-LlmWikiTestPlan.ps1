@@ -63,6 +63,7 @@ $scopes = @($diff.scopes)
 $scenarios = [System.Collections.Generic.List[object]]::new()
 $discoveredTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $directTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+$declaredTypeTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $plannedDirectoryTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $siblingTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $consumerTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
@@ -120,6 +121,7 @@ if (Test-Path -LiteralPath $frontendContractPath) {
     }
 }
 
+$changedDeclaredTypeNames = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $changedTypeNames = @($effectivePaths | Where-Object { $_ -match '\.(cs|ts)$' } | ForEach-Object {
     $changedSourcePath = Join-Path $repositoryRoot $_
     if (Test-Path -LiteralPath $changedSourcePath -PathType Leaf) {
@@ -135,9 +137,14 @@ $changedTypeNames = @($effectivePaths | Where-Object { $_ -match '\.(cs|ts)$' } 
                 '(?m)^\s*(?:public\s+|internal\s+|protected\s+|private\s+)(?:static\s+|virtual\s+|override\s+|abstract\s+|async\s+)*(?:[A-Za-z_][\w.<>?\[\],]*\s+)+([A-Za-z_][\w]*)\s*\('
             )
         }
-        foreach ($pattern in $patterns) {
+        for ($patternIndex = 0; $patternIndex -lt $patterns.Count; $patternIndex++) {
+            $pattern = $patterns[$patternIndex]
             foreach ($match in [regex]::Matches($sourceText, $pattern)) {
-                if ($match.Groups[1].Value.Length -ge 5) { $match.Groups[1].Value }
+                if ($match.Groups[1].Value.Length -ge 5) {
+                    $name = $match.Groups[1].Value
+                    if ($patternIndex -eq 0) { $null = $changedDeclaredTypeNames.Add($name) }
+                    $name
+                }
             }
         }
     }
@@ -162,18 +169,35 @@ if ($changedTypeNames.Count -gt 0) {
     }
     foreach ($testFile in $testFiles) {
         $content = [System.IO.File]::ReadAllText($testFile.FullName)
+        $relative = $testFile.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
+        $declaredTypeMatch = @($changedDeclaredTypeNames | Where-Object {
+            $content -match "\b$([regex]::Escape($_))\b"
+        }).Count -gt 0
+        if ($declaredTypeMatch) {
+            $null = $declaredTypeTests.Add($relative)
+            $null = $directTests.Add($relative)
+            continue
+        }
         foreach ($typeName in $changedTypeNames) {
             if ($content -match "\b$([regex]::Escape($typeName))\b") {
-                $relative = $testFile.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
                 $null = $directTests.Add($relative)
                 break
             }
         }
     }
-    $consumerNamesPattern = @($changedTypeNames | ForEach-Object { [regex]::Escape($_) }) -join '|'
-    $consumerPattern = "(^|[^A-Za-z0-9_])($consumerNamesPattern)([^A-Za-z0-9_]|$)"
-    $trackedCSharpFiles = @(& git -C $repositoryRoot grep -l -E $consumerPattern -- '*.cs')
-    if ($LASTEXITCODE -notin @(0, 1)) { throw 'Unable to search C# consumers for the focused test plan.' }
+    $trackedCSharpFileSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    $escapedConsumerNames = @($changedTypeNames | ForEach-Object { [regex]::Escape($_) })
+    foreach ($consumerNamesPattern in @(Split-LlmWikiGitGrepAlternatives -Alternative $escapedConsumerNames)) {
+        $consumerPattern = "(^|[^A-Za-z0-9_])($consumerNamesPattern)([^A-Za-z0-9_]|$)"
+        foreach ($trackedCSharpFile in @(Invoke-LlmWikiGitPathList `
+                -RepositoryRoot $repositoryRoot `
+                -Arguments @('grep', '-l', '-E', $consumerPattern, '--', '*.cs') `
+                -AllowedExitCode @(0, 1) `
+                -FailureMessage 'Unable to search C# consumers for the focused test plan.')) {
+            $null = $trackedCSharpFileSet.Add($trackedCSharpFile)
+        }
+    }
+    $trackedCSharpFiles = @($trackedCSharpFileSet | Sort-Object)
     foreach ($relativeSource in $trackedCSharpFiles) {
         $normalizedSource = $relativeSource.Replace('\', '/')
         if ($normalizedSource -in @($diff.changedPaths) -or $normalizedSource -match '(?i)(^|/)(tests?|__tests__)/|\.Tests?/') { continue }
@@ -233,6 +257,7 @@ function Add-RankedTests {
     }
 }
 Add-RankedTests $changedTestFiles 100 'changed-test'
+Add-RankedTests @($declaredTypeTests | Sort-Object) 98 'references-changed-declared-type'
 Add-RankedTests @($plannedDirectoryTests | Sort-Object) 95 'planned-directory-spec'
 Add-RankedTests @($siblingTests | Sort-Object) 90 'direct-sibling-spec'
 Add-RankedTests @($consumerTests | Sort-Object) 80 'direct-component-consumer'

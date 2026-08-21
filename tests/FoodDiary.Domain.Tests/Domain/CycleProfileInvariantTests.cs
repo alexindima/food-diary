@@ -849,4 +849,108 @@ public class CycleProfileInvariantTests {
             () => Assert.Equal(start, inferred.StartDate),
             () => Assert.Equal(MenstrualEpisodeStatus.Inferred, inferred.Status));
     }
+
+    [Fact]
+    public void UpdateSettings_WithInvalidExplicitGoalOrState_Throws() {
+        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 4, 1));
+
+        Assert.Multiple(
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => profile.UpdateSettings(new CycleProfileSettings(
+                Mode: CycleTrackingMode.PeriodTracking,
+                AverageCycleLength: null,
+                AveragePeriodLength: null,
+                LutealLength: null,
+                IsRegular: null,
+                IsOnboardingComplete: null,
+                ShowFertilityEstimates: null,
+                DiscreetNotifications: null,
+                Notes: null,
+                Goal: (CycleTrackingGoal)int.MaxValue))),
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => profile.UpdateSettings(new CycleProfileSettings(
+                Mode: CycleTrackingMode.PeriodTracking,
+                AverageCycleLength: null,
+                AveragePeriodLength: null,
+                LutealLength: null,
+                IsRegular: null,
+                IsOnboardingComplete: null,
+                ShowFertilityEstimates: null,
+                DiscreetNotifications: null,
+                Notes: null,
+                ReproductiveState: (CycleReproductiveState)int.MaxValue))));
+    }
+
+    [Fact]
+    public void ConsentTransitions_CoverRegrantMissingAndFertilityCleanup() {
+        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 4, 1));
+        DateTime grantedAt = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, grantedAt);
+        profile.UpsertFertilitySignal(
+            new DateOnly(2026, 4, 2),
+            basalBodyTemperatureCelsius: 36.5,
+            ovulationTestResult: null,
+            cervicalFluid: null,
+            hadSex: null,
+            notes: null);
+        profile.RevokeConsent(CycleConsentPurpose.FertilitySignals, grantedAt.AddMinutes(1));
+
+        Assert.Empty(profile.FertilitySignals);
+        Assert.False(profile.ShowFertilityEstimates);
+
+        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, grantedAt.AddMinutes(2));
+        Assert.True(profile.HasActiveConsent(CycleConsentPurpose.FertilitySignals));
+
+        profile.RevokeConsent(CycleConsentPurpose.NutritionInsights, grantedAt);
+        Assert.False(profile.HasActiveConsent(CycleConsentPurpose.NutritionInsights));
+    }
+
+    [Fact]
+    public void ClearOperations_WhenDateHasNoMatchingEntries_ReturnFalse() {
+        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 4, 1));
+        DateOnly missing = new(2026, 4, 2);
+
+        Assert.Multiple(
+            () => Assert.False(profile.ClearBleedingEntries(missing)),
+            () => Assert.False(profile.ClearSymptomEntries(missing, [CycleSymptomCategory.Pain])),
+            () => Assert.False(profile.ClearFertilitySignal(missing)));
+    }
+
+    [Fact]
+    public void MenstrualEpisodeOperations_WithEmptyId_Throw() {
+        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 4, 1));
+
+        Assert.Multiple(
+            () => Assert.Throws<ArgumentException>(() => profile.UpdateMenstrualEpisode(
+                MenstrualEpisodeId.Empty,
+                new DateOnly(2026, 4, 1),
+                endDate: null)),
+            () => Assert.Throws<ArgumentException>(() => profile.RemoveMenstrualEpisode(MenstrualEpisodeId.Empty)));
+    }
+
+    [Fact]
+    public void RemoveMenstrualEpisode_WhenEpisodeIsInferred_Throws() {
+        DateOnly date = new(2026, 4, 1);
+        var profile = CycleProfile.Create(UserId.New(), date);
+        profile.UpsertBleedingEntry(
+            date,
+            BleedingType.Bleeding,
+            CycleFlowLevel.Medium,
+            painImpact: null,
+            notes: null);
+        MenstrualEpisode inferred = Assert.Single(profile.MenstrualEpisodes);
+
+        Assert.Throws<InvalidOperationException>(() => profile.RemoveMenstrualEpisode(inferred.Id));
+    }
+
+    [Fact]
+    public void UpsertFertilitySignal_WithoutConsent_Throws() {
+        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 4, 1));
+
+        Assert.Throws<InvalidOperationException>(() => profile.UpsertFertilitySignal(
+            new DateOnly(2026, 4, 2),
+            basalBodyTemperatureCelsius: 36.5,
+            ovulationTestResult: null,
+            cervicalFluid: null,
+            hadSex: null,
+            notes: null));
+    }
 }

@@ -249,7 +249,7 @@ function Test-Receipt([object]$Receipt) {
     if (-not $Receipt.PSObject.Properties['totals'] -or (Get-Hash $Receipt.totals) -cne (Get-Hash $expectedTotals)) { $issues.Add('Cost totals are invalid.') }
     if (-not $Receipt.PSObject.Properties['costHash']) {
         $issues.Add('verification-cost.json is missing required field costHash.')
-    } elseif ($issues.Count -eq 0 -and [string]$Receipt.costHash -cne (Get-Hash (Get-Payload $Receipt))) {
+    } elseif ([string]$Receipt.costHash -cne (Get-Hash (Get-Payload $Receipt))) {
         $issues.Add('Verification cost hash is invalid.')
     }
     [pscustomobject]@{ valid = $issues.Count -eq 0; issues = @($issues) }

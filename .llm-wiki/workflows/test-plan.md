@@ -53,12 +53,17 @@ changed behavior.
 
 Focused tests are ranked by evidence: explicitly changed tests first, then a
 changed production file's sibling spec, specs belonging to direct selector
-consumers, tests that directly reference changed types or methods, behavior-
+consumers, tests that directly reference changed declared types before common
+method names, behavior-
 specific tests selected from intent such as idempotency/retry/replay, neighboring
 test classes, and finally broad downstream context. Planned paths receive the
 same symbol analysis as already changed paths. JSON includes
 `focusedTestDetails` with the rank reason. Use `-Compact` to retain actionable
 tests, commands, and scenarios while reducing context volume.
+
+Consumer discovery batches large changed-symbol sets into bounded Git grep
+patterns. Large refactors therefore keep the same direct-consumer evidence
+without exceeding the Windows process command-line limit.
 
 When a changed or planned Wiki tool uses a known repository antipattern, the
 planner searches the whole tool family and returns every match in

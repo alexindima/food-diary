@@ -56,6 +56,38 @@ public partial class CyclesFeatureTests {
     }
 
     [Fact]
+    public async Task CreateCycleCommandHandler_WithoutExplicitConsent_ReturnsValidationFailure() {
+        var user = User.Create("cycle-create-consent@example.com", "hash");
+        var handler = new CreateCycleCommandHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user));
+        CreateCycleCommand command = CreateCommand(user.Id.Value) with { CycleTrackingConsentGranted = false };
+
+        Result<CycleModel> result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateCycleCommandHandler_ForNewProfile_AppliesOptionalConsents() {
+        var user = User.Create("cycle-create-new@example.com", "hash");
+        var repository = new NoopCycleRepository();
+        var handler = new CreateCycleCommandHandler(repository, CreateCurrentUserAccessService(user));
+        CreateCycleCommand command = CreateCommand(user.Id.Value) with {
+            CycleTrackingConsentGranted = true,
+            NutritionInsightsConsentGranted = true,
+            FertilitySignalsConsentGranted = true,
+        };
+
+        Result<CycleModel> result = await handler.Handle(command, CancellationToken.None);
+
+        CycleModel model = ResultAssert.Success(result);
+        IReadOnlyCollection<CycleConsentModel> consents = Assert.IsAssignableFrom<IReadOnlyCollection<CycleConsentModel>>(model.Consents);
+        Assert.Multiple(
+            () => Assert.Contains(consents, consent => consent.Purpose == CycleConsentPurpose.NutritionInsights),
+            () => Assert.Contains(consents, consent => consent.Purpose == CycleConsentPurpose.FertilitySignals));
+    }
+
+    [Fact]
     public async Task CreateCycleCommandHandler_WhenCurrentProfileExists_UpdatesExistingProfile() {
         var user = User.Create("cycle-create-existing@example.com", "hash");
         var profile = CycleProfile.Create(

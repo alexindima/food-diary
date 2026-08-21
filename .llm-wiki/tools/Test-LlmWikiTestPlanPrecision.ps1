@@ -59,4 +59,14 @@ $rootPlan = & $tool `
 if (@($rootPlan.repositoryAntipatterns | Where-Object id -eq 'fixed-parent-repository-root').Count -lt 2) {
     throw 'Test plan did not discover repeated fixed-depth repository-root traversal.'
 }
+$repositoryPlan = & $tool `
+    -ChangedPath 'FoodDiary.Infrastructure/Persistence/Products/ProductRepository.cs' `
+    -Limit 15 `
+    -Format Json | ConvertFrom-Json
+$declaredTypeTest = @($repositoryPlan.focusedTestDetails | Where-Object {
+    $_.path -eq 'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
+})
+if ($declaredTypeTest.Count -ne 1 -or $declaredTypeTest[0].reason -ne 'references-changed-declared-type') {
+    throw 'A test referencing the changed repository type was displaced by common member-name matches.'
+}
 Write-Host 'LLM Wiki test-plan semantic selection passed: planned symbols, idempotency tests, neighboring tests, and repeated antipatterns are visible.'

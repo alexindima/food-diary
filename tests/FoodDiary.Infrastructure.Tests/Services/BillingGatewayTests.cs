@@ -529,6 +529,46 @@ public sealed class BillingGatewayTests {
         Assert.Equal(HttpMethod.Post, handler.Requests[1].Method);
     }
 
+    [Theory]
+    [InlineData("missing_created_at", false)]
+    [InlineData("invalid_items", true)]
+    [InlineData("different_price", false)]
+    [InlineData("missing_identity", true)]
+    public async Task PaddleCreateCheckoutSession_WithNonExactRecoveryCandidate_ValidatesFallback(
+        string scenario,
+        bool expectedFailure) {
+        var userId = Guid.NewGuid();
+        string candidate = scenario switch {
+            "missing_created_at" => CreateRecoveryCandidateJson(userId, id: "txn_candidate", itemsJson: ValidMonthlyItemJson, createdAt: null),
+            "invalid_items" => CreateRecoveryCandidateJson(userId, id: "txn_candidate", itemsJson: "[]", createdAt: PaddleRecoveryNow),
+            "different_price" => CreateRecoveryCandidateJson(userId, id: "txn_candidate", itemsJson: "[{ \"price\": { \"id\": \"pri_yearly\" }, \"quantity\": 1 }]", createdAt: PaddleRecoveryNow),
+            "missing_identity" => CreateRecoveryCandidateJson(userId, id: "", itemsJson: ValidMonthlyItemJson, createdAt: PaddleRecoveryNow),
+            _ => throw new InvalidOperationException($"Unknown scenario: {scenario}"),
+        };
+        var handler = new RecordingHttpMessageHandler(
+            new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent($$"""{ "data": [{{candidate}}] }""") },
+            new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = JsonContent("""{ "data": { "id": "txn_new", "checkout": { "url": "https://checkout.paddle.com/txn_new" } } }"""),
+            });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+                PremiumMonthlyPriceId = "pri_monthly",
+                PremiumYearlyPriceId = "pri_yearly",
+                CheckoutUrl = "https://app.example/billing/paddle",
+            }),
+            new FixedTimeProvider(PaddleRecoveryNow));
+
+        Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(userId, "buyer@example.com", "monthly", "ctm_123", "new-request"),
+            CancellationToken.None);
+
+        Assert.Equal(expectedFailure, result.IsFailure);
+        Assert.Equal(expectedFailure ? 1 : 2, handler.Requests.Count);
+    }
+
     [Fact]
     public async Task PaddleCreateCheckoutSession_WhenExactTransactionUsesOldPrice_FailsClosed() {
         var userId = Guid.NewGuid();
@@ -1304,6 +1344,21 @@ public sealed class BillingGatewayTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_WhenRootIsNotObject_ReturnsValidationFailure() {
+        const string payload = "[]";
+        PaddleBillingGateway gateway = CreateConfiguredPaddleWebhookGateway();
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreatePaddleSignature(payload, "secret"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+        Assert.Contains("JSON object", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -2772,6 +2827,32 @@ public sealed class BillingGatewayTests {
 
     private static HttpResponseMessage EmptyPaddleListResponse() =>
         new(HttpStatusCode.OK) { Content = JsonContent("""{ "data": [] }""") };
+
+    private const string ValidMonthlyItemJson =
+        "[{ \"price\": { \"id\": \"pri_monthly\" }, \"quantity\": 1 }]";
+
+    private static string CreateRecoveryCandidateJson(
+        Guid userId,
+        string id,
+        string itemsJson,
+        DateTimeOffset? createdAt) {
+        string createdAtJson = createdAt.HasValue
+            ? $", \"created_at\": \"{createdAt.Value:O}\""
+            : string.Empty;
+        return $$"""
+            {
+              "id": "{{id}}",
+              "status": "ready",
+              "checkout": { "url": "https://checkout.paddle.com/candidate" },
+              "items": {{itemsJson}}{{createdAtJson}},
+              "custom_data": {
+                "user_id": "{{userId}}",
+                "plan": "monthly",
+                "checkout_reference": "old-request"
+              }
+            }
+            """;
+    }
 
     private static T? InvokePrivate<T>(object instance, string methodName, params object?[] args) {
         System.Reflection.MethodInfo method = instance.GetType().GetMethod(

@@ -6,6 +6,7 @@ param(
     [string]$Path = '.artifacts/llm-wiki/task-contract.json',
     [string]$Objective,
     [string]$BaseRef = 'HEAD',
+    [string[]]$ChangedPath,
     [string[]]$AllowedPath = @(),
     [string[]]$ExcludedPath = @(),
     [switch]$FailOnOutOfScope
@@ -71,9 +72,9 @@ switch ($Action) {
     }
     'validate' {
         $contract = Read-Contract
-        $diff = & (Join-Path $PSScriptRoot 'Get-LlmWikiDiffContext.ps1') `
-            -BaseRef $contract.git.base `
-            -Format Json | ConvertFrom-Json
+        $diffArguments = @{ BaseRef = $contract.git.base; Format = 'Json' }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $diffArguments.ChangedPath = $ChangedPath }
+        $diff = & (Join-Path $PSScriptRoot 'Get-LlmWikiDiffContext.ps1') @diffArguments | ConvertFrom-Json
         $outOfScope = @(
             $diff.changedPaths | Where-Object {
                 -not (Test-PathMatch -Value $_ -Patterns @($contract.scope.allowedPathPatterns)) -or

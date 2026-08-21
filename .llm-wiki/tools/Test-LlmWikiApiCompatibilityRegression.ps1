@@ -81,6 +81,32 @@ Assert-ApiCompatibility (@($detailed.changes.kind) -contains 'changed-response-s
 Assert-ApiCompatibility (@($detailed.changes.kind) -contains 'added-response-media-type') 'Additional response media types were omitted from compatibility comparison.'
 Assert-ApiCompatibility (@($detailed.changes.kind) -contains 'added-response-header') 'Additional response headers were omitted from compatibility comparison.'
 
+$emptyEndpointBase = @{
+    OpenApi = '3.0.4'
+    Endpoints = @()
+    Schemas = @(
+        @{ Name = 'ExampleHttpRequest'; Properties = @(
+            @{ Name = 'stable'; Required = $true; Type = 'string'; Nullable = $false }
+        ) }
+    )
+} | ConvertTo-Json -Depth 10
+$emptyEndpointChanged = @{
+    OpenApi = '3.0.4'
+    Endpoints = @()
+    Schemas = @(
+        @{ Name = 'ExampleHttpRequest'; Properties = @(
+            @{ Name = 'stable'; Required = $true; Type = 'string'; Nullable = $false }
+            @{ Name = 'optionalAdded'; Required = $false; Type = 'boolean'; Nullable = $false }
+        ) }
+    )
+} | ConvertTo-Json -Depth 10
+$emptyEndpointSchema = & $tool `
+    -BaseSnapshotContent $emptyEndpointBase `
+    -CurrentSnapshotContent $emptyEndpointChanged `
+    -Format Json | ConvertFrom-Json
+Assert-ApiCompatibility ($emptyEndpointSchema.snapshotFormat -eq 'endpoint-contract') 'An empty endpoint array was misclassified as raw OpenAPI.'
+Assert-ApiCompatibility (@($emptyEndpointSchema.changes.kind) -contains 'added-schema-property') 'An empty endpoint array suppressed compact schema comparison.'
+
 $beforeDto = @'
 public sealed record ExampleHttpRequest(
     string Name,

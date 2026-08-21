@@ -573,6 +573,8 @@ public sealed class OpenFoodFactsServiceTests {
     [Theory]
     [InlineData("timeout", false, typeof(TaskCanceledException))]
     [InlineData("json_error", false, typeof(System.Text.Json.JsonException))]
+    [InlineData("oversized_response", false, typeof(InvalidDataException))]
+    [InlineData("response_body_timeout", false, typeof(TimeoutException))]
     [InlineData("transport_error", false, typeof(HttpRequestException))]
     [InlineData("failure", false, typeof(InvalidOperationException))]
     public void ResolveFailureOutcome_MapsExceptionTypeToOutcome(
@@ -639,6 +641,51 @@ public sealed class OpenFoodFactsServiceTests {
             cache.Remove(cacheKey);
         }
     }
+
+    [Fact]
+    public async Task SearchAsync_WhenCacheEntryExpired_RemovesItAndRefreshesFromProvider() {
+        string query = $"expired-{Guid.NewGuid():N}";
+        OpenFoodFactsService warmup = CreateService(
+            new SuccessHttpMessageHandler("""{"products":[{"code":"old","product_name":"Old","nutriments":{}}]}"""));
+        await warmup.SearchAsync(query);
+        MakeOpenFoodFactsSearchCacheStale(query, limit: 10, TimeSpan.FromHours(7));
+        OpenFoodFactsService refreshed = CreateService(
+            new SuccessHttpMessageHandler("""{"products":[{"code":"new","product_name":"New","nutriments":{}}]}"""));
+
+        OpenFoodFactsProductModel product = Assert.Single(await refreshed.SearchAsync(query));
+
+        Assert.Equal("new", product.Barcode);
+    }
+
+    [Fact]
+    public void CacheSearchResult_WhenEntryIsReplaced_UpdatesCacheSize() {
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler("{}"));
+        string key = OpenFoodFactsService.GetSearchCacheKey($"replace-{Guid.NewGuid():N}", 10);
+        System.Reflection.MethodInfo method = typeof(OpenFoodFactsService).GetMethod(
+            "CacheSearchResult",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        IReadOnlyList<OpenFoodFactsProductModel> first = [CreateProductModel("1", "A")];
+        IReadOnlyList<OpenFoodFactsProductModel> second = [CreateProductModel("2", new string('x', 100))];
+
+        method.Invoke(service, [key, first]);
+        long firstSize = OpenFoodFactsService.SearchCacheSizeBytes;
+        method.Invoke(service, [key, second]);
+
+        Assert.True(OpenFoodFactsService.SearchCacheSizeBytes > firstSize);
+    }
+
+    private static OpenFoodFactsProductModel CreateProductModel(string barcode, string name) =>
+        new(
+            Barcode: barcode,
+            Name: name,
+            Brand: null,
+            Category: null,
+            ImageUrl: null,
+            CaloriesPer100G: null,
+            ProteinsPer100G: null,
+            FatsPer100G: null,
+            CarbsPer100G: null,
+            FiberPer100G: null);
 
     private static OpenFoodFactsService CreateService(
         HttpMessageHandler handler,

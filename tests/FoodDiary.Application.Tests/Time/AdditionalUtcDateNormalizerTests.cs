@@ -16,6 +16,7 @@ public sealed class AdditionalUtcDateNormalizerTests {
 
         DateTime cyclesLocal = CyclesUtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(local);
         DateTime cyclesUnspecified = CyclesUtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(unspecified);
+        DateTime cyclesUtc = CyclesUtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(utc);
         DateTime exportLocal = ExportUtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(local);
         DateTime exportUnspecified = ExportUtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(unspecified);
         DateTime hydration = HydrationUtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(unspecified);
@@ -31,6 +32,7 @@ public sealed class AdditionalUtcDateNormalizerTests {
         Assert.Multiple(
             () => Assert.Equal(local.ToUniversalTime(), cyclesLocal),
             () => Assert.Equal(DateTimeKind.Utc, cyclesUnspecified.Kind),
+            () => Assert.Equal(utc, cyclesUtc),
             () => Assert.Equal(local.ToUniversalTime(), exportLocal),
             () => Assert.Equal(DateTimeKind.Utc, exportUnspecified.Kind),
             () => Assert.Equal(DateTimeKind.Utc, hydration.Kind),

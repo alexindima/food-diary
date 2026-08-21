@@ -173,6 +173,14 @@ public class FastingSessionInvariantTests {
     }
 
     [Fact]
+    public void End_WhenTimestampPredatesStart_Throws() {
+        DateTime startedAt = new(2026, 4, 1, 12, 0, 0, DateTimeKind.Utc);
+        var session = FastingSession.Create(UserId.New(), FastingProtocol.Fast16Eat8, 16, startedAt);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.End(startedAt.AddTicks(-1)));
+    }
+
+    [Fact]
     public void UpdateNotes_WithNewValue_SetsModifiedOnUtc() {
         var session = FastingSession.Create(
             UserId.New(), FastingProtocol.Fast16Eat8, 16, DateTime.UtcNow);

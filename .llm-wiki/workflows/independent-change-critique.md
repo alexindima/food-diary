@@ -19,6 +19,10 @@ The confidence ledger aggregates evidence. The independent critique acts as a
 separate review pass: it re-derives findings from the current workspace rather
 than accepting the task's own conclusion.
 
+Its assessment dependencies are read-only. In particular, requirement
+assessment must not rewrite a persisted requirement model and invalidate the
+confidence ledger that the critique is about to verify.
+
 ```powershell
 ./.llm-wiki/wiki.ps1 task-critique-assess -WorkspacePath .artifacts/llm-wiki/tasks/<name>
 ./.llm-wiki/wiki.ps1 task-critique-create -WorkspacePath .artifacts/llm-wiki/tasks/<name>

@@ -28,6 +28,11 @@ For a bounded implementation, declare the objective and allowed repository paths
 ./.llm-wiki/wiki.ps1 task-validate -FailOnOutOfScope
 ```
 
+By default validation uses the current diff from the contract's captured base.
+For a deterministic check inside a dirty or shared worktree, pass the exact
+`-ChangedPath <path[]>` set; validation then evaluates only that explicit delta
+against the same allow/exclude patterns.
+
 The default contract lives under `.artifacts/` and is not committed. Patterns are
 .NET regular expressions over repository-relative paths. Include expected tests,
 documentation, generated artifacts, and contract snapshots in scope. This guard

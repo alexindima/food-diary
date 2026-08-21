@@ -435,6 +435,25 @@ public class ExportFeatureTests {
     }
 
     [Fact]
+    public async Task ExportCycle_WithSensitiveScopeAndNoCredentialVerifier_ReturnsConfigurationFailure() {
+        var userId = UserId.New();
+        var profile = CycleProfile.Create(userId, CycleTestDate);
+        ExportCycleQueryHandler handler = CreateExportCycleHandler(profile, CreateCurrentUserAccessService());
+
+        Result<FileExportResult> result = await handler.Handle(
+            new ExportCycleQuery(
+                userId.Value,
+                CycleTestDate,
+                CycleTestDate,
+                Scope: CycleExportScope.Sensitive,
+                CurrentPassword: "password"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Contains("not configured", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task ExportCycle_WithNullUserId_ReturnsFailure() {
         ExportCycleQueryHandler handler = CreateExportCycleHandler(profile: null, CreateCurrentUserAccessService());
 

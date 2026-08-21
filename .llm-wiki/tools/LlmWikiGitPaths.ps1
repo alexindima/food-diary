@@ -37,11 +37,33 @@ function ConvertFrom-LlmWikiGitPathOutput {
     } | Where-Object { -not [string]::IsNullOrEmpty($_) } | Sort-Object -Unique)
 }
 
+function Split-LlmWikiGitGrepAlternatives {
+    param(
+        [Parameter(Mandatory)][string[]]$Alternative,
+        [ValidateRange(256, 16000)][int]$MaxPatternLength = 6000
+    )
+
+    $groups = [Collections.Generic.List[string]]::new()
+    $current = [Text.StringBuilder]::new()
+    foreach ($value in @($Alternative | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })) {
+        $separatorLength = if ($current.Length -gt 0) { 1 } else { 0 }
+        if ($current.Length -gt 0 -and $current.Length + $separatorLength + $value.Length -gt $MaxPatternLength) {
+            $groups.Add($current.ToString())
+            $null = $current.Clear()
+        }
+        if ($current.Length -gt 0) { $null = $current.Append('|') }
+        $null = $current.Append($value)
+    }
+    if ($current.Length -gt 0) { $groups.Add($current.ToString()) }
+    @($groups)
+}
+
 function Invoke-LlmWikiGitPathList {
     param(
         [Parameter(Mandatory)][string]$RepositoryRoot,
         [Parameter(Mandatory)][string[]]$Arguments,
-        [string]$FailureMessage = 'Git path enumeration failed.'
+        [string]$FailureMessage = 'Git path enumeration failed.',
+        [int[]]$AllowedExitCode = @(0)
     )
 
     $startInfo = [Diagnostics.ProcessStartInfo]::new()
@@ -55,7 +77,13 @@ function Invoke-LlmWikiGitPathList {
     $gitArguments = [Collections.Generic.List[string]]::new()
     foreach ($argument in @($Arguments)) { $gitArguments.Add($argument) }
     $separatorIndex = $gitArguments.IndexOf('--')
-    if ($separatorIndex -ge 0) { $gitArguments.Insert($separatorIndex, '-z') } else { $gitArguments.Add('-z') }
+    if ($gitArguments.Count -gt 0 -and $gitArguments[0] -eq 'grep') {
+        $gitArguments.Insert(1, '-z')
+    } elseif ($separatorIndex -ge 0) {
+        $gitArguments.Insert($separatorIndex, '-z')
+    } else {
+        $gitArguments.Add('-z')
+    }
     $startInfo.Arguments = (@($gitArguments | ForEach-Object { '"' + ([string]$_).Replace('"', '\"') + '"' }) -join ' ')
     $process = [Diagnostics.Process]::new()
     $process.StartInfo = $startInfo
@@ -66,7 +94,7 @@ function Invoke-LlmWikiGitPathList {
         $process.WaitForExit()
         $stdout = [string]$stdoutTask.GetAwaiter().GetResult()
         $stderr = [string]$stderrTask.GetAwaiter().GetResult()
-        if ($process.ExitCode -ne 0) {
+        if ($process.ExitCode -notin $AllowedExitCode) {
             $detail = $stderr.Trim()
             throw "$FailureMessage Exit code $($process.ExitCode).$(if ($detail) { " $detail" })"
         }

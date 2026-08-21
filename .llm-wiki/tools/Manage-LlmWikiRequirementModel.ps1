@@ -254,10 +254,13 @@ if ($Action -eq 'expand') {
     foreach ($criterion in @($acceptance.criteria)) {
         $analysis = @($assessment.classification.criteria | Where-Object { $_.id -eq $criterion.id })[0]
         $parts = @(if ($null -ne $analysis -and -not $analysis.atomic) { @(Split-CompoundCriterion ([string]$criterion.text)) } else { @([string]$criterion.text) })
+        $wasSplit = $parts.Count -gt 1
         for ($partIndex = 0; $partIndex -lt $parts.Count; $partIndex++) {
             if ($partIndex -eq 0) {
                 $criterion.text = $parts[$partIndex]
-                $criterion | Add-Member -NotePropertyName origin -NotePropertyValue ([pscustomobject][ordered]@{ kind = 'compound-split'; sourceCriterionId = [string]$criterion.id }) -Force
+                if ($wasSplit) {
+                    $criterion | Add-Member -NotePropertyName origin -NotePropertyValue ([pscustomobject][ordered]@{ kind = 'compound-split'; sourceCriterionId = [string]$criterion.id }) -Force
+                }
                 $expandedCriteria.Add($criterion)
                 continue
             }
@@ -298,15 +301,23 @@ if ($Action -eq 'expand') {
     $result = [pscustomobject][ordered]@{ action = 'expand'; valid = $expandedModel.valid; addedCount = $added.Count; addedCriteria = @($added); issues = @(); model = $expandedModel; savedPath = "$normalizedWorkspace/requirement-model.json" }
 } elseif ($Action -in @('assess', 'create')) {
     $receipt = New-Receipt (Get-Assessment)
-    $temporaryPath = "$receiptPath.$([guid]::NewGuid().ToString('N')).tmp"
-    try {
-        [IO.File]::WriteAllText($temporaryPath, (($receipt | ConvertTo-Json -Depth 40) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
-        if (Test-Path -LiteralPath $receiptPath) { [IO.File]::Delete($receiptPath) }
-        [IO.File]::Move($temporaryPath, $receiptPath)
-    } finally {
-        if (Test-Path -LiteralPath $temporaryPath) { [IO.File]::Delete($temporaryPath) }
+    if ($Action -eq 'create') {
+        $temporaryPath = "$receiptPath.$([guid]::NewGuid().ToString('N')).tmp"
+        try {
+            [IO.File]::WriteAllText($temporaryPath, (($receipt | ConvertTo-Json -Depth 40) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+            if (Test-Path -LiteralPath $receiptPath) { [IO.File]::Delete($receiptPath) }
+            [IO.File]::Move($temporaryPath, $receiptPath)
+        } finally {
+            if (Test-Path -LiteralPath $temporaryPath) { [IO.File]::Delete($temporaryPath) }
+        }
     }
-    $result = [pscustomobject][ordered]@{ action = $Action; valid = $receipt.valid; issues = @(); model = $receipt; savedPath = "$normalizedWorkspace/requirement-model.json" }
+    $result = [pscustomobject][ordered]@{
+        action = $Action
+        valid = $receipt.valid
+        issues = @()
+        model = $receipt
+        savedPath = $(if ($Action -eq 'create') { "$normalizedWorkspace/requirement-model.json" } else { $null })
+    }
 } else {
     if (-not (Test-Path -LiteralPath $receiptPath -PathType Leaf)) { throw "Requirement model is absent: $normalizedWorkspace/requirement-model.json" }
     $receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json

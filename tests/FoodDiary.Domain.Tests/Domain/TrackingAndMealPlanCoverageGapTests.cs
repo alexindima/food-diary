@@ -26,6 +26,11 @@ public sealed class TrackingAndMealPlanCoverageGapTests {
         Assert.Equal(start.AddDays(2), inferred.EndDate);
         Assert.Throws<ArgumentOutOfRangeException>(() => InvokeInstance(inferred, "UpdateInferredRange", start.AddDays(-1)));
         Assert.Throws<InvalidOperationException>(() => InvokeInstance(inferred, "SetPredictionExclusion", true));
+        Assert.Throws<InvalidOperationException>(() => InvokeInstance(
+            inferred,
+            "UpdateConfirmedRange",
+            start,
+            start.AddDays(1)));
 
         MenstrualEpisode confirmed = CreateEpisode(
             profileId: CycleProfileId.New(), start, end: null, status: MenstrualEpisodeStatus.Confirmed);
@@ -74,6 +79,15 @@ public sealed class TrackingAndMealPlanCoverageGapTests {
         Assert.Throws<ArgumentOutOfRangeException>(() => CreateRevision(CycleProfileId.New(), generatedAt, from, from, 1, -1, 50));
         Assert.Throws<ArgumentOutOfRangeException>(() => CreateRevision(CycleProfileId.New(), generatedAt, from, from, 1, 1, 101));
         Assert.Throws<ArgumentNullException>(() => CreateRevision(CycleProfileId.New(), generatedAt, from, from, 1, 1, 50, reasonCodes: null));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateRevision(
+            CycleProfileId.New(),
+            generatedAt,
+            from,
+            from,
+            1,
+            1,
+            50,
+            reasonCodes: [new string('x', 600), new string('y', 600)]));
     }
 
     private static MenstrualEpisode CreateEpisode(

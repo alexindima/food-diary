@@ -7,6 +7,7 @@ param(
     [string]$Category = 'all',
     [ValidateRange(1, 100)]
     [int]$Limit = 30,
+    [switch]$NoImplicitScope,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'
 )
@@ -24,7 +25,7 @@ $scopePaths = @(
         Sort-Object -Unique
 )
 $scopeMode = if ($scopePaths.Count -gt 0) { 'explicit' } else { 'none' }
-if ($scopePaths.Count -eq 0 -and [string]::IsNullOrWhiteSpace($Query) -and $Category -eq 'all') {
+if (-not $NoImplicitScope -and $scopePaths.Count -eq 0 -and [string]::IsNullOrWhiteSpace($Query) -and $Category -eq 'all') {
     $gitPaths = @(& git -C $repositoryRoot diff --name-only HEAD --)
     $gitPaths += @(& git -C $repositoryRoot ls-files --others --exclude-standard)
     $scopePaths = @(
@@ -87,7 +88,7 @@ if ($scopeMode -eq 'none' -and [string]::IsNullOrWhiteSpace($Query) -and $Catego
     $items = @()
     $guidance = @(
         "Provide -Query, choose -PrivacyCategory, or scope the review with -PlannedPath @('path/one','path/two')."
-        "When a non-wiki git diff exists, the default privacy command scopes itself to that diff."
+        "Unless -NoImplicitScope is set, a non-wiki git diff scopes the default privacy command to that diff."
     )
 }
 $items = @($items | Select-Object -First $Limit)

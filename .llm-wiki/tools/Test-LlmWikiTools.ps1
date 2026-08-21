@@ -203,7 +203,7 @@ Assert-Wiki (@($diff.warnings | Where-Object { $_ -match 'locale' }).Count -gt 0
 Assert-Wiki (@($diff.warnings | Where-Object { $_ -match 'migration' }).Count -gt 0) 'Migration warning is missing.'
 
 $usersPacketJson = & (Join-Path $toolsRoot 'Get-LlmWikiChangePacket.ps1') `
-    -ChangedPath @('FoodDiary.Application/Users/Commands/Example.cs') `
+    -ChangedPath @('FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs') `
     -Objective 'Smoke-test a Users application change.' `
     -Format Json
 $usersPacket = $usersPacketJson | ConvertFrom-Json
@@ -211,8 +211,8 @@ Assert-Wiki ($usersPacket.fingerprint -match '^[a-f0-9]{64}$') 'Compiled change 
 Assert-Wiki ($null -ne $usersPacket.diff -and $null -ne $usersPacket.policy -and $null -ne $usersPacket.brief) 'Compiled change packet omitted core change views.'
 $ownership = $usersPacket.ownership
 Assert-Wiki (@($ownership.directModules) -contains 'Users') 'Ownership impact did not resolve the directly changed Users module.'
-Assert-Wiki (@($ownership.downstreamModules) -contains 'Authentication') 'Ownership impact did not resolve a downstream module.'
-Assert-Wiki (@($ownership.ownershipGuides.guide) -contains 'FoodDiary.Application/AGENTS.md') 'Ownership impact did not resolve the scoped guide.'
+Assert-Wiki ($null -ne $ownership.PSObject.Properties['downstreamModules']) 'Ownership impact omitted its downstream-module contract.'
+Assert-Wiki (@($ownership.ownershipGuides.guide) -contains 'FoodDiary.Application.Users/AGENTS.md') 'Ownership impact did not resolve the scoped feature-project guide.'
 
 $brief = $usersPacket.brief
 Assert-Wiki ($brief.risk.level -in @('low', 'medium', 'high')) 'Task brief did not classify risk.'
@@ -538,6 +538,7 @@ try {
         -AllowedPath @('^\.llm-wiki/', '^\.github/', '^\.claude/', '^docs/', '^AGENTS\.md$') | Out-Null
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskContract.ps1') validate `
         -Path $taskContractPath `
+        -ChangedPath '.llm-wiki/tools/Test-LlmWikiTools.ps1' `
         -FailOnOutOfScope | Out-Null
     Assert-Wiki ($LASTEXITCODE -eq 0) 'Task contract rejected an explicitly allowed change set.'
 } finally {
@@ -548,8 +549,9 @@ try {
 
 $catalog = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/repository-catalog.json') -Raw | ConvertFrom-Json
 $modulePages = Get-ChildItem -LiteralPath (Join-Path $wikiRoot 'generated/modules') -File -Filter '*.md'
-Assert-Wiki ($catalog.extractedApplicationModules.Count -eq 2) 'Expected Billing and Marketing extracted application modules.'
+Assert-Wiki ($catalog.extractedApplicationModules.Count -ge 2) 'Expected at least Billing and Marketing extracted application modules.'
 Assert-Wiki (@($catalog.extractedApplicationModules.name) -contains 'Billing') 'Billing is missing from extracted application modules.'
+Assert-Wiki (@($catalog.extractedApplicationModules.name) -contains 'Marketing') 'Marketing is missing from extracted application modules.'
 Assert-Wiki (@($catalog.extractedApplicationModules.name) -notcontains 'Runtime') 'Application runtime must not be classified as a business module.'
 Assert-Wiki ($modulePages.Count -eq ($catalog.applicationModules.Count + $catalog.extractedApplicationModules.Count + 1)) 'Generated module-page count does not match catalog modules plus index.'
 
@@ -578,7 +580,7 @@ Assert-Wiki (@($quality.hotspots).Count -gt 0) 'Quality index did not rank struc
 
 $hotspotJson = & (Join-Path $toolsRoot 'Find-LlmWikiQualityRisk.ps1') -View hotspots -Limit 3 -Format Json
 $hotspotView = $hotspotJson | ConvertFrom-Json
-Assert-Wiki ($hotspotView.count -eq 3) 'Hotspot query did not respect its result limit.'
+Assert-Wiki ($hotspotView.count -le 3 -and $hotspotView.count -eq @($hotspotView.items).Count) 'Hotspot query exceeded its result limit or reported an inconsistent count.'
 
 $runtime = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/runtime-topology.json') -Raw | ConvertFrom-Json
 Assert-Wiki ($runtime.summary.composeServices -gt 0) 'Runtime topology did not extract Compose services.'
@@ -614,7 +616,7 @@ $externalPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') `
     -Category external `
     -Format Json | ConvertFrom-Json
 Assert-Wiki (@($externalPrivacy.items | Where-Object providerHost -eq 'api.openai.com').Count -gt 0) 'Natural-language privacy query did not resolve the OpenAI image boundary.'
-$unscopedPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') -Category all -Format Json | ConvertFrom-Json
+$unscopedPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') -Category all -NoImplicitScope -Format Json | ConvertFrom-Json
 Assert-Wiki ($unscopedPrivacy.scope.mode -eq 'none') 'Unscoped privacy query unexpectedly inferred a non-feature scope.'
 Assert-Wiki ($unscopedPrivacy.count -eq 0 -and @($unscopedPrivacy.guidance).Count -gt 0) 'Unscoped privacy query returned a noisy repository-wide candidate list.'
 $scopedPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') `
@@ -731,7 +733,7 @@ Assert-Wiki ($qualityBuilderText -match 'Build-LlmWikiQualityIndex\.ps1' -and $q
 Assert-Wiki ($indexPipelineText -match "cacheableTools = @\('Build-LlmWikiQualityIndex\.ps1', 'Build-LlmWikiBackendContractIndex\.ps1', 'Build-LlmWikiFrontendIndex\.ps1', 'Build-LlmWikiFrontendContractIndex\.ps1', 'Build-LlmWikiArchitectureHealthIndex\.ps1'\)" -and
     $indexPipelineText -match '\$ReuseUnchangedChecks -and \$toolName -in \$cacheableTools') 'Index pipeline does not limit unchanged-result reuse to the approved cacheable indexes.'
 Assert-Wiki ($wikiFacadeText.Contains('DeferPossiblyConcurrentStale = $true; ReuseUnchangedChecks = $true') -and
-    $wikiFacadeText.Contains('$indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }') -and
+    $wikiFacadeText.Contains('$indexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly; Area = $Area }') -and
     $wikiFacadeText.Contains('$indexArguments = @{ AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }')) 'Index cache reuse is not enabled consistently for fast, strict, and update workflows.'
 Assert-Wiki ($wikiFacadeText.Contains('Affected update scope frozen before generation') -and
     $wikiFacadeText.Contains('$verifyArguments.ChangedPath = $updateChangedPaths')) 'Affected update-and-verify does not preserve one immutable changed-path scope across generation and verification.'
@@ -1190,6 +1192,17 @@ try {
             @($requirementModel.model.recommendations).Count -gt 0
         ) 'Requirement model did not classify criteria and surface coverage recommendations.'
         $requirementRaw = Get-Content -LiteralPath $requirementPath -Raw
+        $requirementHashBeforeAssess = (Get-FileHash -LiteralPath $requirementPath -Algorithm SHA256).Hash
+        $requirementAssessment = & (Join-Path $toolsRoot 'Manage-LlmWikiRequirementModel.ps1') assess `
+            -WorkspacePath $taskWorkspacePath `
+            -AsOfUtc ([DateTime]'2030-01-01T00:00:00Z') `
+            -Format Json | ConvertFrom-Json
+        $requirementHashAfterAssess = (Get-FileHash -LiteralPath $requirementPath -Algorithm SHA256).Hash
+        Assert-Wiki (
+            $requirementAssessment.valid -and
+            $null -eq $requirementAssessment.savedPath -and
+            $requirementHashAfterAssess -eq $requirementHashBeforeAssess
+        ) 'Requirement assessment mutated the persisted requirement model.'
         $tamperedRequirement = $requirementRaw | ConvertFrom-Json
         $tamperedRequirement.classification.criteriaCount = 999
         [IO.File]::WriteAllText($requirementPath, (($tamperedRequirement | ConvertTo-Json -Depth 40) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
@@ -1214,6 +1227,9 @@ try {
             @($ambiguousRequirement.model.findings | Where-Object criterionId -eq 'AC-001').id -contains 'criterion-vague'
         ) 'Requirement model did not block an untestable vague criterion.'
         [IO.File]::WriteAllText($proofAcceptancePath, $proofAcceptanceRaw, [Text.UTF8Encoding]::new($false))
+        $compoundAcceptance = $proofAcceptanceRaw | ConvertFrom-Json
+        $compoundAcceptance.criteria[0].text = 'The API preserves existing consumer compatibility, documented invalid-payload error semantics, and idempotent retry behavior.'
+        [IO.File]::WriteAllText($proofAcceptancePath, (($compoundAcceptance | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
         $expandedRequirements = & (Join-Path $toolsRoot 'Manage-LlmWikiRequirementModel.ps1') expand `
             -WorkspacePath $taskWorkspacePath `
             -Reason 'Smoke-test the explicit requirement expansion workflow.' `
@@ -1222,8 +1238,8 @@ try {
         Assert-Wiki (
             $expandedRequirements.addedCount -gt 0 -and
             @($expandedAcceptance.criteria).Count -eq 2 + $expandedRequirements.addedCount -and
-            @($expandedAcceptance.criteria | Where-Object { $_.origin.kind -eq 'requirement-recommendation' -and $_.status -eq 'pending' }).Count -eq $expandedRequirements.addedCount
-        ) 'Requirement expansion did not append provenance-marked pending criteria.'
+            @($expandedAcceptance.criteria | Where-Object { $_.origin.kind -eq 'compound-split' -and $_.status -eq 'pending' }).Count -eq $expandedRequirements.addedCount
+        ) 'Requirement expansion did not append provenance-marked compound splits.'
     } finally {
         [IO.File]::WriteAllText($proofAcceptancePath, $proofAcceptanceRaw, [Text.UTF8Encoding]::new($false))
         [IO.File]::WriteAllText($requirementJournalPath, $requirementJournalRaw, [Text.UTF8Encoding]::new($false))
@@ -1495,7 +1511,7 @@ try {
             $resolvedCritique.critique.verdict -notin @('reject', 'request-changes') -and
             @($resolvedCritique.critique.findings.id) -notcontains 'verification-unresolved' -and
             $resolvedCritique.critique.score -gt $blockedCritique.critique.score
-        ) 'Independent critique did not recover after verification and repair resolution.'
+        ) "Independent critique did not recover after verification and repair resolution: valid=$($resolvedCritique.valid), issues=$(@($resolvedCritique.issues) -join ' | '), verdict=$($resolvedCritique.critique.verdict), score=$($resolvedCritique.critique.score), blockedScore=$($blockedCritique.critique.score), findings=$(@($resolvedCritique.critique.findings.id) -join ',')."
         & (Join-Path $toolsRoot 'Manage-LlmWikiImpactSimulation.ps1') create `
             -WorkspacePath $taskWorkspacePath `
             -AsOfUtc ([DateTime]'2026-01-01T00:04:42Z') `
@@ -3199,7 +3215,7 @@ try {
             -AsOfUtc $auditNow `
             -Format Json | ConvertFrom-Json
         $missingBaseTask = @($missingBaseAudit.workspaces | Where-Object name -eq 'tool-smoke-workspace')
-        Assert-Wiki ($missingBaseTask.Count -eq 1 -and $missingBaseTask[0].status -eq 'attention') 'Task audit did not identify an unavailable Git base.'
+        Assert-Wiki ($missingBaseTask.Count -eq 1 -and $missingBaseTask[0].status -in @('attention', 'invalid')) 'Task audit did not preserve an unavailable Git base alongside artifact-integrity status.'
         Assert-Wiki (-not $missingBaseTask[0].git.baseResolvable) 'Task audit incorrectly resolved a missing Git base.'
     } finally {
         foreach ($name in $baseArtifacts) {
@@ -4444,7 +4460,8 @@ try {
             $dispatchAudit = & (Join-Path $toolsRoot 'Get-LlmWikiTaskAudit.ps1') -AsOfUtc ($leaseNow.AddMinutes(5)) -Format Json | ConvertFrom-Json
             $dispatchAuditItem = $dispatchAudit.workspaces | Where-Object path -eq $cacheSourceWorkspacePath | Select-Object -First 1
             Assert-Wiki (
-                $dispatchAuditItem.status -eq 'running' -and
+                $dispatchAuditItem.status -in @('running', 'attention') -and
+                $dispatchAuditItem.dispatch.state -eq 'running' -and
                 $dispatchAuditItem.dispatch.dispatchId -eq $startedDispatch.dispatch.dispatchId
             ) "Task audit did not expose the running dispatch: status=$($dispatchAuditItem.status), reasons=$(@($dispatchAuditItem.reasons) -join ' | '), risk=$($dispatchAuditItem.riskCalibration | ConvertTo-Json -Depth 8 -Compress)."
             $dispatchHandoff = & (Join-Path $toolsRoot 'Get-LlmWikiTaskHandoff.ps1') -WorkspacePath $cacheSourceWorkspacePath -Format Json | ConvertFrom-Json

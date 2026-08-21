@@ -52,6 +52,10 @@ command groups. Direct owners remain required. A broad production consumer set
 is represented by one recommended composition build instead of many project
 builds, while content-addressed local verification receipts prevent unchanged
 successful commands from being presented as pending work.
+Changed-symbol discovery batches long `git grep` alternative sets under a bounded
+native command length and unions the path results. Large generated or imported
+change sets therefore preserve semantic test ranking on Windows without exceeding
+the process command-line limit.
 
 Ordinary `wiki verify` is always affected and resumable. `wiki verify-full`, pre-push, and CI retain the explicit full-repository gate. Successful stage receipts survive a later timeout, so rerunning `verify` continues from unchanged green stages rather than replaying them.
 

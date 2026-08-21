@@ -1131,6 +1131,28 @@ public sealed class OpenAiFoodServiceTests {
         Assert.Contains("deadline expired", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Fact]
+    public async Task CalculateNutritionAsync_WhenResponseBodyReaderTimesOut_ReturnsInvalidResponse() {
+        using var httpClient = new HttpClient(new SequenceHttpMessageHandler(new Queue<HttpResponseMessage>([
+            new(HttpStatusCode.OK) {
+                Content = new TimeoutHttpContent(),
+            },
+        ])));
+        OpenAiFoodClient client = CreateClient(
+            httpClient,
+            new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
+
+        Result<OpenAiFoodClientResponse<FoodNutritionModel>> result = await client.CalculateNutritionAsync(
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
+            NutritionPrompt,
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.True(result.IsFailure),
+            () => Assert.Equal("Ai.InvalidResponse", result.Error.Code),
+            () => Assert.Contains("read deadline", result.Error.Message, StringComparison.OrdinalIgnoreCase));
+    }
+
     private static OpenAiFoodClient CreateClient(
         HttpClient httpClient,
         OpenAiOptions options,
@@ -1296,6 +1318,17 @@ public sealed class OpenAiFoodServiceTests {
         public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
         public override void SetLength(long value) => throw new NotSupportedException();
         public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class TimeoutHttpContent : HttpContent {
+        protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context) =>
+            Task.FromException(new TimeoutException("read timed out"));
+
+        protected override bool TryComputeLength(out long length) {
+            length = 0;
+            return false;
+        }
     }
 
     [ExcludeFromCodeCoverage]

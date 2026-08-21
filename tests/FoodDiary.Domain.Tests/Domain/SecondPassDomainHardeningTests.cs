@@ -18,6 +18,13 @@ namespace FoodDiary.Domain.Tests.Domain;
 
 [ExcludeFromCodeCoverage]
 public sealed class SecondPassDomainHardeningTests {
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(101)]
+    public void HealthAreaScore_RejectsScoreOutsidePercentageRange(int score) {
+        Assert.Throws<ArgumentOutOfRangeException>(() => new HealthAreaScore(score, HealthAreaGrade.Unknown));
+    }
+
     [Fact]
     public void CompositeUpdates_WhenLateValidationFails_AreAtomic() {
         var recipe = Recipe.Create(UserId.New(), "Original", servings: 1);

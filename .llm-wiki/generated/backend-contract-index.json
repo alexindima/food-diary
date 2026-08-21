@@ -23704,7 +23704,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.CreateAndRead.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "CreateCycleCommand",
@@ -27916,7 +27916,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeCommands.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "DeleteMenstrualEpisodeCommand",
@@ -30152,7 +30152,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "ExportCycleQuery",
@@ -34013,7 +34013,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.NutritionSummary.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 11
     },
     {
       "contract": "GetCycleNutritionSummaryQuery",
@@ -99103,7 +99103,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs",
       "isTest": true,
-      "referenceCount": 30
+      "referenceCount": 31
     },
     {
       "contract": "OpenFoodFactsProductHttpResponse",
@@ -102002,7 +102002,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Marketing/MarketingAttributionCoverageTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "RecordMarketingAttributionCommand",
@@ -109113,7 +109113,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeCommands.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "UpdateMenstrualEpisodeCommand",
@@ -110881,7 +110881,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.DayCommands.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 11
     },
     {
       "contract": "UpsertCycleDayCommand",
@@ -111180,7 +111180,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.WebPush.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 7
     },
     {
       "contract": "UpsertWebPushSubscriptionCommand",

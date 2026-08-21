@@ -9760,11 +9760,11 @@
     },
     {
       "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryDateRangePolicy.cs",
-      "nonBlankLines": 36,
-      "decisionPoints": 3,
+      "nonBlankLines": 29,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.22
+      "structuralRiskScore": 3.58
     },
     {
       "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs",

@@ -20,6 +20,22 @@ if ('.llm-wiki/wiki.ps1' -notin $tracked) { throw 'NUL-safe Git path enumeration
 $failed = $false
 try { $null = Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('not-a-real-command') -FailureMessage 'Expected failure.' } catch { $failed = $_.Exception.Message -match 'Expected failure.*Exit code' }
 if (-not $failed) { throw 'Git path enumeration did not propagate a required Git failure.' }
+$noMatches = @(
+    Invoke-LlmWikiGitPathList `
+        -RepositoryRoot $repositoryRoot `
+        -Arguments @('grep', '-l', '--fixed-strings', 'llm-wiki-regression-value-that-does-not-exist', '--', '*.cs') `
+        -AllowedExitCode @(0, 1) `
+        -FailureMessage 'Expected an empty Git search result.'
+)
+if ($noMatches.Count -ne 0) { throw 'Git path enumeration returned paths for an empty search result.' }
+$largeAlternatives = @(1..1000 | ForEach-Object { "ChangedType$($_.ToString('0000'))" })
+$boundedPatterns = @(Split-LlmWikiGitGrepAlternatives -Alternative $largeAlternatives -MaxPatternLength 512)
+if ($boundedPatterns.Count -le 1 -or @($boundedPatterns | Where-Object Length -gt 512).Count -gt 0) {
+    throw 'Git grep alternative batching did not respect the command-line pattern bound.'
+}
+if ((($boundedPatterns -join '|').Split('|') -join '|') -cne ($largeAlternatives -join '|')) {
+    throw 'Git grep alternative batching lost or reordered search terms.'
+}
 $gitPathHelperText = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1') -Raw
 if (($gitPathHelperText | Select-String -Pattern 'StandardOutput\.ReadToEndAsync\(\)' -AllMatches).Matches.Count -ne 1 -or
     ($gitPathHelperText | Select-String -Pattern 'StandardError\.ReadToEndAsync\(\)' -AllMatches).Matches.Count -ne 1) {
@@ -66,4 +82,4 @@ try {
     Remove-Item -LiteralPath $overlayRepository -Recurse -Force -ErrorAction SilentlyContinue
 }
 
-Write-Host 'LLM Wiki Git path regression passed: BOM, spaces, Unicode, NUL parsing, immutable refs, workspace HEAD overlays, and exit codes are safe.'
+Write-Host 'LLM Wiki Git path regression passed: BOM, spaces, Unicode, NUL parsing, bounded grep patterns, immutable refs, workspace HEAD overlays, and exit codes are safe.'

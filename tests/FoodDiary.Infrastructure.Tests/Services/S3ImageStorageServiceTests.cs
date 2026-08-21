@@ -12,6 +12,17 @@ public sealed class S3ImageStorageServiceTests {
     private const string IntegrationsMeterName = "FoodDiary.Integrations";
 
     [Fact]
+    public void ContentTypeMatchesFormat_WhenCodecFormatIsUnsupported_ReturnsFalse() {
+        System.Reflection.MethodInfo method = typeof(S3ImageStorageService).GetMethod(
+            "ContentTypeMatchesFormat",
+            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+
+        bool result = (bool)method.Invoke(null, ["image/png", SKEncodedImageFormat.Bmp])!;
+
+        Assert.False(result);
+    }
+
+    [Fact]
     public async Task CreatePresignedUploadAsync_WhenInputIsValid_RecordsSuccessMetric() {
         long? count = null;
         string? operation = null;

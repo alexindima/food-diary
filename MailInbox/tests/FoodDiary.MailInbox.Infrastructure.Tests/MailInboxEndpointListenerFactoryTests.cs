@@ -50,6 +50,24 @@ public sealed class MailInboxEndpointListenerFactoryTests {
         Assert.Equal(1, releaseCount);
     }
 
+    [Fact]
+    public void ConnectionLimiter_ReleaseSource_CoversDecrementRemovalAndMissingSource() {
+        Type limiterType = GetNestedType("ConnectionLimiter");
+        ConstructorInfo constructor = limiterType.GetConstructors(
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Single();
+        using var limiter = (IDisposable)constructor.Invoke([2, 2]);
+        MethodInfo acquire = limiterType.GetMethod("TryAcquireSource")!;
+        MethodInfo release = limiterType.GetMethod("ReleaseSource", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+        Assert.True((bool)acquire.Invoke(limiter, ["source"])!);
+        Assert.True((bool)acquire.Invoke(limiter, ["source"])!);
+        release.Invoke(limiter, ["source"]);
+        release.Invoke(limiter, ["source"]);
+        release.Invoke(limiter, ["missing"]);
+
+        Assert.True((bool)acquire.Invoke(limiter, ["source"])!);
+    }
+
     private static Type GetNestedType(string name) => typeof(MailInboxEndpointListenerFactory).GetNestedType(
         name,
         BindingFlags.NonPublic) ?? throw new InvalidOperationException($"Nested type {name} was not found.");

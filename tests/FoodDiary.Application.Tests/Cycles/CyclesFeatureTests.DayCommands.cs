@@ -170,6 +170,35 @@ public partial class CyclesFeatureTests {
     }
 
     [Fact]
+    public async Task UpsertCycleDayCommandHandler_WithFertilitySignalAndNoConsent_ReturnsValidationFailure() {
+        var user = User.Create("cycle-day-no-fertility-consent@example.com", "hash");
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new UpsertCycleDayCommandHandler(repository, CreateCurrentUserAccessService(user));
+
+        Result<CycleLogDayModel> result = await handler.Handle(
+            new UpsertCycleDayCommand(
+                user.Id.Value,
+                profile.Id.Value,
+                new DateOnly(2026, 4, 3),
+                Bleeding: null,
+                Symptoms: [],
+                new FertilitySignalCommandModel(
+                    BasalBodyTemperatureCelsius: 36.6,
+                    OvulationTestResult: null,
+                    CervicalFluid: null,
+                    HadSex: null,
+                    Notes: null,
+                    ClearNotes: false)),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Validation.Invalid", result.Error.Code),
+            () => Assert.False(repository.WasUpdated));
+    }
+
+    [Fact]
     public async Task UpsertCycleDayCommandHandler_WithClearBleeding_RemovesOnlyBleedingEntries() {
         var user = User.Create("cycle-day-clear-bleeding@example.com", "hash");
         DateOnly date = new(2026, 4, 3);

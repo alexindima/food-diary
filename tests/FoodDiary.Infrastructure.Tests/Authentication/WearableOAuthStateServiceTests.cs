@@ -97,8 +97,9 @@ public sealed class WearableOAuthStateServiceTests {
     [InlineData("{}")]
     public void IsValidState_WhenUnprotectedPayloadIsInvalid_ReturnsFalse(string payload) {
         WearableOAuthStateService service = CreateService(provider: new PlainTextDataProtectionProvider(payload));
+        string state = service.CreateState(UserId.New(), WearableProvider.Fitbit, clientState: null);
 
-        Assert.False(service.IsValidState("protected", UserId.New(), WearableProvider.Fitbit));
+        Assert.False(service.IsValidState(state, UserId.New(), WearableProvider.Fitbit));
     }
 
     private static WearableOAuthStateService CreateService(

@@ -451,6 +451,32 @@ public class ProductInvariantTests {
     }
 
     [Fact]
+    public void UpdateIdentity_WithNameAndProductType_UpdatesBothFields() {
+        Product product = CreateValidProduct();
+
+        product.UpdateIdentity(new ProductIdentityUpdate(Name: "Pear", ProductType: ProductType.Fruit));
+
+        Assert.Multiple(
+            () => Assert.Equal("Pear", product.Name),
+            () => Assert.Equal(ProductType.Fruit, product.ProductType));
+    }
+
+    [Theory]
+    [InlineData(MeasurementUnit.G, 100, true)]
+    [InlineData(MeasurementUnit.Ml, 100, true)]
+    [InlineData(MeasurementUnit.Pcs, 1, true)]
+    [InlineData(MeasurementUnit.G, 99, false)]
+    [InlineData((MeasurementUnit)int.MaxValue, 100, false)]
+    [InlineData(MeasurementUnit.G, double.NaN, false)]
+    [InlineData(MeasurementUnit.G, -1, false)]
+    public void IsCanonicalBaseAmount_CoversEveryGuard(
+        MeasurementUnit unit,
+        double value,
+        bool expected) {
+        Assert.Equal(expected, Product.IsCanonicalBaseAmount(unit, value));
+    }
+
+    [Fact]
     public void UpdateIdentity_WithSameValues_DoesNotSetModifiedOnUtc() {
         var product = Product.Create(
             UserId.New(),

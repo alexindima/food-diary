@@ -62,7 +62,7 @@ param(
     [string]$PathPrefix,
     [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Tests')]
     [string]$ChangeType = 'Any',
-    [ValidateSet('all', 'credential', 'identity', 'health', 'financial', 'privateContent', 'logging', 'boundaries')]
+    [ValidateSet('all', 'credential', 'identity', 'health', 'financial', 'privateContent', 'logging', 'boundaries', 'external')]
     [string]$PrivacyCategory = 'all',
     [ValidateSet('all', 'components', 'consumers', 'api', 'translations', 'spec-gaps')]
     [string]$FrontendView = 'all',
@@ -98,6 +98,7 @@ param(
     [switch]$Detached,
     [switch]$Compact,
     [switch]$NoBaseline,
+    [switch]$NoImplicitScope,
     [switch]$SkipHistory,
     [switch]$SkipTestPlan,
     [switch]$FailOnUnreviewed,
@@ -2255,6 +2256,7 @@ switch ($Command) {
             Format = $Format
         }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $privacyArguments.ScopePath = $ProposedPath }
+        if ($NoImplicitScope) { $privacyArguments.NoImplicitScope = $true }
         Invoke-WikiTool 'Find-LlmWikiSensitiveData.ps1' $privacyArguments
     }
     'ui' {
@@ -2873,7 +2875,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 delivery-finalize -WorkspacePath <task> -FailOnInvalid'
         Write-Host '  ./.llm-wiki/wiki.ps1 delivery-critique -WorkspacePath <task> -FailOnInvalid'
         Write-Host '  ./.llm-wiki/wiki.ps1 topology [-Query <text>]'
-        Write-Host "  ./.llm-wiki/wiki.ps1 privacy -PrivacyCategory credential [-PlannedPath @('path/one','path/two')]"
+        Write-Host "  ./.llm-wiki/wiki.ps1 privacy -PrivacyCategory credential [-PlannedPath @('path/one','path/two')] [-NoImplicitScope]"
         Write-Host '  ./.llm-wiki/wiki.ps1 ui -FrontendView components -Query autocomplete'
         Write-Host '  ./.llm-wiki/wiki.ps1 domain -DomainView invariants -Query weight'
         Write-Host '  ./.llm-wiki/wiki.ps1 contracts -BackendContractView consumers -Query StartFastingCommand'

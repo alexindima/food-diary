@@ -111,6 +111,30 @@ public partial class NotificationsFeatureTests {
     }
 
     [Fact]
+    public async Task UpsertWebPushSubscription_WithInsecureEndpoint_ReturnsValidationFailureBeforeLookup() {
+        User user = CreateUser();
+        var repository = new InMemoryWebPushSubscriptionRepository();
+        var handler = new UpsertWebPushSubscriptionCommandHandler(
+            repository,
+            CreateCurrentUserAccessService(user),
+            new RecordingAuditLogger());
+
+        Result result = await handler.Handle(
+            new UpsertWebPushSubscriptionCommand(
+                user.Id.Value,
+                "http://push.example.com/new",
+                "p256",
+                "auth",
+                ExpirationTimeUtc: null,
+                "en",
+                "Chrome"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Equal(0, repository.EndpointLookupCount);
+    }
+
+    [Fact]
     public async Task UpsertWebPushSubscription_WithDeletedUser_ReturnsFailureWithoutAddingSubscription() {
         var userId = UserId.New();
         var repository = new InMemoryWebPushSubscriptionRepository();

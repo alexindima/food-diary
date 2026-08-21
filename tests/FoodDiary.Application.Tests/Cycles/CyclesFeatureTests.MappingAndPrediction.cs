@@ -92,6 +92,20 @@ public partial class CyclesFeatureTests {
     }
 
     [Fact]
+    public void CyclePredictionService_CalculatePredictions_WithEpisodesTooClose_ReturnsAmbiguousHistory() {
+        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 1, 1));
+        AddBleedingEpisode(profile, new DateOnly(2026, 1, 1));
+        AddBleedingEpisode(profile, new DateOnly(2026, 1, 11));
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, new DateOnly(2026, 1, 11));
+
+        Assert.Multiple(
+            () => Assert.Null(predictions.NextPeriodStartFrom),
+            () => Assert.Equal("Insufficient", predictions.DataSufficiency),
+            () => Assert.Contains("ambiguous_episode_history", predictions.ReasonCodes, StringComparer.Ordinal));
+    }
+
+    [Fact]
     public void CyclePredictionService_CalculatePredictions_WithActivePredictionLimitingFactor_ReturnsLimitedPrediction() {
         var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 4, 1), showFertilityEstimates: true);
         profile.UpsertFactor(

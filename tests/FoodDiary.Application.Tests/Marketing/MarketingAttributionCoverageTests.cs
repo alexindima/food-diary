@@ -7,6 +7,28 @@ namespace FoodDiary.Application.Tests.Marketing;
 
 [ExcludeFromCodeCoverage]
 public sealed class MarketingAttributionCoverageTests {
+    [Fact]
+    public async Task Handle_WithWhitespaceAndOversizedValues_NormalizesStoredRecord() {
+        var repository = new RecordingRepository();
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
+        RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
+            AnonymousId = "   ",
+            SessionId = new string('s', 120),
+            LandingPath = "  /landing  ",
+            UtmSource = "  source  ",
+        };
+
+        Result result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        MarketingAttributionEventRecord record = Assert.IsType<MarketingAttributionEventRecord>(repository.Record);
+        Assert.Multiple(
+            () => Assert.Equal("unknown", record.AnonymousId),
+            () => Assert.Equal(96, record.SessionId.Length),
+            () => Assert.Equal("/landing", record.LandingPath),
+            () => Assert.Equal("source", record.UtmSource));
+    }
+
     [Theory]
     [InlineData("not-a-date")]
     [InlineData("2026-04-01T00:00:00Z")]

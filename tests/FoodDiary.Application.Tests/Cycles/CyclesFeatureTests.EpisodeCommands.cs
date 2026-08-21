@@ -97,4 +97,44 @@ public partial class CyclesFeatureTests {
             () => Assert.Equal(FoodDiary.Domain.Enums.MenstrualEpisodeStatus.Inferred, Assert.Single(model.MenstrualEpisodes!).Status),
             () => Assert.True(repository.WasUpdated));
     }
+
+    [Fact]
+    public async Task DeleteMenstrualEpisodeCommandHandler_WhenEpisodeIsMissing_ReturnsValidationFailure() {
+        var user = User.Create("cycle-episode-delete-missing@example.com", "hash");
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new DeleteMenstrualEpisodeCommandHandler(repository, CreateCurrentUserAccessService(user));
+
+        Result<CycleModel> result = await handler.Handle(
+            new DeleteMenstrualEpisodeCommand(user.Id.Value, profile.Id.Value, Guid.NewGuid()),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Validation.Invalid", result.Error.Code),
+            () => Assert.False(repository.WasUpdated));
+    }
+
+    [Fact]
+    public async Task UpdateMenstrualEpisodeCommandHandler_WithInferredEpisode_ReturnsValidationFailure() {
+        var user = User.Create("cycle-episode-update-inferred@example.com", "hash");
+        DateOnly start = new(2026, 4, 1);
+        var profile = CycleProfile.Create(user.Id, start);
+        profile.UpsertBleedingEntry(
+            start,
+            FoodDiary.Domain.Enums.BleedingType.Bleeding,
+            FoodDiary.Domain.Enums.CycleFlowLevel.Light,
+            painImpact: null,
+            notes: null);
+        MenstrualEpisode episode = Assert.Single(profile.MenstrualEpisodes);
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new UpdateMenstrualEpisodeCommandHandler(repository, CreateCurrentUserAccessService(user));
+
+        Result<CycleModel> result = await handler.Handle(
+            new UpdateMenstrualEpisodeCommand(user.Id.Value, profile.Id.Value, episode.Id.Value, start, start.AddDays(2)),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
 }

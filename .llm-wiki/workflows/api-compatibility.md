@@ -23,7 +23,9 @@ After regenerating API contract snapshots, compare them with the intended base:
 ```
 
 The guard understands both a raw OpenAPI document and this repository's compact
-`Endpoints` contract snapshot. The full compact snapshot records component
+`Endpoints` contract snapshot. Property presence determines the format, so a
+valid compact snapshot with an empty `Endpoints` array still compares its
+component schemas instead of being misclassified as raw OpenAPI. The full compact snapshot records component
 schema properties used by request and response bodies. It also records query-
 and path-parameter name, location, requiredness, type, format, default,
 validation limits and enum values. Every request and successful response media

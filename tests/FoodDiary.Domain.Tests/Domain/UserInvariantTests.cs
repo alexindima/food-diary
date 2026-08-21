@@ -12,6 +12,16 @@ namespace FoodDiary.Domain.Tests.Domain;
 [ExcludeFromCodeCoverage]
 public class UserInvariantTests {
     [Fact]
+    public void RequirePasswordChange_SetsSecurityFlagAndModificationTimestamp() {
+        var user = User.Create("password-change@example.com", "hash");
+
+        user.RequirePasswordChange();
+
+        Assert.True(user.MustChangePassword);
+        Assert.NotNull(user.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void Create_WithEmptyEmail_Throws() {
         Assert.Throws<ArgumentException>(() => User.Create("   ", "hash"));
     }

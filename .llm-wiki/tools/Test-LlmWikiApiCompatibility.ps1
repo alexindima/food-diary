@@ -103,8 +103,9 @@ function Convert-CompactSchemaShape {
 function ConvertTo-ComparableOpenApi {
     param($Snapshot)
 
-    $snapshotEndpoints = Get-PropertyValue $Snapshot 'Endpoints'
-    if ($null -ne $snapshotEndpoints) {
+    $snapshotEndpointsProperty = Get-Properties $Snapshot | Where-Object Name -eq 'Endpoints' | Select-Object -First 1
+    if ($null -ne $snapshotEndpointsProperty) {
+        $snapshotEndpoints = @($snapshotEndpointsProperty.Value)
         $paths = [ordered]@{}
         foreach ($endpoint in @($snapshotEndpoints)) {
             $operations = [ordered]@{}
@@ -422,8 +423,8 @@ $baseText = if ($PSBoundParameters.ContainsKey('BaseSnapshotContent')) {
 
 $beforeSource = $baseText | ConvertFrom-Json
 $afterSource = $currentText | ConvertFrom-Json
-$beforeHasEndpoints = $null -ne (Get-PropertyValue $beforeSource 'Endpoints')
-$afterHasEndpoints = $null -ne (Get-PropertyValue $afterSource 'Endpoints')
+$beforeHasEndpoints = $null -ne (Get-Properties $beforeSource | Where-Object Name -eq 'Endpoints' | Select-Object -First 1)
+$afterHasEndpoints = $null -ne (Get-Properties $afterSource | Where-Object Name -eq 'Endpoints' | Select-Object -First 1)
 $snapshotFormat = if ($beforeHasEndpoints -or $afterHasEndpoints) {
     'endpoint-contract'
 } else {

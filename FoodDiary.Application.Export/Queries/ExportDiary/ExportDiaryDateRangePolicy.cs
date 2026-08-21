@@ -10,15 +10,8 @@ internal static class ExportDiaryDateRangePolicy {
         out DateTime normalizedFrom,
         out DateTime normalizedTo,
         out TimeSpan displayOffset) {
-        try {
-            normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(dateFrom);
-            normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(dateTo);
-        } catch (ArgumentException) {
-            normalizedFrom = default;
-            normalizedTo = default;
-            displayOffset = default;
-            return false;
-        }
+        normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(dateFrom);
+        normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(dateTo);
 
         displayOffset = ResolveDisplayOffset(normalizedFrom, timeZoneOffsetMinutes);
         return CanApplyOffset(normalizedFrom, displayOffset) && CanApplyOffset(normalizedTo, displayOffset);
