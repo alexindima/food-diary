@@ -67,6 +67,15 @@ public class PasswordHasherTests {
         Assert.False(_hasher.Verify("password", "not-a-bcrypt-hash"));
     }
 
+    [Theory]
+    [InlineData("", "hash")]
+    [InlineData("password", "")]
+    [InlineData("password", "   ")]
+    [InlineData("password", "$fd$bcrypt-sha384$invalid")]
+    public void Verify_WithInvalidInput_ReturnsFalse(string password, string hash) {
+        Assert.False(_hasher.Verify(password, hash));
+    }
+
     [Fact]
     public void NeedsRehash_WithEnhancedHash_ReturnsFalse() {
         string hash = _hasher.Hash("password");

@@ -8,7 +8,7 @@
 
 ## Context
 
-ADR 0013 introduced an in-process, read-only SQLite context reader in shadow mode. The shared Node and .NET ranking policy now passes the committed 60-case corpus above the promotion criteria: 96.7% top-1 accuracy, 100% top-10 recall, and 0.9833 mean reciprocal rank. The corpus covers backend, frontend, integrations, jobs, privacy, API compatibility, and JavaScript/MJS tooling paths.
+ADR 0013 introduced an in-process, read-only SQLite context reader in shadow mode. The shared Node and .NET ranking policy passes a committed 60-case regression corpus above the promotion criteria: 96.7% top-1 accuracy, 100% top-10 recall, and 0.9833 mean reciprocal rank. A separately authored 40-case challenge corpus improved from a pre-tuning baseline of 11/40 top-1 and 19/40 top-10 to 40/40 top-1. Together the corpora cover 100 cases with no top-10 miss, including Russian queries, backend, frontend, integrations, jobs, privacy, API compatibility, and JavaScript/MJS tooling paths.
 
 Shadow mode still paid for the legacy JSON trace on every aggregate request, so it could measure SQL quality but could not deliver the main latency benefit. Promotion also required a stronger freshness proof than file timestamps or Git HEAD alone because uncommitted source changes must participate in the selected context.
 
@@ -62,8 +62,8 @@ Adopt option 3 for `get_development_context`.
 
 - `SqliteWikiContextSearchTests` verifies freshness acceptance, mismatch rejection, ranking, read-only behavior, and telemetry.
 - `WikiQueryServiceTests` verifies SQL-primary scope, one refresh attempt, JSON fallback, fingerprint forwarding, and routing telemetry.
-- `.llm-wiki/evals/context-search.json` contains at least 60 representative cases and independent regression and switch criteria.
-- `Test-LlmWikiSqlContextEvaluation.ps1` enforces the corpus floor and retrieval regression gate.
+- `.llm-wiki/evals/context-search.json` contains at least 60 regression cases, and `.llm-wiki/evals/context-search-holdout.json` contains at least 40 independently authored challenge cases. Both define independent regression and switch criteria.
+- `Test-LlmWikiSqlContextEvaluation.ps1` requires both corpora to meet switch criteria, a combined floor of 100 cases, and no top-10 miss.
 - `--evaluate-context-search` calculates the live MCP change-set fingerprint before evaluating, so a stale database cannot produce a false passing result.
 - `Test-LlmWikiCodeGraph.ps1` and the full Wiki verification validate the writer and projection lifecycle.
 

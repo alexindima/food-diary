@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 1,
+  "description": "Independently authored difficult challenge corpus for SQL context retrieval. Its pre-tuning baseline was 11/40 top-1, 19/40 top-10, and 0.3276 MRR.",
+  "diagnosticLimit": 100,
+  "thresholds": {
+    "minimumTop1Rate": 0.85,
+    "minimumTop10Rate": 0.95,
+    "minimumMeanReciprocalRank": 0.85
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 40,
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "cases": [
+    {
+      "id": "ru-api-telemetry-privacy",
+      "query": "где мы вычищаем идентификаторы пользователя из логов API",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Web.Api/Extensions/TelemetryPrivacyProcessor.cs"]
+    },
+    {
+      "id": "ru-usda-external-search",
+      "query": "какой код ходит во внешний сервис USDA за продуктами",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Services/UsdaFoodSearchService.cs"]
+    },
+    {
+      "id": "ru-weekly-goal-reminder",
+      "query": "кто отправляет напоминание если недельная цель отстает",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs"]
+    },
+    {
+      "id": "ru-billing-webhook-controller",
+      "query": "какой HTTP контроллер принимает уведомления от платежного провайдера",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs"]
+    },
+    {
+      "id": "ru-recipe-nutrition-recalculation",
+      "query": "где пересчитывается пищевая ценность рецепта после изменения ингредиента",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Recipes/Recipes/Services/RecipeNutritionUpdater.cs"]
+    },
+    {
+      "id": "ru-cycle-prediction-revision",
+      "query": "кто пересматривает прогноз цикла когда меняется история",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Cycles/Services/CyclePredictionRevisionService.cs"]
+    },
+    {
+      "id": "ru-inbound-smtp-store",
+      "query": "куда сохраняется входящее письмо принятое по SMTP",
+      "changeType": "Backend",
+      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpInboundMessageStore.cs"]
+    },
+    {
+      "id": "ru-web-push-audience",
+      "query": "как выбираются пользователи которым отправим web push",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Notifications/Services/WebPushDeliveryAudienceService.cs"]
+    },
+    {
+      "id": "ru-password-reset-request",
+      "query": "обработчик запроса на восстановление пароля",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs"]
+    },
+    {
+      "id": "ru-frontend-state-ownership",
+      "query": "скрипт который проверяет кому принадлежит состояние на фронтенде",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/scripts/check-state-ownership.mjs"]
+    },
+    {
+      "id": "ru-user-cleanup-job",
+      "query": "фоновая задача удаляет давно неактивных пользователей",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/UserCleanupJob.cs"]
+    },
+    {
+      "id": "ru-dashboard-snapshot",
+      "query": "где собираем данные главного экрана за текущий день",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs"]
+    },
+    {
+      "id": "image-cleanup-background-job",
+      "query": "recurring background task removes orphaned uploaded images",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/ImageCleanupJob.cs"]
+    },
+    {
+      "id": "expired-notification-cleanup",
+      "query": "purge old read notifications after their retention period",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.Notifications/Services/NotificationCleanupService.cs",
+        "FoodDiary.JobManager/Services/NotificationCleanupJob.cs"
+      ]
+    },
+    {
+      "id": "email-template-administration",
+      "query": "administrator changes transactional email templates",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationService.cs"]
+    },
+    {
+      "id": "user-agent-parsing",
+      "query": "detect the browser and operating system from a User-Agent header",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Services/UserAgents/UserAgentParser.cs"]
+    },
+    {
+      "id": "restore-deleted-account",
+      "query": "undelete a user account while it is still inside retention",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs"]
+    },
+    {
+      "id": "verify-email-token",
+      "query": "consume an email verification token and mark the address verified",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs"]
+    },
+    {
+      "id": "start-premium-trial",
+      "query": "grant the current user a free premium trial",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Billing/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs"]
+    },
+    {
+      "id": "billing-renewal-service",
+      "query": "renew a subscription after a successful recurring payment",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Billing/Services/BillingRenewalService.cs"]
+    },
+    {
+      "id": "open-food-facts-cache-first-search",
+      "query": "prefer cached Open Food Facts products before calling the provider",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs"]
+    },
+    {
+      "id": "daily-advice-selection",
+      "query": "choose the personalized daily advice shown to a user",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.DailyAdvices/Services/DailyAdviceSelector.cs"]
+    },
+    {
+      "id": "meal-nutrition-calculation",
+      "query": "compute calorie and macro totals across meal items",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Meals/Services/MealNutritionCalculator.cs"]
+    },
+    {
+      "id": "meal-ai-session-append",
+      "query": "append AI-recognized food into the meal being edited",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Meals/Services/MealAiSessionAppender.cs"]
+    },
+    {
+      "id": "satiety-level-validation",
+      "query": "reject an impossible satiety score on a meal",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Meals/Services/SatietyLevelValidator.cs"]
+    },
+    {
+      "id": "delete-image-asset-handler",
+      "query": "delete a previously uploaded image asset",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs"]
+    },
+    {
+      "id": "presigned-image-upload-url",
+      "query": "create a presigned URL for a client image upload",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs"]
+    },
+    {
+      "id": "structured-audit-logging",
+      "query": "write a structured security audit entry",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Infrastructure/Services/StructuredAuditLogger.cs"]
+    },
+    {
+      "id": "dashboard-meals-persistence-read",
+      "query": "load dashboard meal data directly from persistence",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs"]
+    },
+    {
+      "id": "email-outbox-processing",
+      "query": "deliver emails queued in the transactional outbox",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Email/EmailOutboxProcessor.cs"]
+    },
+    {
+      "id": "outbox-dead-letter-replay",
+      "query": "replay poison messages from the outbox dead-letter queue",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs"]
+    },
+    {
+      "id": "wearable-oauth-state",
+      "query": "hold OAuth state between the wearable authorization redirect and callback",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Infrastructure/Authentication/WearableOAuthStateService.cs"]
+    },
+    {
+      "id": "redis-api-idempotency",
+      "query": "enforce idempotency for repeated API requests using Redis",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Web.Api/Services/RedisIdempotencyStore.cs"]
+    },
+    {
+      "id": "paddle-notification-recovery-service",
+      "query": "recover failed Paddle provider notification processing",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Billing/PaddleNotificationRecoveryService.cs"]
+    },
+    {
+      "id": "diary-pdf-generation",
+      "query": "render a personal food diary export as a PDF document",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs"]
+    },
+    {
+      "id": "ai-prompt-provider",
+      "query": "load the configured AI prompt template used for food recognition",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Ai/AiPromptProvider.cs"]
+    },
+    {
+      "id": "russian-prerender-html-tool",
+      "query": "generate static Russian prerender HTML pages",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/scripts/generate-ru-prerender-html.mjs"]
+    },
+    {
+      "id": "lighthouse-budget-runner",
+      "query": "run Lighthouse and enforce frontend performance budgets",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/scripts/run-lighthouse.mjs"]
+    },
+    {
+      "id": "component-logic-audit",
+      "query": "detect Angular components that contain too much business logic",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/scripts/check-component-logic.mjs"]
+    },
+    {
+      "id": "mail-relay-provider-events-api",
+      "query": "HTTP API receives delivery events from the mail provider",
+      "changeType": "Api",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayProviderEventsController.cs"]
+    }
+  ]
+}

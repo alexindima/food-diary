@@ -105,6 +105,41 @@ public partial class RecipesFeatureTests {
         Assert.Contains("Nested recipe", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task RecipeIngredientAccessValidator_WithTransitiveDependency_ValidatesWholeGraph(bool dependencyExists) {
+        var userId = UserId.New();
+        var editedRecipeId = RecipeId.New();
+        var firstDependency = Recipe.Create(userId, "First", servings: 1);
+        var secondDependency = Recipe.Create(userId, "Second", servings: 1);
+        firstDependency.AddStep(1, "Mix").AddNestedRecipeIngredient(secondDependency.Id, 1);
+        IReadOnlyList<RecipeOverviewReadItem> recipes = dependencyExists
+            ? [TestRecipeOverview.From(firstDependency, userId), TestRecipeOverview.From(secondDependency, userId)]
+            : [TestRecipeOverview.From(firstDependency, userId)];
+        var lookup = new GraphRecipeLookupService(recipes);
+        var step = new RecipeStepInput(
+            Order: 1,
+            Description: "Mix",
+            Title: null,
+            ImageUrl: null,
+            ImageAssetId: null,
+            Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: firstDependency.Id.Value, Amount: 1)]);
+
+        Result result = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
+            [step],
+            editedRecipeId,
+            userId,
+            new AllowAllProductLookupService(),
+            lookup,
+            CancellationToken.None);
+
+        Assert.Equal(dependencyExists, result.IsSuccess);
+        if (!dependencyExists) {
+            Assert.Contains("dependency not found", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
     [Fact]
     public async Task RecipeNutritionUpdater_WhenManualNutrition_DoesNotUpdateRepository() {
         var recipe = Recipe.Create(UserId.New(), "Manual", servings: 1);

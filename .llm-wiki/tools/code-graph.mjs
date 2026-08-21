@@ -817,7 +817,12 @@ function searchTerms(query) {
     .match(/[\p{L}\p{N}][\p{L}\p{N}_-]*/gu) ?? [])]
     .filter((term) => term.length >= 2 && !stopTerms.has(term));
   const expanded = [...direct];
-  for (const term of direct) expanded.push(...(contextSearchRanking.queryTermExpansions?.[term] ?? []));
+  for (const term of direct) {
+    expanded.push(...(contextSearchRanking.queryTermExpansions?.[term] ?? []));
+    for (const [prefix, expansions] of Object.entries(contextSearchRanking.queryPrefixExpansions ?? {})) {
+      if (term.startsWith(prefix)) expanded.push(...expansions);
+    }
+  }
   return [...new Set(expanded)].slice(0, Number(contextSearchRanking.maximumQueryTerms ?? 24));
 }
 
@@ -847,6 +852,31 @@ function searchContext(database, query, limit, filters = {}) {
     ORDER BY lexicalRank, path
     LIMIT ?
   `).all(match, candidateLimit);
+  const identityMatch = terms.flatMap((term) => {
+    const escaped = term.replaceAll('"', '""');
+    return [`path : "${escaped}"*`, `title : "${escaped}"*`];
+  }).join(' OR ');
+  const identityLimit = Math.min(Math.max(limit * 2, 20), 100);
+  const identityCandidates = database.prepare(`
+    SELECT record_type recordType, record_key recordKey, path, source_path sourcePath,
+      category, title, bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexicalRank
+    FROM context_search
+    WHERE context_search MATCH ?
+    ORDER BY lexicalRank, path
+    LIMIT ?
+  `).all(identityMatch, identityLimit);
+  const candidateIndexes = new Map(candidates.map((item, index) => [
+    `${item.recordType}\0${item.recordKey}\0${item.path}`,
+    index,
+  ]));
+  for (const identityCandidate of identityCandidates) {
+    const key = `${identityCandidate.recordType}\0${identityCandidate.recordKey}\0${identityCandidate.path}`;
+    const existingIndex = candidateIndexes.get(key);
+    if (existingIndex === undefined) {
+      candidateIndexes.set(key, candidates.length);
+      candidates.push(identityCandidate);
+    }
+  }
   const normalizedQuery = expandSearchText(query).toLowerCase();
   const moduleTerm = String(filters.module ?? '').toLowerCase();
   const scopePaths = String(filters.path ?? '').split(';').filter(Boolean).map((path) => path.replaceAll('\\', '/').toLowerCase());
@@ -903,6 +933,15 @@ function searchContext(database, query, limit, filters = {}) {
     }
     const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(path);
     if (isTest && changeType !== 'tests') score -= Number(contextSearchRanking.nonTestPenalty ?? 25);
+    const isFrontendPath = normalizedPath.startsWith('fooddiary.web.client/');
+    const isCode = item.recordType === 'code';
+    if (isCode && changeType === 'frontend' && !isFrontendPath) {
+      score -= Number(contextSearchRanking.crossLayerPenalty ?? 0);
+      reasons.push('backend candidate penalty for frontend intent');
+    } else if (isFrontendPath && ['api', 'backend', 'database'].includes(changeType)) {
+      score -= Number(contextSearchRanking.crossLayerPenalty ?? 0);
+      reasons.push('frontend candidate penalty for backend intent');
+    }
     const requestsAbstraction = terms.some((term) => ['interface', 'contract', 'abstraction'].includes(term));
     if (!requestsAbstraction && normalizedPath.startsWith('fooddiary.application.abstractions/')) {
       score -= Number(contextSearchRanking.applicationAbstractionPenalty ?? 0);
@@ -910,7 +949,11 @@ function searchContext(database, query, limit, filters = {}) {
     if (!requestsAbstraction && /\/I[A-Z][^/]*\.cs$/.test(path)) {
       score -= Number(contextSearchRanking.interfacePathPenalty ?? 0);
     }
-    if (item.recordType === 'code') score += 20;
+    if (/\.[^./]+\.cs$/i.test(path)) {
+      score -= Number(contextSearchRanking.companionFilePenalty ?? 0);
+      reasons.push('companion file ranked after primary declaration');
+    }
+    if (isCode) score += 20;
     if (item.recordType === 'agent-guide') score += Number(contextSearchRanking.agentGuideBoost ?? 15);
     return { ...item, score, lexicalRank: Math.round(item.lexicalRank * 1_000_000) / 1_000_000, reasons };
   }).sort((left, right) => right.score - left.score || left.lexicalRank - right.lexicalRank || left.path.localeCompare(right.path));

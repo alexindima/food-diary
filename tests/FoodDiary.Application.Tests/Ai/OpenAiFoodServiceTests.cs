@@ -245,6 +245,53 @@ public sealed class OpenAiFoodServiceTests {
             () => Assert.Empty(quotaRepository.Reservations));
     }
 
+    [Theory]
+    [InlineData(true, "context")]
+    [InlineData(true, "budget")]
+    [InlineData(true, "quota")]
+    [InlineData(true, "provider")]
+    [InlineData(false, "context")]
+    [InlineData(false, "budget")]
+    [InlineData(false, "quota")]
+    [InlineData(false, "provider")]
+    public async Task VisionOperations_WhenDependencyFails_ReturnFailure(bool analyzeImage, string stage) {
+        var client = new RecordingOpenAiFoodClient {
+            AnalyzeFoodImageBudgetResult = string.Equals(stage, "budget", StringComparison.Ordinal)
+                ? Result.Failure<AiProviderTokenBudget>(Errors.Ai.InvalidResponse("budget failed"))
+                : null,
+            ParseFoodTextBudgetResult = string.Equals(stage, "budget", StringComparison.Ordinal)
+                ? Result.Failure<AiProviderTokenBudget>(Errors.Ai.InvalidResponse("budget failed"))
+                : null,
+            AnalyzeFoodImageResult = string.Equals(stage, "provider", StringComparison.Ordinal)
+                ? Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.InvalidResponse("provider failed"))
+                : null,
+            ParseFoodTextResult = string.Equals(stage, "provider", StringComparison.Ordinal)
+                ? Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.InvalidResponse("provider failed"))
+                : null,
+        };
+        var quotaRepository = new RecordingAiQuotaRepository {
+            ReserveStatus = string.Equals(stage, "quota", StringComparison.Ordinal)
+                ? AiQuotaReservationStatus.QuotaExceeded
+                : AiQuotaReservationStatus.Acquired,
+        };
+        OpenAiFoodService service = CreateService(
+            client,
+            quotaRepository,
+            returnNull: string.Equals(stage, "context", StringComparison.Ordinal));
+
+        Result<FoodVisionModel> result = analyzeImage
+            ? await service.AnalyzeFoodImageAsync(
+                imageUrl: "https://cdn.example.com/meal.webp",
+                userLanguage: "en",
+                userId: UserId.New(),
+                description: null,
+                requestId: RequestId,
+                cancellationToken: CancellationToken.None)
+            : await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), RequestId, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+    }
+
     [Fact]
     public async Task CalculateNutritionAsync_WhenCallerCancels_PropagatesCancellation() {
         var client = new RecordingOpenAiFoodClient {
@@ -288,7 +335,10 @@ public sealed class OpenAiFoodServiceTests {
         private static readonly AiProviderTokenBudget DefaultBudget = new(11, 4_096);
 
         public Result<AiProviderTokenBudget>? CalculateNutritionBudgetResult { get; init; }
+        public Result<AiProviderTokenBudget>? AnalyzeFoodImageBudgetResult { get; init; }
+        public Result<AiProviderTokenBudget>? ParseFoodTextBudgetResult { get; init; }
         public Result<OpenAiFoodClientResponse<FoodVisionModel>>? AnalyzeFoodImageResult { get; init; }
+        public Result<OpenAiFoodClientResponse<FoodVisionModel>>? ParseFoodTextResult { get; init; }
         public Result<OpenAiFoodClientResponse<FoodNutritionModel>>? CalculateNutritionResult { get; init; }
         public Action? BeforeCalculateNutrition { get; init; }
         public Func<CancellationToken, Task>? BeforeCalculateNutritionBudgetAsync { get; init; }
@@ -307,7 +357,7 @@ public sealed class OpenAiFoodServiceTests {
                 await BeforeVisionBudgetAsync(cancellationToken);
             }
 
-            return Result.Success(DefaultBudget);
+            return AnalyzeFoodImageBudgetResult ?? Result.Success(DefaultBudget);
         }
 
         public Task<Result<OpenAiFoodClientResponse<FoodVisionModel>>> AnalyzeFoodImageAsync(
@@ -331,7 +381,7 @@ public sealed class OpenAiFoodServiceTests {
                 await BeforeVisionBudgetAsync(cancellationToken);
             }
 
-            return Result.Success(DefaultBudget);
+            return ParseFoodTextBudgetResult ?? Result.Success(DefaultBudget);
         }
 
         public Task<Result<OpenAiFoodClientResponse<FoodVisionModel>>> ParseFoodTextAsync(
@@ -339,7 +389,7 @@ public sealed class OpenAiFoodServiceTests {
             string? userLanguage,
             string promptTemplate,
             CancellationToken cancellationToken) =>
-            Task.FromResult(Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
+            Task.FromResult(ParseFoodTextResult ?? Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
                 CreateVisionModel(),
                 "text-parse",
                 "test-model",

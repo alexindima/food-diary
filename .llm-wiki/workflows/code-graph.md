@@ -12,6 +12,7 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiCodeGraph.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextShadow.ps1
   - .llm-wiki/evals/context-search.json
+  - .llm-wiki/evals/context-search-holdout.json
   - .llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
   - FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs
@@ -47,18 +48,29 @@ PowerShell/Node round trip. The Development MCP aggregate route now uses a
 fresh SQL result as its primary code-scope selection; policy, checks, reviewed
 knowledge, and source claims remain Git-backed.
 
-The committed retrieval corpus lives in `.llm-wiki/evals/context-search.json`.
-Run it without changing the JSON-authoritative path:
+The committed retrieval suite has a 60-case regression corpus in
+`.llm-wiki/evals/context-search.json` and a separately authored 40-case
+challenge corpus in `.llm-wiki/evals/context-search-holdout.json`. The challenge
+set includes Russian queries and deliberately indirect implementation searches.
+Its recorded pre-tuning baseline was 11/40 top-1, 19/40 top-10, and 0.3276 MRR.
+Run either corpus without changing the JSON-authoritative path, or run the
+combined gate:
 
 ```powershell
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
+  -CorpusPath .llm-wiki/evals/context-search-holdout.json
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 -FailOnRegression
+./.llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
 ```
 
-The 60-case gate reports top-1 accuracy, top-10 recall, mean reciprocal rank,
-SQL timing, and per-query misses. It keeps lower regression thresholds separate
-from stricter `switchCriteria`. Timing is diagnostic rather than a correctness
-gate because workstation load varies.
+Each evaluation reports top-1 accuracy, top-10 recall, mean reciprocal rank,
+SQL timing, and per-query misses. Each corpus keeps lower regression thresholds
+separate from stricter `switchCriteria`. The combined gate requires at least
+100 committed cases, both corpora to meet switch criteria, and no top-10 miss.
+The current Node result is 58/60 top-1 on the regression corpus and 40/40 top-1
+on the challenge corpus, with 100/100 top-10 retrieval. Timing is diagnostic
+rather than a correctness gate because workstation load varies.
 
 The Development MCP reads the existing projection directly with
 `Microsoft.Data.Sqlite`. It opens the database read-only, uses the same ranking
@@ -69,6 +81,8 @@ built MCP:
 ```powershell
 dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search.json
+dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+  --evaluate-context-search .llm-wiki/evals/context-search-holdout.json
 ```
 
 The evaluation calculates the live change-set fingerprint, so it fails closed

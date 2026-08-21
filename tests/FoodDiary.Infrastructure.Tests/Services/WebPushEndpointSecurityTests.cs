@@ -1,4 +1,6 @@
 using System.Net;
+using System.Net.Sockets;
+using System.Reflection;
 using FoodDiary.Integrations.Services;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
@@ -151,6 +153,37 @@ public sealed class WebPushEndpointSecurityTests {
                 CancellationToken.None));
 
         Assert.Same(expected, exception);
+    }
+
+    [Fact]
+    public async Task ConnectSocketAsync_WithListeningEndpoint_ReturnsConnectedStream() {
+        using var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        var endpoint = (IPEndPoint)listener.LocalEndpoint;
+        Task<TcpClient> acceptTask = listener.AcceptTcpClientAsync();
+
+        await using Stream stream = await InvokeConnectSocketAsync(endpoint, CancellationToken.None);
+        using TcpClient accepted = await acceptTask;
+
+        Assert.True(stream.CanRead);
+        Assert.True(accepted.Connected);
+    }
+
+    [Fact]
+    public async Task ConnectSocketAsync_WhenConnectionFails_DisposesSocketAndPropagates() {
+        using var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        var endpoint = (IPEndPoint)listener.LocalEndpoint;
+        listener.Stop();
+
+        await Assert.ThrowsAsync<SocketException>(() => InvokeConnectSocketAsync(endpoint, CancellationToken.None).AsTask());
+    }
+
+    private static ValueTask<Stream> InvokeConnectSocketAsync(IPEndPoint endpoint, CancellationToken cancellationToken) {
+        MethodInfo method = typeof(WebPushSocketsHttpHandlerFactory).GetMethod(
+            "ConnectSocketAsync",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        return (ValueTask<Stream>)method.Invoke(null, [endpoint, cancellationToken])!;
     }
 
     [ExcludeFromCodeCoverage]

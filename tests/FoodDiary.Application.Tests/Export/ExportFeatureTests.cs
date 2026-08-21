@@ -319,7 +319,7 @@ public class ExportFeatureTests {
         var user = User.Create("cycle-sensitive-export@example.com", "stored-hash");
         var profile = CycleProfile.Create(user.Id, CycleTestDate);
         profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UtcNow);
-        profile.UpsertBleedingEntry(CycleTestDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: "private note");
+        profile.UpsertBleedingEntry(CycleTestDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: "private, \"quoted\" note");
         profile.UpsertFertilitySignal(CycleTestDate, 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: "signal note");
         IUserCredentialVerificationService credentialVerificationService = Substitute.For<IUserCredentialVerificationService>();
         credentialVerificationService
@@ -344,7 +344,7 @@ public class ExportFeatureTests {
         Assert.Equal("User.InvalidPassword", invalid.Error.Code);
         ResultAssert.Success(valid);
         string content = System.Text.Encoding.UTF8.GetString(valid.Value.Content);
-        Assert.Contains("private note", content, StringComparison.Ordinal);
+        Assert.Contains("\"private, \"\"quoted\"\" note\"", content, StringComparison.Ordinal);
         Assert.Contains("FertilitySignal", content, StringComparison.Ordinal);
         Assert.Contains("signal note", content, StringComparison.Ordinal);
     }

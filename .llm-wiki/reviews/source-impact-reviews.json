@@ -192,13 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "1717bd283d40840c01014fd213c199d3e7b9916ee691871325161b71751c47ca"
+          "sha256": "a0c6fc6e255561da309da18eadfb6c314ec8ee3ec5d1146f018d661269a47781"
         }
       ],
-      "reason": "The merged Mail integration registration and SQL-first local MCP changes do not alter HTTP routes, payloads, status codes, or Swagger snapshots; the regenerated backend contract index is current.",
+      "reason": "Generated contract delta only raises an existing OpenAiFoodClientResponse test reference count; no HTTP route, payload, status, or runtime contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "13f6bba05ae5784c9d6d332287b26657205d94d0",
-      "reviewedAtUtc": "2026-08-21T05:58:27.7395577Z"
+      "gitHead": "fb83194b2f8f1647d051377b88cefa115f767059",
+      "reviewedAtUtc": "2026-08-21T06:40:42.3271180Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -736,13 +736,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "9bd1359e69d562d162248c5c292cf54649a398ff7c9fced62e9746c0ea6effd8"
+          "sha256": "6a902ffa80ba7be8cbdd357e03796bd2050ce775d988a011822d2d536d55c88b"
         }
       ],
-      "reason": "The SQLite projection remains local and read-only in MCP, the Node writer remains sole owner, and JavaScript indexing adds symbols and tokens without expanding the existing arbitrary C# runtime-literal boundary.",
+      "reason": "Sensitive-data delta only shifts the existing read-only SQLite connection builder line after ranking code insertion; no credential handling or sensitive-data boundary changed.",
       "baseRef": "HEAD",
-      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
-      "reviewedAtUtc": "2026-08-21T05:47:01.5145073Z"
+      "gitHead": "fb83194b2f8f1647d051377b88cefa115f767059",
+      "reviewedAtUtc": "2026-08-21T06:45:46.4953096Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -797,13 +797,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8296cfcffa9495cfa9dfe3025845867847380668ac68f11a8f2a2ff95bb26556"
+          "sha256": "b3b69e640904b076aae996885874189bda9a2940ec87c075cd99f21bd88ecd98"
         }
       ],
-      "reason": "The regenerated quality index includes the merged Mail DI test plus the verified SQL-first MCP and cycle/OpenAI test additions; full solution build, focused tests, architecture tests, and code-graph smoke passed.",
+      "reason": "Reviewed final SQL retrieval implementation after removing a zero-effect ranking branch; the bounded read-only FTS lane and shared policy remain covered by 100/100 top-10 retrieval, exact Node/.NET top-five parity, the 100-case gate, and all 59 MCP tests.",
       "baseRef": "HEAD",
-      "gitHead": "13f6bba05ae5784c9d6d332287b26657205d94d0",
-      "reviewedAtUtc": "2026-08-21T05:58:28.2441015Z"
+      "gitHead": "fb83194b2f8f1647d051377b88cefa115f767059",
+      "reviewedAtUtc": "2026-08-21T06:45:46.9188136Z"
     },
     {
       "pageId": "workflow-release-readiness",

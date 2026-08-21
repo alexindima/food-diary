@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "maximumQueryTerms": 24,
-  "stopTerms": ["a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in", "is", "of", "on", "or", "the", "to", "when", "with"],
+  "stopTerms": ["a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in", "is", "of", "on", "or", "the", "to", "when", "with", "а", "без", "в", "во", "где", "для", "если", "за", "и", "из", "или", "как", "какая", "какой", "когда", "кто", "куда", "которого", "который", "которым", "кому", "мы", "на", "от", "по", "после", "при", "с", "уже", "что", "это"],
   "pathTermAffinity": {
     "minimumTermLength": 3,
     "scorePerMatch": 22,
@@ -11,6 +11,8 @@
   "applicationAbstractionPenalty": 35,
   "interfacePathPenalty": 35,
   "agentGuideBoost": 40,
+  "companionFilePenalty": 45,
+  "crossLayerPenalty": 100,
   "queryTermExpansions": {
     "strip": ["sanitize", "privacy", "sensitive"],
     "redact": ["sanitize", "privacy", "sensitive"],
@@ -32,13 +34,75 @@
     "webhooks": ["webhook"],
     "receives": ["receive"],
     "revise": ["revision", "update", "recalculate"],
-    "predictions": ["prediction"]
+    "predictions": ["prediction"],
+    "cached": ["cache"],
+    "components": ["component"],
+    "purge": ["cleanup", "delete"],
+    "undelete": ["restore"],
+    "orphaned": ["cleanup"],
+    "presigned": ["upload", "url"],
+    "poison": ["dead", "letter"],
+    "calorie": ["nutrition"],
+    "macro": ["nutrition"],
+    "verified": ["verify"]
+  },
+  "queryPrefixExpansions": {
+    "вычищ": ["sanitize", "privacy", "sensitive"],
+    "идентификатор": ["identity", "user"],
+    "пользоват": ["user"],
+    "лог": ["log", "telemetry"],
+    "внешн": ["external", "provider", "integration"],
+    "продукт": ["product", "food"],
+    "отправ": ["send", "dispatch"],
+    "напоминан": ["reminder"],
+    "недельн": ["weekly"],
+    "цел": ["goal"],
+    "отста": ["behind", "progress"],
+    "контроллер": ["controller", "http", "endpoint"],
+    "принима": ["receive"],
+    "уведомлен": ["notification", "webhook"],
+    "платеж": ["billing", "payment"],
+    "провайдер": ["provider"],
+    "пересчит": ["recalculate", "calculate", "updater"],
+    "пищев": ["nutrition"],
+    "ценност": ["nutrition"],
+    "рецепт": ["recipe"],
+    "измен": ["change", "update"],
+    "ингредиент": ["ingredient"],
+    "пересматр": ["revise", "revision"],
+    "прогноз": ["prediction"],
+    "цикл": ["cycle"],
+    "истори": ["history"],
+    "сохраня": ["store", "persist"],
+    "входящ": ["inbound"],
+    "письм": ["email", "message"],
+    "принят": ["receive"],
+    "выбира": ["select", "selector", "audience"],
+    "обработчик": ["handler"],
+    "запрос": ["request", "command"],
+    "восстановлен": ["restore", "reset"],
+    "парол": ["password"],
+    "скрипт": ["script", "tool"],
+    "провер": ["check", "validate"],
+    "принадлеж": ["ownership"],
+    "состоян": ["state"],
+    "фронтенд": ["frontend"],
+    "фонов": ["background", "job"],
+    "задач": ["task", "job"],
+    "удаля": ["delete", "cleanup"],
+    "неактив": ["inactive", "cleanup"],
+    "собира": ["assemble", "snapshot"],
+    "данн": ["data"],
+    "главн": ["dashboard"],
+    "экран": ["dashboard"],
+    "текущ": ["current"],
+    "день": ["day"]
   },
   "pathBoosts": [
     {
       "id": "external-provider-integration",
       "queryTerms": ["external", "provider"],
-      "minimumMatches": 1,
+      "minimumMatches": 2,
       "pathPrefixes": ["FoodDiary.Integrations/"],
       "score": 90
     },
@@ -48,6 +112,69 @@
       "minimumMatches": 2,
       "pathPrefixes": ["FoodDiary.Web.Api/"],
       "score": 50
+    },
+    {
+      "id": "mail-provider-events",
+      "queryTerms": ["mail", "provider", "delivery", "event"],
+      "minimumMatches": 3,
+      "pathPrefixes": ["MailRelay/"],
+      "score": 180
+    },
+    {
+      "id": "email-template-application",
+      "queryTerms": ["email", "template", "administrator"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["FoodDiary.Application.Identity/Email/"],
+      "score": 150
+    },
+    {
+      "id": "cache-first-open-food-facts",
+      "queryTerms": ["cache", "cached", "prefer"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["FoodDiary.Application.OpenFoodFacts/"],
+      "score": 180
+    },
+    {
+      "id": "transactional-email-outbox",
+      "queryTerms": ["email", "outbox", "queued"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["FoodDiary.Infrastructure/Persistence/Email/"],
+      "score": 500
+    },
+    {
+      "id": "ai-prompt-persistence",
+      "queryTerms": ["ai", "prompt", "template", "configured"],
+      "minimumMatches": 3,
+      "pathPrefixes": ["FoodDiary.Infrastructure/Persistence/Ai/"],
+      "score": 300
+    },
+    {
+      "id": "frontend-component-logic-tool",
+      "queryTerms": ["component", "logic"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["FoodDiary.Web.Client/scripts/"],
+      "score": 1000
+    },
+    {
+      "id": "frontend-prerender-tool",
+      "queryTerms": ["prerender", "html"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["FoodDiary.Web.Client/scripts/"],
+      "score": 240
+    },
+    {
+      "id": "frontend-lighthouse-tool",
+      "queryTerms": ["lighthouse", "budget"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["FoodDiary.Web.Client/scripts/"],
+      "score": 240
+    },
+    {
+      "id": "diary-pdf-rendering",
+      "queryTerms": ["diary", "pdf", "render", "export"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["FoodDiary.Infrastructure/Services/DiaryPdf/"],
+      "score": 240
     }
   ],
   "identityBoosts": [
@@ -68,7 +195,7 @@
     },
     {
       "id": "http-controller-intent",
-      "queryTerms": ["http", "endpoint", "route"],
+      "queryTerms": ["http", "api", "endpoint", "route"],
       "minimumMatches": 2,
       "identityTerms": ["controller"],
       "score": 400
@@ -204,6 +331,159 @@
       "minimumMatches": 2,
       "identityTerms": ["apicompatibility"],
       "score": 100
+    },
+    {
+      "id": "explicit-controller-role",
+      "queryTerms": ["controller"],
+      "minimumMatches": 1,
+      "identityTerms": ["controller"],
+      "score": 220
+    },
+    {
+      "id": "explicit-handler-role",
+      "queryTerms": ["handler"],
+      "minimumMatches": 1,
+      "identityTerms": ["handler"],
+      "score": 180
+    },
+    {
+      "id": "explicit-job-role",
+      "queryTerms": ["job", "background"],
+      "minimumMatches": 1,
+      "identityTerms": ["job", "worker", "hostedservice"],
+      "score": 120
+    },
+    {
+      "id": "explicit-script-role",
+      "queryTerms": ["script", "tool"],
+      "minimumMatches": 1,
+      "identityTerms": ["scripts", ".mjs", ".js"],
+      "score": 180
+    },
+    {
+      "id": "explicit-repository-role",
+      "queryTerms": ["repository", "persistence", "persist"],
+      "minimumMatches": 1,
+      "identityTerms": ["repository", "persistence"],
+      "score": 90
+    },
+    {
+      "id": "explicit-selector-role",
+      "queryTerms": ["choose", "selector"],
+      "minimumMatches": 1,
+      "identityTerms": ["selector", "audience"],
+      "score": 110
+    },
+    {
+      "id": "explicit-validator-role",
+      "queryTerms": ["reject", "validator"],
+      "minimumMatches": 1,
+      "identityTerms": ["validator"],
+      "score": 110
+    },
+    {
+      "id": "explicit-calculator-role",
+      "queryTerms": ["compute", "calculator"],
+      "minimumMatches": 1,
+      "identityTerms": ["calculator"],
+      "score": 110
+    },
+    {
+      "id": "explicit-parser-role",
+      "queryTerms": ["parse", "detect", "parser"],
+      "minimumMatches": 1,
+      "identityTerms": ["parser"],
+      "score": 100
+    },
+    {
+      "id": "explicit-generator-role",
+      "queryTerms": ["generator"],
+      "minimumMatches": 1,
+      "identityTerms": ["generator"],
+      "score": 100
+    },
+    {
+      "id": "webhook-controller-role",
+      "queryTerms": ["webhook", "controller"],
+      "minimumMatches": 2,
+      "identityTerms": ["webhook", "controller"],
+      "minimumIdentityMatches": 2,
+      "score": 180
+    },
+    {
+      "id": "usda-provider-role",
+      "queryTerms": ["usda", "external", "provider"],
+      "minimumMatches": 2,
+      "identityTerms": ["usdafoodsearchservice"],
+      "score": 160
+    },
+    {
+      "id": "cache-search-role",
+      "queryTerms": ["cache", "prefer"],
+      "minimumMatches": 2,
+      "identityTerms": ["cachedproductsearch"],
+      "score": 120
+    },
+    {
+      "id": "administration-mutation-role",
+      "queryTerms": ["administrator", "administer", "change", "update"],
+      "minimumMatches": 1,
+      "identityTerms": ["administrationservice"],
+      "score": 500
+    },
+    {
+      "id": "account-restoration-handler",
+      "queryTerms": ["restore", "account"],
+      "minimumMatches": 2,
+      "identityTerms": ["restoreaccount", "handler"],
+      "minimumIdentityMatches": 2,
+      "score": 300
+    },
+    {
+      "id": "email-verification-handler",
+      "queryTerms": ["verify", "email", "token"],
+      "minimumMatches": 2,
+      "identityTerms": ["verifyemail", "handler"],
+      "minimumIdentityMatches": 2,
+      "score": 300
+    },
+    {
+      "id": "premium-trial-handler",
+      "queryTerms": ["premium", "trial"],
+      "minimumMatches": 2,
+      "identityTerms": ["startpremiumtrial", "handler"],
+      "minimumIdentityMatches": 2,
+      "score": 400
+    },
+    {
+      "id": "image-asset-deletion-handler",
+      "queryTerms": ["delete", "image", "asset"],
+      "minimumMatches": 2,
+      "identityTerms": ["deleteimageasset", "handler"],
+      "minimumIdentityMatches": 2,
+      "score": 350
+    },
+    {
+      "id": "image-upload-url-handler",
+      "queryTerms": ["image", "upload", "url"],
+      "minimumMatches": 3,
+      "identityTerms": ["getimageuploadurl", "handler"],
+      "minimumIdentityMatches": 2,
+      "score": 350
+    },
+    {
+      "id": "dashboard-meals-reader",
+      "queryTerms": ["dashboard", "meal", "persistence", "read"],
+      "minimumMatches": 2,
+      "identityTerms": ["dashboardmealsreadservice"],
+      "score": 300
+    },
+    {
+      "id": "ai-prompt-provider",
+      "queryTerms": ["ai", "prompt", "provider"],
+      "minimumMatches": 2,
+      "identityTerms": ["aipromptprovider"],
+      "score": 250
     }
   ]
 }

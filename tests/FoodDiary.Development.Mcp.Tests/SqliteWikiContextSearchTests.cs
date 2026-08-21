@@ -41,6 +41,14 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         "search external USDA foods over HTTP provider",
         "Backend",
         "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs")]
+    [InlineData(
+        "где вычищаем идентификаторы пользователя из логов API",
+        "Backend",
+        "FoodDiary.Web.Api/Extensions/TelemetryPrivacyProcessor.cs")]
+    [InlineData(
+        "какой код ходит во внешний сервис USDA за продуктами",
+        "Backend",
+        "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs")]
     public async Task SearchAsync_AppliesSharedRankingPolicy(
         string query,
         string changeType,
@@ -68,6 +76,25 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         WikiCommandStageTiming timing = Assert.Single(telemetry.Capture(0).CommandStageTimings);
         Assert.Equal("context-search", timing.Command);
         Assert.Equal("in-process-sqlite", timing.Stage);
+    }
+
+    [Fact]
+    public async Task SearchAsync_RanksPrimaryDeclarationBeforeCompanionFile() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "render a diary PDF document with the generator",
+            limit: 10,
+            changeType: "Backend",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.True(result.Ready, result.UnavailableReason);
+        Assert.Equal(
+            "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
+            result.Candidates[0].Path);
     }
 
     [Fact]
@@ -142,7 +169,9 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
                 ('code', 'logs', 'FoodDiary.Presentation.Api/Features/Logs/LogsController.cs', 'logs', 'csharp', 'LogsController', 'web API telemetry logs'),
                 ('code', 'privacy', 'FoodDiary.Web.Api/Extensions/TelemetryPrivacyProcessor.cs', 'privacy', 'csharp', 'TelemetryPrivacyProcessor', 'Sanitize SensitiveTags privacy'),
                 ('code', 'usda-query', 'FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs', 'usda-query', 'csharp', 'SearchUsdaFoodsQueryHandler', 'USDA foods search'),
-                ('code', 'usda-provider', 'FoodDiary.Integrations/Services/UsdaFoodSearchService.cs', 'usda-provider', 'csharp', 'UsdaFoodSearchService', 'HttpClient external provider');
+                ('code', 'usda-provider', 'FoodDiary.Integrations/Services/UsdaFoodSearchService.cs', 'usda-provider', 'csharp', 'UsdaFoodSearchService', 'HttpClient external provider'),
+                ('code', 'pdf-primary', 'FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs', 'pdf-primary', 'csharp', 'DiaryPdfGenerator', 'render diary PDF document generator'),
+                ('code', 'pdf-helper', 'FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgRenderer.cs', 'pdf-helper', 'csharp', 'DiaryPdfGenerator ChartSvgRenderer', 'render diary PDF document generator');
             """;
         command.ExecuteNonQuery();
     }

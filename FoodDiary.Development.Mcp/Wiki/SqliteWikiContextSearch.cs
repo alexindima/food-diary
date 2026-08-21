@@ -29,6 +29,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         @"/I[A-Z][^/]*\.cs$",
         RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture,
         TimeSpan.FromMilliseconds(100));
+    private static readonly Regex CompanionPath = new(
+        @"\.[^./\\]+\.cs$",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture,
+        TimeSpan.FromMilliseconds(100));
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly string _databasePath;
     private readonly Lazy<RankingPolicy> _policy;
@@ -125,6 +129,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             List<RawCandidate> rawCandidates = await ReadCandidatesAsync(
                 connection,
                 queryTerms,
+                limit,
                 candidateLimit,
                 cancellationToken).ConfigureAwait(false);
             WikiContextSearchCandidate[] candidates = Rank(
@@ -201,42 +206,93 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
     private static async Task<List<RawCandidate>> ReadCandidatesAsync(
         SqliteConnection connection,
         IReadOnlyList<string> queryTerms,
+        int limit,
         int candidateLimit,
         CancellationToken cancellationToken) {
         string match = string.Join(
             " OR ",
             queryTerms.Select(term => $"\"{term.Replace("\"", "\"\"", StringComparison.Ordinal)}\"*"));
-        SqliteCommand command = connection.CreateCommand();
-        await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
-        command.CommandTimeout = 2;
-        command.CommandText = """
-            SELECT record_type, record_key, path, source_path,
-                COALESCE(category, ''), COALESCE(title, ''),
-                bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexical_rank
-            FROM context_search
-            WHERE context_search MATCH $match
-            ORDER BY lexical_rank, path
-            LIMIT $limit;
-            """;
-        command.Parameters.AddWithValue("$match", match);
-        command.Parameters.AddWithValue("$limit", candidateLimit);
-        SqliteDataReader reader = await command
-            .ExecuteReaderAsync(cancellationToken)
-            .ConfigureAwait(false);
-        await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
         List<RawCandidate> candidates = [];
-        while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-            candidates.Add(new RawCandidate(
-                reader.GetString(0),
-                reader.GetString(1),
-                reader.GetString(2),
-                reader.GetString(3),
-                reader.GetString(4),
-                reader.GetString(5),
-                reader.GetDouble(6)));
+        {
+            SqliteCommand command = connection.CreateCommand();
+            await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
+            command.CommandTimeout = 2;
+            command.CommandText = """
+                SELECT record_type, record_key, path, source_path,
+                    COALESCE(category, ''), COALESCE(title, ''),
+                    bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexical_rank
+                FROM context_search
+                WHERE context_search MATCH $match
+                ORDER BY lexical_rank, path
+                LIMIT $limit;
+                """;
+            command.Parameters.AddWithValue("$match", match);
+            command.Parameters.AddWithValue("$limit", candidateLimit);
+            SqliteDataReader reader = await command
+                .ExecuteReaderAsync(cancellationToken)
+                .ConfigureAwait(false);
+            await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                candidates.Add(new RawCandidate(
+                    reader.GetString(0),
+                    reader.GetString(1),
+                    reader.GetString(2),
+                    reader.GetString(3),
+                    reader.GetString(4),
+                    reader.GetString(5),
+                    reader.GetDouble(6)));
+            }
+        }
+
+        string identityMatch = string.Join(
+            " OR ",
+            queryTerms.SelectMany(term => {
+                string escaped = term.Replace("\"", "\"\"", StringComparison.Ordinal);
+                return new[] { $"path : \"{escaped}\"*", $"title : \"{escaped}\"*" };
+            }));
+        int identityLimit = Math.Min(Math.Max(limit * 2, 20), 100);
+        {
+            SqliteCommand command = connection.CreateCommand();
+            await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
+            command.CommandTimeout = 2;
+            command.CommandText = """
+                SELECT record_type, record_key, path, source_path,
+                    COALESCE(category, ''), COALESCE(title, ''),
+                    bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexical_rank
+                FROM context_search
+                WHERE context_search MATCH $match
+                ORDER BY lexical_rank, path
+                LIMIT $limit;
+                """;
+            command.Parameters.AddWithValue("$match", identityMatch);
+            command.Parameters.AddWithValue("$limit", identityLimit);
+            SqliteDataReader reader = await command
+                .ExecuteReaderAsync(cancellationToken)
+                .ConfigureAwait(false);
+            await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
+            var candidateIndexes = candidates
+                .Select((candidate, index) => new { Key = CandidateKey(candidate), Index = index })
+                .ToDictionary(item => item.Key, item => item.Index, StringComparer.Ordinal);
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                RawCandidate candidate = new(
+                    reader.GetString(0),
+                    reader.GetString(1),
+                    reader.GetString(2),
+                    reader.GetString(3),
+                    reader.GetString(4),
+                    reader.GetString(5),
+                    reader.GetDouble(6));
+                string key = CandidateKey(candidate);
+                if (candidateIndexes.TryAdd(key, candidates.Count)) {
+                    candidates.Add(candidate);
+                }
+            }
         }
         return candidates;
     }
+
+    private static string CandidateKey(RawCandidate candidate) =>
+        $"{candidate.RecordType}\0{candidate.RecordKey}\0{candidate.Path}";
 
     private static WikiContextSearchCandidate[] Rank(
         IReadOnlyList<RawCandidate> candidates,
@@ -314,6 +370,22 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             if (isTest && !string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase)) {
                 score -= policy.NonTestPenalty;
             }
+            bool isFrontendPath = normalizedPath.StartsWith(
+                "fooddiary.web.client/",
+                StringComparison.Ordinal);
+            bool isCode = string.Equals(candidate.RecordType, "code", StringComparison.Ordinal);
+            if (isCode &&
+                string.Equals(changeType, "Frontend", StringComparison.OrdinalIgnoreCase) &&
+                !isFrontendPath) {
+                score -= policy.CrossLayerPenalty;
+                reasons.Add("backend candidate penalty for frontend intent");
+            } else if (isFrontendPath &&
+                (string.Equals(changeType, "Api", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(changeType, "Backend", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(changeType, "Database", StringComparison.OrdinalIgnoreCase))) {
+                score -= policy.CrossLayerPenalty;
+                reasons.Add("frontend candidate penalty for backend intent");
+            }
             bool requestsAbstraction = terms.Overlaps(["interface", "contract", "abstraction"]);
             if (!requestsAbstraction && normalizedPath.StartsWith(
                 "fooddiary.application.abstractions/",
@@ -323,7 +395,11 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             if (!requestsAbstraction && InterfacePath.IsMatch(candidate.Path)) {
                 score -= policy.InterfacePathPenalty;
             }
-            if (string.Equals(candidate.RecordType, "code", StringComparison.Ordinal)) {
+            if (CompanionPath.IsMatch(candidate.Path)) {
+                score -= policy.CompanionFilePenalty;
+                reasons.Add("companion file ranked after primary declaration");
+            }
+            if (isCode) {
                 score += 20;
             }
             if (string.Equals(candidate.RecordType, "agent-guide", StringComparison.Ordinal)) {
@@ -366,16 +442,27 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             }
         }
         foreach (string term in terms.ToArray()) {
-            if (!policy.QueryTermExpansions.TryGetValue(term, out string[]? expansions)) {
-                continue;
+            if (policy.QueryTermExpansions.TryGetValue(term, out string[]? expansions)) {
+                AddExpansions(expansions, terms, seen);
             }
-            foreach (string expansion in expansions) {
-                if (seen.Add(expansion)) {
-                    terms.Add(expansion);
+            foreach ((string prefix, string[] prefixExpansions) in policy.QueryPrefixExpansions) {
+                if (term.StartsWith(prefix, StringComparison.Ordinal)) {
+                    AddExpansions(prefixExpansions, terms, seen);
                 }
             }
         }
         return [.. terms.Take(policy.MaximumQueryTerms)];
+    }
+
+    private static void AddExpansions(
+        IReadOnlyList<string> expansions,
+        List<string> terms,
+        HashSet<string> seen) {
+        foreach (string expansion in expansions) {
+            if (seen.Add(expansion)) {
+                terms.Add(expansion);
+            }
+        }
     }
 
     private static string ExpandSearchText(string value) {
@@ -400,6 +487,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             policy.StopTerms is null ||
             policy.PathTermAffinity is null ||
             policy.QueryTermExpansions is null ||
+            policy.QueryPrefixExpansions is null ||
             policy.PathBoosts is null ||
             policy.IdentityBoosts is null) {
             throw new InvalidDataException("Context-search ranking policy is invalid.");
@@ -459,7 +547,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         int ApplicationAbstractionPenalty,
         int InterfacePathPenalty,
         int AgentGuideBoost,
+        int CompanionFilePenalty,
+        int CrossLayerPenalty,
         Dictionary<string, string[]> QueryTermExpansions,
+        Dictionary<string, string[]> QueryPrefixExpansions,
         PathBoost[] PathBoosts,
         IdentityBoost[] IdentityBoosts);
 
