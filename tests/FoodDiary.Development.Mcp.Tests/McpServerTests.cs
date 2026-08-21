@@ -123,6 +123,14 @@ public sealed class McpServerTests {
     [Fact]
     public async Task ConfiguredServer_AggregatesContextWithoutLockingBuildOutput() {
         string repositoryRoot = FindRepositoryRoot();
+        using CancellationTokenSource preparationTimeout = new(TimeSpan.FromMinutes(2));
+        ProcessResult graphBuild = await RunProcessAsync(
+            "node",
+            [".llm-wiki/tools/code-graph.mjs", "build"],
+            repositoryRoot,
+            preparationTimeout.Token);
+        Assert.True(graphBuild.ExitCode == 0, graphBuild.Output);
+
         var configuration = CodexMcpTestConfiguration.Load(repositoryRoot);
         var transport = new StdioClientTransport(configuration.CreateTransportOptions("FoodDiary MCP aggregate test"));
         using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(90));
