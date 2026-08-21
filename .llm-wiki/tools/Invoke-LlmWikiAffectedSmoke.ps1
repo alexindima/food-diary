@@ -272,6 +272,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'context-bundle' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiSqlContextShadow.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiSqlContextEvaluation.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiContextCache.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiWorkflowRecovery.ps1')

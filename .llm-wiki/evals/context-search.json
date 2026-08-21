@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "description": "Representative natural-language retrieval cases for the SQLite FTS5 context-search shadow lane.",
+  "diagnosticLimit": 100,
+  "thresholds": {
+    "minimumTop1Rate": 0.8,
+    "minimumTop10Rate": 0.8,
+    "minimumMeanReciprocalRank": 0.8
+  },
+  "cases": [
+    {
+      "id": "redis-idempotency",
+      "query": "prevent duplicate API requests with Redis idempotency",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Web.Api/Services/RedisIdempotencyStore.cs"]
+    },
+    {
+      "id": "telemetry-privacy",
+      "query": "strip user identity from web API telemetry logs",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Web.Api/Extensions/TelemetryPrivacyProcessor.cs"]
+    },
+    {
+      "id": "weekly-checkin",
+      "query": "calculate weekly check in weight and calorie trends",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs"]
+    },
+    {
+      "id": "usda-provider",
+      "query": "search external USDA foods over HTTP provider",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Services/UsdaFoodSearchService.cs"]
+    },
+    {
+      "id": "usda-limits",
+      "query": "limit USDA API request query size",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Features/Usda/UsdaRequestLimits.cs"]
+    },
+    {
+      "id": "daily-advice",
+      "query": "select daily advice for dashboard user",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.DailyAdvices/Services/DailyAdviceSelector.cs"]
+    },
+    {
+      "id": "russian-plural",
+      "query": "frontend russian plural forms for numbers",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/i18n/russian-plural.utils.ts"]
+    },
+    {
+      "id": "grafana-policy-ru",
+      "query": "где хранятся правила доступа к production Grafana только для чтения",
+      "changeType": "Any",
+      "expectedPaths": ["AGENTS.md"]
+    },
+    {
+      "id": "api-compatibility-powershell",
+      "query": "detect breaking OpenAPI contract snapshot changes",
+      "changeType": "Tests",
+      "expectedPaths": [
+        ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
+        ".llm-wiki/tools/Test-LlmWikiApiCompatibilityRegression.ps1"
+      ]
+    },
+    {
+      "id": "billing-recovery",
+      "query": "replay failed Paddle billing webhook notifications recurring job",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/PaddleNotificationRecoveryJob.cs"]
+    }
+  ]
+}

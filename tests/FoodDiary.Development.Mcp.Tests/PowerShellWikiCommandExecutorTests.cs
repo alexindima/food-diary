@@ -29,7 +29,8 @@ public sealed class PowerShellWikiCommandExecutorTests {
 
     [Fact]
     public async Task ExecuteAsync_ReturnsFocusedTestPlan() {
-        PowerShellWikiCommandExecutor executor = new();
+        WikiRuntimeTelemetry telemetry = new();
+        PowerShellWikiCommandExecutor executor = new(telemetry);
         using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(30));
 
         WikiCommandResult result = await executor.ExecuteAsync(
@@ -46,6 +47,13 @@ public sealed class PowerShellWikiCommandExecutorTests {
             timeout.Token);
 
         Assert.StartsWith("{", result.RawOutput, StringComparison.Ordinal);
+        WikiRuntimeMetrics metrics = telemetry.Capture(cacheEntries: 0);
+        Assert.Collection(
+            metrics.CommandStageTimings.OrderBy(timing => timing.Stage, StringComparer.Ordinal),
+            timing => AssertStage(timing, "process-round-trip"),
+            timing => AssertStage(timing, "queue-wait"),
+            timing => AssertStage(timing, "request-serialization"),
+            timing => AssertStage(timing, "result-processing"));
     }
 
     [Fact]
@@ -64,5 +72,12 @@ public sealed class PowerShellWikiCommandExecutorTests {
             timeout.Token);
 
         Assert.StartsWith("{", result.RawOutput, StringComparison.Ordinal);
+    }
+
+    private static void AssertStage(WikiCommandStageTiming timing, string expectedStage) {
+        Assert.Equal("test-plan", timing.Command);
+        Assert.Equal(expectedStage, timing.Stage);
+        Assert.Equal(1, timing.Samples);
+        Assert.True(timing.MaximumMilliseconds >= 0);
     }
 }

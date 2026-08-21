@@ -7,10 +7,25 @@ import { DatabaseSync } from 'node:sqlite';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
-const parserVersion = '9-typescript-compiler-api-v1';
+const parserVersion = '10-powershell-fts-v1';
+const contextSearchSchemaVersion = '1';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
 const roslynDll = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll');
 const typescriptExtractor = resolve(repositoryRoot, '.llm-wiki/tools/typescript-extractor.mjs');
+
+function publishGraphDependencyFingerprint(databasePath, result) {
+  const fingerprint = sha256(JSON.stringify({
+    parserVersion,
+    contextSearchSchemaVersion,
+    files: result.files,
+    symbols: result.symbols,
+    tokens: result.tokens,
+    typedEdges: result.typedEdges,
+    contextSearchFingerprint: result.contextSearch?.fingerprint ?? null,
+  }));
+  writeFileSync(resolve(dirname(databasePath), 'code-graph.fingerprint'), `${fingerprint}\n`, 'utf8');
+  return fingerprint;
+}
 
 function withBuildLock(callback) {
   const lockPath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/build.lock');
@@ -119,16 +134,24 @@ function extractTypeScript(candidates) {
   return new Map(JSON.parse(child.stdout).map((result) => [result.path, result]));
 }
 
-function gitPaths() {
+let repositoryPathsCache;
+
+function repositoryPaths() {
+  if (repositoryPathsCache) return repositoryPathsCache;
   const output = execFileSync('git', ['-C', repositoryRoot, 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], {
     encoding: 'utf8',
     maxBuffer: 64 * 1024 * 1024,
   });
-  return output
+  repositoryPathsCache = output
     .split('\0')
     .map((path) => path.replaceAll('\\', '/'))
-    .filter(Boolean)
-    .filter((path) => /\.(?:cs|csproj|props|targets|ts|html)$/.test(path)
+    .filter(Boolean);
+  return repositoryPathsCache;
+}
+
+function gitPaths() {
+  return repositoryPaths()
+    .filter((path) => /\.(?:cs|csproj|props|targets|ts|html|ps1)$/.test(path)
       || /(^|\/)(?:appsettings(?:\.[^.\/]+)?|package|angular|backend-modules|module-dependencies)\.json$/.test(path)
       || /^\.github\/workflows\/[^/]+\.ya?ml$/.test(path))
     .filter((path) => !/(^|\/)(?:bin|obj|node_modules|\.artifacts|TestResults)(\/|$)/.test(path))
@@ -148,6 +171,7 @@ function lineAt(text, offset) {
 function languageOf(path) {
   const extension = extname(path);
   if (extension === '.cs') return 'csharp';
+  if (extension === '.ps1') return 'powershell';
   if (['.csproj', '.props', '.targets'].includes(extension)) return 'msbuild';
   if (extension === '.html') return 'html';
   if (extension === '.json') return 'json';
@@ -211,6 +235,10 @@ function extract(path, text) {
   } else if (language === 'yaml') {
     addEdges(/^\s*(?<target>[A-Za-z_][A-Za-z0-9_.-]*)\s*:/gm, 'configuration-key');
     addEdges(/\buses\s*:\s*(?<target>[^\s#]+)/g, 'workflow-action');
+  } else if (language === 'powershell') {
+    for (const match of text.matchAll(/^\s*function\s+(?<name>[A-Za-z_][\w-]*)/gmi)) {
+      symbols.push({ kind: 'function', name: match.groups.name, line: lineAt(text, match.index) });
+    }
   }
 
   for (const match of text.matchAll(/\b[A-Za-z_$][A-Za-z0-9_$]{2,}\b/g)) {
@@ -280,6 +308,26 @@ function openDatabase(databasePath) {
     CREATE INDEX IF NOT EXISTS ix_edges_kind_target ON typed_edges(kind, target COLLATE NOCASE);
     CREATE INDEX IF NOT EXISTS ix_query_documents_category_path ON query_documents(category, path COLLATE NOCASE);
   `);
+  const storedSearchSchemaVersion = database.prepare("SELECT value FROM metadata WHERE key='context_search_schema_version'").get()?.value;
+  if (storedSearchSchemaVersion !== contextSearchSchemaVersion) {
+    database.exec('DROP TABLE IF EXISTS context_search');
+  }
+  database.exec(`
+    CREATE VIRTUAL TABLE IF NOT EXISTS context_search USING fts5(
+      record_type UNINDEXED,
+      record_key UNINDEXED,
+      path,
+      source_path UNINDEXED,
+      category UNINDEXED,
+      title,
+      body,
+      tokenize = 'unicode61 remove_diacritics 2'
+    );
+  `);
+  if (storedSearchSchemaVersion !== contextSearchSchemaVersion) {
+    database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)')
+      .run('context_search_schema_version', contextSearchSchemaVersion);
+  }
   const ensureColumn = (table, column, definition) => {
     if (!database.prepare(`PRAGMA table_info(${table})`).all().some((item) => item.name === column)) database.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
   };
@@ -325,6 +373,100 @@ function refreshQueryLayer(database) {
   return refreshed;
 }
 
+function expandSearchText(value) {
+  const text = String(value ?? '');
+  const expanded = text
+    .replace(/([\p{Ll}\p{N}])([\p{Lu}])/gu, '$1 $2')
+    .replace(/[_./\\-]+/g, ' ');
+  return expanded === text ? text : `${text} ${expanded}`;
+}
+
+function contextDocumentPaths() {
+  return repositoryPaths().filter((path) =>
+    /(^|\/)AGENTS\.md$/i.test(path)
+    || /^\.llm-wiki\/.+\.md$/i.test(path)
+    || /^docs\/.+\.md$/i.test(path));
+}
+
+function refreshContextSearch(database) {
+  const files = database.prepare('SELECT path, language, content_hash contentHash FROM files ORDER BY path').all();
+  const queryDocuments = database.prepare(`
+    SELECT category, record_key recordKey, path, source_path sourcePath, payload_json payloadJson
+    FROM query_documents ORDER BY category, record_key, path
+  `).all();
+  const documentation = contextDocumentPaths().map((path) => {
+    const text = readFileSync(resolve(repositoryRoot, path), 'utf8');
+    return { path, text, contentHash: sha256(text) };
+  });
+  const fingerprint = sha256(JSON.stringify({
+    schema: contextSearchSchemaVersion,
+    files: files.map((item) => [item.path, item.contentHash]),
+    queryDocuments: queryDocuments.map((item) => [item.category, item.recordKey, item.path, sha256(item.payloadJson)]),
+    documentation: documentation.map((item) => [item.path, item.contentHash]),
+  }));
+  const metadata = database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value;
+  const existingCount = database.prepare('SELECT COUNT(*) count FROM context_search').get().count;
+  if (metadata === fingerprint && existingCount > 0) {
+    return { refreshed: false, documents: existingCount, fingerprint };
+  }
+
+  const symbolsByPath = new Map();
+  for (const row of database.prepare('SELECT f.path, s.name FROM symbols s JOIN files f ON f.id=s.file_id ORDER BY f.path, s.name').all()) {
+    if (!symbolsByPath.has(row.path)) symbolsByPath.set(row.path, []);
+    symbolsByPath.get(row.path).push(row.name);
+  }
+  const tokensByPath = new Map();
+  for (const row of database.prepare('SELECT f.path, t.token FROM file_tokens t JOIN files f ON f.id=t.file_id ORDER BY f.path, t.token').all()) {
+    if (!tokensByPath.has(row.path)) tokensByPath.set(row.path, []);
+    tokensByPath.get(row.path).push(row.token);
+  }
+
+  database.exec('DELETE FROM context_search');
+  const insert = database.prepare(`
+    INSERT INTO context_search(record_type, record_key, path, source_path, category, title, body)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+  for (const file of files) {
+    const sourceBody = file.language === 'powershell'
+      ? readFileSync(resolve(repositoryRoot, file.path), 'utf8')
+      : (tokensByPath.get(file.path) ?? []).join(' ');
+    insert.run(
+      'code',
+      file.path,
+      file.path,
+      file.path,
+      file.language,
+      expandSearchText((symbolsByPath.get(file.path) ?? []).join(' ')),
+      expandSearchText(sourceBody));
+  }
+  for (const item of queryDocuments) {
+    insert.run(
+      'query-document',
+      item.recordKey,
+      item.path || item.sourcePath,
+      item.sourcePath,
+      item.category,
+      expandSearchText(item.recordKey),
+      expandSearchText(item.payloadJson));
+  }
+  for (const item of documentation) {
+    const recordType = /(^|\/)AGENTS\.md$/i.test(item.path)
+      ? 'agent-guide'
+      : item.path.startsWith('.llm-wiki/') ? 'wiki-page' : 'documentation';
+    const title = item.text.match(/^#{1,3}\s+(.+)$/m)?.[1] ?? item.path;
+    insert.run(recordType, item.path, item.path, item.path, recordType, expandSearchText(title), expandSearchText(item.text));
+  }
+  database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)')
+    .run('context_search_fingerprint', fingerprint);
+  database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)')
+    .run('context_search_updated_at_utc', new Date().toISOString());
+  return {
+    refreshed: true,
+    documents: database.prepare('SELECT COUNT(*) count FROM context_search').get().count,
+    fingerprint,
+  };
+}
+
 function build(database, force = false) {
   const started = performance.now();
   const storedParserVersion = database.prepare("SELECT value FROM metadata WHERE key='parser_version'").get()?.value;
@@ -342,6 +484,7 @@ function build(database, force = false) {
   let unchanged = 0;
   let removed = 0;
   let queryCategoriesRefreshed = 0;
+  let contextSearch;
   const candidates = [];
 
   for (const path of knownPaths) {
@@ -391,6 +534,7 @@ function build(database, force = false) {
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('parser_version', parserVersion);
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('updated_at_utc', new Date().toISOString());
     queryCategoriesRefreshed = refreshQueryLayer(database);
+    contextSearch = refreshContextSearch(database);
     database.exec('COMMIT');
   } catch (error) {
     database.exec('ROLLBACK');
@@ -408,6 +552,7 @@ function build(database, force = false) {
     tokens: database.prepare('SELECT COUNT(*) count FROM file_tokens').get().count,
     typedEdges: database.prepare('SELECT COUNT(*) count FROM typed_edges').get().count,
     queryCategoriesRefreshed,
+    contextSearch,
     durationMs: Math.round((performance.now() - started) * 100) / 100,
   };
 }
@@ -612,6 +757,89 @@ function rankedTrace(database, query, limit, filters = {}) {
   };
 }
 
+function searchTerms(query) {
+  return [...new Set(expandSearchText(query)
+    .toLowerCase()
+    .match(/[\p{L}\p{N}][\p{L}\p{N}_-]*/gu) ?? [])]
+    .filter((term) => term.length >= 2)
+    .slice(0, 16);
+}
+
+function searchContext(database, query, limit, filters = {}) {
+  const started = performance.now();
+  const terms = searchTerms(query);
+  const fingerprint = database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value ?? null;
+  const indexedDocuments = database.prepare('SELECT COUNT(*) count FROM context_search').get().count;
+  if (terms.length === 0 || !fingerprint || indexedDocuments === 0) {
+    return {
+      query,
+      queryTerms: terms,
+      ready: false,
+      indexedDocuments,
+      fingerprint,
+      records: [],
+      durationMs: Math.round((performance.now() - started) * 100) / 100,
+    };
+  }
+  const match = terms.map((term) => `"${term.replaceAll('"', '""')}"*`).join(' OR ');
+  const candidateLimit = Math.min(Math.max(limit * 8, 40), 500);
+  const candidates = database.prepare(`
+    SELECT record_type recordType, record_key recordKey, path, source_path sourcePath,
+      category, title, bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexicalRank
+    FROM context_search
+    WHERE context_search MATCH ?
+    ORDER BY lexicalRank, path
+    LIMIT ?
+  `).all(match, candidateLimit);
+  const normalizedQuery = expandSearchText(query).toLowerCase();
+  const moduleTerm = String(filters.module ?? '').toLowerCase();
+  const scopePaths = String(filters.path ?? '').split(';').filter(Boolean).map((path) => path.replaceAll('\\', '/').toLowerCase());
+  const changeType = String(filters.changeType ?? 'Any').toLowerCase();
+  const ranked = candidates.map((item, index) => {
+    const path = String(item.path ?? '').replaceAll('\\', '/');
+    const normalizedPath = path.toLowerCase();
+    const normalizedTitle = expandSearchText(item.title).toLowerCase();
+    const reasons = ['SQLite FTS5 lexical match'];
+    let score = candidateLimit - index;
+    if (normalizedPath.includes(normalizedQuery) || normalizedTitle.includes(normalizedQuery)) {
+      score += 80;
+      reasons.push('exact normalized query match');
+    }
+    if (moduleTerm && normalizedPath.includes(moduleTerm)) {
+      score += 50;
+      reasons.push(`module ${filters.module}`);
+    }
+    if (scopePaths.some((scope) => normalizedPath === scope || normalizedPath.startsWith(`${scope}/`) || scope.startsWith(`${normalizedPath}/`))) {
+      score += 70;
+      reasons.push('planned scope affinity');
+    }
+    const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)/i.test(path);
+    if (isTest && changeType !== 'tests') score -= 25;
+    if (item.recordType === 'code') score += 20;
+    if (item.recordType === 'agent-guide') score += 15;
+    return { ...item, score, lexicalRank: Math.round(item.lexicalRank * 1_000_000) / 1_000_000, reasons };
+  }).sort((left, right) => right.score - left.score || left.lexicalRank - right.lexicalRank || left.path.localeCompare(right.path));
+  const records = [];
+  const seenPaths = new Set();
+  for (const item of ranked) {
+    const identity = item.path || `${item.recordType}:${item.recordKey}`;
+    if (seenPaths.has(identity)) continue;
+    seenPaths.add(identity);
+    records.push({ ...item, rank: records.length + 1 });
+    if (records.length >= limit) break;
+  }
+  return {
+    query,
+    queryTerms: terms,
+    ready: true,
+    indexedDocuments,
+    fingerprint,
+    updatedAtUtc: database.prepare("SELECT value FROM metadata WHERE key='context_search_updated_at_utc'").get()?.value ?? null,
+    records,
+    durationMs: Math.round((performance.now() - started) * 100) / 100,
+  };
+}
+
 function relations(database, paths, kinds, limit) {
   const requested = paths.map((path) => path.replaceAll('\\', '/').replace(/\/$/, ''));
   const pathClauses = requested.length > 0 ? requested.map(() => '(f.path = ? OR f.path LIKE ?)').join(' OR ') : '1=1';
@@ -680,7 +908,11 @@ try {
     result = withBuildLock(() => {
       database = openDatabase(databasePath);
       try {
-        return build(database, options.force === 'true');
+        const buildResult = build(database, options.force === 'true');
+        return {
+          ...buildResult,
+          graphDependencyFingerprint: publishGraphDependencyFingerprint(databasePath, buildResult),
+        };
       } finally {
         database.close();
         database = undefined;
@@ -697,6 +929,9 @@ try {
   else if (action === 'trace') result = rankedTrace(database, options.query ?? '', Number(options.limit ?? 50), {
     module: options.module, pathPrefix: options['path-prefix'], symbolKind: options['symbol-kind'], layer: options.layer,
   });
+  else if (action === 'search') result = searchContext(database, options.query ?? '', Number(options.limit ?? 20), {
+    module: options.module, path: options.path, changeType: options['change-type'],
+  });
   else if (action === 'relations') result = relations(database, (options.path ?? '').split(';').filter(Boolean), (options.kind ?? '').split(';').filter(Boolean), Number(options.limit ?? 100));
   else if (action === 'coverage') result = coverage(database);
   else if (action === 'fingerprint') result = fingerprint(database, (options.path ?? '').split(';').filter(Boolean));
@@ -709,6 +944,8 @@ try {
     symbols: database.prepare('SELECT COUNT(*) count FROM symbols').get().count,
     tokens: database.prepare('SELECT COUNT(*) count FROM file_tokens').get().count,
     typedEdges: database.prepare('SELECT COUNT(*) count FROM typed_edges').get().count,
+    searchDocuments: database.prepare('SELECT COUNT(*) count FROM context_search').get().count,
+    searchFingerprint: database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value ?? null,
   };
   process.stdout.write(`${JSON.stringify(result)}\n`);
 } finally {

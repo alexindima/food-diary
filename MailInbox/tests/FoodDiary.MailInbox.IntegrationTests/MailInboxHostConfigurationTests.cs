@@ -3,11 +3,23 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using FoodDiary.MailInbox.WebApi;
 using FoodDiary.MailInbox.Infrastructure.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.MailInbox.IntegrationTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxHostConfigurationTests {
+    [Fact]
+    public async Task ValidateRuntimeDatabaseRoleAsync_InDevelopment_ReturnsWithoutResolvingServices() {
+        await using ServiceProvider services = new ServiceCollection().BuildServiceProvider();
+
+        await MailInboxHostConfiguration.ValidateRuntimeDatabaseRoleAsync(
+            services,
+            new ConfigurationBuilder().Build(),
+            CreateEnvironment(Environments.Development),
+            CancellationToken.None);
+    }
+
     [Fact]
     public async Task ContainerHealthCheck_InvalidServerName_ReturnsFalse() {
         IConfiguration configuration = new ConfigurationBuilder()

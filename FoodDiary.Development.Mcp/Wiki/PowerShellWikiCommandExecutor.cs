@@ -48,16 +48,24 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
                 $"Wiki entrypoint was not found at {wikiPath}.");
         }
 
+        var requestStopwatch = Stopwatch.StartNew();
         string requestPath = await WriteRequestAsync(arguments, cancellationToken).ConfigureAwait(false);
+        requestStopwatch.Stop();
+        _telemetry.RecordCommandStage(command, "request-serialization", requestStopwatch.Elapsed);
 
         try {
             _telemetry.CommandQueued();
+            var queueStopwatch = Stopwatch.StartNew();
             try {
                 await _commandGate.WaitAsync(cancellationToken).ConfigureAwait(false);
             } catch (OperationCanceledException) {
+                queueStopwatch.Stop();
+                _telemetry.RecordCommandStage(command, "queue-wait", queueStopwatch.Elapsed);
                 _telemetry.CommandQueueCancelled();
                 throw;
             }
+            queueStopwatch.Stop();
+            _telemetry.RecordCommandStage(command, "queue-wait", queueStopwatch.Elapsed);
 
             _telemetry.CommandStarted();
             var stopwatch = Stopwatch.StartNew();
@@ -130,37 +138,45 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         process.StartInfo.Environment["FOODDIARY_WIKI_COMMAND"] = command;
         process.StartInfo.Environment["FOODDIARY_WIKI_REQUEST"] = requestPath;
 
-        if (!process.Start()) {
-            throw new DevelopmentMcpException(
-                DevelopmentMcpErrorCodes.WikiCommandFailed,
-                "The wiki command process could not be started.");
-        }
-        process.StandardInput.Close();
-
-        Task<string> standardOutput = ReadBoundedAsync(
-            process.StandardOutput,
-            "standard output",
-            cancellationToken);
-        Task<string> standardError = ReadBoundedAsync(
-            process.StandardError,
-            "standard error",
-            cancellationToken);
-        Task processExit = process.WaitForExitAsync(CancellationToken.None);
-        using CancellationTokenSource timeout = new(CommandTimeout);
-        using var linkedCancellation =
-            CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
-
+        var processStopwatch = Stopwatch.StartNew();
+        Task<string>? standardOutput = null;
+        Task<string>? standardError = null;
         try {
-            await Task.WhenAll(processExit, standardOutput, standardError)
-                .WaitAsync(linkedCancellation.Token).ConfigureAwait(false);
-        } catch (OperationCanceledException) when (timeout.IsCancellationRequested) {
-            TryKill(process);
-            throw new DevelopmentMcpException(
-                DevelopmentMcpErrorCodes.Timeout,
-                $"Wiki command '{command}' exceeded {CommandTimeout}.");
-        } catch {
-            TryKill(process);
-            throw;
+            if (!process.Start()) {
+                throw new DevelopmentMcpException(
+                    DevelopmentMcpErrorCodes.WikiCommandFailed,
+                    "The wiki command process could not be started.");
+            }
+            process.StandardInput.Close();
+
+            standardOutput = ReadBoundedAsync(
+                process.StandardOutput,
+                "standard output",
+                cancellationToken);
+            standardError = ReadBoundedAsync(
+                process.StandardError,
+                "standard error",
+                cancellationToken);
+            Task processExit = process.WaitForExitAsync(CancellationToken.None);
+            using CancellationTokenSource timeout = new(CommandTimeout);
+            using var linkedCancellation =
+                CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
+
+            try {
+                await Task.WhenAll(processExit, standardOutput, standardError)
+                    .WaitAsync(linkedCancellation.Token).ConfigureAwait(false);
+            } catch (OperationCanceledException) when (timeout.IsCancellationRequested) {
+                TryKill(process);
+                throw new DevelopmentMcpException(
+                    DevelopmentMcpErrorCodes.Timeout,
+                    $"Wiki command '{command}' exceeded {CommandTimeout}.");
+            } catch {
+                TryKill(process);
+                throw;
+            }
+        } finally {
+            processStopwatch.Stop();
+            _telemetry.RecordCommandStage(command, "process-round-trip", processStopwatch.Elapsed);
         }
 
         string output = await standardOutput.ConfigureAwait(false);
@@ -172,10 +188,16 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
                 $"{process.ExitCode.ToString(System.Globalization.CultureInfo.InvariantCulture)}: {error.Trim()}");
         }
 
-        string gitHead = await ServerStatusService
-            .ReadGitHeadAsync(repositoryRoot, cancellationToken)
-            .ConfigureAwait(false);
-        return WikiOutputParser.Parse(command, output.Trim(), repositoryRoot, gitHead);
+        var resultStopwatch = Stopwatch.StartNew();
+        try {
+            string gitHead = await ServerStatusService
+                .ReadGitHeadAsync(repositoryRoot, cancellationToken)
+                .ConfigureAwait(false);
+            return WikiOutputParser.Parse(command, output.Trim(), repositoryRoot, gitHead);
+        } finally {
+            resultStopwatch.Stop();
+            _telemetry.RecordCommandStage(command, "result-processing", resultStopwatch.Elapsed);
+        }
     }
 
     private static async Task<string> WriteRequestAsync(

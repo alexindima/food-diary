@@ -6,6 +6,8 @@ public sealed class WikiRuntimeTelemetry {
     private const int MaximumTimingSamples = 128;
     private readonly ConcurrentDictionary<string, TimingWindow> _timings =
         new(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, TimingWindow>> _stageTimings =
+        new(StringComparer.OrdinalIgnoreCase);
     private long _cacheHits;
     private long _cacheMisses;
     private long _activeCommands;
@@ -35,6 +37,15 @@ public sealed class WikiRuntimeTelemetry {
         Interlocked.Decrement(ref _activeCommands);
         Interlocked.Increment(ref _completedCommands);
         _timings.GetOrAdd(command, static _ => new TimingWindow())
+            .Add(duration.TotalMilliseconds);
+    }
+
+    public void RecordCommandStage(string command, string stage, TimeSpan duration) {
+        _stageTimings
+            .GetOrAdd(
+                command,
+                static _ => new ConcurrentDictionary<string, TimingWindow>(StringComparer.OrdinalIgnoreCase))
+            .GetOrAdd(stage, static _ => new TimingWindow())
             .Add(duration.TotalMilliseconds);
     }
 
@@ -70,7 +81,12 @@ public sealed class WikiRuntimeTelemetry {
             Interlocked.Read(ref _timedOutCommands),
             [.. _timings
                 .OrderBy(pair => pair.Key, StringComparer.OrdinalIgnoreCase)
-                .Select(pair => pair.Value.Capture(pair.Key))]);
+                .Select(pair => pair.Value.CaptureCommand(pair.Key))],
+            [.. _stageTimings
+                .OrderBy(pair => pair.Key, StringComparer.OrdinalIgnoreCase)
+                .SelectMany(pair => pair.Value
+                    .OrderBy(stage => stage.Key, StringComparer.OrdinalIgnoreCase)
+                    .Select(stage => stage.Value.CaptureStage(pair.Key, stage.Key)))]);
     }
 
     private sealed class TimingWindow {
@@ -86,13 +102,33 @@ public sealed class WikiRuntimeTelemetry {
             }
         }
 
-        public WikiCommandTiming Capture(string command) {
+        public WikiCommandTiming CaptureCommand(string command) {
+            TimingSummary summary = Capture();
+            return new WikiCommandTiming(
+                command,
+                summary.Samples,
+                summary.P50Milliseconds,
+                summary.P95Milliseconds,
+                summary.MaximumMilliseconds);
+        }
+
+        public WikiCommandStageTiming CaptureStage(string command, string stage) {
+            TimingSummary summary = Capture();
+            return new WikiCommandStageTiming(
+                command,
+                stage,
+                summary.Samples,
+                summary.P50Milliseconds,
+                summary.P95Milliseconds,
+                summary.MaximumMilliseconds);
+        }
+
+        private TimingSummary Capture() {
             double[] samples;
             lock (_sync) {
                 samples = [.. _samples.Order()];
             }
-            return new WikiCommandTiming(
-                command,
+            return new TimingSummary(
                 samples.Length,
                 Percentile(samples, 0.50),
                 Percentile(samples, 0.95),
@@ -113,4 +149,10 @@ public sealed class WikiRuntimeTelemetry {
                 MidpointRounding.AwayFromZero);
         }
     }
+
+    private sealed record TimingSummary(
+        int Samples,
+        double P50Milliseconds,
+        double P95Milliseconds,
+        double MaximumMilliseconds);
 }

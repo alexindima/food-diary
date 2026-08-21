@@ -42,7 +42,7 @@ $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -N
     '.llm-wiki/generated/csharp-symbol-index.json'
     '.llm-wiki/generated/frontend-index.json'
     '.llm-wiki/generated/quality-index.json'
-    '.llm-wiki/generated/code-graph.sqlite'
+    '.artifacts/llm-wiki/code-graph/code-graph.fingerprint'
 )
 $cachedResearch = Read-LlmWikiQueryCache -Entry $queryCacheEntry
 if ($null -ne $cachedResearch) {

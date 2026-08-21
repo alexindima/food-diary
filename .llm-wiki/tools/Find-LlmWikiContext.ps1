@@ -6,6 +6,7 @@ param(
     [string[]]$ScopePath,
     [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Tests')]
     [string]$ChangeType = 'Any',
+    [switch]$SqlShadow,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 50)]
@@ -28,7 +29,7 @@ if (-not (Test-Path -LiteralPath $catalogPath)) {
 }
 
 $queryCacheEntry = $null
-if ($Format -eq 'Json') {
+if ($Format -eq 'Json' -and -not $SqlShadow) {
     $cacheRelevantPaths = @(
         @($ScopePath) + $(if (-not [string]::IsNullOrWhiteSpace($Module)) {
             @("FoodDiary.Application/$Module", "FoodDiary.Application.$Module")
@@ -610,6 +611,71 @@ if ($ChangeType -eq 'Frontend' -and $null -ne $frontendIndex) {
 }
 $testResults = Select-ScoredItems $testCandidates
 
+$sqlShadowDiagnostics = $null
+if ($SqlShadow) {
+    $legacyCandidates = @(
+        @($frontendSymbolResults) + @($frontendRouteResults) + @($implementationFileResults) +
+        @($controllerResults) + @($symbolResults) +
+        @($registrationResults) + @($testResults)
+    )
+    $rankedLegacyPaths = [Collections.Generic.List[string]]::new()
+    $seenLegacyPaths = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach ($candidate in @($legacyCandidates | Sort-Object @{ Expression = { [double]$_.score }; Descending = $true })) {
+        $candidatePath = @('path', 'root', 'sourceRoot') |
+            ForEach-Object {
+                $property = $candidate.PSObject.Properties[$_]
+                if ($null -ne $property) { $property.Value }
+            } |
+            Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } |
+            Select-Object -First 1
+        if ($null -ne $candidatePath -and $seenLegacyPaths.Add(([string]$candidatePath).Replace('\', '/'))) {
+            $rankedLegacyPaths.Add(([string]$candidatePath).Replace('\', '/'))
+        }
+        if ($rankedLegacyPaths.Count -ge $Limit) { break }
+    }
+    $shadowStopwatch = [Diagnostics.Stopwatch]::StartNew()
+    try {
+        $shadowArguments = @{
+            Action = 'search'
+            Query = $searchText
+            ChangedPath = $scopePaths
+            Module = $Module
+            ChangeType = $ChangeType
+            Limit = $Limit
+            SkipRefresh = $true
+            Format = 'Json'
+        }
+        $sqlResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') @shadowArguments | ConvertFrom-Json
+        $sqlPaths = @($sqlResult.records.path | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/') } | Select-Object -Unique)
+        $overlap = @($sqlPaths | Where-Object { $_ -in $rankedLegacyPaths })
+        $legacyDenominator = [Math]::Max(1, [Math]::Min($Limit, $rankedLegacyPaths.Count))
+        $sqlDenominator = [Math]::Max(1, [Math]::Min($Limit, $sqlPaths.Count))
+        $sqlShadowDiagnostics = [ordered]@{
+            authoritative = 'json'
+            ready = [bool]$sqlResult.ready
+            indexedDocuments = [int]$sqlResult.indexedDocuments
+            fingerprint = $sqlResult.fingerprint
+            queryTerms = @($sqlResult.queryTerms)
+            legacyCandidateCount = $rankedLegacyPaths.Count
+            sqlCandidateCount = $sqlPaths.Count
+            overlapCount = $overlap.Count
+            legacyRecallAtLimit = [Math]::Round($overlap.Count / $legacyDenominator, 4)
+            sqlPrecisionAtLimit = [Math]::Round($overlap.Count / $sqlDenominator, 4)
+            sqlQueryDurationMs = [double]$sqlResult.durationMs
+            topCandidates = @($sqlResult.records)
+        }
+    } catch {
+        $sqlShadowDiagnostics = [ordered]@{
+            authoritative = 'json'
+            ready = $false
+            error = $_.Exception.Message
+        }
+    } finally {
+        $shadowStopwatch.Stop()
+        $sqlShadowDiagnostics.roundTripDurationMs = [Math]::Round($shadowStopwatch.Elapsed.TotalMilliseconds, 2)
+    }
+}
+
 $recommendedChecks = switch ($ChangeType) {
     'Api' {
         @(
@@ -703,15 +769,19 @@ $context = [ordered]@{
     tests = @($testResults | ForEach-Object { [ordered]@{ path = $_.path; score = $_.score } })
     recommendedChecks = $recommendedChecks
 }
+if ($null -ne $sqlShadowDiagnostics) { $context['sqlShadow'] = $sqlShadowDiagnostics }
 
 if ($Format -eq 'Json') {
     $contextJson = $context | ConvertTo-Json -Depth 12
-    Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $contextJson
+    if ($null -ne $queryCacheEntry) { Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $contextJson }
     Write-Output $contextJson
     return
 }
 
 Write-Host "LLM Wiki context: '$searchText' [$ChangeType]"
+if ($null -ne $sqlShadowDiagnostics) {
+    Write-Host "SQL shadow: ready=$($sqlShadowDiagnostics.ready), overlap=$($sqlShadowDiagnostics.overlapCount)/$($sqlShadowDiagnostics.legacyCandidateCount), SQL=$($sqlShadowDiagnostics.sqlQueryDurationMs)ms, round-trip=$($sqlShadowDiagnostics.roundTripDurationMs)ms; JSON remains authoritative."
+}
 if ($null -ne $moduleContext) {
     Write-Host "Module: $($moduleContext.name)"
     Write-Host "  depends on: $(if ($moduleContext.dependencies.Count) { $moduleContext.dependencies -join ', ' } else { 'none' })"

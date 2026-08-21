@@ -143,37 +143,25 @@
     {
       "pageId": "workflow-adaptive-development",
       "pagePath": ".llm-wiki/workflows/adaptive-development.md",
-      "pageSha256": "5296f4e8c912e36ad1347e6bbbc19adfced3c9f88a31c92870a18e2697fa33ac",
+      "pageSha256": "dfdbd4b839e14d170c467c21c2d3ffee09d6764f7186e3b54160b7ae083ae3d0",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
-          "sha256": "8031f598674daa723700b67ce0375c672262cac78a92902060b9b3b4cae5e5de"
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "c16bcaca9daf9240471b1e2e7399e10d066ebffbb89bb6ad1a5590ff973174fb"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
-          "sha256": "d6f575219184e2d7933385aab438750defa92727f02381a959559653f2450f8b"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "fa95f5656d4a6f3ec16614fd09caee6f4f51f76b145a59ed4bf4e43a2327fbbf"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1",
-          "sha256": "0ac15b8bd09ae2d037355fc704f41a4920a2a502a227927b4cd0cd2cd9deb5cb"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-          "sha256": "0213e3646dfd6140673bd100e15b81daa9f02601bb4cb9a515840ea5d61bb9e2"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiTaskBaseline.ps1",
-          "sha256": "7cd911e84cc329289862c8e99547388af41eaacd105ae8e622f93f1da33e74c7"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiVerificationCache.ps1",
-          "sha256": "14368cd8775a1a55b6fd10e34dd797faa814a815b48e66af6434ceee985fc41f"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+          "sha256": "aaadeaeec83aa4e481c9d6ed97c789d44ba58c460298ca7dde327c0ff0d87e5a"
         }
       ],
-      "reason": "Contract-reference extractor regression passed after lifecycle cleanup; build locks are now removed after the exclusive build section and concurrent ownership remains protected.",
+      "reason": "Reviewed dependent quality and workflow pages against the new FTS shadow smoke and graph fingerprint invalidation; their governed behavior remains accurate and the code-graph workflow documents the new lane.",
       "baseRef": "HEAD",
-      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
-      "reviewedAtUtc": "2026-08-18T02:22:53.3766728Z"
+      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
+      "reviewedAtUtc": "2026-08-21T03:26:10.8310931Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -212,13 +200,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "cef9f2c33b30cf4137decc1109430bb72d1f6721076a53b7538d090cf00057c0"
+          "sha256": "42a53411142f9fb7db90f9b6c00e0ed98c1210a976262a3ffc742dd664449c8b"
         }
       ],
-      "reason": "OpenAPI changes are additive optional MailInbox provenance and DMARC verification response fields; api-compat reports 0 breaking and 18 additive changes, and regenerated snapshots pass integration tests.",
+      "reason": "Reviewed regenerated backend-contract evidence; SQL/FTS and cache-fingerprint changes do not alter HTTP contracts, and the contract generator validation passed.",
       "baseRef": "HEAD",
-      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
-      "reviewedAtUtc": "2026-08-20T15:58:10.8686556Z"
+      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
+      "reviewedAtUtc": "2026-08-21T03:26:12.0490783Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -227,13 +215,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fe23a1e418e3f9d2cf619185cd08be61c023d2df66283348bad9cd6ebcffa3ee"
+          "sha256": "fa95f5656d4a6f3ec16614fd09caee6f4f51f76b145a59ed4bf4e43a2327fbbf"
         }
       ],
-      "reason": "Reviewed the remaining affected navigation pages against their declared current sources; no workflow contract change beyond the documented cache, isolation, graph, and verification updates was required.",
+      "reason": "Reviewed dependent context, brief, manifest, integration, and developer-experience pages; public workflow contracts remain unchanged because JSON stays authoritative and SQL is opt-in shadow diagnostics.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:15:14.7702063Z"
+      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
+      "reviewedAtUtc": "2026-08-21T03:26:12.9191066Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -242,13 +230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fe23a1e418e3f9d2cf619185cd08be61c023d2df66283348bad9cd6ebcffa3ee"
+          "sha256": "fa95f5656d4a6f3ec16614fd09caee6f4f51f76b145a59ed4bf4e43a2327fbbf"
         }
       ],
-      "reason": "Reviewed the remaining affected navigation pages against their declared current sources; no workflow contract change beyond the documented cache, isolation, graph, and verification updates was required.",
+      "reason": "Reviewed dependent context, brief, manifest, integration, and developer-experience pages; public workflow contracts remain unchanged because JSON stays authoritative and SQL is opt-in shadow diagnostics.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:15:15.4395574Z"
+      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
+      "reviewedAtUtc": "2026-08-21T03:26:13.6531438Z"
     },
     {
       "pageId": "workflow-code-graph",
@@ -310,13 +298,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "d0a42f59ca9637b66d9a3eb9b329cc7202351943dc258ddf9036e767fe52eb09"
+          "sha256": "0decdaa7232ef4c133cc976f9a5d214a35d11ea73fac2e2dc11cdc25387462c1"
         }
       ],
-      "reason": "Context scoring preserves the existing long-token substring and short-token Unicode-boundary semantics while avoiding repeated regex compilation; context-cache now enforces cold under 10 seconds and warm under 2 seconds, and both SLA and research-confidence regressions passed.",
+      "reason": "Reviewed dependent context, brief, manifest, integration, and developer-experience pages; public workflow contracts remain unchanged because JSON stays authoritative and SQL is opt-in shadow diagnostics.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:34:51.0563676Z"
+      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
+      "reviewedAtUtc": "2026-08-21T03:26:14.3823834Z"
     },
     {
       "pageId": "workflow-context-security",
@@ -438,17 +426,17 @@
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "27d0024f72d1c76d049cd23b20354f5be8d3d29d460a6f71ba657cf6b3259b3d",
+      "pageSha256": "e8c68f984278bf62d48eb57fdbbe50150acdd40bb94fc7724fadc32573c7bab9",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiWorkflowMetrics.ps1",
-          "sha256": "565075ee7762ef40ffbdee6f07d3261bed1838411f6d9284b08b0d0eb4dedcca"
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "c16bcaca9daf9240471b1e2e7399e10d066ebffbb89bb6ad1a5590ff973174fb"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "Reviewed dependent quality and workflow pages against the new FTS shadow smoke and graph fingerprint invalidation; their governed behavior remains accurate and the code-graph workflow documents the new lane.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:31.3482626Z"
+      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
+      "reviewedAtUtc": "2026-08-21T03:26:15.1408522Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -536,13 +524,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fe23a1e418e3f9d2cf619185cd08be61c023d2df66283348bad9cd6ebcffa3ee"
+          "sha256": "fa95f5656d4a6f3ec16614fd09caee6f4f51f76b145a59ed4bf4e43a2327fbbf"
         }
       ],
-      "reason": "Reviewed the remaining affected navigation pages against their declared current sources; no workflow contract change beyond the documented cache, isolation, graph, and verification updates was required.",
+      "reason": "Reviewed dependent context, brief, manifest, integration, and developer-experience pages; public workflow contracts remain unchanged because JSON stays authoritative and SQL is opt-in shadow diagnostics.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:15:17.3279351Z"
+      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
+      "reviewedAtUtc": "2026-08-21T03:26:16.1222858Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -550,14 +538,14 @@
       "pageSha256": "2d14755cf1714049bfdbd8ce1c1ed6e3fb250c1e2f8a34d27863f86e278e86d7",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
-          "sha256": "e66c160e03d0f6636879a946265748382d5f0742082848c0cde325ae89c95fc9"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "fa95f5656d4a6f3ec16614fd09caee6f4f51f76b145a59ed4bf4e43a2327fbbf"
         }
       ],
-      "reason": "Release readiness now normalizes null, scalar, and array-shaped collections before counting and its regression covers scalar findings plus direct HeadRef invocation.",
+      "reason": "Reviewed dependent quality and workflow pages against the new FTS shadow smoke and graph fingerprint invalidation; their governed behavior remains accurate and the code-graph workflow documents the new lane.",
       "baseRef": "HEAD",
-      "gitHead": "5139162b0a282013047d7fdc953943423039e067",
-      "reviewedAtUtc": "2026-08-21T01:31:02.1628564Z"
+      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
+      "reviewedAtUtc": "2026-08-21T03:26:17.3523407Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -593,17 +581,17 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "c32e5ceb11c2d5cf263772df93a19c2468953f51df012412261f1e59ebd3669b"
+          "sha256": "5aa61d068a48af23b71d5ba9f813a894f794a0fb60aa8569a70825c8eed69c14"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
-          "sha256": "bb5da28b376981ef4184e59a702144ef124a09678f27982eecfdc9572108a3c1"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+          "sha256": "3703b7a7e1c54f22cbf3d6a173ede6a1c71f7f413f6a3427b5ea362a8b6702cc"
         }
       ],
-      "reason": "Release readiness now normalizes scalar-shaped results, and trace-output snapshot verification runs after the parallel code-graph writer to avoid Windows SQLite sharing races.",
+      "reason": "Reviewed affected-smoke integration: the context-bundle group now runs the committed SQL retrieval evaluation after graph prewarm; scheduling, parallel-safety, failure propagation, and index publication semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5139162b0a282013047d7fdc953943423039e067",
-      "reviewedAtUtc": "2026-08-21T01:37:42.3301193Z"
+      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
+      "reviewedAtUtc": "2026-08-21T03:42:53.8812321Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -627,17 +615,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "7868dc2fe9f9633c6794dfd6910be7ceb19aff5792539ef83b447d10d2901a74"
+          "sha256": "c16bcaca9daf9240471b1e2e7399e10d066ebffbb89bb6ad1a5590ff973174fb"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fe23a1e418e3f9d2cf619185cd08be61c023d2df66283348bad9cd6ebcffa3ee"
+          "sha256": "fa95f5656d4a6f3ec16614fd09caee6f4f51f76b145a59ed4bf4e43a2327fbbf"
         }
       ],
-      "reason": "Reviewed the remaining affected navigation pages against their declared current sources; no workflow contract change beyond the documented cache, isolation, graph, and verification updates was required.",
+      "reason": "Reviewed dependent context, brief, manifest, integration, and developer-experience pages; public workflow contracts remain unchanged because JSON stays authoritative and SQL is opt-in shadow diagnostics.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:15:18.5669279Z"
+      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
+      "reviewedAtUtc": "2026-08-21T03:26:18.8158764Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -817,13 +805,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "71d21b33cd268597d3bd0b61a35bd0df9502224e14b9cf89868f6b670b12f507"
+          "sha256": "121246305dae60b271067ac1e09becd828a5f31e258fc51d4f3509df46700512"
         }
       ],
-      "reason": "Reviewed quality risk with exact sliding-window boundary and bounded-tail tests, 162 infrastructure tests, 58 integration tests, architecture guards, format checks, and frontend verification.",
+      "reason": "Reviewed dependent quality and workflow pages against the new FTS shadow smoke and graph fingerprint invalidation; their governed behavior remains accurate and the code-graph workflow documents the new lane.",
       "baseRef": "HEAD",
-      "gitHead": "57d59eb7271d3721a3fc1010502005c76625d3db",
-      "reviewedAtUtc": "2026-08-20T18:12:05.6795532Z"
+      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
+      "reviewedAtUtc": "2026-08-21T03:26:19.8819034Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -938,13 +926,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fe23a1e418e3f9d2cf619185cd08be61c023d2df66283348bad9cd6ebcffa3ee"
+          "sha256": "fa95f5656d4a6f3ec16614fd09caee6f4f51f76b145a59ed4bf4e43a2327fbbf"
         }
       ],
-      "reason": "Updated workflow contracts for detection-only standalone snapshots, scoped cache lineage, bounded compact research, trace scope ranking, and sandbox-owned smoke attribution; verify-full passed indexes and 28 focused groups before source-impact review.",
+      "reason": "Reviewed dependent quality and workflow pages against the new FTS shadow smoke and graph fingerprint invalidation; their governed behavior remains accurate and the code-graph workflow documents the new lane.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:15:21.7458940Z"
+      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
+      "reviewedAtUtc": "2026-08-21T03:26:21.4734464Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -1183,14 +1171,14 @@
       "pageSha256": "8439af4b89bf50398667ec91e06804d1fb6925969f3cfb30925553589f14ce9c",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "8f9eca544b6b060d90ff70964cf5338b7849ca3b4f446a35cde4a6f46bc5a83e"
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "0decdaa7232ef4c133cc976f9a5d214a35d11ea73fac2e2dc11cdc25387462c1"
         }
       ],
-      "reason": "Reviewed generated catalog and runtime topology against the MailInbox compose, initializer, PostgreSQL TLS, runtime-role, SMTP quota, and admin DMARC changes; affected indexes were regenerated.",
+      "reason": "Reviewed dependent context, brief, manifest, integration, and developer-experience pages; public workflow contracts remain unchanged because JSON stays authoritative and SQL is opt-in shadow diagnostics.",
       "baseRef": "HEAD",
-      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
-      "reviewedAtUtc": "2026-08-20T13:44:46.3348745Z"
+      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
+      "reviewedAtUtc": "2026-08-21T03:26:20.6841440Z"
     },
     {
       "pageId": "workflow.review-diff",

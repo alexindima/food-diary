@@ -335,6 +335,29 @@ public sealed class MailInboxPresentationTests {
     }
 
     [Fact]
+    public async Task MailInboxControllerBase_HandleOk_WhenQuerySucceeds_MapsResponse() {
+        var request = new TestMailInboxQuery();
+        StubSender sender = new StubSender().Register(request, Result.Success("value"));
+        var controller = new TestMailInboxController(sender) {
+            ControllerContext = CreateControllerContext(),
+        };
+
+        IActionResult result = await controller.HandleMappedQuery(request, static value => value.Length);
+
+        OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
+        Assert.Equal(5, ok.Value);
+    }
+
+    [Fact]
+    public void MailInboxHttpOptions_GetApiKey_WhenPermissionIsUnknown_ReturnsEmptyString() {
+        var options = new MailInboxHttpOptions();
+
+        string result = options.GetApiKey((MailInboxPermission)999);
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
     public async Task MailInboxControllerBase_HandleNoContent_WhenCommandSucceeds_ReturnsNoContent() {
         StubSender sender = new StubSender()
             .Register(new TestMailInboxCommand(), Result.Success());
@@ -612,6 +635,12 @@ public sealed class MailInboxPresentationTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class TestMailInboxController(ISender sender) : MailInboxControllerBase(sender) {
+        public Task<IActionResult> HandleMappedQuery<TResponse, THttpResponse>(
+            IRequest<Result<TResponse>> request,
+            Func<TResponse, THttpResponse> map) {
+            return HandleOk(request, map);
+        }
+
         public Task<IActionResult> HandleCommand(IRequest<Result> request) {
             return HandleOk(request, "accepted");
         }
@@ -627,6 +656,9 @@ public sealed class MailInboxPresentationTests {
 
     [ExcludeFromCodeCoverage]
     private sealed record TestMailInboxCommand : IRequest<Result>;
+
+    [ExcludeFromCodeCoverage]
+    private sealed record TestMailInboxQuery : IRequest<Result<string>>;
 
     [ExcludeFromCodeCoverage]
     private sealed record TestPlainCommand : IRequest;

@@ -8,4 +8,5 @@ public sealed record WikiRuntimeMetrics(
     long FailedCommands,
     long CancelledCommands,
     long TimedOutCommands,
-    IReadOnlyList<WikiCommandTiming> CommandTimings);
+    IReadOnlyList<WikiCommandTiming> CommandTimings,
+    IReadOnlyList<WikiCommandStageTiming> CommandStageTimings);

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using OpenTelemetry.Metrics;
 using Microsoft.Extensions.Options;
 using Npgsql;
+using System.Reflection;
 
 namespace FoodDiary.MailInbox.Infrastructure.Tests;
 
@@ -23,6 +24,74 @@ public sealed class MailInboxSmtpOptionsTests {
         string connectionString,
         bool expected) {
         Assert.Equal(expected, MailInboxDatabaseConfiguration.TargetsRequiredDatabase(connectionString));
+    }
+
+    [Theory]
+    [InlineData("Host=database;Database=fooddiary_mailinbox;Username=mailinbox_runtime;SSL Mode=VerifyFull", true)]
+    [InlineData("Host=database;Database=fooddiary_mailinbox;Username=mailinbox_runtime;SSL Mode=Require", false)]
+    [InlineData("invalid", false)]
+    [InlineData("", false)]
+    public void DatabaseConfiguration_UsesAuthenticatedTls_ReturnsExpectedResult(
+        string connectionString,
+        bool expected) {
+        Assert.Equal(expected, MailInboxDatabaseConfiguration.UsesAuthenticatedTls(connectionString));
+    }
+
+    [Theory]
+    [InlineData("Host=database;Username=mailinbox_runtime", "mailinbox_runtime", true)]
+    [InlineData("Host=database;Username=mailinbox_runtime", "MAILINBOX_RUNTIME", false)]
+    [InlineData("Host=database;Username=other", "mailinbox_runtime", false)]
+    [InlineData("invalid", "mailinbox_runtime", false)]
+    [InlineData("", "mailinbox_runtime", false)]
+    [InlineData("Host=database;Username=mailinbox_runtime", "", false)]
+    public void DatabaseConfiguration_UsesExpectedRole_ReturnsExpectedResult(
+        string connectionString,
+        string expectedRoleName,
+        bool expected) {
+        Assert.Equal(
+            expected,
+            MailInboxDatabaseConfiguration.UsesExpectedRole(connectionString, expectedRoleName));
+    }
+
+    [Theory]
+    [InlineData("192.0.2.0/24", "192.0.2.42", true)]
+    [InlineData("192.0.2.0/24", "192.0.3.42", false)]
+    [InlineData("192.0.2.10", "192.0.2.10", true)]
+    [InlineData("2001:db8::/65", "2001:db8::1", true)]
+    [InlineData("2001:db8::/65", "2001:db8:0:0:8000::1", false)]
+    [InlineData("2001:db8::/64", "192.0.2.42", false)]
+    [InlineData("::ffff:192.0.2.0/24", "192.0.2.42", true)]
+    public void NetworkRange_Contains_ReturnsExpectedResult(
+        string network,
+        string address,
+        bool expected) {
+        Type rangeType = typeof(MailInboxSmtpOptions).Assembly.GetType(
+            "FoodDiary.MailInbox.Infrastructure.Options.MailInboxNetworkRange",
+            throwOnError: true)!;
+        object range = rangeType.GetMethod("Parse", BindingFlags.Public | BindingFlags.Static)!
+            .Invoke(obj: null, [network])!;
+        bool actual = (bool)rangeType.GetMethod("Contains", BindingFlags.Public | BindingFlags.Instance)!
+            .Invoke(range, [System.Net.IPAddress.Parse(address)])!;
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("invalid")]
+    [InlineData("192.0.2.0/0")]
+    [InlineData("192.0.2.0/33")]
+    [InlineData("192.0.2.0/not-a-prefix")]
+    [InlineData("192.0.2.0/24/extra")]
+    public void NetworkRange_Parse_WhenValueIsInvalid_Throws(string value) {
+        Type rangeType = typeof(MailInboxSmtpOptions).Assembly.GetType(
+            "FoodDiary.MailInbox.Infrastructure.Options.MailInboxNetworkRange",
+            throwOnError: true)!;
+        TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() =>
+            rangeType.GetMethod("Parse", BindingFlags.Public | BindingFlags.Static)!
+                .Invoke(obj: null, [value]));
+
+        Assert.IsType<FormatException>(exception.InnerException);
     }
 
     [Theory]

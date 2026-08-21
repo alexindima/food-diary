@@ -10,11 +10,34 @@ foreach ($lockSafetyFragment in @('isProcessAlive(owner.pid)', 'process.kill(pid
 }
 $recipesBoundary = if (Test-Path -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Application.Recipes') -PathType Container) { 'FoodDiary.Application.Recipes' } else { 'FoodDiary.Application/Recipes' }
 $recipesSourcePrefix = if ($recipesBoundary -eq 'FoodDiary.Application.Recipes') { 'FoodDiary.Application.Recipes/Recipes' } else { $recipesBoundary }
+$russianServerQuery = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('0L/QvtC00LrQu9GO0YfQuNGB0Ywg0YHQtdGA0LLQtdGA0YM='))
 $build = & $manager build -Format Json | ConvertFrom-Json
 if ([int]$build.files -lt 100 -or [int]$build.symbols -lt 100) { throw 'Code graph build produced an implausibly small repository graph.' }
 if ([int]$build.typedEdges -lt 1000) { throw 'Code graph build produced an implausibly small typed relationship graph.' }
+if ([string]::IsNullOrWhiteSpace([string]$build.graphDependencyFingerprint) -or
+    -not (Test-Path -LiteralPath (Join-Path $repositoryRoot '.artifacts/llm-wiki/code-graph/code-graph.fingerprint') -PathType Leaf)) {
+    throw 'Code graph build did not publish its cache dependency fingerprint sidecar.'
+}
 $warm = & $manager build -Format Json | ConvertFrom-Json
 if ([int]$warm.updated -ne 0 -or [int]$warm.scanned -ne 0) { throw 'Unchanged code graph build was not incremental.' }
+if ([int]$warm.contextSearch.documents -lt 1000) { throw 'Code graph FTS projection contains too few repository documents.' }
+$fts = & $manager search -Query 'Recipe nutrition updater' -Limit 20 -SkipRefresh -Format Json | ConvertFrom-Json
+if (-not $fts.ready -or
+    @($fts.records | Where-Object path -eq "$recipesSourcePrefix/Services/RecipeNutritionUpdater.cs").Count -ne 1) {
+    throw 'SQLite FTS context search did not locate RecipeNutritionUpdater.'
+}
+foreach ($searchCase in @(
+    @{ Query = 'MCP PowerShell command stage telemetry'; ExpectedPath = 'FoodDiary.Development.Mcp/Wiki/PowerShellWikiCommandExecutor.cs' }
+    @{ Query = 'Mail inbox SMTP rate limiter'; ExpectedPath = 'MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs' }
+    @{ Query = 'weight history measurements'; ExpectedPath = 'FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.ts' }
+    @{ Query = 'periodic cleanup fasting telemetry registration'; ExpectedPath = 'FoodDiary.JobManager/Services/FastingTelemetryCleanupJob.cs' }
+    @{ Query = $russianServerQuery; ExpectedPath = 'AGENTS.md' }
+)) {
+    $searchResult = & $manager search -Query $searchCase.Query -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
+    if ($searchCase.ExpectedPath -notin @($searchResult.records.path)) {
+        throw "SQLite FTS context search did not locate '$($searchCase.ExpectedPath)' for '$($searchCase.Query)'."
+    }
+}
 $symbol = & $manager symbol -Query RecipeNutritionUpdater -Format Json | ConvertFrom-Json
 if (@($symbol.symbols | Where-Object path -eq "$recipesSourcePrefix/Services/RecipeNutritionUpdater.cs").Count -ne 1) {
     throw 'Code graph symbol query did not locate RecipeNutritionUpdater.'
@@ -38,6 +61,10 @@ if (@(Compare-Object @($scanConsumers.consumers.path) @($graphConsumers.consumer
     throw 'Graph-prefiltered contract consumers differ from the authoritative repository scan.'
 }
 $coverage = & $manager coverage -Format Json | ConvertFrom-Json
+$powerShellCoverage = @($coverage.languages | Where-Object language -eq 'powershell')
+if ($powerShellCoverage.Count -ne 1 -or [int]$powerShellCoverage[0].files -lt 100) {
+    throw 'Code graph coverage omitted the repository PowerShell tool surface.'
+}
 foreach ($requiredKind in @('di-service','mediator-handler','method-call','type-construction','type-inheritance','project-reference','http-client','template-component','test-ownership','configuration-key','migration-table')) {
     if ($requiredKind -notin @($coverage.relationKinds.kind)) { throw "Code graph coverage omitted typed relationship kind '$requiredKind'." }
 }

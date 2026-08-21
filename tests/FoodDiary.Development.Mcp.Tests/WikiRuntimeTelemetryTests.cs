@@ -11,6 +11,8 @@ public sealed class WikiRuntimeTelemetryTests {
         Complete(telemetry, "brief", 10);
         Complete(telemetry, "brief", 20);
         Complete(telemetry, "brief", 100);
+        telemetry.RecordCommandStage("brief", "process-round-trip", TimeSpan.FromMilliseconds(8));
+        telemetry.RecordCommandStage("brief", "process-round-trip", TimeSpan.FromMilliseconds(80));
         telemetry.CommandQueued();
         telemetry.CommandStarted();
         telemetry.CommandFailed(cancelled: false, timedOut: true);
@@ -32,6 +34,13 @@ public sealed class WikiRuntimeTelemetryTests {
         Assert.Equal(20, timing.P50Milliseconds);
         Assert.Equal(100, timing.P95Milliseconds);
         Assert.Equal(100, timing.MaximumMilliseconds);
+        WikiCommandStageTiming stageTiming = Assert.Single(metrics.CommandStageTimings);
+        Assert.Equal("brief", stageTiming.Command);
+        Assert.Equal("process-round-trip", stageTiming.Stage);
+        Assert.Equal(2, stageTiming.Samples);
+        Assert.Equal(8, stageTiming.P50Milliseconds);
+        Assert.Equal(80, stageTiming.P95Milliseconds);
+        Assert.Equal(80, stageTiming.MaximumMilliseconds);
     }
 
     private static void Complete(

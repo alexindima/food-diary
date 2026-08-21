@@ -123,8 +123,7 @@ function Get-ReadOnlySnapshotFingerprint {
         $material.Add("$relativePath=$(Get-FileHashOrMissing (Join-Path $RepositoryRoot $relativePath))")
     }
     foreach ($dependencyPath in @(
-        '.artifacts/llm-wiki/code-graph/code-graph.sqlite'
-        '.artifacts/llm-wiki/code-graph/code-graph.sqlite-wal'
+        '.artifacts/llm-wiki/code-graph/code-graph.fingerprint'
     )) {
         $material.Add("dependency:$dependencyPath=$(Get-FileHashOrMissing (Join-Path $RepositoryRoot $dependencyPath))")
     }
@@ -396,6 +395,7 @@ try {
         Copy-WorkspaceOverlay -SourceRoot $sourceRepositoryRoot -SnapshotRoot $snapshotRoot -Path @(
             '.artifacts/llm-wiki/code-graph/code-graph.sqlite'
             '.artifacts/llm-wiki/code-graph/code-graph.sqlite-wal'
+            '.artifacts/llm-wiki/code-graph/code-graph.fingerprint'
         )
         [IO.File]::WriteAllText($readyPath, $snapshotFingerprint + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
     }

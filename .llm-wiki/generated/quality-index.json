@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4435,
+    "productionFiles": 4436,
     "criticalSymbols": 569,
     "criticalSymbolsWithTestReferences": 543,
     "criticalSymbolsWithoutTestReferences": 26,
@@ -16104,11 +16104,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/PowerShellWikiCommandExecutor.cs",
-      "nonBlankLines": 229,
+      "nonBlankLines": 251,
       "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 36.08
+      "structuralRiskScore": 36.52
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandRequest.cs",
@@ -16125,6 +16125,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 17.72
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandStageTiming.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandTiming.cs",
@@ -16168,19 +16176,19 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeMetrics.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.22
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeTelemetry.cs",
-      "nonBlankLines": 102,
+      "nonBlankLines": 140,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.04
+      "structuralRiskScore": 8.8
     },
     {
       "path": "FoodDiary.Domain/Common/DomainConstants.cs",
@@ -41558,8 +41566,9 @@
       "role": "Validator",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleValidator.cs",
       "line": 4,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/MailInboxCoverageGapTests.cs",
         "MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/NpgsqlInboundMailStoreIntegrationTests.cs"
       ]
     },

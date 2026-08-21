@@ -55,5 +55,16 @@ $researchSource = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'Get-LlmWikiRe
 if ($researchSource -notmatch 'runtimeFlowEvidence' -or $researchSource -notmatch 'Get-LlmWikiGraphResearch') { throw 'Ordinary research no longer attaches graph-backed runtime-flow evidence for PlannedPath.' }
 if ($researchSource -notmatch '\$SkipHistory' -or $researchSource -notmatch "workflow\.profile\s*-eq\s*'test-only'") { throw 'Research no longer defers Git history for explicit or test-only fast paths.' }
 if ($researchSource -notmatch 'failureStopwords' -or $researchSource -notmatch '\$matches\.Count\s*-lt\s*2') { throw 'Research failure matching no longer requires meaningful multi-token or path evidence.' }
+$taskBriefSource = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'Get-LlmWikiTaskBrief.ps1'))
+$graphDependency = '.artifacts/llm-wiki/code-graph/code-graph.fingerprint'
+if (-not $researchSource.Contains($graphDependency) -or -not $taskBriefSource.Contains($graphDependency)) {
+    throw 'Research and task-brief caches do not depend on the graph fingerprint sidecar.'
+}
+if ($researchSource.Contains('.llm-wiki/generated/code-graph.sqlite') -or
+    $taskBriefSource.Contains('.llm-wiki/generated/code-graph.sqlite') -or
+    $researchSource.Contains('.artifacts/llm-wiki/code-graph/code-graph.sqlite') -or
+    $taskBriefSource.Contains('.artifacts/llm-wiki/code-graph/code-graph.sqlite')) {
+    throw 'Research or task-brief cache still hashes a live SQLite graph instead of its fingerprint sidecar.'
+}
 
 Write-Host 'LLM Wiki research confidence tests passed.'

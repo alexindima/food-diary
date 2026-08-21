@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3419,
-    "symbols": 3427,
+    "sourceFiles": 3420,
+    "symbols": 3428,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 238,
     "kinds": {
       "class": 1781,
       "enum": 61,
       "interface": 418,
-      "record": 1047,
+      "record": 1048,
       "record struct": 120
     },
     "roles": {
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 62,
-      "Other": 1309,
+      "Other": 1310,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -13409,6 +13409,13 @@
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandResult.cs",
       "line": 4
+    },
+    {
+      "name": "WikiCommandStageTiming",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandStageTiming.cs",
+      "line": 2
     },
     {
       "name": "WikiCommandTiming",

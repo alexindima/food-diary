@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 
 namespace FoodDiary.JobManager.Tests;
 
@@ -73,7 +74,9 @@ public sealed class DependencyInjectionTests {
 
         using ServiceProvider provider = services.BuildServiceProvider();
 
-        Assert.NotNull(provider.GetRequiredService<MeterProvider>());
+        Assert.Multiple(
+            () => Assert.NotNull(provider.GetRequiredService<MeterProvider>()),
+            () => Assert.NotNull(provider.GetRequiredService<TracerProvider>()));
     }
 
     [Fact]

@@ -81,6 +81,21 @@ public sealed class BillingRecoveryJobsTests {
     }
 
     [Fact]
+    public async Task PaddleNotificationRecoveryJob_WhenReplayLimitIsReached_RecordsSuccess() {
+        const string json = """{"data":[{"id":"ntf_failed","origin":"event","replayed_at":null}],"meta":{"pagination":{"next":null}}}""";
+        var handler = new QueueHandler(JsonResponse(json), new HttpResponseMessage(HttpStatusCode.Accepted));
+        var tracker = new JobExecutionStateTracker();
+        var job = new PaddleNotificationRecoveryJob(
+            CreateRecoveryService(handler, maximumReplaysPerRun: 1),
+            new JobExecutionObserver(TimeProvider.System, tracker),
+            NullLogger<PaddleNotificationRecoveryJob>.Instance);
+
+        await job.Execute();
+
+        Assert.Equal(0, tracker.GetSnapshot("billing.paddle-notification-recovery")?.ConsecutiveFailures);
+    }
+
+    [Fact]
     public async Task PaddleNotificationRecoveryJob_WhenServiceFails_RecordsFailureAndRethrows() {
         var tracker = new JobExecutionStateTracker();
         var job = new PaddleNotificationRecoveryJob(
@@ -108,7 +123,9 @@ public sealed class BillingRecoveryJobsTests {
         Assert.Equal(0, tracker.GetSnapshot("billing.paddle-notification-recovery")?.ConsecutiveFailures);
     }
 
-    private static PaddleNotificationRecoveryService CreateRecoveryService(HttpMessageHandler handler) =>
+    private static PaddleNotificationRecoveryService CreateRecoveryService(
+        HttpMessageHandler handler,
+        int maximumReplaysPerRun = 100) =>
         new(
             new HttpClient(handler),
             MsOptions.Create(new PaddleOptions {
@@ -121,7 +138,8 @@ public sealed class BillingRecoveryJobsTests {
                 PremiumMonthlyPriceId = "pri_month",
                 PremiumYearlyPriceId = "pri_year",
                 CheckoutUrl = "https://example.com/premium",
-            }));
+            }),
+            maximumReplaysPerRun: maximumReplaysPerRun);
 
     private static HttpResponseMessage JsonResponse(string json) =>
         new(HttpStatusCode.OK) { Content = new StringContent(json, Encoding.UTF8, "application/json") };

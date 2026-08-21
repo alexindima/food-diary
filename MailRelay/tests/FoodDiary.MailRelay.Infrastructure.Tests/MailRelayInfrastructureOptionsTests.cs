@@ -285,4 +285,19 @@ public sealed class MailRelayInfrastructureOptionsTests {
             () => Assert.NotNull(provider.GetRequiredService<OpenTelemetry.Metrics.MeterProvider>()),
             () => Assert.NotNull(provider.GetRequiredService<OpenTelemetry.Trace.TracerProvider>()));
     }
+
+    [Fact]
+    public void AddMailRelayTelemetry_WhenOtlpEndpointIsInvalid_Throws() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["OpenTelemetry:Otlp:Endpoint"] = "not an absolute uri",
+            })
+            .Build();
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
+            services.AddMailRelayTelemetry(configuration));
+
+        Assert.Contains("valid absolute URI", exception.Message, StringComparison.Ordinal);
+    }
 }

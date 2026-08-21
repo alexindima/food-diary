@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('build', 'build-plan', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query')]
+    [ValidateSet('build', 'build-plan', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search')]
     [string]$Action = 'status',
     [string]$Query,
     [ValidateSet('modules', 'contracts', 'risks', 'tests')]
@@ -9,6 +9,8 @@ param(
     [string[]]$RelationKind,
     [string]$Module,
     [string]$PathPrefix,
+    [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Tests')]
+    [string]$ChangeType = 'Any',
     [ValidateSet('Any', 'HostedService', 'Service', 'Handler', 'Controller', 'Repository', 'Component')]
     [string]$SymbolKind = 'Any',
     [ValidateRange(1, 500)]
@@ -31,6 +33,7 @@ if (-not [string]::IsNullOrWhiteSpace($Query)) { $arguments += "--query=$Query" 
 if ($Action -eq 'query') { $arguments += "--category=$Category" }
 if (-not [string]::IsNullOrWhiteSpace($Module)) { $arguments += "--module=$Module" }
 if (-not [string]::IsNullOrWhiteSpace($PathPrefix)) { $arguments += "--path-prefix=$PathPrefix" }
+if ($Action -eq 'search') { $arguments += "--change-type=$ChangeType" }
 if ($SymbolKind -ne 'Any') { $arguments += "--symbol-kind=$SymbolKind" }
 $normalizedChangedPaths = [string[]]@($ChangedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
 if ($normalizedChangedPaths.Length -gt 0) { $arguments += "--path=$($normalizedChangedPaths -join ';')" }
@@ -82,5 +85,9 @@ switch ($Action) {
     'query' {
         Write-Host "Code graph query [$Category] '$Query': $(@($result.records).Count) record(s)."
         foreach ($item in @($result.records)) { Write-Host " - $($item.path) [$($item.recordKey)]" }
+    }
+    'search' {
+        Write-Host "Code graph FTS search '$Query': $(@($result.records).Count) record(s), ready=$($result.ready), indexed=$($result.indexedDocuments)."
+        foreach ($item in @($result.records)) { Write-Host " - #$($item.rank) score=$($item.score): $($item.path) [$($item.recordType)]" }
     }
 }

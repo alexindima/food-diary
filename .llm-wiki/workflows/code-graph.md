@@ -10,6 +10,10 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiGraphResearch.ps1
   - .llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1
   - .llm-wiki/tools/Test-LlmWikiCodeGraph.ps1
+  - .llm-wiki/tools/Test-LlmWikiSqlContextShadow.ps1
+  - .llm-wiki/evals/context-search.json
+  - .llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1
+  - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
   - .llm-wiki/tools/Measure-LlmWikiCodeGraph.ps1
   - .llm-wiki/wiki.ps1
 ---
@@ -20,6 +24,36 @@ The experimental graph stores reconstructable code intelligence in
 `.artifacts/llm-wiki/code-graph/code-graph.sqlite`. It is a local cache and is
 never committed. Human-reviewed policy, acceptance, evidence, journeys, and
 architecture documentation remain JSON or Markdown sources in Git.
+
+Each build also publishes
+`.artifacts/llm-wiki/code-graph/code-graph.fingerprint`. Query caches hash this
+small sidecar instead of the live SQLite file, avoiding WAL writer/read-lock
+races and a full database scan during cache-key construction.
+
+The same database contains a versioned FTS5 projection named
+`context_search`. It indexes code paths and symbols, compiled module, contract,
+and quality records, Wiki and current documentation, and scoped `AGENTS.md`
+files. `Manage-LlmWikiCodeGraph.ps1 search` queries this projection with
+deterministic path, module, task-type, and source-kind ranking.
+PowerShell tools are indexed as code with function symbols and raw source text,
+so operational Wiki commands participate in natural-language retrieval.
+`Find-LlmWikiContext.ps1 -SqlShadow` compares its ranked code paths with the
+current JSON retrieval while keeping JSON authoritative; it reports SQLite
+query time separately from the PowerShell/Node round trip. Do not switch the
+normal context path until shadow cases establish acceptable relevant-path
+recall and rule/check coverage.
+
+The committed retrieval corpus lives in `.llm-wiki/evals/context-search.json`.
+Run it without changing the JSON-authoritative path:
+
+```powershell
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 -FailOnRegression
+```
+
+The gate reports top-1 accuracy, top-10 recall, mean reciprocal rank, SQL timing,
+and per-query misses. Thresholds are versioned with the corpus; timing is
+diagnostic rather than a correctness gate because workstation load varies.
 
 Build or incrementally refresh the graph:
 

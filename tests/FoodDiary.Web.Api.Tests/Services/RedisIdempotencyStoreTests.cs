@@ -70,6 +70,30 @@ public sealed class RedisIdempotencyStoreTests {
     }
 
     [Fact]
+    public async Task ReserveAsync_WhenCachedResponseRemainsInvalid_ThrowsAfterRetry() {
+        IDatabase database = Substitute.For<IDatabase>();
+        ConfigureReservationResult(database, CompletedResult("invalid-one"), CompletedResult("invalid-two"));
+        RedisIdempotencyStore store = CreateStore(database);
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            store.ReserveAsync("request-corrupt", "hash", ResponseTtl, ProcessingTtl, CancellationToken.None));
+
+        Assert.Contains("could not be read", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ReserveAsync_WhenRedisReturnsUnknownState_Throws() {
+        IDatabase database = Substitute.For<IDatabase>();
+        ConfigureReservationResult(database, ReservationResult(99, string.Empty));
+        RedisIdempotencyStore store = CreateStore(database);
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            store.ReserveAsync("request-unknown", "hash", ResponseTtl, ProcessingTtl, CancellationToken.None));
+
+        Assert.Contains("Unexpected Redis idempotency reservation state: 99", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task ReserveAsync_WhenDifferentRequestOwnsActiveLock_ReturnsConflict() {
         IDatabase database = Substitute.For<IDatabase>();
         ConfigureReservationResult(database, ActiveLockResult("other-hash:owner"));

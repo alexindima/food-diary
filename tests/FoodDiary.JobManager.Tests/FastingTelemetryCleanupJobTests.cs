@@ -59,6 +59,20 @@ public sealed class FastingTelemetryCleanupJobTests : IDisposable {
         Assert.Equal(1, snapshot!.Value.ConsecutiveFailures);
     }
 
+    [Fact]
+    public async Task Execute_WhenCanceled_RecordsCancellationAndRethrows() {
+        var cleanupService = new RecordingFastingTelemetryCleanupService();
+        FastingTelemetryCleanupJob job = CreateJob(cleanupService);
+        using var cancellation = new CancellationTokenSource();
+        await cancellation.CancelAsync();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => job.Execute(cancellation.Token));
+
+        JobExecutionStateSnapshot? snapshot = _stateTracker.GetSnapshot("fasting.telemetry_cleanup");
+        Assert.NotNull(snapshot);
+        Assert.Equal(0, snapshot.Value.ConsecutiveFailures);
+    }
+
     private FastingTelemetryCleanupJob CreateJob(
         IFastingTelemetryCleanupService cleanupService,
         FastingTelemetryCleanupOptions? options = null,

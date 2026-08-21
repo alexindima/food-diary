@@ -225,6 +225,18 @@ public sealed class SwaggerOperationFilterTests {
         Assert.Equal("page", parameter.Name);
     }
 
+    [Fact]
+    public void PresentationTransportFilter_ForNonControllerAction_DoesNothing() {
+        var filter = new PresentationTransportOperationFilter();
+        var operation = new OpenApiOperation();
+
+        filter.Apply(operation, CreateContext(new ActionDescriptor()));
+
+        Assert.Null(operation.Parameters);
+        Assert.NotNull(operation.Responses);
+        Assert.Empty(operation.Responses!);
+    }
+
     [Theory]
     [InlineData(nameof(TestController.OptionalIdempotency), false)]
     [InlineData(nameof(TestController.RequiredIdempotency), true)]
@@ -244,6 +256,38 @@ public sealed class SwaggerOperationFilterTests {
             () => Assert.Equal(128, schema.MaxLength),
             () => Assert.True(operation.Responses.ContainsKey("400")),
             () => Assert.True(operation.Responses.ContainsKey("409")));
+    }
+
+    [Fact]
+    public void PresentationTransportFilter_PreservesExistingErrorResponses() {
+        var filter = new PresentationTransportOperationFilter();
+        var operation = new OpenApiOperation {
+            Responses = new OpenApiResponses {
+                ["400"] = new OpenApiResponse { Description = "Custom 400" },
+                ["409"] = new OpenApiResponse { Description = "Custom 409" },
+                ["503"] = new OpenApiResponse { Description = "Custom 503" },
+            },
+        };
+
+        filter.Apply(operation, CreateContext(nameof(TestController.RequiredIdempotency)));
+
+        Assert.Multiple(
+            () => Assert.Equal("Custom 400", operation.Responses["400"].Description),
+            () => Assert.Equal("Custom 409", operation.Responses["409"].Description),
+            () => Assert.Equal("Custom 503", operation.Responses["503"].Description));
+    }
+
+    [Fact]
+    public void PresentationTransportFilter_AddApiErrorResponse_WhenStatusIsUnknown_UsesGenericDescription() {
+        MethodInfo method = typeof(PresentationTransportOperationFilter).GetMethod(
+            "AddApiErrorResponse",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!;
+        var operation = new OpenApiOperation { Responses = [] };
+        OperationFilterContext context = CreateContext(nameof(TestController.RequiredIdempotency));
+
+        _ = method.Invoke(obj: null, [operation, context, StatusCodes.Status418ImATeapot]);
+
+        Assert.Equal("Error", operation.Responses["418"].Description);
     }
 
     [Fact]

@@ -19,7 +19,9 @@ analysis entrypoints without replacing repository source-of-truth checks.
   fingerprint, assembly MVID/hash, and build timestamps).
   It also reports the in-process query-cache hit rate and entry count, active
   and queued PowerShell commands, completion/failure/cancellation/timeout
-  counters, and bounded per-command p50/p95/maximum timings.
+  counters, bounded per-command p50/p95/maximum timings, and matching stage
+  timings for request serialization, queue wait, process round-trip, and result
+  processing.
   `runningCodeIncludesWorktreeChanges` compares the running build with the
   current MCP sources. Wiki index freshness is `verified` only when both source
   and index fingerprints match the receipt from a successful full Wiki verify.
