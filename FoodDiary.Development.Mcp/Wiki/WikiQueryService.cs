@@ -272,7 +272,9 @@ public sealed class WikiQueryService(
         result is null ||
         string.Equals(result.UnavailableReason, "database-missing", StringComparison.Ordinal) ||
         string.Equals(result.UnavailableReason, "fts-projection-not-ready", StringComparison.Ordinal) ||
-        string.Equals(result.UnavailableReason, "snapshot-mismatch", StringComparison.Ordinal);
+        string.Equals(result.UnavailableReason, "snapshot-mismatch", StringComparison.Ordinal) ||
+        string.Equals(result.UnavailableReason, "sqlite-error-11", StringComparison.Ordinal) ||
+        string.Equals(result.UnavailableReason, "sqlite-error-26", StringComparison.Ordinal);
 
     private async Task EnsureSnapshotUnchangedAsync(
         ChangeSetSnapshot expected,

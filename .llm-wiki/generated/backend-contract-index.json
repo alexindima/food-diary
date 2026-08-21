@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1054,
     "ambiguousContracts": 3,
-    "consumerEdges": 7422,
+    "consumerEdges": 7426,
     "productionConsumerEdges": 4479,
-    "testConsumerEdges": 2943,
+    "testConsumerEdges": 2947,
     "consumedContracts": 1054,
     "unconsumedContracts": 0
   },
@@ -22771,6 +22771,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "ConfirmPeriodStartHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Cycles/Requests/ConfirmPeriodStartHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "ConnectWearableCommand",
       "roles": [
         "Command"
@@ -26460,7 +26473,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "CycleLogDayHttpResponse",
@@ -27552,7 +27565,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.DeleteProfile.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "DeleteCycleProfileCommand",
@@ -27916,7 +27929,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeValidation.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "DeleteProductCommand",
@@ -84361,7 +84374,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "ISender",
@@ -95905,7 +95918,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 12
     },
     {
       "contract": "LessonDetailHttpResponse",
@@ -107582,6 +107595,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "UpdateCycleConsentHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Cycles/Requests/UpdateCycleConsentHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "UpdateCycleSettingsCommand",
       "roles": [
         "Command"
@@ -107631,7 +107657,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.SettingsCommands.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "UpdateCycleSettingsCommand",
@@ -107682,6 +107708,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CycleHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UpdateCycleSettingsHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Cycles/Requests/UpdateCycleSettingsHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -109061,7 +109100,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeValidation.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 8
     },
     {
       "contract": "UpdateMenstrualEpisodeCommand",
@@ -109112,6 +109151,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CycleHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UpdateMenstrualEpisodeHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Cycles/Requests/UpdateMenstrualEpisodeHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

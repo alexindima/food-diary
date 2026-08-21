@@ -41,6 +41,13 @@ Adopt option 3 for `get_development_context`.
 - The standalone `trace_backend_flow` tool and JSON-backed policy and knowledge indexes are unchanged. SQLite remains a reconstructable code-navigation projection, not the authority for reviewed decisions or source claims.
 - Runtime telemetry records `context-routing/sqlite-primary` or `context-routing/json-fallback`. SQLite query timing remains separately visible as `context-search/in-process-sqlite`.
 
+### Recovery compatibility boundary
+
+- The SQLite code graph is a reconstructable local cache. When the sole Node writer confirms `SQLITE_CORRUPT` or `SQLITE_NOTADB` while holding the build lock, it may quarantine the database and its sidecars under `.artifacts/llm-wiki/code-graph/` and rebuild from current sources.
+- Busy or locked databases, cancellation, lock-wait timeout, permission failures, and unclassified SQLite errors are never treated as corruption and never trigger quarantine.
+- `DevelopmentContext.BackendTrace`, `ContextRetrievalSource`, and `ContextFallbackReason` remain compatible while the JSON fallback retirement criteria are incomplete. The standalone `trace_backend_flow` tool is not coupled to aggregate-context retirement.
+- Worktree-change races continue to fail with the existing retryable `snapshot_changed` error instead of publishing a graph built from mixed source states.
+
 ## Consequences
 
 ### Positive

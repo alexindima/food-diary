@@ -41,4 +41,23 @@ public partial class CyclesFeatureTests {
         Assert.Equal("Cycle.NotFound", result.Error.Code);
         Assert.False(repository.WasDeleted);
     }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task DeleteCycleProfileCommandHandler_WithInvalidIdentity_ReturnsFailure(bool emptyProfileId) {
+        var user = User.Create($"cycle-delete-invalid-{emptyProfileId}@example.com", "hash");
+        var handler = new DeleteCycleProfileCommandHandler(
+            new NoopCycleRepository(),
+            CreateCurrentUserAccessService(emptyProfileId ? user : null));
+
+        Result result = await handler.Handle(
+            new DeleteCycleProfileCommand(
+                emptyProfileId ? user.Id.Value : Guid.NewGuid(),
+                emptyProfileId ? Guid.Empty : Guid.NewGuid()),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal(emptyProfileId ? "Validation.Invalid" : "Authentication.InvalidToken", result.Error.Code);
+    }
 }

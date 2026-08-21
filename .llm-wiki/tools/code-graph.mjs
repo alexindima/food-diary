@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, extname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
@@ -29,8 +29,14 @@ function publishGraphDependencyFingerprint(databasePath, result) {
     contextSearchRankingFingerprint: sha256(contextSearchRankingText),
     changeSetFingerprint: result.changeSetFingerprint ?? null,
   }));
-  writeFileSync(resolve(dirname(databasePath), 'code-graph.fingerprint'), `${fingerprint}\n`, 'utf8');
+  writeFileSync(graphDependencyFingerprintPath(databasePath), `${fingerprint}\n`, 'utf8');
   return fingerprint;
+}
+
+function graphDependencyFingerprintPath(databasePath) {
+  return databasePath === defaultDatabasePath
+    ? resolve(dirname(databasePath), 'code-graph.fingerprint')
+    : `${databasePath}.fingerprint`;
 }
 
 function withBuildLock(callback) {
@@ -295,8 +301,10 @@ function extract(path, text) {
 
 function openDatabase(databasePath) {
   mkdirSync(dirname(databasePath), { recursive: true });
-  const database = new DatabaseSync(databasePath);
-  database.exec(`
+  let database;
+  try {
+    database = new DatabaseSync(databasePath);
+    database.exec(`
     PRAGMA journal_mode = WAL;
     PRAGMA synchronous = NORMAL;
     PRAGMA foreign_keys = ON;
@@ -350,11 +358,11 @@ function openDatabase(databasePath) {
     CREATE INDEX IF NOT EXISTS ix_edges_kind_target ON typed_edges(kind, target COLLATE NOCASE);
     CREATE INDEX IF NOT EXISTS ix_query_documents_category_path ON query_documents(category, path COLLATE NOCASE);
   `);
-  const storedSearchSchemaVersion = database.prepare("SELECT value FROM metadata WHERE key='context_search_schema_version'").get()?.value;
-  if (storedSearchSchemaVersion !== contextSearchSchemaVersion) {
-    database.exec('DROP TABLE IF EXISTS context_search');
-  }
-  database.exec(`
+    const storedSearchSchemaVersion = database.prepare("SELECT value FROM metadata WHERE key='context_search_schema_version'").get()?.value;
+    if (storedSearchSchemaVersion !== contextSearchSchemaVersion) {
+      database.exec('DROP TABLE IF EXISTS context_search');
+    }
+    database.exec(`
     CREATE VIRTUAL TABLE IF NOT EXISTS context_search USING fts5(
       record_type UNINDEXED,
       record_key UNINDEXED,
@@ -366,17 +374,67 @@ function openDatabase(databasePath) {
       tokenize = 'unicode61 remove_diacritics 2'
     );
   `);
-  if (storedSearchSchemaVersion !== contextSearchSchemaVersion) {
-    database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)')
-      .run('context_search_schema_version', contextSearchSchemaVersion);
+    if (storedSearchSchemaVersion !== contextSearchSchemaVersion) {
+      database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)')
+        .run('context_search_schema_version', contextSearchSchemaVersion);
+    }
+    const ensureColumn = (table, column, definition) => {
+      if (!database.prepare(`PRAGMA table_info(${table})`).all().some((item) => item.name === column)) database.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+    };
+    ensureColumn('symbols', 'symbol_id', 'TEXT');
+    ensureColumn('typed_edges', 'target_id', 'TEXT');
+    database.exec('CREATE INDEX IF NOT EXISTS ix_symbols_symbol_id ON symbols(symbol_id); CREATE INDEX IF NOT EXISTS ix_edges_target_id ON typed_edges(target_id);');
+    return database;
+  } catch (error) {
+    try { database?.close(); } catch { /* Preserve the original SQLite failure. */ }
+    throw error;
   }
-  const ensureColumn = (table, column, definition) => {
-    if (!database.prepare(`PRAGMA table_info(${table})`).all().some((item) => item.name === column)) database.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
-  };
-  ensureColumn('symbols', 'symbol_id', 'TEXT');
-  ensureColumn('typed_edges', 'target_id', 'TEXT');
-  database.exec('CREATE INDEX IF NOT EXISTS ix_symbols_symbol_id ON symbols(symbol_id); CREATE INDEX IF NOT EXISTS ix_edges_target_id ON typed_edges(target_id);');
-  return database;
+}
+
+function isDatabaseCorruption(error) {
+  const sqliteCode = Number(error?.errcode ?? error?.sqliteErrorCode);
+  return sqliteCode === 11
+    || sqliteCode === 26
+    || /database disk image is malformed|database corruption|file is not a database/i.test(String(error?.message ?? ''));
+}
+
+function quarantineCorruptDatabase(databasePath) {
+  const suffix = `.corrupt-${new Date().toISOString().replaceAll(/[^0-9]/g, '')}-${randomUUID()}`;
+  const quarantinedPaths = [];
+  try {
+    for (const sourcePath of [
+      databasePath,
+      `${databasePath}-wal`,
+      `${databasePath}-shm`,
+      graphDependencyFingerprintPath(databasePath),
+    ]) {
+      if (!existsSync(sourcePath)) continue;
+      const quarantinePath = `${sourcePath}${suffix}`;
+      renameSync(sourcePath, quarantinePath);
+      quarantinedPaths.push(quarantinePath);
+    }
+  } catch (error) {
+    for (const quarantinePath of quarantinedPaths.toReversed()) {
+      const sourcePath = quarantinePath.slice(0, -suffix.length);
+      if (!existsSync(sourcePath) && existsSync(quarantinePath)) renameSync(quarantinePath, sourcePath);
+    }
+    throw error;
+  }
+  return quarantinedPaths;
+}
+
+function openDatabaseForBuild(databasePath) {
+  try {
+    return { database: openDatabase(databasePath), recoveredFromCorruption: false, quarantinedPaths: [] };
+  } catch (error) {
+    if (!isDatabaseCorruption(error) || dirname(databasePath) !== dirname(defaultDatabasePath)) throw error;
+    const quarantinedPaths = quarantineCorruptDatabase(databasePath);
+    return {
+      database: openDatabase(databasePath),
+      recoveredFromCorruption: true,
+      quarantinedPaths,
+    };
+  }
 }
 
 function refreshQueryLayer(database) {
@@ -1044,15 +1102,34 @@ try {
   let result;
   if (action === 'build') {
     result = withBuildLock(() => {
-      database = openDatabase(databasePath);
+      let opened = openDatabaseForBuild(databasePath);
+      database = opened.database;
       try {
-        const buildResult = build(database, options.force === 'true');
-        return {
-          ...buildResult,
-          graphDependencyFingerprint: publishGraphDependencyFingerprint(databasePath, buildResult),
+        const completeBuild = () => {
+          const buildResult = build(database, options.force === 'true');
+          return {
+            ...buildResult,
+            graphDependencyFingerprint: publishGraphDependencyFingerprint(databasePath, buildResult),
+            recoveredFromCorruption: opened.recoveredFromCorruption,
+            quarantinedPaths: opened.quarantinedPaths,
+          };
         };
+        try {
+          return completeBuild();
+        } catch (error) {
+          if (opened.recoveredFromCorruption || !isDatabaseCorruption(error)) throw error;
+          try { database.close(); } finally { database = undefined; }
+          const quarantinedPaths = quarantineCorruptDatabase(databasePath);
+          opened = {
+            database: openDatabase(databasePath),
+            recoveredFromCorruption: true,
+            quarantinedPaths,
+          };
+          database = opened.database;
+          return completeBuild();
+        }
       } finally {
-        database.close();
+        database?.close();
         database = undefined;
       }
     });

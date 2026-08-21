@@ -83,4 +83,29 @@ public partial class CyclesFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Cycle.NotFound", result.Error.Code);
     }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task UpdateCycleSettingsCommandHandler_WithInvalidIdentity_ReturnsFailure(bool emptyProfileId) {
+        var user = User.Create($"cycle-settings-invalid-{emptyProfileId}@example.com", "hash");
+        var handler = new UpdateCycleSettingsCommandHandler(
+            new NoopCycleRepository(),
+            CreateCurrentUserAccessService(emptyProfileId ? user : null));
+        var command = new UpdateCycleSettingsCommand(
+            emptyProfileId ? user.Id.Value : Guid.NewGuid(),
+            emptyProfileId ? Guid.Empty : Guid.NewGuid(),
+            (int)CycleTrackingMode.PeriodTracking,
+            AverageCycleLength: 28,
+            AveragePeriodLength: 5,
+            LutealLength: 14,
+            IsRegular: true,
+            ShowFertilityEstimates: true,
+            DiscreetNotifications: false);
+
+        Result<CycleModel> result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal(emptyProfileId ? "Validation.Invalid" : "Authentication.InvalidToken", result.Error.Code);
+    }
 }

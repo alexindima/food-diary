@@ -185,6 +185,47 @@ public sealed class CyclesControllerCoverageTests {
         Assert.Equal("notes", command.Notes);
     }
 
+    [Fact]
+    public async Task CycleMutationEndpoints_WhenCommandsSucceed_MapCycleResponses() {
+        var userId = Guid.NewGuid();
+        var cycleProfileId = Guid.NewGuid();
+        var episodeId = Guid.NewGuid();
+        ISender sender = SubstituteSender.Create(Result.Success(CreateCycle(cycleProfileId, userId)));
+        CyclesController cycles = CreateController(new CyclesController(sender));
+        MenstrualEpisodesController episodes = CreateController(new MenstrualEpisodesController(sender));
+
+        IActionResult settings = await cycles.UpdateSettings(
+            cycleProfileId,
+            userId,
+            new UpdateCycleSettingsHttpRequest(
+                Mode: 0,
+                AverageCycleLength: 28,
+                AveragePeriodLength: 5,
+                LutealLength: 14,
+                IsRegular: true,
+                ShowFertilityEstimates: true,
+                DiscreetNotifications: false));
+        IActionResult consent = await cycles.UpdateConsent(
+            cycleProfileId,
+            purpose: 0,
+            userId,
+            new UpdateCycleConsentHttpRequest(Granted: true));
+        IActionResult confirmation = await episodes.ConfirmPeriodStart(
+            cycleProfileId,
+            userId,
+            new ConfirmPeriodStartHttpRequest(DateTime.UtcNow));
+        IActionResult updateEpisode = await episodes.UpdateMenstrualEpisode(
+            userId,
+            cycleProfileId,
+            episodeId,
+            new UpdateMenstrualEpisodeHttpRequest(DateTime.UtcNow, EndDate: null));
+        IActionResult deleteEpisode = await episodes.DeleteMenstrualEpisode(userId, cycleProfileId, episodeId);
+
+        Assert.All(
+            new[] { settings, consent, confirmation, updateEpisode, deleteEpisode },
+            static result => Assert.IsType<CycleHttpResponse>(Assert.IsType<OkObjectResult>(result).Value));
+    }
+
     private static TController CreateController<TController>(TController controller)
         where TController : ControllerBase {
         controller.ControllerContext = new ControllerContext {

@@ -136,6 +136,63 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         Assert.Empty(result.Candidates);
     }
 
+    [Fact]
+    public async Task SearchAsync_ReturnsUnavailableWhenDatabaseIsCorrupt() {
+        SqliteConnection.ClearAllPools();
+        File.Delete(_databasePath);
+        await File.WriteAllTextAsync(_databasePath, "this is not a SQLite database");
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "anything",
+            limit: 10,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None);
+
+        Assert.False(result.Ready);
+        Assert.StartsWith("sqlite-error-", result.UnavailableReason, StringComparison.Ordinal);
+        Assert.Empty(result.Candidates);
+    }
+
+    [Fact]
+    public async Task SearchAsync_DoesNotClassifyLockedDatabaseAsCorrupt() {
+        await using SqliteConnection blocker = new($"Data Source={_databasePath}");
+        await blocker.OpenAsync();
+        await using SqliteCommand command = blocker.CreateCommand();
+        command.CommandText = "BEGIN EXCLUSIVE; UPDATE metadata SET value = value WHERE key = 'fixture-head';";
+        await command.ExecuteNonQueryAsync();
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "anything",
+            limit: 10,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None);
+
+        Assert.False(result.Ready);
+        Assert.Equal("sqlite-error-5", result.UnavailableReason);
+        Assert.True(File.Exists(_databasePath));
+    }
+
+    [Fact]
+    public async Task SearchAsync_PropagatesCancellation() {
+        using CancellationTokenSource cancellation = new();
+        await cancellation.CancelAsync();
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => search.SearchAsync(
+            "anything",
+            limit: 10,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            cancellation.Token));
+    }
+
     public void Dispose() {
         SqliteConnection.ClearAllPools();
         if (Directory.Exists(_fixtureRoot)) {

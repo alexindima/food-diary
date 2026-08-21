@@ -284,6 +284,83 @@ public sealed class WikiQueryServiceTests {
             Arg.Any<CancellationToken>());
     }
 
+    [Theory]
+    [InlineData("sqlite-error-11")]
+    [InlineData("sqlite-error-26")]
+    public async Task GetDevelopmentContextAsync_RebuildsConfirmedCorruptSqlIndexBeforeUsingIt(
+        string unavailableReason) {
+        IWikiContextSearch contextSearch = Substitute.For<IWikiContextSearch>();
+        WikiContextSearchResult corrupt = CreateSqlContext(
+            ready: false,
+            fresh: false,
+            unavailableReason);
+        WikiContextSearchResult fresh = CreateSqlContext(ready: true, fresh: true);
+        contextSearch.SearchAsync(
+            Arg.Any<string>(),
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<string?>(),
+            Arg.Any<IReadOnlyList<string>?>(),
+            Arg.Any<CancellationToken>(),
+            Arg.Any<string?>()).Returns(corrupt, fresh);
+        WikiQueryService service = new(_executor, _snapshots, contextSearch: contextSearch);
+
+        DevelopmentContext result = await service.GetDevelopmentContextAsync(
+            "Change user flow",
+            "update user",
+            "FoodDiary.Application.Users",
+            CancellationToken.None);
+
+        Assert.Equal("sqlite", result.ContextRetrievalSource);
+        Assert.Same(fresh, result.SqlContextSearch);
+        await _executor.Received(1).ExecuteAsync(
+            "graph-build",
+            Arg.Any<IReadOnlyList<string>>(),
+            CancellationToken.None);
+        await _executor.DidNotReceive().ExecuteAsync(
+            "trace",
+            Arg.Any<IReadOnlyList<string>>(),
+            CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task GetDevelopmentContextAsync_DoesNotRebuildLockedSqlIndex() {
+        IWikiContextSearch contextSearch = Substitute.For<IWikiContextSearch>();
+        WikiContextSearchResult locked = CreateSqlContext(
+            ready: false,
+            fresh: false,
+            unavailableReason: "sqlite-error-5");
+        contextSearch.SearchAsync(
+            Arg.Any<string>(),
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<string?>(),
+            Arg.Any<IReadOnlyList<string>?>(),
+            Arg.Any<CancellationToken>(),
+            Arg.Any<string?>()).Returns(locked);
+        _executor.ExecuteAsync("trace", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(CreateResult("trace", ["FoodDiary.Application.Users/FallbackHandler.cs"]));
+        WikiQueryService service = new(_executor, _snapshots, contextSearch: contextSearch);
+
+        DevelopmentContext result = await service.GetDevelopmentContextAsync(
+            "Change user flow",
+            "update user",
+            "FoodDiary.Application.Users",
+            CancellationToken.None);
+
+        Assert.Equal("json", result.ContextRetrievalSource);
+        Assert.Equal("sqlite-error-5", result.ContextFallbackReason);
+        Assert.NotNull(result.BackendTrace);
+        await _executor.DidNotReceive().ExecuteAsync(
+            "graph-build",
+            Arg.Any<IReadOnlyList<string>>(),
+            CancellationToken.None);
+        await _executor.Received(1).ExecuteAsync(
+            "trace",
+            Arg.Any<IReadOnlyList<string>>(),
+            CancellationToken.None);
+    }
+
     [Fact]
     public async Task GetDevelopmentContextAsync_FallsBackToJsonWhenRebuiltIndexIsStillStale() {
         IWikiContextSearch contextSearch = Substitute.For<IWikiContextSearch>();

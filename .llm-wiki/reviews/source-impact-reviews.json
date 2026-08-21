@@ -192,13 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "a0c6fc6e255561da309da18eadfb6c314ec8ee3ec5d1146f018d661269a47781"
+          "sha256": "9f256cc524a86f42588ac281c00f6bfb02e1984bb6304259d2b6ae906fe120f3"
         }
       ],
-      "reason": "Generated contract delta only raises an existing OpenAiFoodClientResponse test reference count; no HTTP route, payload, status, or runtime contract changed.",
+      "reason": "Generated backend-contract deltas are test-only consumer edges from the concurrently added cycle and MCP recovery tests; no production route, request, response, status, or Swagger contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "fb83194b2f8f1647d051377b88cefa115f767059",
-      "reviewedAtUtc": "2026-08-21T06:40:42.3271180Z"
+      "gitHead": "3769cdb28a711e9fd6d3f6265c4479b585e3189a",
+      "reviewedAtUtc": "2026-08-21T07:21:06.9841675Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -797,13 +797,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b3b69e640904b076aae996885874189bda9a2940ec87c075cd99f21bd88ecd98"
+          "sha256": "2d54bcaf68705bfba4b745b3c307126edaef088949c7a5694536d190351a0308"
         }
       ],
-      "reason": "Reviewed final SQL retrieval implementation after removing a zero-effect ranking branch; the bounded read-only FTS lane and shared policy remain covered by 100/100 top-10 retrieval, exact Node/.NET top-five parity, the 100-case gate, and all 59 MCP tests.",
+      "reason": "Reviewed reconstructable SQLite recovery: only confirmed corruption codes trigger quarantine under the writer lock; lock, cancellation, generic errors, and worktree races remain non-destructive. Real quarantine/rebuild, 100-case retrieval, 65 MCP tests, and 711 architecture tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "fb83194b2f8f1647d051377b88cefa115f767059",
-      "reviewedAtUtc": "2026-08-21T06:45:46.9188136Z"
+      "gitHead": "3769cdb28a711e9fd6d3f6265c4479b585e3189a",
+      "reviewedAtUtc": "2026-08-21T07:21:08.1704748Z"
     },
     {
       "pageId": "workflow-release-readiness",

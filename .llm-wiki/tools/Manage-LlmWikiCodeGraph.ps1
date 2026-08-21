@@ -46,7 +46,12 @@ $result = $json | ConvertFrom-Json
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 12; return }
 
 switch ($Action) {
-    'build' { Write-Host "Code graph: $($result.files) files, $($result.symbols) symbols; scanned=$($result.scanned), updated=$($result.updated), unchanged=$($result.unchanged), removed=$($result.removed), $($result.durationMs)ms." }
+    'build' {
+        Write-Host "Code graph: $($result.files) files, $($result.symbols) symbols; scanned=$($result.scanned), updated=$($result.updated), unchanged=$($result.unchanged), removed=$($result.removed), $($result.durationMs)ms."
+        if ($result.recoveredFromCorruption) {
+            Write-Host "Code graph recovery: quarantined $(@($result.quarantinedPaths).Count) corrupt cache artifact(s) and rebuilt from current sources."
+        }
+    }
     'build-plan' { Write-Host "Code graph build plan: reason=$($result.reason); candidates=$($result.candidateFiles); estimated=$($result.estimatedSeconds)s." }
     'status' { Write-Host "Code graph: $($result.files) files, $($result.symbols) symbols, $($result.tokens) file-token edges, $($result.typedEdges) typed edges; parser=$($result.parserVersion)." }
     'symbol' { foreach ($item in @($result.symbols)) { Write-Host "$($item.name) [$($item.kind)] $($item.path):$($item.line)" } }

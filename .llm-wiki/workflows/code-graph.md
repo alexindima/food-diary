@@ -116,6 +116,15 @@ steals the lock from a live owner merely because it is old; an unreadable or
 dead-owner lock must also exceed the stale threshold, and cleanup verifies the
 ownership token before removing it.
 
+Because the graph is reconstructable, a build that confirms `SQLITE_CORRUPT`
+or `SQLITE_NOTADB` while holding that lock quarantines the database, WAL/SHM,
+and dependency fingerprint with a unique `.corrupt-*` suffix, then rebuilds
+from current sources. Custom database paths publish isolated fingerprint
+sidecars. Busy/locked databases, cancellation, permission failures, and
+unclassified SQLite errors are not corruption and never trigger quarantine.
+The aggregate MCP route refreshes once for the two confirmed corruption codes;
+if rebuilding still fails, the compatibility JSON trace remains the fallback.
+
 Semantic enrichment is automatic for ordinary incremental updates. SQLite
 selects declaration files referenced by the changed C# identifiers, and Roslyn
 records fully-qualified declaration IDs, selected overloads, implemented types,

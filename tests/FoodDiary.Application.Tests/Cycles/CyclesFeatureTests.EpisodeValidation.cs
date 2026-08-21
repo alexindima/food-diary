@@ -38,6 +38,35 @@ public partial class CyclesFeatureTests {
         Assert.Equal("Cycle.NotFound", result.Error.Code);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task EpisodeCommandHandlers_WithEmptyProfileId_ReturnValidationFailure(bool update) {
+        var user = User.Create($"episode-empty-profile-{update}@example.com", "hash");
+        Result<CycleModel> result = update
+            ? await new UpdateMenstrualEpisodeCommandHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user))
+                .Handle(new UpdateMenstrualEpisodeCommand(UserId: user.Id.Value, CycleProfileId: Guid.Empty, MenstrualEpisodeId: Guid.NewGuid(), StartDate: new DateOnly(2026, 4, 1), EndDate: null), CancellationToken.None)
+            : await new DeleteMenstrualEpisodeCommandHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user))
+                .Handle(new DeleteMenstrualEpisodeCommand(user.Id.Value, Guid.Empty, Guid.NewGuid()), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task EpisodeCommandHandlers_WithInvalidUser_ReturnAuthenticationFailure(bool update) {
+        Result<CycleModel> result = update
+            ? await new UpdateMenstrualEpisodeCommandHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user: null))
+                .Handle(new UpdateMenstrualEpisodeCommand(UserId: Guid.NewGuid(), CycleProfileId: Guid.NewGuid(), MenstrualEpisodeId: Guid.NewGuid(), StartDate: new DateOnly(2026, 4, 1), EndDate: null), CancellationToken.None)
+            : await new DeleteMenstrualEpisodeCommandHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user: null))
+                .Handle(new DeleteMenstrualEpisodeCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
     [Fact]
     public async Task UpdateMenstrualEpisodeCommandValidator_WithInvalidValues_HasErrors() {
         TestValidationResult<UpdateMenstrualEpisodeCommand> result = await new UpdateMenstrualEpisodeCommandValidator()

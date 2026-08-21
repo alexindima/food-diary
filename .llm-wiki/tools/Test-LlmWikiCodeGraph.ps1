@@ -8,6 +8,9 @@ $graphToolText = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'code-graph.m
 foreach ($lockSafetyFragment in @('isProcessAlive(owner.pid)', 'process.kill(pid, 0)', 'owner.token === ownerToken')) {
     if (-not $graphToolText.Contains($lockSafetyFragment)) { throw "Code graph live-owner lock safety is missing: $lockSafetyFragment" }
 }
+foreach ($corruptionSafetyFragment in @('isDatabaseCorruption(error)', 'quarantineCorruptDatabase(databasePath)', 'recoveredFromCorruption: true')) {
+    if (-not $graphToolText.Contains($corruptionSafetyFragment)) { throw "Code graph corruption recovery is missing: $corruptionSafetyFragment" }
+}
 $recipesBoundary = if (Test-Path -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Application.Recipes') -PathType Container) { 'FoodDiary.Application.Recipes' } else { 'FoodDiary.Application/Recipes' }
 $recipesSourcePrefix = if ($recipesBoundary -eq 'FoodDiary.Application.Recipes') { 'FoodDiary.Application.Recipes/Recipes' } else { $recipesBoundary }
 $russianServerQuery = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('0L/QvtC00LrQu9GO0YfQuNGB0Ywg0YHQtdGA0LLQtdGA0YM='))
@@ -105,5 +108,36 @@ if ($measurementSpecs.Count -lt 20 -or @($measurementTestPlan.required | Where-O
 $broadFrontendPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ProposedPath 'FoodDiary.Web.Client/src/app/features' -Limit 20 -Format Json | ConvertFrom-Json
 if (@($broadFrontendPlan.scopeTooBroad).Count -ne 1 -or $broadFrontendPlan.confidence -ne 'low') {
     throw 'Graph-only test plan did not diagnose an overly broad frontend scope.'
+}
+$graphArtifactDirectory = Join-Path $repositoryRoot '.artifacts/llm-wiki/code-graph'
+$corruptDatabaseName = "corruption-recovery-$([Guid]::NewGuid().ToString('N')).sqlite"
+$corruptDatabasePath = Join-Path $graphArtifactDirectory $corruptDatabaseName
+$corruptFingerprintPath = "$corruptDatabasePath.fingerprint"
+try {
+    [IO.File]::WriteAllText($corruptDatabasePath, 'this is not a SQLite database', [Text.Encoding]::UTF8)
+    $recoveredBuild = & node (Join-Path $PSScriptRoot 'code-graph.mjs') build "--database=$corruptDatabasePath" | ConvertFrom-Json
+    if ($LASTEXITCODE -ne 0) { throw 'Code graph build did not recover a corrupt derived database.' }
+    if (-not $recoveredBuild.recoveredFromCorruption -or @($recoveredBuild.quarantinedPaths).Count -ne 1) {
+        throw 'Code graph build did not report the quarantined corrupt database.'
+    }
+    if (-not (Test-Path -LiteralPath $corruptDatabasePath -PathType Leaf) -or
+        -not (Test-Path -LiteralPath $corruptFingerprintPath -PathType Leaf) -or
+        [int]$recoveredBuild.files -lt 100) {
+        throw 'Code graph corruption recovery did not publish a rebuilt graph and isolated dependency fingerprint.'
+    }
+} finally {
+    $cleanupPaths = @(
+        $corruptDatabasePath
+        "$corruptDatabasePath-wal"
+        "$corruptDatabasePath-shm"
+        $corruptFingerprintPath
+    ) + @(Get-ChildItem -LiteralPath $graphArtifactDirectory -Filter "$corruptDatabaseName.corrupt-*" -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName)
+    foreach ($cleanupPath in @($cleanupPaths | Sort-Object -Unique)) {
+        $resolvedCleanupPath = [IO.Path]::GetFullPath($cleanupPath)
+        if (-not [string]::Equals([IO.Path]::GetDirectoryName($resolvedCleanupPath), $graphArtifactDirectory, [StringComparison]::OrdinalIgnoreCase)) {
+            throw "Refusing to clean a corruption-test artifact outside the graph directory: $resolvedCleanupPath"
+        }
+        Remove-Item -LiteralPath $resolvedCleanupPath -Force -ErrorAction SilentlyContinue
+    }
 }
 Write-Host "LLM Wiki code graph regression passed: $($warm.files) files, $($warm.symbols) symbols, incremental no-op and Recipes queries are valid."
