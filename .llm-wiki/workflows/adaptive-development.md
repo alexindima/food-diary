@@ -16,6 +16,7 @@ sources:
   - .llm-wiki/tools/Start-LlmWikiDevelopment.ps1
   - .llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1
   - .llm-wiki/tools/Get-LlmWikiResearchPacket.ps1
+  - .llm-wiki/tools/Get-LlmWikiNextResearchQuestion.ps1
   - .llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1
   - .llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1
   - .llm-wiki/tools/Get-LlmWikiGitPrecedents.ps1
@@ -263,6 +264,15 @@ payload changed. Compact research enforces the public item limit on every lane,
 filters generic graph symbols and weak failure matches, and caps structured output
 at 30,000 characters.
 
+When `-PlannedPath` is present, existing planned files are the highest-priority
+implementation evidence and unrelated semantic symbols, tests, and integration
+surfaces are removed unless graph evidence connects them to that scope. The
+packet omits empty lanes and publishes a policy-bounded `researchPlan` with
+grouped lane IDs, deduplicated repository read paths, duplicate-read savings,
+and parallel-eligibility hints. The plan is an execution-neutral file contract:
+an agent, script, or developer may consume its groups sequentially or in
+parallel without changing the result semantics.
+
 Git history can also be queried directly:
 
 ```powershell
@@ -333,6 +343,21 @@ Research deliberately exposes blocking open questions instead of filling them wi
 heuristics. When no implementation path is grounded, discover an exact route,
 command, handler, component, or service with `trace`/source search and rerun research
 with `-PlannedPath`.
+
+Each open question records why developer input is required, the evidence needed,
+an honest `line`, `path`, or `missing` source-anchor status, and a resolution
+command when one exists. Ask one question at a time through:
+
+```powershell
+./.llm-wiki/wiki.ps1 research-next-question `
+  -Intent '<task>' `
+  -ResearchPurpose Implementation `
+  -PlannedPath '<known paths>'
+```
+
+The command prioritizes blocking questions and defers the remainder. It never
+turns a missing source anchor into an invented file or line, and it does not ask
+for confirmation when current repository evidence can resolve the issue.
 
 ## Conditional design checkpoint
 

@@ -194,5 +194,14 @@ Compact research applies `-Limit` at every external array boundary and rejects
 generic graph-only links such as `Unit`, `DependencyInjection`, and `Result`.
 Known-failure matches require two meaningful tokens or explicit path evidence;
 repository-brand stopwords do not qualify. With a planned path, unrelated routes
-and guides are omitted unless graph or scope evidence connects them. The JSON
-contract advertises and enforces a 30,000-character maximum.
+and runtime evidence are omitted unless graph or scope evidence connects them;
+existing planned files remain the highest-priority implementation evidence. The
+JSON contract advertises and enforces a 30,000-character maximum.
+
+The same packet compiles non-empty research lanes into a policy-bounded
+`researchPlan`. It groups lanes that share at least two repository paths,
+publishes a deduplicated read set and duplicate-read savings, and marks groups
+that have no cross-group path dependency as parallel-eligible. These are
+execution hints rather than an agent-orchestration requirement. Use
+`research-next-question` to retrieve only the highest-priority grounded open
+question; remaining questions stay deferred in the packet.

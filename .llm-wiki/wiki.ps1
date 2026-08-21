@@ -2,7 +2,7 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-status', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'delivery-finalize', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'coverage-plan', 'decision',
+        'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-status', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'research-next-question', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'delivery-finalize', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'coverage-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'contract-consumers', 'extraction', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'graph-build', 'graph-status', 'graph-symbol', 'graph-consumers', 'graph-trace', 'graph-impact', 'graph-relations', 'graph-coverage',
         'diff', 'impact', 'review', 'review-affected', 'ownership', 'api-compat', 'policy', 'verification-record', 'verification-list',
@@ -341,9 +341,9 @@ if ($Command -in @('verify', 'verify-full') -and $env:CI -ne 'true' -and -not $P
     $ResumePassedStages = $true
 }
 
-$deltaAwareCommands = @('update', 'repair-verify', 'completion', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'review-affected', 'ownership', 'policy')
-$explicitScopePlanningCommands = @('research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision')
-$readOnlyFacadeCommands = @('research', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'diff', 'ownership', 'api-compat')
+$deltaAwareCommands = @('update', 'repair-verify', 'completion', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'review-affected', 'ownership', 'policy')
+$explicitScopePlanningCommands = @('research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision')
+$readOnlyFacadeCommands = @('research', 'research-next-question', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'diff', 'ownership', 'api-compat')
 $taskBaselineContext = $null
 if ($Command -in @('develop', 'start')) {
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId $TaskSessionId -Format Text
@@ -1050,6 +1050,16 @@ switch ($Command) {
         }
         $metricStopwatch.Stop()
         & (Join-Path $toolsRoot 'Write-LlmWikiWorkflowMetric.ps1') -Operation research -Outcome passed -DurationSeconds $metricStopwatch.Elapsed.TotalSeconds -ScopePathCount @($ProposedPath).Count
+    }
+    'research-next-question' {
+        if ([string]::IsNullOrWhiteSpace($Objective) -and -not [string]::IsNullOrWhiteSpace($Query)) { $Objective = $Query }
+        if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'research-next-question requires -Intent <task description> (compatible alias: -Query).' }
+        $questionArguments = @{ Objective = $Objective; Purpose = $ResearchPurpose; BaseRef = $BaseRef; Format = $Format; Limit = $Limit; Compact = $Compact; SkipHistory = $SkipHistory }
+        if (-not [string]::IsNullOrWhiteSpace($Module)) { $questionArguments.Module = $Module }
+        if ($PSBoundParameters.ContainsKey('HeadRef')) { $questionArguments.HeadRef = $HeadRef }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $questionArguments.ChangedPath = $ChangedPath }
+        if ($PSBoundParameters.ContainsKey('ProposedPath')) { $questionArguments.ProposedPath = $ProposedPath }
+        Invoke-WikiTool 'Get-LlmWikiNextResearchQuestion.ps1' $questionArguments
     }
     'integration-scan' {
         if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'integration-scan requires -Intent <task description>.' }
@@ -2143,6 +2153,7 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiTaskHandoff.ps1' @{
             WorkspacePath = $WorkspacePath
             Limit = [Math]::Min(100, $Limit)
+            Compact = $Compact
             Format = $(if ($Format -eq 'Json') { 'Json' } else { 'Markdown' })
             OutputPath = $OutputPath
         }
@@ -2632,7 +2643,8 @@ switch ($Command) {
             Write-Host "  ./.llm-wiki/wiki.ps1 develop -Intent '<task>' [-PlannedPath <path[]>]"
             Write-Host "  ./.llm-wiki/wiki.ps1 start -Intent '<large task>' [-PlannedPath <path[]>]"
             Write-Host '  ./.llm-wiki/wiki.ps1 next|status [-WorkspacePath <task>]'
-            Write-Host "  ./.llm-wiki/wiki.ps1 research -Intent '<task>' [-PlannedPath <path[]>]"
+        Write-Host "  ./.llm-wiki/wiki.ps1 research -Intent '<task>' [-PlannedPath <path[]>]"
+        Write-Host "  ./.llm-wiki/wiki.ps1 research-next-question -Intent '<task>' [-PlannedPath <path[]>]"
             Write-Host '  ./.llm-wiki/wiki.ps1 brief|trace|test-plan|qa'
             Write-Host '  ./.llm-wiki/wiki.ps1 delivery-status|delivery-finalize -WorkspacePath <task>'
             Write-Host '  ./.llm-wiki/wiki.ps1 completion|update [-ChangedPath <path[]>]'
@@ -2823,7 +2835,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 task-similarity-reuse -WorkspacePath <target> [-SourceWorkspacePath <source>] [-DryRun]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-similarity-show|task-similarity-verify -WorkspacePath <target>'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-run -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-CheckId <id>] [-DryRun]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-handoff -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-OutputPath <path>]'
+        Write-Host '  ./.llm-wiki/wiki.ps1 task-handoff -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-Compact] [-OutputPath <path>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-export -WorkspacePath <path> [-ExportPath .artifacts/llm-wiki/exports/<name>.json]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-export-verify -ExportPath .artifacts/llm-wiki/exports/<name>.json [-FailOnInvalid]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-import -ImportPath .artifacts/llm-wiki/exports/<name>.json -WorkspacePath .artifacts/llm-wiki/tasks/<new-name> [-DryRun]'
@@ -2842,6 +2854,7 @@ switch ($Command) {
         Write-Host "  ./.llm-wiki/wiki.ps1 ui-finalize [-ChangedPath <accumulated-ui-path[]>]"
         Write-Host "  ./.llm-wiki/wiki.ps1 next|status [-WorkspacePath <task>] [-Intent '<new task>']"
         Write-Host "  ./.llm-wiki/wiki.ps1 research -Intent '<task>' [-Query '<compatible alias>'] [-ResearchPurpose Assessment|Implementation] [-PlannedPath 'path/one','path/two']"
+        Write-Host "  ./.llm-wiki/wiki.ps1 research-next-question -Intent '<task>' [-ResearchPurpose Assessment|Implementation] [-PlannedPath 'path/one','path/two']"
         Write-Host "  ./.llm-wiki/wiki.ps1 extraction -Module Users  # contract and boundary-wide aggregate readiness"
         Write-Host "  ./.llm-wiki/wiki.ps1 integration-scan -Intent '<task>' [-PlannedPath 'path/one','path/two']"
         Write-Host "  ./.llm-wiki/wiki.ps1 precedents -Intent '<task>' [-PlannedPath 'path/one','path/two']"

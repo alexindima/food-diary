@@ -30,6 +30,11 @@ function Resolve-OutputPath([string]$Path) {
     if ([System.IO.Path]::IsPathRooted($Path)) { return $Path }
     return Join-Path $repositoryRoot $Path
 }
+function Get-FindingSeverity([object]$Dimension, [string[]]$BlockingDimensions, [string[]]$UnassessedDimensions) {
+    if ([string]$Dimension.id -in $BlockingDimensions -or [string]$Dimension.status -in @('blocked', 'fail', 'failed')) { return 'major' }
+    if ([string]$Dimension.id -in $UnassessedDimensions -or [string]$Dimension.status -in @('conditional', 'attention', 'unassessed')) { return 'warning' }
+    return 'info'
+}
 
 $packetArguments = @{
     BaseRef = $BaseRef
@@ -64,9 +69,40 @@ $currentPacketObjective = if ($packet.PSObject.Properties['inputs'] -and $null -
 $legacyPacketObjective = if ($packet.PSObject.Properties['objective']) { [string]$packet.objective } else { '' }
 $packetHasObjective = -not [string]::IsNullOrWhiteSpace($currentPacketObjective) -or -not [string]::IsNullOrWhiteSpace($legacyPacketObjective)
 $packetObjective = if (-not [string]::IsNullOrWhiteSpace($Objective)) { $Objective } elseif ($packetHasObjective) { Get-LlmWikiPacketObjective $packet } else { $null }
+$normalizedFindings = @(
+    foreach ($dimension in @($readiness.dimensions)) {
+        $issueIndex = 0
+        foreach ($issue in @($dimension.issues | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })) {
+            $issueIndex++
+            $matchingPath = @($packet.diff.changedPaths | Where-Object { ([string]$issue).Contains([string]$_, [StringComparison]::OrdinalIgnoreCase) } | Select-Object -First 1)
+            $severity = Get-FindingSeverity $dimension @($readiness.blockingDimensions) @($readiness.unassessedDimensions)
+            [pscustomobject][ordered]@{
+                id = "readiness-$($dimension.id)-$('{0:D2}' -f $issueIndex)"
+                severity = $severity
+                kind = $(if ([string]$dimension.id -in @($readiness.unassessedDimensions)) { 'question' } else { 'defect' })
+                area = [string]$dimension.id
+                blocking = $severity -in @('critical', 'major')
+                anchorStatus = $(if ($matchingPath.Count -gt 0) { 'path' } else { 'missing' })
+                location = $(if ($matchingPath.Count -gt 0) {
+                    [pscustomobject][ordered]@{ path = [string]$matchingPath[0]; startLine = $null; endLine = $null }
+                } else { $null })
+                trigger = [string]$issue
+                consequence = [string]$dimension.summary
+                testGap = "Current evidence does not resolve the '$($dimension.id)' readiness issue."
+                remediation = "Resolve the '$($dimension.id)' issue and record current verification or review evidence."
+                evidence = @([string]$issue)
+            }
+        }
+    }
+)
 
 $report = [pscustomobject][ordered]@{
-    schemaVersion = 1
+    schemaVersion = 2
+    findingContract = [pscustomobject][ordered]@{
+        severity = @('critical', 'major', 'warning', 'info')
+        kind = @('defect', 'suggestion', 'question')
+        requiredFields = @('id', 'severity', 'kind', 'area', 'blocking', 'anchorStatus', 'location', 'trigger', 'consequence', 'testGap', 'remediation', 'evidence')
+    }
     packetFingerprint = $packet.fingerprint
     objective = $packetObjective
     verdict = $readiness.verdict
@@ -79,6 +115,7 @@ $report = [pscustomobject][ordered]@{
     scopes = @($packet.diff.scopes)
     modules = @($packet.diff.modules | ForEach-Object { if ($_ -is [string]) { $_ } elseif ($null -ne $_.name) { [string]$_.name } else { [string]$_ } } | Where-Object { $_ } | Sort-Object -Unique)
     dimensions = @($readiness.dimensions)
+    findings = $normalizedFindings
     requiredChecks = @($packet.policy.requiredChecks)
     reviewObligations = @($packet.policy.reviewObligations)
     testScenarios = @($packet.testPlan.scenarios)
@@ -121,16 +158,16 @@ if ($Format -eq 'Json') {
         $lines.Add("| $(ConvertTo-MarkdownCell $dimension.id) | **$(ConvertTo-MarkdownCell $dimension.status)** | $($dimension.weight) | $(ConvertTo-MarkdownCell $dimension.summary) |")
     }
 
-    $issues = @($report.dimensions | ForEach-Object {
-        $dimensionId = $_.id
-        @($_.issues | ForEach-Object { [pscustomobject]@{ dimension = $dimensionId; issue = $_ } })
-    })
-    if ($issues.Count -gt 0) {
+    if (@($report.findings).Count -gt 0) {
         $lines.Add('')
         $lines.Add('### Findings')
         $lines.Add('')
-        foreach ($issue in $issues) {
-            $lines.Add("- **$(ConvertTo-MarkdownCell $issue.dimension):** $(ConvertTo-MarkdownCell $issue.issue)")
+        foreach ($finding in $report.findings) {
+            $location = if ($finding.anchorStatus -eq 'path') { " at ``$($finding.location.path)``" } else { '' }
+            $lines.Add("- **[$($finding.severity)/$($finding.kind)] $($finding.area)**$location — $(ConvertTo-MarkdownCell $finding.trigger)")
+            $lines.Add("  - Consequence: $(ConvertTo-MarkdownCell $finding.consequence)")
+            $lines.Add("  - Test gap: $(ConvertTo-MarkdownCell $finding.testGap)")
+            $lines.Add("  - Remediation: $(ConvertTo-MarkdownCell $finding.remediation)")
         }
     }
 

@@ -5,6 +5,7 @@ param(
     [object]$StatusInput,
     [ValidateRange(1, 100)]
     [int]$Limit = 20,
+    [switch]$Compact,
     [ValidateSet('Markdown', 'Json')]
     [string]$Format = 'Markdown',
     [string]$OutputPath
@@ -300,6 +301,30 @@ $learningHealth = & (Join-Path $PSScriptRoot 'Manage-LlmWikiLearningHealth.ps1')
 $workspaceLearningHealth = @($learningHealth.health | Where-Object { @($_.observations.workspace) -contains $normalizedWorkspacePath })
 $evalPromotion = & (Join-Path $PSScriptRoot 'Manage-LlmWikiEvalPromotion.ps1') list -Format Json | ConvertFrom-Json
 $workspaceEvalCandidates = @($evalPromotion.candidates | Where-Object workspace -eq $normalizedWorkspacePath)
+$sourceAnchors = @(
+    if ($null -ne $contextBundle -and $contextBundle.PSObject.Properties['bundle']) {
+        foreach ($item in @($contextBundle.bundle.items | Select-Object -First $Limit)) {
+            if (-not $item.PSObject.Properties['path'] -or [string]::IsNullOrWhiteSpace([string]$item.path)) { continue }
+            $line = if ($item.PSObject.Properties['line'] -and $null -ne $item.line -and [int]$item.line -gt 0) {
+                [int]$item.line
+            } elseif ($item.PSObject.Properties['excerpt'] -and $null -ne $item.excerpt -and $item.excerpt.PSObject.Properties['startLine'] -and [int]$item.excerpt.startLine -gt 0) {
+                [int]$item.excerpt.startLine
+            } else { $null }
+            [pscustomobject][ordered]@{
+                path = [string]$item.path
+                line = $line
+                anchorStatus = $(if ($null -ne $line) { 'line' } else { 'path' })
+                kind = $(if ($item.PSObject.Properties['kind']) { [string]$item.kind } else { 'context' })
+                reasons = $(if ($item.PSObject.Properties['reasons']) { @($item.reasons) } else { @() })
+            }
+        }
+    }
+)
+if ($sourceAnchors.Count -eq 0) {
+    $sourceAnchors = @($includedPaths | ForEach-Object {
+        [pscustomobject][ordered]@{ path = [string]$_; line = $null; anchorStatus = 'path'; kind = 'changed-path'; reasons = @('Changed path in the current task packet.') }
+    })
+}
 $handoff = [pscustomobject][ordered]@{
     schemaVersion = 1
     generatedAtUtc = [DateTime]::UtcNow.ToString('o')
@@ -328,6 +353,7 @@ $handoff = [pscustomobject][ordered]@{
         changedPaths = $includedPaths
         omittedChangedPathCount = [Math]::Max(0, $changedPaths.Count - $includedPaths.Count)
         outOfScopePaths = @($status.outOfScopePaths)
+        sourceAnchors = $sourceAnchors
     }
     taskGraph = [pscustomobject][ordered]@{
         valid = [bool]$taskGraph.valid
@@ -464,8 +490,77 @@ $handoff = [pscustomobject][ordered]@{
     )
 }
 
+$compactJournalEntries = @($handoff.journal.entries | Where-Object { $_.status -eq 'open' -or $_.type -in @('decision', 'blocker') } | Select-Object -Last $Limit)
+$compactHandoff = [pscustomobject][ordered]@{
+    schemaVersion = $handoff.schemaVersion
+    view = 'compact'
+    generatedAtUtc = $handoff.generatedAtUtc
+    workspace = $handoff.workspace
+    objective = $handoff.objective
+    state = $handoff.state
+    readiness = $handoff.readiness
+    continuity = $handoff.continuity
+    scope = [pscustomobject][ordered]@{
+        scopes = @($handoff.scope.scopes)
+        modules = @($handoff.scope.modules)
+        changedPathCount = $handoff.scope.changedPathCount
+        sourceAnchors = @($handoff.scope.sourceAnchors)
+        outOfScopePaths = @($handoff.scope.outOfScopePaths)
+    }
+    acceptanceCriteria = @($handoff.acceptanceCriteria | Where-Object status -notin @('satisfied', 'not-applicable'))
+    checks = @($handoff.checks | Where-Object status -notin @('passed', 'passed-with-known-baseline-failures', 'not-applicable'))
+    reviews = @($handoff.reviews | Where-Object status -notin @('completed', 'not-applicable'))
+    journal = [pscustomobject][ordered]@{
+        openCount = $handoff.journal.openCount
+        openBlockerCount = $handoff.journal.openBlockerCount
+        entries = $compactJournalEntries
+    }
+    nextActions = @($handoff.nextActions)
+    resumeCommands = @($handoff.resumeCommands)
+    authority = 'Executable code, tests, manifests, current documentation, and applicable AGENTS.md files remain authoritative; this handoff is derived context.'
+}
+
 if ($Format -eq 'Json') {
-    $content = $handoff | ConvertTo-Json -Depth 12
+    $content = $(if ($Compact) { $compactHandoff } else { $handoff }) | ConvertTo-Json -Depth 12
+} elseif ($Compact) {
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $lines.Add('# AI Task Handoff (Compact)')
+    $lines.Add('')
+    $lines.Add("**Objective:** $(ConvertTo-MarkdownText $compactHandoff.objective)")
+    $lines.Add('')
+    $lines.Add("**State:** $($compactHandoff.state) | **Readiness:** $($compactHandoff.readiness.verdict) ($($compactHandoff.readiness.score)/100) | **Risk:** $($compactHandoff.readiness.risk.level)")
+    $lines.Add('')
+    $lines.Add("**Continuity fingerprint:** ``$($compactHandoff.continuity.currentPacketFingerprint)``")
+    $lines.Add('')
+    $lines.Add("> $($compactHandoff.authority)")
+    $lines.Add('')
+    $lines.Add('## Source anchors')
+    $lines.Add('')
+    foreach ($anchor in $compactHandoff.scope.sourceAnchors) {
+        $reference = if ($anchor.anchorStatus -eq 'line') { "$($anchor.path):$($anchor.line)" } else { [string]$anchor.path }
+        $lines.Add("- ``$reference`` — $(ConvertTo-MarkdownText $anchor.kind)")
+    }
+    $lines.Add('')
+    $lines.Add('## Open acceptance, checks, and reviews')
+    $lines.Add('')
+    foreach ($criterion in $compactHandoff.acceptanceCriteria) { $lines.Add("- **acceptance/$($criterion.id) [$($criterion.status)]:** $(ConvertTo-MarkdownText $criterion.text)") }
+    foreach ($check in $compactHandoff.checks) { $lines.Add("- **check/$($check.id) [$($check.status)]:** ``$(ConvertTo-MarkdownText $check.command)``") }
+    foreach ($review in $compactHandoff.reviews) { $lines.Add("- **review/$($review.id) [$($review.status)]:** $(ConvertTo-MarkdownText $review.description)") }
+    if (@($compactHandoff.acceptanceCriteria).Count + @($compactHandoff.checks).Count + @($compactHandoff.reviews).Count -eq 0) { $lines.Add('- None.') }
+    $lines.Add('')
+    $lines.Add('## Decisions and blockers')
+    $lines.Add('')
+    foreach ($entry in $compactHandoff.journal.entries) { $lines.Add("- **$($entry.id) [$($entry.status)/$($entry.type)]:** $(ConvertTo-MarkdownText $entry.text)") }
+    if (@($compactHandoff.journal.entries).Count -eq 0) { $lines.Add('- None.') }
+    $lines.Add('')
+    $lines.Add('## Next actions')
+    $lines.Add('')
+    foreach ($action in $compactHandoff.nextActions) { $lines.Add("- $(ConvertTo-MarkdownText $action)") }
+    $lines.Add('')
+    $lines.Add('## Resume')
+    $lines.Add('')
+    foreach ($command in $compactHandoff.resumeCommands) { $lines.Add("- ``$command``") }
+    $content = $lines -join [Environment]::NewLine
 } else {
     $lines = [System.Collections.Generic.List[string]]::new()
     $lines.Add('# AI Task Handoff')

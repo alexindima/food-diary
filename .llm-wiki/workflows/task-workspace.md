@@ -226,6 +226,22 @@ pages, acceptance state, checks, reviews, next actions, and exact resume
 commands. `-Limit` bounds path/page expansion so the result stays suitable for
 an LLM context window; `-Format Json` provides the same contract to automation.
 
+Use `-Compact` for a session boundary rather than creating a second handoff
+format. The compact projection keeps the same task identity and continuity
+fingerprint while retaining only source anchors, unresolved acceptance/checks/
+reviews, open decisions and blockers, next actions, and resume commands:
+
+```powershell
+./.llm-wiki/wiki.ps1 task-handoff `
+  -WorkspacePath .artifacts/llm-wiki/tasks/fasting-command `
+  -Compact `
+  -OutputPath .artifacts/llm-wiki/tasks/fasting-command/handoff.compact.md
+```
+
+Anchors use context-bundle lines when available and otherwise identify the
+changed path honestly as a path-only anchor. Full handoff remains the audit and
+automation view; compact handoff is the bounded session-resume view.
+
 Export a portable, privacy-filtered handoff contract:
 
 ```powershell

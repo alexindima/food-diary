@@ -8,13 +8,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "242ba5c7b16402fb42532f2e644d9e58f5bed445650fa904672932c6d3a4bdf3"
+          "sha256": "17f3fd3be7fefc41afb02f2933f045778188dfc9c46ebf721bf3003419830c36"
         }
       ],
-      "reason": "Reviewed against the current root AGENTS.md on HEAD 6cf1cee22; repository navigation and source-authority guidance remain accurately represented.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
-      "reviewedAtUtc": "2026-08-19T12:52:25.6182862Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:37.4477791Z"
     },
     {
       "pageId": "module.mail-services",
@@ -97,14 +97,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/adr/README.md",
-          "sha256": "66ec522358d2d1d4c22e082527bab5ae0c782726d9a2d851df8c975e516d07dc"
+          "path": "AGENTS.md",
+          "sha256": "17f3fd3be7fefc41afb02f2933f045778188dfc9c46ebf721bf3003419830c36"
         }
       ],
-      "reason": "ADR 0014 and the ADR index now record SQL-first routing; existing knowledge, decision, and query-context guidance remains accurate because SQLite is reconstructable navigation while Git-backed sources remain authoritative.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
-      "reviewedAtUtc": "2026-08-21T05:47:00.1424737Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:37.7502111Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -233,17 +233,17 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "9f94f707c088c59376a982f8b6f60dec696ad25d730917b192e782500a6f5994",
+      "pageSha256": "0cbd27947c34238449fe901bd71bf167388d652267b868fc6944dcde9994c5a3",
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "6e1ea9cae6b8cc9765a5d9dff313c5ac360af33609288bb776a1698a210f9793"
+          "sha256": "667d6f376e5be0805c5e86ed7368dee3e60dcda75e2b01b22f1a4dfc2688fffd"
         }
       ],
-      "reason": "The default help now exposes ten primary entries while help -Detailed retains all 358 validated routes; facade catalog regression and parser checks passed, so code-graph, index, review, and task-dispatch command semantics are unchanged.",
+      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:27:06.8103001Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:38.4016606Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -251,22 +251,14 @@
       "pageSha256": "d59b6b99ff0c566de2b31579a916ee8e62adbeedea3d928970b2200fa0b63eb6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
-          "sha256": "387cedb338cf68e56e3a60e0a0805dfa20df8bad148b5c8311064f5409fb3aba"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "c4e02543040cc86c01a0c69a4723da3cf37840748f28aef59ae8cfbc68612fe2"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         }
       ],
-      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:28:06.9445431Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:38.7261163Z"
     },
     {
       "pageId": "workflow-context-budget-optimization",
@@ -274,14 +266,14 @@
       "pageSha256": "79a057816a216c509d2f1d25849e93e19a32ce66f1f22b4e39db637ed292e1db",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         }
       ],
-      "reason": "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "11ad75c4c7b137342ee1af037f718414c8be6578",
-      "reviewedAtUtc": "2026-08-12T14:07:30.4199634Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:39.0597833Z"
     },
     {
       "pageId": "workflow-context-bundles",
@@ -289,14 +281,33 @@
       "pageSha256": "d5e1b60357672ab39c6e84d10132a391d72d5a46575afbffe7db0399b804a2cd",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "0decdaa7232ef4c133cc976f9a5d214a35d11ea73fac2e2dc11cdc25387462c1"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Reviewed dependent context, brief, manifest, integration, and developer-experience pages; public workflow contracts remain unchanged because JSON stays authoritative and SQL is opt-in shadow diagnostics.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
-      "reviewedAtUtc": "2026-08-21T03:26:14.3823834Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:39.3828451Z"
+    },
+    {
+      "pageId": "workflow-context-quality-benchmark",
+      "pagePath": ".llm-wiki/workflows/context-quality-benchmark.md",
+      "pageSha256": "a1beaf7e3319e13f0306568afc90513ecb4c5c41c61d788942a9a42334e1ff43",
+      "sources": [
+        {
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+        }
+      ],
+      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
+      "baseRef": "HEAD",
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:39.7597941Z"
     },
     {
       "pageId": "workflow-context-security",
@@ -304,14 +315,29 @@
       "pageSha256": "893ec0218c13b7b7c053c337c5bf42d475f1143bf06f472905cb285f239b7395",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiWorkflowRecovery.ps1",
-          "sha256": "45a818f253fafe665dd545b5657b4142ae6ca3820435d874c51949dbb05c8824"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         }
       ],
-      "reason": "Context-security behavior remains covered by workflow recovery smoke; fixture isolation changes do not alter sensitive-data classification or handling.",
+      "reason": "Reviewed the new policy subtree and compact anchors; anchors contain repository path/line metadata only, and existing context-security, redaction, quarantine, and privacy lifecycle behavior is unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
-      "reviewedAtUtc": "2026-08-18T02:17:16.2779551Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:40.1112728Z"
+    },
+    {
+      "pageId": "workflow-context-strategy-experiments",
+      "pagePath": ".llm-wiki/workflows/context-strategy-experiments.md",
+      "pageSha256": "37afa451dcb6f644cb09b385848104cc63b1db1eba8c902ef59912598bbb5a55",
+      "sources": [
+        {
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+        }
+      ],
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:40.4486361Z"
     },
     {
       "pageId": "workflow-context-strategy-outcome-learning",
@@ -319,14 +345,14 @@
       "pageSha256": "e4de9df2c7adeae34ec774eebca8f821c2a90f1b85fe27d16d59d8d581495c23",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         }
       ],
-      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:28:07.3079359Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:40.7319460Z"
     },
     {
       "pageId": "workflow-controlled-learning-promotion",
@@ -334,18 +360,18 @@
       "pageSha256": "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:28:07.5645504Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:41.0235683Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -353,22 +379,18 @@
       "pageSha256": "1a4c6620169d6fbe556feae253e1e80b1f7a4f4d232962b8fe8b13635bfb608a",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "c4e02543040cc86c01a0c69a4723da3cf37840748f28aef59ae8cfbc68612fe2"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:28:07.8315280Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:41.3715761Z"
     },
     {
       "pageId": "workflow-cost-aware-verification",
@@ -376,14 +398,14 @@
       "pageSha256": "89bba606d2635692a16e530538c4ccc5a89b7d983e5a9465a605a1aefdd34e7c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "a191c7810f5153158a879b409d0db880b5077b591f54596e8d2ea05b9c37ae3b"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:31.1334363Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:41.7033536Z"
     },
     {
       "pageId": "workflow-decision-context",
@@ -451,18 +473,18 @@
       "pageSha256": "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         },
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
-          "sha256": "7e85515b2fbe14b9ad9fdd1c01c9b133fc915c4ac145732675c27655b47e4497"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:31.5566305Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:42.0098036Z"
     },
     {
       "pageId": "workflow-failure-knowledge",
@@ -485,14 +507,14 @@
       "pageSha256": "f329d54afe5274a4bfce5e5cc7e77455554286b51569c8b214ef3fd44fe8be83",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "a191c7810f5153158a879b409d0db880b5077b591f54596e8d2ea05b9c37ae3b"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:32.0939882Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:42.3807890Z"
     },
     {
       "pageId": "workflow-frontend-visual-evidence",
@@ -510,19 +532,38 @@
       "reviewedAtUtc": "2026-08-16T22:10:28.4940291Z"
     },
     {
+      "pageId": "workflow-governed-context-strategy-application",
+      "pagePath": ".llm-wiki/workflows/governed-context-strategy-application.md",
+      "pageSha256": "c779512a05454746e5f0fb6c7670c3a7095db50d3a5798251e6454153ab729a1",
+      "sources": [
+        {
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+        }
+      ],
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:42.6836366Z"
+    },
+    {
       "pageId": "workflow-impact-simulation",
       "pagePath": ".llm-wiki/workflows/impact-simulation.md",
       "pageSha256": "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fa95f5656d4a6f3ec16614fd09caee6f4f51f76b145a59ed4bf4e43a2327fbbf"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Reviewed dependent context, brief, manifest, integration, and developer-experience pages; public workflow contracts remain unchanged because JSON stays authoritative and SQL is opt-in shadow diagnostics.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
-      "reviewedAtUtc": "2026-08-21T03:26:16.1222858Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:43.0212193Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -545,26 +586,18 @@
       "pageSha256": "033f7616fa69222933f081cd5a872dadfb1266e95f95809f37fc2f619103b669",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1",
-          "sha256": "5d6e0e21f764bce86a516137201c13a6f3edb7f8086b4e74d5ac9a133cca2d3f"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "c4e02543040cc86c01a0c69a4723da3cf37840748f28aef59ae8cfbc68612fe2"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:28:08.4811388Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:43.3382527Z"
     },
     {
       "pageId": "workflow-index-pipeline",
@@ -572,18 +605,14 @@
       "pageSha256": "08f1eca6ad7aa7243e07add3230cd161740bdd8db9acfa9f7e582944a1102922",
       "sources": [
         {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "5aa61d068a48af23b71d5ba9f813a894f794a0fb60aa8569a70825c8eed69c14"
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "3703b7a7e1c54f22cbf3d6a173ede6a1c71f7f413f6a3427b5ea362a8b6702cc"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "667d6f376e5be0805c5e86ed7368dee3e60dcda75e2b01b22f1a4dfc2688fffd"
         }
       ],
-      "reason": "Reviewed affected-smoke integration: the context-bundle group now runs the committed SQL retrieval evaluation after graph prewarm; scheduling, parallel-safety, failure propagation, and index publication semantics remain unchanged.",
+      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
       "baseRef": "HEAD",
-      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
-      "reviewedAtUtc": "2026-08-21T03:42:53.8812321Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:43.7750155Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -591,14 +620,14 @@
       "pageSha256": "61d91d7cbe073b4d9d81be15b1391daea4fc698ef9abec557da5a9d9b45c26bb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiInstructionOutcome.ps1",
-          "sha256": "789fcb02a0f90012879dbea8c04c00e27a0360d4dc83a17cbe989f7b3b06dde4"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         }
       ],
-      "reason": "Reviewed cross-platform canonical JSON hashing and standalone verification; instruction outcome semantics and persisted chain remain unchanged.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "d5eb6dc6614140a568feb0ecea95841c174df82f",
-      "reviewedAtUtc": "2026-07-31T20:22:08.9685006Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:44.3759161Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -607,17 +636,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "c16bcaca9daf9240471b1e2e7399e10d066ebffbb89bb6ad1a5590ff973174fb"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fa95f5656d4a6f3ec16614fd09caee6f4f51f76b145a59ed4bf4e43a2327fbbf"
+          "sha256": "c7a49f17c4330d2a2692886071edb75f7ea238ef386419b3b4b1d57dab47a37b"
         }
       ],
-      "reason": "Reviewed dependent context, brief, manifest, integration, and developer-experience pages; public workflow contracts remain unchanged because JSON stays authoritative and SQL is opt-in shadow diagnostics.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
-      "reviewedAtUtc": "2026-08-21T03:26:18.8158764Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:44.7079912Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -625,18 +650,18 @@
       "pageSha256": "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:28:09.1877299Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:45.0936491Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -644,14 +669,14 @@
       "pageSha256": "f2175e29d46c5bf4aca0b8bb756b10ce36fb1049494ab8ee1309f48f3f75fbe6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "a191c7810f5153158a879b409d0db880b5077b591f54596e8d2ea05b9c37ae3b"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:33.7154857Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:45.4115892Z"
     },
     {
       "pageId": "workflow-ownership-impact",
@@ -689,26 +714,18 @@
       "pageSha256": "cc412c14328fb572376872cca0476a09251ab524bf64dd86398365cfae4a2bf6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-          "sha256": "63736caed0e5a9a47a99be097c93ab3f428702d95796f1c565a41d67317e9d1c"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "c4e02543040cc86c01a0c69a4723da3cf37840748f28aef59ae8cfbc68612fe2"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:28:09.5599322Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:45.8109634Z"
     },
     {
       "pageId": "workflow-post-task-retrospective",
@@ -716,18 +733,18 @@
       "pageSha256": "dbcac0a7ae8c9e8975807cd711fc7680b3c731e74459583b85917d9bb8e1827d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
+      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:28:09.8993084Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:46.1084595Z"
     },
     {
       "pageId": "workflow-privacy-review",
@@ -765,30 +782,18 @@
       "pageSha256": "7622935ab3aa92e0641117a4b5afc2b8faada090a2a8a83e9ea27a575f549281",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "17f3fb3c9ff435af9715dcb28c21f5f169e17f5b41d66441ba4c7d05dd42c832"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiProofOfChange.ps1",
-          "sha256": "a0ec5aac213c6708618783a1c4b38de83f74ec9cfefd20f51ed2b504b74c5fda"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "c4e02543040cc86c01a0c69a4723da3cf37840748f28aef59ae8cfbc68612fe2"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:28:10.2147596Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:46.3916930Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -826,14 +831,18 @@
       "pageSha256": "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-          "sha256": "f8994ec4e824400b47bebeef6a2d20b33f39f56753fb5631b1f26850b24c664e"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Requirement-intelligence behavior is unchanged; the governed Authentication regression now only derives its disposable workspace from the shared smoke sandbox helper.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
-      "reviewedAtUtc": "2026-08-18T02:23:12.1253328Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:46.9936989Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -856,18 +865,18 @@
       "pageSha256": "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         },
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "a191c7810f5153158a879b409d0db880b5077b591f54596e8d2ea05b9c37ae3b"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:36.0281969Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:47.6304793Z"
     },
     {
       "pageId": "workflow-runtime-impact",
@@ -890,26 +899,18 @@
       "pageSha256": "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskSimilarity.ps1",
-          "sha256": "7bbe3eaf84f1e349a7052ab7be26b8f2dfcc69ecfc4110f508a1b783dc2c14af"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "a191c7810f5153158a879b409d0db880b5077b591f54596e8d2ea05b9c37ae3b"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
+      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:28:10.9040106Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:47.9381463Z"
     },
     {
       "pageId": "workflow-task-brief",
@@ -947,18 +948,14 @@
       "pageSha256": "7b3ea1842edd2b40e621b8bef887a96786f9bff979e494b7832a71c176439ff0",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskWorkspaces.ps1",
-          "sha256": "9eeff500efb7c4f28ba18a1fc3927ffdacd1c17744611e52e9d3dd3d498e2d71"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:36.6851273Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:48.2451221Z"
     },
     {
       "pageId": "workflow-task-dispatch-receipts",
@@ -967,13 +964,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "6e1ea9cae6b8cc9765a5d9dff313c5ac360af33609288bb776a1698a210f9793"
+          "sha256": "667d6f376e5be0805c5e86ed7368dee3e60dcda75e2b01b22f1a4dfc2688fffd"
         }
       ],
-      "reason": "The default help now exposes ten primary entries while help -Detailed retains all 358 validated routes; facade catalog regression and parser checks passed, so code-graph, index, review, and task-dispatch command semantics are unchanged.",
+      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:27:07.9584119Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:48.5511188Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -981,22 +978,18 @@
       "pageSha256": "b964048fb46e10eb6f3e28c3ddcfb451e3443691f1da29c8708d768c8ac1629c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskWorkspaces.ps1",
-          "sha256": "9eeff500efb7c4f28ba18a1fc3927ffdacd1c17744611e52e9d3dd3d498e2d71"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
-          "sha256": "7005b0ca6a00879a5d4b98dc653d16d349da5219f0f4aceb176f19e4b6aaa310"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:37.1183250Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:48.8621443Z"
     },
     {
       "pageId": "workflow-task-workspace",
@@ -1053,18 +1046,14 @@
       "pageSha256": "368dfe1e9684ead7a5e3207edd05e55477d432ae1f9627814d62bfeb9559fb84",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
-          "sha256": "126b0f518b04d6681d571546a4e3afcbbbdddc9beb6b6f59e57be4f85bed0e7c"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "a191c7810f5153158a879b409d0db880b5077b591f54596e8d2ea05b9c37ae3b"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         }
       ],
-      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
       "baseRef": "HEAD",
-      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
-      "reviewedAtUtc": "2026-08-18T00:21:37.3173837Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:49.1408173Z"
     },
     {
       "pageId": "workflow-verification-telemetry",
@@ -1072,14 +1061,14 @@
       "pageSha256": "9cc76f52e65dc93eb463ced774f1826e3433f33fb3ac620b0a5c280a106fd88d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiOperationalTelemetry.ps1",
-          "sha256": "84c4378acceed0ac7e38f82f59cf98cdef7947fbc15c744a920439fc49695659"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
         }
       ],
-      "reason": "All 28 uncached affected-smoke groups passed, including governed delivery, focused test selection, verification receipts, and facade contracts.",
+      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
       "baseRef": "HEAD",
-      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
-      "reviewedAtUtc": "2026-08-18T02:17:18.4552892Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:49.4407797Z"
     },
     {
       "pageId": "workflow.change-policy",
@@ -1088,13 +1077,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "242ba5c7b16402fb42532f2e644d9e58f5bed445650fa904672932c6d3a4bdf3"
+          "sha256": "17f3fd3be7fefc41afb02f2933f045778188dfc9c46ebf721bf3003419830c36"
         }
       ],
-      "reason": "Reviewed against the current root AGENTS.md on HEAD 6cf1cee22; the documented change-policy obligations remain consistent with repository guidance.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
-      "reviewedAtUtc": "2026-08-19T12:52:33.6501156Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:38.0718173Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1147,14 +1136,14 @@
       "pageSha256": "8439af4b89bf50398667ec91e06804d1fb6925969f3cfb30925553589f14ce9c",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "e82dd6ef22a1b611f29a15d6cb08e1b692e07c75e299f02fd3c632355ae17973"
+          "path": "AGENTS.md",
+          "sha256": "17f3fd3be7fefc41afb02f2933f045778188dfc9c46ebf721bf3003419830c36"
         }
       ],
-      "reason": "ADR 0014 and the ADR index now record SQL-first routing; existing knowledge, decision, and query-context guidance remains accurate because SQLite is reconstructable navigation while Git-backed sources remain authoritative.",
+      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
-      "reviewedAtUtc": "2026-08-21T05:47:02.5976759Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:46.7077055Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1162,14 +1151,18 @@
       "pageSha256": "2fef1c903c42193a33f6c3de3fc4c406a2a718ff38e942ad7944df0e74c713af",
       "sources": [
         {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "667d6f376e5be0805c5e86ed7368dee3e60dcda75e2b01b22f1a4dfc2688fffd"
+        },
+        {
           "path": "AGENTS.md",
-          "sha256": "242ba5c7b16402fb42532f2e644d9e58f5bed445650fa904672932c6d3a4bdf3"
+          "sha256": "17f3fd3be7fefc41afb02f2933f045778188dfc9c46ebf721bf3003419830c36"
         }
       ],
-      "reason": "Reviewed against the current root AGENTS.md on HEAD 6cf1cee22; diff-review routing and evidence expectations remain accurate.",
+      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
       "baseRef": "HEAD",
-      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
-      "reviewedAtUtc": "2026-08-19T12:52:38.9497422Z"
+      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
+      "reviewedAtUtc": "2026-08-21T19:09:47.2909804Z"
     }
   ]
 }

@@ -37,6 +37,13 @@ objects, so malformed placeholders cannot enter the generated report.
 Objective metadata uses the shared current/legacy packet reader, keeping reports
 and governed delivery commands compatible with the same workspace formats.
 
+JSON and Markdown findings share one agent-neutral contract. `severity` is one
+of `critical`, `major`, `warning`, or `info`; `kind` is independently one of
+`defect`, `suggestion`, or `question`. Every finding carries its area, blocking
+state, honest location status, trigger, observable consequence, unresolved test
+gap, remediation direction, and evidence. Missing locations remain explicitly
+`anchorStatus: missing` instead of being attached to an arbitrary changed file.
+
 CI deliberately produces the report without requiring local manifest,
 acceptance, or evidence files. Missing optional governance artifacts therefore
 appear as `conditional` instead of making an otherwise valid pull request fail.

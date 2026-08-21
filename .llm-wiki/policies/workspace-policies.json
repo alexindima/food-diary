@@ -362,6 +362,11 @@
         "operability"
       ]
     },
+    "researchPlanning": {
+      "minimumSharedPathsForGrouping": 2,
+      "maximumGroups": 6,
+      "maximumLanesPerGroup": 6
+    },
     "retrospective": {
       "minimumLearningScore": 60,
       "maximumLearningCandidates": 20,

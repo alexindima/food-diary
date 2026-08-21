@@ -90,6 +90,20 @@ requirement. Include:
 - why current tests or guards do not prevent it;
 - smallest appropriate remediation direction.
 
+Use the same agent-neutral finding contract in Markdown and JSON:
+
+- `severity`: `critical`, `major`, `warning`, or `info`;
+- `kind`: `defect`, `suggestion`, or `question`;
+- `location`: affected path and the tightest supported start/end line;
+- `trigger`, `consequence`, `testGap`, `remediation`, and supporting `evidence`.
+
+Severity expresses impact; kind expresses reviewer intent. A discussion or
+missing product decision is a `question`, not a severity level. Use
+`anchorStatus: missing` when no current-source location is known rather than
+inventing a file or line. Critical and major findings block approval. Questions
+block only when the unresolved decision changes requested behavior, safety, or
+compatibility.
+
 Do not report speculative style preferences as defects. If evidence is
 insufficient, ask for validation or describe the uncertainty instead of
 asserting a bug.

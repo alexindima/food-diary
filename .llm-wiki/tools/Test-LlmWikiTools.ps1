@@ -789,6 +789,7 @@ Assert-Wiki ($sharedJsonToolCount -eq 12) 'Shared JSON helper change did not sel
 & (Join-Path $toolsRoot 'Test-LlmWikiIndexSelection.ps1')
 & (Join-Path $toolsRoot 'Test-LlmWikiUiContinuation.ps1')
 & (Join-Path $toolsRoot 'Test-LlmWikiReviewReport.ps1')
+& (Join-Path $toolsRoot 'Test-LlmWikiResearchContracts.ps1')
 
 $deferredStale = & (Join-Path $toolsRoot 'Get-LlmWikiStaleDisposition.ps1') `
     -FailedTool @('Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiQualityIndex.ps1') `
@@ -4789,6 +4790,11 @@ try {
     Assert-Wiki (($taskHandoffMarkdown -join "`n") -match '# AI Task Handoff') 'Markdown task handoff omitted its heading.'
     Assert-Wiki (($taskHandoffMarkdown -join "`n") -match 'derived context') 'Markdown task handoff omitted the authority warning.'
     Assert-Wiki (($taskHandoffMarkdown -join "`n") -match 'Consumer compatibility is not yet proven') 'Markdown task handoff omitted the open journal blocker.'
+    $compactTaskHandoff = & (Join-Path $toolsRoot 'Get-LlmWikiTaskHandoff.ps1') @handoffArguments -Compact -Format Json | ConvertFrom-Json
+    $compactTaskHandoffMarkdown = & (Join-Path $toolsRoot 'Get-LlmWikiTaskHandoff.ps1') @handoffArguments -Compact
+    Assert-Wiki ($compactTaskHandoff.view -eq 'compact' -and @($compactTaskHandoff.scope.sourceAnchors).Count -gt 0) 'Compact task handoff omitted its view marker or source anchors.'
+    Assert-Wiki (@($compactTaskHandoff.resumeCommands | Where-Object { $_ -match 'task-status' }).Count -eq 1) 'Compact task handoff omitted its resume command.'
+    Assert-Wiki (($compactTaskHandoffMarkdown -join "`n") -match '# AI Task Handoff \(Compact\)' -and ($compactTaskHandoffMarkdown -join "`n") -match '## Source anchors') 'Compact Markdown handoff omitted its compact heading or source anchors.'
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskJournal.ps1') resolve `
         -WorkspacePath $taskWorkspacePath `
         -NoteId J-0002 `

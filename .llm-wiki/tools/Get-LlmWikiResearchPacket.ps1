@@ -22,6 +22,8 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+$workspacePolicy = Get-Content -LiteralPath (Join-Path $wikiRoot 'policies/workspace-policies.json') -Raw | ConvertFrom-Json
+$researchPlanningPolicy = $workspacePolicy.scheduler.researchPlanning
 if ($Compact) { $Limit = [Math]::Min($Limit, 6) }
 $moduleScope = @()
 if (-not [string]::IsNullOrWhiteSpace($Module)) {
@@ -39,6 +41,7 @@ $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -N
     ChangedPath = @($ChangedPath); ProposedPath = @($ProposedPath); Purpose = $Purpose; Limit = $Limit; Module = $Module; Compact = [bool]$Compact; SkipHistory = [bool]$SkipHistory
 } -RelevantPath @($(if (@($ProposedPath).Count -gt 0) { $ProposedPath } else { $ChangedPath })) -DependencyPath @(
     '.llm-wiki/policies/query-indexes.json'
+    '.llm-wiki/policies/workspace-policies.json'
     '.llm-wiki/generated/csharp-symbol-index.json'
     '.llm-wiki/generated/frontend-index.json'
     '.llm-wiki/generated/quality-index.json'
@@ -68,6 +71,100 @@ function Get-ObjectPropertyValues([object[]]$InputObject, [string]$Name) {
     @($InputObject | ForEach-Object {
         if ($null -ne $_ -and $_.PSObject.Properties[$Name]) { $_.$Name }
     } | Where-Object { $null -ne $_ -and -not [string]::IsNullOrWhiteSpace([string]$_) })
+}
+function Get-NormalizedResearchPaths([object[]]$InputObject) {
+    @($InputObject |
+        Where-Object { $null -ne $_ -and -not [string]::IsNullOrWhiteSpace([string]$_) } |
+        ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') } |
+        Where-Object { $_ } |
+        Sort-Object -Unique)
+}
+function Test-RepositoryReadPath([string]$Path) {
+    if ([string]::IsNullOrWhiteSpace($Path) -or [IO.Path]::IsPathRooted($Path)) { return $false }
+    Test-Path -LiteralPath (Join-Path $repositoryRoot $Path) -PathType Leaf
+}
+function Get-SharedPathCount([object[]]$Left, [object[]]$Right) {
+    @($Left | Where-Object { $_ -in $Right }).Count
+}
+function New-ResearchPlan([object[]]$Lanes) {
+    $minimumSharedPaths = [Math]::Max(1, [int]$researchPlanningPolicy.minimumSharedPathsForGrouping)
+    $maximumGroups = [Math]::Max(1, [int]$researchPlanningPolicy.maximumGroups)
+    $maximumLanesPerGroup = [Math]::Max(1, [int]$researchPlanningPolicy.maximumLanesPerGroup)
+    $groups = [Collections.Generic.List[object]]::new()
+
+    foreach ($lane in $Lanes) {
+        $readPaths = @(Get-NormalizedResearchPaths $lane.sources | Where-Object { Test-RepositoryReadPath $_ })
+        $lane | Add-Member -NotePropertyName readPaths -NotePropertyValue $readPaths -Force
+        $bestGroup = $null
+        $bestOverlap = 0
+        foreach ($group in $groups) {
+            if (@($group.laneIds).Count -ge $maximumLanesPerGroup) { continue }
+            $overlap = Get-SharedPathCount $readPaths @($group.readPaths)
+            if ($overlap -ge $minimumSharedPaths -and $overlap -gt $bestOverlap) {
+                $bestGroup = $group
+                $bestOverlap = $overlap
+            }
+        }
+        if ($null -eq $bestGroup) {
+            $groups.Add([pscustomobject][ordered]@{
+                laneIds = @([string]$lane.id)
+                readPaths = $readPaths
+                evidenceCount = [int]$lane.evidenceCount
+                groupingReason = 'independent-source-set'
+            })
+            continue
+        }
+        $bestGroup.laneIds = @($bestGroup.laneIds + [string]$lane.id)
+        $bestGroup.readPaths = @(Get-NormalizedResearchPaths @($bestGroup.readPaths + $readPaths))
+        $bestGroup.evidenceCount = [int]$bestGroup.evidenceCount + [int]$lane.evidenceCount
+        $bestGroup.groupingReason = "shared-at-least-$minimumSharedPaths-paths"
+    }
+
+    if ($groups.Count -gt $maximumGroups) {
+        $kept = @($groups | Select-Object -First ($maximumGroups - 1))
+        $overflow = @($groups | Select-Object -Skip ($maximumGroups - 1))
+        $kept += [pscustomobject][ordered]@{
+            laneIds = @($overflow.laneIds | ForEach-Object { @($_) } | Sort-Object -Unique)
+            readPaths = @(Get-NormalizedResearchPaths @($overflow.readPaths | ForEach-Object { @($_) }))
+            evidenceCount = [int](($overflow | Measure-Object -Property evidenceCount -Sum).Sum)
+            groupingReason = 'policy-cap-overflow'
+        }
+        $groups = [Collections.Generic.List[object]]::new()
+        foreach ($group in $kept) { $groups.Add($group) }
+    }
+
+    $allReadAssignments = @($Lanes | ForEach-Object { @($_.readPaths) })
+    $readSet = @(Get-NormalizedResearchPaths $allReadAssignments)
+    $compiledGroups = @(
+        for ($index = 0; $index -lt $groups.Count; $index++) {
+            $group = $groups[$index]
+            $otherPaths = @($groups | Where-Object { $_ -ne $group } | ForEach-Object { @($_.readPaths) })
+            [pscustomobject][ordered]@{
+                id = 'RG-{0:D3}' -f ($index + 1)
+                laneIds = @($group.laneIds)
+                readPaths = @($group.readPaths)
+                evidenceCount = [int]$group.evidenceCount
+                parallelEligible = (Get-SharedPathCount @($group.readPaths) $otherPaths) -eq 0
+                groupingReason = [string]$group.groupingReason
+            }
+        }
+    )
+    [pscustomobject][ordered]@{
+        schemaVersion = 1
+        policy = [pscustomobject][ordered]@{
+            minimumSharedPathsForGrouping = $minimumSharedPaths
+            maximumGroups = $maximumGroups
+            maximumLanesPerGroup = $maximumLanesPerGroup
+        }
+        groups = $compiledGroups
+        readSet = $readSet
+        laneCount = $Lanes.Count
+        groupCount = $compiledGroups.Count
+        totalReadAssignments = $allReadAssignments.Count
+        uniqueReadPathCount = $readSet.Count
+        duplicateReadSavings = [Math]::Max(0, $allReadAssignments.Count - $readSet.Count)
+        executionHint = 'Groups describe reusable read sets. Executors may run them sequentially or in parallel without changing the contract.'
+    }
 }
 function ConvertFrom-UnicodeEscape([string]$Value) { ('"' + $Value + '"') | ConvertFrom-Json }
 $foodDiaryIntentAliases = @(
@@ -143,14 +240,20 @@ $failureMatches = @(
     }
 )
 
-$implementationFiles = @($context.implementationFiles | Select-Object -First $Limit | ForEach-Object {
+$explicitPlannedFiles = @($ProposedPath | ForEach-Object {
+    if ([string]::IsNullOrWhiteSpace([string]$_)) { return }
+    $normalized = ([string]$_).Replace('\', '/').TrimEnd('/')
+    if (-not (Test-Path -LiteralPath (Join-Path $repositoryRoot $normalized) -PathType Leaf)) { return }
+    [pscustomobject][ordered]@{ path = $normalized; score = 1000; provenance = 'explicit-planned-path' }
+})
+$implementationFiles = @(@($explicitPlannedFiles) + @($context.implementationFiles | ForEach-Object {
     if (-not $_.PSObject.Properties['path']) { return }
     [pscustomobject][ordered]@{
         path = $_.path
         score = $(if ($_.PSObject.Properties['score']) { $_.score } else { 0 })
         provenance = $(if ($_.PSObject.Properties['provenance'] -and $_.provenance) { $_.provenance } else { 'compiled-index' })
     }
-})
+}) | Group-Object path | ForEach-Object { $_.Group | Sort-Object score -Descending | Select-Object -First 1 } | Select-Object -First $Limit)
 $symbolFiles = @($context.symbols | Select-Object -First $Limit | ForEach-Object {
     if (-not $_.PSObject.Properties['path']) { return }
     [pscustomobject][ordered]@{ path = $_.path; symbol = $(if ($_.PSObject.Properties['name']) { $_.name } else { '' }); line = $(if ($_.PSObject.Properties['line']) { $_.line } else { $null }); provenance = 'compiled-symbol-index' }
@@ -159,7 +262,6 @@ $frontendFiles = @($context.frontendSymbols | Select-Object -First $Limit | ForE
     if (-not $_.PSObject.Properties['path']) { return }
     [pscustomobject][ordered]@{ path = $_.path; symbol = $(if ($_.PSObject.Properties['name']) { $_.name } else { '' }); line = $(if ($_.PSObject.Properties['line']) { $_.line } else { $null }); provenance = 'compiled-frontend-index' }
 })
-$groundedPaths = @($scopePaths + (Get-ObjectPropertyValues $implementationFiles 'path') + (Get-ObjectPropertyValues $symbolFiles 'path') + (Get-ObjectPropertyValues $frontendFiles 'path') | Where-Object { $_ } | Sort-Object -Unique)
 $runtimeFlowEvidence = [pscustomobject][ordered]@{
     status = 'not-requested'
     sourcePaths = @()
@@ -217,10 +319,41 @@ if (@($ProposedPath).Count -gt 0) {
     $contextFrontendRoutes = @($contextFrontendRoutes | Where-Object {
         $_.PSObject.Properties['path'] -and (Test-ScopedResearchPath ([string]$_.path))
     })
+    $implementationFiles = @($implementationFiles | Where-Object {
+        $_.PSObject.Properties['path'] -and (Test-ScopedResearchPath ([string]$_.path))
+    })
+    $symbolFiles = @($symbolFiles | Where-Object {
+        $_.PSObject.Properties['path'] -and (Test-ScopedResearchPath ([string]$_.path))
+    })
+    $frontendFiles = @($frontendFiles | Where-Object {
+        $_.PSObject.Properties['path'] -and (Test-ScopedResearchPath ([string]$_.path))
+    })
+    $contextTests = @($contextTests | Where-Object {
+        $_.PSObject.Properties['path'] -and (Test-ScopedResearchPath ([string]$_.path))
+    })
+    $contextDependencyInjection = @($contextDependencyInjection | Where-Object {
+        $_.PSObject.Properties['path'] -and (Test-ScopedResearchPath ([string]$_.path))
+    })
+    $contextHttpClients = @($contextHttpClients | Where-Object {
+        $_.PSObject.Properties['path'] -and (Test-ScopedResearchPath ([string]$_.path))
+    })
+    $contextHostedServices = @($contextHostedServices | Where-Object {
+        $_.PSObject.Properties['path'] -and (Test-ScopedResearchPath ([string]$_.path))
+    })
+    $contextWebhooks = @($contextWebhooks | Where-Object {
+        $_.PSObject.Properties['path'] -and (Test-ScopedResearchPath ([string]$_.path))
+    })
     $contextAgentGuides = @($contextAgentGuides | Where-Object {
         $_.PSObject.Properties['path'] -and (Test-ScopedResearchPath ([string]$_.path) -AllowAncestor)
     })
 }
+$groundedPaths = @(Get-NormalizedResearchPaths @(
+    $scopePaths +
+    (Get-ObjectPropertyValues $implementationFiles 'path') +
+    (Get-ObjectPropertyValues $symbolFiles 'path') +
+    (Get-ObjectPropertyValues $frontendFiles 'path') +
+    @($runtimeFlowEvidence.sourcePaths)
+))
 
 $extractionDelta = $null
 if ($Objective -match '(?i)IUserContextService|extraction|profile.{0,20}boundar|\u043f\u0440\u043e\u0435\u043a\u0446') {
@@ -255,24 +388,81 @@ if ($Objective -match '(?i)IUserContextService|extraction|profile.{0,20}boundar|
     }
 }
 
+function Get-QuestionAnchor([switch]$AllowMissing) {
+    $candidate = @($symbolFiles + $frontendFiles | Where-Object { $_.path } | Select-Object -First 1)
+    if ($candidate.Count -eq 0) {
+        $candidate = @($implementationFiles | Where-Object { $_.path } | Select-Object -First 1)
+    }
+    if ($candidate.Count -eq 0) {
+        if ($AllowMissing) { return [pscustomobject][ordered]@{ status = 'missing'; path = $null; line = $null; symbol = $null } }
+        return $null
+    }
+    $item = $candidate[0]
+    $line = if ($item.PSObject.Properties['line'] -and $null -ne $item.line -and [int]$item.line -gt 0) { [int]$item.line } else { $null }
+    [pscustomobject][ordered]@{
+        status = $(if ($null -ne $line) { 'line' } else { 'path' })
+        path = [string]$item.path
+        line = $line
+        symbol = $(if ($item.PSObject.Properties['symbol'] -and $item.symbol) { [string]$item.symbol } else { $null })
+    }
+}
+function New-GroundedQuestion(
+    [string]$Id,
+    [bool]$Blocking,
+    [string]$Question,
+    [string]$EvidenceNeeded,
+    [string]$WhyUserInputIsRequired,
+    [object]$Anchor,
+    [string]$ResolutionCommand = ''
+) {
+    [pscustomobject][ordered]@{
+        id = $Id
+        blocking = $Blocking
+        question = $Question
+        evidenceNeeded = $EvidenceNeeded
+        whyUserInputIsRequired = $WhyUserInputIsRequired
+        anchorStatus = $(if ($null -ne $Anchor) { [string]$Anchor.status } else { 'missing' })
+        anchor = $(if ($null -ne $Anchor) {
+            [pscustomobject][ordered]@{ path = $Anchor.path; line = $Anchor.line; symbol = $Anchor.symbol }
+        } else { $null })
+        resolutionCommand = $ResolutionCommand
+    }
+}
+
 $openQuestions = [Collections.Generic.List[object]]::new()
 if (-not $workflow.scopeKnown -and $effectivePurpose -eq 'Implementation') {
-    $openQuestions.Add([pscustomobject][ordered]@{ id = 'confirm-edit-boundary'; blocking = $true; question = 'Which ranked implementation paths form the actual edit boundary?'; evidenceNeeded = 'Read current source and confirm the entry point, implementation, and focused tests.' })
+    $openQuestions.Add((New-GroundedQuestion `
+        -Id 'confirm-edit-boundary' `
+        -Blocking $true `
+        -Question 'Which ranked implementation paths form the actual edit boundary?' `
+        -EvidenceNeeded 'Read current source and confirm the entry point, implementation, and focused tests.' `
+        -WhyUserInputIsRequired 'The repository evidence identifies candidates, but choosing the intended edit boundary changes implementation scope.' `
+        -Anchor (Get-QuestionAnchor -AllowMissing) `
+        -ResolutionCommand "./.llm-wiki/wiki.ps1 research -Intent '$($Objective.Replace("'", "''"))' -ResearchPurpose Implementation -PlannedPath '<confirmed paths>'"))
 }
 if ($workflow.requiresDecisionCheckpoint) {
     $escapedObjective = $Objective.Replace("'", "''")
     $plannedArgument = if ($groundedPaths.Count -gt 0) { " -PlannedPath '$(($groundedPaths | Select-Object -First $Limit) -join ';')'" } else { '' }
-    $openQuestions.Add([pscustomobject][ordered]@{
-        id = 'resolve-design-boundary'
-        blocking = $effectivePurpose -eq 'Implementation'
-        question = 'Select and record the compatibility, privacy, provider, persistence, or architecture boundary that the implementation must preserve.'
-        evidenceNeeded = 'A source-grounded decision naming the selected boundary, rejected alternative, and affected consumers.'
-        resolutionCommand = "./.llm-wiki/wiki.ps1 design -Intent '$escapedObjective'$plannedArgument -Decision '<selected boundary; rejected alternative; affected consumers>'"
-    })
+    $openQuestions.Add((New-GroundedQuestion `
+        -Id 'resolve-design-boundary' `
+        -Blocking ($effectivePurpose -eq 'Implementation') `
+        -Question 'Select and record the compatibility, privacy, provider, persistence, or architecture boundary that the implementation must preserve.' `
+        -EvidenceNeeded 'A source-grounded decision naming the selected boundary, rejected alternative, and affected consumers.' `
+        -WhyUserInputIsRequired 'Repository evidence can expose the boundary and alternatives but cannot choose the product or compatibility tradeoff.' `
+        -Anchor (Get-QuestionAnchor -AllowMissing) `
+        -ResolutionCommand "./.llm-wiki/wiki.ps1 design -Intent '$escapedObjective'$plannedArgument -Decision '<selected boundary; rejected alternative; affected consumers>'"))
 }
-if ($scopePaths.Count -eq 0 -and @($context.implementationFiles).Count -eq 0 -and @($context.symbols).Count -eq 0 -and @($context.frontendSymbols).Count -eq 0) {
-    $openQuestions.Add([pscustomobject][ordered]@{ id = 'locate-implementation'; blocking = $true; question = 'The context index found no ranked implementation file. What exact symbol or route names the flow?'; evidenceNeeded = 'Use trace or source search and rerun research with PlannedPath.' })
+if ($groundedPaths.Count -eq 0) {
+    $openQuestions.Add((New-GroundedQuestion `
+        -Id 'locate-implementation' `
+        -Blocking $true `
+        -Question 'What exact symbol, route, command, or component names the flow?' `
+        -EvidenceNeeded 'Use trace or source search and rerun research with PlannedPath.' `
+        -WhyUserInputIsRequired 'No current repository path was grounded, so asking for a concrete entry point is safer than inferring one.' `
+        -Anchor $null `
+        -ResolutionCommand "./.llm-wiki/wiki.ps1 trace -Query '<exact symbol or route>'"))
 }
+$nextQuestion = @($openQuestions | Sort-Object @{ Expression = { if ($_.blocking) { 0 } else { 1 } } }, id | Select-Object -First 1)
 $researchDiscoveryConfidence = if ($groundedPaths.Count -gt 0) { 'high' } else { 'low' }
 $researchBlockerConfidence = if ($groundedPaths.Count -gt 0 -and $extractionDelta) { 'high' } elseif ($groundedPaths.Count -gt 0) { 'medium' } else { 'low' }
 $researchImplementationScopeConfidence = if ($effectivePurpose -eq 'Assessment') { 'not-required' } elseif ($workflow.scopeKnown) { 'high' } elseif ($groundedPaths.Count -gt 0) { 'medium' } else { 'low' }
@@ -284,6 +474,15 @@ if ($researchBlockerConfidence -eq 'high') { $researchConfidenceReasons.Add('Blo
 elseif ($researchBlockerConfidence -eq 'medium') { $researchConfidenceReasons.Add('Blocker count is provisional because research found the flow but did not run a boundary-specific blocker analyzer.') }
 if ($researchImplementationScopeConfidence -eq 'not-required') { $researchConfidenceReasons.Add('Implementation scope is not rated because this is a read-only assessment.') }
 elseif ($researchImplementationScopeConfidence -ne 'high') { $researchConfidenceReasons.Add('Implementation scope is not high because the discovered paths were not confirmed as the future edit boundary.') }
+
+$researchLanes = @(
+    [pscustomobject][ordered]@{ id = 'flow'; purpose = 'Current implementation and entry points'; evidenceCount = @($implementationFiles).Count + @($symbolFiles).Count + @($frontendFiles).Count; sources = @(Get-NormalizedResearchPaths @((Get-ObjectPropertyValues @($implementationFiles) 'path') + (Get-ObjectPropertyValues @($symbolFiles) 'path') + (Get-ObjectPropertyValues @($frontendFiles) 'path'))) }
+    [pscustomobject][ordered]@{ id = 'tests'; purpose = 'Focused regression and contract evidence'; evidenceCount = @($contextTests).Count; sources = @(Get-NormalizedResearchPaths (Get-ObjectPropertyValues @($contextTests) 'path') | Select-Object -First $Limit) }
+    [pscustomobject][ordered]@{ id = 'integrations'; purpose = 'Runtime, provider, DI, and delivery boundaries'; evidenceCount = @(@($contextHttpClients) + @($contextHostedServices) + @($contextWebhooks) + @($contextDependencyInjection) | Where-Object { $null -ne $_ }).Count; sources = @(Get-NormalizedResearchPaths (Get-ObjectPropertyValues @(@($contextHttpClients) + @($contextHostedServices) + @($contextWebhooks) + @($contextDependencyInjection)) 'path') | Select-Object -First $Limit) }
+    [pscustomobject][ordered]@{ id = 'precedents'; purpose = 'Git precedents and verified failure knowledge'; evidenceCount = @($precedents.precedents).Count + @($failureMatches).Count; sources = @((Get-ObjectPropertyValues @($precedents.precedents) 'shortHash') + (Get-ObjectPropertyValues @($failureMatches) 'id') | Where-Object { $_ } | Sort-Object -Unique) }
+    [pscustomobject][ordered]@{ id = 'guidance'; purpose = 'Scoped instructions and governed Wiki context'; evidenceCount = @($contextAgentGuides).Count + @($contextWikiPages).Count; sources = @(Get-NormalizedResearchPaths (Get-ObjectPropertyValues @(@($contextAgentGuides) + @($contextWikiPages)) 'path') | Select-Object -First $Limit) }
+) | Where-Object { [int]$_.evidenceCount -gt 0 -or @($_.sources).Count -gt 0 }
+$researchPlan = New-ResearchPlan $researchLanes
 
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
@@ -316,13 +515,8 @@ $result = [pscustomobject][ordered]@{
         wikiPages = @($contextWikiPages | Select-Object -First $Limit)
         runtimeFlow = $runtimeFlowEvidence
     }
-    researchLanes = @(
-        [pscustomobject][ordered]@{ id = 'flow'; purpose = 'Current implementation and entry points'; evidenceCount = @($implementationFiles).Count + @($symbolFiles).Count + @($frontendFiles).Count; sources = @((Get-ObjectPropertyValues @($implementationFiles) 'path') + (Get-ObjectPropertyValues @($symbolFiles) 'path') + (Get-ObjectPropertyValues @($frontendFiles) 'path') | Sort-Object -Unique) }
-        [pscustomobject][ordered]@{ id = 'tests'; purpose = 'Focused regression and contract evidence'; evidenceCount = @($contextTests).Count; sources = @(Get-ObjectPropertyValues @($contextTests) 'path' | Select-Object -First $Limit) }
-        [pscustomobject][ordered]@{ id = 'integrations'; purpose = 'Runtime, provider, DI, and delivery boundaries'; evidenceCount = @(@($contextHttpClients) + @($contextHostedServices) + @($contextWebhooks) + @($contextDependencyInjection) | Where-Object { $null -ne $_ }).Count; sources = @(Get-ObjectPropertyValues @(@($contextHttpClients) + @($contextHostedServices) + @($contextWebhooks) + @($contextDependencyInjection)) 'path' | Sort-Object -Unique | Select-Object -First $Limit) }
-        [pscustomobject][ordered]@{ id = 'precedents'; purpose = 'Git precedents and verified failure knowledge'; evidenceCount = @($precedents.precedents).Count + @($failureMatches).Count; sources = @((Get-ObjectPropertyValues @($precedents.precedents) 'shortHash') + (Get-ObjectPropertyValues @($failureMatches) 'id')) }
-        [pscustomobject][ordered]@{ id = 'guidance'; purpose = 'Scoped instructions and governed Wiki context'; evidenceCount = @($contextAgentGuides).Count + @($contextWikiPages).Count; sources = @(Get-ObjectPropertyValues @(@($contextAgentGuides) + @($contextWikiPages)) 'path' | Sort-Object -Unique | Select-Object -First $Limit) }
-    )
+    researchLanes = $researchLanes
+    researchPlan = $researchPlan
     boundaries = [pscustomobject][ordered]@{
         runtime = @(@($contextHttpClients) + @($contextHostedServices) + @($contextWebhooks) | Where-Object { $null -ne $_ } | Select-Object -First $Limit)
         privacy = [pscustomobject][ordered]@{
@@ -334,6 +528,7 @@ $result = [pscustomobject][ordered]@{
     knownFailures = @($failureMatches | Select-Object -First $Limit)
     extractionDelta = $extractionDelta
     openQuestions = @($openQuestions)
+    nextQuestion = $(if ($nextQuestion.Count -gt 0) { $nextQuestion[0] } else { $null })
     readiness = [pscustomobject][ordered]@{
         assessmentStatus = $(if ($groundedPaths.Count -gt 0) { 'complete' } else { 'incomplete' })
         designCheckpoint = $(if ($effectivePurpose -eq 'Assessment') { 'not-required' } elseif ($workflow.requiresDecisionCheckpoint) { 'required' } else { 'not-required' })
@@ -379,6 +574,8 @@ if ($Compact -and $resultJson.Length -gt 30000) {
     $result.precedents = @($result.precedents | Select-Object -First $compactLimit)
     $result.knownFailures = @($result.knownFailures | Select-Object -First $compactLimit)
     foreach ($lane in $result.researchLanes) { $lane.sources = @($lane.sources | Select-Object -First $compactLimit) }
+    $result.researchPlan.readSet = @($result.researchPlan.readSet | Select-Object -First ($compactLimit * 3))
+    foreach ($group in $result.researchPlan.groups) { $group.readPaths = @($group.readPaths | Select-Object -First $compactLimit) }
     $result.boundaries.runtime = @($result.boundaries.runtime | Select-Object -First $compactLimit)
     $result.extractionDelta = $null
     $resultJson = $result | ConvertTo-Json -Depth 12
@@ -411,6 +608,7 @@ foreach ($item in @($result.discovery.implementationFiles | Select-Object -First
 foreach ($item in @($result.precedents | Select-Object -First 3)) { Write-Host "  Precedent: $($item.shortHash) $($item.subject)" }
 foreach ($item in $result.knownFailures) { Write-Host "  Known failure: $($item.id) - $($item.symptom)" }
 foreach ($lane in $result.researchLanes) { Write-Host "  Lane $($lane.id): $($lane.evidenceCount) evidence item(s) - $($lane.purpose)" }
+Write-Host "Research plan: groups=$($result.researchPlan.groupCount), unique reads=$($result.researchPlan.uniqueReadPathCount), duplicate reads avoided=$($result.researchPlan.duplicateReadSavings)"
 if ($result.extractionDelta) {
     $delta = $result.extractionDelta
     Write-Host "Extraction delta: $($delta.contract) consumers $($delta.initialConsumers) -> $($delta.currentConsumers) (resolved=$($delta.resolvedConsumers)); aggregate blockers $($delta.initialAggregateBlockers) -> $($delta.currentAggregateBlockers)."
@@ -418,7 +616,11 @@ if ($result.extractionDelta) {
     if (@($delta.nextOwner).Count -gt 0) { Write-Host "  Next owner: $($delta.nextOwner -join ', ')" }
     foreach ($cluster in $delta.capabilityClusters) { Write-Host "  Capability $($cluster.capability): $($cluster.count) path(s), consumers=$($cluster.consumers -join ', ')" }
 }
-foreach ($item in $result.openQuestions) { Write-Host "  OPEN [$($item.id)]: $($item.question)" }
+if ($null -ne $result.nextQuestion) {
+    $anchorText = if ($result.nextQuestion.anchorStatus -eq 'line') { "$($result.nextQuestion.anchor.path):$($result.nextQuestion.anchor.line)" } elseif ($result.nextQuestion.anchorStatus -eq 'path') { [string]$result.nextQuestion.anchor.path } else { 'anchor missing' }
+    Write-Host "  NEXT QUESTION [$($result.nextQuestion.id)] ($anchorText): $($result.nextQuestion.question)"
+    if (@($result.openQuestions).Count -gt 1) { Write-Host "  Additional questions deferred: $(@($result.openQuestions).Count - 1)" }
+}
 Write-Host "Ready to design: $($result.readiness.readyToDesign)"
 Write-Host "Ready to implement: $($result.readiness.readyToImplement)"
 Write-Host "Next: $($result.nextAction)"

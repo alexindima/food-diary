@@ -66,6 +66,7 @@ For normal work, prefer the compact path:
 ./.llm-wiki/wiki.ps1 develop -Intent '<task>' -PlannedPath '<known path>'
 ./.llm-wiki/wiki.ps1 next -Intent '<task>' -PlannedPath '<known path>'
 ./.llm-wiki/wiki.ps1 next -WorkspacePath .artifacts/llm-wiki/tasks/<name>
+./.llm-wiki/wiki.ps1 research-next-question -Intent '<task>' -PlannedPath '<known path>'
 ./.llm-wiki/wiki.ps1 phase-next -WorkspacePath .artifacts/llm-wiki/tasks/<name>
 ./.llm-wiki/wiki.ps1 delivery-validate -WorkspacePath .artifacts/llm-wiki/tasks/<name> -FailOnInvalid
 ./.llm-wiki/wiki.ps1 handoff
@@ -152,6 +153,7 @@ The unified developer entrypoint is:
 ./.llm-wiki/wiki.ps1 task-evidence-import -WorkspacePath .artifacts/llm-wiki/tasks/my-task
 ./.llm-wiki/wiki.ps1 task-run -WorkspacePath .artifacts/llm-wiki/tasks/my-task -DryRun
 ./.llm-wiki/wiki.ps1 task-handoff -WorkspacePath .artifacts/llm-wiki/tasks/my-task -OutputPath .artifacts/llm-wiki/tasks/my-task/handoff.md
+./.llm-wiki/wiki.ps1 task-handoff -WorkspacePath .artifacts/llm-wiki/tasks/my-task -Compact -OutputPath .artifacts/llm-wiki/tasks/my-task/handoff.compact.md
 ./.llm-wiki/wiki.ps1 task-export -WorkspacePath .artifacts/llm-wiki/tasks/my-task
 ./.llm-wiki/wiki.ps1 task-export-verify -ExportPath .artifacts/llm-wiki/exports/my-task.task-export.json -FailOnInvalid
 ./.llm-wiki/wiki.ps1 task-import -ImportPath .artifacts/llm-wiki/exports/my-task.task-export.json -WorkspacePath .artifacts/llm-wiki/tasks/resumed-task -DryRun
