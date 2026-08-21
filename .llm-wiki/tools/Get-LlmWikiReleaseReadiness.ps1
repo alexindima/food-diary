@@ -39,6 +39,9 @@ function Get-Ids([object[]]$Items) {
         if ($null -ne $_ -and $_.PSObject.Properties['id'] -and -not [string]::IsNullOrWhiteSpace([string]$_.id)) { $_.id }
     })
 }
+function Get-ItemCount([AllowNull()][object]$Value) {
+    return @($Value).Length
+}
 
 $packetArguments = @{ BaseRef = $BaseRef; Objective = $Objective; Format = 'Json' }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $packetArguments.HeadRef = $HeadRef }
@@ -58,10 +61,10 @@ function Add-Dimension([string]$Id, [int]$Weight, [string]$Status, [string]$Summ
 }
 
 $policyIssues = @($packet.policy.violations | ForEach-Object { "[$($_.rule)] $($_.message)" })
-if ($policyIssues.Count -gt 0) {
+if ((Get-ItemCount $policyIssues) -gt 0) {
     Add-Dimension 'policy' 20 'fail' 'Structural change policy violations exist.' $policyIssues
 } else {
-    Add-Dimension 'policy' 20 'pass' "$(@($packet.policy.matchedRules).Count) policy rule(s) evaluated without structural violations."
+    Add-Dimension 'policy' 20 'pass' "$(Get-ItemCount $packet.policy.matchedRules) policy rule(s) evaluated without structural violations."
 }
 
 $health = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/architecture-health-index.json') -Raw | ConvertFrom-Json
@@ -70,7 +73,7 @@ $architectureIssues = @(
     @($health.untrackedProductionProjects | ForEach-Object { "Ungoverned project: $($_.name)" }) +
     @($health.moduleCycleNodes | ForEach-Object { "Module cycle node: $_" })
 )
-if ($architectureIssues.Count -gt 0) {
+if ((Get-ItemCount $architectureIssues) -gt 0) {
     Add-Dimension 'architecture' 15 'fail' 'Enforced architecture drift exists.' $architectureIssues
 } else {
     Add-Dimension 'architecture' 15 'pass' 'No forbidden project edges, ungoverned production projects, or module cycles.'
@@ -83,7 +86,6 @@ if (-not $apiScope) {
     Add-Dimension 'api-compatibility' 15 'not-assessed' 'Synthetic path input cannot prove an OpenAPI diff; run against the real Git change set.'
 } else {
     $apiArguments = @{ BaseRef = $BaseRef; Format = 'Json' }
-    if ($PSBoundParameters.ContainsKey('HeadRef')) { $apiArguments.HeadRef = $HeadRef }
     $api = if ($null -ne $ApiCompatibilityInput) {
         $ApiCompatibilityInput
     } else {
@@ -105,8 +107,8 @@ if (-not $apiScope) {
     }
     if ($api.breakingCount -gt 0) {
         Add-Dimension 'api-compatibility' 15 'fail' "$($api.breakingCount) breaking API change(s) detected." $breakingChanges
-    } elseif ($behavioralRestrictions.Count -gt 0) {
-        Add-Dimension 'api-compatibility' 15 'warning' "$($behavioralRestrictions.Count) behavioral API restriction(s) require explicit review; no schema-breaking change was detected." $behavioralRestrictions
+    } elseif ((Get-ItemCount $behavioralRestrictions) -gt 0) {
+        Add-Dimension 'api-compatibility' 15 'warning' "$(Get-ItemCount $behavioralRestrictions) behavioral API restriction(s) require explicit review; no schema-breaking change was detected." $behavioralRestrictions
     } else {
         Add-Dimension 'api-compatibility' 15 'pass' 'No breaking API snapshot change was detected.'
     }
@@ -132,7 +134,7 @@ if (-not (Test-Path -LiteralPath $manifestAbsolute)) {
         @($newChecks | ForEach-Object { "New required check: $_" }) +
         @($newReviews | ForEach-Object { "New review obligation: $_" })
     )
-    if ($manifestIssues.Count -gt 0) {
+    if ((Get-ItemCount $manifestIssues) -gt 0) {
         Add-Dimension 'scope-manifest' 10 'fail' 'The final change drifted from the manifest.' $manifestIssues
     } else {
         Add-Dimension 'scope-manifest' 10 'pass' 'Changed paths and obligations remain inside the manifest.'
@@ -186,23 +188,23 @@ if ($null -eq $evidence) {
         @($unresolvedReviews | ForEach-Object { "Review $($_.id): $($_.status)" }) +
         @($missingReviews | ForEach-Object { "Missing review: $_" })
     )
-    if ($verificationIssues.Count -gt 0) {
+    if ((Get-ItemCount $verificationIssues) -gt 0) {
         Add-Dimension 'verification-evidence' 10 'fail' 'Required verification evidence is missing or unresolved.' $verificationIssues
     } else {
         Add-Dimension 'verification-evidence' 10 'pass' 'All required checks have resolved evidence.'
     }
-    if ($reviewIssues.Count -gt 0) {
+    if ((Get-ItemCount $reviewIssues) -gt 0) {
         Add-Dimension 'review-evidence' 5 'fail' 'Required review evidence is missing or unresolved.' $reviewIssues
     } else {
         Add-Dimension 'review-evidence' 5 'pass' 'All required reviews have resolved evidence.'
     }
 }
 
-$privacyImpactCount = @(
+$privacyImpactCount = Get-ItemCount @(
     @($packet.brief.privacyImpact.fields) +
     @($packet.brief.privacyImpact.boundaries) +
     @($packet.brief.privacyImpact.potentialLogging)
-).Count
+)
 if ($privacyImpactCount -eq 0) {
     Add-Dimension 'privacy' 5 'not-applicable' 'No indexed sensitive-data impact was found.'
 } elseif ($null -eq $evidence) {
@@ -211,19 +213,19 @@ if ($privacyImpactCount -eq 0) {
     $privacyReviews = @($evidence.reviews | Where-Object {
         $_.id -match 'privacy|security' -and $_.status -in @('completed', 'not-applicable')
     })
-    if ($privacyReviews.Count -gt 0) {
+    if ((Get-ItemCount $privacyReviews) -gt 0) {
         Add-Dimension 'privacy' 5 'pass' "$privacyImpactCount privacy-sensitive item(s) have resolved privacy/security review evidence."
     } else {
         Add-Dimension 'privacy' 5 'fail' 'Privacy-sensitive impact exists without a resolved privacy/security review.'
     }
 }
 
-$rolloutImpact = @($packet.rollout.flags.PSObject.Properties | Where-Object { [bool]$_.Value }).Count -gt 0
+$rolloutImpact = (Get-ItemCount @($packet.rollout.flags.PSObject.Properties | Where-Object { [bool]$_.Value })) -gt 0
 if (-not $rolloutImpact) {
     Add-Dimension 'rollout' 5 'not-applicable' 'No specialized rollout flag was inferred.'
 } elseif ($null -eq $evidence) {
     Add-Dimension 'rollout' 5 'not-assessed' 'Specialized rollout impact exists without an evidence bundle.'
-} elseif (@($evidence.reviews | Where-Object { $_.status -notin @('completed', 'not-applicable') }).Count -eq 0) {
+} elseif ((Get-ItemCount @($evidence.reviews | Where-Object { $_.status -notin @('completed', 'not-applicable') })) -eq 0) {
     Add-Dimension 'rollout' 5 'pass' 'Rollout-impacting reviews are resolved.'
 } else {
     Add-Dimension 'rollout' 5 'fail' 'Rollout-impacting review obligations remain unresolved.'
@@ -236,13 +238,13 @@ foreach ($dimension in $dimensions) {
 }
 $blocking = @($dimensions | Where-Object status -eq 'fail')
 $unassessed = @($dimensions | Where-Object status -eq 'not-assessed')
-$verdict = if ($blocking.Count -gt 0) { 'blocked' } elseif ($unassessed.Count -gt 0) { 'conditional' } else { 'ready' }
+$verdict = if ((Get-ItemCount $blocking) -gt 0) { 'blocked' } elseif ((Get-ItemCount $unassessed) -gt 0) { 'conditional' } else { 'ready' }
 $engineeringIds = @('policy', 'architecture', 'api-compatibility', 'verification-evidence')
 $engineeringDimensions = @($dimensions | Where-Object id -in $engineeringIds)
 $governanceDimensions = @($dimensions | Where-Object id -notin $engineeringIds)
 function Get-IndependentVerdict([object[]]$Items) {
-    if (@($Items | Where-Object status -eq 'fail').Count -gt 0) { return 'blocked' }
-    if (@($Items | Where-Object status -eq 'not-assessed').Count -gt 0) { return 'conditional' }
+    if ((Get-ItemCount @($Items | Where-Object status -eq 'fail')) -gt 0) { return 'blocked' }
+    if ((Get-ItemCount @($Items | Where-Object status -eq 'not-assessed')) -gt 0) { return 'conditional' }
     return 'ready'
 }
 $result = [pscustomobject][ordered]@{

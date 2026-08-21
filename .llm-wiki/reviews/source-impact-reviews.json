@@ -550,14 +550,14 @@
       "pageSha256": "2d14755cf1714049bfdbd8ce1c1ed6e3fb250c1e2f8a34d27863f86e278e86d7",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fe23a1e418e3f9d2cf619185cd08be61c023d2df66283348bad9cd6ebcffa3ee"
+          "path": ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
+          "sha256": "e66c160e03d0f6636879a946265748382d5f0742082848c0cde325ae89c95fc9"
         }
       ],
-      "reason": "Updated workflow contracts for detection-only standalone snapshots, scoped cache lineage, bounded compact research, trace scope ranking, and sandbox-owned smoke attribution; verify-full passed indexes and 28 focused groups before source-impact review.",
+      "reason": "Release readiness now normalizes null, scalar, and array-shaped collections before counting and its regression covers scalar findings plus direct HeadRef invocation.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:15:17.9153383Z"
+      "gitHead": "5139162b0a282013047d7fdc953943423039e067",
+      "reviewedAtUtc": "2026-08-21T01:31:02.1628564Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -589,17 +589,21 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "172319ccc4a1813b3cc8904b0af8a671f10a3ef2c319043367a5c0489176d86a",
+      "pageSha256": "08f1eca6ad7aa7243e07add3230cd161740bdd8db9acfa9f7e582944a1102922",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "6e1ea9cae6b8cc9765a5d9dff313c5ac360af33609288bb776a1698a210f9793"
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "c32e5ceb11c2d5cf263772df93a19c2468953f51df012412261f1e59ebd3669b"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+          "sha256": "bb5da28b376981ef4184e59a702144ef124a09678f27982eecfdc9572108a3c1"
         }
       ],
-      "reason": "The default help now exposes ten primary entries while help -Detailed retains all 358 validated routes; facade catalog regression and parser checks passed, so code-graph, index, review, and task-dispatch command semantics are unchanged.",
+      "reason": "Release readiness now normalizes scalar-shaped results, and trace-output snapshot verification runs after the parallel code-graph writer to avoid Windows SQLite sharing races.",
       "baseRef": "HEAD",
-      "gitHead": "c1d29e8ed6a433d7e0e414861181e3b6adc6cd17",
-      "reviewedAtUtc": "2026-08-19T02:27:07.1818651Z"
+      "gitHead": "5139162b0a282013047d7fdc953943423039e067",
+      "reviewedAtUtc": "2026-08-21T01:37:42.3301193Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -828,13 +832,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-          "sha256": "678532e518c52e61fbbfd5b2d182ea913ef650928ac63e6d71edaa142ce74bd3"
+          "sha256": "87ecbae893bc8e6cc5cc9914d327de41b5f0aaa1f737b91e1d33df920d9443c1"
         }
       ],
-      "reason": "All 28 uncached affected-smoke groups passed, including governed delivery, focused test selection, verification receipts, and facade contracts.",
+      "reason": "Release readiness now normalizes null, scalar, and array-shaped collections before counting and its regression covers scalar findings plus direct HeadRef invocation.",
       "baseRef": "HEAD",
-      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
-      "reviewedAtUtc": "2026-08-18T02:17:16.9765505Z"
+      "gitHead": "5139162b0a282013047d7fdc953943423039e067",
+      "reviewedAtUtc": "2026-08-21T01:31:02.4906469Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -857,14 +861,14 @@
       "pageSha256": "9b6d5d7319915e804b736c3a089e76f843fe5b97955da5c933faf69165102e18",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "24219117ec06ffcc85219472f89f16239a8cef046da544ffb3067464b201d4ba"
+          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+          "sha256": "87ecbae893bc8e6cc5cc9914d327de41b5f0aaa1f737b91e1d33df920d9443c1"
         }
       ],
-      "reason": "The API hardening adds focused unit, integration, and architecture coverage; the concurrent CI change only pins the existing .NET SDK version and does not alter verification workflow semantics.",
+      "reason": "Release readiness now normalizes null, scalar, and array-shaped collections before counting and its regression covers scalar findings plus direct HeadRef invocation.",
       "baseRef": "HEAD",
-      "gitHead": "041536a5ee00e36f438e372a754e93c5978bcfbf",
-      "reviewedAtUtc": "2026-08-18T12:52:48.8942264Z"
+      "gitHead": "5139162b0a282013047d7fdc953943423039e067",
+      "reviewedAtUtc": "2026-08-21T01:31:02.8230751Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1021,21 +1025,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-          "sha256": "678532e518c52e61fbbfd5b2d182ea913ef650928ac63e6d71edaa142ce74bd3"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-          "sha256": "f8994ec4e824400b47bebeef6a2d20b33f39f56753fb5631b1f26850b24c664e"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
-          "sha256": "c21809c2eb9368f5e694b3d19653508ad5ab5d4a3b64d33a2333940a5f15e5db"
+          "sha256": "87ecbae893bc8e6cc5cc9914d327de41b5f0aaa1f737b91e1d33df920d9443c1"
         }
       ],
-      "reason": "Governed task fixture isolation preserves direct task-workspace constraints and the implementation/governed-delivery smoke groups passed.",
+      "reason": "Release readiness now normalizes null, scalar, and array-shaped collections before counting and its regression covers scalar findings plus direct HeadRef invocation.",
       "baseRef": "HEAD",
-      "gitHead": "bee193445963187a50c15098667e1c849f37bd64",
-      "reviewedAtUtc": "2026-08-18T02:23:12.4747904Z"
+      "gitHead": "5139162b0a282013047d7fdc953943423039e067",
+      "reviewedAtUtc": "2026-08-21T01:31:03.1891681Z"
     },
     {
       "pageId": "workflow-test-plan",

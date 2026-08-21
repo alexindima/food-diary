@@ -96,4 +96,51 @@ if ($behavioralDimension.status -ne 'warning' -or @($behavioralDimension.issues)
     throw 'Release readiness did not keep behavioral API restrictions distinct from schema-breaking changes.'
 }
 
+$scalarPacket = [pscustomobject]@{
+    policy = [pscustomobject]@{
+        violations = [pscustomobject]@{ rule = 'scalar-fixture'; message = 'Scalar policy issue.' }
+        matchedRules = [pscustomobject]@{ id = 'scalar-rule' }
+        requiredChecks = [pscustomobject]@{ id = 'scalar-check'; command = 'scalar-check' }
+        reviewObligations = [pscustomobject]@{ id = 'scalar-review' }
+    }
+    diff = [pscustomobject]@{ scopes = 'Api'; changedPaths = 'SyntheticHttpModel.cs' }
+    brief = [pscustomobject]@{
+        risk = [pscustomobject]@{ level = 'medium'; score = 3 }
+        privacyImpact = [pscustomobject]@{
+            fields = 'email'
+            boundaries = 'api'
+            potentialLogging = 'request'
+        }
+    }
+    rollout = [pscustomobject]@{ flags = [pscustomobject]@{ configuration = $true } }
+    fingerprint = 'scalar-collection-fixture'
+}
+$scalarApiResult = [pscustomobject]@{
+    breakingCount = 0
+    additiveCount = 0
+    behavioralRestrictions = [pscustomobject]@{
+        severity = 'behavioral-restriction'
+        kind = 'scalar-restriction'
+        location = '/scalar'
+        description = 'Scalar fixture.'
+    }
+    changes = [pscustomobject]@{ severity = 'behavioral-restriction' }
+}
+$scalarReadiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiReleaseReadiness.ps1') `
+    -PacketInput $scalarPacket `
+    -ApiCompatibilityInput $scalarApiResult `
+    -HeadRef HEAD `
+    -ManifestPath '.artifacts/llm-wiki/nonexistent-scalar-manifest.json' `
+    -AcceptancePath '.artifacts/llm-wiki/nonexistent-scalar-acceptance.json' `
+    -EvidencePath '.artifacts/llm-wiki/nonexistent-scalar-evidence.json' `
+    -Format Json | ConvertFrom-Json
+$scalarPolicyDimension = @($scalarReadiness.dimensions | Where-Object id -eq 'policy')[0]
+$scalarApiDimension = @($scalarReadiness.dimensions | Where-Object id -eq 'api-compatibility')[0]
+if ($scalarReadiness.verdict -ne 'blocked' -or $scalarPolicyDimension.status -ne 'fail') {
+    throw 'Release readiness did not normalize a scalar policy finding.'
+}
+if ($scalarApiDimension.status -ne 'warning' -or @($scalarApiDimension.issues).Count -ne 1) {
+    throw 'Release readiness did not normalize a scalar behavioral restriction.'
+}
+
 Write-Host 'LLM Wiki implementation-plan tests passed.'

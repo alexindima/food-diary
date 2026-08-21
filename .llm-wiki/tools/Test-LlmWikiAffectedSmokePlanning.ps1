@@ -86,6 +86,12 @@ if (@($fullFocusedPlan.serialGroups) -notcontains 'read-only-guard') {
 if (@($fullFocusedPlan.serialGroups) -notcontains 'context-bundle') {
     throw 'The context-cache SLA fixture must remain isolated from parallel smoke groups.'
 }
+if (@($fullFocusedPlan.serialGroups) -notcontains 'trace-output') {
+    throw 'Trace-output snapshot creation must not race the parallel code-graph writer.'
+}
+if (@($fullFocusedPlan.parallelGroups) -notcontains 'code-graph') {
+    throw 'The code-graph smoke must remain in the parallel batch ahead of trace-output snapshot creation.'
+}
 $productGroups = @(Get-Groups 'FoodDiary.Application/Users/Example.cs')
 if ($productGroups.Count -ne 0) { throw 'Product-only changes unexpectedly selected Wiki tool smoke.' }
 
