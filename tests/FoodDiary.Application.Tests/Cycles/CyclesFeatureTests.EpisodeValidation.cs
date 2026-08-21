@@ -130,4 +130,28 @@ public partial class CyclesFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.False(repository.WasUpdated);
     }
+
+    [Fact]
+    public async Task DeleteMenstrualEpisodeCommandHandler_WithInferredEpisode_ReturnsValidationFailure() {
+        var user = User.Create("episode-delete-inferred@example.com", "hash");
+        DateOnly date = new(2026, 4, 1);
+        var profile = FoodDiary.Domain.Entities.Tracking.CycleProfile.Create(user.Id, date);
+        profile.UpsertBleedingEntry(
+            date,
+            FoodDiary.Domain.Enums.BleedingType.Bleeding,
+            FoodDiary.Domain.Enums.CycleFlowLevel.Light,
+            painImpact: null,
+            notes: null);
+        FoodDiary.Domain.Entities.Tracking.MenstrualEpisode episode = Assert.Single(profile.MenstrualEpisodes);
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new DeleteMenstrualEpisodeCommandHandler(repository, CreateCurrentUserAccessService(user));
+
+        Result<CycleModel> result = await handler.Handle(
+            new DeleteMenstrualEpisodeCommand(user.Id.Value, profile.Id.Value, episode.Id.Value),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.False(repository.WasUpdated);
+    }
 }

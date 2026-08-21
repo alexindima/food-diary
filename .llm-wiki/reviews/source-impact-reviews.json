@@ -177,13 +177,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "3b6f414ef0b1d6e1d5abcc3e5f01dc5eae5104954ef823df693a692bf58320d7"
+          "sha256": "f8dead9765be8cf3e14530c7796b7b59042fc75c45e69088b232a642dc7fa563"
         }
       ],
-      "reason": "Regenerated architecture, contract, and quality indexes were reviewed; project edges remain valid, no HTTP contract changed, and the focused MCP tests cover the new reader boundary.",
+      "reason": "Quality and architecture indexes were regenerated for the new SQL search evals and neighboring test coverage; the strict 250-case SQL gate, 71 MCP tests, and affected code-graph smoke passed.",
       "baseRef": "HEAD",
-      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
-      "reviewedAtUtc": "2026-08-21T04:29:08.1448182Z"
+      "gitHead": "5ef761aec358fde8b27f29fd63516db9fbd1e9fe",
+      "reviewedAtUtc": "2026-08-21T12:39:07.4366698Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -192,13 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "9f256cc524a86f42588ac281c00f6bfb02e1984bb6304259d2b6ae906fe120f3"
+          "sha256": "d2bb0516151c5da680ff22eaa9beacdce1456b62e3bc3afe86a34f724431bf6e"
         }
       ],
-      "reason": "Generated backend-contract deltas are test-only consumer edges from the concurrently added cycle and MCP recovery tests; no production route, request, response, status, or Swagger contract changed.",
+      "reason": "Backend contract index was regenerated after test-only additions; no production HTTP routes, payloads, status codes, or API snapshots changed, and the generated delta represents test consumer coverage.",
       "baseRef": "HEAD",
-      "gitHead": "3769cdb28a711e9fd6d3f6265c4479b585e3189a",
-      "reviewedAtUtc": "2026-08-21T07:21:06.9841675Z"
+      "gitHead": "5ef761aec358fde8b27f29fd63516db9fbd1e9fe",
+      "reviewedAtUtc": "2026-08-21T12:39:07.9340074Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -736,13 +736,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "6a902ffa80ba7be8cbdd357e03796bd2050ce775d988a011822d2d536d55c88b"
+          "sha256": "fdcb917e73df5ade8f770c4a488ef7799d72210f286993dffa81da215d63cfb8"
         }
       ],
-      "reason": "Sensitive-data delta only shifts the existing read-only SQLite connection builder line after ranking code insertion; no credential handling or sensitive-data boundary changed.",
+      "reason": "Reviewed the regenerated sensitive-data index after adding retrieval tooling and eval cases; no credential handling or private-data flow changed, and the generated index was verified.",
       "baseRef": "HEAD",
-      "gitHead": "fb83194b2f8f1647d051377b88cefa115f767059",
-      "reviewedAtUtc": "2026-08-21T06:45:46.4953096Z"
+      "gitHead": "5ef761aec358fde8b27f29fd63516db9fbd1e9fe",
+      "reviewedAtUtc": "2026-08-21T08:31:35.8353172Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -797,13 +797,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2d54bcaf68705bfba4b745b3c307126edaef088949c7a5694536d190351a0308"
+          "sha256": "3146469543b48a6e6415cb4c352d915b20c30c0cb1c51321b855893412064126"
         }
       ],
-      "reason": "Reviewed reconstructable SQLite recovery: only confirmed corruption codes trigger quarantine under the writer lock; lock, cancellation, generic errors, and worktree races remain non-destructive. Real quarantine/rebuild, 100-case retrieval, 65 MCP tests, and 711 architecture tests pass.",
+      "reason": "Quality and architecture indexes were regenerated for the new SQL search evals and neighboring test coverage; the strict 250-case SQL gate, 71 MCP tests, and affected code-graph smoke passed.",
       "baseRef": "HEAD",
-      "gitHead": "3769cdb28a711e9fd6d3f6265c4479b585e3189a",
-      "reviewedAtUtc": "2026-08-21T07:21:08.1704748Z"
+      "gitHead": "5ef761aec358fde8b27f29fd63516db9fbd1e9fe",
+      "reviewedAtUtc": "2026-08-21T12:39:08.3690993Z"
     },
     {
       "pageId": "workflow-release-readiness",

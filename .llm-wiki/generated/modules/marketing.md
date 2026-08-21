@@ -65,6 +65,7 @@ Source: `FoodDiary.Presentation.Api/Features/Marketing/MarketingAttributionContr
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Marketing/MarketingAttributionCoverageTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Marketing/MarketingConversionRecorderTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Marketing/MarketingDependencyInjectionTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/MarketingModuleExtractionTests.cs`

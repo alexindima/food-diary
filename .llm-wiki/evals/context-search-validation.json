@@ -1,0 +1,318 @@
+{
+  "schemaVersion": 1,
+  "description": "Blind validation corpus authored after structural ranking work and frozen before its first execution. It uses files and formulations outside the tuning corpus and is diagnostic only until repeated runs establish stable thresholds.",
+  "diagnosticLimit": 100,
+  "thresholds": {
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 50,
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "cases": [
+    {
+      "id": "openai-food-http-client",
+      "query": "HTTP client sends food recognition requests to OpenAI",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs"]
+    },
+    {
+      "id": "s3-object-storage-client",
+      "query": "client uploads and reads objects from S3 storage",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Services/S3ObjectStorageClient.cs"]
+    },
+    {
+      "id": "bounded-http-content-reader",
+      "query": "read an HTTP response body with a strict maximum size",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Http/BoundedHttpContentReader.cs"]
+    },
+    {
+      "id": "web-push-delivery-audience",
+      "query": "select users eligible to receive a web push delivery",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Notifications/Services/WebPushDeliveryAudienceService.cs"]
+    },
+    {
+      "id": "notification-preferences-service",
+      "query": "load and update a user's notification delivery preferences",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Notifications/Services/NotificationPreferencesService.cs"]
+    },
+    {
+      "id": "profile-overview-reader-validation",
+      "query": "assemble the current user's profile overview",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Users/Services/ProfileOverviewReadService.cs"]
+    },
+    {
+      "id": "password-hasher",
+      "query": "hash and verify application user passwords",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Infrastructure/Services/PasswordHasher.cs"]
+    },
+    {
+      "id": "wearable-oauth-state",
+      "query": "protect and validate OAuth state for wearable connections",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Infrastructure/Authentication/WearableOAuthStateService.cs"]
+    },
+    {
+      "id": "jwt-token-generator-validation",
+      "query": "generate signed JWT access tokens for authenticated users",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Infrastructure/Authentication/JwtTokenGenerator.cs"]
+    },
+    {
+      "id": "redis-idempotency-store",
+      "query": "reserve API idempotency keys in Redis",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Web.Api/Services/RedisIdempotencyStore.cs"]
+    },
+    {
+      "id": "swagger-standard-errors-filter",
+      "query": "OpenAPI operation filter documents standard error responses",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Web.Api/Swagger/StandardErrorResponsesOperationFilter.cs"]
+    },
+    {
+      "id": "telegram-secret-authorization-filter",
+      "query": "authorize Telegram bot HTTP calls using the configured secret",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Security/TelegramBotSecretAuthorizationFilter.cs"]
+    },
+    {
+      "id": "notification-signalr-hub",
+      "query": "SignalR hub pushes notification updates to connected clients",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Hubs/NotificationHub.cs"]
+    },
+    {
+      "id": "wearable-sync-repository-validation",
+      "query": "persist synchronized wearable measurements and checkpoints",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Wearables/WearableSyncRepository.cs"]
+    },
+    {
+      "id": "user-role-catalog",
+      "query": "read the catalog of assignable user roles from persistence",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Users/UserRoleCatalogService.cs"]
+    },
+    {
+      "id": "current-weight-provider",
+      "query": "retrieve a user's latest recorded weight",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs"]
+    },
+    {
+      "id": "recommendation-bulk-dispatch-repository",
+      "query": "persist bulk dispatch state for dietologist recommendations",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Recommendations/RecommendationBulkDispatchRepository.cs"]
+    },
+    {
+      "id": "recent-item-postcommit-recorder",
+      "query": "record recent item usage only after a successful commit",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs"]
+    },
+    {
+      "id": "recipe-overview-reader-validation",
+      "query": "database reader returns recipe overview details",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs"]
+    },
+    {
+      "id": "weekly-goals-controller-validation",
+      "query": "HTTP endpoints get and update weekly goals",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Features/WeeklyGoals/WeeklyGoalsController.cs"]
+    },
+    {
+      "id": "weight-entries-controller-validation",
+      "query": "API endpoint creates and lists weight entries",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Features/WeightEntries/WeightEntriesController.cs"]
+    },
+    {
+      "id": "update-user-appearance-command",
+      "query": "command changes a user's theme and appearance preferences",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandHandler.cs"]
+    },
+    {
+      "id": "create-checkout-session-command",
+      "query": "command starts a billing checkout session",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs"]
+    },
+    {
+      "id": "billing-webhook-event-validator-validation",
+      "query": "validate a billing webhook event before processing it",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs"]
+    },
+    {
+      "id": "mark-all-notifications-read",
+      "query": "command marks every notification as read",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs"]
+    },
+    {
+      "id": "s3-health-check",
+      "query": "health check verifies access to S3 object storage",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Web.Api/HealthChecks/S3HealthCheck.cs"]
+    },
+    {
+      "id": "unsaved-changes-route-guard",
+      "query": "Angular route guard warns before leaving with unsaved changes",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/guards/unsaved-changes.guard.ts"]
+    },
+    {
+      "id": "admin-panel-launcher",
+      "query": "frontend service opens the administration panel from the main shell",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shell/sidebar/admin-panel-launcher.service.ts"]
+    },
+    {
+      "id": "sidebar-facade",
+      "query": "facade coordinates sidebar state and actions",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shell/sidebar/sidebar.facade.ts"]
+    },
+    {
+      "id": "app-seo-data-utility",
+      "query": "frontend utility builds SEO metadata for application pages",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shell/app-lib/app-seo-data.utils.ts"]
+    },
+    {
+      "id": "ru-mail-inbox-smtp-host",
+      "query": "фоновый SMTP сервис принимает входящие письма в mail inbox",
+      "changeType": "Backend",
+      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs"]
+    },
+    {
+      "id": "mail-inbox-rate-limiter",
+      "query": "sliding window limits inbound SMTP attempts by sender",
+      "changeType": "Backend",
+      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSlidingWindowRateLimiter.cs"]
+    },
+    {
+      "id": "mail-inbox-tls-health",
+      "query": "health check validates local TLS readiness for the inbox",
+      "changeType": "Backend",
+      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxLocalTlsHealthCheck.cs"]
+    },
+    {
+      "id": "mail-relay-outbox-publisher",
+      "query": "hosted service publishes pending mail relay outbox messages",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayOutboxPublisherHostedService.cs"]
+    },
+    {
+      "id": "mail-relay-queue-processor",
+      "query": "background processor claims and delivers queued relay emails",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueProcessorHostedService.cs"]
+    },
+    {
+      "id": "provider-webhook-authorizer",
+      "query": "authorize incoming mail provider webhook requests",
+      "changeType": "Api",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs"]
+    },
+    {
+      "id": "create-mail-suppression-command",
+      "query": "command adds a recipient to the mail relay suppression list",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandHandler.cs"]
+    },
+    {
+      "id": "mail-relay-readiness-query",
+      "query": "query checks whether the mail relay is ready",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Application/Health/CheckMailRelayReadinessQueryHandler.cs"]
+    },
+    {
+      "id": "mail-relay-message-details-query",
+      "query": "query loads details for one queued relay message",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryHandler.cs"]
+    },
+    {
+      "id": "wiki-verification-planner-workflow",
+      "query": "Wiki workflow selects verification stages from change risk",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/verification-planner.md"]
+    },
+    {
+      "id": "wiki-ownership-impact-workflow",
+      "query": "Wiki workflow determines module ownership impact",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/ownership-impact.md"]
+    },
+    {
+      "id": "wiki-runtime-impact-workflow",
+      "query": "Wiki workflow reviews runtime topology impact",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/runtime-impact.md"]
+    },
+    {
+      "id": "wiki-sensitive-data-tool",
+      "query": "PowerShell tool finds sensitive domain data touched by a change",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Find-LlmWikiSensitiveData.ps1"]
+    },
+    {
+      "id": "wiki-runtime-topology-tool",
+      "query": "PowerShell tool finds affected background workers and integrations",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Find-LlmWikiRuntimeTopology.ps1"]
+    },
+    {
+      "id": "wiki-release-readiness-tool",
+      "query": "PowerShell command compiles release readiness evidence",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1"]
+    },
+    {
+      "id": "wiki-task-workspace-initializer",
+      "query": "PowerShell command initializes a bounded Wiki task workspace",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Initialize-LlmWikiTaskWorkspace.ps1"]
+    },
+    {
+      "id": "wiki-dependency-changes-tool",
+      "query": "PowerShell tool reports dependency manifest changes",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1"]
+    },
+    {
+      "id": "wiki-api-compatibility-workflow",
+      "query": "Wiki workflow checks API compatibility and snapshots",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/api-compatibility.md"]
+    },
+    {
+      "id": "wiki-evidence-bundle-workflow",
+      "query": "Wiki workflow assembles an evidence bundle for review",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/evidence-bundle.md"]
+    },
+    {
+      "id": "wiki-index-pipeline-workflow",
+      "query": "Wiki workflow explains rebuilding generated indexes",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/index-pipeline.md"]
+    }
+  ]
+}

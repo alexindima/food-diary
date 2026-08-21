@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "description": "Second blind probe authored after the first validation corpus reached its regression target. Frozen before first execution and kept diagnostic to expose remaining generalization gaps.",
+  "diagnosticLimit": 100,
+  "thresholds": {
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 30,
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "cases": [
+    {
+      "id": "relay-email-transport-probe",
+      "query": "transport submits application email through the mail relay client",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Services/RelayEmailTransport.cs"]
+    },
+    {
+      "id": "web-push-http-handler-factory-probe",
+      "query": "factory creates the HTTP handler used for web push sockets",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs"]
+    },
+    {
+      "id": "billing-public-config-provider-probe",
+      "query": "provide public billing configuration for the active payment provider",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Billing/BillingPublicConfigProvider.cs"]
+    },
+    {
+      "id": "integration-uri-validator-probe",
+      "query": "validate configured integration URLs before startup",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Options/IntegrationUriValidator.cs"]
+    },
+    {
+      "id": "telegram-auth-timestamp-validator-probe",
+      "query": "reject stale Telegram authentication timestamps",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Authentication/TelegramAuthTimestampValidator.cs"]
+    },
+    {
+      "id": "notification-feed-reader-probe",
+      "query": "read the current user's paged notification feed",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Notifications/Services/NotificationFeedReadService.cs"]
+    },
+    {
+      "id": "user-credential-verification-service-probe",
+      "query": "verify a user's current password credential",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Users/Services/UserCredentialVerificationService.cs"]
+    },
+    {
+      "id": "billing-access-service-probe",
+      "query": "decide whether the current user can access premium billing features",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Billing/Services/BillingAccessService.cs"]
+    },
+    {
+      "id": "gamification-calculator-probe",
+      "query": "calculate gamification progress and achievement metrics",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Gamification/Services/GamificationCalculator.cs"]
+    },
+    {
+      "id": "achievement-award-service-probe",
+      "query": "award newly earned achievements to a user",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Gamification/Services/AchievementAwardService.cs"]
+    },
+    {
+      "id": "product-lookup-service-probe",
+      "query": "lookup one product from database persistence",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Services/ProductLookupService.cs"]
+    },
+    {
+      "id": "recipe-access-service-probe",
+      "query": "check whether a user may access a private recipe",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Services/RecipeAccessService.cs"]
+    },
+    {
+      "id": "user-role-membership-service-probe",
+      "query": "add and remove persisted role memberships for a user",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Users/UserRoleMembershipService.cs"]
+    },
+    {
+      "id": "hydration-entry-repository-probe",
+      "query": "persist hydration tracking entries",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Tracking/HydrationEntryRepository.cs"]
+    },
+    {
+      "id": "cycle-repository-probe",
+      "query": "store menstrual cycle tracking records",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Tracking/CycleRepository.cs"]
+    },
+    {
+      "id": "recommendation-comment-repository-probe",
+      "query": "persist comments attached to dietologist recommendations",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Recommendations/RecommendationCommentRepository.cs"]
+    },
+    {
+      "id": "presentation-error-mapper-probe",
+      "query": "map application failures to presentation HTTP errors",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Responses/PresentationErrorHttpMapper.cs"]
+    },
+    {
+      "id": "oversized-request-filter-probe",
+      "query": "reject an HTTP request when its body is too large",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Filters/RejectOversizedRequestAttribute.cs"]
+    },
+    {
+      "id": "authorization-result-handler-probe",
+      "query": "handle API authorization failures and forbidden responses",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Web.Api/Extensions/ApiAuthorizationMiddlewareResultHandler.cs"]
+    },
+    {
+      "id": "notification-test-scheduler-probe",
+      "query": "schedule delivery of a test notification",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Web.Api/Services/NotificationTestScheduler.cs"]
+    },
+    {
+      "id": "logged-in-route-guard-probe",
+      "query": "Angular guard allows routes only for signed in users",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/guards/logged-in.guard.ts"]
+    },
+    {
+      "id": "app-bootstrap-service-probe",
+      "query": "frontend service performs application bootstrap initialization",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/bootstrap/app-bootstrap.service.ts"]
+    },
+    {
+      "id": "autosave-queue-probe",
+      "query": "frontend queue serializes pending autosave operations",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/autosave-queue.ts"]
+    },
+    {
+      "id": "realtime-hub-url-utility-probe",
+      "query": "frontend utility constructs a realtime SignalR hub URL",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/realtime-hub-url.utils.ts"]
+    },
+    {
+      "id": "browser-notification-capability-probe",
+      "query": "detect whether browser notifications are supported and permitted",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/notifications/browser-notification-capability.service.ts"]
+    },
+    {
+      "id": "notification-realtime-service-probe",
+      "query": "connect notification updates to the frontend in realtime",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/notifications/notification-realtime.service.ts"]
+    },
+    {
+      "id": "image-upload-facade-probe",
+      "query": "facade coordinates image upload state and progress",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/image-upload.facade.ts"]
+    },
+    {
+      "id": "quality-score-utility-probe",
+      "query": "frontend utility converts a quality score into a grade",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/quality-score.utils.ts"]
+    },
+    {
+      "id": "wiki-cost-aware-verification-workflow-probe",
+      "query": "Wiki workflow balances verification confidence against execution cost",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/cost-aware-verification.md"]
+    },
+    {
+      "id": "wiki-ownership-impact-tool-probe",
+      "query": "PowerShell tool calculates ownership impact for changed modules",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Get-LlmWikiOwnershipImpact.ps1"]
+    }
+  ]
+}

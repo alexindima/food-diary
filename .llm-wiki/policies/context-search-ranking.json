@@ -7,11 +7,16 @@
     "scorePerMatch": 22,
     "maximumScore": 110
   },
+  "matchedPolicyFileNameAffinity": {
+    "minimumTermLength": 3,
+    "scorePerMatch": 35,
+    "maximumScore": 140
+  },
   "nonTestPenalty": 120,
   "applicationAbstractionPenalty": 35,
   "interfacePathPenalty": 35,
   "agentGuideBoost": 40,
-  "companionFilePenalty": 45,
+  "companionFilePenalty": 100,
   "crossLayerPenalty": 100,
   "queryTermExpansions": {
     "strip": ["sanitize", "privacy", "sensitive"],
@@ -24,7 +29,10 @@
     "http": ["httpclient", "integrations"],
     "reviews": ["review"],
     "recalculate": ["calculate", "update", "updater"],
-    "changes": ["update"],
+    "change": ["mutation", "update"],
+    "changes": ["mutation", "update"],
+    "identities": ["identity"],
+    "utility": ["utils"],
     "english": ["i18n", "localization", "translation"],
     "russian": ["i18n", "localization", "translation"],
     "translation": ["i18n", "localization"],
@@ -44,7 +52,37 @@
     "poison": ["dead", "letter"],
     "calorie": ["nutrition"],
     "macro": ["nutrition"],
-    "verified": ["verify"]
+    "verified": ["verify"],
+    "expired": ["cleanup"],
+    "retention": ["cleanup"],
+    "schedule": ["recurring", "job"],
+    "command": ["handler"],
+    "reader": ["read", "readservice"],
+    "load": ["read"],
+    "ingest": ["ingestion"],
+    "powershell": ["script", "tool"],
+    "unauthenticated": ["auth", "guard"],
+    "navigation": ["guard", "route"],
+    "endpoints": ["endpoint"],
+    "exceptions": ["exception"],
+    "accepts": ["enqueue"],
+    "suppressed": ["suppress"],
+    "saves": ["save"],
+    "themes": ["theme"],
+    "definitions": ["definition"],
+    "workers": ["runtime", "topology"],
+    "finds": ["find"],
+    "initializes": ["initialize"],
+    "loads": ["load"],
+    "adds": ["create"],
+    "checks": ["check"],
+    "passwords": ["password"],
+    "roles": ["role"],
+    "urls": ["url", "uri"],
+    "scheduled": ["schedule"],
+    "signed": ["auth", "logged"],
+    "tests": ["test"],
+    "scenarios": ["scenario"]
   },
   "queryPrefixExpansions": {
     "вычищ": ["sanitize", "privacy", "sensitive"],
@@ -96,7 +134,19 @@
     "главн": ["dashboard"],
     "экран": ["dashboard"],
     "текущ": ["current"],
-    "день": ["day"]
+    "день": ["day"],
+    "период": ["periodic", "recurring", "job"],
+    "запуска": ["run", "hostedservice", "job"],
+    "регистр": ["registration", "hostedservice"],
+    "физическ": ["persistence", "store"],
+    "очеред": ["queue"],
+    "исходящ": ["outbound", "mail"],
+    "оберт": ["adapter"],
+    "браузер": ["browser"],
+    "распозна": ["recognition", "speech"],
+    "голос": ["voice", "speech"],
+    "телеметр": ["telemetry"],
+    "голодан": ["fasting"]
   },
   "pathBoosts": [
     {
@@ -175,6 +225,54 @@
       "minimumMatches": 2,
       "pathPrefixes": ["FoodDiary.Infrastructure/Services/DiaryPdf/"],
       "score": 240
+    },
+    {
+      "id": "powershell-tool-intent",
+      "queryTerms": ["powershell", "sqlite", "graph"],
+      "minimumMatches": 2,
+      "pathPrefixes": [".llm-wiki/tools/"],
+      "score": 300,
+      "directOnly": true
+    },
+    {
+      "id": "wiki-documentation-intent",
+      "queryTerms": ["documentation"],
+      "minimumMatches": 1,
+      "pathPrefixes": [".llm-wiki/workflows/"],
+      "score": 250,
+      "directOnly": true
+    },
+    {
+      "id": "mail-inbox-module-intent",
+      "queryTerms": ["mail", "inbox", "received"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["MailInbox/"],
+      "score": 180,
+      "directOnly": true
+    },
+    {
+      "id": "wiki-workflow-intent",
+      "queryTerms": ["wiki", "workflow"],
+      "minimumMatches": 2,
+      "pathPrefixes": [".llm-wiki/workflows/"],
+      "score": 350,
+      "directOnly": true
+    },
+    {
+      "id": "wiki-test-planning-intent",
+      "queryTerms": ["wiki", "tests", "risk", "scenarios"],
+      "minimumMatches": 3,
+      "pathPrefixes": [".llm-wiki/workflows/"],
+      "score": 350,
+      "directOnly": true
+    },
+    {
+      "id": "repository-root-guidance-intent",
+      "queryTerms": ["repository", "rule"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["AGENTS.md"],
+      "score": 250,
+      "directOnly": true
     }
   ],
   "identityBoosts": [
@@ -183,7 +281,8 @@
       "queryTerms": ["job", "recurring", "background"],
       "minimumMatches": 1,
       "identityTerms": ["job"],
-      "score": 60
+      "score": 60,
+      "identityScope": "file"
     },
     {
       "id": "recovery-job-intent",
@@ -198,7 +297,8 @@
       "queryTerms": ["http", "api", "endpoint", "route"],
       "minimumMatches": 2,
       "identityTerms": ["controller"],
-      "score": 400
+      "score": 400,
+      "identityScope": "file"
     },
     {
       "id": "command-handler-intent",
@@ -212,7 +312,8 @@
       "queryTerms": ["read"],
       "minimumMatches": 1,
       "identityTerms": ["readservice", "reader"],
-      "score": 70
+      "score": 70,
+      "identityScope": "file"
     },
     {
       "id": "reminder-processor-intent",
@@ -238,10 +339,11 @@
     {
       "id": "cleanup-job-intent",
       "queryTerms": ["background", "job", "removes", "expired", "cleanup"],
-      "minimumMatches": 2,
+      "minimumMatches": 3,
       "identityTerms": ["cleanup", "job"],
       "minimumIdentityMatches": 2,
-      "score": 110
+      "score": 110,
+      "identityScope": "file"
     },
     {
       "id": "dispatcher-intent",
@@ -337,21 +439,24 @@
       "queryTerms": ["controller"],
       "minimumMatches": 1,
       "identityTerms": ["controller"],
-      "score": 220
+      "score": 220,
+      "identityScope": "file"
     },
     {
       "id": "explicit-handler-role",
       "queryTerms": ["handler"],
       "minimumMatches": 1,
       "identityTerms": ["handler"],
-      "score": 180
+      "score": 180,
+      "identityScope": "file"
     },
     {
       "id": "explicit-job-role",
       "queryTerms": ["job", "background"],
       "minimumMatches": 1,
       "identityTerms": ["job", "worker", "hostedservice"],
-      "score": 120
+      "score": 120,
+      "identityScope": "file"
     },
     {
       "id": "explicit-script-role",
@@ -362,10 +467,13 @@
     },
     {
       "id": "explicit-repository-role",
-      "queryTerms": ["repository", "persistence", "persist"],
+      "queryTerms": ["repository", "persistence", "persist", "store"],
       "minimumMatches": 1,
-      "identityTerms": ["repository", "persistence"],
-      "score": 90
+      "identityTerms": ["repository"],
+      "score": 400,
+      "directOnly": true,
+      "identityScope": "file",
+      "changeTypes": ["Database"]
     },
     {
       "id": "explicit-selector-role",
@@ -376,10 +484,58 @@
     },
     {
       "id": "explicit-validator-role",
-      "queryTerms": ["reject", "validator"],
+      "queryTerms": ["validate", "verify", "reject", "validator"],
       "minimumMatches": 1,
-      "identityTerms": ["validator"],
-      "score": 110
+      "identityTerms": ["validator", "validationhandler"],
+      "score": 120,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-api-client-role",
+      "queryTerms": ["client"],
+      "minimumMatches": 1,
+      "identityTerms": ["apiclient", "httpclient"],
+      "score": 500,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-adapter-role",
+      "queryTerms": ["adapter"],
+      "minimumMatches": 1,
+      "identityTerms": ["adapter"],
+      "score": 600,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-writer-role",
+      "queryTerms": ["writer"],
+      "minimumMatches": 1,
+      "identityTerms": ["writer"],
+      "score": 400,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "notification-writer-intent",
+      "queryTerms": ["write", "notification"],
+      "minimumMatches": 2,
+      "identityTerms": ["notification", "writer"],
+      "minimumIdentityMatches": 2,
+      "score": 400,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-mapper-role",
+      "queryTerms": ["map", "mapper"],
+      "minimumMatches": 1,
+      "identityTerms": ["mapper"],
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
     },
     {
       "id": "explicit-calculator-role",
@@ -427,7 +583,7 @@
     {
       "id": "administration-mutation-role",
       "queryTerms": ["administrator", "administer", "change", "update"],
-      "minimumMatches": 1,
+      "minimumMatches": 2,
       "identityTerms": ["administrationservice"],
       "score": 500
     },
@@ -484,6 +640,707 @@
       "minimumMatches": 2,
       "identityTerms": ["aipromptprovider"],
       "score": 250
+    },
+    {
+      "id": "cleanup-job-role",
+      "queryTerms": ["cleanup", "job"],
+      "minimumMatches": 2,
+      "identityTerms": ["cleanup", "job"],
+      "minimumIdentityMatches": 2,
+      "score": 400,
+      "identityScope": "file"
+    },
+    {
+      "id": "cleanup-service-role",
+      "queryTerms": ["cleanup", "service"],
+      "minimumMatches": 2,
+      "identityTerms": ["cleanup", "service"],
+      "minimumIdentityMatches": 2,
+      "score": 400,
+      "identityScope": "file"
+    },
+    {
+      "id": "recurring-job-host-role",
+      "queryTerms": ["registration", "hostedservice"],
+      "minimumMatches": 2,
+      "identityTerms": ["recurring", "hostedservice"],
+      "minimumIdentityMatches": 2,
+      "score": 400,
+      "identityScope": "file"
+    },
+    {
+      "id": "queue-store-role",
+      "queryTerms": ["queue", "store"],
+      "minimumMatches": 2,
+      "identityTerms": ["queue", "store"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-reader-role",
+      "queryTerms": ["reader"],
+      "minimumMatches": 1,
+      "identityTerms": ["readservice", "reader"],
+      "score": 400,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-command-handler-role",
+      "queryTerms": ["command"],
+      "minimumMatches": 1,
+      "identityTerms": ["handler"],
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "delivery-ingestion-role",
+      "queryTerms": ["ingestion", "delivery"],
+      "minimumMatches": 2,
+      "identityTerms": ["ingestion", "service"],
+      "minimumIdentityMatches": 2,
+      "score": 300,
+      "identityScope": "file"
+    },
+    {
+      "id": "authentication-guard-role",
+      "queryTerms": ["auth", "guard"],
+      "minimumMatches": 2,
+      "identityTerms": ["guard"],
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "agent-guide-intent",
+      "queryTerms": ["rule", "guidance", "instruction"],
+      "minimumMatches": 1,
+      "identityTerms": ["agents.md"],
+      "score": 300,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "jwt-validation-intent",
+      "queryTerms": ["jwt", "check"],
+      "minimumMatches": 2,
+      "identityTerms": ["jwt", "validator"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "overview-read-service-intent",
+      "queryTerms": ["overview", "read"],
+      "minimumMatches": 2,
+      "identityTerms": ["overview", "readservice"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "query-context-workflow-intent",
+      "queryTerms": ["querying", "context"],
+      "minimumMatches": 2,
+      "identityTerms": ["query", "context"],
+      "minimumIdentityMatches": 2,
+      "score": 300,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "billing-renewal-service-intent",
+      "queryTerms": ["renew", "subscription", "payment"],
+      "minimumMatches": 2,
+      "identityTerms": ["billing", "renewal", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "api-exception-handler-intent",
+      "queryTerms": ["unhandled", "exception"],
+      "minimumMatches": 2,
+      "identityTerms": ["api", "exception", "handler"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "domain-event-interceptor-intent",
+      "queryTerms": ["domain", "event", "save"],
+      "minimumMatches": 2,
+      "identityTerms": ["domain", "event", "interceptor"],
+      "minimumIdentityMatches": 3,
+      "score": 300,
+      "identityScope": "file"
+    },
+    {
+      "id": "mail-retention-host-intent",
+      "queryTerms": ["hosted", "retention", "inbox"],
+      "minimumMatches": 2,
+      "identityTerms": ["retention", "hostedservice"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "mail-suppression-policy-intent",
+      "queryTerms": ["suppress", "delivery", "recipient"],
+      "minimumMatches": 2,
+      "identityTerms": ["suppression", "policy"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "dashboard-statistics-reader-intent",
+      "queryTerms": ["dashboard", "statistics", "read"],
+      "minimumMatches": 3,
+      "identityTerms": ["dashboard", "statistics", "readservice"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "version-controller-intent",
+      "queryTerms": ["api", "version"],
+      "minimumMatches": 2,
+      "identityTerms": ["version", "controller"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "frontend-theme-service-intent",
+      "queryTerms": ["light", "dark", "theme"],
+      "minimumMatches": 2,
+      "identityTerms": ["theme", "service"],
+      "minimumIdentityMatches": 2,
+      "score": 300,
+      "identityScope": "file"
+    },
+    {
+      "id": "frontend-marketing-attribution-service-intent",
+      "queryTerms": ["campaign", "attribution", "client"],
+      "minimumMatches": 2,
+      "identityTerms": ["marketing", "attribution", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 300,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "localized-tour-service-intent",
+      "queryTerms": ["localized", "tour", "definition"],
+      "minimumMatches": 2,
+      "identityTerms": ["localized", "tour", "definition"],
+      "minimumIdentityMatches": 3,
+      "score": 300,
+      "identityScope": "file"
+    },
+    {
+      "id": "enqueue-email-command-intent",
+      "queryTerms": ["enqueue", "email", "queue"],
+      "minimumMatches": 2,
+      "identityTerms": ["enqueue", "email", "handler"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "powershell-code-graph-manager-intent",
+      "queryTerms": ["powershell", "command", "graph"],
+      "minimumMatches": 3,
+      "identityTerms": ["manage", "codegraph"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "sql-evaluation-measure-intent",
+      "queryTerms": ["measure", "reciprocal", "rank"],
+      "minimumMatches": 2,
+      "identityTerms": ["measure", "sql", "context", "evaluation"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "code-graph-regression-test-intent",
+      "queryTerms": ["regression", "test", "graph"],
+      "minimumMatches": 2,
+      "identityTerms": ["test", "codegraph"],
+      "minimumIdentityMatches": 2,
+      "score": 300,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "powershell-command-executor-intent",
+      "queryTerms": ["powershell", "command", "telemetry", "stage", "mcp"],
+      "minimumMatches": 3,
+      "identityTerms": ["powershell", "command", "executor"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-powershell-file-intent",
+      "queryTerms": ["powershell"],
+      "minimumMatches": 1,
+      "identityTerms": [".ps1"],
+      "score": 550,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-password-hasher-intent",
+      "queryTerms": ["hash", "password"],
+      "minimumMatches": 2,
+      "identityTerms": ["password", "hasher"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-hub-role",
+      "queryTerms": ["hub", "signalr"],
+      "minimumMatches": 1,
+      "identityTerms": ["hub"],
+      "score": 250,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-facade-role",
+      "queryTerms": ["facade"],
+      "minimumMatches": 1,
+      "identityTerms": ["facade"],
+      "score": 250,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-authorizer-role",
+      "queryTerms": ["authorize", "authorizer"],
+      "minimumMatches": 1,
+      "identityTerms": ["authorizer", "authorizationfilter"],
+      "score": 300,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-query-handler-role",
+      "queryTerms": ["query", "load", "check"],
+      "minimumMatches": 2,
+      "identityTerms": ["queryhandler"],
+      "score": 300,
+      "identityScope": "file"
+    },
+    {
+      "id": "all-items-command-intent",
+      "queryTerms": ["all", "every", "command"],
+      "minimumMatches": 2,
+      "identityTerms": ["all", "handler"],
+      "minimumIdentityMatches": 2,
+      "score": 300,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "user-role-catalog-intent",
+      "queryTerms": ["user", "role", "catalog"],
+      "minimumMatches": 3,
+      "identityTerms": ["user", "role", "catalog"],
+      "minimumIdentityMatches": 3,
+      "score": 600,
+      "identityScope": "file"
+    },
+    {
+      "id": "current-weight-provider-intent",
+      "queryTerms": ["latest", "weight", "user"],
+      "minimumMatches": 2,
+      "identityTerms": ["current", "weight", "provider"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "seo-utility-intent",
+      "queryTerms": ["seo", "utility", "metadata"],
+      "minimumMatches": 2,
+      "identityTerms": ["seo", "utils"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "notification-preferences-service-intent",
+      "queryTerms": ["notification", "preferences", "update"],
+      "minimumMatches": 2,
+      "identityTerms": ["notification", "preferences", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 300,
+      "identityScope": "file"
+    },
+    {
+      "id": "openai-http-client-intent",
+      "queryTerms": ["openai", "http", "client"],
+      "minimumMatches": 2,
+      "identityTerms": ["openai", "client"],
+      "minimumIdentityMatches": 2,
+      "score": 700,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "profile-overview-reader-intent",
+      "queryTerms": ["assemble", "profile", "overview"],
+      "minimumMatches": 2,
+      "identityTerms": ["profile", "overview", "readservice"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "oauth-state-service-intent",
+      "queryTerms": ["oauth", "state", "wearable"],
+      "minimumMatches": 2,
+      "identityTerms": ["oauth", "state", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "weight-entries-controller-intent",
+      "queryTerms": ["weight", "entries", "endpoint"],
+      "minimumMatches": 2,
+      "identityTerms": ["weight", "entries", "controller"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "sidebar-facade-intent",
+      "queryTerms": ["sidebar", "facade"],
+      "minimumMatches": 2,
+      "identityTerms": ["sidebar", "facade"],
+      "minimumIdentityMatches": 2,
+      "score": 300,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "verification-planner-workflow-intent",
+      "queryTerms": ["verification", "risk", "workflow"],
+      "minimumMatches": 2,
+      "identityTerms": ["verification", "planner"],
+      "minimumIdentityMatches": 2,
+      "score": 300,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "index-pipeline-workflow-intent",
+      "queryTerms": ["indexes", "rebuild", "workflow"],
+      "minimumMatches": 2,
+      "identityTerms": ["index", "pipeline"],
+      "minimumIdentityMatches": 2,
+      "score": 300,
+      "identityScope": "file"
+    },
+    {
+      "id": "find-sensitive-data-tool-intent",
+      "queryTerms": ["find", "sensitive", "data"],
+      "minimumMatches": 2,
+      "identityTerms": ["find", "sensitive", "data"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "find-runtime-topology-tool-intent",
+      "queryTerms": ["find", "runtime", "topology"],
+      "minimumMatches": 2,
+      "identityTerms": ["find", "runtime", "topology"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "release-readiness-tool-intent",
+      "queryTerms": ["release", "readiness", "powershell"],
+      "minimumMatches": 2,
+      "identityTerms": ["release", "readiness"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "initialize-workspace-tool-intent",
+      "queryTerms": ["initialize", "workspace", "powershell"],
+      "minimumMatches": 2,
+      "identityTerms": ["initialize", "workspace"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "lookup-service-intent",
+      "queryTerms": ["lookup"],
+      "minimumMatches": 1,
+      "identityTerms": ["lookup", "service"],
+      "minimumIdentityMatches": 2,
+      "score": 500,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "scheduler-intent",
+      "queryTerms": ["schedule"],
+      "minimumMatches": 1,
+      "identityTerms": ["scheduler"],
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "configuration-provider-intent",
+      "queryTerms": ["configuration", "config", "provider", "provide"],
+      "minimumMatches": 2,
+      "identityTerms": ["config", "provider"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "credential-verification-service-intent",
+      "queryTerms": ["verify", "password", "credential"],
+      "minimumMatches": 3,
+      "identityTerms": ["credential", "verification", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 400,
+      "identityScope": "file"
+    },
+    {
+      "id": "application-cleanup-service-intent",
+      "queryTerms": ["cleanup", "application", "layer"],
+      "minimumMatches": 2,
+      "identityTerms": ["cleanup", "service"],
+      "minimumIdentityMatches": 2,
+      "score": 400,
+      "identityScope": "file"
+    },
+    {
+      "id": "identity-mutation-service-intent",
+      "queryTerms": ["change", "mutation", "persisted", "identity"],
+      "minimumMatches": 2,
+      "identityTerms": ["identity", "mutation", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 450,
+      "identityScope": "file",
+      "changeTypes": ["Backend"]
+    },
+    {
+      "id": "api-host-telemetry-intent",
+      "queryTerms": ["api", "host", "telemetry", "counter", "timing"],
+      "minimumMatches": 3,
+      "identityTerms": ["api", "telemetry"],
+      "minimumIdentityMatches": 2,
+      "score": 400,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "viewport-observer-service-intent",
+      "queryTerms": ["viewport", "size", "observe", "service"],
+      "minimumMatches": 2,
+      "identityTerms": ["viewport", "service"],
+      "minimumIdentityMatches": 2,
+      "score": 400,
+      "identityScope": "file"
+    },
+    {
+      "id": "browser-storage-service-intent",
+      "queryTerms": ["browser", "storage", "read", "write"],
+      "minimumMatches": 2,
+      "identityTerms": ["browser", "storage", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 400,
+      "identityScope": "file"
+    },
+    {
+      "id": "google-identity-service-intent",
+      "queryTerms": ["google", "identity", "authentication", "initialize"],
+      "minimumMatches": 2,
+      "identityTerms": ["google", "identity", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 400,
+      "identityScope": "file",
+      "changeTypes": ["Frontend"]
+    },
+    {
+      "id": "wiki-query-cache-intent",
+      "queryTerms": ["wiki", "query", "cache", "fingerprint", "dependency"],
+      "minimumMatches": 3,
+      "identityTerms": ["query", "cache"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "requirement-intelligence-workflow-intent",
+      "queryTerms": ["requirement", "actionable", "task", "intent"],
+      "minimumMatches": 2,
+      "identityTerms": ["requirement", "intelligence"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "achievement-award-service-intent",
+      "queryTerms": ["award", "achievement", "earned"],
+      "minimumMatches": 2,
+      "identityTerms": ["achievement", "award", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "oversized-request-filter-intent",
+      "queryTerms": ["reject", "request", "large", "oversized"],
+      "minimumMatches": 2,
+      "identityTerms": ["reject", "oversized", "request"],
+      "minimumIdentityMatches": 3,
+      "score": 400,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-utility-role",
+      "queryTerms": ["utility"],
+      "minimumMatches": 1,
+      "identityTerms": ["utils"],
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "logged-in-guard-intent",
+      "queryTerms": ["guard", "auth", "logged"],
+      "minimumMatches": 3,
+      "identityTerms": ["logged", "guard"],
+      "minimumIdentityMatches": 2,
+      "score": 400,
+      "identityScope": "file"
+    },
+    {
+      "id": "browser-notification-capability-intent",
+      "queryTerms": ["browser", "notification", "supported", "permitted"],
+      "minimumMatches": 2,
+      "identityTerms": ["browser", "notification", "capability", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 400,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "ownership-impact-tool-intent",
+      "queryTerms": ["ownership", "impact", "powershell"],
+      "minimumMatches": 2,
+      "identityTerms": ["ownership", "impact"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "test-plan-workflow-intent",
+      "queryTerms": ["test", "risk", "scenario"],
+      "minimumMatches": 2,
+      "identityTerms": ["test", "plan"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "notification-feed-reader-intent",
+      "queryTerms": ["notification", "feed", "read"],
+      "minimumMatches": 2,
+      "identityTerms": ["notification", "feed", "readservice"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "identityScope": "file"
+    },
+    {
+      "id": "cost-aware-verification-workflow-intent",
+      "queryTerms": ["cost", "verification", "workflow"],
+      "minimumMatches": 3,
+      "identityTerms": ["cost", "verification"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "recipe-access-service-intent",
+      "queryTerms": ["recipe", "access"],
+      "minimumMatches": 2,
+      "identityTerms": ["recipe", "access", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "billing-access-service-intent",
+      "queryTerms": ["billing", "access", "premium"],
+      "minimumMatches": 2,
+      "identityTerms": ["billing", "access", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "gamification-calculator-intent",
+      "queryTerms": ["calculate", "gamification", "achievement"],
+      "minimumMatches": 3,
+      "identityTerms": ["gamification", "calculator"],
+      "minimumIdentityMatches": 2,
+      "score": 350,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "achievement-definition-administration-intent",
+      "queryTerms": ["administer", "gamification", "achievement", "definition"],
+      "minimumMatches": 3,
+      "identityTerms": ["achievement", "definition", "administration", "service"],
+      "minimumIdentityMatches": 4,
+      "score": 400,
+      "identityScope": "file"
+    },
+    {
+      "id": "shopping-list-creation-intent",
+      "queryTerms": ["create", "shopping", "list", "meal", "plan"],
+      "minimumMatches": 3,
+      "identityTerms": ["shopping", "list", "creation", "service"],
+      "minimumIdentityMatches": 4,
+      "score": 350,
+      "identityScope": "file"
     }
   ]
 }

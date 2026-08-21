@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "description": "Fourth blind context-search probe authored after probe-2 was promoted. Frozen before first execution and kept diagnostic.",
+  "diagnosticLimit": 100,
+  "thresholds": {
+    "minimumTop1Rate": 0.55,
+    "minimumTop10Rate": 0.9,
+    "minimumMeanReciprocalRank": 0.65
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 30,
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "cases": [
+    {
+      "id": "admin-user-login-reader-probe-3",
+      "query": "read administrator login events and device summaries",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Admin/Services/AdminUserLoginReadService.cs"]
+    },
+    {
+      "id": "recommendation-discussion-reader-probe-3",
+      "query": "load comments in a dietologist recommendation discussion",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Dietologist/Services/RecommendationDiscussionReadService.cs"]
+    },
+    {
+      "id": "meal-manual-item-appender-probe-3",
+      "query": "append manually entered nutrition items to a meal",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Meals/Services/MealManualItemAppender.cs"]
+    },
+    {
+      "id": "image-asset-cleanup-service-probe-3",
+      "query": "application service deletes unused and orphaned image assets",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Images/Services/ImageAssetCleanupService.cs"]
+    },
+    {
+      "id": "fasting-check-in-reminder-planner-probe-3",
+      "query": "plan due reminders for missing fasting check-ins",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Fasting/Services/FastingCheckInReminderPlanner.cs"]
+    },
+    {
+      "id": "authentication-token-service-probe-3",
+      "query": "issue authentication access and refresh tokens from a principal",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Services/AuthenticationTokenService.cs"]
+    },
+    {
+      "id": "shopping-list-item-builder-probe-3",
+      "query": "build and validate normalized product and custom shopping list items",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListItemBuilder.cs"]
+    },
+    {
+      "id": "dashboard-statistics-mapper-probe-3",
+      "query": "map aggregated statistics into dashboard calorie models",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Dashboard/Services/DashboardStatisticsMapper.cs"]
+    },
+    {
+      "id": "marketing-conversion-recorder-probe-3",
+      "query": "record a marketing conversion when premium starts",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Marketing/Services/MarketingConversionRecorder.cs"]
+    },
+    {
+      "id": "notification-client-refresh-service-probe-3",
+      "query": "refresh notification state for connected clients",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Notifications/Services/NotificationClientRefreshService.cs"]
+    },
+    {
+      "id": "openai-error-metadata-probe-3",
+      "query": "summarize safe diagnostic metadata from an OpenAI error response",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Services/OpenAi/OpenAiErrorMetadata.cs"]
+    },
+    {
+      "id": "stripe-billing-gateway-probe-3",
+      "query": "Stripe gateway creates checkout and customer portal sessions",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Billing/StripeBillingGateway.cs"]
+    },
+    {
+      "id": "smtp-relay-delivery-transport-probe-3",
+      "query": "SMTP transport sends relay email and converts HTML body to text",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/SmtpRelayDeliveryTransport.cs"]
+    },
+    {
+      "id": "mail-inbox-runtime-role-validator-probe-3",
+      "query": "validate PostgreSQL runtime role permissions for the mail inbox",
+      "changeType": "Database",
+      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleValidator.cs"]
+    },
+    {
+      "id": "relay-request-authorizer-probe-3",
+      "query": "authorize inbound mail relay HTTP requests",
+      "changeType": "Api",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Presentation/Security/RelayRequestAuthorizer.cs"]
+    },
+    {
+      "id": "browser-window-service-probe-3",
+      "query": "frontend service safely exposes browser window URLs and media queries",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/platform/browser-window.service.ts"]
+    },
+    {
+      "id": "browser-performance-service-probe-3",
+      "query": "frontend service observes paint and navigation performance entries",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/platform/browser-performance.service.ts"]
+    },
+    {
+      "id": "client-telemetry-session-service-probe-3",
+      "query": "frontend service creates and stores a client telemetry session identifier",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/observability/client-telemetry-session.service.ts"]
+    },
+    {
+      "id": "validation-error-utility-probe-3",
+      "query": "frontend utility resolves translated form validation errors",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/validation-error.utils.ts"]
+    },
+    {
+      "id": "localized-number-pipe-probe-3",
+      "query": "Angular pipe formats a number using the active locale",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/i18n/localized-number.pipe.ts"]
+    },
+    {
+      "id": "localization-service-probe-3",
+      "query": "frontend service changes language and loads application translations",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/i18n/localization.service.ts"]
+    },
+    {
+      "id": "ai-food-api-service-probe-3",
+      "query": "frontend API service analyzes food images and calculates nutrition",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/api/ai-food.service.ts"]
+    },
+    {
+      "id": "token-storage-service-probe-3",
+      "query": "frontend service stores access tokens refresh tokens and user identity",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/services/token-storage.service.ts"]
+    },
+    {
+      "id": "jwt-decoder-service-probe-3",
+      "query": "frontend service decodes JWT payloads and extracts the user id",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/services/jwt-decoder.service.ts"]
+    },
+    {
+      "id": "mobile-shell-start-guard-probe-3",
+      "query": "route guard redirects startup inside the mobile shell runtime",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/platform/mobile-shell-start.guard.ts"]
+    },
+    {
+      "id": "confidence-ledger-workflow-probe-3",
+      "query": "Wiki workflow records confidence claims and supporting evidence",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/confidence-ledger.md"]
+    },
+    {
+      "id": "context-budget-workflow-probe-3",
+      "query": "Wiki workflow optimizes context selection under a token budget",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/context-budget-optimization.md"]
+    },
+    {
+      "id": "risk-calibration-workflow-probe-3",
+      "query": "Wiki workflow calibrates verification depth from change risk",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/risk-calibration.md"]
+    },
+    {
+      "id": "domain-data-finder-probe-3",
+      "query": "PowerShell tool finds affected sensitive domain data boundaries",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Find-LlmWikiDomainData.ps1"]
+    },
+    {
+      "id": "rollout-plan-tool-probe-3",
+      "query": "PowerShell command compiles a migration and rollout plan",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Get-LlmWikiRolloutPlan.ps1"]
+    }
+  ]
+}

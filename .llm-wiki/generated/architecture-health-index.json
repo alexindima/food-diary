@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 151,
     "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 20,
+    "criticalSymbolsWithoutTestReferences": 19,
     "explicitDebtMarkers": 4
   },
   "projectDependencyViolations": [],
@@ -5361,14 +5361,6 @@
       "role": "Validator",
       "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "IntegrationUriValidator",
-      "role": "Validator",
-      "path": "FoodDiary.Integrations/Options/IntegrationUriValidator.cs",
-      "line": 2,
       "testReferenceCount": 0,
       "testReferences": []
     },

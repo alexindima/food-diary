@@ -238,6 +238,8 @@ public sealed class IntegrationOptionsTests {
 
     [Theory]
     [InlineData("mailto:admin@example.com", true)]
+    [InlineData("mailto:not-an-address", false)]
+    [InlineData("mailto:admin@example.com#fragment", false)]
     [InlineData("https://example.com/contact", true)]
     [InlineData("http://example.com/contact", false)]
     [InlineData("file:///tmp/contact", false)]
@@ -251,6 +253,8 @@ public sealed class IntegrationOptionsTests {
     [Theory]
     [InlineData("/", true)]
     [InlineData("/notifications", true)]
+    [InlineData("/\\attacker.example/notifications", false)]
+    [InlineData("/notifications\nignored", false)]
     [InlineData("https://app.example.com/notifications", true)]
     [InlineData("//attacker.example/notifications", false)]
     [InlineData("javascript:alert(1)", false)]

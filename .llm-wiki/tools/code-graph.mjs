@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import { dirname, extname, resolve } from 'node:path';
+import { basename, dirname, extname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
 
@@ -869,24 +869,57 @@ function rankedTrace(database, query, limit, filters = {}) {
 }
 
 function searchTerms(query) {
+  const direct = directSearchTerms(query);
+  const expanded = [...direct];
+  for (const term of direct) expanded.push(...englishMorphologicalVariants(term));
+  expanded.push(...configuredSearchTermExpansions(direct));
+  return [...new Set(expanded)].slice(0, Number(contextSearchRanking.maximumQueryTerms ?? 24));
+}
+
+function rankingTerms(query) {
+  const direct = directSearchTerms(query);
+  return [...new Set([...direct, ...configuredSearchTermExpansions(direct)])]
+    .slice(0, Number(contextSearchRanking.maximumQueryTerms ?? 24));
+}
+
+function directSearchTerms(query) {
   const stopTerms = new Set(contextSearchRanking.stopTerms ?? []);
-  const direct = [...new Set(expandSearchText(query)
+  return [...new Set(expandSearchText(query)
     .toLowerCase()
     .match(/[\p{L}\p{N}][\p{L}\p{N}_-]*/gu) ?? [])]
     .filter((term) => term.length >= 2 && !stopTerms.has(term));
-  const expanded = [...direct];
+}
+
+function configuredSearchTermExpansions(direct) {
+  const expanded = [];
   for (const term of direct) {
     expanded.push(...(contextSearchRanking.queryTermExpansions?.[term] ?? []));
     for (const [prefix, expansions] of Object.entries(contextSearchRanking.queryPrefixExpansions ?? {})) {
       if (term.startsWith(prefix)) expanded.push(...expansions);
     }
   }
-  return [...new Set(expanded)].slice(0, Number(contextSearchRanking.maximumQueryTerms ?? 24));
+  return expanded;
+}
+
+function englishMorphologicalVariants(term) {
+  if (!/^[a-z]+$/.test(term)) return [];
+  const variants = [];
+  if (term.length > 4 && term.endsWith('ies')) variants.push(`${term.slice(0, -3)}y`);
+  else if (term.length > 3 && term.endsWith('s') && !term.endsWith('ss')) variants.push(term.slice(0, -1));
+  if (term.length > 5 && term.endsWith('ing')) {
+    const stem = term.slice(0, -3);
+    variants.push(stem, `${stem}e`);
+    if (stem.length > 2 && stem.at(-1) === stem.at(-2)) variants.push(stem.slice(0, -1));
+  }
+  if (term.length > 4 && term.endsWith('ed')) variants.push(term.slice(0, -2), term.slice(0, -1));
+  return variants;
 }
 
 function searchContext(database, query, limit, filters = {}) {
   const started = performance.now();
   const terms = searchTerms(query);
+  const directTerms = directSearchTerms(query);
+  const boostTerms = rankingTerms(query);
   const fingerprint = database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value ?? null;
   const indexedDocuments = database.prepare('SELECT COUNT(*) count FROM context_search').get().count;
   if (terms.length === 0 || !fingerprint || indexedDocuments === 0) {
@@ -960,6 +993,8 @@ function searchContext(database, query, limit, filters = {}) {
     const affinity = contextSearchRanking.pathTermAffinity ?? {};
     const searchablePath = expandSearchText(path).toLowerCase();
     const searchableIdentity = `${searchablePath} ${normalizedTitle}`;
+    const searchableFileIdentity = expandSearchText(basename(path)).toLowerCase();
+    let matchedRankingPolicy = false;
     const identityMatches = terms.filter((term) =>
       term.length >= Number(affinity.minimumTermLength ?? 3) && searchableIdentity.includes(term));
     const identityScore = Math.min(
@@ -970,23 +1005,43 @@ function searchContext(database, query, limit, filters = {}) {
       reasons.push(`path/title affinity ${identityMatches.join(', ')}`);
     }
     for (const boost of contextSearchRanking.identityBoosts ?? []) {
-      const queryMatches = (boost.queryTerms ?? []).filter((term) => terms.includes(String(term).toLowerCase()));
+      const matchesChangeType = !(boost.changeTypes?.length)
+        || boost.changeTypes.some((candidate) => String(candidate).toLowerCase() === changeType);
+      if (!matchesChangeType) continue;
+      const eligibleQueryTerms = boost.directOnly ? directTerms : boostTerms;
+      const eligibleIdentity = boost.identityScope === 'file' ? searchableFileIdentity : searchablePath;
+      const queryMatches = (boost.queryTerms ?? []).filter((term) => eligibleQueryTerms.includes(String(term).toLowerCase()));
       const identityMatchesBoost = (boost.identityTerms ?? []).filter((term) =>
-        searchablePath.includes(String(term).toLowerCase()));
+        eligibleIdentity.includes(String(term).toLowerCase()));
       if (queryMatches.length >= Number(boost.minimumMatches ?? 1)
         && identityMatchesBoost.length >= Number(boost.minimumIdentityMatches ?? 1)) {
         score += Number(boost.score ?? 0);
+        matchedRankingPolicy ||= boost.identityScope === 'file';
         reasons.push(`ranking policy ${boost.id}`);
       }
     }
     for (const boost of contextSearchRanking.pathBoosts ?? []) {
-      const matchedTerms = (boost.queryTerms ?? []).filter((term) => terms.includes(String(term).toLowerCase()));
+      const eligibleQueryTerms = boost.directOnly ? directTerms : boostTerms;
+      const matchedTerms = (boost.queryTerms ?? []).filter((term) => eligibleQueryTerms.includes(String(term).toLowerCase()));
       const matchesIntent = matchedTerms.length >= Number(boost.minimumMatches ?? 1);
       const matchesPath = (boost.pathPrefixes ?? []).some((pathPrefix) =>
         normalizedPath.startsWith(String(pathPrefix).replaceAll('\\', '/').toLowerCase()));
       if (matchesIntent && matchesPath) {
         score += Number(boost.score ?? 0);
+        matchedRankingPolicy = true;
         reasons.push(`ranking policy ${boost.id}`);
+      }
+    }
+    if (matchedRankingPolicy) {
+      const roleAffinity = contextSearchRanking.matchedPolicyFileNameAffinity ?? {};
+      const fileNameMatches = boostTerms.filter((term) =>
+        term.length >= Number(roleAffinity.minimumTermLength ?? 3) && searchableFileIdentity.includes(term));
+      const roleAffinityScore = Math.min(
+        fileNameMatches.length * Number(roleAffinity.scorePerMatch ?? 0),
+        Number(roleAffinity.maximumScore ?? 0));
+      if (roleAffinityScore > 0) {
+        score += roleAffinityScore;
+        reasons.push(`matched-role file-name affinity ${fileNameMatches.join(', ')}`);
       }
     }
     const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(path);

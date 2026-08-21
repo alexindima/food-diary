@@ -1,0 +1,438 @@
+{
+  "schemaVersion": 1,
+  "description": "Frozen generalization corpus authored before ranking changes. It stresses conversational Russian and English, neighboring implementation roles, cross-layer disambiguation, frontend utilities, service boundaries, and Wiki operations. Its pre-tuning baseline was 29/70 top-1, 54/70 top-10, and 0.5498 MRR.",
+  "diagnosticLimit": 100,
+  "thresholds": {
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 70,
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "cases": [
+    {
+      "id": "fitbit-http-client",
+      "query": "client that talks to Fitbit for wearable health data",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Wearables/FitbitClient.cs"]
+    },
+    {
+      "id": "ru-weekly-goal-job",
+      "query": "какая периодическая задача запускает напоминания по недельным целям",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/WeeklyGoalReminderJob.cs"]
+    },
+    {
+      "id": "user-login-event-cleanup-job",
+      "query": "delete expired user login audit events on a schedule",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/UserLoginEventCleanupJob.cs"]
+    },
+    {
+      "id": "ru-recurring-job-host",
+      "query": "где при старте приложения регистрируются и запускаются периодические задания",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"]
+    },
+    {
+      "id": "web-push-outbox-job",
+      "query": "scheduled job drains the notification web push outbox",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/NotificationWebPushOutboxJob.cs"]
+    },
+    {
+      "id": "ru-fasting-telemetry-cleanup-job",
+      "query": "фоновая очистка старой телеметрии интервального голодания",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/FastingTelemetryCleanupJob.cs"]
+    },
+    {
+      "id": "billing-webhook-inbox-job",
+      "query": "process queued billing webhook inbox records in the background",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/BillingWebhookInboxJob.cs"]
+    },
+    {
+      "id": "achievement-outbox-job",
+      "query": "job that consumes pending achievement evaluation outbox items",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs"]
+    },
+    {
+      "id": "dkim-signing",
+      "query": "sign outgoing relay email with DKIM",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DkimSigningService.cs"]
+    },
+    {
+      "id": "ru-mail-relay-queue-store",
+      "query": "где физически храним очередь исходящих писем mail relay",
+      "changeType": "Database",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.cs"]
+    },
+    {
+      "id": "mx-dns-resolver",
+      "query": "resolve recipient domain MX records through DNS",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DnsClientMxResolver.cs"]
+    },
+    {
+      "id": "mail-relay-delivery-policy",
+      "query": "configured policy decides how mail relay delivers messages",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfiguredMailRelayDeliveryPolicy.cs"]
+    },
+    {
+      "id": "web-push-endpoint-validation",
+      "query": "validate a web push subscription endpoint before sending",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Services/WebPushEndpointValidationHandler.cs"]
+    },
+    {
+      "id": "paddle-api-client",
+      "query": "HTTP client calls Paddle billing API",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Billing/PaddleApiClient.cs"]
+    },
+    {
+      "id": "billing-url-validation",
+      "query": "reject unsafe redirect URLs supplied by a billing provider",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Billing/BillingUrlValidator.cs"]
+    },
+    {
+      "id": "telegram-widget-validation",
+      "query": "validate signed data returned by the Telegram login widget",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Authentication/TelegramLoginWidgetValidator.cs"]
+    },
+    {
+      "id": "google-token-validation",
+      "query": "verify a Google identity credential received during sign in",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Authentication/GoogleTokenValidator.cs"]
+    },
+    {
+      "id": "pdf-remote-image-policy",
+      "query": "prevent unsafe remote image addresses in diary PDF generation",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Infrastructure/Services/DiaryPdf/RemoteImageAddressPolicy.cs"]
+    },
+    {
+      "id": "database-command-telemetry",
+      "query": "measure and log slow Entity Framework database commands",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Services/DatabaseCommandTelemetryInterceptor.cs"]
+    },
+    {
+      "id": "admin-sso-redis-code-store",
+      "query": "store short lived admin single sign on codes in Redis",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Web.Api/Services/RedisAdminSsoCodeStore.cs"]
+    },
+    {
+      "id": "security-headers-middleware",
+      "query": "middleware adds browser security response headers",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Web.Api/Extensions/SecurityHeadersMiddleware.cs"]
+    },
+    {
+      "id": "request-observability-middleware",
+      "query": "capture request metrics and tracing around every API call",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Web.Api/Extensions/RequestObservabilityMiddleware.cs"]
+    },
+    {
+      "id": "jwt-token-use-validator",
+      "query": "check whether a JWT can still be used after session revocation",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Web.Api/Extensions/JwtTokenUseValidator.cs"]
+    },
+    {
+      "id": "impersonation-access-guard",
+      "query": "block forbidden operations while an administrator impersonates a user",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Web.Api/Extensions/ImpersonationAccessGuardMiddleware.cs"]
+    },
+    {
+      "id": "api-exception-handler",
+      "query": "turn unhandled application exceptions into API problem responses",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs"]
+    },
+    {
+      "id": "presentation-idempotency-filter",
+      "query": "API filter rejects a duplicate request with the same idempotency key",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs"]
+    },
+    {
+      "id": "email-template-repository",
+      "query": "persist administrator managed email templates",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Admin/EmailTemplateRepository.cs"]
+    },
+    {
+      "id": "refresh-token-session-repository",
+      "query": "database repository for refresh token sessions and revocation",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs"]
+    },
+    {
+      "id": "inactive-user-cleanup-service",
+      "query": "service deletes user accounts after the inactivity retention window",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Users/UserCleanupService.cs"]
+    },
+    {
+      "id": "web-push-outbox-processor",
+      "query": "processor sends pending notification outbox entries to web push",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Notifications/NotificationWebPushOutboxProcessor.cs"]
+    },
+    {
+      "id": "achievement-outbox-processor",
+      "query": "evaluate achievements from persisted outbox records",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs"]
+    },
+    {
+      "id": "dashboard-statistics-reader",
+      "query": "read aggregate dashboard statistics from persistence",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs"]
+    },
+    {
+      "id": "recipe-overview-reader",
+      "query": "load compact recipe overview cards from the database",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs"]
+    },
+    {
+      "id": "product-overview-reader",
+      "query": "database reader returns product overview information",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs"]
+    },
+    {
+      "id": "open-food-facts-cache-repository",
+      "query": "persist cached products received from Open Food Facts",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/OpenFoodFacts/OpenFoodFactsProductCacheRepository.cs"]
+    },
+    {
+      "id": "domain-event-dispatch-interceptor",
+      "query": "dispatch domain events when Entity Framework saves changes",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Interceptors/DomainEventDispatchInterceptor.cs"]
+    },
+    {
+      "id": "collaboration-audit-interceptor",
+      "query": "audit collaborative entity changes during database save",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs"]
+    },
+    {
+      "id": "outbox-processing-policy",
+      "query": "policy controls retry and batch behavior for outbox processing",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingPolicy.cs"]
+    },
+    {
+      "id": "wearables-controller",
+      "query": "HTTP endpoints connect and synchronize wearable devices",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs"]
+    },
+    {
+      "id": "version-controller",
+      "query": "small API endpoint reports the running application version",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Features/Version/VersionController.cs"]
+    },
+    {
+      "id": "user-ai-consent-controller",
+      "query": "HTTP API lets a user grant or withdraw AI processing consent",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Features/Users/UserAiConsentController.cs"]
+    },
+    {
+      "id": "notifications-controller",
+      "query": "HTTP endpoints list and mark user notifications",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Features/Notifications/NotificationsController.cs"]
+    },
+    {
+      "id": "mail-inbox-messages-controller",
+      "query": "mail inbox HTTP API exposes received message metadata and details",
+      "changeType": "Api",
+      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs"]
+    },
+    {
+      "id": "mark-inbound-message-read",
+      "query": "command marks a received inbox email as read",
+      "changeType": "Backend",
+      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandHandler.cs"]
+    },
+    {
+      "id": "dmarc-report-parser",
+      "query": "parse an aggregate DMARC XML report received by email",
+      "changeType": "Backend",
+      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs"]
+    },
+    {
+      "id": "mail-inbox-retention-job",
+      "query": "hosted service removes inbox messages after retention expires",
+      "changeType": "Backend",
+      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs"]
+    },
+    {
+      "id": "mail-relay-queue-controller",
+      "query": "HTTP API shows mail relay queue status and queued messages",
+      "changeType": "Api",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayQueueController.cs"]
+    },
+    {
+      "id": "enqueue-mail-relay-email",
+      "query": "command accepts a new email into the mail relay queue",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandHandler.cs"]
+    },
+    {
+      "id": "delivery-event-ingestion",
+      "query": "ingest provider delivery and bounce events into mail relay",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Application/DeliveryEvents/Services/MailRelayDeliveryEventIngestionService.cs"]
+    },
+    {
+      "id": "mail-relay-suppression-policy",
+      "query": "decide whether a recipient is suppressed from mail delivery",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelaySuppressionPolicy.cs"]
+    },
+    {
+      "id": "frontend-theme-service",
+      "query": "switch the frontend between light and dark themes",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/theme/theme.service.ts"]
+    },
+    {
+      "id": "ru-speech-recognition-service",
+      "query": "обертка браузерного распознавания голоса на фронтенде",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/platform/speech-recognition.service.ts"]
+    },
+    {
+      "id": "frontend-version-recovery",
+      "query": "recover the Angular application after a stale service worker version",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/service-worker/app-version-recovery.service.ts"]
+    },
+    {
+      "id": "frontend-push-notification",
+      "query": "subscribe the browser to push notifications",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts"]
+    },
+    {
+      "id": "frontend-marketing-attribution",
+      "query": "capture campaign attribution parameters in the Angular client",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution.service.ts"]
+    },
+    {
+      "id": "measurement-system-service",
+      "query": "choose metric or imperial measurements in the frontend",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/measurements/measurement-system.service.ts"]
+    },
+    {
+      "id": "admin-users-api-service",
+      "query": "Angular admin client calls the API to manage users",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts"]
+    },
+    {
+      "id": "admin-auth-guard",
+      "query": "prevent unauthenticated navigation into the Angular admin area",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/projects/fooddiary-admin/src/app/guards/admin-auth.guard.ts"]
+    },
+    {
+      "id": "localized-tour-definitions",
+      "query": "load localized onboarding tour definitions in the web client",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/tours/localized-tour-definition.service.ts"]
+    },
+    {
+      "id": "nutrition-data-invalidation",
+      "query": "invalidate shared frontend nutrition state after data changes",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/state/nutrition-data-invalidation.service.ts"]
+    },
+    {
+      "id": "wiki-code-graph-build",
+      "query": "PowerShell command builds and refreshes the local SQLite code graph",
+      "changeType": "Tests",
+      "expectedPaths": [".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1"]
+    },
+    {
+      "id": "wiki-sql-evaluation-runner",
+      "query": "measure top one recall and reciprocal rank of SQL context search",
+      "changeType": "Tests",
+      "expectedPaths": [".llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1"]
+    },
+    {
+      "id": "mcp-sql-context-reader",
+      "query": "Development MCP reads ranked context directly from SQLite",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs"]
+    },
+    {
+      "id": "sql-first-fallback-adr",
+      "query": "architecture decision for SQL first development context with JSON fallback",
+      "changeType": "Any",
+      "expectedPaths": ["docs/adr/0014-sql-first-development-context-with-json-fallback.md"]
+    },
+    {
+      "id": "sqlite-corruption-recovery-test",
+      "query": "regression test quarantines a corrupt code graph and rebuilds it",
+      "changeType": "Tests",
+      "expectedPaths": [".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1"]
+    },
+    {
+      "id": "api-snapshot-guidance",
+      "query": "repository rule says Swagger visible API changes require contract snapshots",
+      "changeType": "Any",
+      "expectedPaths": ["AGENTS.md"]
+    },
+    {
+      "id": "wiki-test-plan-workflow",
+      "query": "how the Wiki derives focused tests and risk scenarios before implementation",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/test-plan.md"]
+    },
+    {
+      "id": "wiki-privacy-workflow",
+      "query": "which Wiki workflow checks private identity health and financial data changes",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/privacy-review.md"]
+    },
+    {
+      "id": "wiki-query-context-workflow",
+      "query": "documentation for querying compiled Wiki context by natural language",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/query-context.md"]
+    },
+    {
+      "id": "wiki-code-graph-documentation",
+      "query": "documentation explains local code intelligence graph commands and coverage",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/code-graph.md"]
+    }
+  ]
+}

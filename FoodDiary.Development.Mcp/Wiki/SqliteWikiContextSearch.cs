@@ -79,6 +79,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
 
             RankingPolicy policy = _policy.Value;
             string[] queryTerms = ExpandQueryTerms(query, policy);
+            string[] directQueryTerms = GetDirectQueryTerms(query, policy);
+            string[] rankingTerms = ExpandRankingTerms(query, policy);
             if (queryTerms.Length == 0) {
                 return Unavailable("query-has-no-search-terms", stopwatch, queryTerms);
             }
@@ -136,6 +138,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 rawCandidates,
                 query,
                 queryTerms,
+                directQueryTerms,
+                rankingTerms,
                 limit,
                 candidateLimit,
                 changeType,
@@ -298,6 +302,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         IReadOnlyList<RawCandidate> candidates,
         string query,
         IReadOnlyList<string> queryTerms,
+        IReadOnlyList<string> directQueryTerms,
+        IReadOnlyList<string> rankingTerms,
         int limit,
         int candidateLimit,
         string changeType,
@@ -309,7 +315,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         string[] normalizedScopes = [.. (scopePaths ?? [])
             .Where(path => !string.IsNullOrWhiteSpace(path))
             .Select(path => NormalizePath(path).ToLowerInvariant())];
-        HashSet<string> terms = new(queryTerms, StringComparer.Ordinal);
+        HashSet<string> terms = new(rankingTerms, StringComparer.Ordinal);
+        HashSet<string> directTerms = new(directQueryTerms, StringComparer.Ordinal);
         List<RankedCandidate> ranked = [];
         for (int index = 0; index < candidates.Count; index++) {
             RawCandidate candidate = candidates[index];
@@ -335,6 +342,9 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             }
             string searchablePath = ExpandSearchText(NormalizePath(candidate.Path)).ToLowerInvariant();
             string searchableIdentity = $"{searchablePath} {normalizedTitle}";
+            string searchableFileIdentity =
+                ExpandSearchText(Path.GetFileName(candidate.Path)).ToLowerInvariant();
+            bool matchedRankingPolicy = false;
             string[] identityMatches = [.. queryTerms
                 .Where(term =>
                     term.Length >= policy.PathTermAffinity.MinimumTermLength &&
@@ -348,22 +358,58 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 reasons.Add($"path/title affinity {string.Join(", ", identityMatches)}");
             }
             foreach (IdentityBoost boost in policy.IdentityBoosts) {
-                int queryMatches = boost.QueryTerms.Count(term => terms.Contains(term.ToLowerInvariant()));
+                bool matchesChangeType = boost.ChangeTypes is null ||
+                    boost.ChangeTypes.Length == 0 ||
+                    boost.ChangeTypes.Any(candidateChangeType =>
+                        string.Equals(candidateChangeType, changeType, StringComparison.OrdinalIgnoreCase));
+                if (!matchesChangeType) {
+                    continue;
+                }
+                HashSet<string> eligibleQueryTerms = boost.DirectOnly ? directTerms : terms;
+                string eligibleIdentity = string.Equals(
+                    boost.IdentityScope,
+                    "file",
+                    StringComparison.OrdinalIgnoreCase)
+                    ? searchableFileIdentity
+                    : searchablePath;
+                int queryMatches = boost.QueryTerms.Count(term =>
+                    eligibleQueryTerms.Contains(term.ToLowerInvariant()));
                 int identityMatchesBoost = boost.IdentityTerms.Count(term =>
-                    searchablePath.Contains(term.ToLowerInvariant(), StringComparison.Ordinal));
+                    eligibleIdentity.Contains(term.ToLowerInvariant(), StringComparison.Ordinal));
                 if (queryMatches >= boost.MinimumMatches &&
                     identityMatchesBoost >= Math.Max(1, boost.MinimumIdentityMatches)) {
                     score += boost.Score;
+                    matchedRankingPolicy |= string.Equals(
+                        boost.IdentityScope,
+                        "file",
+                        StringComparison.OrdinalIgnoreCase);
                     reasons.Add($"ranking policy {boost.Id}");
                 }
             }
             foreach (PathBoost boost in policy.PathBoosts) {
-                int matchedTerms = boost.QueryTerms.Count(term => terms.Contains(term.ToLowerInvariant()));
+                HashSet<string> eligibleQueryTerms = boost.DirectOnly ? directTerms : terms;
+                int matchedTerms = boost.QueryTerms.Count(term =>
+                    eligibleQueryTerms.Contains(term.ToLowerInvariant()));
                 bool matchesPath = boost.PathPrefixes.Any(prefix =>
                     normalizedPath.StartsWith(NormalizePath(prefix).ToLowerInvariant(), StringComparison.Ordinal));
                 if (matchedTerms >= boost.MinimumMatches && matchesPath) {
                     score += boost.Score;
+                    matchedRankingPolicy = true;
                     reasons.Add($"ranking policy {boost.Id}");
+                }
+            }
+            if (matchedRankingPolicy) {
+                string[] fileNameMatches = [.. rankingTerms
+                    .Where(term =>
+                        term.Length >= policy.MatchedPolicyFileNameAffinity.MinimumTermLength &&
+                        searchableFileIdentity.Contains(term, StringComparison.Ordinal))
+                    .Distinct(StringComparer.Ordinal)];
+                int roleAffinityScore = Math.Min(
+                    fileNameMatches.Length * policy.MatchedPolicyFileNameAffinity.ScorePerMatch,
+                    policy.MatchedPolicyFileNameAffinity.MaximumScore);
+                if (roleAffinityScore > 0) {
+                    score += roleAffinityScore;
+                    reasons.Add($"matched-role file-name affinity {string.Join(", ", fileNameMatches)}");
                 }
             }
             bool isTest = TestPath.IsMatch(candidate.Path);
@@ -433,6 +479,25 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
     }
 
     private static string[] ExpandQueryTerms(string query, RankingPolicy policy) {
+        string[] directTerms = GetDirectQueryTerms(query, policy);
+        List<string> terms = [.. directTerms];
+        HashSet<string> seen = new(terms, StringComparer.Ordinal);
+        foreach (string term in directTerms) {
+            AddExpansions(GetEnglishMorphologicalVariants(term), terms, seen);
+        }
+        AddConfiguredExpansions(directTerms, policy, terms, seen);
+        return [.. terms.Take(policy.MaximumQueryTerms)];
+    }
+
+    private static string[] ExpandRankingTerms(string query, RankingPolicy policy) {
+        string[] directTerms = GetDirectQueryTerms(query, policy);
+        List<string> terms = [.. directTerms];
+        HashSet<string> seen = new(terms, StringComparer.Ordinal);
+        AddConfiguredExpansions(directTerms, policy, terms, seen);
+        return [.. terms.Take(policy.MaximumQueryTerms)];
+    }
+
+    private static string[] GetDirectQueryTerms(string query, RankingPolicy policy) {
         List<string> terms = [];
         HashSet<string> seen = new(StringComparer.Ordinal);
         HashSet<string> stopTerms = new(policy.StopTerms, StringComparer.Ordinal);
@@ -441,7 +506,15 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 terms.Add(match.Value);
             }
         }
-        foreach (string term in terms.ToArray()) {
+        return [.. terms];
+    }
+
+    private static void AddConfiguredExpansions(
+        IReadOnlyList<string> directTerms,
+        RankingPolicy policy,
+        List<string> terms,
+        HashSet<string> seen) {
+        foreach (string term in directTerms) {
             if (policy.QueryTermExpansions.TryGetValue(term, out string[]? expansions)) {
                 AddExpansions(expansions, terms, seen);
             }
@@ -451,7 +524,31 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 }
             }
         }
-        return [.. terms.Take(policy.MaximumQueryTerms)];
+    }
+
+    private static string[] GetEnglishMorphologicalVariants(string term) {
+        if (term.Any(character => character is < 'a' or > 'z')) {
+            return [];
+        }
+        List<string> variants = [];
+        if (term.Length > 4 && term.EndsWith("ies", StringComparison.Ordinal)) {
+            variants.Add($"{term[..^3]}y");
+        } else if (term.Length > 3 && term.EndsWith('s') && !term.EndsWith("ss", StringComparison.Ordinal)) {
+            variants.Add(term[..^1]);
+        }
+        if (term.Length > 5 && term.EndsWith("ing", StringComparison.Ordinal)) {
+            string stem = term[..^3];
+            variants.Add(stem);
+            variants.Add($"{stem}e");
+            if (stem.Length > 2 && stem[^1] == stem[^2]) {
+                variants.Add(stem[..^1]);
+            }
+        }
+        if (term.Length > 4 && term.EndsWith("ed", StringComparison.Ordinal)) {
+            variants.Add(term[..^2]);
+            variants.Add(term[..^1]);
+        }
+        return [.. variants];
     }
 
     private static void AddExpansions(
@@ -486,10 +583,15 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             policy.MaximumQueryTerms < 1 ||
             policy.StopTerms is null ||
             policy.PathTermAffinity is null ||
+            policy.MatchedPolicyFileNameAffinity is null ||
             policy.QueryTermExpansions is null ||
             policy.QueryPrefixExpansions is null ||
             policy.PathBoosts is null ||
-            policy.IdentityBoosts is null) {
+            policy.IdentityBoosts is null ||
+            policy.IdentityBoosts?.Any(boost =>
+                !string.IsNullOrWhiteSpace(boost.IdentityScope) &&
+                !string.Equals(boost.IdentityScope, "path", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(boost.IdentityScope, "file", StringComparison.OrdinalIgnoreCase)) == true) {
             throw new InvalidDataException("Context-search ranking policy is invalid.");
         }
         return policy;
@@ -543,6 +645,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         int MaximumQueryTerms,
         string[] StopTerms,
         PathTermAffinity PathTermAffinity,
+        PathTermAffinity MatchedPolicyFileNameAffinity,
         int NonTestPenalty,
         int ApplicationAbstractionPenalty,
         int InterfacePathPenalty,
@@ -564,7 +667,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         string[] QueryTerms,
         int MinimumMatches,
         string[] PathPrefixes,
-        int Score);
+        int Score,
+        bool DirectOnly = false);
 
     private sealed record IdentityBoost(
         string Id,
@@ -572,5 +676,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         int MinimumMatches,
         string[] IdentityTerms,
         int MinimumIdentityMatches,
-        int Score);
+        int Score,
+        bool DirectOnly = false,
+        string? IdentityScope = null,
+        string[]? ChangeTypes = null);
 }

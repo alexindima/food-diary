@@ -7,8 +7,8 @@
   "summary": {
     "productionFiles": 4441,
     "criticalSymbols": 569,
-    "criticalSymbolsWithTestReferences": 549,
-    "criticalSymbolsWithoutTestReferences": 20,
+    "criticalSymbolsWithTestReferences": 550,
+    "criticalSymbolsWithoutTestReferences": 19,
     "debtMarkers": 4
   },
   "hotspots": [
@@ -27,6 +27,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 179.42
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+      "nonBlankLines": 651,
+      "decisionPoints": 98,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 160.02
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page-lib/cycle-tracking-page.mapper.ts",
@@ -59,14 +67,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 129.36
-    },
-    {
-      "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 548,
-      "decisionPoints": 75,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 123.46
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
@@ -805,12 +805,12 @@
       "structuralRiskScore": 45.6
     },
     {
-      "path": "FoodDiary.Integrations/Options/IntegrationUriValidator.cs",
-      "nonBlankLines": 52,
-      "decisionPoints": 25,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 45.54
+      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.ts",
+      "nonBlankLines": 227,
+      "decisionPoints": 27,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 45.04
     }
   ],
   "files": [
@@ -16136,11 +16136,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 548,
-      "decisionPoints": 75,
+      "nonBlankLines": 651,
+      "decisionPoints": 98,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 123.46
+      "structuralRiskScore": 160.02
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandRequest.cs",
@@ -20811,8 +20811,8 @@
       "nonBlankLines": 52,
       "decisionPoints": 25,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 45.54
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 40.54
     },
     {
       "path": "FoodDiary.Integrations/Options/OpenAiOptions.cs",
@@ -37299,8 +37299,9 @@
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
       "line": 9,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "tests/FoodDiary.Application.Tests/Marketing/MarketingAttributionCoverageTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs"
       ]
     },
@@ -41459,10 +41460,11 @@
       "role": "Validator",
       "path": "FoodDiary.Integrations/Authentication/GoogleTokenValidator.cs",
       "line": 14,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
         "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ExternalLogin.cs",
         "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
+        "tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs",
         "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
         "tests/FoodDiary.Infrastructure.Tests/Integrations/GoogleTokenValidatorTests.cs"
       ]
@@ -41500,8 +41502,10 @@
       "role": "Validator",
       "path": "FoodDiary.Integrations/Options/IntegrationUriValidator.cs",
       "line": 2,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs"
+      ]
     },
     {
       "name": "InviteDietologistCommandValidator",

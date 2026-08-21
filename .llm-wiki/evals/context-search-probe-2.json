@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "description": "Third frozen context-search corpus, promoted after its blind 17/30 top-1 baseline reached the regression target through generic ranking improvements.",
+  "diagnosticLimit": 100,
+  "thresholds": {
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 30,
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "cases": [
+    {
+      "id": "openai-request-factory-probe-2",
+      "query": "factory builds outbound OpenAI food request payloads",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Services/OpenAi/OpenAiRequestFactory.cs"]
+    },
+    {
+      "id": "web-push-client-adapter-probe-2",
+      "query": "adapter wraps the web push client used by notification sending",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Services/WebPushClientAdapter.cs"]
+    },
+    {
+      "id": "telegram-auth-validator-probe-2",
+      "query": "validate Telegram authentication hash and signed fields",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Authentication/TelegramAuthValidator.cs"]
+    },
+    {
+      "id": "notification-writer-probe-2",
+      "query": "write a new notification for a user",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Notifications/Services/NotificationWriter.cs"]
+    },
+    {
+      "id": "notification-cleanup-service-probe-2",
+      "query": "remove expired notification data in the application layer",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Notifications/Services/NotificationCleanupService.cs"]
+    },
+    {
+      "id": "user-identity-mutation-service-probe-2",
+      "query": "change persisted login identities linked to a user",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Users/Services/UserIdentityMutationService.cs"]
+    },
+    {
+      "id": "user-administration-reader-probe-2",
+      "query": "read administrator views of user accounts",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Users/Services/UserAdministrationReadService.cs"]
+    },
+    {
+      "id": "achievement-reconciliation-handler-probe-2",
+      "query": "handler reconciles achievement state after domain changes",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Gamification/Services/AchievementReconciliationHandler.cs"]
+    },
+    {
+      "id": "recipe-lookup-service-probe-2",
+      "query": "lookup recipe information from infrastructure",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Services/RecipeLookupService.cs"]
+    },
+    {
+      "id": "current-waist-provider-probe-2",
+      "query": "retrieve the user's current waist measurement",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs"]
+    },
+    {
+      "id": "exercise-entry-repository-probe-2",
+      "query": "persist exercise tracking entries",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Tracking/ExerciseEntryRepository.cs"]
+    },
+    {
+      "id": "daily-advice-repository-probe-2",
+      "query": "store generated daily advice records",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Tracking/DailyAdviceRepository.cs"]
+    },
+    {
+      "id": "shopping-list-repository-probe-2",
+      "query": "persist shopping lists and their items",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs"]
+    },
+    {
+      "id": "presentation-error-details-mapper-probe-2",
+      "query": "map API error details from application results",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Responses/ApiErrorDetailsMapper.cs"]
+    },
+    {
+      "id": "api-telemetry-probe-2",
+      "query": "record API host telemetry counters and timings",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Web.Api/Extensions/ApiTelemetry.cs"]
+    },
+    {
+      "id": "mail-inbox-listener-factory-probe-2",
+      "query": "factory creates the network listener for inbound SMTP endpoints",
+      "changeType": "Backend",
+      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxEndpointListenerFactory.cs"]
+    },
+    {
+      "id": "mail-relay-row-mapper-probe-2",
+      "query": "map database rows into queued mail relay messages",
+      "changeType": "Database",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueRowMapper.cs"]
+    },
+    {
+      "id": "viewport-service-probe-2",
+      "query": "frontend service observes viewport size changes",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/platform/viewport.service.ts"]
+    },
+    {
+      "id": "browser-storage-service-probe-2",
+      "query": "frontend wrapper reads and writes browser storage",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/platform/browser-storage.service.ts"]
+    },
+    {
+      "id": "session-events-service-probe-2",
+      "query": "frontend service publishes authentication session events",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/auth/session-events.service.ts"]
+    },
+    {
+      "id": "google-identity-service-probe-2",
+      "query": "frontend service initializes Google identity authentication",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/auth/google-identity.service.ts"]
+    },
+    {
+      "id": "api-error-utility-probe-2",
+      "query": "frontend utility extracts messages from API errors",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/api-error.utils.ts"]
+    },
+    {
+      "id": "image-upload-api-service-probe-2",
+      "query": "frontend API service uploads image files",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts"]
+    },
+    {
+      "id": "notification-service-probe-2",
+      "query": "frontend service loads and marks notifications",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts"]
+    },
+    {
+      "id": "measurement-display-pipe-probe-2",
+      "query": "Angular pipe formats measurements for display",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/measurements/measurement-display.pipe.ts"]
+    },
+    {
+      "id": "requirement-intelligence-workflow-probe-2",
+      "query": "Wiki workflow derives actionable requirements from task intent",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/requirement-intelligence.md"]
+    },
+    {
+      "id": "quality-risk-tool-probe-2",
+      "query": "PowerShell tool finds quality hotspots and test gaps",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1"]
+    },
+    {
+      "id": "research-packet-tool-probe-2",
+      "query": "PowerShell command compiles the Wiki research packet",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1"]
+    },
+    {
+      "id": "frontend-contract-review-workflow-probe-2",
+      "query": "Wiki workflow reviews frontend contracts affected by a change",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/frontend-contract-review.md"]
+    },
+    {
+      "id": "failure-knowledge-workflow-probe-2",
+      "query": "Wiki workflow reuses verified failure resolutions",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/failure-knowledge.md"]
+    }
+  ]
+}

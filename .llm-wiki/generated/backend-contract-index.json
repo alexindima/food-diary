@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1054,
     "ambiguousContracts": 3,
-    "consumerEdges": 7426,
+    "consumerEdges": 7428,
     "productionConsumerEdges": 4479,
-    "testConsumerEdges": 2947,
+    "testConsumerEdges": 2949,
     "consumedContracts": 1054,
     "unconsumedContracts": 0
   },
@@ -20142,7 +20142,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "AnalyzeFoodImageCommand",
@@ -27929,7 +27929,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeValidation.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 7
     },
     {
       "contract": "DeleteProductCommand",
@@ -66810,6 +66810,19 @@
         "FoodDiary.Application.Abstractions/Marketing/Common/IMarketingAttributionEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Marketing/MarketingAttributionCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMarketingAttributionEventWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Marketing/Common/IMarketingAttributionEventWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Marketing/MarketingDependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -101977,6 +101990,19 @@
       "consumerPath": "FoodDiary.Presentation.Api/Features/Marketing/Mappings/MarketingAttributionHttpMappings.cs",
       "isTest": false,
       "referenceCount": 4
+    },
+    {
+      "contract": "RecordMarketingAttributionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Marketing/MarketingAttributionCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "RecordMarketingAttributionCommand",

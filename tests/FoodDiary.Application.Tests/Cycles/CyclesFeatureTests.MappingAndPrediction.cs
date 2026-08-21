@@ -149,6 +149,27 @@ public partial class CyclesFeatureTests {
     }
 
     [Fact]
+    public void CyclePredictionService_WithEstablishedHistory_UsesPercentileRange() {
+        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2025, 1, 1));
+        DateOnly current = new(2025, 1, 1);
+        int[] intervals = [25, 27, 28, 29, 30, 31, 33, 28];
+        AddBleedingEpisode(profile, current);
+        foreach (int interval in intervals) {
+            current = current.AddDays(interval);
+            AddBleedingEpisode(profile, current);
+        }
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, current);
+
+        Assert.Multiple(
+            () => Assert.Equal("Established", predictions.DataSufficiency),
+            () => Assert.NotNull(predictions.NextPeriodStartFrom),
+            () => Assert.NotNull(predictions.NextPeriodStartTo),
+            () => Assert.True(predictions.NextPeriodStartFrom < predictions.NextPeriodStartTo),
+            () => Assert.True(predictions.CalibrationSampleCount > 0));
+    }
+
+    [Fact]
     public void CyclePredictionService_CalculatePredictions_DoesNotReinferExcludedConfirmedEpisode() {
         var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 1, 1));
         DateOnly[] starts = [

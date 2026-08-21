@@ -11,8 +11,14 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1
   - .llm-wiki/tools/Test-LlmWikiCodeGraph.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextShadow.ps1
+  - .llm-wiki/policies/context-search-ranking.json
   - .llm-wiki/evals/context-search.json
   - .llm-wiki/evals/context-search-holdout.json
+  - .llm-wiki/evals/context-search-generalization.json
+  - .llm-wiki/evals/context-search-validation.json
+  - .llm-wiki/evals/context-search-probe.json
+  - .llm-wiki/evals/context-search-probe-2.json
+  - .llm-wiki/evals/context-search-probe-3.json
   - .llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
   - FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs
@@ -53,6 +59,27 @@ The committed retrieval suite has a 60-case regression corpus in
 challenge corpus in `.llm-wiki/evals/context-search-holdout.json`. The challenge
 set includes Russian queries and deliberately indirect implementation searches.
 Its recorded pre-tuning baseline was 11/40 top-1, 19/40 top-10, and 0.3276 MRR.
+An additional frozen 70-case generalization corpus in
+`.llm-wiki/evals/context-search-generalization.json` covers unseen files,
+conversational Russian and English, neighboring implementation roles, frontend
+utilities, service boundaries, and Wiki operations. Its pre-tuning baseline was
+29/70 top-1, 54/70 top-10, and 0.5498 MRR. It is a regression gate, while the
+original primary and challenge corpora remain the SQL promotion gate.
+The 50-case validation corpus in
+`.llm-wiki/evals/context-search-validation.json` was frozen after the structural
+ranking changes. Its first-run result was 26/50 top-1, 42/50 top-10, and 0.6224
+MRR; after its failure classes were addressed it reached 50/50 top-1 and became
+a strict regression gate. The first 30-case probe in
+`.llm-wiki/evals/context-search-probe.json` was then frozen and initially scored
+13/30 top-1, 24/30 top-10, and 0.5547 MRR. After its failure classes were
+addressed it reached 30/30 and joined the regression gate. The independent
+follow-up in `.llm-wiki/evals/context-search-probe-2.json` was frozen next and
+run once without tuning. Its diagnostic baseline was 17/30 top-1, 26/30 top-10,
+and 0.6909 MRR. Generic role and scope improvements raised it to 30/30 top-1,
+after which it joined the regression gate. A fresh independent probe in
+`.llm-wiki/evals/context-search-probe-3.json` was then frozen with 30 previously
+unused targets. Its first and only untuned run scored 19/30 top-1, 30/30 top-10,
+and 0.7612 MRR; it remains diagnostic.
 Run either corpus without changing the JSON-authoritative path, or run the
 combined gate:
 
@@ -60,6 +87,16 @@ combined gate:
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
   -CorpusPath .llm-wiki/evals/context-search-holdout.json
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
+  -CorpusPath .llm-wiki/evals/context-search-generalization.json
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
+  -CorpusPath .llm-wiki/evals/context-search-validation.json
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
+  -CorpusPath .llm-wiki/evals/context-search-probe.json
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
+  -CorpusPath .llm-wiki/evals/context-search-probe-2.json
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
+  -CorpusPath .llm-wiki/evals/context-search-probe-3.json
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 -FailOnRegression
 ./.llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
 ```
@@ -68,9 +105,12 @@ Each evaluation reports top-1 accuracy, top-10 recall, mean reciprocal rank,
 SQL timing, and per-query misses. Each corpus keeps lower regression thresholds
 separate from stricter `switchCriteria`. The combined gate requires at least
 100 committed cases, both corpora to meet switch criteria, and no top-10 miss.
-The current Node result is 58/60 top-1 on the regression corpus and 40/40 top-1
-on the challenge corpus, with 100/100 top-10 retrieval. Timing is diagnostic
-rather than a correctness gate because workstation load varies.
+The current Node result is 60/60 top-1 on the regression corpus, 40/40 top-1 on
+the challenge corpus, 70/70 top-1 on the generalization corpus, 50/50 top-1 on
+the validation corpus, and 30/30 top-1 on each promoted probe. All 280 strict
+cases are top-1. The separate blind probe-3 baseline is 19/30 top-1, 30/30
+top-10, and 0.7612 MRR. Timing is diagnostic rather than a correctness gate
+because workstation load varies.
 
 The Development MCP reads the existing projection directly with
 `Microsoft.Data.Sqlite`. It opens the database read-only, uses the same ranking
@@ -83,6 +123,16 @@ dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll
   --evaluate-context-search .llm-wiki/evals/context-search.json
 dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search-holdout.json
+dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+  --evaluate-context-search .llm-wiki/evals/context-search-generalization.json
+dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+  --evaluate-context-search .llm-wiki/evals/context-search-validation.json
+dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+  --evaluate-context-search .llm-wiki/evals/context-search-probe.json
+dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+  --evaluate-context-search .llm-wiki/evals/context-search-probe-2.json
+dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+  --evaluate-context-search .llm-wiki/evals/context-search-probe-3.json
 ```
 
 The evaluation calculates the live change-set fingerprint, so it fails closed

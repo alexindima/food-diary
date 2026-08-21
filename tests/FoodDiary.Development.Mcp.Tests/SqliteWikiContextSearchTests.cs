@@ -98,6 +98,115 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     }
 
     [Fact]
+    public async Task SearchAsync_ExpandsCommonEnglishInflections() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "endpoints policies querying suppressed",
+            limit: 10,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Contains("endpoint", result.QueryTerms, StringComparer.Ordinal);
+        Assert.Contains("policy", result.QueryTerms, StringComparer.Ordinal);
+        Assert.Contains("query", result.QueryTerms, StringComparer.Ordinal);
+        Assert.Contains("suppress", result.QueryTerms, StringComparer.Ordinal);
+    }
+
+    [Fact]
+    public async Task SearchAsync_ScopesRoleBoostsToTheFileIdentity() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "delete expired user login events on a schedule",
+            limit: 10,
+            changeType: "Backend",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Equal(
+            "FoodDiary.JobManager/Services/UserLoginEventCleanupJob.cs",
+            result.Candidates[0].Path);
+    }
+
+    [Fact]
+    public async Task SearchAsync_DoesNotTreatIndexedTitleAsTheFileIdentity() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "database reader returns product overview information",
+            limit: 10,
+            changeType: "Database",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Equal(
+            "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
+            result.Candidates[0].Path);
+    }
+
+    [Fact]
+    public async Task SearchAsync_PrefersPowerShellFilesForExplicitPowerShellIntent() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "PowerShell tool finds sensitive domain data touched by a change",
+            limit: 10,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Equal(
+            ".llm-wiki/tools/Find-LlmWikiSensitiveData.ps1",
+            result.Candidates[0].Path);
+    }
+
+    [Fact]
+    public async Task SearchAsync_PrefersSpecificClientIdentityOverGenericApiClientRole() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "HTTP client sends food recognition requests to OpenAI",
+            limit: 10,
+            changeType: "Backend",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Equal(
+            "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
+            result.Candidates[0].Path);
+    }
+
+    [Fact]
+    public async Task SearchAsync_UsesFileSubjectToBreakTiesWithinMatchedRole() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "validate configured integration URLs before startup",
+            limit: 10,
+            changeType: "Backend",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Equal(
+            "FoodDiary.Integrations/Options/IntegrationUriValidator.cs",
+            result.Candidates[0].Path);
+    }
+
+    [Fact]
     public async Task SearchAsync_RejectsAnIndexFromAnotherChangeSet() {
         SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
 
@@ -227,6 +336,16 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
                 ('code', 'privacy', 'FoodDiary.Web.Api/Extensions/TelemetryPrivacyProcessor.cs', 'privacy', 'csharp', 'TelemetryPrivacyProcessor', 'Sanitize SensitiveTags privacy'),
                 ('code', 'usda-query', 'FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs', 'usda-query', 'csharp', 'SearchUsdaFoodsQueryHandler', 'USDA foods search'),
                 ('code', 'usda-provider', 'FoodDiary.Integrations/Services/UsdaFoodSearchService.cs', 'usda-provider', 'csharp', 'UsdaFoodSearchService', 'HttpClient external provider'),
+                ('code', 'cleanup-options', 'FoodDiary.JobManager/Services/UserLoginEventCleanupOptions.cs', 'cleanup-options', 'csharp', 'UserLoginEventCleanupOptions', 'delete expired user login events schedule'),
+                ('code', 'cleanup-job', 'FoodDiary.JobManager/Services/UserLoginEventCleanupJob.cs', 'cleanup-job', 'csharp', 'UserLoginEventCleanupJob', 'delete expired user login events schedule'),
+                ('code', 'product-reader-test', 'tests/FoodDiary.Application.Tests/FavoriteMeals/FavoriteMealReadServiceCoverageTests.cs', 'product-reader-test', 'csharp', 'FavoriteMealReadServiceCoverageTests ProductOverviewReadService', 'database reader returns product overview information'),
+                ('code', 'product-reader', 'FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs', 'product-reader', 'csharp', 'ProductOverviewReadService', 'database reader returns product overview information'),
+                ('code', 'wiki-sensitive-data-tool', '.llm-wiki/tools/Find-LlmWikiSensitiveData.ps1', 'wiki-sensitive-data-tool', 'powershell', 'Find Llm Wiki Sensitive Data', 'PowerShell tool finds sensitive domain data touched by a change'),
+                ('code', 'wiki-code-graph', '.llm-wiki/tools/code-graph.mjs', 'wiki-code-graph', 'javascript', 'code graph', 'PowerShell tool finds sensitive domain data touched by a change'),
+                ('code', 'openai-food-client', 'FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs', 'openai-food-client', 'csharp', 'OpenAiFoodClient', 'HTTP client sends food recognition requests to OpenAI'),
+                ('code', 'paddle-api-client', 'FoodDiary.Integrations/Billing/PaddleApiClient.cs', 'paddle-api-client', 'csharp', 'PaddleApiClient', 'HTTP client sends food recognition requests to OpenAI'),
+                ('code', 'integration-uri-validator', 'FoodDiary.Integrations/Options/IntegrationUriValidator.cs', 'integration-uri-validator', 'csharp', 'IntegrationUriValidator', 'validate configured integration URLs before startup'),
+                ('code', 'google-token-validator', 'FoodDiary.Integrations/Authentication/GoogleTokenValidator.cs', 'google-token-validator', 'csharp', 'GoogleTokenValidator', 'validate configured integration URLs before startup'),
                 ('code', 'pdf-primary', 'FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs', 'pdf-primary', 'csharp', 'DiaryPdfGenerator', 'render diary PDF document generator'),
                 ('code', 'pdf-helper', 'FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgRenderer.cs', 'pdf-helper', 'csharp', 'DiaryPdfGenerator ChartSvgRenderer', 'render diary PDF document generator');
             """;
