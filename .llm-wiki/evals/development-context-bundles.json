@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "description": "End-to-end evaluation of the SQL-first development context bundle: retrieval, bounded scope, change context, focused checks, and compact payload.",
+  "thresholds": {
+    "minimumSqlitePrimaryRate": 1.0,
+    "minimumScopeRecallRate": 1.0,
+    "minimumSqlTopTenRecallRate": 1.0,
+    "minimumCompleteBundleRate": 0.8,
+    "minimumFocusedChecksRate": 0.8,
+    "minimumExpectedLayersRate": 1.0,
+    "maximumAverageExpandedScopePaths": 11.0,
+    "maximumP95DurationMilliseconds": 60000,
+    "maximumCompactCharacters": 120000
+  },
+  "cases": [
+    {
+      "id": "favorite-product-read-bundle",
+      "intent": "Improve favorite product summary loading without changing its public contract",
+      "query": "load a user's favorite product summaries",
+      "plannedPath": "FoodDiary.Application.Favorites/FavoriteProducts/",
+      "expectedPaths": ["FoodDiary.Application.Favorites/FavoriteProducts/Services/FavoriteProductReadService.cs"],
+      "expectedLayers": ["Application"]
+    },
+    {
+      "id": "authentication-cleanup-bundle",
+      "intent": "Harden cleanup of old authentication login events",
+      "query": "cleanup old authentication login events",
+      "plannedPath": "FoodDiary.Application.Identity/Authentication/",
+      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventCleanupService.cs"],
+      "expectedLayers": ["Application"]
+    },
+    {
+      "id": "recipe-nutrition-applier-bundle",
+      "intent": "Improve how calculated nutrition values are applied to recipes",
+      "query": "apply calculated nutrition values to a recipe",
+      "plannedPath": "FoodDiary.Application.Recipes/Recipes/",
+      "expectedPaths": ["FoodDiary.Application.Recipes/Recipes/Services/RecipeNutritionApplier.cs"],
+      "expectedLayers": ["Application"]
+    },
+    {
+      "id": "signal-form-patch-bundle",
+      "intent": "Make partial signal form model updates safer",
+      "query": "frontend utility patches a signal form model with partial values",
+      "plannedPath": "FoodDiary.Web.Client/src/app/shared/lib/",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/signal-form-model.utils.ts"],
+      "expectedLayers": ["Frontend"]
+    },
+    {
+      "id": "nutrition-form-utility-bundle",
+      "intent": "Improve macro calorie mismatch warnings in nutrition forms",
+      "query": "frontend nutrition form utility calculates macro calories and mismatch warnings",
+      "plannedPath": "FoodDiary.Web.Client/src/app/shared/lib/",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/nutrition-form.utils.ts"],
+      "expectedLayers": ["Frontend"]
+    },
+    {
+      "id": "translation-language-bundle",
+      "intent": "Make active translation language resolution more robust",
+      "query": "frontend helper resolves the active translation language",
+      "plannedPath": "FoodDiary.Web.Client/src/app/shared/i18n/",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/i18n/translate-language.utils.ts"],
+      "expectedLayers": ["Frontend"]
+    }
+  ]
+}

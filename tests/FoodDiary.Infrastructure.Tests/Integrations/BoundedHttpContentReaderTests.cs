@@ -5,6 +5,45 @@ namespace FoodDiary.Infrastructure.Tests.Integrations;
 [ExcludeFromCodeCoverage]
 public sealed class BoundedHttpContentReaderTests {
     [Fact]
+    public async Task ReadAsByteArrayAsync_WhenBodyFits_ReturnsAllBytes() {
+        using var content = new ByteArrayContent("hello"u8.ToArray());
+
+        byte[] result = await BoundedHttpContentReader.ReadAsByteArrayAsync(
+            content,
+            maxBytes: 5,
+            readTimeout: TimeSpan.FromSeconds(1),
+            CancellationToken.None);
+
+        Assert.Equal("hello"u8.ToArray(), result);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task ReadAsByteArrayAsync_WhenMaximumSizeIsInvalid_Throws(long maxBytes) {
+        using var content = new ByteArrayContent([]);
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            BoundedHttpContentReader.ReadAsByteArrayAsync(
+                content,
+                maxBytes,
+                TimeSpan.FromSeconds(1),
+                CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task ReadAsByteArrayAsync_WhenTimeoutIsInvalid_Throws() {
+        using var content = new ByteArrayContent([]);
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            BoundedHttpContentReader.ReadAsByteArrayAsync(
+                content,
+                maxBytes: 1,
+                readTimeout: TimeSpan.Zero,
+                CancellationToken.None));
+    }
+
+    [Fact]
     public async Task ReadAsByteArrayAsync_WhenDeclaredLengthExceedsLimit_RejectsBeforeReading() {
         using var content = new ByteArrayContent(new byte[11]);
 

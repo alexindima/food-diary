@@ -41,6 +41,93 @@ public sealed class WikiRuntimeTelemetryTests {
         Assert.Equal(8, stageTiming.P50Milliseconds);
         Assert.Equal(80, stageTiming.P95Milliseconds);
         Assert.Equal(80, stageTiming.MaximumMilliseconds);
+        Assert.Equal(ContextRoutingHealth.Empty, metrics.ContextRouting);
+    }
+
+    [Fact]
+    public void ContextRoutingTelemetry_PersistsBoundedPrivacySafeHealthAcrossInstances() {
+        string directory = Path.Combine(
+            Path.GetTempPath(),
+            "fooddiary-development-mcp-tests",
+            Guid.NewGuid().ToString("N"));
+        string path = Path.Combine(directory, "context-routing.json");
+        try {
+            ContextRoutingTelemetryStore store = new(path, maximumEvents: 3);
+            store.Record(
+                usedSqlite: true,
+                fallbackReason: null,
+                TimeSpan.FromMilliseconds(10),
+                refreshAttempted: false,
+                refreshSucceeded: false);
+            store.Record(
+                usedSqlite: false,
+                fallbackReason: "graph-refresh-secret-query-and-path",
+                TimeSpan.FromMilliseconds(40),
+                refreshAttempted: true,
+                refreshSucceeded: false);
+            store.Record(
+                usedSqlite: false,
+                fallbackReason: "sqlite-no-candidates",
+                TimeSpan.FromMilliseconds(20),
+                refreshAttempted: false,
+                refreshSucceeded: false);
+            store.Record(
+                usedSqlite: true,
+                fallbackReason: null,
+                TimeSpan.FromMilliseconds(30),
+                refreshAttempted: false,
+                refreshSucceeded: false);
+
+            ContextRoutingHealth health = new ContextRoutingTelemetryStore(path, maximumEvents: 3).Capture();
+
+            Assert.Equal(3, health.SampleCount);
+            Assert.Equal(1, health.SqlitePrimaryCount);
+            Assert.Equal(2, health.JsonFallbackCount);
+            Assert.Equal(0.6667, health.JsonFallbackRate);
+            Assert.Equal(1, health.SqliteNoCandidateFallbackCount);
+            Assert.Equal(30, health.P50Milliseconds);
+            Assert.Equal(40, health.P95Milliseconds);
+            Assert.Equal(1, health.FallbackReasonCounts["graph-refresh-failed"]);
+            Assert.True(health.PersistenceHealthy);
+            Assert.False(health.JsonFallbackRetirementReady);
+            string persisted = File.ReadAllText(path);
+            Assert.DoesNotContain("secret-query", persisted, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("query-and-path", persisted, StringComparison.OrdinalIgnoreCase);
+        } finally {
+            if (Directory.Exists(directory)) {
+                Directory.Delete(directory, recursive: true);
+            }
+        }
+    }
+
+    [Fact]
+    public async Task ContextRoutingTelemetry_SerializesConcurrentWritersAndReportsRetirementEvidence() {
+        string directory = Path.Combine(
+            Path.GetTempPath(),
+            "fooddiary-development-mcp-tests",
+            Guid.NewGuid().ToString("N"));
+        string path = Path.Combine(directory, "context-routing.json");
+        try {
+            ContextRoutingTelemetryStore store = new(path, maximumEvents: 100);
+            await Task.WhenAll(Enumerable.Range(0, 100).Select(_ => Task.Run(() => store.Record(
+                usedSqlite: true,
+                fallbackReason: null,
+                TimeSpan.FromMilliseconds(5),
+                refreshAttempted: false,
+                refreshSucceeded: false))));
+
+            ContextRoutingHealth health = store.Capture();
+
+            Assert.Equal(100, health.SampleCount);
+            Assert.Equal(100, health.SqlitePrimaryCount);
+            Assert.Equal(0, health.JsonFallbackCount);
+            Assert.True(health.JsonFallbackRetirementReady);
+            Assert.Equal(0, health.PersistenceFailures);
+        } finally {
+            if (Directory.Exists(directory)) {
+                Directory.Delete(directory, recursive: true);
+            }
+        }
     }
 
     private static void Complete(

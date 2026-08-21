@@ -40,6 +40,8 @@ Adopt option 3 for `get_development_context`.
 - If the retry is unavailable, stale, invalid, or empty, the request executes the established JSON trace. There is no retry loop.
 - The standalone `trace_backend_flow` tool and JSON-backed policy and knowledge indexes are unchanged. SQLite remains a reconstructable code-navigation projection, not the authority for reviewed decisions or source claims.
 - Runtime telemetry records `context-routing/sqlite-primary` or `context-routing/json-fallback`. SQLite query timing remains separately visible as `context-search/in-process-sqlite`.
+- A bounded persistent route sample is stored outside the worktree under the resolved Git directory. It contains only timestamp, route, normalized fallback category, duration, and graph-refresh outcome; query text, intent, content, source paths, fingerprints, user identity, and payloads are prohibited.
+- `get_server_status` reports route counts, fallback categories and rate, p50/p95, retention, persistence health, and whether the evidence threshold for considering JSON fallback retirement has been met.
 
 ### Recovery compatibility boundary
 
@@ -56,7 +58,7 @@ Adopt option 3 for `get_development_context`.
 - Dirty-worktree freshness is an exact content property rather than an age heuristic.
 - A graph generated from a changing worktree cannot be published as fresh.
 - Existing behavior remains available during bootstrap, corruption, lock contention, and unexpected retrieval gaps.
-- Route counts provide concrete data for later fallback removal decisions.
+- Route counts survive MCP restarts and provide concrete, privacy-safe data for later fallback removal decisions.
 
 ### Negative
 
@@ -69,9 +71,11 @@ Adopt option 3 for `get_development_context`.
 
 - `SqliteWikiContextSearchTests` verifies freshness acceptance, mismatch rejection, ranking, read-only behavior, and telemetry.
 - `WikiQueryServiceTests` verifies SQL-primary scope, one refresh attempt, JSON fallback, fingerprint forwarding, and routing telemetry.
-- `.llm-wiki/evals/context-search.json` contains at least 60 regression cases, and `.llm-wiki/evals/context-search-holdout.json` contains at least 40 independently authored challenge cases. Both define independent regression and switch criteria.
-- `Test-LlmWikiSqlContextEvaluation.ps1` requires both corpora to meet switch criteria, a combined floor of 100 cases, and no top-10 miss.
+- The committed search suite contains 380 strict cases across the primary, holdout, generalization, validation, and five promoted probe corpora. Probe-5 preserves its blind baseline of 22/40 top-1, 36/40 top-10, and 0.6906 MRR.
+- `Test-LlmWikiSqlContextEvaluation.ps1` requires every corpus to meet its thresholds, both promotion corpora to meet switch criteria, a combined promotion floor of 100 cases, and no top-10 promotion miss.
 - `--evaluate-context-search` calculates the live MCP change-set fingerprint before evaluating, so a stale database cannot produce a false passing result.
+- `Test-LlmWikiDevelopmentContextEvaluation.ps1` evaluates the complete SQL-first aggregate bundle, including scope recall, noise budget, change context, focused checks, compact payload size, and end-to-end timing.
+- `ContextRoutingTelemetryStore` tests enforce bounded retention, reload, concurrent writers, normalized fallback categories, and absence of query/path data.
 - `Test-LlmWikiCodeGraph.ps1` and the full Wiki verification validate the writer and projection lifecycle.
 
 ## JSON Trace Removal Criteria
@@ -79,7 +83,7 @@ Adopt option 3 for `get_development_context`.
 Removing the fallback is a separate decision. It requires all of the following evidence:
 
 1. Node and in-process evaluations produce the same top candidates across the committed corpus, expanded to at least 100 cases with no top-10 misses.
-2. Runtime route telemetry from representative development sessions contains at least 100 aggregate requests and less than 1% unexplained JSON fallbacks; expected first-request refreshes do not count as fallbacks when the retry succeeds.
+2. Persistent runtime route telemetry from representative development sessions contains at least 100 aggregate requests and no more than 1% JSON fallbacks; successful first-request refreshes remain SQL-primary observations.
 3. Bootstrap, missing database, corrupt database, writer lock, cancelled refresh, and worktree-change races have explicit user-facing recovery behavior outside the JSON trace.
 4. A consumer scan confirms that aggregate callers do not depend on trace-only payload fields or ordering.
 5. Source, test, ADR, policy, privacy, journey, and scoped-instruction verification remains Git-backed even if the compatibility trace is removed.

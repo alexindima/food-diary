@@ -130,7 +130,10 @@ public sealed class WikiQueryService(
                 fullSnapshot.Fingerprint,
                 cancellationToken).ConfigureAwait(false);
         string? refreshFailureReason = null;
+        bool refreshAttempted = false;
+        bool refreshSucceeded = false;
         if (contextSearch is not null && ShouldRefreshSqlContext(sqlContext)) {
+            refreshAttempted = true;
             try {
                 _ = await executor.ExecuteAsync(
                     "graph-build",
@@ -145,11 +148,16 @@ public sealed class WikiQueryService(
                     plannedPath,
                     fullSnapshot.Fingerprint,
                     cancellationToken).ConfigureAwait(false);
+                refreshSucceeded = true;
             } catch (DevelopmentMcpException exception) {
                 refreshFailureReason = $"graph-refresh-{exception.ErrorCode}";
             }
         }
         bool useSqlContext = sqlContext is { Ready: true, Fresh: true, Candidates.Count: > 0 };
+        string? fallbackReason = useSqlContext
+            ? null
+            : refreshFailureReason ?? sqlContext?.UnavailableReason ??
+                (contextSearch is null ? "sqlite-reader-not-configured" : "sqlite-no-candidates");
         string[] initialRelevantPaths = NormalizePaths([plannedPath]);
         List<DevelopmentContextComponentError> errors = [];
         ChangeSetSnapshot? snapshot = null;
@@ -185,10 +193,12 @@ public sealed class WikiQueryService(
                 .Distinct(StringComparer.OrdinalIgnoreCase)];
         }
         routingStopwatch.Stop();
-        _telemetry.RecordCommandStage(
-            "context-routing",
-            useSqlContext ? "sqlite-primary" : "json-fallback",
-            routingStopwatch.Elapsed);
+        _telemetry.RecordContextRoute(
+            useSqlContext,
+            fallbackReason,
+            routingStopwatch.Elapsed,
+            refreshAttempted,
+            refreshSucceeded);
         snapshot = await snapshots.GetAsync(expandedScopePaths, cancellationToken).ConfigureAwait(false);
 
         List<string> briefArguments = [
@@ -246,10 +256,7 @@ public sealed class WikiQueryService(
             BaselineAvailable: baselineAvailable,
             SqlContextSearch: sqlContext,
             ContextRetrievalSource: useSqlContext ? "sqlite" : "json",
-            ContextFallbackReason: useSqlContext
-                ? null
-                : refreshFailureReason ?? sqlContext?.UnavailableReason ??
-                    (contextSearch is null ? "sqlite-reader-not-configured" : "sqlite-no-candidates"));
+            ContextFallbackReason: fallbackReason);
     }
 
     private static async Task<WikiContextSearchResult?> SearchSqlContextAsync(

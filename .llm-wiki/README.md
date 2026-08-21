@@ -47,6 +47,19 @@ Rules:
 Start at [index.md](index.md). Follow the smallest relevant set of pages, then
 open the cited source files before changing code.
 
+Choose the interface by outcome:
+
+| Need | Recommended interface | Why |
+| --- | --- | --- |
+| Retrieve code context, a backend trace, a focused test plan, or server health from an agent | Development MCP | It returns a compact structured payload, reuses one worktree snapshot, and uses the SQL-first retrieval path. |
+| Start, advance, pause, resume, validate, or hand off governed work | `wiki.ps1` facade | It owns durable task state, acceptance evidence, phase transitions, and publication checks. |
+| Diagnose an index, ranking, privacy, or workflow failure | Detailed `wiki.ps1` command | The facade exposes the lower-level evidence needed for diagnosis. |
+| Verify a claim before editing | Cited code, tests, current docs, ADRs, and scoped `AGENTS.md` | Wiki and MCP results are derived navigation, not source authority. |
+
+In short, agents should prefer MCP for retrieval and the Wiki facade for
+governed lifecycle operations. They complement each other; neither turns the
+SQLite cache into an authority over Git-backed sources.
+
 For normal work, prefer the compact path:
 
 ```powershell
@@ -99,6 +112,15 @@ indexes. Compiled JSON files remain publication artifacts while any generator
 or compatibility reader still consumes them; migration to SQLite removes
 query-time reads first, starting with cold context discovery, and a file is
 deleted only after a repository consumer scan proves it unused.
+
+`get_server_status` exposes bounded SQL-route health under
+`runtimeMetrics.contextRouting`. The persistent sample contains only timestamp,
+route, normalized fallback category, duration, and refresh outcome. It never
+stores the query, intent, content, repository paths, fingerprints, user IDs, or
+payloads. The last 1000 samples live under the resolved Git directory at
+`llm-wiki/context-routing-telemetry.json`, outside the worktree. JSON fallback
+retirement is reported ready only after at least 100 samples, at most 1%
+fallback, and healthy telemetry persistence.
 
 The unified developer entrypoint is:
 

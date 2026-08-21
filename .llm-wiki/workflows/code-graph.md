@@ -19,10 +19,16 @@ sources:
   - .llm-wiki/evals/context-search-probe.json
   - .llm-wiki/evals/context-search-probe-2.json
   - .llm-wiki/evals/context-search-probe-3.json
+  - .llm-wiki/evals/context-search-probe-4.json
+  - .llm-wiki/evals/context-search-probe-5.json
+  - .llm-wiki/evals/development-context-bundles.json
   - .llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
+  - .llm-wiki/tools/Test-LlmWikiDevelopmentContextEvaluation.ps1
   - FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs
   - FoodDiary.Development.Mcp/Wiki/WikiContextSearchEvaluationRunner.cs
+  - FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs
+  - FoodDiary.Development.Mcp/Wiki/ContextRoutingTelemetryStore.cs
   - docs/adr/0013-read-only-sqlite-context-search-in-development-mcp.md
   - docs/adr/0014-sql-first-development-context-with-json-fallback.md
   - .llm-wiki/tools/Measure-LlmWikiCodeGraph.ps1
@@ -78,8 +84,21 @@ run once without tuning. Its diagnostic baseline was 17/30 top-1, 26/30 top-10,
 and 0.6909 MRR. Generic role and scope improvements raised it to 30/30 top-1,
 after which it joined the regression gate. A fresh independent probe in
 `.llm-wiki/evals/context-search-probe-3.json` was then frozen with 30 previously
-unused targets. Its first and only untuned run scored 19/30 top-1, 30/30 top-10,
-and 0.7612 MRR; it remains diagnostic.
+unused targets. Its untuned baseline was 19/30 top-1, 30/30 top-10, and 0.7612
+MRR. File-scoped role and intent improvements raised it to 30/30 top-1, after
+which it joined the regression gate. The next independent diagnostic set in
+`.llm-wiki/evals/context-search-probe-4.json` was frozen with 30 more unused
+targets before its only untuned run. Its baseline is 16/30 top-1, 29/30 top-10,
+and 0.6708 MRR. File-scoped service, frontend-role, and Wiki-tool intent rules
+raised it to 30/30 top-1 without changing its cases or regressing the previous
+310 cases, after which it joined the regression gate.
+A fifth independent probe in `.llm-wiki/evals/context-search-probe-5.json` was
+frozen with 40 unused targets before its first run. Its blind baseline was
+22/40 top-1, 36/40 top-10, and 0.6906 MRR. Shared structural-role scoring and
+general query normalization raised it to 40/40 top-1. Fourteen probe-4
+file-specific identity rules were removed during that work; the replacement
+policy uses candidate role, source scope, query/candidate terms, and filename
+affinity in both Node and .NET.
 Run either corpus without changing the JSON-authoritative path, or run the
 combined gate:
 
@@ -97,6 +116,10 @@ combined gate:
   -CorpusPath .llm-wiki/evals/context-search-probe-2.json
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
   -CorpusPath .llm-wiki/evals/context-search-probe-3.json
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
+  -CorpusPath .llm-wiki/evals/context-search-probe-4.json
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
+  -CorpusPath .llm-wiki/evals/context-search-probe-5.json
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 -FailOnRegression
 ./.llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
 ```
@@ -107,10 +130,10 @@ separate from stricter `switchCriteria`. The combined gate requires at least
 100 committed cases, both corpora to meet switch criteria, and no top-10 miss.
 The current Node result is 60/60 top-1 on the regression corpus, 40/40 top-1 on
 the challenge corpus, 70/70 top-1 on the generalization corpus, 50/50 top-1 on
-the validation corpus, and 30/30 top-1 on each promoted probe. All 280 strict
-cases are top-1. The separate blind probe-3 baseline is 19/30 top-1, 30/30
-top-10, and 0.7612 MRR. Timing is diagnostic rather than a correctness gate
-because workstation load varies.
+the validation corpus, 30/30 top-1 on each of the first four promoted probes,
+and 40/40 on probe-5. All 380 strict cases are top-1. Probe-4 and probe-5
+preserve their blind baselines in their committed descriptions. Timing is
+diagnostic rather than a correctness gate because workstation load varies.
 
 The Development MCP reads the existing projection directly with
 `Microsoft.Data.Sqlite`. It opens the database read-only, uses the same ranking
@@ -133,6 +156,20 @@ dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll
   --evaluate-context-search .llm-wiki/evals/context-search-probe-2.json
 dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search-probe-3.json
+dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+  --evaluate-context-search .llm-wiki/evals/context-search-probe-4.json
+dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+  --evaluate-context-search .llm-wiki/evals/context-search-probe-5.json
+```
+
+The separate full-bundle evaluation runs real SQL retrieval, compact brief,
+and fast test planning on one snapshot. It gates SQL routing, top-10 scope
+recall, bounded expansion, complete components, focused checks, effective
+layers, payload size, and end-to-end p95. It is intentionally a deep smoke
+evaluation rather than a pre-commit check:
+
+```powershell
+./.llm-wiki/tools/Test-LlmWikiDevelopmentContextEvaluation.ps1
 ```
 
 The evaluation calculates the live change-set fingerprint, so it fails closed
@@ -140,9 +177,12 @@ when the database is stale. The graph manager remains the only SQLite writer.
 It records the fingerprint in the projection transaction and rolls back if the
 worktree changes during the build. `get_development_context` attempts one graph
 refresh for missing or stale state, then uses the JSON trace fallback when SQL
-is still unavailable, invalid, or empty. Route counts and query timings are
-exposed through MCP runtime telemetry. See ADR 0014 for freshness, fallback,
-and eventual compatibility-trace removal criteria.
+is still unavailable, invalid, or empty. `get_server_status` exposes both
+process-local timings and the last 1000 persistent route decisions. Persistent
+events contain no query, intent, path, fingerprint, content, or payload data;
+they record only route, normalized fallback category, duration, refresh
+outcome, and timestamp. See ADR 0014 for freshness, fallback, and eventual
+compatibility-trace removal criteria.
 
 Build or incrementally refresh the graph:
 

@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 1,
+  "description": "Fifth promoted blind context-search probe, frozen before first execution. Its baseline was 22/40 top-1, 36/40 top-10, and 0.6906 MRR; promotion requires the general structural ranking policy to keep at least 95% top-1, 100% top-10, and 0.97 MRR.",
+  "diagnosticLimit": 100,
+  "thresholds": {
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 40,
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "cases": [
+    {
+      "id": "image-deletion-outbox-job-probe-5",
+      "query": "background job drains queued image object deletion outbox records",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/ImageObjectDeletionOutboxJob.cs"]
+    },
+    {
+      "id": "fasting-notification-job-probe-5",
+      "query": "background job sends scheduled fasting notifications",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/FastingNotificationJob.cs"]
+    },
+    {
+      "id": "email-outbox-job-probe-5",
+      "query": "background job delivers queued email outbox messages",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/EmailOutboxJob.cs"]
+    },
+    {
+      "id": "client-task-reminder-job-probe-5",
+      "query": "job reminds dietologist clients about pending tasks",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/ClientTaskReminderJob.cs"]
+    },
+    {
+      "id": "billing-renewal-job-probe-5",
+      "query": "background job renews billing subscriptions",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/BillingRenewalJob.cs"]
+    },
+    {
+      "id": "wearable-read-service-probe-5",
+      "query": "read wearable connections and synchronization state",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Wearables/Wearables/Services/WearableReadService.cs"]
+    },
+    {
+      "id": "favorite-product-read-service-probe-5",
+      "query": "load a user's favorite product summaries",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Favorites/FavoriteProducts/Services/FavoriteProductReadService.cs"]
+    },
+    {
+      "id": "favorite-meal-read-service-probe-5",
+      "query": "load a user's favorite meal summaries",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Favorites/FavoriteMeals/Services/FavoriteMealReadService.cs"]
+    },
+    {
+      "id": "waist-entry-read-service-probe-5",
+      "query": "read a user's waist measurement entries",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.BodyMetrics/WaistEntries/Services/WaistEntryReadService.cs"]
+    },
+    {
+      "id": "email-template-administration-reader-probe-5",
+      "query": "administrator reads email template definitions",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationReadService.cs"]
+    },
+    {
+      "id": "authentication-login-event-cleanup-probe-5",
+      "query": "cleanup old authentication login events",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventCleanupService.cs"]
+    },
+    {
+      "id": "shopping-list-read-service-probe-5",
+      "query": "read shopping list data for meal planning",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListReadService.cs"]
+    },
+    {
+      "id": "meal-plan-read-service-probe-5",
+      "query": "read saved meal plan details",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.MealPlanning/MealPlans/Services/MealPlanReadService.cs"]
+    },
+    {
+      "id": "post-commit-action-queue-probe-5",
+      "query": "queue actions that must run after transaction commit",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Runtime/Common/Services/PostCommitActionQueue.cs"]
+    },
+    {
+      "id": "recipe-nutrition-applier-probe-5",
+      "query": "apply calculated nutrition values to a recipe",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Recipes/Recipes/Services/RecipeNutritionApplier.cs"]
+    },
+    {
+      "id": "page-container-directive-probe-5",
+      "query": "Angular directive constrains the page content container layout",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/ui/layout/page-container.directive.ts"]
+    },
+    {
+      "id": "user-facade-probe-5",
+      "query": "shared frontend facade exposes current user state",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/user.facade.ts"]
+    },
+    {
+      "id": "signal-form-model-patch-probe-5",
+      "query": "frontend utility patches a signal form model with partial values",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/signal-form-model.utils.ts"]
+    },
+    {
+      "id": "satiety-level-normalizer-probe-5",
+      "query": "frontend utility normalizes satiety level to the supported scale",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/satiety-level.utils.ts"]
+    },
+    {
+      "id": "tracked-request-runner-probe-5",
+      "query": "run a frontend request while tracking loading and errors",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/run-tracked-request.ts"]
+    },
+    {
+      "id": "request-state-controller-probe-5",
+      "query": "frontend controller manages asynchronous request loading success and failure state",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/request-state.ts"]
+    },
+    {
+      "id": "nutrition-form-utility-probe-5",
+      "query": "frontend nutrition form utility calculates macro calories and mismatch warnings",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/nutrition-form.utils.ts"]
+    },
+    {
+      "id": "meal-image-resolver-probe-5",
+      "query": "frontend utility resolves a meal image or meal type fallback",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/meal-image.util.ts"]
+    },
+    {
+      "id": "history-range-utility-probe-5",
+      "query": "frontend utility calculates date filters for history ranges",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/history-range.utils.ts"]
+    },
+    {
+      "id": "fasting-reminder-presets-probe-5",
+      "query": "frontend presets resolve fasting reminder intervals",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/fasting-reminder-presets.ts"]
+    },
+    {
+      "id": "client-id-utility-probe-5",
+      "query": "frontend utility generates a browser client identifier with a prefix",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/client-id.utils.ts"]
+    },
+    {
+      "id": "api-query-params-utility-probe-5",
+      "query": "frontend utility adds optional values to API query parameters",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/api-query-params.utils.ts"]
+    },
+    {
+      "id": "translate-language-resolver-probe-5",
+      "query": "frontend helper resolves the active translation language",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/i18n/translate-language.utils.ts"]
+    },
+    {
+      "id": "item-select-dialog-probe-5",
+      "query": "shared Angular dialog lets the user select an item from a list",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.ts"]
+    },
+    {
+      "id": "frontend-user-api-service-probe-5",
+      "query": "frontend API service loads and updates the user profile",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/api/user.service.ts"]
+    },
+    {
+      "id": "context-security-workflow-probe-5",
+      "query": "Wiki workflow detects prompt injection and quarantines untrusted context instructions",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/context-security.md"]
+    },
+    {
+      "id": "context-quality-benchmark-probe-5",
+      "query": "Wiki workflow benchmarks a candidate context strategy against a baseline",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/context-quality-benchmark.md"]
+    },
+    {
+      "id": "context-bundles-workflow-probe-5",
+      "query": "Wiki workflow builds bounded redacted task context bundles",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/context-bundles.md"]
+    },
+    {
+      "id": "change-manifest-workflow-probe-5",
+      "query": "Wiki workflow freezes change scope phases checks and rollout assumptions",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/change-manifest.md"]
+    },
+    {
+      "id": "failure-prediction-workflow-probe-5",
+      "query": "Wiki workflow predicts and calibrates verification failures",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/failure-prediction.md"]
+    },
+    {
+      "id": "integration-scan-workflow-probe-5",
+      "query": "Wiki workflow scans integration edges and external boundaries",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/integration-scan.md"]
+    },
+    {
+      "id": "performance-observability-review-probe-5",
+      "query": "Wiki workflow reviews query performance and telemetry guardrails",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/performance-observability-review.md"]
+    },
+    {
+      "id": "manual-qa-plan-tool-probe-5",
+      "query": "PowerShell tool compiles manual QA cases from product journeys",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Get-LlmWikiManualQaPlan.ps1"]
+    },
+    {
+      "id": "frontend-runtime-owner-tool-probe-5",
+      "query": "PowerShell tool finds the frontend runtime owner for candidate paths",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Get-LlmWikiFrontendRuntimeOwner.ps1"]
+    },
+    {
+      "id": "backend-contract-finder-probe-5",
+      "query": "PowerShell tool searches backend contracts and their consumers",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Find-LlmWikiBackendContract.ps1"]
+    }
+  ]
+}

@@ -305,10 +305,10 @@ function openDatabase(databasePath) {
   try {
     database = new DatabaseSync(databasePath);
     database.exec(`
+    PRAGMA busy_timeout = 5000;
     PRAGMA journal_mode = WAL;
     PRAGMA synchronous = NORMAL;
     PRAGMA foreign_keys = ON;
-    PRAGMA busy_timeout = 5000;
     CREATE TABLE IF NOT EXISTS metadata(key TEXT PRIMARY KEY, value TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS files(
       id INTEGER PRIMARY KEY,
@@ -975,6 +975,7 @@ function searchContext(database, query, limit, filters = {}) {
   const ranked = candidates.map((item, index) => {
     const path = String(item.path ?? '').replaceAll('\\', '/');
     const normalizedPath = path.toLowerCase();
+    const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(path);
     const normalizedTitle = expandSearchText(item.title).toLowerCase();
     const reasons = ['SQLite FTS5 lexical match'];
     let score = candidateLimit - index;
@@ -1020,6 +1021,41 @@ function searchContext(database, query, limit, filters = {}) {
         reasons.push(`ranking policy ${boost.id}`);
       }
     }
+    for (const boost of contextSearchRanking.structuralRoleBoosts ?? []) {
+      const matchesChangeType = !(boost.changeTypes?.length)
+        || boost.changeTypes.some((candidate) => String(candidate).toLowerCase() === changeType);
+      if (!matchesChangeType) continue;
+      if (boost.excludeTests === true && isTest) continue;
+      if (boost.recordTypes?.length
+        && !boost.recordTypes.some((candidate) => String(candidate).toLowerCase() === String(item.recordType ?? '').toLowerCase())) continue;
+      if (boost.pathPrefixes?.length
+        && !boost.pathPrefixes.some((prefix) => normalizedPath.startsWith(String(prefix).replaceAll('\\', '/').toLowerCase()))) continue;
+      if (boost.excludedPathPrefixes?.length
+        && boost.excludedPathPrefixes.some((prefix) => normalizedPath.startsWith(String(prefix).replaceAll('\\', '/').toLowerCase()))) continue;
+      if (boost.pathSuffixes?.length
+        && !boost.pathSuffixes.some((suffix) => normalizedPath.endsWith(String(suffix).toLowerCase()))) continue;
+      const eligibleQueryTerms = boost.directOnly ? directTerms : boostTerms;
+      if ((boost.excludedQueryTerms ?? []).some((term) => eligibleQueryTerms.includes(String(term).toLowerCase()))) continue;
+      const queryMatches = (boost.queryTerms ?? []).filter((term) => eligibleQueryTerms.includes(String(term).toLowerCase()));
+      const eligibleIdentity = boost.identityScope === 'file'
+        ? searchableFileIdentity
+        : boost.identityScope === 'identity' ? searchableIdentity : searchablePath;
+      const candidateMatches = (boost.candidateTerms ?? []).filter((term) =>
+        eligibleIdentity.includes(String(term).toLowerCase()));
+      const minimumAffinityTermLength = Number(boost.minimumAffinityTermLength ?? affinity.minimumTermLength ?? 3);
+      const affinityQueryTerms = boost.affinityDirectOnly === false ? boostTerms : directTerms;
+      const queryIdentityMatches = affinityQueryTerms.filter((term) =>
+        term.length >= minimumAffinityTermLength && eligibleIdentity.includes(term));
+      if (queryMatches.length < Number(boost.minimumMatches ?? 0)
+        || candidateMatches.length < Number(boost.minimumCandidateMatches ?? 0)
+        || queryIdentityMatches.length < Number(boost.minimumQueryIdentityMatches ?? 0)) continue;
+      const variableScore = Math.min(
+        queryIdentityMatches.length * Number(boost.scorePerQueryIdentityMatch ?? 0),
+        Number(boost.maximumQueryIdentityScore ?? Number.MAX_SAFE_INTEGER));
+      score += Number(boost.score ?? 0) + variableScore;
+      matchedRankingPolicy = true;
+      reasons.push(`structural role ${boost.id} (${queryIdentityMatches.join(', ')})`);
+    }
     for (const boost of contextSearchRanking.pathBoosts ?? []) {
       const eligibleQueryTerms = boost.directOnly ? directTerms : boostTerms;
       const matchedTerms = (boost.queryTerms ?? []).filter((term) => eligibleQueryTerms.includes(String(term).toLowerCase()));
@@ -1044,7 +1080,6 @@ function searchContext(database, query, limit, filters = {}) {
         reasons.push(`matched-role file-name affinity ${fileNameMatches.join(', ')}`);
       }
     }
-    const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(path);
     if (isTest && changeType !== 'tests') score -= Number(contextSearchRanking.nonTestPenalty ?? 25);
     const isFrontendPath = normalizedPath.startsWith('fooddiary.web.client/');
     const isCode = item.recordType === 'code';

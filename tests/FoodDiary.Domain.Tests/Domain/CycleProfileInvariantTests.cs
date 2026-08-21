@@ -19,6 +19,42 @@ public class CycleProfileInvariantTests {
         Assert.Equal(new DateOnly(2026, 3, 27), profile.TrackingStartDate);
     }
 
+    [Theory]
+    [InlineData(CycleTrackingMode.PeriodTracking, CycleReproductiveState.Cycling)]
+    [InlineData(CycleTrackingMode.TryingToConceive, CycleReproductiveState.Cycling)]
+    [InlineData(CycleTrackingMode.Pregnancy, CycleReproductiveState.Pregnancy)]
+    [InlineData(CycleTrackingMode.PostpartumLactation, CycleReproductiveState.Postpartum)]
+    [InlineData(CycleTrackingMode.Perimenopause, CycleReproductiveState.Perimenopause)]
+    [InlineData(CycleTrackingMode.NoPeriod, CycleReproductiveState.NoPeriod)]
+    public void Create_WithLegacyMode_MapsReproductiveState(
+        CycleTrackingMode mode,
+        CycleReproductiveState expectedState) {
+        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 3, 27), mode);
+
+        Assert.Equal(expectedState, profile.ReproductiveState);
+    }
+
+    [Theory]
+    [InlineData(CycleReproductiveState.Cycling, CycleTrackingGoal.PeriodAwareness, CycleTrackingMode.PeriodTracking)]
+    [InlineData(CycleReproductiveState.Cycling, CycleTrackingGoal.TryingToConceive, CycleTrackingMode.TryingToConceive)]
+    [InlineData(CycleReproductiveState.Pregnancy, CycleTrackingGoal.PeriodAwareness, CycleTrackingMode.Pregnancy)]
+    [InlineData(CycleReproductiveState.Postpartum, CycleTrackingGoal.PeriodAwareness, CycleTrackingMode.PostpartumLactation)]
+    [InlineData(CycleReproductiveState.Lactation, CycleTrackingGoal.PeriodAwareness, CycleTrackingMode.PostpartumLactation)]
+    [InlineData(CycleReproductiveState.Perimenopause, CycleTrackingGoal.PeriodAwareness, CycleTrackingMode.Perimenopause)]
+    [InlineData(CycleReproductiveState.NoPeriod, CycleTrackingGoal.PeriodAwareness, CycleTrackingMode.NoPeriod)]
+    public void Create_WithExplicitGoalAndState_MapsTrackingMode(
+        CycleReproductiveState reproductiveState,
+        CycleTrackingGoal goal,
+        CycleTrackingMode expectedMode) {
+        var profile = CycleProfile.Create(
+            UserId.New(),
+            new DateOnly(2026, 3, 27),
+            goal: goal,
+            reproductiveState: reproductiveState);
+
+        Assert.Equal(expectedMode, profile.Mode);
+    }
+
     [Fact]
     public void ReconcileMenstrualEpisodes_IsNotExposedAsPublicMutation() {
         MethodInfo? method = typeof(CycleProfile).GetMethod(

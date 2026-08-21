@@ -216,6 +216,10 @@ public sealed class McpServerTests {
         Assert.True(runtimeMetrics.GetProperty("completedCommands").GetInt64() >= 1);
         Assert.Contains(runtimeMetrics.GetProperty("commandTimings").EnumerateArray(), timing =>
             string.Equals(timing.GetProperty("command").GetString(), "brief", StringComparison.Ordinal));
+        JsonElement contextRouting = runtimeMetrics.GetProperty("contextRouting");
+        Assert.True(contextRouting.GetProperty("sampleCount").GetInt32() >= 0);
+        Assert.True(contextRouting.GetProperty("retentionLimit").GetInt32() >= 1000);
+        Assert.True(contextRouting.GetProperty("persistenceHealthy").GetBoolean());
     }
 
     private static async Task<CallToolResult> CallStatusAsync(

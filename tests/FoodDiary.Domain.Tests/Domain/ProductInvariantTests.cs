@@ -423,6 +423,34 @@ public class ProductInvariantTests {
     }
 
     [Fact]
+    public void UpdateIdentity_WithEveryClearAndReplacementConflict_Throws() {
+        Product product = CreateValidProduct();
+
+        Assert.Multiple(
+            () => Assert.Throws<ArgumentException>(() => product.UpdateIdentity(
+                new ProductIdentityUpdate(Barcode: "123", ClearBarcode: true))),
+            () => Assert.Throws<ArgumentException>(() => product.UpdateIdentity(
+                new ProductIdentityUpdate(Brand: "Brand", ClearBrand: true))),
+            () => Assert.Throws<ArgumentException>(() => product.UpdateIdentity(
+                new ProductIdentityUpdate(Category: "Fruit", ClearCategory: true))),
+            () => Assert.Throws<ArgumentException>(() => product.UpdateIdentity(
+                new ProductIdentityUpdate(Description: "Description", ClearDescription: true))),
+            () => Assert.Throws<ArgumentException>(() => product.UpdateIdentity(
+                new ProductIdentityUpdate(Comment: "Comment", ClearComment: true))));
+    }
+
+    [Fact]
+    public void UpdateIdentity_WithInvalidNameOrProductType_Throws() {
+        Product product = CreateValidProduct();
+
+        Assert.Multiple(
+            () => Assert.Throws<ArgumentException>(() => product.UpdateIdentity(
+                new ProductIdentityUpdate(Name: "   "))),
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => product.UpdateIdentity(
+                new ProductIdentityUpdate(ProductType: (ProductType)int.MaxValue))));
+    }
+
+    [Fact]
     public void UpdateIdentity_WithSameValues_DoesNotSetModifiedOnUtc() {
         var product = Product.Create(
             UserId.New(),

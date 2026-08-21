@@ -25,6 +25,29 @@ if (args.Length == 2 && string.Equals(
     return;
 }
 
+if (args.Length == 2 && string.Equals(
+    args[0],
+    "--evaluate-development-context-bundles",
+    StringComparison.Ordinal)) {
+    WikiRuntimeTelemetry evaluationTelemetry = new();
+    using ChangeSetSnapshotService evaluationSnapshots = new();
+    WikiQueryCache evaluationCache = new(TimeProvider.System, evaluationTelemetry);
+    PowerShellWikiCommandExecutor evaluationExecutor = new(evaluationTelemetry);
+    SqliteWikiContextSearch evaluationSearch = new(evaluationTelemetry);
+    WikiQueryService evaluationQueries = new(
+        evaluationExecutor,
+        evaluationSnapshots,
+        evaluationCache,
+        evaluationSearch,
+        evaluationTelemetry);
+    await DevelopmentContextEvaluationRunner.RunAsync(
+        evaluationQueries,
+        args[1],
+        Console.Out,
+        CancellationToken.None).ConfigureAwait(false);
+    return;
+}
+
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 string? sessionLockPath = Environment.GetEnvironmentVariable("FOODDIARY_MCP_SESSION_LOCK");
 FileStream? sessionLock = string.IsNullOrWhiteSpace(sessionLockPath)
@@ -34,10 +57,20 @@ string repositoryRoot = FoodDiary.Development.Mcp.Infrastructure.RepositoryRootR
 string repositoryHeadAtStartup = await ServerStatusService
     .ReadGitHeadAsync(repositoryRoot, CancellationToken.None)
     .ConfigureAwait(false);
+string gitDirectory = await ServerStatusService
+    .ResolveGitDirectoryForStatusAsync(repositoryRoot, CancellationToken.None)
+    .ConfigureAwait(false);
+string contextRoutingTelemetryPath = Path.Combine(
+    gitDirectory,
+    "llm-wiki",
+    "context-routing-telemetry.json");
 
 builder.Logging.AddConsole(options => options.LogToStandardErrorThreshold = LogLevel.Trace);
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton(ServerRuntimeIdentity.Capture(repositoryHeadAtStartup));
+builder.Services.AddSingleton(serviceProvider => new ContextRoutingTelemetryStore(
+    contextRoutingTelemetryPath,
+    serviceProvider.GetRequiredService<TimeProvider>()));
 builder.Services.AddSingleton<WikiRuntimeTelemetry>();
 builder.Services.AddSingleton<WikiQueryCache>();
 builder.Services.AddSingleton<IWikiContextSearch, SqliteWikiContextSearch>();

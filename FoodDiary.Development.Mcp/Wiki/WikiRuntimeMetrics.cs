@@ -9,4 +9,5 @@ public sealed record WikiRuntimeMetrics(
     long CancelledCommands,
     long TimedOutCommands,
     IReadOnlyList<WikiCommandTiming> CommandTimings,
-    IReadOnlyList<WikiCommandStageTiming> CommandStageTimings);
+    IReadOnlyList<WikiCommandStageTiming> CommandStageTimings,
+    ContextRoutingHealth ContextRouting);

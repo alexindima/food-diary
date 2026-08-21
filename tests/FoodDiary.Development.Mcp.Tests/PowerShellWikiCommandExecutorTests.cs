@@ -25,6 +25,8 @@ public sealed class PowerShellWikiCommandExecutorTests {
         Assert.Contains(result.Indexes, index => index.Path.EndsWith("frontend-index.json", StringComparison.Ordinal));
         Assert.Equal(0, result.RuntimeMetrics.QueryCache.Entries);
         Assert.Equal(0, result.RuntimeMetrics.ActiveCommands);
+        Assert.Equal(0, result.RuntimeMetrics.ContextRouting.SampleCount);
+        Assert.True(result.RuntimeMetrics.ContextRouting.PersistenceHealthy);
     }
 
     [Fact]

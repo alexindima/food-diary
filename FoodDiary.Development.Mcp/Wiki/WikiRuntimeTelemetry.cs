@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 
 namespace FoodDiary.Development.Mcp.Wiki;
 
-public sealed class WikiRuntimeTelemetry {
+public sealed class WikiRuntimeTelemetry(ContextRoutingTelemetryStore? contextRoutingStore = null) {
     private const int MaximumTimingSamples = 128;
     private readonly ConcurrentDictionary<string, TimingWindow> _timings =
         new(StringComparer.OrdinalIgnoreCase);
@@ -49,6 +49,24 @@ public sealed class WikiRuntimeTelemetry {
             .Add(duration.TotalMilliseconds);
     }
 
+    public void RecordContextRoute(
+        bool usedSqlite,
+        string? fallbackReason,
+        TimeSpan duration,
+        bool refreshAttempted,
+        bool refreshSucceeded) {
+        RecordCommandStage(
+            "context-routing",
+            usedSqlite ? "sqlite-primary" : "json-fallback",
+            duration);
+        contextRoutingStore?.Record(
+            usedSqlite,
+            fallbackReason,
+            duration,
+            refreshAttempted,
+            refreshSucceeded);
+    }
+
     public void CommandFailed(bool cancelled, bool timedOut) {
         Interlocked.Decrement(ref _activeCommands);
         if (timedOut) {
@@ -86,7 +104,8 @@ public sealed class WikiRuntimeTelemetry {
                 .OrderBy(pair => pair.Key, StringComparer.OrdinalIgnoreCase)
                 .SelectMany(pair => pair.Value
                     .OrderBy(stage => stage.Key, StringComparer.OrdinalIgnoreCase)
-                    .Select(stage => stage.Value.CaptureStage(pair.Key, stage.Key)))]);
+                    .Select(stage => stage.Value.CaptureStage(pair.Key, stage.Key)))],
+            contextRoutingStore?.Capture() ?? ContextRoutingHealth.Empty);
     }
 
     private sealed class TimingWindow {

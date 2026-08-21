@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "description": "Fourth blind context-search probe authored after probe-2 was promoted. Frozen before first execution and kept diagnostic.",
+  "description": "Fourth frozen context-search corpus, promoted after its blind 19/30 top-1 baseline reached the regression target through generic ranking improvements.",
   "diagnosticLimit": 100,
   "thresholds": {
-    "minimumTop1Rate": 0.55,
-    "minimumTop10Rate": 0.9,
-    "minimumMeanReciprocalRank": 0.65
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
   },
   "switchCriteria": {
     "minimumCaseCount": 30,

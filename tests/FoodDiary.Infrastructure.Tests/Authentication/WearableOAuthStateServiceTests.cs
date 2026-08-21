@@ -91,6 +91,16 @@ public sealed class WearableOAuthStateServiceTests {
         Assert.False(validator.IsValidState(state, userId, WearableProvider.Fitbit));
     }
 
+    [Theory]
+    [InlineData("not-json")]
+    [InlineData("null")]
+    [InlineData("{}")]
+    public void IsValidState_WhenUnprotectedPayloadIsInvalid_ReturnsFalse(string payload) {
+        WearableOAuthStateService service = CreateService(provider: new PlainTextDataProtectionProvider(payload));
+
+        Assert.False(service.IsValidState("protected", UserId.New(), WearableProvider.Fitbit));
+    }
+
     private static WearableOAuthStateService CreateService(
         DateTime? utcNow = null,
         IDataProtectionProvider? provider = null) =>
@@ -101,5 +111,14 @@ public sealed class WearableOAuthStateServiceTests {
     [ExcludeFromCodeCoverage]
     private sealed class StubTimeProvider(DateTime utcNow) : TimeProvider {
         public override DateTimeOffset GetUtcNow() => new(utcNow);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class PlainTextDataProtectionProvider(string payload) : IDataProtectionProvider, IDataProtector {
+        public IDataProtector CreateProtector(string purpose) => this;
+
+        public byte[] Protect(byte[] plaintext) => plaintext;
+
+        public byte[] Unprotect(byte[] protectedData) => System.Text.Encoding.UTF8.GetBytes(payload);
     }
 }

@@ -139,6 +139,40 @@ public sealed class S3ObjectStorageClientTests {
             client.GetObjectBytesAsync("bucket", "images/key.webp", 4, CancellationToken.None));
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task GetObjectBytesAsync_WhenMaximumSizeIsInvalid_ThrowsBeforeCallingS3(long maximumBytes) {
+        IAmazonS3 amazonS3 = CreateS3Client((method, _) => throw new Xunit.Sdk.XunitException(
+            $"S3 must not be called, but {method.Name} was invoked."));
+        var client = new S3ObjectStorageClient(amazonS3);
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.GetObjectBytesAsync("bucket", "images/key.webp", maximumBytes, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task GetObjectBytesAsync_WhenObjectIsMissing_ReturnsNull() {
+        IAmazonS3 amazonS3 = CreateS3Client((method, _) => {
+            if (string.Equals(method.Name, nameof(IAmazonS3.GetObjectAsync), StringComparison.Ordinal)) {
+                throw new AmazonS3Exception("missing") {
+                    StatusCode = HttpStatusCode.NotFound,
+                };
+            }
+
+            throw new NotSupportedException(method.Name);
+        });
+        var client = new S3ObjectStorageClient(amazonS3);
+
+        byte[]? content = await client.GetObjectBytesAsync(
+            "bucket",
+            "missing.webp",
+            1024,
+            CancellationToken.None);
+
+        Assert.Null(content);
+    }
+
     private static IAmazonS3 CreateS3Client(Func<MethodInfo, object?[]?, object?> handler) {
         IAmazonS3 client = DispatchProxy.Create<IAmazonS3, AmazonS3Proxy>();
         ((AmazonS3Proxy)(object)client).InvokeHandler = (method, args) => {

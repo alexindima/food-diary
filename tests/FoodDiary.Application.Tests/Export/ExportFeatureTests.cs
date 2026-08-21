@@ -27,6 +27,60 @@ public class ExportFeatureTests {
     private static readonly DateTime TestDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
     private static readonly DateOnly CycleTestDate = new(2026, 4, 1);
 
+    [Theory]
+    [InlineData(-840, -840)]
+    [InlineData(840, 840)]
+    [InlineData(-841, -360)]
+    [InlineData(841, -360)]
+    public void ExportDiaryDateRangePolicy_ResolvesExplicitAndFallbackOffsets(
+        int requestedOffsetMinutes,
+        int expectedOffsetMinutes) {
+        DateTime from = new(2026, 4, 1, 6, 0, 0, DateTimeKind.Utc);
+
+        bool resolved = ExportDiaryDateRangePolicy.TryResolve(
+            from,
+            from.AddHours(1),
+            requestedOffsetMinutes,
+            out DateTime normalizedFrom,
+            out DateTime normalizedTo,
+            out TimeSpan displayOffset);
+
+        Assert.Multiple(
+            () => Assert.True(resolved),
+            () => Assert.Equal(from, normalizedFrom),
+            () => Assert.Equal(from.AddHours(1), normalizedTo),
+            () => Assert.Equal(TimeSpan.FromMinutes(expectedOffsetMinutes), displayOffset));
+    }
+
+    [Fact]
+    public void ExportDiaryDateRangePolicy_WhenFallbackUsesNextDay_ResolvesPositiveOffset() {
+        DateTime from = new(2026, 4, 1, 18, 0, 0, DateTimeKind.Utc);
+
+        bool resolved = ExportDiaryDateRangePolicy.TryResolve(
+            from,
+            from,
+            timeZoneOffsetMinutes: null,
+            out _,
+            out _,
+            out TimeSpan displayOffset);
+
+        Assert.True(resolved);
+        Assert.Equal(TimeSpan.FromHours(6), displayOffset);
+    }
+
+    [Fact]
+    public void ExportDiaryDateRangePolicy_WhenOffsetWouldOverflow_ReturnsFalse() {
+        bool resolved = ExportDiaryDateRangePolicy.TryResolve(
+            DateTime.MaxValue,
+            DateTime.MaxValue,
+            timeZoneOffsetMinutes: 1,
+            out _,
+            out _,
+            out _);
+
+        Assert.False(resolved);
+    }
+
     private static Meal CreateMeal(
         UserId? userId = null,
         DateTime? date = null,

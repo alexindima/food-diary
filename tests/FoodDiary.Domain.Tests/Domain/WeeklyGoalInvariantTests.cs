@@ -181,4 +181,41 @@ public sealed class WeeklyGoalInvariantTests {
             () => Assert.Equal(reminderDate, goal.LastReminderLocalDate),
             () => Assert.Equal(modifiedAfterFirstCall, goal.ModifiedOnUtc));
     }
+
+    [Fact]
+    public void MarkReminderSent_WhenRemindersAreDisabled_Throws() {
+        var goal = WeeklyGoal.Create(
+            UserId.New(), WeekStart, WeeklyGoalType.DiaryLogging, targetDays: 5,
+            reminderEnabled: false, reminderTimeMinutes: null, timeZoneOffsetMinutes: null);
+
+        Assert.Throws<InvalidOperationException>(() =>
+            goal.MarkReminderSent(new DateOnly(2026, 8, 10), WeekStart));
+    }
+
+    [Fact]
+    public void MarkReminderSent_WhenOffsetWouldOverflow_ThrowsDomainRangeError() {
+        var goal = WeeklyGoal.Create(
+            UserId.New(),
+            new DateTime(9999, 12, 27, 0, 0, 0, DateTimeKind.Utc),
+            WeeklyGoalType.DiaryLogging,
+            targetDays: 5,
+            reminderEnabled: true,
+            reminderTimeMinutes: 0,
+            timeZoneOffsetMinutes: 840);
+
+        ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            goal.MarkReminderSent(DateOnly.MaxValue, DateTime.MaxValue));
+
+        Assert.Equal("modifiedAtUtc", exception.ParamName);
+    }
+
+    [Fact]
+    public void MarkReminderSent_WhenDatePredatesGoalWeek_Throws() {
+        var goal = WeeklyGoal.Create(
+            UserId.New(), WeekStart, WeeklyGoalType.DiaryLogging, targetDays: 5,
+            reminderEnabled: true, reminderTimeMinutes: 0, timeZoneOffsetMinutes: 0);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            goal.MarkReminderSent(new DateOnly(2026, 8, 9), WeekStart.AddDays(-1)));
+    }
 }

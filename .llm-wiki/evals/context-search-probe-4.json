@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "description": "Fifth blind context-search probe promoted after its frozen 16/30 top-1, 29/30 top-10 baseline was improved without changing its cases.",
+  "diagnosticLimit": 100,
+  "thresholds": {
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 30,
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "cases": [
+    {
+      "id": "admin-audit-reader-probe-4",
+      "query": "read structured audit records for administrator review",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Admin/Services/AdminAuditReadService.cs"]
+    },
+    {
+      "id": "favorite-recipe-reader-probe-4",
+      "query": "load a user's favorite recipe summaries",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Favorites/FavoriteRecipes/Services/FavoriteRecipeReadService.cs"]
+    },
+    {
+      "id": "dietologist-user-context-probe-4",
+      "query": "resolve the current user context for dietologist operations",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Dietologist/Services/DietologistUserContextService.cs"]
+    },
+    {
+      "id": "meal-nutrition-applier-probe-4",
+      "query": "apply calculated nutrition values to a meal",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Meals/Services/MealNutritionApplier.cs"]
+    },
+    {
+      "id": "manual-nutrition-validator-probe-4",
+      "query": "validate manually entered meal nutrition values",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Meals/Services/ManualNutritionValidator.cs"]
+    },
+    {
+      "id": "content-report-administration-probe-4",
+      "query": "administrator service changes content report status",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.ContentReports/Services/ContentReportAdministrationService.cs"]
+    },
+    {
+      "id": "fasting-historical-insight-builder-probe-4",
+      "query": "build historical insights from completed fasting occurrences",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Fasting/Services/FastingHistoricalInsightBuilder.cs"]
+    },
+    {
+      "id": "initial-admin-bootstrap-service-probe-4",
+      "query": "bootstrap the initial administrator account during startup",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Services/InitialAdminBootstrapService.cs"]
+    },
+    {
+      "id": "product-usda-link-service-probe-4",
+      "query": "link a product to its USDA food record",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Products/Products/Services/ProductUsdaLinkService.cs"]
+    },
+    {
+      "id": "dashboard-snapshot-builder-probe-4",
+      "query": "build a composed dashboard snapshot from section data",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs"]
+    },
+    {
+      "id": "weekly-check-in-user-profile-probe-4",
+      "query": "load the user profile needed for a weekly check-in",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInUserProfileService.cs"]
+    },
+    {
+      "id": "billing-webhook-inbox-service-probe-4",
+      "query": "process queued billing webhook inbox events",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs"]
+    },
+    {
+      "id": "web-push-subscription-reader-probe-4",
+      "query": "read web push subscriptions for notification administration",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Notifications/Services/WebPushSubscriptionReadService.cs"]
+    },
+    {
+      "id": "application-ai-telemetry-probe-4",
+      "query": "record application AI request counters and duration telemetry",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Ai/Services/ApplicationAiTelemetry.cs"]
+    },
+    {
+      "id": "tdee-calculator-probe-4",
+      "query": "calculator computes total daily energy expenditure from a profile",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Tdee/Services/TdeeCalculator.cs"]
+    },
+    {
+      "id": "page-layout-directive-probe-4",
+      "query": "Angular directive applies the shared page layout",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/ui/layout/page-layout.directive.ts"]
+    },
+    {
+      "id": "card-hover-directive-probe-4",
+      "query": "Angular directive adds hover behavior to cards",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/ui/card-hover.directive.ts"]
+    },
+    {
+      "id": "mobile-shell-runtime-probe-4",
+      "query": "frontend runtime detects whether the app is inside the mobile shell",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/platform/mobile-shell-runtime.ts"]
+    },
+    {
+      "id": "unknown-value-utility-probe-4",
+      "query": "frontend utility safely converts unknown values",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/unknown-value.utils.ts"]
+    },
+    {
+      "id": "local-date-utility-probe-4",
+      "query": "frontend utility parses and formats local calendar dates",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/local-date.utils.ts"]
+    },
+    {
+      "id": "collection-touched-state-utility-probe-4",
+      "query": "frontend utility tracks touched state across a form collection",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/collection-touched-state.utils.ts"]
+    },
+    {
+      "id": "localized-date-pipe-probe-4",
+      "query": "Angular pipe renders a date using the active locale",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/i18n/localized-date.pipe.ts"]
+    },
+    {
+      "id": "translation-loader-probe-4",
+      "query": "frontend loader fetches FoodDiary translation resources",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/i18n/food-diary-translation.loader.ts"]
+    },
+    {
+      "id": "export-api-service-probe-4",
+      "query": "frontend API service downloads diary export files",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/api/export.service.ts"]
+    },
+    {
+      "id": "idle-selective-preloading-strategy-probe-4",
+      "query": "Angular preloading strategy waits for browser idle time",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/services/idle-selective-preloading.strategy.ts"]
+    },
+    {
+      "id": "acceptance-evidence-workflow-probe-4",
+      "query": "Wiki workflow maps acceptance criteria to verification evidence",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/acceptance-evidence-matrix.md"]
+    },
+    {
+      "id": "controlled-repair-workflow-probe-4",
+      "query": "Wiki workflow governs bounded retries for failed verification",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/controlled-repair-loop.md"]
+    },
+    {
+      "id": "model-routing-workflow-probe-4",
+      "query": "Wiki workflow selects a model based on task complexity",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/model-routing.md"]
+    },
+    {
+      "id": "coverage-plan-tool-probe-4",
+      "query": "PowerShell command compiles a focused coverage plan",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Get-LlmWikiCoveragePlan.ps1"]
+    },
+    {
+      "id": "architecture-health-finder-probe-4",
+      "query": "PowerShell tool finds architecture health risks in changed modules",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Find-LlmWikiArchitectureHealth.ps1"]
+    }
+  ]
+}

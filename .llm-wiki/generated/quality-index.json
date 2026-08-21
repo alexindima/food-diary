@@ -5,13 +5,21 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4441,
+    "productionFiles": 4444,
     "criticalSymbols": 569,
     "criticalSymbolsWithTestReferences": 550,
     "criticalSymbolsWithoutTestReferences": 19,
     "debtMarkers": 4
   },
   "hotspots": [
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+      "nonBlankLines": 726,
+      "decisionPoints": 127,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 205.02
+    },
     {
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
       "nonBlankLines": 696,
@@ -27,14 +35,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 179.42
-    },
-    {
-      "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 651,
-      "decisionPoints": 98,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 160.02
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page-lib/cycle-tracking-page.mapper.ts",
@@ -134,11 +134,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
-      "nonBlankLines": 447,
+      "nonBlankLines": 454,
       "decisionPoints": 61,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 100.44
+      "structuralRiskScore": 100.58
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
@@ -677,6 +677,14 @@
       "structuralRiskScore": 52.06
     },
     {
+      "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
+      "nonBlankLines": 189,
+      "decisionPoints": 32,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 51.78
+    },
+    {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/ux-playbook.stories.ts",
       "nonBlankLines": 239,
       "decisionPoints": 31,
@@ -803,14 +811,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 45.6
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.ts",
-      "nonBlankLines": 227,
-      "decisionPoints": 27,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 45.04
     }
   ],
   "files": [
@@ -16032,11 +16032,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "nonBlankLines": 58,
-      "decisionPoints": 4,
+      "nonBlankLines": 90,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.16
+      "structuralRiskScore": 10.8
     },
     {
       "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentContext.cs",
@@ -16111,6 +16111,30 @@
       "structuralRiskScore": 22.96
     },
     {
+      "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingHealth.cs",
+      "nonBlankLines": 36,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.72
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingTelemetryStore.cs",
+      "nonBlankLines": 198,
+      "decisionPoints": 18,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 30.96
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
+      "nonBlankLines": 189,
+      "decisionPoints": 32,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 51.78
+    },
+    {
       "path": "FoodDiary.Development.Mcp/Wiki/IWikiCommandExecutor.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -16136,11 +16160,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 651,
-      "decisionPoints": 98,
+      "nonBlankLines": 726,
+      "decisionPoints": 127,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 160.02
+      "structuralRiskScore": 205.02
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandRequest.cs",
@@ -16208,27 +16232,27 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
-      "nonBlankLines": 447,
+      "nonBlankLines": 454,
       "decisionPoints": 61,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 100.44
+      "structuralRiskScore": 100.58
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeMetrics.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.24
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeTelemetry.cs",
-      "nonBlankLines": 140,
-      "decisionPoints": 4,
+      "nonBlankLines": 158,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.8
+      "structuralRiskScore": 10.66
     },
     {
       "path": "FoodDiary.Domain/Common/DomainConstants.cs",

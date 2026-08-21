@@ -321,6 +321,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         for (int index = 0; index < candidates.Count; index++) {
             RawCandidate candidate = candidates[index];
             string normalizedPath = NormalizePath(candidate.Path).ToLowerInvariant();
+            bool isTest = TestPath.IsMatch(candidate.Path);
             string normalizedTitle = ExpandSearchText(candidate.Title).ToLowerInvariant();
             List<string> reasons = ["SQLite FTS5 lexical match"];
             int score = candidateLimit - index;
@@ -386,6 +387,54 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                     reasons.Add($"ranking policy {boost.Id}");
                 }
             }
+            foreach (StructuralRoleBoost boost in policy.StructuralRoleBoosts ?? []) {
+                bool matchesChangeType = boost.ChangeTypes is null ||
+                    boost.ChangeTypes.Length == 0 ||
+                    boost.ChangeTypes.Any(candidateChangeType =>
+                        string.Equals(candidateChangeType, changeType, StringComparison.OrdinalIgnoreCase));
+                if (!matchesChangeType || (boost.ExcludeTests && isTest) ||
+                    (boost.RecordTypes is { Length: > 0 } && !boost.RecordTypes.Any(recordType =>
+                        string.Equals(recordType, candidate.RecordType, StringComparison.OrdinalIgnoreCase))) ||
+                    (boost.PathPrefixes is { Length: > 0 } && !boost.PathPrefixes.Any(prefix =>
+                        normalizedPath.StartsWith(NormalizePath(prefix).ToLowerInvariant(), StringComparison.Ordinal))) ||
+                    (boost.ExcludedPathPrefixes is { Length: > 0 } && boost.ExcludedPathPrefixes.Any(prefix =>
+                        normalizedPath.StartsWith(NormalizePath(prefix).ToLowerInvariant(), StringComparison.Ordinal))) ||
+                    (boost.PathSuffixes is { Length: > 0 } && !boost.PathSuffixes.Any(suffix =>
+                        normalizedPath.EndsWith(suffix.ToLowerInvariant(), StringComparison.Ordinal)))) {
+                    continue;
+                }
+                HashSet<string> eligibleQueryTerms = boost.DirectOnly ? directTerms : terms;
+                if (boost.ExcludedQueryTerms?.Any(term =>
+                    eligibleQueryTerms.Contains(term.ToLowerInvariant())) == true) {
+                    continue;
+                }
+                int queryMatches = boost.QueryTerms?.Count(term =>
+                    eligibleQueryTerms.Contains(term.ToLowerInvariant())) ?? 0;
+                string eligibleIdentity = boost.IdentityScope?.ToLowerInvariant() switch {
+                    "file" => searchableFileIdentity,
+                    "identity" => searchableIdentity,
+                    _ => searchablePath,
+                };
+                int candidateMatches = boost.CandidateTerms?.Count(term =>
+                    eligibleIdentity.Contains(term.ToLowerInvariant(), StringComparison.Ordinal)) ?? 0;
+                int minimumAffinityTermLength = boost.MinimumAffinityTermLength ??
+                    policy.PathTermAffinity.MinimumTermLength;
+                HashSet<string> affinityQueryTerms = boost.AffinityDirectOnly ? directTerms : terms;
+                string[] queryIdentityMatches = [.. affinityQueryTerms.Where(term =>
+                    term.Length >= minimumAffinityTermLength &&
+                    eligibleIdentity.Contains(term, StringComparison.Ordinal))];
+                if (queryMatches < boost.MinimumMatches ||
+                    candidateMatches < boost.MinimumCandidateMatches ||
+                    queryIdentityMatches.Length < boost.MinimumQueryIdentityMatches) {
+                    continue;
+                }
+                int variableScore = Math.Min(
+                    queryIdentityMatches.Length * boost.ScorePerQueryIdentityMatch,
+                    boost.MaximumQueryIdentityScore ?? int.MaxValue);
+                score += boost.Score + variableScore;
+                matchedRankingPolicy = true;
+                reasons.Add($"structural role {boost.Id} ({string.Join(", ", queryIdentityMatches)})");
+            }
             foreach (PathBoost boost in policy.PathBoosts) {
                 HashSet<string> eligibleQueryTerms = boost.DirectOnly ? directTerms : terms;
                 int matchedTerms = boost.QueryTerms.Count(term =>
@@ -412,7 +461,6 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                     reasons.Add($"matched-role file-name affinity {string.Join(", ", fileNameMatches)}");
                 }
             }
-            bool isTest = TestPath.IsMatch(candidate.Path);
             if (isTest && !string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase)) {
                 score -= policy.NonTestPenalty;
             }
@@ -591,7 +639,12 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             policy.IdentityBoosts?.Any(boost =>
                 !string.IsNullOrWhiteSpace(boost.IdentityScope) &&
                 !string.Equals(boost.IdentityScope, "path", StringComparison.OrdinalIgnoreCase) &&
-                !string.Equals(boost.IdentityScope, "file", StringComparison.OrdinalIgnoreCase)) == true) {
+                !string.Equals(boost.IdentityScope, "file", StringComparison.OrdinalIgnoreCase)) == true ||
+            policy.StructuralRoleBoosts?.Any(boost =>
+                !string.IsNullOrWhiteSpace(boost.IdentityScope) &&
+                !string.Equals(boost.IdentityScope, "path", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(boost.IdentityScope, "file", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(boost.IdentityScope, "identity", StringComparison.OrdinalIgnoreCase)) == true) {
             throw new InvalidDataException("Context-search ranking policy is invalid.");
         }
         return policy;
@@ -655,7 +708,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         Dictionary<string, string[]> QueryTermExpansions,
         Dictionary<string, string[]> QueryPrefixExpansions,
         PathBoost[] PathBoosts,
-        IdentityBoost[] IdentityBoosts);
+        IdentityBoost[] IdentityBoosts,
+        StructuralRoleBoost[]? StructuralRoleBoosts = null);
 
     private sealed record PathTermAffinity(
         int MinimumTermLength,
@@ -680,4 +734,26 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         bool DirectOnly = false,
         string? IdentityScope = null,
         string[]? ChangeTypes = null);
+
+    private sealed record StructuralRoleBoost(
+        string Id,
+        string[]? QueryTerms = null,
+        int MinimumMatches = 0,
+        string[]? CandidateTerms = null,
+        int MinimumCandidateMatches = 0,
+        int MinimumQueryIdentityMatches = 0,
+        int Score = 0,
+        int ScorePerQueryIdentityMatch = 0,
+        int? MaximumQueryIdentityScore = null,
+        int? MinimumAffinityTermLength = null,
+        bool DirectOnly = false,
+        string? IdentityScope = null,
+        string[]? ChangeTypes = null,
+        string[]? RecordTypes = null,
+        string[]? PathPrefixes = null,
+        string[]? ExcludedPathPrefixes = null,
+        string[]? PathSuffixes = null,
+        string[]? ExcludedQueryTerms = null,
+        bool AffinityDirectOnly = true,
+        bool ExcludeTests = false);
 }

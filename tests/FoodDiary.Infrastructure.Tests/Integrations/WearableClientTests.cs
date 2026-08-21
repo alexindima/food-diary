@@ -137,6 +137,30 @@ public sealed class WearableClientTests {
         Assert.Null(result);
     }
 
+    [Theory]
+    [InlineData("{\"access_token\":\"\",\"refresh_token\":\"refresh\",\"user_id\":\"user\",\"expires_in\":3600}")]
+    [InlineData("{\"access_token\":\"access\",\"refresh_token\":\"\",\"user_id\":\"user\",\"expires_in\":3600}")]
+    [InlineData("{\"access_token\":\"access\",\"refresh_token\":\"refresh\",\"user_id\":\"\",\"expires_in\":3600}")]
+    [InlineData("{\"access_token\":\"access\",\"refresh_token\":\"refresh\",\"user_id\":\"user\",\"expires_in\":0}")]
+    public async Task FitbitRefreshTokenAsync_WhenRequiredTokenFieldIsInvalid_ReturnsNull(string json) {
+        FitbitClient client = CreateFitbitClient(new RecordingHttpMessageHandler(_ => JsonResponse(json)));
+
+        WearableTokenResult? result = await client.RefreshTokenAsync("refresh", CancellationToken.None);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task FitbitRefreshTokenAsync_WhenCallerCancels_PropagatesCancellation() {
+        using var cancellationSource = new CancellationTokenSource();
+        await cancellationSource.CancelAsync();
+        FitbitClient client = CreateFitbitClient(new RecordingHttpMessageHandler(_ =>
+            throw new OperationCanceledException(cancellationSource.Token)));
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            client.RefreshTokenAsync("refresh", cancellationSource.Token));
+    }
+
     [Fact]
     public async Task FitbitRefreshTokenAsync_WhenRequestFails_ReturnsNull() {
         FitbitClient client = CreateFitbitClient(
