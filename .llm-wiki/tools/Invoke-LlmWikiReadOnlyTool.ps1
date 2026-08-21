@@ -186,6 +186,9 @@ function Remove-StaleReadOnlySnapshots {
                 } finally {
                     $ErrorActionPreference = $previousErrorActionPreference
                 }
+                if ($removeExitCode -ne 0) {
+                    $global:LASTEXITCODE = 0
+                }
             }
             if ($removeExitCode -eq 0) {
                 Remove-Item -LiteralPath $readyFile.FullName -Force -ErrorAction SilentlyContinue
@@ -425,7 +428,10 @@ try {
             Remove-Item -LiteralPath $snapshotRoot -Recurse -Force -ErrorAction SilentlyContinue
         } else {
             & git -C $sourceRepositoryRoot worktree remove --force $snapshotRoot 2>$null
-            if ($LASTEXITCODE -ne 0) { Write-Warning "Unable to remove isolated read-only snapshot: $snapshotRoot" }
+            if ($LASTEXITCODE -ne 0) {
+                Write-Warning "Unable to remove isolated read-only snapshot: $snapshotRoot"
+                $global:LASTEXITCODE = 0
+            }
         }
     }
     Remove-Item -LiteralPath $snapshotLockPath -Force -ErrorAction SilentlyContinue

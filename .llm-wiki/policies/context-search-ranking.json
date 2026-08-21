@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "maximumQueryTerms": 24,
+  "stopTerms": ["a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in", "is", "of", "on", "or", "the", "to", "when", "with"],
+  "pathTermAffinity": {
+    "minimumTermLength": 3,
+    "scorePerMatch": 22,
+    "maximumScore": 110
+  },
+  "nonTestPenalty": 120,
+  "applicationAbstractionPenalty": 35,
+  "interfacePathPenalty": 35,
+  "agentGuideBoost": 40,
+  "queryTermExpansions": {
+    "strip": ["sanitize", "privacy", "sensitive"],
+    "redact": ["sanitize", "privacy", "sensitive"],
+    "scrub": ["sanitize", "privacy", "sensitive"],
+    "identity": ["privacy", "user"],
+    "personal": ["privacy", "user"],
+    "external": ["integration", "integrations", "httpclient"],
+    "provider": ["integration", "integrations", "client"],
+    "http": ["httpclient", "integrations"],
+    "reviews": ["review"],
+    "recalculate": ["calculate", "update", "updater"],
+    "changes": ["update"],
+    "english": ["i18n", "localization", "translation"],
+    "russian": ["i18n", "localization", "translation"],
+    "translation": ["i18n", "localization"],
+    "consistent": ["check", "validate"],
+    "replay": ["recovery", "recover"],
+    "reminders": ["reminder"],
+    "webhooks": ["webhook"],
+    "receives": ["receive"],
+    "revise": ["revision", "update", "recalculate"],
+    "predictions": ["prediction"]
+  },
+  "pathBoosts": [
+    {
+      "id": "external-provider-integration",
+      "queryTerms": ["external", "provider"],
+      "minimumMatches": 1,
+      "pathPrefixes": ["FoodDiary.Integrations/"],
+      "score": 90
+    },
+    {
+      "id": "web-api-intent",
+      "queryTerms": ["web", "api"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["FoodDiary.Web.Api/"],
+      "score": 50
+    }
+  ],
+  "identityBoosts": [
+    {
+      "id": "background-job-intent",
+      "queryTerms": ["job", "recurring", "background"],
+      "minimumMatches": 1,
+      "identityTerms": ["job"],
+      "score": 60
+    },
+    {
+      "id": "recovery-job-intent",
+      "queryTerms": ["replay", "failed", "notifications"],
+      "minimumMatches": 2,
+      "identityTerms": ["recovery", "job"],
+      "minimumIdentityMatches": 2,
+      "score": 90
+    },
+    {
+      "id": "http-controller-intent",
+      "queryTerms": ["http", "endpoint", "route"],
+      "minimumMatches": 2,
+      "identityTerms": ["controller"],
+      "score": 400
+    },
+    {
+      "id": "command-handler-intent",
+      "queryTerms": ["authenticate", "login", "rotate", "revoke", "assemble", "confirm", "start", "remove", "toggle", "request"],
+      "minimumMatches": 1,
+      "identityTerms": ["handler"],
+      "score": 70
+    },
+    {
+      "id": "read-service-intent",
+      "queryTerms": ["read"],
+      "minimumMatches": 1,
+      "identityTerms": ["readservice", "reader"],
+      "score": 70
+    },
+    {
+      "id": "reminder-processor-intent",
+      "queryTerms": ["send", "process", "reminder"],
+      "minimumMatches": 2,
+      "identityTerms": ["processor"],
+      "score": 70
+    },
+    {
+      "id": "calculator-intent",
+      "queryTerms": ["calculate", "statistics", "duration"],
+      "minimumMatches": 2,
+      "identityTerms": ["calculator"],
+      "score": 80
+    },
+    {
+      "id": "goal-service-intent",
+      "queryTerms": ["hydration", "goal", "calculate"],
+      "minimumMatches": 2,
+      "identityTerms": ["goalservice"],
+      "score": 80
+    },
+    {
+      "id": "cleanup-job-intent",
+      "queryTerms": ["background", "job", "removes", "expired", "cleanup"],
+      "minimumMatches": 2,
+      "identityTerms": ["cleanup", "job"],
+      "minimumIdentityMatches": 2,
+      "score": 110
+    },
+    {
+      "id": "dispatcher-intent",
+      "queryTerms": ["dispatch", "notification", "push"],
+      "minimumMatches": 1,
+      "identityTerms": ["dispatcher"],
+      "score": 70
+    },
+    {
+      "id": "query-handler-intent",
+      "queryTerms": ["get", "insights", "history"],
+      "minimumMatches": 2,
+      "identityTerms": ["query", "handler"],
+      "minimumIdentityMatches": 2,
+      "score": 100
+    },
+    {
+      "id": "entry-read-service-intent",
+      "queryTerms": ["hydration", "entries", "read"],
+      "minimumMatches": 2,
+      "identityTerms": ["hydration", "entry", "read", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 80
+    },
+    {
+      "id": "administration-service-intent",
+      "queryTerms": ["administer", "gamification", "achievement", "definitions"],
+      "minimumMatches": 2,
+      "identityTerms": ["administration", "service"],
+      "minimumIdentityMatches": 2,
+      "score": 120
+    },
+    {
+      "id": "access-service-intent",
+      "queryTerms": ["access", "dashboard", "client"],
+      "minimumMatches": 2,
+      "identityTerms": ["access", "service"],
+      "minimumIdentityMatches": 2,
+      "score": 100
+    },
+    {
+      "id": "selector-intent",
+      "queryTerms": ["select", "advice"],
+      "minimumMatches": 2,
+      "identityTerms": ["selector"],
+      "score": 70
+    },
+    {
+      "id": "prediction-service-intent",
+      "queryTerms": ["predict", "cycle", "fertile"],
+      "minimumMatches": 2,
+      "identityTerms": ["predictionservice"],
+      "score": 70
+    },
+    {
+      "id": "prediction-revision-intent",
+      "queryTerms": ["revise", "prediction", "history"],
+      "minimumMatches": 2,
+      "identityTerms": ["revision", "service"],
+      "minimumIdentityMatches": 2,
+      "score": 140
+    },
+    {
+      "id": "payment-api-client-intent",
+      "queryTerms": ["payment", "api", "provider"],
+      "minimumMatches": 2,
+      "identityTerms": ["apiclient"],
+      "score": 70
+    },
+    {
+      "id": "mailbox-filter-intent",
+      "queryTerms": ["rate", "limit", "suspicious", "smtp", "sender"],
+      "minimumMatches": 2,
+      "identityTerms": ["mailboxfilter"],
+      "score": 70
+    },
+    {
+      "id": "nutrition-updater-intent",
+      "queryTerms": ["recalculate", "nutrition", "ingredient", "update"],
+      "minimumMatches": 2,
+      "identityTerms": ["updater"],
+      "score": 70
+    },
+    {
+      "id": "api-compatibility-intent",
+      "queryTerms": ["breaking", "openapi", "contract", "snapshot"],
+      "minimumMatches": 2,
+      "identityTerms": ["apicompatibility"],
+      "score": 100
+    }
+  ]
+}

@@ -75,8 +75,9 @@ function Test-Lineage([string]$Kind, [object]$Entry, [object]$Requirement) {
         if ($Kind -eq 'check') {
             if ([string]$lineage.execution.command -cne [string]$Entry.command) { $entryIssues.Add('command does not match evidence') }
             if ([string]$lineage.execution.commandFingerprint -cne (Get-Hash ([string]$Entry.command))) { $entryIssues.Add('command fingerprint is invalid') }
-            if ([string]$lineage.kind -eq 'executed-check' -and $null -ne $lineage.artifact) {
-                $artifactPath = [string]$lineage.artifact.path
+            $artifact = if ($lineage.PSObject.Properties['artifact']) { $lineage.artifact } else { $null }
+            if ([string]$lineage.kind -eq 'executed-check' -and $null -ne $artifact) {
+                $artifactPath = [string]$artifact.path
                 $expectedPrefix = if (-not [string]::IsNullOrWhiteSpace($normalizedWorkspacePath)) { "$normalizedWorkspacePath/logs/" } else { '.artifacts/llm-wiki/' }
                 if (-not $artifactPath.StartsWith($expectedPrefix, [StringComparison]::Ordinal)) {
                     $entryIssues.Add('execution artifact path is outside the evidence boundary')
@@ -84,7 +85,7 @@ function Test-Lineage([string]$Kind, [object]$Entry, [object]$Requirement) {
                     $absoluteArtifactPath = Join-Path $repositoryRoot $artifactPath
                     if (-not (Test-Path -LiteralPath $absoluteArtifactPath -PathType Leaf)) {
                         $entryIssues.Add('execution artifact is missing')
-                    } elseif ((Get-FileHash -LiteralPath $absoluteArtifactPath -Algorithm SHA256).Hash.ToLowerInvariant() -cne [string]$lineage.artifact.sha256) {
+                    } elseif ((Get-FileHash -LiteralPath $absoluteArtifactPath -Algorithm SHA256).Hash.ToLowerInvariant() -cne [string]$artifact.sha256) {
                         $entryIssues.Add('execution artifact hash is invalid')
                     }
                 }
@@ -122,7 +123,8 @@ function Test-Lineage([string]$Kind, [object]$Entry, [object]$Requirement) {
         valid = $entryIssues.Count -eq 0
         reusable = $entryIssues.Count -eq 0 -and [string]$Entry.status -in @('passed', 'passed-with-known-baseline-failures', 'not-applicable', 'completed')
         cacheReusable = $entryIssues.Count -eq 0 -and [string]$Entry.status -eq 'passed' -and
-            [string]$lineage.kind -eq 'executed-check' -and [int]$lineage.execution.exitCode -eq 0 -and $null -ne $lineage.artifact
+            [string]$lineage.kind -eq 'executed-check' -and [int]$lineage.execution.exitCode -eq 0 -and
+            $lineage.PSObject.Properties['artifact'] -and $null -ne $lineage.artifact
         issues = @($entryIssues)
         compatibilityFingerprint = $(if ($null -ne $lineage) { [string]$lineage.compatibilityFingerprint } else { '' })
     })

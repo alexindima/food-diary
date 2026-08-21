@@ -3,7 +3,7 @@ id: workflow-code-graph
 title: Local Code Intelligence Graph
 kind: workflow
 status: current
-summary: Query an incremental SQLite symbol and consumer graph without replacing governed Wiki evidence or committed project knowledge.
+summary: Query an incremental SQLite symbol and consumer graph as the primary Development MCP code-context route without replacing governed Wiki evidence or committed project knowledge.
 sources:
   - .llm-wiki/tools/code-graph.mjs
   - .llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1
@@ -14,6 +14,10 @@ sources:
   - .llm-wiki/evals/context-search.json
   - .llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
+  - FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs
+  - FoodDiary.Development.Mcp/Wiki/WikiContextSearchEvaluationRunner.cs
+  - docs/adr/0013-read-only-sqlite-context-search-in-development-mcp.md
+  - docs/adr/0014-sql-first-development-context-with-json-fallback.md
   - .llm-wiki/tools/Measure-LlmWikiCodeGraph.ps1
   - .llm-wiki/wiki.ps1
 ---
@@ -37,11 +41,11 @@ files. `Manage-LlmWikiCodeGraph.ps1 search` queries this projection with
 deterministic path, module, task-type, and source-kind ranking.
 PowerShell tools are indexed as code with function symbols and raw source text,
 so operational Wiki commands participate in natural-language retrieval.
-`Find-LlmWikiContext.ps1 -SqlShadow` compares its ranked code paths with the
-current JSON retrieval while keeping JSON authoritative; it reports SQLite
-query time separately from the PowerShell/Node round trip. Do not switch the
-normal context path until shadow cases establish acceptable relevant-path
-recall and rule/check coverage.
+`Find-LlmWikiContext.ps1 -SqlShadow` remains a diagnostic comparison with the
+JSON retrieval and reports SQLite query time separately from the
+PowerShell/Node round trip. The Development MCP aggregate route now uses a
+fresh SQL result as its primary code-scope selection; policy, checks, reviewed
+knowledge, and source claims remain Git-backed.
 
 The committed retrieval corpus lives in `.llm-wiki/evals/context-search.json`.
 Run it without changing the JSON-authoritative path:
@@ -51,9 +55,30 @@ Run it without changing the JSON-authoritative path:
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 -FailOnRegression
 ```
 
-The gate reports top-1 accuracy, top-10 recall, mean reciprocal rank, SQL timing,
-and per-query misses. Thresholds are versioned with the corpus; timing is
-diagnostic rather than a correctness gate because workstation load varies.
+The 60-case gate reports top-1 accuracy, top-10 recall, mean reciprocal rank,
+SQL timing, and per-query misses. It keeps lower regression thresholds separate
+from stricter `switchCriteria`. Timing is diagnostic rather than a correctness
+gate because workstation load varies.
+
+The Development MCP reads the existing projection directly with
+`Microsoft.Data.Sqlite`. It opens the database read-only, uses the same ranking
+policy as Node, and accepts candidates only when the database contains the
+exact current change-set fingerprint. Evaluate that in-process reader with a
+built MCP:
+
+```powershell
+dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+  --evaluate-context-search .llm-wiki/evals/context-search.json
+```
+
+The evaluation calculates the live change-set fingerprint, so it fails closed
+when the database is stale. The graph manager remains the only SQLite writer.
+It records the fingerprint in the projection transaction and rolls back if the
+worktree changes during the build. `get_development_context` attempts one graph
+refresh for missing or stale state, then uses the JSON trace fallback when SQL
+is still unavailable, invalid, or empty. Route counts and query timings are
+exposed through MCP runtime telemetry. See ADR 0014 for freshness, fallback,
+and eventual compatibility-trace removal criteria.
 
 Build or incrementally refresh the graph:
 

@@ -16,7 +16,10 @@ public sealed record DevelopmentContext(
     bool CrossLayerScope,
     string? BaseRevision = null,
     string? HeadRevision = null,
-    bool BaselineAvailable = false) {
+    bool BaselineAvailable = false,
+    WikiContextSearchResult? SqlContextSearch = null,
+    string ContextRetrievalSource = "json",
+    string? ContextFallbackReason = null) {
     public DevelopmentContext WithoutRawOutput() => this with {
         ChangeContext = ChangeContext?.WithoutRawOutput(),
         BackendTrace = BackendTrace?.WithoutRawOutput(),
@@ -28,5 +31,6 @@ public sealed record DevelopmentContext(
         BackendTrace = BackendTrace?.ToCompactTrace(includeRawOutput: includeRawOutput),
         TestPlan = TestPlan?.ToCompactTestPlan(includeRawOutput: includeRawOutput),
         ExpandedScopePaths = ExpandedScopePaths.Take(20).ToArray(),
+        SqlContextSearch = SqlContextSearch?.ToCompact(),
     };
 }

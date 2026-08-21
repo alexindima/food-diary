@@ -7,11 +7,15 @@ import { DatabaseSync } from 'node:sqlite';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
-const parserVersion = '10-powershell-fts-v1';
+const parserVersion = '11-javascript-context-v1';
 const contextSearchSchemaVersion = '1';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
 const roslynDll = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll');
 const typescriptExtractor = resolve(repositoryRoot, '.llm-wiki/tools/typescript-extractor.mjs');
+const contextSearchRankingPath = resolve(repositoryRoot, '.llm-wiki/policies/context-search-ranking.json');
+const contextSearchRankingText = readFileSync(contextSearchRankingPath, 'utf8');
+const contextSearchRanking = JSON.parse(contextSearchRankingText);
+if (contextSearchRanking.schemaVersion !== 1) throw new Error(`Unsupported context-search ranking schema: ${contextSearchRanking.schemaVersion}`);
 
 function publishGraphDependencyFingerprint(databasePath, result) {
   const fingerprint = sha256(JSON.stringify({
@@ -22,6 +26,8 @@ function publishGraphDependencyFingerprint(databasePath, result) {
     tokens: result.tokens,
     typedEdges: result.typedEdges,
     contextSearchFingerprint: result.contextSearch?.fingerprint ?? null,
+    contextSearchRankingFingerprint: sha256(contextSearchRankingText),
+    changeSetFingerprint: result.changeSetFingerprint ?? null,
   }));
   writeFileSync(resolve(dirname(databasePath), 'code-graph.fingerprint'), `${fingerprint}\n`, 'utf8');
   return fingerprint;
@@ -149,9 +155,45 @@ function repositoryPaths() {
   return repositoryPathsCache;
 }
 
+function changeSetSnapshot() {
+  const head = execFileSync('git', ['-C', repositoryRoot, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+  const status = execFileSync(
+    'git',
+    ['-c', 'core.fsmonitor=false', '-C', repositoryRoot, 'status', '--porcelain=v1', '-z', '--untracked-files=all'],
+    { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+  const records = status.split('\0').filter(Boolean);
+  const changedPaths = new Set();
+  for (let index = 0; index < records.length; index += 1) {
+    const record = records[index];
+    if (record.length < 4) continue;
+    const changeStatus = record.slice(0, 2);
+    changedPaths.add(record.slice(3).replaceAll('\\', '/'));
+    if ((['R', 'C'].includes(changeStatus[0]) || ['R', 'C'].includes(changeStatus[1])) && index + 1 < records.length) {
+      index += 1;
+    }
+  }
+  const orderedPaths = [...changedPaths].sort((left, right) => {
+    const normalizedLeft = left.toLowerCase();
+    const normalizedRight = right.toLowerCase();
+    if (normalizedLeft < normalizedRight) return -1;
+    if (normalizedLeft > normalizedRight) return 1;
+    return left < right ? -1 : left > right ? 1 : 0;
+  });
+  const hash = createHash('sha256');
+  hash.update(head, 'utf8');
+  hash.update(status, 'utf8');
+  for (const path of orderedPaths) {
+    hash.update(path, 'utf8');
+    const absolutePath = resolve(repositoryRoot, path);
+    if (existsSync(absolutePath)) hash.update(createHash('sha256').update(readFileSync(absolutePath)).digest());
+    else hash.update('<missing>', 'utf8');
+  }
+  return { head, fingerprint: hash.digest('hex'), changedPaths: orderedPaths };
+}
+
 function gitPaths() {
   return repositoryPaths()
-    .filter((path) => /\.(?:cs|csproj|props|targets|ts|html|ps1)$/.test(path)
+    .filter((path) => /\.(?:cs|csproj|props|targets|ts|js|mjs|cjs|html|ps1)$/.test(path)
       || /(^|\/)(?:appsettings(?:\.[^.\/]+)?|package|angular|backend-modules|module-dependencies)\.json$/.test(path)
       || /^\.github\/workflows\/[^/]+\.ya?ml$/.test(path))
     .filter((path) => !/(^|\/)(?:bin|obj|node_modules|\.artifacts|TestResults)(\/|$)/.test(path))
@@ -469,6 +511,7 @@ function refreshContextSearch(database) {
 
 function build(database, force = false) {
   const started = performance.now();
+  const startingChangeSet = changeSetSnapshot();
   const storedParserVersion = database.prepare("SELECT value FROM metadata WHERE key='parser_version'").get()?.value;
   if (storedParserVersion !== parserVersion) force = true;
   const knownPaths = new Set(gitPaths().filter((path) => existsSync(resolve(repositoryRoot, path))));
@@ -535,6 +578,14 @@ function build(database, force = false) {
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('updated_at_utc', new Date().toISOString());
     queryCategoriesRefreshed = refreshQueryLayer(database);
     contextSearch = refreshContextSearch(database);
+    const completedChangeSet = changeSetSnapshot();
+    if (completedChangeSet.fingerprint !== startingChangeSet.fingerprint) {
+      throw new Error('Worktree changed while the code graph was being refreshed; retry the build.');
+    }
+    database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)')
+      .run('change_set_fingerprint', completedChangeSet.fingerprint);
+    database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)')
+      .run('change_set_git_head', completedChangeSet.head);
     database.exec('COMMIT');
   } catch (error) {
     database.exec('ROLLBACK');
@@ -553,6 +604,8 @@ function build(database, force = false) {
     typedEdges: database.prepare('SELECT COUNT(*) count FROM typed_edges').get().count,
     queryCategoriesRefreshed,
     contextSearch,
+    changeSetFingerprint: startingChangeSet.fingerprint,
+    changeSetGitHead: startingChangeSet.head,
     durationMs: Math.round((performance.now() - started) * 100) / 100,
   };
 }
@@ -758,11 +811,14 @@ function rankedTrace(database, query, limit, filters = {}) {
 }
 
 function searchTerms(query) {
-  return [...new Set(expandSearchText(query)
+  const stopTerms = new Set(contextSearchRanking.stopTerms ?? []);
+  const direct = [...new Set(expandSearchText(query)
     .toLowerCase()
     .match(/[\p{L}\p{N}][\p{L}\p{N}_-]*/gu) ?? [])]
-    .filter((term) => term.length >= 2)
-    .slice(0, 16);
+    .filter((term) => term.length >= 2 && !stopTerms.has(term));
+  const expanded = [...direct];
+  for (const term of direct) expanded.push(...(contextSearchRanking.queryTermExpansions?.[term] ?? []));
+  return [...new Set(expanded)].slice(0, Number(contextSearchRanking.maximumQueryTerms ?? 24));
 }
 
 function searchContext(database, query, limit, filters = {}) {
@@ -813,10 +869,49 @@ function searchContext(database, query, limit, filters = {}) {
       score += 70;
       reasons.push('planned scope affinity');
     }
-    const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)/i.test(path);
-    if (isTest && changeType !== 'tests') score -= 25;
+    const affinity = contextSearchRanking.pathTermAffinity ?? {};
+    const searchablePath = expandSearchText(path).toLowerCase();
+    const searchableIdentity = `${searchablePath} ${normalizedTitle}`;
+    const identityMatches = terms.filter((term) =>
+      term.length >= Number(affinity.minimumTermLength ?? 3) && searchableIdentity.includes(term));
+    const identityScore = Math.min(
+      identityMatches.length * Number(affinity.scorePerMatch ?? 0),
+      Number(affinity.maximumScore ?? 0));
+    if (identityScore > 0) {
+      score += identityScore;
+      reasons.push(`path/title affinity ${identityMatches.join(', ')}`);
+    }
+    for (const boost of contextSearchRanking.identityBoosts ?? []) {
+      const queryMatches = (boost.queryTerms ?? []).filter((term) => terms.includes(String(term).toLowerCase()));
+      const identityMatchesBoost = (boost.identityTerms ?? []).filter((term) =>
+        searchablePath.includes(String(term).toLowerCase()));
+      if (queryMatches.length >= Number(boost.minimumMatches ?? 1)
+        && identityMatchesBoost.length >= Number(boost.minimumIdentityMatches ?? 1)) {
+        score += Number(boost.score ?? 0);
+        reasons.push(`ranking policy ${boost.id}`);
+      }
+    }
+    for (const boost of contextSearchRanking.pathBoosts ?? []) {
+      const matchedTerms = (boost.queryTerms ?? []).filter((term) => terms.includes(String(term).toLowerCase()));
+      const matchesIntent = matchedTerms.length >= Number(boost.minimumMatches ?? 1);
+      const matchesPath = (boost.pathPrefixes ?? []).some((pathPrefix) =>
+        normalizedPath.startsWith(String(pathPrefix).replaceAll('\\', '/').toLowerCase()));
+      if (matchesIntent && matchesPath) {
+        score += Number(boost.score ?? 0);
+        reasons.push(`ranking policy ${boost.id}`);
+      }
+    }
+    const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(path);
+    if (isTest && changeType !== 'tests') score -= Number(contextSearchRanking.nonTestPenalty ?? 25);
+    const requestsAbstraction = terms.some((term) => ['interface', 'contract', 'abstraction'].includes(term));
+    if (!requestsAbstraction && normalizedPath.startsWith('fooddiary.application.abstractions/')) {
+      score -= Number(contextSearchRanking.applicationAbstractionPenalty ?? 0);
+    }
+    if (!requestsAbstraction && /\/I[A-Z][^/]*\.cs$/.test(path)) {
+      score -= Number(contextSearchRanking.interfacePathPenalty ?? 0);
+    }
     if (item.recordType === 'code') score += 20;
-    if (item.recordType === 'agent-guide') score += 15;
+    if (item.recordType === 'agent-guide') score += Number(contextSearchRanking.agentGuideBoost ?? 15);
     return { ...item, score, lexicalRank: Math.round(item.lexicalRank * 1_000_000) / 1_000_000, reasons };
   }).sort((left, right) => right.score - left.score || left.lexicalRank - right.lexicalRank || left.path.localeCompare(right.path));
   const records = [];

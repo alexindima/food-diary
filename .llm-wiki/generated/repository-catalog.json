@@ -22,7 +22,7 @@
     "controllers": 87,
     "endpoints": 279,
     "agentGuides": 74,
-    "documentationPages": 48
+    "documentationPages": 50
   },
   "dotnet": {
     "projects": [
@@ -1116,6 +1116,10 @@
         "isTestProject": false,
         "projectReferences": [],
         "packageReferences": [
+          {
+            "name": "Microsoft.Data.Sqlite",
+            "version": null
+          },
           {
             "name": "Microsoft.Extensions.Hosting",
             "version": null
@@ -5700,6 +5704,8 @@
       "docs/adr/0010-meals-terminology-and-application-boundary.md",
       "docs/adr/0011-application-runtime-boundary.md",
       "docs/adr/0012-cycle-health-data-and-calendar-date-boundary.md",
+      "docs/adr/0013-read-only-sqlite-context-search-in-development-mcp.md",
+      "docs/adr/0014-sql-first-development-context-with-json-fallback.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/CODE_REVIEW.md",

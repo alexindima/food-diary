@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3420,
-    "symbols": 3428,
+    "sourceFiles": 3425,
+    "symbols": 3433,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 238,
+    "dependencyInjectionRegistrations": 239,
     "kinds": {
-      "class": 1781,
+      "class": 1783,
       "enum": 61,
-      "interface": 418,
-      "record": 1048,
+      "interface": 419,
+      "record": 1050,
       "record struct": 120
     },
     "roles": {
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 62,
-      "Other": 1310,
+      "Other": 1315,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -13369,6 +13369,20 @@
       "line": 2
     },
     {
+      "name": "WikiContextSearchCandidate",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Protocol/WikiContextSearchCandidate.cs",
+      "line": 2
+    },
+    {
+      "name": "WikiContextSearchResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs",
+      "line": 2
+    },
+    {
       "name": "ToolExecution",
       "kind": "class",
       "role": "Other",
@@ -13390,11 +13404,25 @@
       "line": 2
     },
     {
+      "name": "IWikiContextSearch",
+      "kind": "interface",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/IWikiContextSearch.cs",
+      "line": 4
+    },
+    {
       "name": "PowerShellWikiCommandExecutor",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/PowerShellWikiCommandExecutor.cs",
       "line": 9
+    },
+    {
+      "name": "SqliteWikiContextSearch",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+      "line": 10
     },
     {
       "name": "WikiCommandRequest",
@@ -13423,6 +13451,13 @@
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandTiming.cs",
       "line": 2
+    },
+    {
+      "name": "WikiContextSearchEvaluationRunner",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiContextSearchEvaluationRunner.cs",
+      "line": 6
     },
     {
       "name": "WikiOutputParser",
@@ -26463,25 +26498,32 @@
       "line": 15
     },
     {
+      "service": "IWikiContextSearch",
+      "implementation": "SqliteWikiContextSearch",
+      "lifetime": "Singleton",
+      "path": "FoodDiary.Development.Mcp/Program.cs",
+      "line": 43
+    },
+    {
       "service": "IServerStatusService",
       "implementation": "ServerStatusService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 24
+      "line": 44
     },
     {
       "service": "IChangeSetSnapshotService",
       "implementation": "ChangeSetSnapshotService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 25
+      "line": 45
     },
     {
       "service": "IWikiCommandExecutor",
       "implementation": "PowerShellWikiCommandExecutor",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 26
+      "line": 46
     },
     {
       "service": "IAchievementDefinitionStore",

@@ -6,6 +6,25 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+if (args.Length == 2 && string.Equals(
+    args[0],
+    "--evaluate-context-search",
+    StringComparison.Ordinal)) {
+    WikiRuntimeTelemetry evaluationTelemetry = new();
+    SqliteWikiContextSearch evaluationSearch = new(evaluationTelemetry);
+    using ChangeSetSnapshotService evaluationSnapshots = new();
+    ChangeSetSnapshot evaluationSnapshot = await evaluationSnapshots
+        .GetAsync(CancellationToken.None)
+        .ConfigureAwait(false);
+    await WikiContextSearchEvaluationRunner.RunAsync(
+        evaluationSearch,
+        args[1],
+        Console.Out,
+        CancellationToken.None,
+        evaluationSnapshot.Fingerprint).ConfigureAwait(false);
+    return;
+}
+
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 string? sessionLockPath = Environment.GetEnvironmentVariable("FOODDIARY_MCP_SESSION_LOCK");
 FileStream? sessionLock = string.IsNullOrWhiteSpace(sessionLockPath)
@@ -21,6 +40,7 @@ builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton(ServerRuntimeIdentity.Capture(repositoryHeadAtStartup));
 builder.Services.AddSingleton<WikiRuntimeTelemetry>();
 builder.Services.AddSingleton<WikiQueryCache>();
+builder.Services.AddSingleton<IWikiContextSearch, SqliteWikiContextSearch>();
 builder.Services.AddSingleton<IServerStatusService, ServerStatusService>();
 builder.Services.AddSingleton<IChangeSetSnapshotService, ChangeSetSnapshotService>();
 builder.Services.AddSingleton<IWikiCommandExecutor, PowerShellWikiCommandExecutor>();

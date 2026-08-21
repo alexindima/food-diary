@@ -5,10 +5,10 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4436,
+    "productionFiles": 4441,
     "criticalSymbols": 569,
-    "criticalSymbolsWithTestReferences": 543,
-    "criticalSymbolsWithoutTestReferences": 26,
+    "criticalSymbolsWithTestReferences": 549,
+    "criticalSymbolsWithoutTestReferences": 20,
     "debtMarkers": 4
   },
   "hotspots": [
@@ -131,6 +131,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 100.02
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+      "nonBlankLines": 460,
+      "decisionPoints": 60,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 99.2
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
+      "nonBlankLines": 445,
+      "decisionPoints": 59,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 97.4
     },
     {
       "path": "FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs",
@@ -371,14 +387,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 67.66
-    },
-    {
-      "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
-      "nonBlankLines": 337,
-      "decisionPoints": 40,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 66.74
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
@@ -803,14 +811,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
       "structuralRiskScore": 45.54
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.ts",
-      "nonBlankLines": 227,
-      "decisionPoints": 27,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 45.04
     }
   ],
   "files": [
@@ -7795,16 +7795,16 @@
       "nonBlankLines": 49,
       "decisionPoints": 3,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 12.48
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.48
     },
     {
       "path": "FoodDiary.Application.Cycles/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandValidator.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.16
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.16
     },
     {
       "path": "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommand.cs",
@@ -7875,8 +7875,8 @@
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.16
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.16
     },
     {
       "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommand.cs",
@@ -7891,16 +7891,16 @@
       "nonBlankLines": 60,
       "decisionPoints": 4,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 14.2
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.2
     },
     {
       "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommandValidator.cs",
       "nonBlankLines": 23,
       "decisionPoints": 1,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.96
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.96
     },
     {
       "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleSettings/UpdateCycleSettingsCommand.cs",
@@ -7947,8 +7947,8 @@
       "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.24
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.24
     },
     {
       "path": "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/BleedingLogCommandModel.cs",
@@ -16032,19 +16032,19 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "nonBlankLines": 39,
-      "decisionPoints": 2,
+      "nonBlankLines": 58,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.78
+      "structuralRiskScore": 7.16
     },
     {
       "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentContext.cs",
-      "nonBlankLines": 29,
+      "nonBlankLines": 33,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.58
+      "structuralRiskScore": 0.66
     },
     {
       "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentContextComponentError.cs",
@@ -16079,6 +16079,22 @@
       "structuralRiskScore": 0.14
     },
     {
+      "path": "FoodDiary.Development.Mcp/Protocol/WikiContextSearchCandidate.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
       "path": "FoodDiary.Development.Mcp/Tools/ToolExecution.cs",
       "nonBlankLines": 58,
       "decisionPoints": 3,
@@ -16103,12 +16119,28 @@
       "structuralRiskScore": 0.14
     },
     {
+      "path": "FoodDiary.Development.Mcp/Wiki/IWikiContextSearch.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
       "path": "FoodDiary.Development.Mcp/Wiki/PowerShellWikiCommandExecutor.cs",
       "nonBlankLines": 251,
       "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 36.52
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+      "nonBlankLines": 460,
+      "decisionPoints": 60,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 99.2
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandRequest.cs",
@@ -16143,6 +16175,14 @@
       "structuralRiskScore": 0.14
     },
     {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiContextSearchEvaluationRunner.cs",
+      "nonBlankLines": 159,
+      "decisionPoints": 15,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 25.68
+    },
+    {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiOutputParser.cs",
       "nonBlankLines": 171,
       "decisionPoints": 51,
@@ -16168,11 +16208,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
-      "nonBlankLines": 337,
-      "decisionPoints": 40,
+      "nonBlankLines": 445,
+      "decisionPoints": 59,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 66.74
+      "structuralRiskScore": 97.4
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeMetrics.cs",
@@ -36511,8 +36551,10 @@
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Cycles/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandHandler.cs",
       "line": 14,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs"
+      ]
     },
     {
       "name": "ConnectWearableCommandHandler",
@@ -36839,9 +36881,10 @@
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandHandler.cs",
       "line": 14,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeCommands.cs"
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeCommands.cs",
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeValidation.cs"
       ]
     },
     {
@@ -37639,8 +37682,10 @@
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommandHandler.cs",
       "line": 15,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs"
+      ]
     },
     {
       "name": "UpdateCycleSettingsCommandHandler",
@@ -37745,9 +37790,10 @@
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandHandler.cs",
       "line": 14,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeCommands.cs"
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeCommands.cs",
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeValidation.cs"
       ]
     },
     {
@@ -38489,9 +38535,10 @@
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Logs/LogsController.cs",
       "line": 21,
-      "testReferenceCount": 6,
+      "testReferenceCount": 7,
       "testReferences": [
         "tests/FoodDiary.ArchitectureTests/PresentationConventionsTests.cs",
+        "tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs",
@@ -40274,9 +40321,10 @@
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs",
       "line": 7,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs"
+        "tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs",
+        "tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs"
       ]
     },
     {
@@ -40446,8 +40494,10 @@
       "role": "Validator",
       "path": "FoodDiary.Application.Cycles/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs"
+      ]
     },
     {
       "name": "ConnectWearableCommandValidator",
@@ -40700,8 +40750,10 @@
       "role": "Validator",
       "path": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeValidation.cs"
+      ]
     },
     {
       "name": "DeleteProductCommandValidator",
@@ -42039,8 +42091,10 @@
       "role": "Validator",
       "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommandValidator.cs",
       "line": 5,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs"
+      ]
     },
     {
       "name": "UpdateCycleSettingsCommandValidator",
@@ -42126,8 +42180,10 @@
       "role": "Validator",
       "path": "FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeValidation.cs"
+      ]
     },
     {
       "name": "UpdateNotificationPreferencesCommandValidator",

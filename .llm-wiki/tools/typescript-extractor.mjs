@@ -36,7 +36,8 @@ function declaration(node) {
 function extract(path) {
   const absolutePath = resolve(repositoryRoot, path);
   const text = readFileSync(absolutePath, 'utf8');
-  const sourceFile = ts.createSourceFile(path, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  const scriptKind = /\.(?:js|mjs|cjs)$/i.test(path) ? ts.ScriptKind.JS : ts.ScriptKind.TS;
+  const sourceFile = ts.createSourceFile(path, text, ts.ScriptTarget.Latest, true, scriptKind);
   const symbols = [];
   const edges = [];
   const tokens = new Set();

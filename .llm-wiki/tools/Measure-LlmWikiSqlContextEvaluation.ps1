@@ -63,10 +63,34 @@ $thresholds = [pscustomobject][ordered]@{
 $passed = $top1Rate -ge $thresholds.minimumTop1Rate -and
     $top10Rate -ge $thresholds.minimumTop10Rate -and
     $mrr -ge $thresholds.minimumMeanReciprocalRank
+$switchCriteria = [pscustomobject][ordered]@{
+    minimumCaseCount = [int]$corpus.switchCriteria.minimumCaseCount
+    minimumTop1Rate = [double]$corpus.switchCriteria.minimumTop1Rate
+    minimumTop10Rate = [double]$corpus.switchCriteria.minimumTop10Rate
+    minimumMeanReciprocalRank = [double]$corpus.switchCriteria.minimumMeanReciprocalRank
+}
+$switchReady = $results.Count -ge $switchCriteria.minimumCaseCount -and
+    $top1Rate -ge $switchCriteria.minimumTop1Rate -and
+    $top10Rate -ge $switchCriteria.minimumTop10Rate -and
+    $mrr -ge $switchCriteria.minimumMeanReciprocalRank
+$switchGaps = [Collections.Generic.List[string]]::new()
+if ($results.Count -lt $switchCriteria.minimumCaseCount) {
+    $switchGaps.Add("caseCount=$($results.Count)<$($switchCriteria.minimumCaseCount)")
+}
+if ($top1Rate -lt $switchCriteria.minimumTop1Rate) {
+    $switchGaps.Add("top1=$([Math]::Round($top1Rate, 4))<$($switchCriteria.minimumTop1Rate)")
+}
+if ($top10Rate -lt $switchCriteria.minimumTop10Rate) {
+    $switchGaps.Add("top10=$([Math]::Round($top10Rate, 4))<$($switchCriteria.minimumTop10Rate)")
+}
+if ($mrr -lt $switchCriteria.minimumMeanReciprocalRank) {
+    $switchGaps.Add("mrr=$([Math]::Round($mrr, 4))<$($switchCriteria.minimumMeanReciprocalRank)")
+}
 $evaluation = [pscustomobject][ordered]@{
     schemaVersion = 1
     corpusPath = $resolvedCorpusPath.Replace('\', '/')
     passed = $passed
+    switchReady = $switchReady
     caseCount = $results.Count
     metrics = [pscustomobject][ordered]@{
         top1Count = $top1Count
@@ -78,6 +102,8 @@ $evaluation = [pscustomobject][ordered]@{
         p95SqlDurationMs = [Math]::Round($durations[$p95Index], 2)
     }
     thresholds = $thresholds
+    switchCriteria = $switchCriteria
+    switchGaps = @($switchGaps)
     misses = @($results | Where-Object { -not $_.top10 })
     results = @($results)
 }
@@ -85,7 +111,10 @@ $evaluation = [pscustomobject][ordered]@{
 if ($Format -eq 'Json') {
     $evaluation | ConvertTo-Json -Depth 10
 } else {
-    Write-Host "SQL context evaluation: passed=$passed, cases=$($results.Count), top1=$top1Count/$($results.Count) ($([Math]::Round($top1Rate * 100, 1))%), top10=$top10Count/$($results.Count) ($([Math]::Round($top10Rate * 100, 1))%), MRR=$([Math]::Round($mrr, 4)), SQL p95=$($evaluation.metrics.p95SqlDurationMs)ms."
+    Write-Host "SQL context evaluation: passed=$passed, switchReady=$switchReady, cases=$($results.Count), top1=$top1Count/$($results.Count) ($([Math]::Round($top1Rate * 100, 1))%), top10=$top10Count/$($results.Count) ($([Math]::Round($top10Rate * 100, 1))%), MRR=$([Math]::Round($mrr, 4)), SQL p95=$($evaluation.metrics.p95SqlDurationMs)ms."
+    if (-not $switchReady) {
+        Write-Host " Switch gaps: $($switchGaps -join '; ')"
+    }
     foreach ($miss in @($evaluation.misses)) {
         $observedRank = if ($null -eq $miss.rank) { ">$diagnosticLimit" } else { [string]$miss.rank }
         Write-Host " - miss $($miss.id): rank=$observedRank; expected=$($miss.expectedPaths -join ', '); top=$(@($miss.topCandidates.path) -join ', ')"

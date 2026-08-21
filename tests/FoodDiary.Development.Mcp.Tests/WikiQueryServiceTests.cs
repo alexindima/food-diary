@@ -131,7 +131,7 @@ public sealed class WikiQueryServiceTests {
             CancellationToken.None);
 
         Assert.Equal("snapshot-hash", result.SnapshotFingerprint);
-        await _snapshots.Received(2).GetAsync(
+        await _snapshots.Received(3).GetAsync(
             Arg.Any<IReadOnlyList<string>?>(),
             CancellationToken.None);
         await _snapshots.Received(1).RefreshAsync(
@@ -166,6 +166,200 @@ public sealed class WikiQueryServiceTests {
                 "-SkipTestPlan",
                 StringComparer.Ordinal)),
             CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task GetDevelopmentContextAsync_UsesFreshSqlContextAsPrimaryScope() {
+        IWikiContextSearch contextSearch = Substitute.For<IWikiContextSearch>();
+        WikiContextSearchResult sqlContext = new(
+            "sqlite-derived",
+            "in-process-microsoft-data-sqlite",
+            Ready: true,
+            IndexedDocuments: 20_000,
+            Fingerprint: "fts-fingerprint",
+            UpdatedAtUtc: "2026-08-21T00:00:00Z",
+            ChangeSetFingerprint: "snapshot-hash",
+            GitHead: "abc123",
+            Fresh: true,
+            QueryTerms: ["user", "privacy"],
+            Candidates: [new WikiContextSearchCandidate(
+                1,
+                "FoodDiary.Web.Api/Extensions/TelemetryPrivacyProcessor.cs",
+                "code",
+                "csharp",
+                100,
+                -1,
+                ["ranking policy web-api-intent"])],
+            QueryDurationMilliseconds: 12.5);
+        contextSearch.SearchAsync(
+            Arg.Any<string>(),
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<string?>(),
+            Arg.Any<IReadOnlyList<string>?>(),
+            Arg.Any<CancellationToken>(),
+            Arg.Any<string?>()).Returns(sqlContext);
+        WikiRuntimeTelemetry telemetry = new();
+        WikiQueryService service = new(
+            _executor,
+            _snapshots,
+            queryCache: null,
+            contextSearch,
+            telemetry);
+
+        DevelopmentContext result = await service.GetDevelopmentContextAsync(
+            "Protect telemetry",
+            "strip user identity from web API telemetry logs",
+            "FoodDiary.Web.Api/Extensions",
+            CancellationToken.None);
+
+        Assert.Same(sqlContext, result.SqlContextSearch);
+        Assert.Equal("sqlite", result.ContextRetrievalSource);
+        Assert.Null(result.ContextFallbackReason);
+        Assert.Contains(
+            sqlContext.Candidates[0].Path,
+            result.ExpandedScopePaths,
+            StringComparer.OrdinalIgnoreCase);
+        await _executor.DidNotReceive().ExecuteAsync(
+            "trace",
+            Arg.Any<IReadOnlyList<string>>(),
+            Arg.Any<CancellationToken>());
+        await contextSearch.Received(1).SearchAsync(
+            query: "strip user identity from web API telemetry logs",
+            limit: 20,
+            changeType: "Api",
+            module: null,
+            scopePaths: Arg.Is<IReadOnlyList<string>>(paths => paths.SequenceEqual(
+                new[] { "FoodDiary.Web.Api/Extensions" },
+                StringComparer.OrdinalIgnoreCase)),
+            cancellationToken: CancellationToken.None,
+            expectedChangeSetFingerprint: "snapshot-hash");
+        WikiCommandStageTiming timing = Assert.Single(
+            telemetry.Capture(0).CommandStageTimings,
+            item => string.Equals(item.Command, "context-routing", StringComparison.Ordinal));
+        Assert.Equal("sqlite-primary", timing.Stage);
+    }
+
+    [Fact]
+    public async Task GetDevelopmentContextAsync_RebuildsStaleSqlIndexBeforeUsingIt() {
+        IWikiContextSearch contextSearch = Substitute.For<IWikiContextSearch>();
+        WikiContextSearchResult stale = CreateSqlContext(
+            ready: false,
+            fresh: false,
+            unavailableReason: "snapshot-mismatch");
+        WikiContextSearchResult fresh = CreateSqlContext(ready: true, fresh: true);
+        contextSearch.SearchAsync(
+            Arg.Any<string>(),
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<string?>(),
+            Arg.Any<IReadOnlyList<string>?>(),
+            Arg.Any<CancellationToken>(),
+            Arg.Any<string?>()).Returns(stale, fresh);
+        WikiQueryService service = new(_executor, _snapshots, contextSearch: contextSearch);
+
+        DevelopmentContext result = await service.GetDevelopmentContextAsync(
+            "Protect telemetry",
+            "strip user identity from web API telemetry logs",
+            "FoodDiary.Web.Api/Extensions",
+            CancellationToken.None);
+
+        Assert.Equal("sqlite", result.ContextRetrievalSource);
+        Assert.Same(fresh, result.SqlContextSearch);
+        await _executor.Received(1).ExecuteAsync(
+            "graph-build",
+            Arg.Is<IReadOnlyList<string>>(arguments => arguments.SequenceEqual(new[] { "-Format", "Json" })),
+            CancellationToken.None);
+        await contextSearch.Received(2).SearchAsync(
+            Arg.Any<string>(),
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<string?>(),
+            Arg.Any<IReadOnlyList<string>?>(),
+            Arg.Any<CancellationToken>(),
+            "snapshot-hash");
+        await _executor.DidNotReceive().ExecuteAsync(
+            "trace",
+            Arg.Any<IReadOnlyList<string>>(),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task GetDevelopmentContextAsync_FallsBackToJsonWhenRebuiltIndexIsStillStale() {
+        IWikiContextSearch contextSearch = Substitute.For<IWikiContextSearch>();
+        WikiContextSearchResult stale = CreateSqlContext(
+            ready: false,
+            fresh: false,
+            unavailableReason: "snapshot-mismatch");
+        contextSearch.SearchAsync(
+            Arg.Any<string>(),
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<string?>(),
+            Arg.Any<IReadOnlyList<string>?>(),
+            Arg.Any<CancellationToken>(),
+            Arg.Any<string?>()).Returns(stale);
+        _executor.ExecuteAsync("trace", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(CreateResult("trace", ["FoodDiary.Application.Users/FallbackHandler.cs"]));
+        WikiQueryService service = new(_executor, _snapshots, contextSearch: contextSearch);
+
+        DevelopmentContext result = await service.GetDevelopmentContextAsync(
+            "Change user flow",
+            "update user",
+            "FoodDiary.Application.Users",
+            CancellationToken.None);
+
+        Assert.Equal("json", result.ContextRetrievalSource);
+        Assert.Equal("snapshot-mismatch", result.ContextFallbackReason);
+        Assert.Contains(
+            "FoodDiary.Application.Users/FallbackHandler.cs",
+            result.ExpandedScopePaths,
+            StringComparer.Ordinal);
+        await _executor.Received(1).ExecuteAsync(
+            "graph-build",
+            Arg.Any<IReadOnlyList<string>>(),
+            CancellationToken.None);
+        await _executor.Received(1).ExecuteAsync(
+            "trace",
+            Arg.Any<IReadOnlyList<string>>(),
+            CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task GetDevelopmentContextAsync_RejectsSqlResultWhenAnyWorktreePathChanges() {
+        IWikiContextSearch contextSearch = Substitute.For<IWikiContextSearch>();
+        WikiContextSearchResult fresh = CreateSqlContext(ready: true, fresh: true);
+        contextSearch.SearchAsync(
+            Arg.Any<string>(),
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<string?>(),
+            Arg.Any<IReadOnlyList<string>?>(),
+            Arg.Any<CancellationToken>(),
+            Arg.Any<string?>()).Returns(fresh);
+        ChangeSetSnapshot initial = new(
+            "abc123",
+            "snapshot-hash",
+            ["FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs"],
+            DateTimeOffset.UtcNow);
+        ChangeSetSnapshot changed = initial with {
+            Fingerprint = "changed-outside-selected-scope",
+            ChangedPaths = ["docs/unrelated.md"],
+        };
+        _snapshots.RefreshAsync(
+            Arg.Any<IReadOnlyList<string>?>(),
+            Arg.Any<CancellationToken>()).Returns(initial, changed);
+        WikiQueryService service = new(_executor, _snapshots, contextSearch: contextSearch);
+
+        DevelopmentMcpException exception = await Assert.ThrowsAsync<DevelopmentMcpException>(() =>
+            service.GetDevelopmentContextAsync(
+                "Protect telemetry",
+                "strip user identity from web API telemetry logs",
+                "FoodDiary.Web.Api/Extensions",
+                CancellationToken.None));
+
+        Assert.Equal(DevelopmentMcpErrorCodes.SnapshotChanged, exception.ErrorCode);
+        Assert.Contains("complete worktree", exception.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -478,4 +672,31 @@ public sealed class WikiQueryServiceTests {
         RequiredChecks: [],
         Warnings: [],
         ScopePaths: scopePaths);
+
+    private static WikiContextSearchResult CreateSqlContext(
+        bool ready,
+        bool fresh,
+        string? unavailableReason = null) => new(
+        Authority: "sqlite-derived",
+        Reader: "in-process-microsoft-data-sqlite",
+        Ready: ready,
+        IndexedDocuments: 20_000,
+        Fingerprint: "fts-fingerprint",
+        UpdatedAtUtc: "2026-08-21T00:00:00Z",
+        ChangeSetFingerprint: "snapshot-hash",
+        GitHead: "abc123",
+        Fresh: fresh,
+        QueryTerms: ["user"],
+        Candidates: ready
+            ? [new WikiContextSearchCandidate(
+                1,
+                "FoodDiary.Application.Users/PrimaryHandler.cs",
+                "code",
+                "csharp",
+                100,
+                -1,
+                ["SQLite FTS5 lexical match"])]
+            : [],
+        QueryDurationMilliseconds: 1,
+        UnavailableReason: unavailableReason);
 }

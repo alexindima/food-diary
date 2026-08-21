@@ -2,6 +2,7 @@ using Asp.Versioning;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Fasting.Common;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Services;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 
@@ -127,10 +129,13 @@ public sealed class PresentationServiceCollectionExtensionsTests {
 
     [Fact]
     public void MapPresentationApi_MapsHubsAndClosesConnectionsWhenAuthenticationExpires() {
-        WebApplicationBuilder builder = WebApplication.CreateBuilder();
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(new WebApplicationOptions {
+            EnvironmentName = Environments.Development,
+        });
         builder.Services.AddCors(options => options.AddPolicy("TestCors", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
         builder.Services.AddAuthorization();
         builder.Services.AddDistributedMemoryCache();
+        builder.Services.AddSingleton<ISender>(Substitute.For<ISender>());
         builder.Services.AddScoped<IFastingTelemetryEventRepository, StubFastingTelemetryEventRepository>();
         builder.Services.AddScoped<IUnitOfWork, StubUnitOfWork>();
         builder.Services.AddSingleton<TimeProvider, StubDateTimeProvider>();

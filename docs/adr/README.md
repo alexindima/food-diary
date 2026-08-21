@@ -27,6 +27,8 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 | [0010](0010-meals-terminology-and-application-boundary.md) | Meals terminology and application boundary | Accepted | 2026-08-13 |
 | [0011](0011-application-runtime-boundary.md) | Separate the Application Runtime boundary | Accepted | 2026-08-14 |
 | [0012](0012-cycle-health-data-and-calendar-date-boundary.md) | Cycle health-data and calendar-date boundary | Proposed | 2026-08-17 |
+| [0013](0013-read-only-sqlite-context-search-in-development-mcp.md) | Read-only SQLite context search in the Development MCP | Superseded | 2026-08-21 |
+| [0014](0014-sql-first-development-context-with-json-fallback.md) | SQL-first development context with JSON fallback | Accepted | 2026-08-21 |
 
 ## Creating A Record
 

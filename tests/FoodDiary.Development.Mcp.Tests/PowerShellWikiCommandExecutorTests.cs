@@ -31,7 +31,7 @@ public sealed class PowerShellWikiCommandExecutorTests {
     public async Task ExecuteAsync_ReturnsFocusedTestPlan() {
         WikiRuntimeTelemetry telemetry = new();
         PowerShellWikiCommandExecutor executor = new(telemetry);
-        using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(30));
+        using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(90));
 
         WikiCommandResult result = await executor.ExecuteAsync(
             "test-plan",

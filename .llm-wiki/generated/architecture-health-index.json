@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 151,
     "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 26,
+    "criticalSymbolsWithoutTestReferences": 20,
     "explicitDebtMarkers": 4
   },
   "projectDependencyViolations": [],
@@ -5301,42 +5301,10 @@
   ],
   "criticalSymbolsWithoutTestReferences": [
     {
-      "name": "ConfirmPeriodStartCommandHandler",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Cycles/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandHandler.cs",
-      "line": 14,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "UpdateCycleConsentCommandHandler",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommandHandler.cs",
-      "line": 15,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
       "name": "BillingWebhookEventValidator",
       "role": "Validator",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
       "line": 6,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "ConfirmPeriodStartCommandValidator",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "DeleteMenstrualEpisodeCommandValidator",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandValidator.cs",
-      "line": 4,
       "testReferenceCount": 0,
       "testReferences": []
     },
@@ -5485,25 +5453,9 @@
       "testReferences": []
     },
     {
-      "name": "UpdateCycleConsentCommandValidator",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommandValidator.cs",
-      "line": 5,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
       "name": "UpdateFavoriteProductCommandValidator",
       "role": "Validator",
       "path": "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "UpdateMenstrualEpisodeCommandValidator",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": []

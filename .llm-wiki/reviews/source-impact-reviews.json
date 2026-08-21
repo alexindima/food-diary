@@ -97,14 +97,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "242ba5c7b16402fb42532f2e644d9e58f5bed445650fa904672932c6d3a4bdf3"
+          "path": "docs/adr/README.md",
+          "sha256": "66ec522358d2d1d4c22e082527bab5ae0c782726d9a2d851df8c975e516d07dc"
         }
       ],
-      "reason": "Reviewed against the current root AGENTS.md on HEAD 6cf1cee22; the documented authority hierarchy and compiled-navigation model remain accurate.",
+      "reason": "ADR 0014 and the ADR index now record SQL-first routing; existing knowledge, decision, and query-context guidance remains accurate because SQLite is reconstructable navigation while Git-backed sources remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "fb2be6e1e6edd393a038cedfb68b580520eaf21c",
-      "reviewedAtUtc": "2026-08-19T12:52:27.5404339Z"
+      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
+      "reviewedAtUtc": "2026-08-21T05:47:00.1424737Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -113,13 +113,13 @@
       "sources": [
         {
           "path": "Directory.Packages.props",
-          "sha256": "eeb453b0353c6cd0da3f783b4fd8e2b7a7ba57ef659cf131a4d6ec29ded26f61"
+          "sha256": "c468935b647f50057b666b9ec6af50dde35192f06ffd434a13891dcd615ca6fc"
         }
       ],
-      "reason": "Central package versions and Infrastructure package references were intentionally updated; the regenerated catalog was reviewed against Directory.Packages.props and FoodDiary.Infrastructure.csproj.",
+      "reason": "Microsoft.Data.Sqlite 10.0.11 is centrally pinned, lockfiles are refreshed, the MCP is the sole new consumer, and the generated repository catalog is current.",
       "baseRef": "HEAD",
-      "gitHead": "ba1226f4d35e4928ae3f3e4db634d867c3f0a9e5",
-      "reviewedAtUtc": "2026-08-20T01:21:57.2737256Z"
+      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
+      "reviewedAtUtc": "2026-08-21T04:29:06.3645594Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -146,22 +146,14 @@
       "pageSha256": "dfdbd4b839e14d170c467c21c2d3ffee09d6764f7186e3b54160b7ae083ae3d0",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "c16bcaca9daf9240471b1e2e7399e10d066ebffbb89bb6ad1a5590ff973174fb"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fa95f5656d4a6f3ec16614fd09caee6f4f51f76b145a59ed4bf4e43a2327fbbf"
-        },
-        {
           "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "aaadeaeec83aa4e481c9d6ed97c789d44ba58c460298ca7dde327c0ff0d87e5a"
+          "sha256": "7f42e779250d6ce78b607441e5beb8a4bf02346d66d6a5cf61d3f888ad51db28"
         }
       ],
-      "reason": "Reviewed dependent quality and workflow pages against the new FTS shadow smoke and graph fingerprint invalidation; their governed behavior remains accurate and the code-graph workflow documents the new lane.",
+      "reason": "Best-effort stale snapshot cleanup now clears an expected failed Git cleanup exit code so successful read-only tools remain successful; the read-only guard smoke passes.",
       "baseRef": "HEAD",
-      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
-      "reviewedAtUtc": "2026-08-21T03:26:10.8310931Z"
+      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
+      "reviewedAtUtc": "2026-08-21T04:28:54.2861701Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -184,14 +176,14 @@
       "pageSha256": "f74e1b06fd3864499e0a28e359f979e552cb8fa51fa0da582148e417a7dfd065",
       "sources": [
         {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "08eeb7e0309f00c6aa1767ab625fcce2f504a654c8321c8e4cc0b44c8e366fdc"
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "3b6f414ef0b1d6e1d5abcc3e5f01dc5eae5104954ef823df693a692bf58320d7"
         }
       ],
-      "reason": "The regenerated architecture-health index was reviewed against ProjectDependencyMatrixTests and the new MailInbox WebApi integration host coverage.",
+      "reason": "Regenerated architecture, contract, and quality indexes were reviewed; project edges remain valid, no HTTP contract changed, and the focused MCP tests cover the new reader boundary.",
       "baseRef": "HEAD",
-      "gitHead": "134d982543eb510e337fe44e21dc73f15e96d4cf",
-      "reviewedAtUtc": "2026-08-20T01:46:26.1517091Z"
+      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
+      "reviewedAtUtc": "2026-08-21T04:29:08.1448182Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -200,13 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "42a53411142f9fb7db90f9b6c00e0ed98c1210a976262a3ffc742dd664449c8b"
+          "sha256": "1717bd283d40840c01014fd213c199d3e7b9916ee691871325161b71751c47ca"
         }
       ],
-      "reason": "Reviewed regenerated backend-contract evidence; SQL/FTS and cache-fingerprint changes do not alter HTTP contracts, and the contract generator validation passed.",
+      "reason": "The merged Mail integration registration and SQL-first local MCP changes do not alter HTTP routes, payloads, status codes, or Swagger snapshots; the regenerated backend contract index is current.",
       "baseRef": "HEAD",
-      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
-      "reviewedAtUtc": "2026-08-21T03:26:12.0490783Z"
+      "gitHead": "13f6bba05ae5784c9d6d332287b26657205d94d0",
+      "reviewedAtUtc": "2026-08-21T05:58:27.7395577Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -400,13 +392,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "7c1d57181e4da4c3657cffa4a7bdd6486273d9871c30402db19b94ef10f85c8c"
+          "sha256": "66ec522358d2d1d4c22e082527bab5ae0c782726d9a2d851df8c975e516d07dc"
         }
       ],
-      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
+      "reason": "ADR 0014 and the ADR index now record SQL-first routing; existing knowledge, decision, and query-context guidance remains accurate because SQLite is reconstructable navigation while Git-backed sources remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
-      "reviewedAtUtc": "2026-08-17T04:01:38.9806847Z"
+      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
+      "reviewedAtUtc": "2026-08-21T05:47:01.0547784Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -744,13 +736,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "07ec77f4d01231db8b082c681d1512903e17b341ddaa3b8192e508f38eeafa9a"
+          "sha256": "9bd1359e69d562d162248c5c292cf54649a398ff7c9fced62e9746c0ea6effd8"
         }
       ],
-      "reason": "Reviewed privacy impact: no new message data, secrets, addresses, or bodies are stored or tagged; the new admission outcome is bounded and the documentation clarifies provenance without exposing content.",
+      "reason": "The SQLite projection remains local and read-only in MCP, the Node writer remains sole owner, and JavaScript indexing adds symbols and tokens without expanding the existing arbitrary C# runtime-literal boundary.",
       "baseRef": "HEAD",
-      "gitHead": "57d59eb7271d3721a3fc1010502005c76625d3db",
-      "reviewedAtUtc": "2026-08-20T18:12:04.5613913Z"
+      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
+      "reviewedAtUtc": "2026-08-21T05:47:01.5145073Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -805,13 +797,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "121246305dae60b271067ac1e09becd828a5f31e258fc51d4f3509df46700512"
+          "sha256": "8296cfcffa9495cfa9dfe3025845867847380668ac68f11a8f2a2ff95bb26556"
         }
       ],
-      "reason": "Reviewed dependent quality and workflow pages against the new FTS shadow smoke and graph fingerprint invalidation; their governed behavior remains accurate and the code-graph workflow documents the new lane.",
+      "reason": "The regenerated quality index includes the merged Mail DI test plus the verified SQL-first MCP and cycle/OpenAI test additions; full solution build, focused tests, architecture tests, and code-graph smoke passed.",
       "baseRef": "HEAD",
-      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
-      "reviewedAtUtc": "2026-08-21T03:26:19.8819034Z"
+      "gitHead": "13f6bba05ae5784c9d6d332287b26657205d94d0",
+      "reviewedAtUtc": "2026-08-21T05:58:28.2441015Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1012,14 +1004,14 @@
       "pageSha256": "a8ae24482a03c1b60dded0be60c6d262106c7eeb20511caf3127b4ed8b9525f8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-          "sha256": "87ecbae893bc8e6cc5cc9914d327de41b5f0aaa1f737b91e1d33df920d9443c1"
+          "path": ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
+          "sha256": "f585b3bfa501bf799c933f5951abc01973ab61a94cd0a7316143a73a37d93726"
         }
       ],
-      "reason": "Release readiness now normalizes null, scalar, and array-shaped collections before counting and its regression covers scalar findings plus direct HeadRef invocation.",
+      "reason": "Evidence lineage now treats an execution artifact as optional under StrictMode, while preserving path and hash validation whenever an artifact is present; governed-delivery smoke and direct lineage validation pass.",
       "baseRef": "HEAD",
-      "gitHead": "5139162b0a282013047d7fdc953943423039e067",
-      "reviewedAtUtc": "2026-08-21T01:31:03.1891681Z"
+      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
+      "reviewedAtUtc": "2026-08-21T04:33:02.7255062Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1122,33 +1114,17 @@
     {
       "pageId": "workflow.evidence-bundle",
       "pagePath": ".llm-wiki/workflows/evidence-bundle.md",
-      "pageSha256": "dfce522394cc3d66d2a43c52d67969355bb1cbbc65b0dd94e694a38d20a610fa",
+      "pageSha256": "f23f6110e42d7342e66693195c2772bf1325e0a2da4a3d51286d0fa18162353d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
-          "sha256": "64b18b8d4a02d29efd31eaa011d32174257de0fbc017186b37ca0ced3daa1737"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "5faebdb192cb38471a8c2318a65eea5c22a9e44989f2f39dc9833ce49bbfd648"
-        },
-        {
-          "path": ".llm-wiki/tools/New-LlmWikiEvidenceLineage.ps1",
-          "sha256": "f5d0a71a1099e6a3993532cc82685079b20292467733f0cf36b7a19eed1eb1a1"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "8e1506bb3d8b69676876cd74e6047611d495972724b6790a6623a995f2ac925c"
-        },
-        {
           "path": ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
-          "sha256": "4dc07f2d9cbd2f6bca55059706089901e991a66357497453c93ee6372dfe6ac5"
+          "sha256": "f585b3bfa501bf799c933f5951abc01973ab61a94cd0a7316143a73a37d93726"
         }
       ],
-      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
+      "reason": "Evidence lineage now treats an execution artifact as optional under StrictMode, while preserving path and hash validation whenever an artifact is present; governed-delivery smoke and direct lineage validation pass.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:28:08.1201329Z"
+      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
+      "reviewedAtUtc": "2026-08-21T04:33:03.0393723Z"
     },
     {
       "pageId": "workflow.frontend-contract-review",
@@ -1171,14 +1147,14 @@
       "pageSha256": "8439af4b89bf50398667ec91e06804d1fb6925969f3cfb30925553589f14ce9c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "0decdaa7232ef4c133cc976f9a5d214a35d11ea73fac2e2dc11cdc25387462c1"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "e82dd6ef22a1b611f29a15d6cb08e1b692e07c75e299f02fd3c632355ae17973"
         }
       ],
-      "reason": "Reviewed dependent context, brief, manifest, integration, and developer-experience pages; public workflow contracts remain unchanged because JSON stays authoritative and SQL is opt-in shadow diagnostics.",
+      "reason": "ADR 0014 and the ADR index now record SQL-first routing; existing knowledge, decision, and query-context guidance remains accurate because SQLite is reconstructable navigation while Git-backed sources remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
-      "reviewedAtUtc": "2026-08-21T03:26:20.6841440Z"
+      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
+      "reviewedAtUtc": "2026-08-21T05:47:02.5976759Z"
     },
     {
       "pageId": "workflow.review-diff",

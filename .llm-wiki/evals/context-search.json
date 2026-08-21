@@ -1,11 +1,17 @@
 {
   "schemaVersion": 1,
-  "description": "Representative natural-language retrieval cases for the SQLite FTS5 context-search shadow lane.",
+  "description": "Representative natural-language retrieval cases for the SQLite FTS5 context-search primary and diagnostic lanes.",
   "diagnosticLimit": 100,
   "thresholds": {
-    "minimumTop1Rate": 0.8,
-    "minimumTop10Rate": 0.8,
-    "minimumMeanReciprocalRank": 0.8
+    "minimumTop1Rate": 0.85,
+    "minimumTop10Rate": 0.95,
+    "minimumMeanReciprocalRank": 0.85
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 60,
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
   },
   "cases": [
     {
@@ -70,6 +76,306 @@
       "query": "replay failed Paddle billing webhook notifications recurring job",
       "changeType": "Backend",
       "expectedPaths": ["FoodDiary.JobManager/Services/PaddleNotificationRecoveryJob.cs"]
+    },
+    {
+      "id": "refresh-token-rotation",
+      "query": "rotate refresh token during authentication and revoke old session",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs"]
+    },
+    {
+      "id": "open-food-facts-provider",
+      "query": "look up product barcode through external Open Food Facts API",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Services/OpenFoodFactsService.cs"]
+    },
+    {
+      "id": "s3-image-storage",
+      "query": "upload and resize product image in S3 storage",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Services/S3ImageStorageService.cs"]
+    },
+    {
+      "id": "weekly-goal-reminder",
+      "query": "send weekly goal reminder when progress is behind",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs"]
+    },
+    {
+      "id": "dashboard-snapshot",
+      "query": "assemble dashboard snapshot for the user's local day",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs"]
+    },
+    {
+      "id": "waist-history-chart",
+      "query": "render waist history chart card in the frontend",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-chart-card/waist-history-chart-card.ts"]
+    },
+    {
+      "id": "mailbox-smtp-filter",
+      "query": "rate limit suspicious SMTP mailbox senders",
+      "changeType": "Backend",
+      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs"]
+    },
+    {
+      "id": "mail-relay-rabbit-consumer",
+      "query": "consume queued email delivery messages from RabbitMQ",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs"]
+    },
+    {
+      "id": "diary-export-read-service",
+      "query": "read diary data for a personal export",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Export/Services/ExportDiaryReadService.cs"]
+    },
+    {
+      "id": "content-report-review",
+      "query": "admin reviews a pending user content report",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Admin/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs"]
+    },
+    {
+      "id": "cycle-prediction",
+      "query": "predict fertile window and future cycle dates",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Cycles/Services/CyclePredictionService.cs"]
+    },
+    {
+      "id": "yookassa-api-client",
+      "query": "call the external YooKassa payment API provider",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Billing/YooKassaApiClient.cs"]
+    },
+    {
+      "id": "recipe-nutrition-update",
+      "query": "recalculate recipe nutrition after an ingredient changes",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Recipes/Recipes/Services/RecipeNutritionUpdater.cs"]
+    },
+    {
+      "id": "frontend-localization-check",
+      "query": "verify English and Russian translation files stay consistent",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/scripts/check-i18n.mjs"]
+    },
+    {
+      "id": "project-dependency-matrix",
+      "query": "enforce project dependency matrix architecture boundaries",
+      "changeType": "Tests",
+      "expectedPaths": ["tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs"]
+    },
+    {
+      "id": "swagger-standard-errors",
+      "query": "add standard error responses to Swagger operations",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Web.Api/Swagger/StandardErrorResponsesOperationFilter.cs"]
+    },
+    {
+      "id": "wiki-query-cache",
+      "query": "fingerprint Wiki query cache dependencies",
+      "changeType": "Backend",
+      "expectedPaths": [".llm-wiki/tools/LlmWikiQueryCache.ps1"]
+    },
+    {
+      "id": "user-login-handler",
+      "query": "authenticate a user login and issue tokens",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommandHandler.cs"]
+    },
+    {
+      "id": "open-food-facts-http-endpoint",
+      "query": "HTTP endpoint searches Open Food Facts products by barcode",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Features/OpenFoodFacts/OpenFoodFactsController.cs"]
+    },
+    {
+      "id": "weekly-goal-repository",
+      "query": "persist weekly goals in the database repository",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/WeeklyGoals/WeeklyGoalRepository.cs"]
+    },
+    {
+      "id": "confirm-password-reset",
+      "query": "confirm a password reset token and update the user password",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs"]
+    },
+    {
+      "id": "start-fasting-command",
+      "query": "start a new fasting session for the current user",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandHandler.cs"]
+    },
+    {
+      "id": "fasting-stats-calculator",
+      "query": "calculate completed fasting duration statistics",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Fasting/Services/FastingStatsCalculator.cs"]
+    },
+    {
+      "id": "hydration-goal-service",
+      "query": "calculate the user's daily hydration goal",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Hydration/Services/HydrationGoalService.cs"]
+    },
+    {
+      "id": "recipe-comment-read-service",
+      "query": "read comments for a community recipe",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.RecipeCommunity/RecipeComments/Services/RecipeCommentReadService.cs"]
+    },
+    {
+      "id": "toggle-recipe-like-handler",
+      "query": "toggle whether a user likes a community recipe",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.RecipeCommunity/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs"]
+    },
+    {
+      "id": "dietologist-email-sender",
+      "query": "send a dietologist invitation email",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Dietologist/Services/DietologistEmailSender.cs"]
+    },
+    {
+      "id": "client-task-reminder-processor",
+      "query": "process reminders for overdue dietologist client tasks",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Dietologist/Services/ClientTaskDueReminderProcessor.cs"]
+    },
+    {
+      "id": "marketing-attribution-cleanup-job",
+      "query": "background job removes expired marketing attribution events",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/MarketingAttributionCleanupJob.cs"]
+    },
+    {
+      "id": "billing-webhook-controller",
+      "query": "HTTP endpoint receives billing provider webhooks",
+      "changeType": "Api",
+      "expectedPaths": ["FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs"]
+    },
+    {
+      "id": "telegram-bot-worker",
+      "query": "hosted worker processes Telegram bot updates",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Telegram.Bot/TelegramBotWorker.cs"]
+    },
+    {
+      "id": "achievement-award-service",
+      "query": "award gamification achievements when user progress qualifies",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Gamification/Services/AchievementAwardService.cs"]
+    },
+    {
+      "id": "weight-entry-read-service",
+      "query": "read weight measurement history for body metrics",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs"]
+    },
+    {
+      "id": "shopping-list-creation-service",
+      "query": "create a shopping list from a meal plan",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListCreationService.cs"]
+    },
+    {
+      "id": "remove-favorite-meal-handler",
+      "query": "remove a meal from the user's favorites",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs"]
+    },
+    {
+      "id": "cycle-prediction-revision",
+      "query": "revise cycle predictions after menstrual history changes",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Cycles/Services/CyclePredictionRevisionService.cs"]
+    },
+    {
+      "id": "web-push-audience-service",
+      "query": "select the web push delivery audience for a notification",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Notifications/Services/WebPushDeliveryAudienceService.cs"]
+    },
+    {
+      "id": "fasting-push-dispatcher",
+      "query": "dispatch fasting reminder notifications through web push",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Fasting/Services/FastingNotificationPushDispatcher.cs"]
+    },
+    {
+      "id": "smtp-inbound-store",
+      "query": "store an inbound SMTP message in the mailbox",
+      "changeType": "Backend",
+      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpInboundMessageStore.cs"]
+    },
+    {
+      "id": "wiki-read-only-guard",
+      "query": "isolate read-only Wiki commands in a Git snapshot",
+      "changeType": "Tests",
+      "expectedPaths": [".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1"]
+    },
+    {
+      "id": "request-password-reset",
+      "query": "request a password reset email for an account",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs"]
+    },
+    {
+      "id": "telegram-bot-auth-handler",
+      "query": "authenticate a user payload received from the Telegram bot",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs"]
+    },
+    {
+      "id": "fasting-insights-query",
+      "query": "get personalized insights from fasting history",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs"]
+    },
+    {
+      "id": "hydration-entry-read-service",
+      "query": "read hydration entries for a date range",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Hydration/Services/HydrationEntryReadService.cs"]
+    },
+    {
+      "id": "achievement-definition-admin-service",
+      "query": "administer gamification achievement definitions",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Gamification/Services/AchievementDefinitionAdministrationService.cs"]
+    },
+    {
+      "id": "dietologist-dashboard-access",
+      "query": "check whether a dietologist may access a client dashboard",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Dietologist/Services/DietologistDashboardAccessService.cs"]
+    },
+    {
+      "id": "marketing-attribution-repository",
+      "query": "persist marketing attribution events in the database",
+      "changeType": "Database",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Tracking/MarketingAttributionEventRepository.cs"]
+    },
+    {
+      "id": "recipe-like-read-service",
+      "query": "read like status for a community recipe",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.RecipeCommunity/RecipeLikes/Services/RecipeLikeReadService.cs"]
+    },
+    {
+      "id": "frontend-state-ownership-check",
+      "query": "check frontend state ownership boundaries",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/scripts/check-state-ownership.mjs"]
+    },
+    {
+      "id": "frontend-design-token-audit",
+      "query": "audit frontend design token usage",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/scripts/audit-design-tokens.mjs"]
     }
   ]
 }
