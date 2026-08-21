@@ -20680,11 +20680,11 @@
     },
     {
       "path": "FoodDiary.Integrations/DependencyInjection.Mail.cs",
-      "nonBlankLines": 35,
+      "nonBlankLines": 42,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.2
+      "structuralRiskScore": 11.34
     },
     {
       "path": "FoodDiary.Integrations/DependencyInjection.Notifications.cs",
