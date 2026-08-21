@@ -33,6 +33,7 @@ public sealed class ContainerSupplyChainGuardrailTests {
         "build_mail_relay",
         "build_mailrelay_initializer",
         "build_mail_inbox",
+        "build_mailinbox_postgres_tls_init",
         "build_mailinbox_initializer",
         "build_client",
     ];
@@ -228,6 +229,24 @@ public sealed class ContainerSupplyChainGuardrailTests {
 
         Assert.Contains("docker create \"$CLIENT_IMAGE_REF\"", workflow, StringComparison.Ordinal);
         Assert.DoesNotContain("docker create ghcr.io/alexindima/food-diary/client:${DEPLOY_IMAGE_TAG}", workflow, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void DeployWorkflow_ProvisionsMailInboxPostgresTlsBeforeDatabaseInitialization() {
+        string workflow = ReadDeployWorkflow();
+        string tlsInitializerDockerfile = File.ReadAllText(ArchitectureTestPaths.FromRoot(
+            "MailInbox",
+            "FoodDiary.MailInbox.WebApi",
+            "Dockerfile.postgres-tls-init"));
+
+        Assert.Matches(@"(?m)^FROM postgres:17-alpine@sha256:[0-9a-f]{64}\r?$", tlsInitializerDockerfile);
+        Assert.Contains("MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF=\"${{ env.IMAGE_PREFIX }}/mailinbox-postgres-tls-init@${{ steps.build_mailinbox_postgres_tls_init.outputs.digest }}\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("$SCP_CMD MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf", workflow, StringComparison.Ordinal);
+
+        int postgresStart = workflow.IndexOf("docker compose --profile mail-inbox up -d mailinbox-postgres", StringComparison.Ordinal);
+        int databaseInitialization = workflow.IndexOf("docker compose --profile mail-inbox run -T --rm mailinbox-db-init update", StringComparison.Ordinal);
+        Assert.True(postgresStart >= 0, "MailInbox PostgreSQL TLS startup is missing from deployment.");
+        Assert.True(databaseInitialization > postgresStart, "MailInbox PostgreSQL must be running with TLS before database initialization.");
     }
 
     private static string ReadDeployWorkflow() {
