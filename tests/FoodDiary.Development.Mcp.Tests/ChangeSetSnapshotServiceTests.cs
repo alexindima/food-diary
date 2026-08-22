@@ -83,6 +83,40 @@ public sealed class ChangeSetSnapshotServiceTests {
         }
     }
 
+    [Fact]
+    public async Task GetAsync_WithScope_ProjectsExistingAndDeletedChanges() {
+        string repositoryRoot = Path.Combine(
+            Path.GetTempPath(),
+            $"fooddiary-snapshot-scope-{Guid.NewGuid():N}");
+        string scopedDirectory = Path.Combine(repositoryRoot, "Scoped");
+        string unrelatedDirectory = Path.Combine(repositoryRoot, "Unrelated");
+        Directory.CreateDirectory(scopedDirectory);
+        Directory.CreateDirectory(unrelatedDirectory);
+        try {
+            RunGit(repositoryRoot, "init", "--quiet");
+            RunGit(repositoryRoot, "config", "user.email", "snapshot@example.invalid");
+            RunGit(repositoryRoot, "config", "user.name", "Snapshot Test");
+            await File.WriteAllTextAsync(Path.Combine(scopedDirectory, "existing.cs"), "one");
+            await File.WriteAllTextAsync(Path.Combine(scopedDirectory, "deleted.cs"), "delete me");
+            await File.WriteAllTextAsync(Path.Combine(unrelatedDirectory, "other.cs"), "other");
+            RunGit(repositoryRoot, "add", ".");
+            RunGit(repositoryRoot, "commit", "--quiet", "-m", "baseline");
+            await File.WriteAllTextAsync(Path.Combine(scopedDirectory, "existing.cs"), "two");
+            File.Delete(Path.Combine(scopedDirectory, "deleted.cs"));
+            await File.WriteAllTextAsync(Path.Combine(unrelatedDirectory, "other.cs"), "changed");
+
+            using var service = new ChangeSetSnapshotService(TimeProvider.System, repositoryRoot);
+            ChangeSetSnapshot snapshot = await service.GetAsync(["Scoped"], CancellationToken.None);
+
+            Assert.Equal(["Scoped/deleted.cs", "Scoped/existing.cs"], snapshot.ChangedPaths);
+        } finally {
+            foreach (string path in Directory.EnumerateFiles(repositoryRoot, "*", SearchOption.AllDirectories)) {
+                File.SetAttributes(path, FileAttributes.Normal);
+            }
+            Directory.Delete(repositoryRoot, recursive: true);
+        }
+    }
+
     private static string RunGit(string repositoryRoot, params string[] arguments) {
         using System.Diagnostics.Process process = new() {
             StartInfo = new System.Diagnostics.ProcessStartInfo {

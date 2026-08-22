@@ -10,6 +10,7 @@ using MsOptions = Microsoft.Extensions.Options.Options;
 namespace FoodDiary.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
+[Collection("OpenFoodFacts shared state")]
 public sealed class ExternalFoodServiceTests {
     [Fact]
     public async Task UsdaSearchBrandedAsync_WhenApiKeyMissing_ReturnsEmptyWithoutSendingRequest() {

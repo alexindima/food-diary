@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1054,
     "ambiguousContracts": 3,
-    "consumerEdges": 7428,
+    "consumerEdges": 7431,
     "productionConsumerEdges": 4479,
-    "testConsumerEdges": 2949,
+    "testConsumerEdges": 2952,
     "consumedContracts": 1054,
     "unconsumedContracts": 0
   },
@@ -47001,6 +47001,19 @@
       "consumerPath": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IChangeSetSnapshotService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/ChangeSets/IChangeSetSnapshotService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/EvaluationRunnerTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IChangeSetSnapshotService",
@@ -95864,6 +95877,19 @@
         "FoodDiary.Development.Mcp/Wiki/IWikiCommandExecutor.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/EvaluationRunnerTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IWikiCommandExecutor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Wiki/IWikiCommandExecutor.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -95929,9 +95955,22 @@
         "FoodDiary.Development.Mcp/Wiki/IWikiContextSearch.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/EvaluationRunnerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWikiContextSearch",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Wiki/IWikiContextSearch.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
       "isTest": true,
-      "referenceCount": 12
+      "referenceCount": 18
     },
     {
       "contract": "LessonDetailHttpResponse",
@@ -112259,7 +112298,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/UserAuditEventInvariantTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 9
     },
     {
       "contract": "UserRoleAuditEvent",

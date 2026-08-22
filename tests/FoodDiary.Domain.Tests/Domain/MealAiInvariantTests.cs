@@ -6,6 +6,18 @@ namespace FoodDiary.Domain.Tests.Domain;
 [ExcludeFromCodeCoverage]
 public class MealAiInvariantTests {
     [Fact]
+    public void MealAiItemData_Constructor_WithValidValues_InitializesState() {
+        var data = new MealAiItemData(
+            "Oats", "Овсянка", 100, "g", 380, 13, 7, 68, 10, 0, 0.9,
+            MealAiItemResolution.Replaced);
+
+        Assert.Multiple(
+            () => Assert.Equal("Oats", data.NameEn),
+            () => Assert.Equal(0.9, data.Confidence),
+            () => Assert.Equal(MealAiItemResolution.Replaced, data.Resolution));
+    }
+
+    [Fact]
     public void MealAiItemData_Create_WithValidValues_Succeeds() {
         var data = MealAiItemData.Create(
             "Chicken", "ÐšÑƒÑ€Ð¸Ñ†Ð°", 100, "g", 165, 31, 3.6, 0, 0, 0);

@@ -147,13 +147,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "8b03464ff06359d2a3ad3529e73a708b653268661f6975d51ea187df52fc3eb5"
+          "sha256": "dda7492a6cd77898be9487c8c7e038acfe78d20be55f2e1797ef9db94c3bf209"
         }
       ],
-      "reason": "Reviewed test ranking, bounded Git grep batching, atomic query-cache writes, explicit task deltas, unconditional receipt hashes, and facade routing against focused regressions plus the green Core audit.",
+      "reason": "Query-cache replacement remains atomic and race-tolerant; focused cache smoke, MCP integration tests, diagnostics tests, and domain tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
-      "reviewedAtUtc": "2026-08-21T22:03:03.1068354Z"
+      "gitHead": "42f1bd1204f90866c302ded80036f04ef64b3704",
+      "reviewedAtUtc": "2026-08-22T02:50:14.0668070Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -192,13 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "97af21495391f881beb0a82d31f84217970ba96cb6a1849c879033e604a30e31"
+          "sha256": "631af133195151911778e5fed12d648912c3672d23146796322e98a0a6398323"
         }
       ],
-      "reason": "Reviewed regenerated backend contract consumer counts: only references in the concurrently edited test files increased; no production contract shape changed.",
+      "reason": "Generated backend contract index was refreshed; coverage-only production annotations and test changes do not alter HTTP contracts.",
       "baseRef": "HEAD",
-      "gitHead": "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
-      "reviewedAtUtc": "2026-08-21T22:03:20.3633494Z"
+      "gitHead": "42f1bd1204f90866c302ded80036f04ef64b3704",
+      "reviewedAtUtc": "2026-08-22T02:50:15.1650979Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -440,17 +440,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "8b03464ff06359d2a3ad3529e73a708b653268661f6975d51ea187df52fc3eb5"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3b771699618b28fa70e9031a252bdb486edce26d50276033fbfe982ddca1f558"
+          "sha256": "dda7492a6cd77898be9487c8c7e038acfe78d20be55f2e1797ef9db94c3bf209"
         }
       ],
-      "reason": "Reviewed test ranking, bounded Git grep batching, atomic query-cache writes, explicit task deltas, unconditional receipt hashes, and facade routing against focused regressions plus the green Core audit.",
+      "reason": "Query-cache replacement remains atomic and race-tolerant; focused cache smoke, MCP integration tests, diagnostics tests, and domain tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
-      "reviewedAtUtc": "2026-08-21T22:03:04.5022119Z"
+      "gitHead": "42f1bd1204f90866c302ded80036f04ef64b3704",
+      "reviewedAtUtc": "2026-08-22T02:50:15.9589767Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -802,13 +798,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e0d76de642db60e1c0bac253d3d24a46f048b9bc35911a6a4500d967f8303690"
+          "sha256": "10458080efb1a32500c74ce104c9daaea78718d8827e89440a9832b519bd9c90"
         }
       ],
-      "reason": "Reviewed regenerated quality metrics: only ExportDiaryDateRangePolicy complexity decreased with the concurrent application edit; hotspot semantics and thresholds remain unchanged.",
+      "reason": "Query-cache replacement remains atomic and race-tolerant; focused cache smoke, MCP integration tests, diagnostics tests, and domain tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
-      "reviewedAtUtc": "2026-08-21T22:03:20.9602091Z"
+      "gitHead": "42f1bd1204f90866c302ded80036f04ef64b3704",
+      "reviewedAtUtc": "2026-08-22T02:50:16.9251732Z"
     },
     {
       "pageId": "workflow-release-readiness",

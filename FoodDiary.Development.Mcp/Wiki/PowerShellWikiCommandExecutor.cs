@@ -252,6 +252,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static void TryDelete(string path) {
         try {
             File.Delete(path);
@@ -260,6 +261,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static void TryKill(Process process) {
         try {
             if (!process.HasExited) {

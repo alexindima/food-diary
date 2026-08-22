@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace FoodDiary.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
+[Collection("OpenFoodFacts shared state")]
 public sealed class OpenFoodFactsServiceTests {
     private const string IntegrationsMeterName = "FoodDiary.Integrations";
 
@@ -416,7 +417,9 @@ public sealed class OpenFoodFactsServiceTests {
             }
             """;
         var handler = new CountingHttpMessageHandler(json);
-        OpenFoodFactsService service = CreateService(handler);
+        OpenFoodFactsService service = CreateServiceWithTimeProvider(
+            handler,
+            new TestTimeProvider(FixedNow.AddDays(1)));
 
         IReadOnlyList<OpenFoodFactsProductModel> firstResult = await service.SearchAsync("cached-fanta");
         IReadOnlyList<OpenFoodFactsProductModel> secondResult = await service.SearchAsync("cached-fanta");
@@ -736,6 +739,11 @@ public sealed class OpenFoodFactsServiceTests {
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider : TimeProvider {
         public override DateTimeOffset GetUtcNow() => FixedNow;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class TestTimeProvider(DateTimeOffset utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => utcNow;
     }
 
     [ExcludeFromCodeCoverage]

@@ -169,6 +169,57 @@ public sealed class McpServerTests {
     }
 
     [Fact]
+    public async Task ConfiguredServer_ExecutesEveryContextToolWithDetailedRawOutput() {
+        string repositoryRoot = FindRepositoryRoot();
+        var configuration = CodexMcpTestConfiguration.Load(repositoryRoot);
+        var transport = new StdioClientTransport(configuration.CreateTransportOptions("FoodDiary MCP detailed tools test"));
+        using CancellationTokenSource timeout = new(TimeSpan.FromMinutes(3));
+        await using McpClient client = await McpClient.CreateAsync(
+            transport,
+            cancellationToken: timeout.Token);
+
+        var commonFlags = new Dictionary<string, object?>(StringComparer.Ordinal) {
+            ["includeDetailedContext"] = true,
+            ["includeRawOutput"] = true,
+        };
+        CallToolResult changeContext = await client.CallToolAsync(
+            "get_change_context",
+            new Dictionary<string, object?>(commonFlags, StringComparer.Ordinal) {
+                ["intent"] = "Verify detailed MCP tool coverage",
+                ["plannedPath"] = "FoodDiary.Development.Mcp/Tools/WikiTools.cs",
+            },
+            cancellationToken: timeout.Token);
+        CallToolResult trace = await client.CallToolAsync(
+            "trace_backend_flow",
+            new Dictionary<string, object?>(commonFlags, StringComparer.Ordinal) {
+                ["query"] = "WikiQueryService GetDevelopmentContextAsync",
+            },
+            cancellationToken: timeout.Token);
+        CallToolResult testPlan = await client.CallToolAsync(
+            "get_test_plan",
+            new Dictionary<string, object?>(commonFlags, StringComparer.Ordinal) {
+                ["intent"] = "Verify detailed MCP tool coverage",
+                ["plannedPaths"] = new[] { "FoodDiary.Development.Mcp/Tools/WikiTools.cs" },
+                ["changedPaths"] = new[] { "FoodDiary.Development.Mcp/Tools/WikiTools.cs" },
+            },
+            cancellationToken: timeout.Token);
+        CallToolResult developmentContext = await client.CallToolAsync(
+            "get_development_context",
+            new Dictionary<string, object?>(commonFlags, StringComparer.Ordinal) {
+                ["intent"] = "Verify detailed MCP tool coverage",
+                ["query"] = "WikiQueryService GetDevelopmentContextAsync",
+                ["plannedPath"] = "FoodDiary.Development.Mcp/Tools/WikiTools.cs",
+            },
+            cancellationToken: timeout.Token);
+
+        Assert.All([changeContext, trace, testPlan, developmentContext], result => {
+            Assert.False(result.IsError is true, JsonSerializer.Serialize(result));
+            Assert.NotNull(result.StructuredContent);
+            Assert.Contains("rawOutput", result.StructuredContent.Value.GetRawText(), StringComparison.OrdinalIgnoreCase);
+        });
+    }
+
+    [Fact]
     public async Task ConfiguredServer_ReturnsCompactChangeContextByDefault() {
         string repositoryRoot = FindRepositoryRoot();
         var configuration = CodexMcpTestConfiguration.Load(repositoryRoot);
@@ -193,8 +244,8 @@ public sealed class McpServerTests {
             cancellationToken: timeout.Token);
         cachedStopwatch.Stop();
 
-        Assert.NotEqual(true, result.IsError);
-        Assert.NotEqual(true, cachedResult.IsError);
+        Assert.False(result.IsError is true, JsonSerializer.Serialize(result));
+        Assert.False(cachedResult.IsError is true, JsonSerializer.Serialize(cachedResult));
         Assert.True(
             cachedStopwatch.Elapsed < TimeSpan.FromSeconds(2),
             $"Cached change context took {cachedStopwatch.Elapsed}.");

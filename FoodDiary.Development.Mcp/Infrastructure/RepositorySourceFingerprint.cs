@@ -113,6 +113,7 @@ internal static class RepositorySourceFingerprint {
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static void TryKill(Process process) {
         try {
             if (!process.HasExited) {

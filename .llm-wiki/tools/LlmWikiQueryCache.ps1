@@ -105,6 +105,26 @@ function Read-LlmWikiQueryCache {
     }
 }
 
+function Move-LlmWikiQueryCacheFile {
+    param(
+        [Parameter(Mandatory)][string]$TemporaryPath,
+        [Parameter(Mandatory)][string]$DestinationPath
+    )
+    $backupPath = "$DestinationPath.$([guid]::NewGuid().ToString('N')).bak"
+    if ([IO.File]::Exists($DestinationPath)) {
+        try { [IO.File]::Replace($TemporaryPath, $DestinationPath, $backupPath) }
+        finally { Remove-Item -LiteralPath $backupPath -Force -ErrorAction SilentlyContinue }
+        return
+    }
+    try {
+        [IO.File]::Move($TemporaryPath, $DestinationPath)
+    } catch [IO.IOException] {
+        if (-not [IO.File]::Exists($TemporaryPath) -or -not [IO.File]::Exists($DestinationPath)) { throw }
+        try { [IO.File]::Replace($TemporaryPath, $DestinationPath, $backupPath) }
+        finally { Remove-Item -LiteralPath $backupPath -Force -ErrorAction SilentlyContinue }
+    }
+}
+
 function Write-LlmWikiQueryCache {
     [CmdletBinding()]
     param(
@@ -118,7 +138,7 @@ function Write-LlmWikiQueryCache {
     $metadataTemporaryPath = "$($Entry.metadataPath).$([guid]::NewGuid().ToString('N')).tmp"
     try {
         [IO.File]::WriteAllText($temporaryPath, $Content, [Text.UTF8Encoding]::new($false))
-        [IO.File]::Move($temporaryPath, $Entry.path, $true)
+        Move-LlmWikiQueryCacheFile -TemporaryPath $temporaryPath -DestinationPath $Entry.path
         $metadata = [ordered]@{
             schemaVersion = 1
             head = [string]$Entry.head
@@ -128,7 +148,7 @@ function Write-LlmWikiQueryCache {
             recordedAtUtc = [DateTime]::UtcNow.ToString('o')
         } | ConvertTo-Json -Compress
         [IO.File]::WriteAllText($metadataTemporaryPath, $metadata + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
-        [IO.File]::Move($metadataTemporaryPath, $Entry.metadataPath, $true)
+        Move-LlmWikiQueryCacheFile -TemporaryPath $metadataTemporaryPath -DestinationPath $Entry.metadataPath
     } finally {
         Remove-Item -LiteralPath $temporaryPath -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath $metadataTemporaryPath -Force -ErrorAction SilentlyContinue

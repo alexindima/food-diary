@@ -88,6 +88,21 @@ public sealed class TrackingAndMealPlanCoverageGapTests {
             1,
             50,
             reasonCodes: [new string('x', 600), new string('y', 600)]));
+
+        CyclePredictionRevision revision = CreateRevision(
+            CycleProfileId.New(),
+            generatedAt,
+            from,
+            from.AddDays(2),
+            2,
+            1,
+            75,
+            reasonCodes: ["stable", "enough-data"]);
+
+        Assert.Multiple(
+            () => Assert.NotEqual(CyclePredictionRevisionId.Empty, revision.Id),
+            () => Assert.Equal(generatedAt, revision.GeneratedAtUtc),
+            () => Assert.Equal("stable|enough-data", revision.ReasonCodes));
     }
 
     private static MenstrualEpisode CreateEpisode(

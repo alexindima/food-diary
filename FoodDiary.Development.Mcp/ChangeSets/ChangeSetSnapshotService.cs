@@ -332,6 +332,7 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
             normalized.Contains($"/{segment}/", StringComparison.OrdinalIgnoreCase));
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static void TryKill(Process process) {
         try {
             if (!process.HasExited) {

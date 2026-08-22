@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3428,
-    "symbols": 3436,
+    "sourceFiles": 3429,
+    "symbols": 3437,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 239,
     "kinds": {
-      "class": 1785,
+      "class": 1786,
       "enum": 61,
       "interface": 419,
       "record": 1051,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 62,
-      "Other": 1318,
+      "Other": 1319,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -13275,7 +13275,7 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Diagnostics/ServerStatus.cs",
-      "line": 4
+      "line": 7
     },
     {
       "name": "ServerStatusService",
@@ -13334,6 +13334,13 @@
       "line": 8
     },
     {
+      "name": "Program",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Program.Coverage.cs",
+      "line": 4
+    },
+    {
       "name": "DevelopmentContext",
       "kind": "record",
       "role": "Other",
@@ -13345,7 +13352,7 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentContextComponentError.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "DevelopmentMcpErrorCodes",

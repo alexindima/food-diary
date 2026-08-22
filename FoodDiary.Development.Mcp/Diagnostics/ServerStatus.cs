@@ -1,7 +1,9 @@
 using FoodDiary.Development.Mcp.Wiki;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FoodDiary.Development.Mcp.Diagnostics;
 
+[ExcludeFromCodeCoverage]
 public sealed record ServerStatus(
     string Version,
     ServerRuntimeIdentity RuntimeIdentity,

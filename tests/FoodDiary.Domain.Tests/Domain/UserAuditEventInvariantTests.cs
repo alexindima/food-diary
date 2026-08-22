@@ -156,6 +156,8 @@ public class UserAuditEventInvariantTests {
         Assert.Throws<ArgumentException>(() =>
             UserRoleAuditEvent.Create(UserId.New(), Role.Create("Premium"), UserRoleAuditAction.Added, actorUserId: null, " ", DateTime.UtcNow));
         Assert.Throws<ArgumentOutOfRangeException>(() =>
+            UserRoleAuditEvent.Create(UserId.New(), Role.Create("Premium"), (UserRoleAuditAction)999, actorUserId: null, "Admin", DateTime.UtcNow));
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
             UserRoleAuditEvent.Create(UserId.New(), Role.Create("Premium"), UserRoleAuditAction.Added, actorUserId: null, "Admin", new DateTime(2026, 5, 1)));
     }
 }

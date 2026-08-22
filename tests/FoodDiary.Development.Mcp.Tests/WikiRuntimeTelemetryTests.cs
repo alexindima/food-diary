@@ -3,6 +3,26 @@ namespace FoodDiary.Development.Mcp.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class WikiRuntimeTelemetryTests {
     [Fact]
+    public void Capture_WithNoCacheAttemptsAndRegularFailure_ReturnsZeroRateAndFailureCount() {
+        WikiRuntimeTelemetry telemetry = new();
+        telemetry.CommandQueued();
+        telemetry.CommandStarted();
+        telemetry.CommandFailed(cancelled: false, timedOut: false);
+        for (int index = 0; index < 140; index++) {
+            Complete(telemetry, "bounded", index);
+        }
+
+        WikiRuntimeMetrics metrics = telemetry.Capture(cacheEntries: 0);
+
+        WikiCommandTiming timing = Assert.Single(metrics.CommandTimings);
+        Assert.Multiple(
+            () => Assert.Equal(0, metrics.QueryCache.HitRate),
+            () => Assert.Equal(1, metrics.FailedCommands),
+            () => Assert.Equal(128, timing.Samples),
+            () => Assert.Equal(139, timing.MaximumMilliseconds));
+    }
+
+    [Fact]
     public void Capture_ReportsBoundedCommandPercentilesAndOutcomes() {
         WikiRuntimeTelemetry telemetry = new();
         telemetry.RecordCacheMiss();
@@ -128,6 +148,69 @@ public sealed class WikiRuntimeTelemetryTests {
                 Directory.Delete(directory, recursive: true);
             }
         }
+    }
+
+    [Theory]
+    [InlineData(null, "other")]
+    [InlineData(" ", "other")]
+    [InlineData("sqlite-error-11", "sqlite-error")]
+    [InlineData("database-missing", "database-missing")]
+    [InlineData("private-query", "other")]
+    public void ContextRoutingTelemetry_NormalizesFallbackReasons(string? reason, string expected) {
+        string directory = Path.Combine(Path.GetTempPath(), "fooddiary-development-mcp-tests", Guid.NewGuid().ToString("N"));
+        string path = Path.Combine(directory, "context-routing.json");
+        try {
+            var store = new ContextRoutingTelemetryStore(path);
+            store.Record(
+                usedSqlite: false,
+                fallbackReason: reason,
+                duration: TimeSpan.FromMilliseconds(-5),
+                refreshAttempted: false,
+                refreshSucceeded: false);
+
+            ContextRoutingHealth health = store.Capture();
+
+            Assert.Multiple(
+                () => Assert.Equal(0, health.P50Milliseconds),
+                () => Assert.Equal(1, health.FallbackReasonCounts[expected]));
+        } finally {
+            if (Directory.Exists(directory)) {
+                Directory.Delete(directory, recursive: true);
+            }
+        }
+    }
+
+    [Fact]
+    public async Task ContextRoutingTelemetry_WithInvalidPersistedJson_ReportsPersistenceFailure() {
+        string directory = Path.Combine(Path.GetTempPath(), "fooddiary-development-mcp-tests", Guid.NewGuid().ToString("N"));
+        string path = Path.Combine(directory, "context-routing.json");
+        Directory.CreateDirectory(directory);
+        await File.WriteAllTextAsync(path, "not-json");
+        try {
+            var store = new ContextRoutingTelemetryStore(path);
+
+            ContextRoutingHealth health = store.Capture();
+
+            Assert.Multiple(
+                () => Assert.False(health.PersistenceHealthy),
+                () => Assert.Equal(1, health.PersistenceFailures),
+                () => Assert.NotNull(health.LastPersistenceFailureAtUtc));
+        } finally {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void ContextRoutingTelemetry_WithMissingPath_Throws(string path) {
+        Assert.Throws<ArgumentException>(() => new ContextRoutingTelemetryStore(path));
+    }
+
+    [Fact]
+    public void ContextRoutingTelemetry_WithInvalidRetention_Throws() {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new ContextRoutingTelemetryStore("context-routing.json", maximumEvents: 0));
     }
 
     private static void Complete(

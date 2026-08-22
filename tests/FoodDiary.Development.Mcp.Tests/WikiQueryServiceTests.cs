@@ -735,6 +735,271 @@ public sealed class WikiQueryServiceTests {
             Arg.Any<CancellationToken>());
     }
 
+    [Fact]
+    public async Task TraceBackendFlowAsync_ReturnsExecutorResultForValidQuery() {
+        ChangeSetSnapshot snapshot = new("abc123", "trace-snapshot", [], DateTimeOffset.UtcNow);
+        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(snapshot);
+        WikiCommandResult expected = CreateResult("trace", ["FoodDiary.Application.Users/Handler.cs"]);
+        _executor.ExecuteAsync("trace", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(expected);
+        WikiQueryService service = new(_executor, _snapshots);
+
+        WikiCommandResult result = await service.TraceBackendFlowAsync("SomeQuery", CancellationToken.None);
+
+        Assert.Same(expected, result);
+        await _executor.Received(1).ExecuteAsync(
+            "trace",
+            Arg.Is<IReadOnlyList<string>>(arguments => arguments.SequenceEqual(new[] {
+                "-Format",
+                "Json",
+                "-Fast",
+                "-Query",
+                "SomeQuery",
+            })),
+            CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task GetTestPlanAsync_RejectsIdenticalBaseAndHeadRevisions() {
+        WikiQueryService service = new(_executor, _snapshots);
+
+        DevelopmentMcpException exception = await Assert.ThrowsAsync<DevelopmentMcpException>(() =>
+            service.GetTestPlanAsync(
+                intent: null,
+                plannedPaths: ["FoodDiary.Development.Mcp"],
+                changedPaths: null,
+                executedChecks: null,
+                baseRevision: "REV123",
+                headRevision: "rev123",
+                cancellationToken: CancellationToken.None));
+
+        Assert.Equal(DevelopmentMcpErrorCodes.InvalidRevisionRange, exception.ErrorCode);
+    }
+
+    [Fact]
+    public async Task GetTestPlanAsync_UsesExplicitBaseAndHeadRevisionsInsteadOfSnapshotHead() {
+        WikiQueryService service = new(_executor, _snapshots);
+
+        await service.GetTestPlanAsync(
+            intent: null,
+            plannedPaths: null,
+            changedPaths: null,
+            executedChecks: null,
+            baseRevision: "explicit-base",
+            headRevision: "explicit-head",
+            cancellationToken: CancellationToken.None);
+
+        await _executor.Received(1).ExecuteAsync(
+            "test-plan",
+            Arg.Is<IReadOnlyList<string>>(arguments =>
+                arguments.Contains("-BaseRef", StringComparer.Ordinal) &&
+                arguments.Contains("explicit-base", StringComparer.Ordinal) &&
+                arguments.Contains("-HeadRef", StringComparer.Ordinal) &&
+                arguments.Contains("explicit-head", StringComparer.Ordinal)),
+            CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task GetTestPlanAsync_AddsHeadRefEvenWithoutBaseline() {
+        ChangeSetSnapshot cleanSnapshot = new("abc123", "clean-snapshot", [], DateTimeOffset.UtcNow);
+        _snapshots.GetAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(cleanSnapshot);
+        WikiQueryService service = new(_executor, _snapshots);
+
+        await service.GetTestPlanAsync(
+            intent: null,
+            plannedPaths: ["FoodDiary.Development.Mcp"],
+            changedPaths: null,
+            executedChecks: null,
+            baseRevision: null,
+            headRevision: "explicit-head-only",
+            cancellationToken: CancellationToken.None);
+
+        await _executor.Received(1).ExecuteAsync(
+            "test-plan",
+            Arg.Is<IReadOnlyList<string>>(arguments =>
+                arguments.Contains("-NoBaseline", StringComparer.Ordinal) &&
+                !arguments.Contains("-BaseRef", StringComparer.Ordinal) &&
+                arguments.Contains("-HeadRef", StringComparer.Ordinal) &&
+                arguments.Contains("explicit-head-only", StringComparer.Ordinal)),
+            CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task GetDevelopmentContextAsync_InfersInfrastructureDomainAndApiLayersAndIgnoresUnknownPaths() {
+        ChangeSetSnapshot snapshot = new("abc123", "clean-snapshot", [], DateTimeOffset.UtcNow);
+        _snapshots.GetAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
+        _snapshots.RefreshAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
+        _executor.ExecuteAsync("trace", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(CreateResult(
+                "trace",
+                [
+                    "FoodDiary.Infrastructure/Persistence/UserRepository.cs",
+                    "FoodDiary.Domain/Users/User.cs",
+                    "FoodDiary.Web.Api/Controllers/UsersController.cs",
+                    "docs/unrelated-notes.md",
+                ]));
+        WikiQueryService service = new(_executor, _snapshots);
+
+        DevelopmentContext result = await service.GetDevelopmentContextAsync(
+            "Change user persistence",
+            "UpdateUser",
+            plannedPath: null,
+            CancellationToken.None);
+
+        Assert.Equal(["Api", "Domain", "Infrastructure"], result.EffectiveLayers);
+        Assert.True(result.CrossLayerScope);
+    }
+
+    [Fact]
+    public async Task GetDevelopmentContextAsync_RecordsUncachedTraceFailureAsComponentError() {
+        ChangeSetSnapshot snapshot = new("abc123", "clean-snapshot", [], DateTimeOffset.UtcNow);
+        _snapshots.GetAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
+        _snapshots.RefreshAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
+        _executor.ExecuteAsync("trace", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns<Task<WikiCommandResult>>(_ => throw new DevelopmentMcpException(
+                DevelopmentMcpErrorCodes.WikiCommandFailed,
+                "trace unavailable"));
+        WikiQueryService service = new(_executor, _snapshots);
+
+        DevelopmentContext result = await service.GetDevelopmentContextAsync(
+            "Investigate flow",
+            "SomeQuery",
+            plannedPath: null,
+            CancellationToken.None);
+
+        Assert.True(result.PartialSuccess);
+        Assert.Null(result.BackendTrace);
+        Assert.Contains(
+            result.ComponentErrors,
+            error => string.Equals(error.Component, "trace", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task GetDevelopmentContextAsync_FallsBackToJsonWhenGraphRebuildThrows() {
+        IWikiContextSearch contextSearch = Substitute.For<IWikiContextSearch>();
+        WikiContextSearchResult stale = CreateSqlContext(
+            ready: false,
+            fresh: false,
+            unavailableReason: "database-missing");
+        contextSearch.SearchAsync(
+            Arg.Any<string>(),
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<string?>(),
+            Arg.Any<IReadOnlyList<string>?>(),
+            Arg.Any<CancellationToken>(),
+            Arg.Any<string?>()).Returns(stale);
+        _executor.ExecuteAsync("graph-build", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns<Task<WikiCommandResult>>(_ => throw new DevelopmentMcpException(
+                DevelopmentMcpErrorCodes.WikiUnavailable,
+                "graph rebuild failed"));
+        _executor.ExecuteAsync("trace", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(CreateResult("trace", ["FoodDiary.Application.Users/FallbackHandler.cs"]));
+        WikiQueryService service = new(_executor, _snapshots, contextSearch: contextSearch);
+
+        DevelopmentContext result = await service.GetDevelopmentContextAsync(
+            "Change user flow",
+            "update user",
+            "FoodDiary.Application.Users",
+            CancellationToken.None);
+
+        Assert.Equal("json", result.ContextRetrievalSource);
+        Assert.Equal($"graph-refresh-{DevelopmentMcpErrorCodes.WikiUnavailable}", result.ContextFallbackReason);
+        await _executor.Received(1).ExecuteAsync(
+            "graph-build",
+            Arg.Any<IReadOnlyList<string>>(),
+            CancellationToken.None);
+        await _executor.Received(1).ExecuteAsync(
+            "trace",
+            Arg.Any<IReadOnlyList<string>>(),
+            CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task GetDevelopmentContextAsync_TreatsFreshEmptyCandidatesAsNoSqlCandidates() {
+        IWikiContextSearch contextSearch = Substitute.For<IWikiContextSearch>();
+        WikiContextSearchResult freshButEmpty = new(
+            Authority: "sqlite-derived",
+            Reader: "in-process-microsoft-data-sqlite",
+            Ready: true,
+            IndexedDocuments: 20_000,
+            Fingerprint: "fts-fingerprint",
+            UpdatedAtUtc: "2026-08-21T00:00:00Z",
+            ChangeSetFingerprint: "snapshot-hash",
+            GitHead: "abc123",
+            Fresh: true,
+            QueryTerms: ["user"],
+            Candidates: [],
+            QueryDurationMilliseconds: 1);
+        contextSearch.SearchAsync(
+            Arg.Any<string>(),
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<string?>(),
+            Arg.Any<IReadOnlyList<string>?>(),
+            Arg.Any<CancellationToken>(),
+            Arg.Any<string?>()).Returns(freshButEmpty);
+        _executor.ExecuteAsync("trace", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(CreateResult("trace", ["FoodDiary.Application.Users/FallbackHandler.cs"]));
+        WikiQueryService service = new(_executor, _snapshots, contextSearch: contextSearch);
+
+        DevelopmentContext result = await service.GetDevelopmentContextAsync(
+            "Change user flow",
+            "update user",
+            "FoodDiary.Application.Users",
+            CancellationToken.None);
+
+        Assert.Equal("json", result.ContextRetrievalSource);
+        Assert.Equal("sqlite-no-candidates", result.ContextFallbackReason);
+        await _executor.DidNotReceive().ExecuteAsync(
+            "graph-build",
+            Arg.Any<IReadOnlyList<string>>(),
+            Arg.Any<CancellationToken>());
+        await _executor.Received(1).ExecuteAsync(
+            "trace",
+            Arg.Any<IReadOnlyList<string>>(),
+            CancellationToken.None);
+    }
+
+    [Theory]
+    [InlineData(null, "Any")]
+    [InlineData("FoodDiary.Web.Client/src/app/feature.ts", "Frontend")]
+    [InlineData("FoodDiary.Infrastructure/Migrations/2026_AddIndex.cs", "Database")]
+    [InlineData("tests/FoodDiary.Application.Tests/SomeTest.cs", "Tests")]
+    [InlineData("FoodDiary.Application.Users/Handler.cs", "Backend")]
+    public async Task GetDevelopmentContextAsync_InfersSearchChangeTypeFromPlannedPath(
+        string? plannedPath,
+        string expectedChangeType) {
+        IWikiContextSearch contextSearch = Substitute.For<IWikiContextSearch>();
+        WikiContextSearchResult fresh = CreateSqlContext(ready: true, fresh: true);
+        contextSearch.SearchAsync(
+            Arg.Any<string>(),
+            Arg.Any<int>(),
+            Arg.Any<string>(),
+            Arg.Any<string?>(),
+            Arg.Any<IReadOnlyList<string>?>(),
+            Arg.Any<CancellationToken>(),
+            Arg.Any<string?>()).Returns(fresh);
+        WikiQueryService service = new(_executor, _snapshots, contextSearch: contextSearch);
+
+        await service.GetDevelopmentContextAsync(
+            "Intent text",
+            "search query",
+            plannedPath,
+            CancellationToken.None);
+
+        await contextSearch.Received(1).SearchAsync(
+            query: Arg.Is<string>(value => string.Equals(value, "search query", StringComparison.Ordinal)),
+            limit: Arg.Is(20),
+            changeType: Arg.Is<string>(value => string.Equals(value, expectedChangeType, StringComparison.Ordinal)),
+            module: Arg.Is<string?>(value => ReferenceEquals(value, null)),
+            scopePaths: Arg.Is<IReadOnlyList<string>?>(paths => ReferenceEquals(plannedPath, null)
+                ? !ReferenceEquals(paths, null) && paths.Count == 0
+                : !ReferenceEquals(paths, null) && paths.Count == 1 && string.Equals(paths[0], plannedPath, StringComparison.Ordinal)),
+            cancellationToken: Arg.Is(CancellationToken.None),
+            expectedChangeSetFingerprint: Arg.Is<string?>(value => !string.IsNullOrWhiteSpace(value)));
+    }
+
     private static WikiCommandResult CreateResult(
         string command,
         IReadOnlyList<string> referencedPaths,
