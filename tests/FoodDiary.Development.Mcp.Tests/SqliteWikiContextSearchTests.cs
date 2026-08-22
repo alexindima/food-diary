@@ -32,6 +32,13 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         CreateDatabase();
     }
 
+    [Fact]
+    public void Constructor_UsesResolvedRepositoryRoot() {
+        var search = new SqliteWikiContextSearch(new WikiRuntimeTelemetry());
+
+        Assert.NotNull(search);
+    }
+
     [Theory]
     [InlineData(
         "strip user identity from web API telemetry logs",
@@ -114,6 +121,81 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         Assert.Contains("policy", result.QueryTerms, StringComparer.Ordinal);
         Assert.Contains("query", result.QueryTerms, StringComparer.Ordinal);
         Assert.Contains("suppress", result.QueryTerms, StringComparer.Ordinal);
+    }
+
+    [Fact]
+    public async Task SearchAsync_ExpandsDoubledConsonantInflection() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "running",
+            limit: 10,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Contains("run", result.QueryTerms, StringComparer.Ordinal);
+    }
+
+    [Fact]
+    public async Task SearchAsync_ReturnsUnavailableWhenQueryContainsOnlyStopTerms() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "the and",
+            limit: 10,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None);
+
+        Assert.Equal("query-has-no-search-terms", result.UnavailableReason);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("{ \"schemaVersion\": 2 }")]
+    public async Task SearchAsync_ReturnsUnavailableForMissingOrInvalidRankingPolicy(string? policyContent) {
+        string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
+        if (policyContent is null) {
+            File.Delete(policyPath);
+        } else {
+            await File.WriteAllTextAsync(policyPath, policyContent);
+        }
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "anything",
+            limit: 10,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None);
+
+        Assert.Equal("context-search-configuration-unavailable", result.UnavailableReason);
+    }
+
+    [Fact]
+    public async Task SearchAsync_ReturnsUnavailableWhenProjectionMetadataIsIncomplete() {
+        await using (SqliteConnection connection = new($"Data Source={_databasePath}")) {
+            await connection.OpenAsync();
+            await using SqliteCommand command = connection.CreateCommand();
+            command.CommandText = "DELETE FROM metadata WHERE key = 'context_search_fingerprint';";
+            await command.ExecuteNonQueryAsync();
+        }
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "anything",
+            limit: 10,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None);
+
+        Assert.Equal("fts-projection-not-ready", result.UnavailableReason);
     }
 
     [Fact]
@@ -204,6 +286,44 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         Assert.Equal(
             "FoodDiary.Integrations/Options/IntegrationUriValidator.cs",
             result.Candidates[0].Path);
+    }
+
+    [Fact]
+    public async Task SearchAsync_AppliesModuleScopeLayerAndTechnicalRankingBranches() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult scoped = await search.SearchAsync(
+            "coveragebranch",
+            limit: 20,
+            changeType: "Frontend",
+            module: "fooddiary.infrastructure",
+            scopePaths: [" ", "FoodDiary.Infrastructure/Services"],
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        WikiContextSearchResult backend = await search.SearchAsync(
+            "coveragebranch",
+            limit: 20,
+            changeType: "Backend",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        WikiContextSearchCandidate exact = Assert.Single(
+            scoped.Candidates,
+            candidate => string.Equals(candidate.Path, "FoodDiary.Infrastructure/Services/CoverageBranch.cs", StringComparison.Ordinal));
+        Assert.Multiple(
+            () => Assert.Contains(exact.Reasons, reason => string.Equals(reason, "exact normalized query match", StringComparison.Ordinal)),
+            () => Assert.Contains(exact.Reasons, reason => reason.StartsWith("module ", StringComparison.Ordinal)),
+            () => Assert.Contains(exact.Reasons, reason => string.Equals(reason, "planned scope affinity", StringComparison.Ordinal)),
+            () => Assert.Contains(exact.Reasons, reason => string.Equals(reason, "backend candidate penalty for frontend intent", StringComparison.Ordinal)),
+            () => Assert.Contains(
+                backend.Candidates.Single(candidate => string.Equals(candidate.Path, "FoodDiary.Web.Client/src/app/coveragebranch.ts", StringComparison.Ordinal)).Reasons,
+                reason => string.Equals(reason, "frontend candidate penalty for backend intent", StringComparison.Ordinal)),
+            () => Assert.Single(scoped.Candidates, candidate => string.Equals(candidate.Path, "Shared/duplicate-coveragebranch.cs", StringComparison.Ordinal)),
+            () => Assert.Contains(scoped.Candidates, candidate => string.Equals(candidate.RecordType, "agent-guide", StringComparison.Ordinal)),
+            () => Assert.Contains(scoped.Candidates, candidate =>
+                string.Equals(candidate.Path, "FoodDiary.Application.Abstractions/ICoverageBranch.cs", StringComparison.Ordinal)));
     }
 
     [Fact]
@@ -347,7 +467,13 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
                 ('code', 'integration-uri-validator', 'FoodDiary.Integrations/Options/IntegrationUriValidator.cs', 'integration-uri-validator', 'csharp', 'IntegrationUriValidator', 'validate configured integration URLs before startup'),
                 ('code', 'google-token-validator', 'FoodDiary.Integrations/Authentication/GoogleTokenValidator.cs', 'google-token-validator', 'csharp', 'GoogleTokenValidator', 'validate configured integration URLs before startup'),
                 ('code', 'pdf-primary', 'FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs', 'pdf-primary', 'csharp', 'DiaryPdfGenerator', 'render diary PDF document generator'),
-                ('code', 'pdf-helper', 'FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgRenderer.cs', 'pdf-helper', 'csharp', 'DiaryPdfGenerator ChartSvgRenderer', 'render diary PDF document generator');
+                ('code', 'pdf-helper', 'FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgRenderer.cs', 'pdf-helper', 'csharp', 'DiaryPdfGenerator ChartSvgRenderer', 'render diary PDF document generator'),
+                ('code', 'coverage-exact', 'FoodDiary.Infrastructure/Services/CoverageBranch.cs', 'coverage-exact', 'csharp', 'coveragebranch', 'coveragebranch'),
+                ('code', 'coverage-frontend', 'FoodDiary.Web.Client/src/app/coveragebranch.ts', 'coverage-frontend', 'typescript', 'CoverageBranch', 'coveragebranch'),
+                ('code', 'coverage-abstraction', 'FoodDiary.Application.Abstractions/ICoverageBranch.cs', 'coverage-abstraction', 'csharp', 'ICoverageBranch', 'coveragebranch'),
+                ('agent-guide', 'coverage-guide', 'FoodDiary.Infrastructure/AGENTS.md', 'coverage-guide', 'markdown', 'Coverage Branch Guide', 'coveragebranch'),
+                ('code', 'coverage-duplicate-one', 'Shared/duplicate-coveragebranch.cs', 'coverage-duplicate-one', 'csharp', 'DuplicateCoverageBranch', 'coveragebranch'),
+                ('code', 'coverage-duplicate-two', 'Shared/duplicate-coveragebranch.cs', 'coverage-duplicate-two', 'csharp', 'DuplicateCoverageBranch', 'coveragebranch');
             """;
         command.ExecuteNonQuery();
     }

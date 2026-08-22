@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.Json;
 using NSubstitute;
 
@@ -5,6 +6,36 @@ namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class EvaluationRunnerTests {
+    [Theory]
+    [InlineData("null", false)]
+    [InlineData("[]", false)]
+    [InlineData("{}", false)]
+    [InlineData("{\"commands\":[]}", false)]
+    [InlineData("{\"focusedTests\":[\"focused\"]}", true)]
+    public void DevelopmentContextEvaluationRunner_HasFocusedChecks_RecognizesStructuredChecks(
+        string structuredJson,
+        bool expected) {
+        WikiCommandResult? testPlan = string.Equals(structuredJson, "null", StringComparison.Ordinal)
+            ? null
+            : new WikiCommandResult(
+                "test-plan",
+                "raw",
+                JsonSerializer.Deserialize<JsonElement>(structuredJson),
+                "repository",
+                "head",
+                [],
+                [],
+                [],
+                []);
+        MethodInfo method = typeof(DevelopmentContextEvaluationRunner).GetMethod(
+            "HasFocusedChecks",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+
+        bool actual = (bool)method.Invoke(null, [testPlan])!;
+
+        Assert.Equal(expected, actual);
+    }
+
     [Fact]
     public async Task WikiContextSearchEvaluationRunner_WithHitsAndMisses_WritesMetrics() {
         string corpusPath = await WriteCorpusAsync("""

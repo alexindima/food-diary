@@ -2,6 +2,13 @@ namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ChangeSetSnapshotServiceTests {
+    [Fact]
+    public void DefaultConstructor_UsesResolvedRepositoryAndDisposes() {
+        using var service = new ChangeSetSnapshotService();
+
+        Assert.NotNull(service);
+    }
+
     [Theory]
     [InlineData("R  new/path.cs\0old/path.cs\0", "new/path.cs")]
     [InlineData("C  copied/path.cs\0source/path.cs\0", "copied/path.cs")]
@@ -45,6 +52,57 @@ public sealed class ChangeSetSnapshotServiceTests {
         Assert.Equal(
             expected,
             ChangeSetSnapshotService.IsPathRelevantToScope(path, [scope]));
+    }
+
+    [Theory]
+    [InlineData("*", "anything")]
+    [InlineData(".git/HEAD", "anything")]
+    [InlineData(".git/index", "anything")]
+    [InlineData("Folder/File.cs", " ")]
+    public void IsPathRelevantToScope_CoversGlobalAndEmptyScopes(string path, string scope) {
+        bool expected = !string.IsNullOrWhiteSpace(scope) ||
+            path.StartsWith(".git/", StringComparison.Ordinal) ||
+            string.Equals(path, "*", StringComparison.Ordinal);
+
+        Assert.Equal(expected, ChangeSetSnapshotService.IsPathRelevantToScope(path, [scope]));
+    }
+
+    [Fact]
+    public void WatcherError_InvalidatesCachedGeneration() {
+        string repositoryRoot = Path.Combine(Path.GetTempPath(), $"fooddiary-snapshot-watcher-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(repositoryRoot);
+        try {
+            using var service = new ChangeSetSnapshotService(TimeProvider.System, repositoryRoot);
+            System.Reflection.MethodInfo method = typeof(ChangeSetSnapshotService).GetMethod(
+                "OnWatcherError",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+
+            method.Invoke(service, [service, new ErrorEventArgs(new IOException("watcher failed"))]);
+
+            System.Reflection.FieldInfo generation = typeof(ChangeSetSnapshotService).GetField(
+                "_generation",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+            Assert.Equal(1L, generation.GetValue(service));
+        } finally {
+            Directory.Delete(repositoryRoot, recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task GetAsync_WhenGitStatusFails_ThrowsRepositoryError() {
+        string repositoryRoot = Path.Combine(Path.GetTempPath(), $"fooddiary-snapshot-invalid-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(Path.Combine(repositoryRoot, ".git"));
+        await File.WriteAllTextAsync(Path.Combine(repositoryRoot, ".git", "HEAD"), "detached-head");
+        try {
+            using var service = new ChangeSetSnapshotService(TimeProvider.System, repositoryRoot);
+
+            DevelopmentMcpException exception = await Assert.ThrowsAsync<DevelopmentMcpException>(() =>
+                service.GetAsync(CancellationToken.None));
+
+            Assert.Equal(DevelopmentMcpErrorCodes.RepositoryNotFound, exception.ErrorCode);
+        } finally {
+            Directory.Delete(repositoryRoot, recursive: true);
+        }
     }
 
     [Fact]
@@ -107,8 +165,12 @@ public sealed class ChangeSetSnapshotServiceTests {
 
             using var service = new ChangeSetSnapshotService(TimeProvider.System, repositoryRoot);
             ChangeSetSnapshot snapshot = await service.GetAsync(["Scoped"], CancellationToken.None);
+            ChangeSetSnapshot refreshed = await service.RefreshAsync(CancellationToken.None);
 
             Assert.Equal(["Scoped/deleted.cs", "Scoped/existing.cs"], snapshot.ChangedPaths);
+            Assert.Equal(
+                ["Scoped/deleted.cs", "Scoped/existing.cs", "Unrelated/other.cs"],
+                refreshed.ChangedPaths);
         } finally {
             foreach (string path in Directory.EnumerateFiles(repositoryRoot, "*", SearchOption.AllDirectories)) {
                 File.SetAttributes(path, FileAttributes.Normal);

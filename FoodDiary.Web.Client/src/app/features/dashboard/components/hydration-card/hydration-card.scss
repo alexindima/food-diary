@@ -71,7 +71,7 @@
     &__water::before {
         content: '';
         position: absolute;
-        top: calc(var(--fd-space-sm) * -1);
+        top: calc(var(--fd-space-xs) * -1);
         left: 0;
         width: 200%;
         height: var(--fd-space-md);

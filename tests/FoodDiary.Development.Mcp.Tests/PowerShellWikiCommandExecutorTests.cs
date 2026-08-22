@@ -4,6 +4,34 @@ namespace FoodDiary.Development.Mcp.Tests;
 [Collection("PowerShell Wiki process")]
 public sealed class PowerShellWikiCommandExecutorTests {
     [Fact]
+    public async Task ExecuteAsync_WhenWikiCommandFails_RecordsFailureAndThrows() {
+        WikiRuntimeTelemetry telemetry = new();
+        PowerShellWikiCommandExecutor executor = new(telemetry);
+        using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(30));
+
+        DevelopmentMcpException exception = await Assert.ThrowsAsync<DevelopmentMcpException>(() =>
+            executor.ExecuteAsync("unknown-command-for-coverage", [], timeout.Token));
+
+        Assert.Equal(DevelopmentMcpErrorCodes.WikiCommandFailed, exception.ErrorCode);
+        Assert.Equal(1, telemetry.Capture(0).FailedCommands);
+    }
+
+    [Fact]
+    public async Task ReadBoundedAsync_WhenLimitIsExceeded_Throws() {
+        var executor = new PowerShellWikiCommandExecutor(maxConcurrentCommands: 1, maxOutputCharacters: 3);
+        System.Reflection.MethodInfo method = typeof(PowerShellWikiCommandExecutor).GetMethod(
+            "ReadBoundedAsync",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        var operation = (Task<string>)method.Invoke(
+            executor,
+            [new StringReader("overflow"), "standard output", CancellationToken.None])!;
+
+        DevelopmentMcpException exception = await Assert.ThrowsAsync<DevelopmentMcpException>(() => operation);
+
+        Assert.Equal(DevelopmentMcpErrorCodes.WikiCommandFailed, exception.ErrorCode);
+    }
+
+    [Fact]
     public async Task ServerStatus_ReturnsWithoutRunningDeepVerification() {
         var runtimeIdentity = ServerRuntimeIdentity.Capture("startup-head");
         using ChangeSetSnapshotService snapshots = new(TimeProvider.System);

@@ -53,6 +53,7 @@ internal static class RepositorySourceFingerprint {
         return Convert.ToHexString(fingerprint.GetHashAndReset()).ToLowerInvariant();
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static async Task<string> RunGitAsync(
         string repositoryRoot,
         IReadOnlyList<string> arguments,

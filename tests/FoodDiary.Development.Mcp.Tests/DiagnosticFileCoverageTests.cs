@@ -1,5 +1,6 @@
 using System.Text.Json;
 using FoodDiary.Development.Mcp.Infrastructure;
+using NSubstitute;
 
 namespace FoodDiary.Development.Mcp.Tests;
 
@@ -102,6 +103,127 @@ public sealed class DiagnosticFileCoverageTests : IDisposable {
         WikiVerificationReceipt? receipt = await WikiVerificationReceipt.ReadAsync(repository, CancellationToken.None);
 
         Assert.Null(receipt);
+    }
+
+    [Fact]
+    public async Task ReadGitHead_ReturnsDetachedHead() {
+        string repository = CreateWikiRepository();
+        await File.WriteAllTextAsync(Path.Combine(repository, ".git", "HEAD"), "detached-head\n");
+
+        string head = await ServerStatusService.ReadGitHeadAsync(repository, CancellationToken.None);
+
+        Assert.Equal("detached-head", head);
+    }
+
+    [Fact]
+    public async Task ReadGitHead_ResolvesLooseReference() {
+        string repository = CreateWikiRepository();
+        string reference = Path.Combine(repository, ".git", "refs", "heads", "main");
+        Directory.CreateDirectory(Path.GetDirectoryName(reference)!);
+        await File.WriteAllTextAsync(Path.Combine(repository, ".git", "HEAD"), "ref: refs/heads/main\n");
+        await File.WriteAllTextAsync(reference, "loose-head\n");
+
+        string head = await ServerStatusService.ReadGitHeadAsync(repository, CancellationToken.None);
+
+        Assert.Equal("loose-head", head);
+    }
+
+    [Fact]
+    public async Task ReadGitHead_ResolvesGitFileCommonDirectoryAndPackedReference() {
+        string repository = CreateWikiRepository();
+        Directory.Delete(Path.Combine(repository, ".git"), recursive: true);
+        string worktreeGit = Path.Combine(_root, "worktree-git");
+        string commonGit = Path.Combine(_root, "common-git");
+        Directory.CreateDirectory(worktreeGit);
+        Directory.CreateDirectory(commonGit);
+        await File.WriteAllTextAsync(Path.Combine(repository, ".git"), $"gitdir: {worktreeGit}\n");
+        await File.WriteAllTextAsync(Path.Combine(worktreeGit, "commondir"), commonGit);
+        await File.WriteAllTextAsync(Path.Combine(worktreeGit, "HEAD"), "ref: refs/heads/main\n");
+        await File.WriteAllTextAsync(
+            Path.Combine(commonGit, "packed-refs"),
+            "ignored refs/heads/other\npacked-head refs/heads/main\n");
+
+        string head = await ServerStatusService.ReadGitHeadAsync(repository, CancellationToken.None);
+
+        Assert.Equal("packed-head", head);
+    }
+
+    [Fact]
+    public async Task ReadGitHead_RejectsInvalidGitDirectoryMarkerAndMissingReference() {
+        string invalidMarkerRepository = CreateWikiRepository();
+        Directory.Delete(Path.Combine(invalidMarkerRepository, ".git"), recursive: true);
+        await File.WriteAllTextAsync(Path.Combine(invalidMarkerRepository, ".git"), "invalid");
+        await Assert.ThrowsAsync<DevelopmentMcpException>(() =>
+            ServerStatusService.ReadGitHeadAsync(invalidMarkerRepository, CancellationToken.None));
+
+        string missingReferenceRepository = CreateWikiRepository();
+        await File.WriteAllTextAsync(
+            Path.Combine(missingReferenceRepository, ".git", "HEAD"),
+            "ref: refs/heads/missing\n");
+        await File.WriteAllTextAsync(Path.Combine(missingReferenceRepository, ".git", "packed-refs"), string.Empty);
+        await Assert.ThrowsAsync<DevelopmentMcpException>(() =>
+            ServerStatusService.ReadGitHeadAsync(missingReferenceRepository, CancellationToken.None));
+    }
+
+    [Fact]
+    public void ServerRuntimeIdentity_CaptureReadsCurrentAssembly() {
+        var identity = ServerRuntimeIdentity.Capture("repository-head");
+
+        Assert.Multiple(
+            () => Assert.Equal(Environment.ProcessId, identity.ProcessId),
+            () => Assert.Equal("repository-head", identity.RepositoryHeadAtStartup),
+            () => Assert.NotEmpty(identity.AssemblySha256),
+            () => Assert.NotEmpty(identity.ModuleVersionId));
+    }
+
+    [Fact]
+    public async Task ServerStatusService_ReportsAndClassifiesCurrentRepositoryState() {
+        string repository = RepositoryRootResolver.Resolve();
+        string head = await ServerStatusService.ReadGitHeadAsync(repository, CancellationToken.None);
+        IChangeSetSnapshotService snapshots = Substitute.For<IChangeSetSnapshotService>();
+        snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(new ChangeSetSnapshot(
+            head,
+            "snapshot-fingerprint",
+            [
+                "FoodDiary.Domain/Entity.cs",
+                ".llm-wiki/generated/index.json",
+                ".llm-wiki/reviews/source-impact-reviews.json",
+            ],
+            DateTimeOffset.UtcNow));
+        var identity = ServerRuntimeIdentity.Capture(head);
+        var service = new ServerStatusService(TimeProvider.System, identity, snapshots);
+
+        ServerStatus status = await service.GetStatusAsync(CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(repository, status.RepositoryRoot),
+            () => Assert.Equal(head, status.GitHead),
+            () => Assert.True(status.WorktreeDirty),
+            () => Assert.Contains("FoodDiary.Domain/Entity.cs", status.SourceChangedPaths, StringComparer.Ordinal),
+            () => Assert.Contains(".llm-wiki/generated/index.json", status.DerivedWikiPaths, StringComparer.Ordinal),
+            () => Assert.Contains(".llm-wiki/reviews/source-impact-reviews.json", status.ReviewMetadataPaths, StringComparer.Ordinal),
+            () => Assert.NotEmpty(status.Indexes));
+    }
+
+    [Fact]
+    public async Task RepositorySourceFingerprint_RejectsDirectoryOutsideGitRepository() {
+        string directory = Path.Combine(_root, "not-a-git-repository");
+        Directory.CreateDirectory(directory);
+
+        DevelopmentMcpException exception = await Assert.ThrowsAsync<DevelopmentMcpException>(() =>
+            RepositorySourceFingerprint.ComputeAsync(directory, CancellationToken.None));
+
+        Assert.Equal(DevelopmentMcpErrorCodes.RepositoryNotFound, exception.ErrorCode);
+    }
+
+    [Fact]
+    public async Task RepositorySourceFingerprint_PropagatesCallerCancellation() {
+        string repository = RepositoryRootResolver.Resolve();
+        using CancellationTokenSource cancellation = new();
+        await cancellation.CancelAsync();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            RepositorySourceFingerprint.ComputeAsync(repository, cancellation.Token));
     }
 
     public void Dispose() {

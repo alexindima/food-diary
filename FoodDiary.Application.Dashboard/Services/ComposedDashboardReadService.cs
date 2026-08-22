@@ -1,4 +1,6 @@
 using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -26,7 +28,11 @@ internal sealed class ComposedDashboardReadService(
             return Result.Failure<DashboardReadModel>(statistics.Error);
         }
 
-        DateTime weeklyFrom = periodDays == 1 ? dayStart.AddDays(-6) : dayStart;
+        DateTime weeklyFrom = dayStart;
+        if (periodDays == 1 && !TemporalRangePolicy.TryAddDays(dayStart, -6, out weeklyFrom)) {
+            return Result.Failure<DashboardReadModel>(
+                Errors.Validation.Invalid(nameof(dayStart), "Dashboard weekly range is outside the supported date range."));
+        }
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> weeklyStatistics = sections.IncludeStatistics
             ? await statisticsReadService.GetStatisticsAsync(userId, weeklyFrom, dayEnd, 1, cancellationToken).ConfigureAwait(false)
             : Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([]);

@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1054,
     "ambiguousContracts": 3,
-    "consumerEdges": 7431,
+    "consumerEdges": 7432,
     "productionConsumerEdges": 4479,
-    "testConsumerEdges": 2952,
+    "testConsumerEdges": 2953,
     "consumedContracts": 1054,
     "unconsumedContracts": 0
   },
@@ -27110,7 +27110,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
-      "referenceCount": 12
+      "referenceCount": 13
     },
     {
       "contract": "DashboardSnapshotRequest",
@@ -47001,6 +47001,19 @@
       "consumerPath": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IChangeSetSnapshotService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/ChangeSets/IChangeSetSnapshotService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/DiagnosticFileCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IChangeSetSnapshotService",

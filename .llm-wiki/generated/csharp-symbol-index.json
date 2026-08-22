@@ -6884,7 +6884,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Application.Dashboard/Services/ComposedDashboardReadService.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "DashboardBodyMapper",
@@ -13401,14 +13401,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Tools/WikiTools.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "ContextRoutingHealth",
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingHealth.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "ContextRoutingTelemetryStore",
@@ -16586,7 +16586,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "DashboardStatisticsReadService",

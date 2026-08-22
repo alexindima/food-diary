@@ -58,6 +58,27 @@ public sealed class DashboardReadServiceTests {
     }
 
     [Fact]
+    public async Task GetSnapshotDataAsync_WithMinimumDate_ReturnsValidationFailureInsteadOfOverflowing() {
+        DashboardReadService service = CreateService();
+
+        Result<DashboardReadModel> result = await service.GetSnapshotDataAsync(
+            UserId.New(),
+            DateTime.MinValue,
+            DateTime.MinValue,
+            DateTime.MinValue,
+            periodDays: 1,
+            page: 1,
+            pageSize: 10,
+            Sections(),
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.True(result.IsFailure),
+            () => Assert.Equal("Validation.Invalid", result.Error.Code),
+            () => Assert.Contains("weekly range", result.Error.Message, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public async Task GetSnapshotDataAsync_WhenMealsFails_ReturnsFailure() {
         Error error = Errors.Validation.Invalid("meals", "Meals failed.");
         IDashboardMealsReadService mealsReadService = Substitute.For<IDashboardMealsReadService>();

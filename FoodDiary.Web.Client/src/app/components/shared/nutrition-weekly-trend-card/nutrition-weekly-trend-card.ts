@@ -212,8 +212,7 @@ export class NutritionWeeklyTrendCardComponent {
         return [
             {
                 value: this.dailyGoal(),
-                label: `${this.translateService.instant('NUTRITION_TREND.GOAL')}\n${new Intl.NumberFormat(locale).format(this.dailyGoal())}`,
-                labelPlacement: 'outside',
+                label: `${this.translateService.instant('NUTRITION_TREND.GOAL')} ${new Intl.NumberFormat(locale).format(this.dailyGoal())}`,
             },
         ];
     });

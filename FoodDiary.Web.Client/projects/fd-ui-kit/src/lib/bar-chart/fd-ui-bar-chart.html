@@ -7,6 +7,14 @@
         [attr.aria-label]="categoricalAriaLabel()"
     >
         <div class="fd-ui-bar-chart__categorical-axis" aria-hidden="true">
+            <div class="fd-ui-bar-chart__axis-sizer">
+                @if (axisUnit()) {
+                    <span>{{ axisUnit() }}</span>
+                }
+                @for (tick of categoricalTicks(); track $index) {
+                    <span>{{ axisValueFormatter()(tick) }}</span>
+                }
+            </div>
             @if (axisUnit()) {
                 <span class="fd-ui-bar-chart__axis-unit">{{ axisUnit() }}</span>
             }

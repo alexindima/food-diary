@@ -7,7 +7,6 @@
 }
 
 .nutrition-trend {
-    --nutrition-trend-goal-space: calc(var(--fd-space-xxl) + var(--fd-space-xl));
     --nutrition-trend-date-space: calc(var(--fd-space-xl) + var(--fd-space-md));
     padding: var(--fd-space-lg);
     border: var(--fd-border-strong);
@@ -35,7 +34,6 @@
         --fd-bar-chart-height: 270px;
         --fd-bar-chart-axis-width: calc(var(--fd-space-xl) + var(--fd-space-sm));
         --fd-bar-chart-label-height: var(--nutrition-trend-date-space);
-        --fd-bar-chart-reference-label-space: var(--nutrition-trend-goal-space);
         --fd-bar-chart-bar-width: min(40px, 70%);
         margin-top: var(--fd-space-lg);
     }
@@ -173,15 +171,13 @@
 
         &__bar-chart {
             --fd-bar-chart-height: 230px;
-            --fd-bar-chart-axis-width: var(--fd-space-xl);
-            --fd-bar-chart-reference-label-space: calc(var(--fd-space-xl) + var(--fd-space-sm));
             --fd-bar-chart-bar-width: min(32px, 76%);
         }
 
         &__legend {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: var(--fd-space-sm) var(--fd-space-md);
+            gap: 0 var(--fd-space-md);
             padding-left: var(--fd-space-xl);
         }
     }

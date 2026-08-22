@@ -101,6 +101,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private async Task<WikiCommandResult> ExecuteProcessAsync(
         string command,
         string requestPath,

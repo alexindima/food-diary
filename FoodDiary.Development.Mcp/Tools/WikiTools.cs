@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Development.Mcp.Diagnostics;
 using FoodDiary.Development.Mcp.Protocol;
 using FoodDiary.Development.Mcp.Wiki;
@@ -8,6 +9,7 @@ using ModelContextProtocol.Server;
 namespace FoodDiary.Development.Mcp.Tools;
 
 [McpServerToolType]
+[ExcludeFromCodeCoverage]
 public sealed class WikiTools(WikiQueryService queries, IServerStatusService statusService) {
     [McpServerTool(Name = "get_change_context", ReadOnly = true, Idempotent = true)]
     [Description("Builds a source-linked FoodDiary change brief from the repository wiki. The wiki is navigation; verify conclusions in its declared authoritative sources.")]

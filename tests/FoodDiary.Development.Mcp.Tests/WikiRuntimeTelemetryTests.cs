@@ -155,6 +155,9 @@ public sealed class WikiRuntimeTelemetryTests {
     [InlineData(" ", "other")]
     [InlineData("sqlite-error-11", "sqlite-error")]
     [InlineData("database-missing", "database-missing")]
+    [InlineData("fts-projection-not-ready", "fts-projection-not-ready")]
+    [InlineData("snapshot-mismatch", "snapshot-mismatch")]
+    [InlineData("sqlite-reader-not-configured", "sqlite-reader-not-configured")]
     [InlineData("private-query", "other")]
     public void ContextRoutingTelemetry_NormalizesFallbackReasons(string? reason, string expected) {
         string directory = Path.Combine(Path.GetTempPath(), "fooddiary-development-mcp-tests", Guid.NewGuid().ToString("N"));
@@ -211,6 +214,78 @@ public sealed class WikiRuntimeTelemetryTests {
     public void ContextRoutingTelemetry_WithInvalidRetention_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             new ContextRoutingTelemetryStore("context-routing.json", maximumEvents: 0));
+    }
+
+    [Fact]
+    public async Task ContextRoutingTelemetry_WhenMutexIsBusy_RecordsTimeoutFailure() {
+        string directory = Path.Combine(Path.GetTempPath(), "fooddiary-development-mcp-tests", Guid.NewGuid().ToString("N"));
+        string path = Path.Combine(directory, "context-routing.json");
+        string mutexName = CreateTelemetryMutexName(path);
+        using ManualResetEventSlim acquired = new();
+        using ManualResetEventSlim release = new();
+        var holder = Task.Run(() => {
+            using Mutex mutex = new(initiallyOwned: false, mutexName);
+            mutex.WaitOne();
+            acquired.Set();
+            release.Wait();
+            mutex.ReleaseMutex();
+        });
+        Assert.True(acquired.Wait(TimeSpan.FromSeconds(5)));
+        try {
+            var store = new ContextRoutingTelemetryStore(path);
+
+            store.Record(
+                usedSqlite: true,
+                fallbackReason: null,
+                duration: TimeSpan.Zero,
+                refreshAttempted: false,
+                refreshSucceeded: false);
+
+            ContextRoutingHealth health = store.Capture();
+            Assert.Multiple(
+                () => Assert.Equal(2, health.PersistenceFailures),
+                () => Assert.NotNull(health.LastPersistenceFailureAtUtc));
+        } finally {
+            release.Set();
+            await holder;
+            if (Directory.Exists(directory)) {
+                Directory.Delete(directory, recursive: true);
+            }
+        }
+    }
+
+    [Fact]
+    public void ContextRoutingTelemetry_WhenMutexIsAbandoned_ContinuesSafely() {
+        string directory = Path.Combine(Path.GetTempPath(), "fooddiary-development-mcp-tests", Guid.NewGuid().ToString("N"));
+        string path = Path.Combine(directory, "context-routing.json");
+        string mutexName = CreateTelemetryMutexName(path);
+        using ManualResetEventSlim acquired = new();
+        var thread = new Thread(() => {
+            using Mutex mutex = new(initiallyOwned: false, mutexName);
+            mutex.WaitOne();
+            acquired.Set();
+        });
+        thread.Start();
+        Assert.True(acquired.Wait(TimeSpan.FromSeconds(5)));
+        thread.Join();
+        try {
+            var store = new ContextRoutingTelemetryStore(path);
+
+            ContextRoutingHealth health = store.Capture();
+
+            Assert.True(health.PersistenceHealthy);
+        } finally {
+            if (Directory.Exists(directory)) {
+                Directory.Delete(directory, recursive: true);
+            }
+        }
+    }
+
+    private static string CreateTelemetryMutexName(string path) {
+        string fullPath = Path.GetFullPath(path);
+        byte[] hash = System.Security.Cryptography.SHA256.HashData(
+            System.Text.Encoding.UTF8.GetBytes(fullPath.ToUpperInvariant()));
+        return $"FoodDiary.LlmWiki.ContextRouting.{Convert.ToHexString(hash)}";
     }
 
     private static void Complete(

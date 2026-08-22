@@ -4,7 +4,7 @@ import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import type { Observable } from 'rxjs';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -210,6 +210,8 @@ function registerActionTests(): void {
         expect(component['selectedDateTo']()).toBe('2026-05-16');
     });
 
+    it('keeps the latest dashboard response when period requests finish out of order', verifyLatestDashboardResponseWinsAsync);
+
     it('shows section load warning when optional details fail', () => {
         dietologistService.getClientDashboard.mockReturnValueOnce(throwError(() => new Error('failed')));
 
@@ -297,7 +299,35 @@ function createComponent(clientId: string): void {
     fixture.detectChanges();
 }
 
-function createDashboardSnapshot(): unknown {
+async function verifyLatestDashboardResponseWinsAsync(): Promise<void> {
+    const olderRequest = new Subject<Record<string, unknown>>();
+    const latestRequest = new Subject<Record<string, unknown>>();
+    dietologistService.getClientDashboard
+        .mockReturnValueOnce(of(createDashboardSnapshot()))
+        .mockReturnValueOnce(olderRequest)
+        .mockReturnValueOnce(latestRequest);
+    createComponent('client-1');
+
+    component['dateFilterModel'].set({ dateFrom: '2026-05-16', dateTo: '2026-05-22' });
+    component['applyDateFilter']();
+    component['showPreviousPeriod']();
+
+    const latestSnapshot = { ...createDashboardSnapshot(), date: '2026-05-16T00:00:00Z' };
+    latestRequest.next(latestSnapshot);
+    latestRequest.complete();
+    await vi.waitFor(() => {
+        expect(component['dashboard']()?.date).toBe(latestSnapshot.date);
+        expect(component['detailsLoading']()).toBe(false);
+    });
+
+    olderRequest.next({ ...createDashboardSnapshot(), date: '2026-05-22T00:00:00Z' });
+    olderRequest.complete();
+    await vi.waitFor(() => {
+        expect(component['dashboard']()?.date).toBe(latestSnapshot.date);
+    });
+}
+
+function createDashboardSnapshot(): Record<string, unknown> {
     return {
         date: '2026-05-23T00:00:00Z',
         dateTo: '2026-05-23T00:00:00Z',

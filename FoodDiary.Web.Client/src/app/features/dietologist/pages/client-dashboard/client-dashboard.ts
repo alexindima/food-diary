@@ -131,6 +131,7 @@ export class ClientDashboardComponent {
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly measurements = inject(MeasurementSystemService);
+    private dashboardReloadSequence = 0;
 
     protected readonly periodPresetDays = PERIOD_PRESET_DAYS;
     protected readonly client = signal<ClientSummary | null>(null);
@@ -567,6 +568,7 @@ export class ClientDashboardComponent {
     }
 
     private async reloadDashboardAsync(client: ClientSummary): Promise<void> {
+        const reloadSequence = ++this.dashboardReloadSequence;
         if (!this.shouldLoadDashboardSnapshot(client)) {
             this.dashboard.set(null);
             return;
@@ -579,6 +581,11 @@ export class ClientDashboardComponent {
                 .pipe(this.handleSectionLoadError<DashboardSnapshot, null>(null))
                 .pipe(takeUntilDestroyed(this.destroyRef)),
         );
+
+        if (reloadSequence !== this.dashboardReloadSequence) {
+            return;
+        }
+
         this.dashboard.set(result);
         this.detailsLoading.set(false);
     }

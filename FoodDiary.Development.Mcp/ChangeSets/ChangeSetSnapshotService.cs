@@ -177,6 +177,7 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
         };
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private async Task<string> RunGitAsync(
         IReadOnlyList<string> arguments,
         CancellationToken cancellationToken) {

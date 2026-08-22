@@ -146,6 +146,28 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [Fact]
+    public async Task BuildAsync_WithMinimumDateAndSingleDayTrend_ReturnsValidationFailureInsteadOfOverflowing() {
+        var user = User.Create("dashboard-minimum-weekly-date@example.com", "hash");
+        DashboardSnapshotBuilder builder = CreateBuilder(user, new ConfigurableDashboardSender());
+
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
+            new DashboardSnapshotRequest(
+                user.Id.Value,
+                DateTime.MinValue,
+                DateTo: null,
+                "en",
+                TrendDays: 1,
+                Page: 1,
+                PageSize: 10),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Validation.Invalid", result.Error.Code),
+            () => Assert.Contains("weekly range", result.Error.Message, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public async Task BuildAsync_WhenTimeZoneOffsetUnderflows_ReturnsValidationFailure() {
         var user = User.Create("dashboard-minimum-date@example.com", "hash");
         DashboardSnapshotBuilder builder = CreateBuilder(user, new StubSender());

@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace FoodDiary.Development.Mcp.Wiki;
 
+[ExcludeFromCodeCoverage]
 public sealed record ContextRoutingHealth(
     int SampleCount,
     int SqlitePrimaryCount,

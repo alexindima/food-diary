@@ -27,6 +27,7 @@ describe('NutritionWeeklyTrendCardComponent', () => {
         expect(element.querySelectorAll('.fd-ui-bar-chart__categorical-segment')).toHaveLength(EXPECTED_SEGMENT_COUNT);
         expect(element.querySelector('.nutrition-trend__insight')?.textContent).toContain('NUTRITION_TREND.INSIGHT.CARB_EXCESS_TITLE');
         expect(element.querySelector('.fd-ui-bar-chart__reference-line')?.textContent).toContain('2,258');
+        expect(element.querySelector('.fd-ui-bar-chart__reference-line--outside')).toBeNull();
         expect(element.querySelectorAll('.fd-ui-bar-chart__categorical-labels span')).toHaveLength(TREND_DAYS);
         expect(element.querySelector('.nutrition-trend__legend')?.textContent).not.toContain('NUTRITION_TREND.GOAL');
     });
