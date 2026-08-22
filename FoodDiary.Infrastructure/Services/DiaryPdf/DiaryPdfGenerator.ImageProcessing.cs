@@ -6,6 +6,7 @@ namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 internal sealed partial class DiaryPdfGenerator {
     private static readonly SKSamplingOptions MealImageSamplingOptions = new(SKFilterMode.Linear, SKMipmapMode.Linear);
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static byte[]? PrepareMealImage(byte[] imageBytes) {
         try {
             SKImageInfo sourceInfo = SKBitmap.DecodeBounds(imageBytes);

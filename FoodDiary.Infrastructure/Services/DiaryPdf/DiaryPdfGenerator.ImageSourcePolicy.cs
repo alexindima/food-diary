@@ -7,7 +7,11 @@ internal sealed partial class DiaryPdfGenerator {
     private const int MaxDataUrlBase64Length = ((MaxMealImageBytes + 2) / 3) * 4;
 
     internal static Func<string, CancellationToken, Task<IPAddress[]>> RemoteImageHostResolver { get; set; } =
-        static (host, cancellationToken) => Dns.GetHostAddressesAsync(host, cancellationToken);
+        ResolveRemoteImageHostAsync;
+
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    private static Task<IPAddress[]> ResolveRemoteImageHostAsync(string host, CancellationToken cancellationToken) =>
+        Dns.GetHostAddressesAsync(host, cancellationToken);
 
     private static bool TryReadDataUrl(string value, out byte[] bytes) {
         bytes = [];

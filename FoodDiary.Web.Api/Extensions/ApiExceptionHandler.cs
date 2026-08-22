@@ -2,9 +2,11 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace FoodDiary.Web.Api.Extensions;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class ApiExceptionHandler(
     ILogger<ApiExceptionHandler> logger) : IExceptionHandler {
     public async ValueTask<bool> TryHandleAsync(
@@ -51,6 +53,8 @@ public sealed class ApiExceptionHandler(
                     await httpContext.Response.WriteAsJsonAsync(conflictResponse, cancellationToken).ConfigureAwait(false);
                     return true;
                 }
+            case DbUpdateException dbUpdateException when IsDuplicateHydrationTimestamp(dbUpdateException):
+                return await HandleDuplicateHydrationTimestampAsync(httpContext, exception, cancellationToken).ConfigureAwait(false);
         }
 
         RequestObservabilityMiddleware.ReportHandledException(httpContext, exception);
@@ -80,4 +84,29 @@ public sealed class ApiExceptionHandler(
             TelemetryPrivacyProcessor.ResolveRouteLabel(httpContext));
         return true;
     }
+
+    private async ValueTask<bool> HandleDuplicateHydrationTimestampAsync(
+        HttpContext httpContext,
+        Exception exception,
+        CancellationToken cancellationToken) {
+        logger.LogWarning(
+            exception,
+            "Duplicate hydration timestamp while processing request {Method} {Path}.",
+            httpContext.Request.Method,
+            TelemetryPrivacyProcessor.ResolveRouteLabel(httpContext));
+
+        httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
+        var conflictResponse = new ApiErrorHttpResponse(
+            "HydrationEntry.AlreadyExists",
+            "A hydration entry already exists at the specified timestamp.",
+            httpContext.TraceIdentifier);
+        await httpContext.Response.WriteAsJsonAsync(conflictResponse, cancellationToken).ConfigureAwait(false);
+        return true;
+    }
+
+    private static bool IsDuplicateHydrationTimestamp(DbUpdateException exception) =>
+        exception.InnerException is PostgresException {
+            SqlState: PostgresErrorCodes.UniqueViolation,
+            ConstraintName: "IX_HydrationEntries_User_Timestamp",
+        };
 }

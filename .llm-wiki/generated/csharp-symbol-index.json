@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3429,
-    "symbols": 3437,
-    "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 239,
+    "sourceFiles": 3427,
+    "symbols": 3435,
+    "interfaceImplementationLinks": 233,
+    "dependencyInjectionRegistrations": 238,
     "kinds": {
       "class": 1786,
       "enum": 61,
-      "interface": 419,
+      "interface": 417,
       "record": 1051,
       "record struct": 120
     },
@@ -36,8 +36,8 @@
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
-      "ReadRepository": 47,
-      "Repository": 104,
+      "ReadRepository": 46,
+      "Repository": 103,
       "Request": 132,
       "Response": 178,
       "Service": 275,
@@ -2664,20 +2664,6 @@
       "role": "ReadModelRepository",
       "path": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadModelRepository.cs",
       "line": 5
-    },
-    {
-      "name": "IHydrationEntryReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IHydrationEntryRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs",
-      "line": 2
     },
     {
       "name": "IHydrationEntryWriteRepository",
@@ -9005,7 +8991,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "DeleteHydrationEntryCommand",
@@ -9047,7 +9033,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "IHydrationEntryReadService",
@@ -9159,7 +9145,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Hydration/Validators/HydrationValidators.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "AdminSsoExchangeCommand",
@@ -13247,7 +13233,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "IChangeSetSnapshotService",
@@ -13268,7 +13254,7 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Diagnostics/ServerRuntimeIdentity.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "ServerStatus",
@@ -13282,7 +13268,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Development.Mcp/Diagnostics/ServerStatusService.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "WikiIndexManifest",
@@ -13303,7 +13289,7 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Diagnostics/WikiVerificationReceipt.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "DevelopmentMcpSourceFingerprint",
@@ -13324,14 +13310,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Infrastructure/RepositoryRootResolver.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "RepositorySourceFingerprint",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Infrastructure/RepositorySourceFingerprint.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "Program",
@@ -13415,7 +13401,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingTelemetryStore.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "DevelopmentContextEvaluationRunner",
@@ -13499,7 +13485,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryCache.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "WikiQueryCacheMetrics",
@@ -13527,7 +13513,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeTelemetry.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "DomainConstants",
@@ -17790,7 +17776,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Services/WebPushClientAdapter.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "WebPushEndpointValidationHandler",
@@ -21780,14 +21766,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/BotInputParser.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "BotUriHelper",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/BotUriHelper.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "Program",
@@ -21801,14 +21787,14 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Telegram.Bot/TelegramBotOptions.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "TelegramBotWorker",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "ApiBuildInfo",
@@ -21822,7 +21808,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiApplicationBuilderExtensions.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "ApiAuthenticationServiceCollectionExtensions",
@@ -21836,7 +21822,7 @@
       "kind": "class",
       "role": "Handler",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthorizationMiddlewareResultHandler.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "ApiCompositionConstants",
@@ -21850,14 +21836,14 @@
       "kind": "class",
       "role": "Handler",
       "path": "FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs",
-      "line": 7
+      "line": 10
     },
     {
       "name": "ApiHostServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiHostServiceCollectionExtensions.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "ApiOptionsServiceCollectionExtensions",
@@ -21871,7 +21857,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 50
+      "line": 52
     },
     {
       "name": "ApiTelemetry",
@@ -21885,14 +21871,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetryServiceCollectionExtensions.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "ImpersonationAccessGuardMiddleware",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ImpersonationAccessGuardMiddleware.cs",
-      "line": 10
+      "line": 12
     },
     {
       "name": "JwtTokenUseValidator",
@@ -21906,7 +21892,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/RequestObservabilityMiddleware.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "SecurityHeadersMiddleware",
@@ -21920,21 +21906,21 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/TelemetryPrivacyProcessor.cs",
-      "line": 5
+      "line": 7
     },
     {
       "name": "DistributedCacheHealthCheck",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/HealthChecks/DistributedCacheHealthCheck.cs",
-      "line": 5
+      "line": 7
     },
     {
       "name": "S3HealthCheck",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/HealthChecks/S3HealthCheck.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "ApiBuildInfoOptions",
@@ -21948,7 +21934,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Web.Api/Options/ApiCorsOptions.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "ApiDataProtectionOptions",
@@ -21962,7 +21948,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Web.Api/Options/ApiForwardedHeadersOptions.cs",
-      "line": 5
+      "line": 7
     },
     {
       "name": "ApiHttpsRedirectionOptions",
@@ -22018,7 +22004,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Options/ForwardedHeadersOptionsSetup.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "OpenTelemetryOptions",
@@ -22046,7 +22032,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Options/RateLimiterOptionsSetup.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "Program",
@@ -22060,49 +22046,49 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Services/NotificationTestScheduler.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "RedisAdminSsoCodeStore",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Services/RedisAdminSsoCodeStore.cs",
-      "line": 5
+      "line": 7
     },
     {
       "name": "RedisIdempotencyStore",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Services/RedisIdempotencyStore.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "WearableTokenProtector",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Services/WearableTokenProtector.cs",
-      "line": 5
+      "line": 7
     },
     {
       "name": "PresentationContractOperationFilter",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Swagger/PresentationContractOperationFilter.cs",
-      "line": 13
+      "line": 15
     },
     {
       "name": "PresentationTransportOperationFilter",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Swagger/PresentationTransportOperationFilter.cs",
-      "line": 10
+      "line": 12
     },
     {
       "name": "StandardErrorResponsesOperationFilter",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Swagger/StandardErrorResponsesOperationFilter.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "IInboundMailStore",
@@ -22515,7 +22501,7 @@
       "kind": "class",
       "role": "Service",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "MailInboxStoredMessageLimits",
@@ -24851,13 +24837,6 @@
       "confidence": "naming-convention"
     },
     {
-      "interface": "IHydrationEntryRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs",
-      "implementation": "HydrationEntryRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Tracking/HydrationEntryRepository.cs",
-      "confidence": "naming-convention"
-    },
-    {
       "interface": "IHydrationGoalService",
       "interfacePath": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationGoalService.cs",
       "implementation": "HydrationGoalService",
@@ -26593,21 +26572,21 @@
       "implementation": "AiUsageRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
-      "line": 9
+      "line": 10
     },
     {
       "service": "IAiQuotaRepository",
       "implementation": "AiQuotaRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
-      "line": 12
+      "line": 13
     },
     {
       "service": "IAiPromptTemplateRepository",
       "implementation": "AiPromptTemplateRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
-      "line": 13
+      "line": 14
     },
     {
       "service": "IJwtTokenGenerator",
@@ -27037,32 +27016,25 @@
       "line": 18
     },
     {
-      "service": "IHydrationEntryRepository",
-      "implementation": "HydrationEntryRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 22
-    },
-    {
       "service": "IDailyAdviceReadModelRepository",
       "implementation": "DailyAdviceRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 26
+      "line": 25
     },
     {
       "service": "ICycleRepository",
       "implementation": "CycleRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 27
+      "line": 26
     },
     {
       "service": "IExerciseEntryRepository",
       "implementation": "ExerciseEntryRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 31
+      "line": 30
     },
     {
       "service": "IUsdaFoodRepository",
@@ -27328,35 +27300,35 @@
       "implementation": "WearableTokenProtector",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 61
+      "line": 62
     },
     {
       "service": "INotificationTextRenderer",
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 104
+      "line": 105
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 105
+      "line": 106
     },
     {
       "service": "INotificationTestScheduler",
       "implementation": "NotificationTestScheduler",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 106
+      "line": 107
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 129
+      "line": 130
     },
     {
       "service": "IMailInboxReadinessChecker",

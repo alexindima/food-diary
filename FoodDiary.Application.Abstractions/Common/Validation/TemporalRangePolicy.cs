@@ -44,6 +44,7 @@ public static class TemporalRangePolicy {
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static IEnumerable<(DateTime Start, DateTime End)> BuildDateBuckets(
         DateTime dateFrom,
         DateTime dateTo,

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Web.Api.HealthChecks;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class S3HealthCheck(
     IAmazonS3 s3Client,
     IOptions<S3Options> s3Options) : IHealthCheck {

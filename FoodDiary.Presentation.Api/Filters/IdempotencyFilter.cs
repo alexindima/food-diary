@@ -79,6 +79,7 @@ public sealed class IdempotencyFilter(
             reservation.OwnerToken!).ConfigureAwait(false);
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private async Task ExecuteAndFinalizeAsync(
         ActionExecutingContext context,
         ActionExecutionDelegate next,

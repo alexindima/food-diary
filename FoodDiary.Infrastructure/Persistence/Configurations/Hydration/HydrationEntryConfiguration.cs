@@ -7,6 +7,8 @@ namespace FoodDiary.Infrastructure.Persistence.Configurations.Hydration;
 
 internal sealed class HydrationEntryConfiguration : IEntityTypeConfiguration<HydrationEntry> {
     public void Configure(EntityTypeBuilder<HydrationEntry> builder) {
+        builder.Property<uint>("xmin").IsRowVersion();
+
         builder.Property(e => e.Id).HasConversion(
             id => id.Value,
             value => new HydrationEntryId(value));
@@ -21,7 +23,13 @@ internal sealed class HydrationEntryConfiguration : IEntityTypeConfiguration<Hyd
         builder.Property(e => e.AmountMl)
             .IsRequired();
 
+        builder.ToTable(table =>
+            table.HasCheckConstraint(
+                "CK_HydrationEntries_AmountMl",
+                "\"AmountMl\" > 0 AND \"AmountMl\" <= 10000"));
+
         builder.HasIndex(e => new { e.UserId, e.Timestamp })
+            .IsUnique()
             .HasDatabaseName("IX_HydrationEntries_User_Timestamp");
 
         builder.HasOne(e => e.User)

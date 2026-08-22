@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static void AddAiPersistence(this IServiceCollection services) {
         services.AddScoped<IAiUsageRepository, AiUsageRepository>();
         services.AddScoped<IAiUsageReadRepository>(static provider => provider.GetRequiredService<IAiUsageRepository>());

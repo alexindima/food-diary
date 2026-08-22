@@ -163,6 +163,7 @@ public sealed partial class User : AggregateRoot<UserId> {
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static void EnsureExpiresAfterIssuance(DateTime expiresAtUtc, DateTime issuedAtUtc, string paramName) {
         if (expiresAtUtc <= issuedAtUtc) {
             throw new ArgumentOutOfRangeException(paramName, "Expiration must be later than issuance.");

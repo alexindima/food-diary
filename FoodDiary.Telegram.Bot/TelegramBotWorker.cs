@@ -10,6 +10,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace FoodDiary.Telegram.Bot;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class TelegramBotWorker(
     ITelegramBotClient botClient,
     IOptions<TelegramBotOptions> options,
@@ -245,7 +246,7 @@ public sealed class TelegramBotWorker(
             TimestampUtc = timeProvider.GetUtcNow().UtcDateTime,
             AmountMl = amountMl,
         };
-        HttpResponseMessage response = await client.PostAsJsonAsync("/api/hydrations", request, cancellationToken).ConfigureAwait(false);
+        HttpResponseMessage response = await client.PostAsJsonAsync("/api/v1/hydrations", request, cancellationToken).ConfigureAwait(false);
         return response.IsSuccessStatusCode;
     }
 

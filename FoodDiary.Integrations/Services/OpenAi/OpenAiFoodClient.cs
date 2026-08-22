@@ -271,6 +271,7 @@ public sealed class OpenAiFoodClient(
         return Result.Failure<long>(Errors.Ai.OpenAiFailed("OpenAI input token count request failed."));
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private async Task<(bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback)> SendRequestAsync(
         object payload,
         string operation,

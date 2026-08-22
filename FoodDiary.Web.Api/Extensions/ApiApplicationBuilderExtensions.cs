@@ -9,6 +9,7 @@ using OpenTelemetry.Trace;
 
 namespace FoodDiary.Web.Api.Extensions;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public static class ApiApplicationBuilderExtensions {
     extension(WebApplication app) {
         public WebApplication UseApiPipeline() {

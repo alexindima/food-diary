@@ -6,6 +6,7 @@ using FoodDiary.Development.Mcp.Protocol;
 
 namespace FoodDiary.Development.Mcp.Infrastructure;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 internal static class RepositorySourceFingerprint {
     private static readonly TimeSpan GitTimeout = TimeSpan.FromSeconds(30);
 

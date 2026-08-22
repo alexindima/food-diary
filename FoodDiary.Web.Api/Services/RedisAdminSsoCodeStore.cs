@@ -3,6 +3,7 @@ using StackExchange.Redis;
 
 namespace FoodDiary.Web.Api.Services;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class RedisAdminSsoCodeStore(IConnectionMultiplexer connectionMultiplexer) : IAdminSsoCodeStore {
     private const string KeyPrefix = "fooddiary:admin-sso:";
 

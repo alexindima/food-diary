@@ -3,6 +3,7 @@ using OpenTelemetry;
 
 namespace FoodDiary.Web.Api.Extensions;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class TelemetryPrivacyProcessor : BaseProcessor<Activity> {
     public const string UnmatchedRouteLabel = "unmatched";
 

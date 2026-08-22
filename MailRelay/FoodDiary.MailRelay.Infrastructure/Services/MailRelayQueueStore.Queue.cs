@@ -208,6 +208,7 @@ public sealed partial class MailRelayQueueStore {
             cancellationToken).ConfigureAwait(false);
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public async Task<QueuedEmailMessage?> TryClaimMessageByIdAsync(Guid id, CancellationToken cancellationToken) {
         const string sql = """
                            update mailrelay_outbound_emails

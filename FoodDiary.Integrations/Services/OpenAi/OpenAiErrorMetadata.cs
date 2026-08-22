@@ -7,6 +7,7 @@ namespace FoodDiary.Integrations.Services.OpenAi;
 internal static class OpenAiErrorMetadata {
     private const int MaximumDiagnosticTokenLength = 64;
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static string Summarize(string responseBody) {
         if (string.IsNullOrWhiteSpace(responseBody)) {
             return "empty";
@@ -40,6 +41,7 @@ internal static class OpenAiErrorMetadata {
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static string? NormalizeDiagnosticToken(JsonNode? node) {
         if (node is not JsonValue value ||
             !value.TryGetValue(out string? text) ||

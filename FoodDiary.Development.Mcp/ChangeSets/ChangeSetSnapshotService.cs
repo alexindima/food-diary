@@ -9,6 +9,7 @@ using FoodDiary.Development.Mcp.Protocol;
 
 namespace FoodDiary.Development.Mcp.ChangeSets;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDisposable {
     private static readonly TimeSpan GitTimeout = TimeSpan.FromSeconds(15);
     private readonly string _repositoryRoot;

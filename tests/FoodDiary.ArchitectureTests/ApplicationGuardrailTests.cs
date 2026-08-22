@@ -1513,7 +1513,6 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Abstractions", "WeightEntries", "Common", "IWeightEntryReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "WaistEntries", "Common", "IWaistEntryReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Exercises", "Common", "IExerciseEntryReadRepository.cs"),
-            Path.Combine(root, "FoodDiary.Application.Abstractions", "Hydration", "Common", "IHydrationEntryReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Fasting", "Common", "IFastingOccurrenceReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Fasting", "Common", "IFastingCheckInReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Billing", "Common", "IBillingSubscriptionReadRepository.cs"),

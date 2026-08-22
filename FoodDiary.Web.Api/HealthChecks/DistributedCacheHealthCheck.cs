@@ -3,6 +3,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace FoodDiary.Web.Api.HealthChecks;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class DistributedCacheHealthCheck(IDistributedCache cache, TimeProvider timeProvider) : IHealthCheck {
     private const string ProbeKey = "health:distributed-cache";
 

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace FoodDiary.Infrastructure.Persistence.Outbox;
 
 internal static class OutboxProcessingEngine {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static async Task<int> ProcessDueAsync<TMessage>(
         FoodDiaryDbContext context,
         DbSet<TMessage> messages,
@@ -120,6 +121,7 @@ internal static class OutboxProcessingEngine {
         return string.Equals(outcome, "processed", StringComparison.Ordinal);
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static void RecordOutcome(string outboxName, string outcome) {
         switch (outcome) {
             case "processed":

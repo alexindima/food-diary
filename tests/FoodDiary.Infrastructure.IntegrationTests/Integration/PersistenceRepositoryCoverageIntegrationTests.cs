@@ -513,8 +513,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         hydration.Update(300, today.AddHours(9));
         await hydrationRepository.UpdateAsync(hydration);
         await context.SaveChangesAsync();
-        Assert.NotNull(await hydrationRepository.GetByIdAsync(hydration.Id));
-        Assert.NotNull(await hydrationRepository.GetByIdAsync(hydration.Id, asTracking: true));
+        Assert.NotNull(await hydrationRepository.GetByIdForUpdateAsync(hydration.Id));
         Assert.NotNull(await hydrationRepository.GetByTimestampAsync(user.Id, today.AddHours(9)));
         Assert.Equal(2, (await hydrationRepository.GetByDateAsync(user.Id, today)).Count);
         Assert.Equal(2, (await hydrationRepository.GetByDateReadModelsAsync(user.Id, today)).Count);

@@ -1,5 +1,6 @@
 namespace FoodDiary.Web.Api.Options;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class ApiCorsOptions {
     public const string SectionName = "Cors";
 

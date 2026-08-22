@@ -72,6 +72,7 @@ internal static class WebPushSocketsHttpHandlerFactory {
                !isSixToFour;
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static async ValueTask<Stream> ConnectAsync(
         SocketsHttpConnectionContext context,
         CancellationToken cancellationToken) {

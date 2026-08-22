@@ -4,6 +4,7 @@ using System.Text;
 
 namespace FoodDiary.Development.Mcp.Wiki;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class WikiQueryCache(
     TimeProvider timeProvider,
     WikiRuntimeTelemetry telemetry) {

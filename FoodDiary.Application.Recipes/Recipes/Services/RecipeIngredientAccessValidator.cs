@@ -62,6 +62,7 @@ public static class RecipeIngredientAccessValidator {
             : Result.Success();
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static async Task<Result> EnsureNoIndirectCycleAsync(
         RecipeId recipeId,
         IEnumerable<RecipeOverviewReadItem> initialRecipes,

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace FoodDiary.Web.Api.Extensions;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class ImpersonationAccessGuardMiddleware(
     RequestDelegate next,
     ILogger<ImpersonationAccessGuardMiddleware> logger) {

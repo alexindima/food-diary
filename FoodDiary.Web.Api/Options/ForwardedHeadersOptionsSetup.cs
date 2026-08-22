@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Web.Api.Options;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class ForwardedHeadersOptionsSetup(IOptions<ApiForwardedHeadersOptions> apiForwardedHeadersOptions)
     : IConfigureOptions<ForwardedHeadersOptions> {
     public void Configure(ForwardedHeadersOptions options) {

@@ -8,6 +8,8 @@ import type { HydrationDaily, HydrationEntry } from '../models/hydration.data';
 import { HydrationService } from './hydration.service';
 
 const ENTRY_AMOUNT_ML = 250;
+const TEST_YEAR = 2026;
+const TEST_DAY = 28;
 const BASE_URL = environment.apiUrls.hydration;
 const TEST_DATE = new Date('2026-03-28T12:00:00.000Z');
 const MOCK_DAILY: HydrationDaily = {
@@ -24,12 +26,10 @@ const MOCK_ENTRY: HydrationEntry = {
 describe('HydrationService', () => {
     let service: HydrationService;
     let httpMock: HttpTestingController;
-
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [HydrationService, provideHttpClient(), provideHttpClientTesting()],
         });
-
         service = TestBed.inject(HydrationService);
         httpMock = TestBed.inject(HttpTestingController);
     });
@@ -44,8 +44,7 @@ describe('HydrationService', () => {
         });
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/daily`);
-        expect(req.request.method).toBe('GET');
-        expect(req.request.params.get('dateUtc')).toBe(TEST_DATE.toISOString());
+        expect(req.request.params.get('dateUtc')).toBe('2026-03-28');
         req.flush(MOCK_DAILY);
     });
 
@@ -53,7 +52,7 @@ describe('HydrationService', () => {
         service.getDaily(TEST_DATE).subscribe(daily => {
             expect(daily.totalMl).toBe(0);
             expect(daily.goalMl).toBeNull();
-            expect(daily.dateUtc).toBe(TEST_DATE.toISOString());
+            expect(daily.dateUtc).toBe('2026-03-28');
         });
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/daily`);
@@ -67,7 +66,7 @@ describe('HydrationService', () => {
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
         expect(req.request.method).toBe('GET');
-        expect(req.request.params.get('dateUtc')).toBe(TEST_DATE.toISOString());
+        expect(req.request.params.get('dateUtc')).toBe('2026-03-28');
         req.flush([MOCK_ENTRY]);
     });
 
@@ -78,6 +77,16 @@ describe('HydrationService', () => {
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+    });
+
+    it('should preserve the local calendar date instead of converting it to UTC', () => {
+        const localDate = new Date(TEST_YEAR, 2, TEST_DAY, 0, 0, 0);
+
+        service.getEntries(localDate).subscribe();
+
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        expect(req.request.params.get('dateUtc')).toBe('2026-03-28');
+        req.flush([]);
     });
 
     it('should add entry', () => {

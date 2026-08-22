@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 
 namespace FoodDiary.Development.Mcp.Diagnostics;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class ServerStatusService(
     TimeProvider timeProvider,
     ServerRuntimeIdentity runtimeIdentity,

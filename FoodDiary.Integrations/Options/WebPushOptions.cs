@@ -27,6 +27,7 @@ public sealed class WebPushOptions {
                && IntegrationUriValidator.IsSafeNavigationUrl(options.DefaultUrl);
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static bool HasValidVapidKeys(WebPushOptions options) {
         try {
             VapidHelper.ValidatePublicKey(options.PublicKey);

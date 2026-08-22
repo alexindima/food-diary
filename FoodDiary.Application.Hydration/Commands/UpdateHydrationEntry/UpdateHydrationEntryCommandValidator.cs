@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
 
@@ -20,9 +21,14 @@ public sealed class UpdateHydrationEntryCommandValidator : AbstractValidator<Upd
 
         RuleFor(c => c.AmountMl)
             .GreaterThan(0)
-            .LessThanOrEqualTo(10000)
+            .LessThanOrEqualTo(HydrationEntry.MaximumAmountMl)
             .When(c => c.AmountMl.HasValue)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("AmountMl must be in range [1, 10000].");
+
+        RuleFor(c => c)
+            .Must(c => c.TimestampUtc.HasValue || c.AmountMl.HasValue)
+            .WithErrorCode("Validation.Required")
+            .WithMessage("At least one hydration entry field must be provided.");
     }
 }

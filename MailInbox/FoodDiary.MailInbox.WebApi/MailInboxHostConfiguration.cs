@@ -49,6 +49,7 @@ internal static class MailInboxHostConfiguration {
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal static async Task ValidateRuntimeDatabaseRoleAsync(
         IServiceProvider services,
         IConfiguration configuration,

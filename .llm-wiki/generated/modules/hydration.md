@@ -47,22 +47,20 @@ Source: `FoodDiary.Presentation.Api/Features/Hydration/HydrationEntriesControlle
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: HydrationEntry
-- Public contract files: 7
+- Public contract files: 5
 - Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 7
-- Interfaces: 5
+- Public contract types: 5
+- Interfaces: 3
 - DTO/read-model/projection types: 1
 - Enums: 0
-- Exported repository-shaped contracts: 4
-- Contracts referencing domain entities: 2
+- Exported repository-shaped contracts: 2
+- Contracts referencing domain entities: 1
 - `class HydrationEntryErrors`
 - `interface IHydrationEntryReadModelRepository`
-- `interface IHydrationEntryReadRepository`
-- `interface IHydrationEntryRepository`
 - `interface IHydrationEntryWriteRepository`
 - `interface IHydrationGoalService`
 - `record HydrationEntryReadModel`
@@ -76,6 +74,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/HydrationModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/HydrationEntryInvariantTests.cs`
+- [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/HydrationEntryRepositoryIntegrationTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/HydrationHttpMappingsTests.cs`
 
 ## Working Rule

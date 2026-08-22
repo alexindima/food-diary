@@ -8,6 +8,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace FoodDiary.Web.Api.Swagger;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class PresentationTransportOperationFilter : IOperationFilter {
     private const string IdempotencyKeyHeader = "Idempotency-Key";
 

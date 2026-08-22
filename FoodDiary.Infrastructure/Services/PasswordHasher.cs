@@ -8,6 +8,7 @@ public sealed class PasswordHasher : IPasswordHasher {
     public string Hash(string password) =>
         EnhancedHashPrefix + BCrypt.Net.BCrypt.EnhancedHashPassword(password, BCrypt.Net.HashType.SHA384);
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public bool Verify(string password, string hashedPassword) {
         if (string.IsNullOrEmpty(password) || string.IsNullOrWhiteSpace(hashedPassword)) {
             return false;

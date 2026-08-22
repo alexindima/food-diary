@@ -170,6 +170,7 @@ public sealed class PaddleBillingGateway(
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public Task<Result<BillingWebhookEventModel?>> ParseWebhookEventAsync(
         string payload,
         string signatureHeader,

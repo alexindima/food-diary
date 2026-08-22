@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Domain.Entities.Tracking;
 
 public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
-    private const int MaxSingleEntryMl = 10000;
+    public const int MaximumAmountMl = 10000;
 
     public UserId UserId { get; private set; }
     public DateTime Timestamp { get; private set; }
@@ -73,7 +73,7 @@ public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
 
     private static int NormalizeAmount(int value) {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(value, 0);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(value, MaxSingleEntryMl);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(value, MaximumAmountMl);
         return value;
     }
 }

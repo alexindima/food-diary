@@ -59,6 +59,7 @@ public sealed class MailInboxEndpointListenerFactory(IOptions<MailInboxSmtpOptio
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private sealed class ConnectionLimiter(int globalLimit, int perSourceLimit) : IDisposable {
         private readonly SemaphoreSlim _global = new(globalLimit, globalLimit);
         private readonly ConcurrentDictionary<string, int> _sourceCounts = new(StringComparer.Ordinal);

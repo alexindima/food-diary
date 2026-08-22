@@ -39,10 +39,9 @@ public sealed class UpdateHydrationEntryCommandHandler(
         UserId userId = userIdResult.Value;
         HydrationEntryId hydrationEntryId = hydrationEntryIdResult.Value;
 
-        HydrationEntry? entry = await repository.GetByIdAsync(
+        HydrationEntry? entry = await repository.GetByIdForUpdateAsync(
             hydrationEntryId,
-            asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken).ConfigureAwait(false);
         if (entry is null || entry.UserId != userId) {
             return Result.Failure<HydrationEntryModel>(Errors.HydrationEntry.NotAccessible(command.HydrationEntryId));
         }
@@ -57,6 +56,15 @@ public sealed class UpdateHydrationEntryCommandHandler(
         DateTime? timestampUtc = command.TimestampUtc.HasValue
             ? UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(command.TimestampUtc.Value)
             : null;
+        if (timestampUtc.HasValue && timestampUtc.Value != entry.Timestamp) {
+            HydrationEntry? existing = await repository
+                .GetByTimestampAsync(userId, timestampUtc.Value, cancellationToken)
+                .ConfigureAwait(false);
+            if (existing is not null && existing.Id != entry.Id) {
+                return Result.Failure<HydrationEntryModel>(Errors.HydrationEntry.AlreadyExists(timestampUtc.Value));
+            }
+        }
+
         entry.Update(command.AmountMl, timestampUtc);
         await repository.UpdateAsync(entry, cancellationToken).ConfigureAwait(false);
 

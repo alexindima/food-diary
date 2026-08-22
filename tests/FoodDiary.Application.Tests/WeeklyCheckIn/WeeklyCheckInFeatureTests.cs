@@ -287,7 +287,7 @@ public class WeeklyCheckInFeatureTests {
         IDashboardStatisticsReadService? statisticsReadService = null,
         IWeightEntryRepository? weightRepo = null,
         IWaistEntryRepository? waistRepo = null,
-        IHydrationEntryRepository? hydrationRepo = null,
+        IHydrationEntryReadModelRepository? hydrationRepo = null,
         IWeeklyCheckInUserProfileService? profileService = null) =>
         new(
             new WeeklyCheckInReadService(
@@ -332,8 +332,8 @@ public class WeeklyCheckInFeatureTests {
         return repository;
     }
 
-    private static IHydrationEntryRepository CreateHydrationEntryRepository() {
-        IHydrationEntryRepository repository = Substitute.For<IHydrationEntryRepository>();
+    private static IHydrationEntryReadModelRepository CreateHydrationEntryRepository() {
+        IHydrationEntryReadModelRepository repository = Substitute.For<IHydrationEntryReadModelRepository>();
         repository
             .GetDailyTotalsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IReadOnlyList<(DateTime Date, int TotalMl)>>([]));

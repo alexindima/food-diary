@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 
 namespace FoodDiary.Web.Api.Services;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class NotificationTestScheduler(
     IServiceScopeFactory serviceScopeFactory,
     IHostApplicationLifetime applicationLifetime,

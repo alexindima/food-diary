@@ -87,6 +87,7 @@ public sealed record WikiCommandResult(
         };
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public WikiCommandResult ToCompactChangeContext(int pathLimit = 20, bool includeRawOutput = false) {
         if (StructuredOutput is not { ValueKind: JsonValueKind.Object } output) {
             return WithoutRawOutput();

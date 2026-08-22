@@ -54,6 +54,21 @@ public class HydrationFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateHydrationEntryCommandValidator_WithNoChanges_Fails() {
+        var validator = new UpdateHydrationEntryCommandValidator();
+        var command = new UpdateHydrationEntryCommand(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            TimestampUtc: null,
+            AmountMl: null);
+
+        ValidationResult result = await validator.ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Validation.Required", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task GetHydrationDailyTotalQueryValidator_WithValidUserId_Passes() {
         var validator = new GetHydrationDailyTotalQueryValidator();
         var query = new GetHydrationDailyTotalQuery(Guid.NewGuid(), DateTime.UtcNow);
@@ -351,6 +366,24 @@ public class HydrationFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateHydrationEntryCommandHandler_WhenTimestampBelongsToAnotherEntry_ReturnsConflict() {
+        var user = User.Create("hydration-update-conflict@example.com", "hash");
+        var entry = HydrationEntry.Create(user.Id, new DateTime(2026, 3, 25, 12, 0, 0, DateTimeKind.Utc), 250);
+        var conflictingEntry = HydrationEntry.Create(user.Id, new DateTime(2026, 3, 25, 13, 0, 0, DateTimeKind.Utc), 500);
+        IHydrationEntryWriteRepository repository = Substitute.For<IHydrationEntryWriteRepository>();
+        repository.GetByIdForUpdateAsync(entry.Id, Arg.Any<CancellationToken>()).Returns(entry);
+        repository.GetByTimestampAsync(user.Id, conflictingEntry.Timestamp, Arg.Any<CancellationToken>()).Returns(conflictingEntry);
+        var handler = new UpdateHydrationEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
+
+        Result<HydrationEntryModel> result = await handler.Handle(
+            new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, conflictingEntry.Timestamp, AmountMl: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "HydrationEntry.AlreadyExists");
+        await repository.DidNotReceive().UpdateAsync(Arg.Any<HydrationEntry>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task UpdateHydrationEntryCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new UpdateHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(),
@@ -587,7 +620,8 @@ public class HydrationFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingHydrationEntryRepository : IHydrationEntryRepository, IHydrationEntryReadService {
+    private sealed class RecordingHydrationEntryRepository
+        : IHydrationEntryReadModelRepository, IHydrationEntryWriteRepository, IHydrationEntryReadService {
         public DateTime? LastDailyTotalDateUtc { get; private set; }
 
         public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
@@ -599,7 +633,7 @@ public class HydrationFeatureTests {
         public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<HydrationEntry?> GetByIdAsync(HydrationEntryId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
+        public Task<HydrationEntry?> GetByIdForUpdateAsync(HydrationEntryId id, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
         public Task<HydrationEntry?> GetByTimestampAsync(UserId userId, DateTime timestampUtc, CancellationToken cancellationToken = default) =>
@@ -680,7 +714,8 @@ public class HydrationFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryHydrationEntryRepository(HydrationEntry? entry = null) : IHydrationEntryRepository, IHydrationEntryReadService {
+    private sealed class InMemoryHydrationEntryRepository(HydrationEntry? entry = null)
+        : IHydrationEntryReadModelRepository, IHydrationEntryWriteRepository, IHydrationEntryReadService {
         private HydrationEntry? _entry = entry;
         private readonly List<HydrationEntry> _entries = entry is null ? [] : [entry];
         public HydrationEntry? AddedEntry { get; private set; }
@@ -706,7 +741,7 @@ public class HydrationFeatureTests {
             return Task.CompletedTask;
         }
 
-        public Task<HydrationEntry?> GetByIdAsync(HydrationEntryId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
+        public Task<HydrationEntry?> GetByIdForUpdateAsync(HydrationEntryId id, CancellationToken cancellationToken = default) =>
             Task.FromResult(_entry?.Id == id ? _entry : null);
 
         public Task<HydrationEntry?> GetByTimestampAsync(

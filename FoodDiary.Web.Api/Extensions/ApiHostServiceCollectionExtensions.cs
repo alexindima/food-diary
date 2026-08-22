@@ -7,6 +7,7 @@ using Microsoft.OpenApi;
 
 namespace FoodDiary.Web.Api.Extensions;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public static class ApiHostServiceCollectionExtensions {
     extension(IServiceCollection services) {
         internal IServiceCollection AddApiHostServices() {

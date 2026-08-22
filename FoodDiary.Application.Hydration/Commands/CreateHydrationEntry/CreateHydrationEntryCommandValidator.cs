@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
 
@@ -15,7 +16,7 @@ public sealed class CreateHydrationEntryCommandValidator : AbstractValidator<Cre
 
         RuleFor(c => c.AmountMl)
             .GreaterThan(0)
-            .LessThanOrEqualTo(10000)
+            .LessThanOrEqualTo(HydrationEntry.MaximumAmountMl)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("AmountMl must be in range [1, 10000].");
     }

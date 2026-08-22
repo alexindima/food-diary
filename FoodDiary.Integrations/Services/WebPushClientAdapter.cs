@@ -2,6 +2,7 @@ using WebPush;
 
 namespace FoodDiary.Integrations.Services;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 internal sealed class WebPushClientAdapter : IWebPushClientAdapter {
     private readonly Func<PushSubscription, string, VapidDetails, CancellationToken, Task> _sendNotificationAsync;
 

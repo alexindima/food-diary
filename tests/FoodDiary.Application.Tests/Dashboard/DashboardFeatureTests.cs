@@ -197,7 +197,7 @@ public class DashboardFeatureTests {
         RepositoryDashboardBodyReadService service = new(
             new WeightEntryReadService(weightRepository),
             new WaistEntryReadService(Substitute.For<IWaistEntryRepository>()),
-            new HydrationEntryReadService(Substitute.For<IHydrationEntryRepository>()));
+            new HydrationEntryReadService(Substitute.For<IHydrationEntryReadModelRepository>()));
 
         DashboardBodyReadModel result = await service.GetBodyAsync(
             userId,

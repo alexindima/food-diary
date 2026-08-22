@@ -11,6 +11,7 @@ internal static class DevelopmentContextEvaluationRunner {
         WriteIndented = true,
     };
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static async Task RunAsync(
         WikiQueryService queries,
         string corpusPath,

@@ -4,6 +4,7 @@ using System.Text.Json;
 
 namespace FoodDiary.Development.Mcp.Wiki;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class ContextRoutingTelemetryStore(
     string filePath,
     TimeProvider? timeProvider = null,

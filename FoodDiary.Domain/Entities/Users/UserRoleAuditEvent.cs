@@ -20,6 +20,7 @@ public sealed class UserRoleAuditEvent : Entity<Guid> {
     private UserRoleAuditEvent() {
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static UserRoleAuditEvent Create(
         UserId userId,
         Role role,

@@ -48,6 +48,7 @@ using StackExchange.Redis;
 
 namespace FoodDiary.Web.Api.Extensions;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public static class ApiServiceCollectionExtensions {
     extension(IServiceCollection services) {
         public IServiceCollection AddApiServices(IConfiguration configuration, IHostEnvironment? environment = null) {

@@ -9,6 +9,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace FoodDiary.Web.Api.Swagger;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
     public void Apply(OpenApiOperation operation, OperationFilterContext context) {
         AddApiErrorResponse(operation, context, StatusCodes.Status500InternalServerError);

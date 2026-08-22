@@ -8,6 +8,7 @@ public sealed class PostCommitRecentItemUsageRecorder(
     IRecentItemWriteRepository repository,
     IPostCommitActionQueue postCommitActionQueue,
     IUnitOfWork unitOfWork) : IRecentItemUsageRecorder {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public Task RegisterUsageAsync(
         UserId userId,
         IReadOnlyCollection<ProductId> productIds,

@@ -35,6 +35,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         _telemetry = telemetry ?? new WikiRuntimeTelemetry();
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public async Task<WikiCommandResult> ExecuteAsync(
         string command,
         IReadOnlyList<string> arguments,

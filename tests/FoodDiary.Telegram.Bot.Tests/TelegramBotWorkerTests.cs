@@ -350,6 +350,7 @@ public sealed class TelegramBotWorkerTests {
         Assert.Equal("Added 500 ml.", GetPropertyValue<string>(request, "Text"));
         Assert.Equal("Bearer", httpFactory.Requests[1].Headers.Authorization?.Scheme);
         Assert.Equal("access-token", httpFactory.Requests[1].Headers.Authorization?.Parameter);
+        Assert.Equal("https://api.example.test/api/v1/hydrations", httpFactory.Requests[1].RequestUri?.ToString());
     }
 
     [Fact]

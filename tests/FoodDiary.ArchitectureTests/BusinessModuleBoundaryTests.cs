@@ -924,7 +924,7 @@ public sealed class BusinessModuleBoundaryTests {
     [Theory]
     [InlineData("WeightEntries", "IWeightEntryRepository", "IWeightEntryReadRepository", "IWeightEntryReadModelRepository", "IWeightEntryWriteRepository")]
     [InlineData("WaistEntries", "IWaistEntryRepository", "IWaistEntryReadRepository", "IWaistEntryReadModelRepository", "IWaistEntryWriteRepository")]
-    [InlineData("Hydration", "IHydrationEntryRepository", "IHydrationEntryReadRepository", "IHydrationEntryReadModelRepository", "IHydrationEntryWriteRepository")]
+    [InlineData("Hydration", "IHydrationEntryReadModelRepository", "IHydrationEntryWriteRepository")]
     [InlineData("Exercises", "IExerciseEntryRepository", "IExerciseEntryReadRepository", "IExerciseEntryReadModelRepository", "IExerciseEntryWriteRepository")]
     [InlineData("Cycles", "ICycleRepository", "ICycleReadRepository", "ICycleReadModelRepository", "ICycleWriteRepository")]
     public void OtherApplicationModules_DoNotAcquireHealthTrackingWriteRepositories(

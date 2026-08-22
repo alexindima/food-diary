@@ -14,7 +14,7 @@ namespace FoodDiary.Infrastructure.Migrations {
         protected override void BuildModel(ModelBuilder modelBuilder) {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.10")
+                .HasAnnotation("ProductVersion", "10.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "pg_trgm");
@@ -2991,12 +2991,21 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Property<Guid>("UserId")
                     .HasColumnType("uuid");
 
+                b.Property<uint>("xmin")
+                    .IsConcurrencyToken()
+                    .ValueGeneratedOnAddOrUpdate()
+                    .HasColumnType("xid")
+                    .HasColumnName("xmin");
+
                 b.HasKey("Id");
 
                 b.HasIndex("UserId", "Timestamp")
+                    .IsUnique()
                     .HasDatabaseName("IX_HydrationEntries_User_Timestamp");
 
-                b.ToTable("HydrationEntries");
+                b.ToTable("HydrationEntries", t => {
+                    t.HasCheckConstraint("CK_HydrationEntries_AmountMl", "\"AmountMl\" > 0 AND \"AmountMl\" <= 10000");
+                });
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.MarketingAttributionEvent", b => {

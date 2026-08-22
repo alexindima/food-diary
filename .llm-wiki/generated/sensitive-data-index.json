@@ -6,11 +6,11 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1496,
+    "candidateFields": 1497,
     "credential": 164,
     "identity": 155,
     "health": 672,
-    "financial": 201,
+    "financial": 202,
     "privateContent": 304,
     "boundaryFiles": 186,
     "potentialLoggingLeads": 1,
@@ -351,7 +351,7 @@
       "name": "SqliteConnectionStringBuilder",
       "type": "new",
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "line": 88
+      "line": 89
     },
     {
       "category": "credential",
@@ -435,28 +435,28 @@
       "name": "HasPassword",
       "type": "Password,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 375
+      "line": 376
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "MustChangePassword,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 377
+      "line": 378
     },
     {
       "category": "credential",
       "name": "EmailConfirmationTokenHash",
       "type": "IsEmailConfirmed,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 379
+      "line": 380
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenExpiresAtUtc",
       "type": "PasswordResetTokenHash,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 383
+      "line": 384
     },
     {
       "category": "credential",
@@ -610,28 +610,28 @@
       "name": "CancellationToken",
       "type": "Func<FoodDiaryDbContext,",
       "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
-      "line": 146
+      "line": 148
     },
     {
       "category": "credential",
       "name": "CancellationToken",
       "type": "Func<FoodDiaryDbContext,",
       "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
-      "line": 166
+      "line": 168
     },
     {
       "category": "credential",
       "name": "CancellationToken",
       "type": "Func<TMessage,",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
-      "line": 18
+      "line": 19
     },
     {
       "category": "credential",
       "name": "CancellationToken",
       "type": "Func<TMessage,",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
-      "line": 89
+      "line": 90
     },
     {
       "category": "credential",
@@ -743,7 +743,7 @@
       "name": "CancellationToken",
       "type": "Func<IPEndPoint,",
       "path": "FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs",
-      "line": 95
+      "line": 96
     },
     {
       "category": "credential",
@@ -960,21 +960,21 @@
       "name": "Token",
       "type": "string",
       "path": "FoodDiary.Telegram.Bot/TelegramBotOptions.cs",
-      "line": 6
+      "line": 7
     },
     {
       "category": "credential",
       "name": "ApiSecret",
       "type": "string",
       "path": "FoodDiary.Telegram.Bot/TelegramBotOptions.cs",
-      "line": 9
+      "line": 10
     },
     {
       "category": "credential",
       "name": "AccessToken",
       "type": "string",
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "line": 262
+      "line": 263
     },
     {
       "category": "credential",
@@ -1058,21 +1058,21 @@
       "name": "DbConnectionStringBuilder",
       "type": "new",
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "line": 89
+      "line": 90
     },
     {
       "category": "credential",
       "name": "DatabasePasswordKeys",
       "type": "in",
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "line": 129
+      "line": 130
     },
     {
       "category": "credential",
       "name": "ConnectionString",
       "type": "string?",
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "line": 157
+      "line": 158
     },
     {
       "category": "credential",
@@ -2021,6 +2021,13 @@
     },
     {
       "category": "financial",
+      "name": "MaximumAmountMl",
+      "type": "value,",
+      "path": "FoodDiary.Domain/Entities/Tracking/HydrationEntry.cs",
+      "line": 76
+    },
+    {
+      "category": "financial",
       "name": "Amount",
       "type": "double",
       "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodNutrient.cs",
@@ -2108,21 +2115,21 @@
       "name": "CustomerId",
       "type": "string",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 767
+      "line": 768
     },
     {
       "category": "financial",
       "name": "Checkout",
       "type": "TransactionCheckoutRequest",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 770
+      "line": 771
     },
     {
       "category": "financial",
       "name": "Checkout",
       "type": "TransactionCheckoutResponse?",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 781
+      "line": 782
     },
     {
       "category": "financial",
@@ -5524,98 +5531,98 @@
       "name": "TuesdayCalories",
       "type": "MondayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 242
+      "line": 243
     },
     {
       "category": "health",
       "name": "ThursdayCalories",
       "type": "WednesdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 244
+      "line": 245
     },
     {
       "category": "health",
       "name": "SaturdayCalories",
       "type": "FridayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 246
+      "line": 247
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "DesiredWeightKg,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 259
+      "line": 260
     },
     {
       "category": "health",
       "name": "MondayCalories",
       "type": "CalorieCyclingEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 261
+      "line": 262
     },
     {
       "category": "health",
       "name": "WednesdayCalories",
       "type": "TuesdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 263
+      "line": 264
     },
     {
       "category": "health",
       "name": "FridayCalories",
       "type": "ThursdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 265
+      "line": 266
     },
     {
       "category": "health",
       "name": "SundayCalories",
       "type": "SaturdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 267
+      "line": 268
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "StepGoal,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 302
+      "line": 303
     },
     {
       "category": "health",
       "name": "BirthDate",
       "type": "LastName,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 314
+      "line": 315
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "Gender,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 316
+      "line": 317
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "HeightCm,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 318
+      "line": 319
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "PushNotificationsEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 326
+      "line": 327
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "SocialPushNotificationsEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 328
+      "line": 329
     },
     {
       "category": "health",
@@ -6091,7 +6098,7 @@
       "name": "Height",
       "type": "int",
       "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
-      "line": 127
+      "line": 128
     },
     {
       "category": "health",
@@ -7925,7 +7932,7 @@
       "name": "EmailConfirmationSentAtUtc",
       "type": "EmailConfirmationTokenExpiresAtUtc,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 381
+      "line": 382
     },
     {
       "category": "identity",
@@ -8009,7 +8016,7 @@
       "name": "Email",
       "type": "string",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 757
+      "line": 758
     },
     {
       "category": "identity",
@@ -9738,7 +9745,7 @@
       "name": "ProfileImageAssetId",
       "type": "ProfileImage,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 320
+      "line": 321
     },
     {
       "category": "privateContent",
@@ -9962,14 +9969,14 @@
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 402
+      "line": 405
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 419
+      "line": 422
     },
     {
       "category": "privateContent",
@@ -11874,7 +11881,7 @@
     },
     {
       "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 354,
+      "line": 355,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",

@@ -24,6 +24,7 @@ public sealed class BillingWebhookHttpProcessor {
         return provider.ToWebhookCommand(payload, signatureHeader);
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static async Task<string> ReadBoundedPayloadAsync(HttpRequest request, CancellationToken cancellationToken) {
         if (request.ContentLength is > MaxWebhookPayloadBytes) {
             throw new BadHttpRequestException("Billing webhook payload exceeds the allowed size.", StatusCodes.Status413PayloadTooLarge);

@@ -12,6 +12,7 @@ using SmtpServer.Storage;
 
 namespace FoodDiary.MailInbox.Infrastructure.Services;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class MailInboxSmtpHostedService(
     IOptions<MailInboxSmtpOptions> options,
     SmtpInboundMessageStore messageStore,

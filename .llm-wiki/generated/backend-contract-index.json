@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1054,
+    "contracts": 1052,
     "ambiguousContracts": 3,
-    "consumerEdges": 7432,
-    "productionConsumerEdges": 4479,
-    "testConsumerEdges": 2953,
-    "consumedContracts": 1054,
+    "consumerEdges": 7422,
+    "productionConsumerEdges": 4475,
+    "testConsumerEdges": 2947,
+    "consumedContracts": 1052,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -8827,22 +8827,6 @@
       "ambiguous": false
     },
     {
-      "name": "IHydrationEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadRepository.cs"
-      ],
-      "ambiguous": false
-    },
-    {
       "name": "IHydrationEntryReadService",
       "roles": [
         "Service"
@@ -8855,22 +8839,6 @@
       ],
       "definitionPaths": [
         "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs"
-      ],
-      "ambiguous": false
-    },
-    {
-      "name": "IHydrationEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "FoodDiary"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs"
       ],
       "ambiguous": false
     },
@@ -20337,7 +20305,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs",
       "isTest": false,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "ApiErrorHttpResponse",
@@ -20558,7 +20526,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Web.Api.Tests/Extensions/ApiExceptionHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 8
     },
     {
       "contract": "ApiErrorHttpResponse",
@@ -63209,19 +63177,6 @@
         "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IHydrationEntryReadModelRepository",
-      "roles": [
-        "ReadModelRepository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadModelRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Hydration/Services/HydrationEntryReadService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -63248,9 +63203,35 @@
         "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/Tracking/HydrationEntryRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IHydrationEntryReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IHydrationEntryReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IHydrationEntryReadModelRepository",
@@ -63263,7 +63244,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IHydrationEntryReadModelRepository",
@@ -63276,7 +63257,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 5
     },
     {
       "contract": "IHydrationEntryReadModelRepository",
@@ -63292,69 +63273,17 @@
       "referenceCount": 1
     },
     {
-      "contract": "IHydrationEntryReadRepository",
+      "contract": "IHydrationEntryReadModelRepository",
       "roles": [
-        "ReadRepository"
+        "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IHydrationEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IHydrationEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
-      "isTest": true,
-      "referenceCount": 5
-    },
-    {
-      "contract": "IHydrationEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IHydrationEntryReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadRepository.cs"
+        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IHydrationEntryReadService",
@@ -63474,136 +63403,6 @@
       "referenceCount": 1
     },
     {
-      "contract": "IHydrationEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "isTest": false,
-      "referenceCount": 4
-    },
-    {
-      "contract": "IHydrationEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Tracking/HydrationEntryRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IHydrationEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IHydrationEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IHydrationEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IHydrationEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 4
-    },
-    {
-      "contract": "IHydrationEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IHydrationEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IHydrationEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IHydrationEntryWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
       "contract": "IHydrationEntryWriteRepository",
       "roles": [
         "WriteRepository"
@@ -63654,6 +63453,45 @@
       "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IHydrationEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/Tracking/HydrationEntryRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IHydrationEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IHydrationEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IHydrationEntryWriteRepository",
@@ -108827,7 +108665,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 11
     },
     {
       "contract": "UpdateHydrationEntryCommand",

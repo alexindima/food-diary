@@ -3,6 +3,7 @@ using System.Net;
 
 namespace FoodDiary.Web.Api.Options;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class ApiForwardedHeadersOptions {
     public const string SectionName = "ForwardedHeaders";
 

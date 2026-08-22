@@ -10,9 +10,8 @@ public interface IHydrationEntryWriteRepository {
 
     Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default);
 
-    Task<HydrationEntry?> GetByIdAsync(
+    Task<HydrationEntry?> GetByIdForUpdateAsync(
         HydrationEntryId id,
-        bool asTracking = false,
         CancellationToken cancellationToken = default);
 
     Task<HydrationEntry?> GetByTimestampAsync(

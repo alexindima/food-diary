@@ -16,6 +16,7 @@ internal sealed class YooKassaApiClient(HttpClient httpClient, YooKassaOptions o
         MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
     };
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public async Task<Result<TResponse>> SendAsync<TResponse>(
         HttpMethod method,
         string path,

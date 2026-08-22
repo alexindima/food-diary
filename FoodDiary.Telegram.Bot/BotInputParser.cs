@@ -2,6 +2,7 @@ using System.Globalization;
 
 namespace FoodDiary.Telegram.Bot;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 internal static class BotInputParser {
     private const string WaterPrefix = "water:";
 

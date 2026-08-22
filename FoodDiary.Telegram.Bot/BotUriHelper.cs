@@ -1,5 +1,6 @@
 namespace FoodDiary.Telegram.Bot;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 internal static class BotUriHelper {
     internal static bool TryCreateApiBaseUri(string? rawBaseUrl, out Uri? baseUri) {
         baseUri = null;

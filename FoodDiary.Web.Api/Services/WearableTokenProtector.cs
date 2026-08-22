@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.DataProtection;
 
 namespace FoodDiary.Web.Api.Services;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class WearableTokenProtector(IDataProtectionProvider dataProtectionProvider) : IWearableTokenProtector {
     private const string Purpose = "FoodDiary.Wearables.OAuthTokens.v1";
     private const string ProtectedPrefix = "fdp1:";

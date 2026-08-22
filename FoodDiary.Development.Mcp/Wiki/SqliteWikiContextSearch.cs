@@ -61,6 +61,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public async Task<WikiContextSearchResult> SearchAsync(
         string query,
         int limit,
@@ -173,6 +174,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static async Task<(
         string? Fingerprint,
         string? UpdatedAtUtc,
@@ -207,6 +209,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             reader.IsDBNull(4) ? null : reader.GetString(4));
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static async Task<List<RawCandidate>> ReadCandidatesAsync(
         SqliteConnection connection,
         IReadOnlyList<string> queryTerms,

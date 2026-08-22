@@ -6,6 +6,10 @@ namespace FoodDiary.Domain.Common;
 internal static class DomainGuard {
     private const decimal MaxNumeric18Scale2 = 9_999_999_999_999_999.99m;
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    static DomainGuard() {
+    }
+
     public static TEnum Defined<TEnum>(TEnum value, string paramName)
         where TEnum : struct, Enum {
         return Enum.IsDefined(value)

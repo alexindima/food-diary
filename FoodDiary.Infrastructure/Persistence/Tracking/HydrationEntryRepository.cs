@@ -7,33 +7,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
-public sealed class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEntryRepository {
+public sealed class HydrationEntryRepository(FoodDiaryDbContext context)
+    : IHydrationEntryReadModelRepository, IHydrationEntryWriteRepository {
     public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
         context.HydrationEntries.Add(entry);
         return Task.FromResult(entry);
     }
 
-    public Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
-        context.HydrationEntries.Update(entry);
-        return Task.CompletedTask;
-    }
+    public Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
+        Task.CompletedTask;
 
     public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
         context.HydrationEntries.Remove(entry);
         return Task.CompletedTask;
     }
 
-    public async Task<HydrationEntry?> GetByIdAsync(
+    public Task<HydrationEntry?> GetByIdForUpdateAsync(
         HydrationEntryId id,
-        bool asTracking = false,
-        CancellationToken cancellationToken = default) {
-        IQueryable<HydrationEntry> query = context.HydrationEntries.AsQueryable();
-        if (!asTracking) {
-            query = query.AsNoTracking();
-        }
-
-        return await query.FirstOrDefaultAsync(x => x.Id == id, cancellationToken).ConfigureAwait(false);
-    }
+        CancellationToken cancellationToken = default) =>
+        context.HydrationEntries.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public Task<HydrationEntry?> GetByTimestampAsync(
         UserId userId,

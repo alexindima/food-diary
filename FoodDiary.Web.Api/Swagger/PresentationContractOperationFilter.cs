@@ -11,6 +11,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace FoodDiary.Web.Api.Swagger;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class PresentationContractOperationFilter : IOperationFilter {
     public void Apply(OpenApiOperation operation, OperationFilterContext context) {
         if (context.ApiDescription.ActionDescriptor is not ControllerActionDescriptor controllerAction) {

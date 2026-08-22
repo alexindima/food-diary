@@ -529,7 +529,7 @@ public sealed class DashboardSnapshotBuilderTests {
     private static DashboardSnapshotBuilder CreateBuilder(
         User user,
         ISender sender,
-        IHydrationEntryRepository? hydrationEntryRepository = null) =>
+        IHydrationEntryReadModelRepository? hydrationEntryRepository = null) =>
         CreateDashboardSnapshotBuilder(
             sender,
             new AccessibleUserContextService(user),
@@ -936,11 +936,12 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubHydrationEntryRepository(IReadOnlyList<(DateTime Date, int TotalMl)>? totals = null) : IHydrationEntryRepository {
+    private sealed class StubHydrationEntryRepository(IReadOnlyList<(DateTime Date, int TotalMl)>? totals = null)
+        : IHydrationEntryReadModelRepository, IHydrationEntryWriteRepository {
         public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<HydrationEntry?> GetByIdAsync(HydrationEntryId id, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<HydrationEntry?> GetByIdForUpdateAsync(HydrationEntryId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<HydrationEntry?> GetByTimestampAsync(UserId userId, DateTime timestampUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<HydrationEntryReadModel>> GetByDateReadModelsAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();

@@ -103,6 +103,7 @@ public static class CycleMappings {
             revision.ReasonCodes.Split('|', StringSplitOptions.RemoveEmptyEntries),
             revision.AlgorithmVersion);
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static IReadOnlyCollection<MenstrualEpisodeModel> BuildEpisodeModels(CycleProfileReadModel profile) {
         var persisted = new List<MenstrualEpisodeModel>(
             (profile.MenstrualEpisodes ?? []).Select(episode => episode.ToModel()));

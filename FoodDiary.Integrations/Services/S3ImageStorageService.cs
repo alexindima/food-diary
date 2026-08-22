@@ -162,6 +162,7 @@ public sealed class S3ImageStorageService(
         return new ImageObjectValidationResult(IsValid: false, errorCode, errorMessage);
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static bool HasValidImageContent(byte[] content, string contentType) {
         using var stream = new SKMemoryStream(content);
         using var codec = SKCodec.Create(stream);

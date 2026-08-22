@@ -12,11 +12,12 @@ export class HydrationService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.hydration;
 
     public getDaily(dateUtc: Date): Observable<HydrationDaily> {
-        const params = { dateUtc: dateUtc.toISOString() };
+        const date = this.toCalendarDate(dateUtc);
+        const params = { dateUtc: date };
         return this.get<HydrationDaily>('daily', params).pipe(
             catchError((error: unknown) =>
                 fallbackApiError('Hydration daily fetch error', error, {
-                    dateUtc: dateUtc.toISOString(),
+                    dateUtc: date,
                     totalMl: 0,
                     goalMl: null,
                 }),
@@ -25,7 +26,7 @@ export class HydrationService extends ApiService {
     }
 
     public getEntries(dateUtc: Date): Observable<HydrationEntry[]> {
-        const params = { dateUtc: dateUtc.toISOString() };
+        const params = { dateUtc: this.toCalendarDate(dateUtc) };
         return this.get<HydrationEntry[]>('', params).pipe(
             catchError((error: unknown) => fallbackApiError('Hydration entries fetch error', error, [])),
         );
@@ -41,5 +42,12 @@ export class HydrationService extends ApiService {
         return this.post<HydrationEntry>('', payload, headers).pipe(
             catchError((error: unknown) => rethrowApiError('Create hydration entry error', error)),
         );
+    }
+
+    private toCalendarDate(date: Date): string {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 }
