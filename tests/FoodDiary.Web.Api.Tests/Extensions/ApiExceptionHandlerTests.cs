@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Npgsql;
 
 namespace FoodDiary.Web.Api.Tests.Extensions;
 
@@ -46,29 +45,6 @@ public sealed class ApiExceptionHandlerTests {
         Assert.Equal("Concurrency.Conflict", response.Error);
         Assert.Equal("The resource was modified by another request. Please retry.", response.Message);
         Assert.Equal("trace-id", response.TraceId);
-        AssertPrivacySafeLog(context, logger, LogLevel.Warning);
-    }
-
-    [Fact]
-    public async Task TryHandleAsync_ForDuplicateHydrationTimestamp_ReturnsConflictApiError() {
-        DefaultHttpContext context = CreateHttpContext();
-        var logger = new RecordingLogger<ApiExceptionHandler>();
-        var handler = new ApiExceptionHandler(logger);
-        var postgresException = new PostgresException(
-            "duplicate key",
-            "ERROR",
-            "ERROR",
-            PostgresErrorCodes.UniqueViolation,
-            constraintName: "IX_HydrationEntries_User_Timestamp");
-        var exception = new DbUpdateException("Duplicate hydration timestamp", postgresException);
-
-        bool handled = await handler.TryHandleAsync(context, exception, CancellationToken.None);
-
-        ApiErrorHttpResponse response = await ReadResponseAsync(context);
-        Assert.Multiple(
-            () => Assert.True(handled),
-            () => Assert.Equal(StatusCodes.Status409Conflict, context.Response.StatusCode),
-            () => Assert.Equal("HydrationEntry.AlreadyExists", response.Error));
         AssertPrivacySafeLog(context, logger, LogLevel.Warning);
     }
 

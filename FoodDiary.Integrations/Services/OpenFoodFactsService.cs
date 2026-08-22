@@ -103,7 +103,6 @@ internal sealed class OpenFoodFactsService(
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public async Task<IReadOnlyList<OpenFoodFactsProductModel>> SearchAsync(
         string query,
         int limit = 10,
@@ -178,7 +177,6 @@ internal sealed class OpenFoodFactsService(
         return hasStaleProducts ? staleProducts : [];
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private async Task<IReadOnlyList<OpenFoodFactsProductModel>> SearchProviderAsync(
         string query,
         int normalizedLimit,
@@ -314,7 +312,6 @@ internal sealed class OpenFoodFactsService(
 
     internal static int InFlightSearchCount => Volatile.Read(ref InFlightSearchCountValue);
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private void CacheSearchResult(string cacheKey, IReadOnlyList<OpenFoodFactsProductModel> products) {
         IReadOnlyList<OpenFoodFactsProductModel> snapshot = Array.AsReadOnly([.. products]);
         long sizeBytes = JsonSerializer.SerializeToUtf8Bytes(snapshot).LongLength;

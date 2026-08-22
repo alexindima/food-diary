@@ -942,7 +942,6 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<HydrationEntry?> GetByIdForUpdateAsync(HydrationEntryId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<HydrationEntry?> GetByTimestampAsync(UserId userId, DateTime timestampUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<HydrationEntryReadModel>> GetByDateReadModelsAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<int> GetDailyTotalAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) => throw new NotSupportedException();

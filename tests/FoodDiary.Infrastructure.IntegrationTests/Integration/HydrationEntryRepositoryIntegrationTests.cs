@@ -11,7 +11,7 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class HydrationEntryRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
-    public async Task SaveChangesAsync_WithDuplicateUserTimestamp_RejectsSecondEntry() {
+    public async Task SaveChangesAsync_WithDuplicateUserTimestamp_PersistsBothEntries() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"hydration-duplicate-{Guid.NewGuid():N}@example.com", "hash");
         DateTime timestampUtc = DateTime.UtcNow;
@@ -20,7 +20,9 @@ public sealed class HydrationEntryRepositoryIntegrationTests(PostgresDatabaseFix
             HydrationEntry.Create(user.Id, timestampUtc, 250),
             HydrationEntry.Create(user.Id, timestampUtc, 500));
 
-        await Assert.ThrowsAsync<DbUpdateException>(() => context.SaveChangesAsync());
+        await context.SaveChangesAsync();
+
+        Assert.Equal(2, await context.HydrationEntries.CountAsync(entry => entry.UserId == user.Id));
     }
 
     [RequiresDockerFact]

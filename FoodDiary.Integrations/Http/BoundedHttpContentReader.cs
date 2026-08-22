@@ -28,7 +28,6 @@ internal static class BoundedHttpContentReader {
         return JsonSerializer.Deserialize<T>(bytes, options);
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static async Task<byte[]> ReadAsByteArrayAsync(
         HttpContent content,
         long maxBytes,

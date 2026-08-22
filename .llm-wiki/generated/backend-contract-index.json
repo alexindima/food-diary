@@ -20305,7 +20305,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs",
       "isTest": false,
-      "referenceCount": 5
+      "referenceCount": 4
     },
     {
       "contract": "ApiErrorHttpResponse",
@@ -20526,7 +20526,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Web.Api.Tests/Extensions/ApiExceptionHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 7
     },
     {
       "contract": "ApiErrorHttpResponse",
@@ -63491,7 +63491,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 2
     },
     {
       "contract": "IHydrationEntryWriteRepository",
@@ -108665,7 +108665,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 11
+      "referenceCount": 10
     },
     {
       "contract": "UpdateHydrationEntryCommand",

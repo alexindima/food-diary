@@ -21,7 +21,6 @@ public sealed class RecordMarketingAttributionCommandHandler(
     private static readonly TimeSpan MaximumPastTimestampAge = TimeSpan.FromDays(1);
     private static readonly TimeSpan MaximumFutureTimestampSkew = TimeSpan.FromMinutes(5);
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public async Task<Result> Handle(RecordMarketingAttributionCommand request, CancellationToken cancellationToken) {
         if (!MarketingAttributionEventTypes.IsClientIngestionSupported(request.EventType)) {
             return Result.Failure(Errors.Validation.Invalid(

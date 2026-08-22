@@ -22,11 +22,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "nonBlankLines": 697,
+      "nonBlankLines": 696,
       "decisionPoints": 122,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 196.94
+      "structuralRiskScore": 196.92
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
@@ -382,11 +382,11 @@
     },
     {
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "nonBlankLines": 534,
+      "nonBlankLines": 533,
       "decisionPoints": 38,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 67.68
+      "structuralRiskScore": 67.66
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
@@ -502,11 +502,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "nonBlankLines": 388,
+      "nonBlankLines": 385,
       "decisionPoints": 35,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 60.26
+      "structuralRiskScore": 60.2
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution.service.ts",
@@ -542,11 +542,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
-      "nonBlankLines": 235,
+      "nonBlankLines": 232,
       "decisionPoints": 36,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 58.7
+      "structuralRiskScore": 58.64
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list.ts",
@@ -566,11 +566,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Billing/StripeBillingGateway.cs",
-      "nonBlankLines": 255,
+      "nonBlankLines": 252,
       "decisionPoints": 35,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 57.6
+      "structuralRiskScore": 57.54
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/time-input/fd-ui-time-input.ts",
@@ -2352,11 +2352,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/Common/Validation/TemporalRangePolicy.cs",
-      "nonBlankLines": 87,
+      "nonBlankLines": 86,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.24
+      "structuralRiskScore": 15.22
     },
     {
       "path": "FoodDiary.Application.Abstractions/Common/Validation/UserIdParser.cs",
@@ -3576,11 +3576,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryWriteRepository.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.22
     },
     {
       "path": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationGoalService.cs",
@@ -8184,11 +8184,11 @@
     },
     {
       "path": "FoodDiary.Application.Cycles/Services/CyclePredictionService.cs",
-      "nonBlankLines": 254,
+      "nonBlankLines": 251,
       "decisionPoints": 25,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 42.58
+      "structuralRiskScore": 42.52
     },
     {
       "path": "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
@@ -10920,11 +10920,11 @@
     },
     {
       "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
-      "nonBlankLines": 45,
-      "decisionPoints": 3,
+      "nonBlankLines": 36,
+      "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.4
+      "structuralRiskScore": 5.72
     },
     {
       "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
@@ -10968,11 +10968,11 @@
     },
     {
       "path": "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
-      "nonBlankLines": 64,
-      "decisionPoints": 10,
+      "nonBlankLines": 56,
+      "decisionPoints": 6,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.28
+      "structuralRiskScore": 12.12
     },
     {
       "path": "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
@@ -11904,11 +11904,11 @@
     },
     {
       "path": "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
-      "nonBlankLines": 96,
+      "nonBlankLines": 95,
       "decisionPoints": 14,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.92
+      "structuralRiskScore": 24.9
     },
     {
       "path": "FoodDiary.Application.Marketing/Common/IMarketingAttributionCleanupService.cs",
@@ -14512,11 +14512,11 @@
     },
     {
       "path": "FoodDiary.Application.Recipes/Recipes/Services/RecipeIngredientAccessValidator.cs",
-      "nonBlankLines": 131,
+      "nonBlankLines": 130,
       "decisionPoints": 19,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 33.12
+      "structuralRiskScore": 33.1
     },
     {
       "path": "FoodDiary.Application.Recipes/Recipes/Services/RecipeManualNutritionValidator.cs",
@@ -16896,11 +16896,11 @@
     },
     {
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "nonBlankLines": 534,
+      "nonBlankLines": 533,
       "decisionPoints": 38,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 67.68
+      "structuralRiskScore": 67.66
     },
     {
       "path": "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs",
@@ -16928,11 +16928,11 @@
     },
     {
       "path": "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs",
-      "nonBlankLines": 60,
+      "nonBlankLines": 59,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.2
+      "structuralRiskScore": 7.18
     },
     {
       "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
@@ -18744,11 +18744,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
-      "nonBlankLines": 235,
+      "nonBlankLines": 232,
       "decisionPoints": 36,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 58.7
+      "structuralRiskScore": 58.64
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaReservation.cs",
@@ -19176,11 +19176,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Hydration/HydrationEntryConfiguration.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 30,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
+      "structuralRiskScore": 0.6
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Images/ImageAssetConfiguration.cs",
@@ -19992,11 +19992,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
-      "nonBlankLines": 162,
+      "nonBlankLines": 160,
       "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.74
+      "structuralRiskScore": 25.7
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingPolicy.cs",
@@ -20040,11 +20040,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
-      "nonBlankLines": 30,
+      "nonBlankLines": 29,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.1
+      "structuralRiskScore": 5.08
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/RecentItems/RecentItemRepository.cs",
@@ -20200,11 +20200,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Tracking/HydrationEntryRepository.cs",
-      "nonBlankLines": 82,
-      "decisionPoints": 9,
+      "nonBlankLines": 73,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.14
+      "structuralRiskScore": 13.46
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Tracking/MarketingAttributionEventRepository.cs",
@@ -20656,11 +20656,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "nonBlankLines": 697,
+      "nonBlankLines": 696,
       "decisionPoints": 122,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 196.94
+      "structuralRiskScore": 196.92
     },
     {
       "path": "FoodDiary.Integrations/Billing/PaddleNotificationRecoveryResult.cs",
@@ -20688,19 +20688,19 @@
     },
     {
       "path": "FoodDiary.Integrations/Billing/StripeBillingGateway.cs",
-      "nonBlankLines": 255,
+      "nonBlankLines": 252,
       "decisionPoints": 35,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 57.6
+      "structuralRiskScore": 57.54
     },
     {
       "path": "FoodDiary.Integrations/Billing/YooKassaApiClient.cs",
-      "nonBlankLines": 75,
+      "nonBlankLines": 74,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.5
+      "structuralRiskScore": 10.48
     },
     {
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
@@ -20792,11 +20792,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Http/BoundedHttpContentReader.cs",
-      "nonBlankLines": 70,
+      "nonBlankLines": 69,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.4
+      "structuralRiskScore": 10.38
     },
     {
       "path": "FoodDiary.Integrations/Options/BillingOptions.cs",
@@ -20968,11 +20968,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "nonBlankLines": 388,
+      "nonBlankLines": 385,
       "decisionPoints": 35,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 60.26
+      "structuralRiskScore": 60.2
     },
     {
       "path": "FoodDiary.Integrations/Services/RelayEmailTransport.cs",
@@ -22504,11 +22504,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookHttpProcessor.cs",
-      "nonBlankLines": 54,
+      "nonBlankLines": 53,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.08
+      "structuralRiskScore": 10.06
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookRequestLimits.cs",
@@ -25680,11 +25680,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs",
-      "nonBlankLines": 94,
-      "decisionPoints": 10,
+      "nonBlankLines": 69,
+      "decisionPoints": 8,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.88
+      "structuralRiskScore": 15.38
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiHostServiceCollectionExtensions.cs",
@@ -25896,35 +25896,35 @@
     },
     {
       "path": "FoodDiary.Web.Api/Services/NotificationTestScheduler.cs",
-      "nonBlankLines": 45,
+      "nonBlankLines": 44,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.4
+      "structuralRiskScore": 8.38
     },
     {
       "path": "FoodDiary.Web.Api/Services/RedisAdminSsoCodeStore.cs",
-      "nonBlankLines": 29,
+      "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.58
+      "structuralRiskScore": 0.56
     },
     {
       "path": "FoodDiary.Web.Api/Services/RedisIdempotencyStore.cs",
-      "nonBlankLines": 162,
+      "nonBlankLines": 161,
       "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.24
+      "structuralRiskScore": 24.22
     },
     {
       "path": "FoodDiary.Web.Api/Services/WearableTokenProtector.cs",
-      "nonBlankLines": 14,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
+      "structuralRiskScore": 0.26
     },
     {
       "path": "FoodDiary.Web.Api/Swagger/PresentationContractOperationFilter.cs",
@@ -36670,7 +36670,7 @@
       "name": "CreateHydrationEntryCommandHandler",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
-      "line": 15,
+      "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
         "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
@@ -39019,7 +39019,7 @@
       "name": "ApiExceptionHandler",
       "role": "Handler",
       "path": "FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs",
-      "line": 10,
+      "line": 9,
       "testReferenceCount": 3,
       "testReferences": [
         "tests/FoodDiary.ArchitectureTests/TelemetrySecurityGuardrailTests.cs",

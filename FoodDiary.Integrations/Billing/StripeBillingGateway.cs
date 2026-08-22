@@ -44,7 +44,6 @@ public sealed class StripeBillingGateway(
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private async Task<Result<BillingCheckoutSessionModel>> CreateCheckoutSessionCoreAsync(
         BillingCheckoutSessionRequestModel request,
         CancellationToken cancellationToken) {
@@ -112,7 +111,6 @@ public sealed class StripeBillingGateway(
             },
         };
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public async Task<Result<BillingPortalSessionModel>> CreatePortalSessionAsync(
         BillingPortalSessionRequestModel request,
         CancellationToken cancellationToken = default) {
@@ -141,7 +139,6 @@ public sealed class StripeBillingGateway(
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public async Task<Result<BillingWebhookEventModel?>> ParseWebhookEventAsync(
         string payload,
         string signatureHeader,

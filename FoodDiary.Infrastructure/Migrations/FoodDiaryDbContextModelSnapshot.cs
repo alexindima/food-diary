@@ -3000,7 +3000,6 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.HasKey("Id");
 
                 b.HasIndex("UserId", "Timestamp")
-                    .IsUnique()
                     .HasDatabaseName("IX_HydrationEntries_User_Timestamp");
 
                 b.ToTable("HydrationEntries", t => {

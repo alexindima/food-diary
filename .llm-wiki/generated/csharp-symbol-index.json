@@ -8984,7 +8984,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "CreateHydrationEntryCommandValidator",
@@ -21836,7 +21836,7 @@
       "kind": "class",
       "role": "Handler",
       "path": "FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "ApiHostServiceCollectionExtensions",
@@ -22046,28 +22046,28 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Services/NotificationTestScheduler.cs",
-      "line": 6
+      "line": 4
     },
     {
       "name": "RedisAdminSsoCodeStore",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Services/RedisAdminSsoCodeStore.cs",
-      "line": 7
+      "line": 5
     },
     {
       "name": "RedisIdempotencyStore",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Services/RedisIdempotencyStore.cs",
-      "line": 8
+      "line": 6
     },
     {
       "name": "WearableTokenProtector",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Services/WearableTokenProtector.cs",
-      "line": 7
+      "line": 5
     },
     {
       "name": "PresentationContractOperationFilter",

@@ -136,7 +136,6 @@ public static class CyclePredictionService {
         return [.. starts];
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static PredictionHistory ResolvePredictionHistory(
         IEnumerable<BleedingEntryReadModel> bleedingEntries,
         IEnumerable<MenstrualEpisodeReadModel> persistedEpisodes) {
@@ -152,7 +151,6 @@ public static class CyclePredictionService {
         return CreatePredictionHistory(confirmed, excluded, inferred);
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static PredictionHistory ResolvePredictionHistory(CycleProfile profile) {
         DateOnly[] confirmed = [.. profile.MenstrualEpisodes
             .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed && !episode.ExcludedFromPredictions)
@@ -177,7 +175,6 @@ public static class CyclePredictionService {
             excluded.Length);
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static DateOnly[] MergeEpisodeStarts(IEnumerable<DateOnly> confirmedStarts, IEnumerable<DateOnly> inferredStarts) {
         DateOnly[] confirmed = [.. confirmedStarts.Distinct()];
         return [.. confirmed

@@ -303,34 +303,34 @@ public class HydrationFeatureTests {
     }
 
     [Fact]
-    public async Task CreateHydrationEntryCommandHandler_WhenSamePayloadIsRetried_ReturnsOriginalEntry() {
+    public async Task CreateHydrationEntryCommandHandler_WhenSameTimestampIsUsedTwice_CreatesTwoEntries() {
         var user = User.Create("hydration-retry@example.com", "hash");
         var repository = new InMemoryHydrationEntryRepository();
         var handler = new CreateHydrationEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
         var command = new CreateHydrationEntryCommand(user.Id.Value, DateTime.UtcNow, 250);
 
         Result<HydrationEntryModel> first = await handler.Handle(command, CancellationToken.None);
-        Result<HydrationEntryModel> replay = await handler.Handle(command, CancellationToken.None);
+        Result<HydrationEntryModel> second = await handler.Handle(command, CancellationToken.None);
 
         ResultAssert.Success(first);
-        ResultAssert.Success(replay);
-        Assert.Equal(first.Value.Id, replay.Value.Id);
+        ResultAssert.Success(second);
+        Assert.NotEqual(first.Value.Id, second.Value.Id);
     }
 
     [Fact]
-    public async Task CreateHydrationEntryCommandHandler_WhenTimestampIsReusedWithDifferentAmount_ReturnsConflict() {
+    public async Task CreateHydrationEntryCommandHandler_WhenTimestampIsReusedWithDifferentAmount_CreatesSecondEntry() {
         var user = User.Create("hydration-conflict@example.com", "hash");
         var repository = new InMemoryHydrationEntryRepository();
         var handler = new CreateHydrationEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
         DateTime timestampUtc = DateTime.UtcNow;
         await handler.Handle(new CreateHydrationEntryCommand(user.Id.Value, timestampUtc, 250), CancellationToken.None);
 
-        Result<HydrationEntryModel> conflict = await handler.Handle(
+        Result<HydrationEntryModel> second = await handler.Handle(
             new CreateHydrationEntryCommand(user.Id.Value, timestampUtc, 300),
             CancellationToken.None);
 
-        ResultAssert.Failure(conflict);
-        Assert.Equal("HydrationEntry.AlreadyExists", conflict.Error.Code);
+        ResultAssert.Success(second);
+        Assert.Equal(300, second.Value.AmountMl);
     }
 
     [Fact]
@@ -363,24 +363,6 @@ public class HydrationFeatureTests {
 
         ResultAssert.Success(result);
         Assert.Equal(750, result.Value.AmountMl);
-    }
-
-    [Fact]
-    public async Task UpdateHydrationEntryCommandHandler_WhenTimestampBelongsToAnotherEntry_ReturnsConflict() {
-        var user = User.Create("hydration-update-conflict@example.com", "hash");
-        var entry = HydrationEntry.Create(user.Id, new DateTime(2026, 3, 25, 12, 0, 0, DateTimeKind.Utc), 250);
-        var conflictingEntry = HydrationEntry.Create(user.Id, new DateTime(2026, 3, 25, 13, 0, 0, DateTimeKind.Utc), 500);
-        IHydrationEntryWriteRepository repository = Substitute.For<IHydrationEntryWriteRepository>();
-        repository.GetByIdForUpdateAsync(entry.Id, Arg.Any<CancellationToken>()).Returns(entry);
-        repository.GetByTimestampAsync(user.Id, conflictingEntry.Timestamp, Arg.Any<CancellationToken>()).Returns(conflictingEntry);
-        var handler = new UpdateHydrationEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
-
-        Result<HydrationEntryModel> result = await handler.Handle(
-            new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, conflictingEntry.Timestamp, AmountMl: null),
-            CancellationToken.None);
-
-        ResultAssert.Failure(result, "HydrationEntry.AlreadyExists");
-        await repository.DidNotReceive().UpdateAsync(Arg.Any<HydrationEntry>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -636,9 +618,6 @@ public class HydrationFeatureTests {
         public Task<HydrationEntry?> GetByIdForUpdateAsync(HydrationEntryId id, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<HydrationEntry?> GetByTimestampAsync(UserId userId, DateTime timestampUtc, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
         public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<HydrationEntry>>([]);
 
@@ -743,12 +722,6 @@ public class HydrationFeatureTests {
 
         public Task<HydrationEntry?> GetByIdForUpdateAsync(HydrationEntryId id, CancellationToken cancellationToken = default) =>
             Task.FromResult(_entry?.Id == id ? _entry : null);
-
-        public Task<HydrationEntry?> GetByTimestampAsync(
-            UserId userId,
-            DateTime timestampUtc,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(_entries.FirstOrDefault(entry => entry.UserId == userId && entry.Timestamp == timestampUtc));
 
         public Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) {
             LastGetByDateDateUtc = dateUtc;

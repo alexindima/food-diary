@@ -4,7 +4,6 @@ using StackExchange.Redis;
 
 namespace FoodDiary.Web.Api.Services;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMultiplexer) : IIdempotencyStore {
     private const string KeyPrefix = "fooddiary:idempotency:";
     private const int CompletedState = 1;

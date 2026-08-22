@@ -29,7 +29,6 @@ internal sealed class HydrationEntryConfiguration : IEntityTypeConfiguration<Hyd
                 "\"AmountMl\" > 0 AND \"AmountMl\" <= 10000"));
 
         builder.HasIndex(e => new { e.UserId, e.Timestamp })
-            .IsUnique()
             .HasDatabaseName("IX_HydrationEntries_User_Timestamp");
 
         builder.HasOne(e => e.User)

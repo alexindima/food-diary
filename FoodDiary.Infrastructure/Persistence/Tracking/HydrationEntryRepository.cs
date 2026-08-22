@@ -27,16 +27,6 @@ public sealed class HydrationEntryRepository(FoodDiaryDbContext context)
         CancellationToken cancellationToken = default) =>
         context.HydrationEntries.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-    public Task<HydrationEntry?> GetByTimestampAsync(
-        UserId userId,
-        DateTime timestampUtc,
-        CancellationToken cancellationToken = default) =>
-        context.HydrationEntries
-            .AsNoTracking()
-            .FirstOrDefaultAsync(
-                entry => entry.UserId == userId && entry.Timestamp == timestampUtc,
-                cancellationToken);
-
     public async Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(
         UserId userId,
         DateTime dateUtc,

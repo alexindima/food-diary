@@ -13,9 +13,4 @@ public interface IHydrationEntryWriteRepository {
     Task<HydrationEntry?> GetByIdForUpdateAsync(
         HydrationEntryId id,
         CancellationToken cancellationToken = default);
-
-    Task<HydrationEntry?> GetByTimestampAsync(
-        UserId userId,
-        DateTime timestampUtc,
-        CancellationToken cancellationToken = default);
 }

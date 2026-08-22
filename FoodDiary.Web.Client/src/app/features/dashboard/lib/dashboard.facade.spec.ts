@@ -12,6 +12,7 @@ import { DashboardFacade } from './dashboard.facade';
 import { DashboardLayoutService } from './dashboard-layout.service';
 
 const HYDRATION_AMOUNT_ML = 250;
+const SECOND_HYDRATION_AMOUNT_ML = 150;
 const TDEE_TARGET = 2300;
 const DEFAULT_SNAPSHOT_CALORIES = 1200;
 const UPDATED_SNAPSHOT_CALORIES = 1800;
@@ -131,6 +132,18 @@ describe('DashboardFacade actions', () => {
 
         expect(hydrationService.addEntry).toHaveBeenCalled();
         expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledTimes(1);
+    });
+
+    it('should send every sequential hydration action', () => {
+        const { facade, hydrationService } = setupFacade();
+        facade.initialize();
+
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+        facade.addHydration(SECOND_HYDRATION_AMOUNT_ML);
+
+        expect(hydrationService.addEntry).toHaveBeenCalledTimes(2);
+        expect(hydrationService.addEntry).toHaveBeenNthCalledWith(1, HYDRATION_AMOUNT_ML, expect.any(Date));
+        expect(hydrationService.addEntry).toHaveBeenNthCalledWith(2, SECOND_HYDRATION_AMOUNT_ML, expect.any(Date));
     });
 
     it('should update calorie goal and reload snapshot after applying TDEE suggestion', () => {

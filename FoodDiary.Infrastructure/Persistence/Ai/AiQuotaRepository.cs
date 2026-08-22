@@ -10,7 +10,6 @@ namespace FoodDiary.Infrastructure.Persistence.Ai;
 public sealed class AiQuotaRepository(
     DbContextOptions<FoodDiaryDbContext> contextOptions,
     TimeProvider timeProvider) : IAiQuotaRepository {
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public async Task<AiQuotaReservationStatus> ReserveAsync(
         AiQuotaReservationRequest request,
         CancellationToken cancellationToken = default) {
@@ -64,7 +63,6 @@ public sealed class AiQuotaRepository(
         }, cancellationToken).ConfigureAwait(false);
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public async Task ReconcileAsync(
         string requestId,
         AiQuotaUsage usage,
@@ -173,7 +171,6 @@ public sealed class AiQuotaRepository(
         }, cancellationToken).ConfigureAwait(false);
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static void ValidateReservation(AiQuotaReservationRequest request, DateTime nowUtc) {
         if (request.RequestId.Length != 64 ||
             !request.RequestId.All(static character => char.IsAsciiHexDigit(character)) ||
