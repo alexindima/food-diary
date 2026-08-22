@@ -140,7 +140,7 @@ for ($leftIndex = 0; $leftIndex -lt $nodes.Count; $leftIndex++) {
 foreach ($node in @($nodes | Where-Object { $null -ne $_.decomposition })) {
     foreach ($prerequisiteWorkspace in @($node.decomposition.prerequisiteWorkspaces)) {
         $prerequisiteName = Split-Path -Leaf ([string]$prerequisiteWorkspace)
-        if ($prerequisiteName -in @($nodes.name)) {
+        if ($prerequisiteName -in @($nodes | ForEach-Object { $_.name })) {
             Add-Edge 'decomposition-prerequisite' $node.name $prerequisiteName 'high' $false 'directed' $prerequisiteName $node.name @([string]$node.decomposition.decompositionId) "Complete decomposition shard '$prerequisiteName' before '$($node.name)'."
         }
     }
@@ -157,7 +157,7 @@ foreach ($edge in @($edges | Where-Object direction -eq 'directed')) {
     }
 }
 $waves = [System.Collections.Generic.List[object]]::new()
-$remaining = @($nodes.name | Sort-Object)
+$remaining = @($nodes | ForEach-Object { $_.name } | Sort-Object)
 $waveNumber = 1
 while ($remaining.Count -gt 0) {
     $ready = @($remaining | Where-Object { $indegree[$_] -eq 0 } | Sort-Object)

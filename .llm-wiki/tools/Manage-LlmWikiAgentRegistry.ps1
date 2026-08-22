@@ -161,8 +161,8 @@ try {
         registeredCount = $views.Count
         quarantinedCount = @($views | Where-Object quarantined).Count
         expiredCount = $expiredAgents.Count
-        totalCapacity = [int](($views | Where-Object active | Measure-Object capacity -Sum).Sum)
-        availableCapacity = [int](($views | Where-Object active | Measure-Object availableCapacity -Sum).Sum)
+        totalCapacity = [int]($($views | Where-Object active | ForEach-Object { $_.capacity } | Measure-Object -Sum).Sum)
+        availableCapacity = [int]($($views | Where-Object active | ForEach-Object { $_.availableCapacity } | Measure-Object -Sum).Sum)
         agent = $(if ($null -ne $selectedAgent) { Get-AgentView $selectedAgent @($leases.leases | Where-Object active) } else { $null })
         agents = $views
     }

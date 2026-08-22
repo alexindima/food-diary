@@ -78,9 +78,10 @@ foreach ($builderText in $cachedBuilderTexts) {
     }
 }
 if ($indexCacheText -notmatch 'TrimStart\(\[char\]0xFEFF\)' -or
-    $indexCacheText -notmatch 'hash-object --stdin-paths' -or
-    $indexCacheText -notmatch 'StandardInputEncoding\s*=\s*\[Text\.UTF8Encoding\]::new\(\$false\)') {
-    throw 'Index input fingerprints must normalize BOM-prefixed paths and use explicit BOM-free UTF-8 for native hashing.'
+    $indexCacheText -notmatch "'hash-object', '--stdin-paths'" -or
+    $indexCacheText -notmatch 'RedirectStandardInput \$stdinPath' -or
+    $indexCacheText -notmatch '\[Text\.UTF8Encoding\]::new\(\$false\)') {
+    throw 'Index input fingerprints must normalize BOM-prefixed paths and use explicit BOM-free UTF-8 for native hashing, via a temp-file stdin redirect that behaves identically on every PowerShell/.NET runtime.'
 }
 if ($pipelineText -notmatch 'analytical indexes:' -or $pipelineText -notmatch 'API snapshot review:' -or $pipelineText -notmatch 'migration review:') {
     throw 'Affected index pipeline omitted the compact delivery summary.'

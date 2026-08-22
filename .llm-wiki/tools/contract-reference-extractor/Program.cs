@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 
-Console.InputEncoding = Encoding.UTF8;
 Console.OutputEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
 bool buildBackendIndex = args is ["--backend-index"];
@@ -17,7 +16,12 @@ var serializerOptions = new JsonSerializerOptions {
     PropertyNameCaseInsensitive = true,
     Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 };
-ScannerInput? input = JsonSerializer.Deserialize<ScannerInput>(Console.In.ReadToEnd(), serializerOptions);
+// Console.In's own StreamReader falls back to a platform-default codepage when stdin is
+// redirected from a file with no byte-order mark to auto-detect (as here, since the caller
+// deliberately writes stdin BOM-free), which corrupts non-ASCII names; reading the raw
+// stream with an explicit UTF-8 decoder avoids that regardless of platform or redirection.
+using var stdinReader = new StreamReader(Console.OpenStandardInput(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false), detectEncodingFromByteOrderMarks: false);
+ScannerInput? input = JsonSerializer.Deserialize<ScannerInput>(stdinReader.ReadToEnd(), serializerOptions);
 string[] names = input?.Names ?? input?.Contracts?.Select(contract => contract.Name).ToArray() ?? [];
 if (input is null || input.Paths.Length == 0 || names.Length == 0) {
     Console.Error.WriteLine("The scanner payload must contain paths and either names or contracts.");
