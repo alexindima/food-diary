@@ -22,39 +22,43 @@ function Add-Text([Security.Cryptography.IncrementalHash]$Hash, [string]$Value) 
 $head = (& git -C $repositoryRoot rev-parse HEAD).Trim()
 if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve HEAD for the Wiki index verification receipt.' }
 function Get-GitBlobHashes([string[]]$Paths) {
-    $startInfo = New-Object Diagnostics.ProcessStartInfo
-    $startInfo.FileName = 'git'
-    $startInfo.WorkingDirectory = $repositoryRoot
-    $startInfo.Arguments = 'hash-object --stdin-paths'
-    $startInfo.RedirectStandardInput = $true
-    $startInfo.RedirectStandardOutput = $true
-    $startInfo.RedirectStandardError = $true
-    $startInfo.UseShellExecute = $false
-    $startInfo.CreateNoWindow = $true
-    $startInfo.StandardInputEncoding = [Text.UTF8Encoding]::new($false)
-    $startInfo.StandardOutputEncoding = [Text.UTF8Encoding]::new($false)
-    $process = New-Object Diagnostics.Process
-    $process.StartInfo = $startInfo
+    # A live redirected pipe needs an explicit BOM-free StandardInputEncoding to stay
+    # stable, but that ProcessStartInfo property exists only on .NET 5+ (PowerShell 7+);
+    # on Windows PowerShell 5.1 the default StreamWriter encoding can also inject a stray
+    # UTF-8 preamble into the stream once its internal buffer first flushes, corrupting the
+    # path git reads at that boundary. Redirecting through temp files instead of a live pipe
+    # sidesteps both problems and behaves identically on every PowerShell/.NET runtime.
+    $stdinPath = [IO.Path]::GetTempFileName()
+    $stdoutPath = [IO.Path]::GetTempFileName()
+    $stderrPath = [IO.Path]::GetTempFileName()
     try {
-        if (-not $process.Start()) { throw 'Unable to start Git source hashing.' }
-        $outputTask = $process.StandardOutput.ReadToEndAsync()
-        $errorTask = $process.StandardError.ReadToEndAsync()
-        foreach ($path in $Paths) { $process.StandardInput.WriteLine($path) }
-        $process.StandardInput.Close()
-        $process.WaitForExit()
-        $output = $outputTask.Result
-        $errorOutput = $errorTask.Result
-        if ($process.ExitCode -ne 0) { throw "Git source hashing failed: $($errorOutput.Trim())" }
-        return @($output -split '\r?\n' | Where-Object { $_ })
-    } finally { $process.Dispose() }
+        [IO.File]::WriteAllText($stdinPath, (($Paths -join "`n") + "`n"), [Text.UTF8Encoding]::new($false))
+        $process = Start-Process -FilePath 'git' -ArgumentList 'hash-object', '--stdin-paths' `
+            -WorkingDirectory $repositoryRoot -RedirectStandardInput $stdinPath `
+            -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath `
+            -NoNewWindow -PassThru -Wait
+        if ($process.ExitCode -ne 0) {
+            # Get-Content -Raw on a genuinely empty file emits no pipeline output at all on
+            # Windows PowerShell 5.1 (captured as PowerShell's internal AutomationNull, which
+            # still fools `-eq $null` but throws on any method call, unlike PowerShell 7+
+            # which returns ''); `-join ''` reliably collapses either case to a real string.
+            # -Encoding UTF8 matches the BOM-free UTF-8 git wrote, instead of Get-Content's
+            # system-codepage default for a BOM-less file on Windows PowerShell 5.1.
+            $errorOutput = (Get-Content -LiteralPath $stderrPath -Raw -Encoding UTF8 -ErrorAction SilentlyContinue) -join ''
+            throw "Git source hashing failed: $($errorOutput.Trim())"
+        }
+        return @(Get-Content -LiteralPath $stdoutPath -Encoding UTF8 | Where-Object { $_ })
+    } finally {
+        Remove-Item -LiteralPath $stdinPath, $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
+    }
 }
 
-$deletedPaths = @(& git -C $repositoryRoot ls-files --deleted) | ForEach-Object { $_.Replace('\', '/') }
-$sourcePaths = @(& git -C $repositoryRoot ls-files -co --exclude-standard) | Where-Object {
+$deletedPaths = @(& git -C $repositoryRoot ls-files --deleted) | ForEach-Object { ([string]$_).TrimStart([char]0xFEFF).Replace('\', '/') }
+$sourcePaths = @(& git -C $repositoryRoot ls-files -co --exclude-standard) | ForEach-Object { ([string]$_).TrimStart([char]0xFEFF).Replace('\', '/') } | Where-Object {
     $_ -and $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' -and
     $_ -notmatch '^\.artifacts/' -and $_ -notmatch '(?i)(review-receipt|source-impact-review)' -and
-    $_.Replace('\', '/') -notin $deletedPaths
-} | ForEach-Object { $_.Replace('\', '/') } | Sort-Object -Unique
+    $_ -notin $deletedPaths
+} | Sort-Object -Unique
 $sourceHashes = @(Get-GitBlobHashes $sourcePaths)
 if ($sourceHashes.Count -ne $sourcePaths.Count) {
     throw "Git hashed $($sourceHashes.Count) source files for $($sourcePaths.Count) repository paths."

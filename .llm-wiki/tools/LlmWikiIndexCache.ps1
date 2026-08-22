@@ -19,35 +19,36 @@ function Get-LlmWikiIndexInputFingerprint([string]$RepositoryRoot, [string[]]$In
     [Array]::Sort($existingPaths, [StringComparer]::Ordinal)
 
     # One Git process hashes the complete set substantially faster than opening
-    # thousands of files through PowerShell. Explicit UTF-8 without BOM keeps
-    # Unicode paths stable and avoids the native-pipeline encoding ambiguity.
-    $startInfo = [Diagnostics.ProcessStartInfo]::new()
-    $startInfo.FileName = 'git'
-    $startInfo.WorkingDirectory = $RepositoryRoot
-    $startInfo.Arguments = 'hash-object --stdin-paths'
-    $startInfo.UseShellExecute = $false
-    $startInfo.RedirectStandardInput = $true
-    $startInfo.RedirectStandardOutput = $true
-    $startInfo.RedirectStandardError = $true
-    $startInfo.StandardInputEncoding = [Text.UTF8Encoding]::new($false)
-    $startInfo.StandardOutputEncoding = [Text.UTF8Encoding]::new($false)
-    $startInfo.StandardErrorEncoding = [Text.UTF8Encoding]::new($false)
-    $process = [Diagnostics.Process]::new()
-    $process.StartInfo = $startInfo
+    # thousands of files through PowerShell. Explicit BOM-free UTF-8 keeps Unicode
+    # paths stable. A live redirected pipe needs StandardInputEncoding to stay BOM-free,
+    # but that ProcessStartInfo property exists only on .NET 5+ (PowerShell 7+); on
+    # Windows PowerShell 5.1 the default StreamWriter encoding can also inject a stray
+    # UTF-8 preamble once its internal buffer first flushes, corrupting whichever path
+    # git reads at that boundary. Redirecting through temp files instead of a live pipe
+    # sidesteps both problems and behaves identically on every PowerShell/.NET runtime.
+    $stdinPath = [IO.Path]::GetTempFileName()
+    $stdoutPath = [IO.Path]::GetTempFileName()
+    $stderrPath = [IO.Path]::GetTempFileName()
     try {
-        if (-not $process.Start()) { throw 'Unable to start git hash-object.' }
-        $outputTask = $process.StandardOutput.ReadToEndAsync()
-        $errorTask = $process.StandardError.ReadToEndAsync()
-        foreach ($relativePath in $existingPaths) { $process.StandardInput.WriteLine($relativePath) }
-        $process.StandardInput.Close()
-        $process.WaitForExit()
-        $output = $outputTask.GetAwaiter().GetResult()
-        $errorText = $errorTask.GetAwaiter().GetResult().Trim()
+        [IO.File]::WriteAllText($stdinPath, (($existingPaths -join "`n") + "`n"), [Text.UTF8Encoding]::new($false))
+        $process = Start-Process -FilePath 'git' -ArgumentList 'hash-object', '--stdin-paths' `
+            -WorkingDirectory $RepositoryRoot -RedirectStandardInput $stdinPath `
+            -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath `
+            -NoNewWindow -PassThru -Wait
+        # Get-Content -Raw on a genuinely empty file emits no pipeline output at all on
+        # Windows PowerShell 5.1 (captured as PowerShell's internal AutomationNull, which
+        # still fools `-eq $null` but throws on any method call, unlike PowerShell 7+ which
+        # returns ''); `-join ''` reliably collapses either case to a real empty string.
+        # Get-Content without -Encoding defaults to the system codepage (not UTF-8) on
+        # Windows PowerShell 5.1 for a BOM-less file; -Encoding UTF8 makes decoding
+        # explicit and correct on every runtime, matching the BOM-free UTF-8 git wrote.
+        $output = (Get-Content -LiteralPath $stdoutPath -Raw -Encoding UTF8 -ErrorAction SilentlyContinue) -join ''
+        $errorText = ((Get-Content -LiteralPath $stderrPath -Raw -Encoding UTF8 -ErrorAction SilentlyContinue) -join '').Trim()
         if ($process.ExitCode -ne 0) {
             throw "git hash-object failed with exit code $($process.ExitCode).$(if ($errorText) { " $errorText" })"
         }
     } finally {
-        $process.Dispose()
+        Remove-Item -LiteralPath $stdinPath, $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
     }
 
     $contentHashes = @($output -split '\r?\n' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
