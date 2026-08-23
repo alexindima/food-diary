@@ -292,9 +292,9 @@ if ($Action -eq 'observe') {
 
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 30 } else {
     Write-Host "Model outcomes: action=$Action, valid=$($result.valid), registry=$($validation.registryFingerprint)"
-    if ($null -ne $result.metrics) {
+    if ($result.PSObject.Properties['metrics']) {
         foreach ($profile in @($result.metrics.profiles)) { Write-Host " - $($profile.routeId): samples=$($profile.sampleCount), score=$($profile.posteriorOutcomeScore), health=$($profile.health)" }
     }
-    foreach ($issue in @($result.issues)) { Write-Host " - $issue" }
+    if ($result.PSObject.Properties['issues']) { foreach ($issue in @($result.issues)) { Write-Host " - $issue" } }
 }
 if ($FailOnInvalid -and -not $result.valid) { exit 1 }

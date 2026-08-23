@@ -69,9 +69,9 @@ function New-BudgetReceipt([string]$CreatedAtUtc) {
     $requiredWithContent = @($required | Where-Object { $null -ne $_.excerpt -and ([string]$_.excerpt.text).Length -gt 0 })
     $contentItems = @($selected | Where-Object { $null -ne $_.excerpt -and ([string]$_.excerpt.text).Length -gt 0 })
     $truncatedItems = @($contentItems | Where-Object { [bool]$_.excerpt.truncated })
-    $selectedScore = [double](($selected | Measure-Object -Property score -Sum).Sum)
-    $omittedScore = [double](($omitted | Measure-Object -Property score -Sum).Sum)
-    $kindCount = @($contentItems.kind | Sort-Object -Unique).Count
+    $selectedScore = [double](($selected | ForEach-Object { $_.score } | Measure-Object -Sum).Sum)
+    $omittedScore = [double](($omitted | ForEach-Object { $_.score } | Measure-Object -Sum).Sum)
+    $kindCount = @($contentItems | ForEach-Object { $_.kind } | Sort-Object -Unique).Count
     $characterLimit = [int]$bundle.budgets.characterLimit
     $usedCharacters = [int]$bundle.budgets.usedCharacters
     $itemLimit = [int]$bundle.budgets.itemLimit

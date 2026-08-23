@@ -145,10 +145,10 @@ $capacity = [Math]::Max(0, $effectiveConcurrency - $running.Count)
 $selected = [System.Collections.Generic.List[object]]::new()
 $assignedByAgent = @{}
 $coordinationTypes = @('boundary-coordination', 'generated-artifact-coordination')
-$runningNames = @($running.name)
+$runningNames = @($running | ForEach-Object { $_.name })
 foreach ($candidate in @($items | Where-Object state -eq 'ready' | Sort-Object @{ Expression = 'priorityScore'; Descending = $true }, name)) {
     if ($selected.Count -ge $capacity) { break }
-    $parallelNames = @($runningNames + @($selected.name))
+    $parallelNames = @($runningNames + @($selected | ForEach-Object { $_.name }))
     $coordinationEdge = $graph.edges | Where-Object {
         $_.type -in $coordinationTypes -and
         (($_.left -eq $candidate.name -and $_.right -in $parallelNames) -or ($_.right -eq $candidate.name -and $_.left -in $parallelNames))
@@ -182,9 +182,9 @@ foreach ($candidate in @($items | Where-Object state -eq 'ready' | Sort-Object @
             })
             $qualifiedCapabilityProfiles = @($relevantCapabilityProfiles | Where-Object { [int]$_.terminalCount -ge [int]$routing.minimumCapabilitySamples })
             $capabilityCoverageComplete = @($candidate.requiredCapabilities).Count -gt 0 -and $qualifiedCapabilityProfiles.Count -eq @($candidate.requiredCapabilities).Count
-            $capabilityTerminalSamples = @($qualifiedCapabilityProfiles | Measure-Object terminalCount -Sum).Sum
-            $capabilityCompletedSamples = @($qualifiedCapabilityProfiles | Measure-Object completedCount -Sum).Sum
-            $capabilityDispatchSamples = @($qualifiedCapabilityProfiles | Measure-Object dispatchCount -Sum).Sum
+            $capabilityTerminalSamples = @($qualifiedCapabilityProfiles | ForEach-Object { $_.terminalCount } | Measure-Object -Sum).Sum
+            $capabilityCompletedSamples = @($qualifiedCapabilityProfiles | ForEach-Object { $_.completedCount } | Measure-Object -Sum).Sum
+            $capabilityDispatchSamples = @($qualifiedCapabilityProfiles | ForEach-Object { $_.dispatchCount } | Measure-Object -Sum).Sum
             $capabilityHeartbeatSamples = @($qualifiedCapabilityProfiles | ForEach-Object {
                 [Math]::Round(([double]$_.heartbeatCoveragePercent * [int]$_.dispatchCount) / 100.0, 4)
             } | Measure-Object -Sum).Sum

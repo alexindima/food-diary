@@ -393,8 +393,8 @@ if ($Action -eq 'create') {
 
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 30 } else {
     Write-Host "Context bundle: action=$($result.action), valid=$($result.valid)"
-    if ($null -ne $result.bundle) { Write-Host "Items=$(@($result.bundle.items).Count), characters=$($result.bundle.budgets.usedCharacters), redactions=$($result.bundle.redaction.count), hash=$($result.bundle.bundleHash)" }
-    if ($null -ne $result.overlapPercent) { Write-Host "Overlap=$($result.overlapPercent)%" }
-    foreach ($issue in @($result.issues | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })) { Write-Host " - $issue" }
+    if ($result.PSObject.Properties['bundle']) { Write-Host "Items=$(@($result.bundle.items).Count), characters=$($result.bundle.budgets.usedCharacters), redactions=$($result.bundle.redaction.count), hash=$($result.bundle.bundleHash)" }
+    if ($result.PSObject.Properties['overlapPercent']) { Write-Host "Overlap=$($result.overlapPercent)%" }
+    if ($result.PSObject.Properties['issues']) { foreach ($issue in @($result.issues | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })) { Write-Host " - $issue" } }
 }
 if ($FailOnInvalid -and -not $result.valid) { exit 1 }

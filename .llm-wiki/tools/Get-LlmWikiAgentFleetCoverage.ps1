@@ -18,11 +18,11 @@ foreach ($capability in @($policy.scheduler.agentRegistry.allowedCapabilities | 
     $capabilities.Add([pscustomobject][ordered]@{
         capability = [string]$capability
         demandTaskCount = $demandTasks.Count
-        demandTasks = @($demandTasks.name)
+        demandTasks = @($demandTasks | ForEach-Object { $_.name })
         agentCount = $supportingAgents.Count
-        totalCapacity = [int](($supportingAgents | Measure-Object capacity -Sum).Sum)
-        availableCapacity = [int](($supportingAgents | Measure-Object availableCapacity -Sum).Sum)
-        owners = @($supportingAgents.owner)
+        totalCapacity = [int](($supportingAgents | ForEach-Object { $_.capacity } | Measure-Object -Sum).Sum)
+        availableCapacity = [int](($supportingAgents | ForEach-Object { $_.availableCapacity } | Measure-Object -Sum).Sum)
+        owners = @($supportingAgents | ForEach-Object { $_.owner })
         gap = $demandTasks.Count -gt 0 -and $supportingAgents.Count -eq 0
         constrained = $demandTasks.Count -gt 0 -and $supportingAgents.Count -eq 1
     })
@@ -58,8 +58,8 @@ $response = [pscustomobject][ordered]@{
     constrainedCapabilityCount = $constrainedCapabilities.Count
     taskGapCount = $taskGaps.Count
     valid = $taskGaps.Count -eq 0
-    gapCapabilities = @($gapCapabilities.capability)
-    constrainedCapabilities = @($constrainedCapabilities.capability)
+    gapCapabilities = @($gapCapabilities | ForEach-Object { $_.capability })
+    constrainedCapabilities = @($constrainedCapabilities | ForEach-Object { $_.capability })
     capabilities = @($capabilities)
     taskGaps = $taskGaps
     agents = @($registry.agents)

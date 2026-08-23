@@ -180,8 +180,8 @@ if ($Action -eq 'record') {
 }
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 30 } else {
     Write-Host "Quality adjustments: action=$($result.action), valid=$($result.valid)"
-    if ($null -ne $result.metrics) { Write-Host "Receipts=$($result.metrics.validReceiptCount), dispatches=$(@($result.metrics.dispatchProfiles).Count), fingerprint=$($result.metrics.fingerprint)" }
-    if ($null -ne $result.totalCount) { Write-Host "Receipts=$($result.totalCount), invalid=$($result.invalidCount)" }
-    foreach ($issue in @($result.issues | Where-Object { $_ })) { Write-Host " - $issue" }
+    if ($result.PSObject.Properties['metrics']) { Write-Host "Receipts=$($result.metrics.validReceiptCount), dispatches=$(@($result.metrics.dispatchProfiles).Count), fingerprint=$($result.metrics.fingerprint)" }
+    if ($result.PSObject.Properties['totalCount']) { Write-Host "Receipts=$($result.totalCount), invalid=$($result.invalidCount)" }
+    if ($result.PSObject.Properties['issues']) { foreach ($issue in @($result.issues | Where-Object { $_ })) { Write-Host " - $issue" } }
 }
 if ($FailOnInvalid -and -not $result.valid) { exit 1 }

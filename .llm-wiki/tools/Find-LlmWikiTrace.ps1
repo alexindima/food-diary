@@ -257,7 +257,7 @@ if ($results.Count -eq 0) {
 $displayResults = if ($Compact) { @($results | Select-Object -First 1) } else { @($results) }
 foreach ($result in $displayResults) {
     Write-Host "$($result.request) -> $($result.handler.name)"
-    if ($null -ne $result.requestDefinition) {
+    if ($result.PSObject.Properties['requestDefinition'] -and $null -ne $result.requestDefinition) {
         Write-Host "  Request: $($result.requestDefinition.path):$($result.requestDefinition.line)"
     }
     Write-Host "  Handler: $($result.handler.path):$($result.handler.line)"

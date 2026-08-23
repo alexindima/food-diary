@@ -459,11 +459,13 @@ if ($Action -eq 'start') {
 
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 30 } else {
     Write-Host "Instruction experiments: action=$Action, valid=$($result.valid)"
-    foreach ($experiment in @($result.experiments)) {
-        Write-Host " - $($experiment.experimentId): state=$($experiment.state), path=$($experiment.definition.path), verdict=$($experiment.finalEvaluation.verdict)"
+    if ($result.PSObject.Properties['experiments']) {
+        foreach ($experiment in @($result.experiments)) {
+            Write-Host " - $($experiment.experimentId): state=$($experiment.state), path=$($experiment.definition.path), verdict=$($experiment.finalEvaluation.verdict)"
+        }
     }
-    if ($null -ne $result.evaluation) { Write-Host "Verdict=$($result.evaluation.verdict), outcome delta=$($result.evaluation.outcomeGainPoints), success delta=$($result.evaluation.successRateDeltaPoints)" }
-    if ($null -ne $result.forecast) { Write-Host "Power forecast=$($result.forecast.planningStatus), cohorts=$($result.forecast.cohortCount), remaining candidate samples=$($result.forecast.remainingCandidateSamples)" }
-    foreach ($issue in @($result.issues)) { Write-Host " - $issue" }
+    if ($result.PSObject.Properties['evaluation']) { Write-Host "Verdict=$($result.evaluation.verdict), outcome delta=$($result.evaluation.outcomeGainPoints), success delta=$($result.evaluation.successRateDeltaPoints)" }
+    if ($result.PSObject.Properties['forecast']) { Write-Host "Power forecast=$($result.forecast.planningStatus), cohorts=$($result.forecast.cohortCount), remaining candidate samples=$($result.forecast.remainingCandidateSamples)" }
+    if ($result.PSObject.Properties['issues']) { foreach ($issue in @($result.issues)) { Write-Host " - $issue" } }
 }
 if ($FailOnInvalid -and -not $result.valid) { exit 1 }

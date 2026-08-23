@@ -45,6 +45,28 @@ $registry = try {
     [pscustomobject]@{ schemaVersion = 1; sessions = @() }
 }
 $sessions = @($registry.sessions)
+
+# Reconcile sessions whose workspace no longer exists on disk (e.g. .artifacts was
+# cleaned by a fresh clone, `git clean`, or CI) so one stale "active" session never
+# blocks auto-resolution for every later session with "Multiple active LLM Wiki
+# sessions exist". Reconciliation always runs so a read-only caller still resolves
+# correctly; only the persisted write is skipped in read-only mode.
+$reconciledCount = 0
+foreach ($session in $sessions) {
+    if ([string]$session.state -ne 'active') { continue }
+    $sessionWorkspace = [string]$session.workspacePath
+    $absoluteWorkspace = $(if ([string]::IsNullOrWhiteSpace($sessionWorkspace)) { $null } else { Join-Path $repositoryRoot $sessionWorkspace })
+    if ($null -eq $absoluteWorkspace -or -not (Test-Path -LiteralPath $absoluteWorkspace -PathType Container)) {
+        $session.state = 'abandoned'
+        $session | Add-Member -NotePropertyName closedAtUtc -NotePropertyValue ([DateTime]::UtcNow.ToString('o')) -Force
+        $session | Add-Member -NotePropertyName closedReason -NotePropertyValue 'Reconciled: workspacePath no longer exists on disk.' -Force
+        $reconciledCount++
+    }
+}
+if ($reconciledCount -gt 0 -and -not $ReadOnly) {
+    Write-Registry ([pscustomobject][ordered]@{ schemaVersion = 1; sessions = @($sessions) })
+}
+
 $externalHint = Get-ExternalHint
 $resolved = $null
 
