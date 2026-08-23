@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using System.Net;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -61,6 +62,7 @@ public sealed class BillingWebhookControllerTests {
         IRequest<Result>? sentRequest = null;
         ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         var httpContext = new DefaultHttpContext();
+        httpContext.Connection.RemoteIpAddress = IPAddress.Parse("185.71.76.1");
         httpContext.Request.Body = new NonSeekableReadStream(Encoding.UTF8.GetBytes("{}"));
         httpContext.Request.ContentLength = 2;
         var controller = new BillingWebhookController(sender, new BillingWebhookHttpProcessor()) {
@@ -175,6 +177,22 @@ public sealed class BillingWebhookControllerTests {
     }
 
     [Fact]
+    public async Task HandleWebhook_WithYooKassaProviderFromUntrustedSource_RejectsBeforeReadingOrDispatch() {
+        bool dispatched = false;
+        ISender sender = SubstituteSender.Create(Result.Success(), _ => dispatched = true);
+        BillingWebhookController controller = CreateController(sender, payload: "{\"event\":\"payment.succeeded\"}");
+        controller.HttpContext.Connection.RemoteIpAddress = IPAddress.Parse("203.0.113.10");
+
+        BadHttpRequestException exception = await Assert.ThrowsAsync<BadHttpRequestException>(() =>
+            controller.HandleWebhook("YooKassa"));
+
+        Assert.Multiple(
+            () => Assert.Equal(StatusCodes.Status403Forbidden, exception.StatusCode),
+            () => Assert.False(dispatched),
+            () => Assert.Equal(0, controller.Request.Body.Position));
+    }
+
+    [Fact]
     public async Task HandleWebhook_WhenCommandFails_ReturnsApiErrorResponse() {
         ISender sender = SubstituteSender.Create(Result.Failure(Errors.Validation.Invalid("Provider", "Unsupported provider.")));
         BillingWebhookController controller = CreateController(sender, payload: "{}");
@@ -190,6 +208,7 @@ public sealed class BillingWebhookControllerTests {
 
     private static BillingWebhookController CreateController(ISender sender, string payload) {
         var httpContext = new DefaultHttpContext();
+        httpContext.Connection.RemoteIpAddress = IPAddress.Parse("185.71.76.1");
         httpContext.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(payload));
         httpContext.Request.ContentLength = httpContext.Request.Body.Length;
 

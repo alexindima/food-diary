@@ -36,6 +36,8 @@ Rules:
 - `id` is stable and unique.
 - `sources` use repository-relative paths and must exist.
 - Important claims link to their canonical source.
+- Every knowledge page is reachable from `index.md` through local Markdown
+  links; a valid but undiscoverable page is still a broken navigation artifact.
 - A wiki page must not silently introduce a new architectural rule.
 - Generated pages declare `generated_by` and are validated by that generator's
   check mode instead of manual freshness review.
@@ -265,9 +267,9 @@ HTTP DTO fallback analysis is Roslyn-based rather than regex-based.
 
 `lint` is the fast deterministic page gate. It enforces the front matter
 contract, unique ids, normalized and existing sources, generated-page
-provenance, local link targets and anchors, and high-confidence credential
-signatures. Text diagnostics use stable `WIKI###` codes; `-Format Json` exposes
-the same result to any agent or CI consumer.
+provenance, local link targets and anchors, reachability from `index.md`, and
+high-confidence credential signatures. Text diagnostics use stable `WIKI###`
+codes; `-Format Json` exposes the same result to any agent or CI consumer.
 
 `smoke portable` is the short cross-version contract and runs on the current
 PowerShell. `smoke linux` runs that contract in the pinned PowerShell 7.5

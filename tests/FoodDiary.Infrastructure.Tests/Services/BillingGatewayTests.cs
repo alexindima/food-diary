@@ -2224,12 +2224,7 @@ public sealed class BillingGatewayTests {
         var currentPeriodStart = new DateTimeOffset(2026, 5, 1, 0, 0, 0, TimeSpan.Zero);
         var currentPeriodEnd = new DateTimeOffset(2026, 6, 1, 0, 0, 0, TimeSpan.Zero);
         string payload = CreateStripeSubscriptionUpdatedPayload(userId, currentPeriodStart, currentPeriodEnd);
-        var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions {
-            SecretKey = "sk_test",
-            WebhookSecret = "whsec_test",
-            PremiumMonthlyPriceId = "price_monthly",
-            PremiumYearlyPriceId = "price_yearly",
-        }));
+        StripeBillingGateway gateway = CreateConfiguredStripeWebhookGateway(payload);
 
         Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
             payload,
@@ -2249,6 +2244,7 @@ public sealed class BillingGatewayTests {
         Assert.Equal(currentPeriodStart.UtcDateTime, result.Value.CurrentPeriodStartUtc);
         Assert.Equal(currentPeriodEnd.UtcDateTime, result.Value.CurrentPeriodEndUtc);
         Assert.Equal(userId, result.Value.UserId);
+        Assert.True(result.Value.IsAuthoritativeSnapshot);
     }
 
     [Fact]
@@ -2262,12 +2258,7 @@ public sealed class BillingGatewayTests {
             currentPeriodStart,
             currentPeriodEnd,
             priceId: "price_monthly");
-        var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions {
-            SecretKey = "sk_test",
-            WebhookSecret = "whsec_test",
-            PremiumMonthlyPriceId = "price_monthly",
-            PremiumYearlyPriceId = "price_yearly",
-        }));
+        StripeBillingGateway gateway = CreateConfiguredStripeWebhookGateway(payload);
 
         Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
             payload,
@@ -2294,12 +2285,7 @@ public sealed class BillingGatewayTests {
             currentPeriodStart,
             currentPeriodEnd,
             priceId: "price_yearly");
-        var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions {
-            SecretKey = "sk_test",
-            WebhookSecret = "whsec_test",
-            PremiumMonthlyPriceId = "price_monthly",
-            PremiumYearlyPriceId = "price_yearly",
-        }));
+        StripeBillingGateway gateway = CreateConfiguredStripeWebhookGateway(payload);
 
         Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
             payload,
@@ -2327,12 +2313,7 @@ public sealed class BillingGatewayTests {
             currentPeriodStart,
             currentPeriodEnd,
             priceId: "price_unknown");
-        var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions {
-            SecretKey = "sk_test",
-            WebhookSecret = "whsec_test",
-            PremiumMonthlyPriceId = "price_monthly",
-            PremiumYearlyPriceId = "price_yearly",
-        }));
+        StripeBillingGateway gateway = CreateConfiguredStripeWebhookGateway(payload);
 
         Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
             payload,
@@ -2378,12 +2359,7 @@ public sealed class BillingGatewayTests {
                 },
             },
         });
-        var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions {
-            SecretKey = "sk_test",
-            WebhookSecret = "whsec_test",
-            PremiumMonthlyPriceId = "price_monthly",
-            PremiumYearlyPriceId = "price_yearly",
-        }));
+        StripeBillingGateway gateway = CreateConfiguredStripeWebhookGateway(payload);
 
         Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
             payload,
@@ -2749,6 +2725,25 @@ public sealed class BillingGatewayTests {
         using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secret));
         string hash = Convert.ToHexString(hmac.ComputeHash(Encoding.UTF8.GetBytes($"{timestamp}.{payload}"))).ToLowerInvariant();
         return $"t={timestamp},v1={hash}";
+    }
+
+    private static StripeBillingGateway CreateConfiguredStripeWebhookGateway(string eventPayload) {
+        using var document = JsonDocument.Parse(eventPayload);
+        string subscriptionPayload = document.RootElement
+            .GetProperty("data")
+            .GetProperty("object")
+            .GetRawText();
+        var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = new StringContent(subscriptionPayload, Encoding.UTF8, "application/json"),
+        });
+        return new StripeBillingGateway(
+            MsOptions.Create(new StripeOptions {
+                SecretKey = "sk_test",
+                WebhookSecret = "whsec_test",
+                PremiumMonthlyPriceId = "price_monthly",
+                PremiumYearlyPriceId = "price_yearly",
+            }),
+            CreateStripeClient(handler));
     }
 
     private static string CreateStripeSubscriptionUpdatedPayload(

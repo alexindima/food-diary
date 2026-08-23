@@ -36,6 +36,20 @@ try {
     Set-Content -LiteralPath (Join-Path $fixtureRoot 'source.txt') -Value 'source'
     Set-Content -LiteralPath (Join-Path $fixtureTools 'Build-Fixture.ps1') -Value '# deterministic fixture generator'
 
+    $indexContent = @'
+---
+id: index
+kind: index
+status: current
+sources:
+  - source.txt
+---
+# Index
+
+[Valid page](valid.md)
+'@
+    Set-Content -LiteralPath (Join-Path $fixtureWiki 'index.md') -Value $indexContent
+
     @'
 ---
 id: fixture.valid
@@ -52,6 +66,27 @@ sources:
     $valid = Invoke-FixtureLint
     Assert-Lint ($valid.exitCode -eq 0) 'a valid page was rejected.'
     Assert-Lint ($valid.result.valid -eq $true) 'valid JSON result was not marked valid.'
+
+    Remove-Item -LiteralPath (Join-Path $fixtureWiki 'index.md')
+    $missingIndex = Invoke-FixtureLint
+    Assert-Lint ($missingIndex.exitCode -eq 1) 'a wiki without index.md did not fail lint.'
+    Assert-Lint ('WIKI020' -in @($missingIndex.result.diagnostics.code)) 'a wiki without index.md did not emit WIKI020.'
+    Set-Content -LiteralPath (Join-Path $fixtureWiki 'index.md') -Value $indexContent
+
+    @'
+---
+id: fixture.orphan
+kind: workflow
+status: current
+sources:
+  - source.txt
+---
+# Orphaned page
+'@ | Set-Content -LiteralPath (Join-Path $fixtureWiki 'orphan.md')
+
+    $orphaned = Invoke-FixtureLint
+    Assert-Lint ($orphaned.exitCode -eq 1) 'an unreachable page did not fail lint.'
+    Assert-Lint ('WIKI021' -in @($orphaned.result.diagnostics.code)) 'an unreachable page did not emit WIKI021.'
 
     @'
 ---
@@ -73,7 +108,7 @@ ghp_123456789012345678901234567890
     $invalid = Invoke-FixtureLint
     $codes = @($invalid.result.diagnostics.code)
     Assert-Lint ($invalid.exitCode -eq 1) 'an invalid page did not fail lint.'
-    foreach ($expectedCode in @('WIKI005', 'WIKI006', 'WIKI009', 'WIKI015', 'WIKI017', 'WIKI018', 'WIKI019')) {
+    foreach ($expectedCode in @('WIKI005', 'WIKI006', 'WIKI009', 'WIKI015', 'WIKI017', 'WIKI018', 'WIKI019', 'WIKI021')) {
         Assert-Lint ($expectedCode -in $codes) "expected diagnostic $expectedCode was not emitted."
     }
 

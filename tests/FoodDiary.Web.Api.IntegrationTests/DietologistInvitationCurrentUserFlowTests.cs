@@ -186,10 +186,16 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
     private void SetDietologistToken(AuthenticatedUser user) {
         using IServiceScope scope = factory.Services.CreateScope();
         IJwtTokenGenerator tokenGenerator = scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
+        FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        long securityVersion = dbContext.Users
+            .Where(candidate => candidate.Id == new UserId(user.UserId))
+            .Select(candidate => candidate.SecurityVersion)
+            .Single();
         string token = tokenGenerator.GenerateAccessToken(
             new UserId(user.UserId),
             user.Email,
-            [RoleNames.Dietologist]);
+            [RoleNames.Dietologist],
+            securityVersion);
         user.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 

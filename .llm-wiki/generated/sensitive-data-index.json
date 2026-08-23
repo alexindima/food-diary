@@ -2129,56 +2129,56 @@
       "name": "Amount",
       "type": "AmountRequest",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 293
+      "line": 294
     },
     {
       "category": "financial",
       "name": "SavePaymentMethod",
       "type": "bool",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 296
+      "line": 297
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "AmountRequest",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 301
+      "line": 302
     },
     {
       "category": "financial",
       "name": "PaymentMethodId",
       "type": "string",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 303
+      "line": 304
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 309
+      "line": 310
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "AmountResponse?",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 323
+      "line": 324
     },
     {
       "category": "financial",
       "name": "PaymentMethod",
       "type": "PaymentMethodResponse?",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 325
+      "line": 326
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string?",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 332
+      "line": 333
     },
     {
       "category": "financial",

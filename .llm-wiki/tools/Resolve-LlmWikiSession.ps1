@@ -61,8 +61,18 @@ $reconciliationAgeThreshold = [TimeSpan]::FromHours(1)
 $reconciledCount = 0
 foreach ($session in $sessions) {
     if ([string]$session.state -ne 'active') { continue }
-    $lastActivityText = $(if (-not [string]::IsNullOrWhiteSpace([string]$session.lastSeenAtUtc)) { [string]$session.lastSeenAtUtc } else { [string]$session.createdAtUtc })
-    try { $lastActivity = ([DateTime]$lastActivityText).ToUniversalTime() } catch { continue }
+    $lastActivityValue = $(if ($null -ne $session.lastSeenAtUtc) { $session.lastSeenAtUtc } else { $session.createdAtUtc })
+    try {
+        $lastActivity = if ($lastActivityValue -is [DateTime]) {
+            ([DateTime]$lastActivityValue).ToUniversalTime()
+        } else {
+            [DateTime]::Parse(
+                [string]$lastActivityValue,
+                [Globalization.CultureInfo]::InvariantCulture,
+                [Globalization.DateTimeStyles]::RoundtripKind
+            ).ToUniversalTime()
+        }
+    } catch { continue }
     if (([DateTime]::UtcNow - $lastActivity) -lt $reconciliationAgeThreshold) { continue }
     $sessionWorkspace = [string]$session.workspacePath
     $absoluteWorkspace = $(if ([string]::IsNullOrWhiteSpace($sessionWorkspace)) { $null } else { Join-Path $repositoryRoot $sessionWorkspace })

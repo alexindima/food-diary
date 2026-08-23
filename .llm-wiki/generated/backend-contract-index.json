@@ -84526,7 +84526,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/BillingWebhookControllerTests.cs",
       "isTest": true,
-      "referenceCount": 11
+      "referenceCount": 12
     },
     {
       "contract": "ISender",
@@ -101114,7 +101114,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs",
       "isTest": true,
-      "referenceCount": 21
+      "referenceCount": 23
     },
     {
       "contract": "ProcessBillingWebhookCommand",

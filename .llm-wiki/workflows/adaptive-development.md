@@ -130,6 +130,9 @@ when available, is only an external lookup hint; one active internal session can
 be recovered without it, while ambiguous concurrent sessions must supply
 `-TaskSessionId` or `-WorkspacePath`. Governed facade commands resolve the same
 session workspace after commits, so delivery state is not lost when HEAD moves.
+Active sessions whose workspace has remained absent beyond the reconciliation
+threshold are retired using UTC round-trip timestamps; the local machine time
+zone cannot make a newly created session appear abandoned.
 Parallel sessions therefore keep independent snapshots of pre-existing dirt even
 though they share the same Git worktree. After runtime ownership and scope are
 confirmed, `wiki.ps1 continue-ui` keeps subsequent frontend iterations on the

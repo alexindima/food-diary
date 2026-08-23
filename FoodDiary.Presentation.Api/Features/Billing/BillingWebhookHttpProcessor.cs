@@ -1,4 +1,5 @@
 using System.Buffers;
+using System.Net;
 using System.Text;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 using FoodDiary.Presentation.Api.Features.Billing.Mappings;
@@ -13,6 +14,7 @@ public sealed class BillingWebhookHttpProcessor {
         HttpRequest request,
         string provider,
         CancellationToken cancellationToken) {
+        EnsureTrustedYooKassaSource(request.HttpContext, provider);
         string payload = await ReadBoundedPayloadAsync(request, cancellationToken).ConfigureAwait(false);
 
         string signatureHeader = provider.ToUpperInvariant() switch {
@@ -23,6 +25,32 @@ public sealed class BillingWebhookHttpProcessor {
 
         return provider.ToWebhookCommand(payload, signatureHeader);
     }
+
+    public static bool IsTrustedYooKassaSource(IPAddress? address) {
+        if (address is null) {
+            return false;
+        }
+
+        IPAddress normalizedAddress = address.IsIPv4MappedToIPv6 ? address.MapToIPv4() : address;
+        return YooKassaSourceNetworks.Any(network => network.Contains(normalizedAddress));
+    }
+
+    private static void EnsureTrustedYooKassaSource(HttpContext context, string provider) {
+        if (string.Equals(provider, "yookassa", StringComparison.OrdinalIgnoreCase) &&
+            !IsTrustedYooKassaSource(context.Connection.RemoteIpAddress)) {
+            throw new BadHttpRequestException("YooKassa webhook source is not trusted.", StatusCodes.Status403Forbidden);
+        }
+    }
+
+    private static readonly IPNetwork[] YooKassaSourceNetworks = [
+        new(IPAddress.Parse("185.71.76.0"), 27),
+        new(IPAddress.Parse("185.71.77.0"), 27),
+        new(IPAddress.Parse("77.75.153.0"), 25),
+        new(IPAddress.Parse("77.75.156.11"), 32),
+        new(IPAddress.Parse("77.75.156.35"), 32),
+        new(IPAddress.Parse("77.75.154.128"), 25),
+        new(IPAddress.Parse("2a02:5180::"), 32),
+    ];
 
     private static async Task<string> ReadBoundedPayloadAsync(HttpRequest request, CancellationToken cancellationToken) {
         if (request.ContentLength is > MaxWebhookPayloadBytes) {

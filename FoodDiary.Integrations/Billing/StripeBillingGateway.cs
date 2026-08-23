@@ -165,10 +165,14 @@ public sealed class StripeBillingGateway(
 
         try {
             return stripeEvent.Type switch {
-                "customer.subscription.created" => Result.Success<BillingWebhookEventModel?>(MapSubscriptionEvent((Subscription)stripeEvent.Data.Object!, stripeEvent)),
-                "customer.subscription.updated" => Result.Success<BillingWebhookEventModel?>(MapSubscriptionEvent((Subscription)stripeEvent.Data.Object!, stripeEvent)),
-                "customer.subscription.deleted" => Result.Success<BillingWebhookEventModel?>(MapSubscriptionEvent((Subscription)stripeEvent.Data.Object!, stripeEvent)),
-                "checkout.session.completed" => Result.Success(
+                "customer.subscription.created" or
+                "customer.subscription.updated" or
+                "customer.subscription.deleted" => Result.Success<BillingWebhookEventModel?>(
+                    await MapAuthoritativeSubscriptionEventAsync(
+                        (Subscription)stripeEvent.Data.Object!,
+                        stripeEvent,
+                        cancellationToken).ConfigureAwait(false)),
+                "checkout.session.completed" => Result.Success<BillingWebhookEventModel?>(
                     await MapCheckoutCompletedEventAsync((CheckoutSession)stripeEvent.Data.Object!, stripeEvent, cancellationToken).ConfigureAwait(false)),
                 _ => Result.Success<BillingWebhookEventModel?>(value: null),
             };
@@ -179,6 +183,17 @@ public sealed class StripeBillingGateway(
             return Result.Failure<BillingWebhookEventModel?>(
                 Errors.Billing.WebhookValidationFailed("Stripe webhook price or structure is invalid."));
         }
+    }
+
+    private async Task<BillingWebhookEventModel> MapAuthoritativeSubscriptionEventAsync(
+        Subscription eventSubscription,
+        Event stripeEvent,
+        CancellationToken cancellationToken) {
+        var subscriptionService = new SubscriptionService(stripeClient);
+        Subscription currentSubscription = await subscriptionService.GetAsync(
+            eventSubscription.Id,
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+        return MapSubscriptionEvent(currentSubscription, stripeEvent) with { IsAuthoritativeSnapshot = true };
     }
 
     private async Task<BillingWebhookEventModel?> MapCheckoutCompletedEventAsync(
@@ -193,7 +208,7 @@ public sealed class StripeBillingGateway(
 
         var subscriptionService = new SubscriptionService(stripeClient);
         Subscription subscription = await subscriptionService.GetAsync(session.SubscriptionId, cancellationToken: cancellationToken).ConfigureAwait(false);
-        return MapSubscriptionEvent(subscription, stripeEvent, session.Metadata);
+        return MapSubscriptionEvent(subscription, stripeEvent, session.Metadata) with { IsAuthoritativeSnapshot = true };
     }
 
     private BillingWebhookEventModel MapSubscriptionEvent(

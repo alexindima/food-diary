@@ -90,6 +90,7 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
                 ALTER TABLE "Users" RENAME COLUMN "Height" TO "HeightCm";
                 ALTER TABLE "Users" RENAME COLUMN "DesiredWeight" TO "DesiredWeightKg";
                 ALTER TABLE "Users" RENAME COLUMN "DesiredWaist" TO "DesiredWaistCm";
+                ALTER TABLE "Users" ADD COLUMN "SecurityVersion" bigint NOT NULL DEFAULT 0;
                 """);
 
             var user = User.Create($"fasting-migration-{Guid.NewGuid():N}@example.com", "hash");
@@ -108,6 +109,7 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
             await legacyContext.SaveChangesAsync();
 
             await legacyContext.Database.ExecuteSqlRawAsync("""
+                ALTER TABLE "Users" DROP COLUMN "SecurityVersion";
                 ALTER TABLE "Users" RENAME COLUMN "WeightKg" TO "Weight";
                 ALTER TABLE "Users" RENAME COLUMN "HeightCm" TO "Height";
                 ALTER TABLE "Users" RENAME COLUMN "DesiredWeightKg" TO "DesiredWeight";

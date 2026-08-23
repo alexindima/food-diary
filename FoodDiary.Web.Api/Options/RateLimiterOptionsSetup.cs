@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Threading.RateLimiting;
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Features.Billing;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.RateLimiting;
@@ -76,9 +77,16 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
         HttpContext context) {
         string? provider = context.Request.RouteValues["provider"]?.ToString();
         return string.Equals(provider, "yookassa", StringComparison.OrdinalIgnoreCase)
-            ? CreatePartition(settings.YooKassaWebhook, "webhook:provider:yookassa")
+            ? CreateYooKassaWebhookPartition(settings, context)
             : CreatePartition(settings.Webhook, $"webhook:{GetPartitionKey(context)}");
     }
+
+    private static RateLimitPartition<string> CreateYooKassaWebhookPartition(
+        ApiRateLimitingOptions settings,
+        HttpContext context) =>
+        BillingWebhookHttpProcessor.IsTrustedYooKassaSource(context.Connection.RemoteIpAddress)
+            ? CreatePartition(settings.YooKassaWebhook, "webhook:provider:yookassa")
+            : CreatePartition(settings.Webhook, $"webhook:yookassa:untrusted:{GetPartitionKey(context)}");
 
     private static string GetPartitionKey(HttpContext context) {
         Guid? userId = context.User.GetUserGuid();

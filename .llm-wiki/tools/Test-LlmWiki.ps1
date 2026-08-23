@@ -120,10 +120,12 @@ if ($pages.Count -eq 0) {
 
 $pageLines = @{}
 $pageAnchors = @{}
+$pageLinks = @{}
 foreach ($page in $pages) {
     $lines = @(Get-Content -LiteralPath $page.FullName)
     $pageLines[$page.FullName] = $lines
     $pageAnchors[$page.FullName] = Get-WikiAnchors $lines
+    $pageLinks[$page.FullName] = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 }
 
 foreach ($page in $pages) {
@@ -254,6 +256,10 @@ foreach ($page in $pages) {
                         continue
                     }
                 }
+                if ($targetPath.EndsWith('.md', [System.StringComparison]::OrdinalIgnoreCase) -and
+                    $pageLines.ContainsKey($targetPath)) {
+                    $null = $pageLinks[$page.FullName].Add($targetPath)
+                }
                 if (-not [string]::IsNullOrWhiteSpace($anchor) -and
                     $targetPath.EndsWith('.md', [System.StringComparison]::OrdinalIgnoreCase)) {
                     if (-not $pageAnchors.ContainsKey($targetPath)) {
@@ -271,6 +277,31 @@ foreach ($page in $pages) {
             $line -match '\bgh[pousr]_[A-Za-z0-9]{20,}\b' -or
             $line -match '\bAKIA[0-9A-Z]{16}\b') {
             Add-WikiDiagnostic 'WIKI019' $displayPath ($index + 1) 'Possible credential material found in wiki content.'
+        }
+    }
+}
+
+$indexPath = Join-Path $WikiRoot 'index.md'
+if (-not $pageLines.ContainsKey($indexPath)) {
+    Add-WikiDiagnostic 'WIKI020' (Get-RelativeDisplayPath $WikiRoot) 0 'Canonical wiki entrypoint .llm-wiki/index.md does not exist.'
+} else {
+    $reachablePages = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    $pendingPages = [System.Collections.Generic.Queue[string]]::new()
+    $null = $reachablePages.Add($indexPath)
+    $pendingPages.Enqueue($indexPath)
+
+    while ($pendingPages.Count -gt 0) {
+        $currentPage = $pendingPages.Dequeue()
+        foreach ($linkedPage in $pageLinks[$currentPage]) {
+            if ($reachablePages.Add($linkedPage)) {
+                $pendingPages.Enqueue($linkedPage)
+            }
+        }
+    }
+
+    foreach ($page in $pages) {
+        if (-not $reachablePages.Contains($page.FullName)) {
+            Add-WikiDiagnostic 'WIKI021' (Get-RelativeDisplayPath $page.FullName) 1 'Page is not reachable from .llm-wiki/index.md through local Markdown links.'
         }
     }
 }

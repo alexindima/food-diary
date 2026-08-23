@@ -395,7 +395,9 @@ public partial class BillingFeatureTests {
                 7.99m,
                 "USD",
                 ProviderMetadataJson: null,
-                user.Id.Value));
+                user.Id.Value,
+                OccurredAtUtc: Now,
+                IsAuthoritativeSnapshot: true));
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
             userRepository,
@@ -510,7 +512,9 @@ public partial class BillingFeatureTests {
                     7.99m,
                     "USD",
                     ProviderMetadataJson: null,
-                    user.Id.Value)),
+                    user.Id.Value,
+                    OccurredAtUtc: Now,
+                    IsAuthoritativeSnapshot: true)),
             new FakeUserRepository(user),
             subscriptionRepository,
             paymentRepository,
@@ -578,6 +582,86 @@ public partial class BillingFeatureTests {
         Assert.Equal("active", subscription.Status);
         Assert.Equal(0, subscriptionRepository.UpdateCount);
         Assert.Empty(paymentRepository.Payments);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task ProcessBillingWebhook_WhenOrderingIsMissingOrEqualAndSnapshotIsNotAuthoritative_IgnoresEvent(
+        bool useEqualTimestamp) {
+        var user = User.Create("ambiguous-webhook@example.com", "hash");
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.Paddle,
+            "customer_ambiguous",
+            "subscription_ambiguous",
+            "pm_ambiguous",
+            "active",
+            Now,
+            Now.AddMonths(1),
+            "evt_applied",
+            Now);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
+        BillingWebhookEventModel ambiguousEvent = CreateWebhookPaymentEvent(user, "evt_ambiguous", "subscription_ambiguous") with {
+            ExternalCustomerId = "customer_ambiguous",
+            Status = "canceled",
+            OccurredAtUtc = useEqualTimestamp ? Now : null,
+            IsAuthoritativeSnapshot = false,
+        };
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
+            new FakeBillingProviderGateway(BillingProviderNames.Paddle, webhookEvent: ambiguousEvent),
+            new FakeUserRepository(user),
+            subscriptionRepository,
+            new RecordingBillingPaymentRepository(),
+            new RecordingBillingWebhookEventRepository());
+
+        Result result = await handler.Handle(
+            new ProcessBillingWebhookCommand(BillingProviderNames.Paddle, "{}", "signature"),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal("active", subscription.Status);
+        Assert.Equal(0, subscriptionRepository.UpdateCount);
+    }
+
+    [Fact]
+    public async Task ProcessBillingWebhook_WhenEqualTimestampSnapshotIsAuthoritative_AppliesCurrentProviderState() {
+        var user = User.Create("authoritative-webhook@example.com", "hash");
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
+            user,
+            BillingProviderNames.Stripe,
+            "customer_authoritative",
+            "subscription_authoritative",
+            "pm_authoritative",
+            "active",
+            Now,
+            Now.AddMonths(1),
+            "evt_applied",
+            Now);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
+        BillingWebhookEventModel authoritativeEvent = CreateWebhookPaymentEvent(
+            user,
+            "evt_authoritative",
+            "subscription_authoritative") with {
+                ExternalCustomerId = "customer_authoritative",
+                Status = "canceled",
+                OccurredAtUtc = Now,
+                IsAuthoritativeSnapshot = true,
+            };
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
+            new FakeBillingProviderGateway(BillingProviderNames.Stripe, webhookEvent: authoritativeEvent),
+            new FakeUserRepository(user),
+            subscriptionRepository,
+            new RecordingBillingPaymentRepository(),
+            new RecordingBillingWebhookEventRepository());
+
+        Result result = await handler.Handle(
+            new ProcessBillingWebhookCommand(BillingProviderNames.Stripe, "{}", "signature"),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal("canceled", subscription.Status);
+        Assert.Equal(1, subscriptionRepository.UpdateCount);
     }
 
     [Fact]
@@ -1080,7 +1164,9 @@ public partial class BillingFeatureTests {
                 7.99m,
                 "USD",
                 ProviderMetadataJson: null,
-                user.Id.Value));
+                user.Id.Value,
+                OccurredAtUtc: Now,
+                IsAuthoritativeSnapshot: true));
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
             userRepository,
@@ -1139,7 +1225,9 @@ public partial class BillingFeatureTests {
                     Amount: null,
                     Currency: null,
                     ProviderMetadataJson: null,
-                    user.Id.Value)),
+                    user.Id.Value,
+                    OccurredAtUtc: Now,
+                    IsAuthoritativeSnapshot: true)),
             new FakeUserRepository(user),
             subscriptionRepository,
             new RecordingBillingPaymentRepository(),

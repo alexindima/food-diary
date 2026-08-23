@@ -70,22 +70,25 @@ public sealed class RateLimiterOptionsSetupTests {
     }
 
     [Fact]
-    public void Configure_WebhookPolicyFactory_UsesGlobalPartitionForYooKassa() {
+    public void Configure_WebhookPolicyFactory_ProtectsYooKassaPartitionFromUntrustedSources() {
         var options = new RateLimiterOptions();
         new RateLimiterOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiRateLimitingOptions())).Configure(options);
         object policy = FindPolicy(options, PresentationPolicyNames.WebhookRateLimitPolicyName);
         Delegate factory = Assert.Single(GetDelegates(policy));
-        DefaultHttpContext firstContext = CreateWebhookContext("YooKassa", "198.51.100.25");
-        DefaultHttpContext secondContext = CreateWebhookContext("yookassa", "203.0.113.10");
+        DefaultHttpContext firstContext = CreateWebhookContext("YooKassa", "185.71.76.1");
+        DefaultHttpContext secondContext = CreateWebhookContext("yookassa", "77.75.156.11");
+        DefaultHttpContext untrustedContext = CreateWebhookContext("yookassa", "203.0.113.10");
         DefaultHttpContext stripeContext = CreateWebhookContext("stripe", "198.51.100.25");
 
         string firstPartitionKey = GetPartitionKey(factory.DynamicInvoke(firstContext));
         string secondPartitionKey = GetPartitionKey(factory.DynamicInvoke(secondContext));
+        string untrustedPartitionKey = GetPartitionKey(factory.DynamicInvoke(untrustedContext));
         string stripePartitionKey = GetPartitionKey(factory.DynamicInvoke(stripeContext));
 
         Assert.Multiple(
             () => Assert.Equal("webhook:provider:yookassa", firstPartitionKey),
             () => Assert.Equal(firstPartitionKey, secondPartitionKey),
+            () => Assert.Equal("webhook:yookassa:untrusted:ip:203.0.113.10", untrustedPartitionKey),
             () => Assert.False(string.Equals(firstPartitionKey, stripePartitionKey, StringComparison.Ordinal)));
     }
 

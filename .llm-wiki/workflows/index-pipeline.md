@@ -67,9 +67,9 @@ diagnostic and never replaces the full uncached CI gate.
 
 `wiki lint` is the fast prerequisite for both verification commands and CI. It
 checks page contracts, sources, generated ownership, local links and anchors,
-and high-confidence credential signatures before expensive index work begins.
-Its isolated regression fixtures run immediately after it in the verification
-gates.
+transitive page reachability from the canonical index, and high-confidence
+credential signatures before expensive index work begins. Its isolated
+regression fixtures run immediately after it in the verification gates.
 
 The unified `wiki.ps1` entrypoint also pins ISO timestamps to JSON strings on
 PowerShell versions that otherwise coerce them into `DateTime`. Nested tools

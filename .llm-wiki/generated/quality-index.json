@@ -326,11 +326,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "nonBlankLines": 289,
+      "nonBlankLines": 290,
       "decisionPoints": 43,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 70.28
+      "structuralRiskScore": 70.3
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history.facade.ts",
@@ -566,11 +566,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Billing/StripeBillingGateway.cs",
-      "nonBlankLines": 252,
+      "nonBlankLines": 266,
       "decisionPoints": 35,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 57.54
+      "structuralRiskScore": 57.82
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/time-input/fd-ui-time-input.ts",
@@ -1960,11 +1960,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingWebhookEventModel.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 32,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
+      "structuralRiskScore": 0.64
     },
     {
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Audit/IAuditLogger.cs",
@@ -7048,11 +7048,11 @@
     },
     {
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
-      "nonBlankLines": 106,
-      "decisionPoints": 16,
+      "nonBlankLines": 107,
+      "decisionPoints": 18,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.12
+      "structuralRiskScore": 29.14
     },
     {
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
@@ -20744,11 +20744,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Billing/StripeBillingGateway.cs",
-      "nonBlankLines": 252,
+      "nonBlankLines": 266,
       "decisionPoints": 35,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 57.54
+      "structuralRiskScore": 57.82
     },
     {
       "path": "FoodDiary.Integrations/Billing/YooKassaApiClient.cs",
@@ -20760,11 +20760,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "nonBlankLines": 289,
+      "nonBlankLines": 290,
       "decisionPoints": 43,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 70.28
+      "structuralRiskScore": 70.3
     },
     {
       "path": "FoodDiary.Integrations/DependencyInjection.Ai.cs",
@@ -22584,11 +22584,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookHttpProcessor.cs",
-      "nonBlankLines": 56,
-      "decisionPoints": 6,
+      "nonBlankLines": 80,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.12
+      "structuralRiskScore": 15.1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookRequestLimits.cs",
@@ -25960,11 +25960,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Options/RateLimiterOptionsSetup.cs",
-      "nonBlankLines": 83,
+      "nonBlankLines": 90,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.66
+      "structuralRiskScore": 7.8
     },
     {
       "path": "FoodDiary.Web.Api/Program.cs",

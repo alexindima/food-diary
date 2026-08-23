@@ -29,8 +29,9 @@ public sealed class BillingWebhookContextResolver(
 
         if (webhookEvent.UpdatesSubscription &&
             subscription?.LastWebhookOccurredAtUtc is { } lastOccurredAtUtc &&
-            webhookEvent.OccurredAtUtc is { } occurredAtUtc &&
-            occurredAtUtc < lastOccurredAtUtc) {
+            (webhookEvent.OccurredAtUtc is not { } occurredAtUtc ||
+             occurredAtUtc < lastOccurredAtUtc ||
+             (occurredAtUtc == lastOccurredAtUtc && !webhookEvent.IsAuthoritativeSnapshot))) {
             return Result.Success<BillingWebhookProcessingContext?>(value: null);
         }
 
