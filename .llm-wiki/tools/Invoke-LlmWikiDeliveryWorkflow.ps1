@@ -17,6 +17,7 @@ $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiChangePacket.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $workspace = $WorkspacePath.Replace('\', '/').TrimEnd('/')
 if ([IO.Path]::IsPathRooted($WorkspacePath) -or $workspace -notmatch '^\.artifacts/llm-wiki/tasks/[^/]+$') {
     throw 'WorkspacePath must identify one workspace directly inside .artifacts/llm-wiki/tasks.'
@@ -104,8 +105,7 @@ function Get-DeliveryAssessment {
     $stalePacketPaths = @($packet.diff.changedPaths | Where-Object {
         $candidate = Join-Path $repositoryRoot ([string]$_)
         if (Test-Path -LiteralPath $candidate) { return $false }
-        $nameStatus = @(& git -C $repositoryRoot diff --name-status ([string]$taskContract.git.base) -- ([string]$_))
-        if ($LASTEXITCODE -ne 0) { throw "Unable to validate packet path freshness for '$_'." }
+        $nameStatus = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('diff', '--name-status', [string]$taskContract.git.base, '--', [string]$_) -FailureMessage "Unable to validate packet path freshness for '$_'.").Lines
         return @($nameStatus | Where-Object { $_ -match '^D\s' }).Count -eq 0
     })
     $journeys = Invoke-JsonTool 'Find-LlmWikiProductJourney.ps1' @{

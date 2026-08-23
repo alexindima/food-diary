@@ -435,7 +435,7 @@ function Invoke-ObservedWikiStage {
     $resultPath = Join-Path $resultRoot "$safeStageName-$fingerprint.json"
     $receiptPath = $null
     if ($ResumePassedStages) {
-        $gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
+        $gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve the Git directory for the resumable verify receipt.').Lines[0].Trim()
         $script:verifyReceiptRoot = Join-Path $gitDirectory 'llm-wiki/verification-stages/wiki'
         $null = New-Item -ItemType Directory -Path $script:verifyReceiptRoot -Force
         $receiptName = (($Name -replace '[^a-zA-Z0-9_.-]', '-') + '-' + $fingerprint + '.passed')

@@ -1,6 +1,7 @@
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+
 function Get-LlmWikiIndexTimingPath([string]$RepositoryRoot) {
-    $gitDirectory = @(& git -C $RepositoryRoot rev-parse --absolute-git-dir)[0]
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve Git directory for index timings.' }
+    $gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve Git directory for index timings.').Lines[0]
     return Join-Path $gitDirectory 'llm-wiki/index-timings.json'
 }
 

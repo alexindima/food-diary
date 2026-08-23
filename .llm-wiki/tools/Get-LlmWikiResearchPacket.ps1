@@ -35,6 +35,7 @@ if (-not [string]::IsNullOrWhiteSpace($Module)) {
 }
 Write-Host "Research [1/3]: classify and scan current sources$(if ($Module) { " for module $Module" } else { '' })..."
 . (Join-Path $PSScriptRoot 'LlmWikiQueryCache.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $queryCacheEntry = $null
 $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'research' -Arguments @{
     Objective = $Objective; BaseRef = $BaseRef; HeadRef = $HeadRef
@@ -358,9 +359,9 @@ $groundedPaths = @(Get-NormalizedResearchPaths @(
 $extractionDelta = $null
 if ($Objective -match '(?i)IUserContextService|extraction|profile.{0,20}boundar|\u043f\u0440\u043e\u0435\u043a\u0446') {
     $currentExtraction = & (Join-Path $PSScriptRoot 'Get-LlmWikiContractConsumers.ps1') -Contract IUserContextService -Format Json | ConvertFrom-Json
-    $baselineModulePage = @(& git -C $repositoryRoot show 'HEAD^:.llm-wiki/generated/modules/users.md' 2>$null)
-    $baselineAvailable = $LASTEXITCODE -eq 0
-    $baselineText = $baselineModulePage -join "`n"
+    $baselineShowResult = Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('show', 'HEAD^:.llm-wiki/generated/modules/users.md') -AllowedExitCode @(0, 128)
+    $baselineAvailable = $baselineShowResult.ExitCode -eq 0
+    $baselineText = $baselineShowResult.StandardOutput
     $initialConsumers = if ($baselineAvailable -and $baselineText -match 'Implementation-owned IUserContextService consumers: (\d+)') { [int]$Matches[1] } else { $null }
     $initialAggregate = if ($baselineAvailable -and $baselineText -match 'Consumers receiving the User aggregate: (\d+)') { [int]$Matches[1] } else { $null }
     $baselineGroups = if ($baselineAvailable) { @([regex]::Matches($baselineText, '(?m)^\| ([^|]+) \| IUserContextService \|') | ForEach-Object { $_.Groups[1].Value.Trim() } | Sort-Object -Unique) } else { @() }

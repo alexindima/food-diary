@@ -17,6 +17,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $configuredRegistryPath = if (-not [string]::IsNullOrWhiteSpace($RegistryPath)) {
@@ -24,8 +25,8 @@ $configuredRegistryPath = if (-not [string]::IsNullOrWhiteSpace($RegistryPath)) 
 } elseif (-not [string]::IsNullOrWhiteSpace($env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH)) {
     $env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH
 } else {
-    $gitDirectory = @(& git -C $repositoryRoot rev-parse --absolute-git-dir)
-    if ($LASTEXITCODE -ne 0 -or $gitDirectory.Count -ne 1) { throw 'Unable to resolve the Git directory for verification telemetry.' }
+    $gitDirectory = @((Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve the Git directory for verification telemetry.').Lines)
+    if ($gitDirectory.Count -ne 1) { throw 'Unable to resolve the Git directory for verification telemetry.' }
     Join-Path ([string]$gitDirectory[0]) 'llm-wiki/verification-telemetry.json'
 }
 $registryPath = if ([IO.Path]::IsPathRooted($configuredRegistryPath)) { $configuredRegistryPath } else { Join-Path $repositoryRoot $configuredRegistryPath }

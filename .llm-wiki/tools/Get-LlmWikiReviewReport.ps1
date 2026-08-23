@@ -74,7 +74,10 @@ $normalizedFindings = @(
         $issueIndex = 0
         foreach ($issue in @($dimension.issues | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })) {
             $issueIndex++
-            $matchingPath = @($packet.diff.changedPaths | Where-Object { ([string]$issue).Contains([string]$_, [StringComparison]::OrdinalIgnoreCase) } | Select-Object -First 1)
+            # String.Contains(string, StringComparison) exists only on .NET 5+ (PowerShell
+            # 7+); Windows PowerShell 5.1 (.NET Framework) only has the case-sensitive
+            # single-argument overload. IndexOf(string, StringComparison) exists on both.
+            $matchingPath = @($packet.diff.changedPaths | Where-Object { ([string]$issue).IndexOf([string]$_, [StringComparison]::OrdinalIgnoreCase) -ge 0 } | Select-Object -First 1)
             $severity = Get-FindingSeverity $dimension @($readiness.blockingDimensions) @($readiness.unassessedDimensions)
             [pscustomobject][ordered]@{
                 id = "readiness-$($dimension.id)-$('{0:D2}' -f $issueIndex)"
@@ -164,7 +167,7 @@ if ($Format -eq 'Json') {
         $lines.Add('')
         foreach ($finding in $report.findings) {
             $location = if ($finding.anchorStatus -eq 'path') { " at ``$($finding.location.path)``" } else { '' }
-            $lines.Add("- **[$($finding.severity)/$($finding.kind)] $($finding.area)**$location — $(ConvertTo-MarkdownCell $finding.trigger)")
+            $lines.Add("- **[$($finding.severity)/$($finding.kind)] $($finding.area)**$location - $(ConvertTo-MarkdownCell $finding.trigger)")
             $lines.Add("  - Consequence: $(ConvertTo-MarkdownCell $finding.consequence)")
             $lines.Add("  - Test gap: $(ConvertTo-MarkdownCell $finding.testGap)")
             $lines.Add("  - Remediation: $(ConvertTo-MarkdownCell $finding.remediation)")

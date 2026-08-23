@@ -83,13 +83,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1",
-                                            "sha256":  "a7cfd40e741582b3806b6d4251d95fb30dfab55a2e9662f5ab153b8a6a3a988c"
+                                            "sha256":  "e24baf3b6295515c49fe31581facadcd09091784efdc44aeeb31c001ffb6eae4"
                                         }
                                     ],
-                        "reason":  "Reviewed incremental verification, baseline-context visibility, and facade orchestration changes; indexed models and the documented evaluation, diff, brief, and dispatch semantics remain authoritative and unchanged outside the documented workflow improvements.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f31792400af36f7855687ca29a96dd026535d0a",
-                        "reviewedAtUtc":  "2026-08-10T18:18:15.4779121Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:08.2344430Z"
                     },
                     {
                         "pageId":  "system.knowledge-model",
@@ -157,14 +157,14 @@
                         "pageSha256":  "f23f6110e42d7342e66693195c2772bf1325e0a2da4a3d51286d0fa18162353d",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
-                                            "sha256":  "f585b3bfa501bf799c933f5951abc01973ab61a94cd0a7316143a73a37d93726"
+                                            "path":  ".llm-wiki/tools/New-LlmWikiEvidenceLineage.ps1",
+                                            "sha256":  "43a2e2e4cc54a3218889f365334f6e02c1e9e8ec4790ca48ac8e571d6b1334b5"
                                         }
                                     ],
-                        "reason":  "Evidence lineage now treats an execution artifact as optional under StrictMode, while preserving path and hash validation whenever an artifact is present; governed-delivery smoke and direct lineage validation pass.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f638db5cb0a099b921fc3d057e163248b5329cb",
-                        "reviewedAtUtc":  "2026-08-21T04:33:03.0393723Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:12.1794563Z"
                     },
                     {
                         "pageId":  "workflow.frontend-contract-review",
@@ -187,14 +187,14 @@
                         "pageSha256":  "8439af4b89bf50398667ec91e06804d1fb6925969f3cfb30925553589f14ce9c",
                         "sources":  [
                                         {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "17f3fd3be7fefc41afb02f2933f045778188dfc9c46ebf721bf3003419830c36"
+                                            "path":  ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+                                            "sha256":  "f6945ef758d416498b2eff63c7e5064685df3ca03e3004ba46cfdce1e668f3bd"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:46.7077055Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:17.4376973Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -202,14 +202,18 @@
                         "pageSha256":  "2fef1c903c42193a33f6c3de3fc4c406a2a718ff38e942ad7944df0e74c713af",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Add-LlmWikiSourceReview.ps1",
+                                            "sha256":  "769db8061edd564efa22092ef0ee88259170e4c544bbb08bbeacab2effa27646"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "3b771699618b28fa70e9031a252bdb486edce26d50276033fbfe982ddca1f558"
+                                            "sha256":  "6a15f74faa2c72fafd6ff07f03617cb3c57035114ecc61dd9d7082776b0284ad"
                                         }
                                     ],
-                        "reason":  "Reviewed test ranking, bounded Git grep batching, atomic query-cache writes, explicit task deltas, unconditional receipt hashes, and facade routing against focused regressions plus the green Core audit.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
-                        "reviewedAtUtc":  "2026-08-21T22:03:05.3125067Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:18.4213675Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -236,14 +240,50 @@
                         "pageSha256":  "826ee326e4250f90576d9326fc66400c9191d37492400b624acf9d4bc69f6d52",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiGitPrecedents.ps1",
+                                            "sha256":  "e976f7c5da57c4c86a760fab115a2c34c4571337b3ffd864d828eb580dd0759a"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+                                            "sha256":  "a9ea1ccfbc43f89fbc8d3a1e724596b268cf8559e6ae2cd9cb3697fcedbc86cb"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
+                                            "sha256":  "fbadfc281a08c477205bdb84e4d5e37a4fc01ad266b7be644821899b7dbe3bc7"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+                                            "sha256":  "eb98e64ae239624221d3443d39b163b4571589468cf6d7ea515670eb1cb9e9e3"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-                                            "sha256":  "dda7492a6cd77898be9487c8c7e038acfe78d20be55f2e1797ef9db94c3bf209"
+                                            "sha256":  "2a73fda675af2e31ae56bc0f30e7607ab37af070360650316e29a5690838d9a0"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAdaptiveSession.ps1",
+                                            "sha256":  "2b9891815fee9fe99db3cc9afa2514aa4d3498f68ae2a5f8d0954af6547a25b3"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskBaseline.ps1",
+                                            "sha256":  "732ba8ee955cd965091ad39be76502f28391970581860f8d4ce7812c6f56b3ee"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
+                                            "sha256":  "bbb687f52fa88e5ea13dda1a3f7a50faa11d5fa76ed110d93c9f0296a27cf708"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Resolve-LlmWikiSession.ps1",
+                                            "sha256":  "0a8f108df6494e98ee5561965c8719787d53e7467b6979910ece5682fa9f3f5b"
                                         }
                                     ],
-                        "reason":  "Query-cache replacement remains atomic and race-tolerant; focused cache smoke, MCP integration tests, diagnostics tests, and domain tests passed.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "42f1bd1204f90866c302ded80036f04ef64b3704",
-                        "reviewedAtUtc":  "2026-08-22T02:50:14.0668070Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:08.6241672Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -327,13 +367,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "3b771699618b28fa70e9031a252bdb486edce26d50276033fbfe982ddca1f558"
+                                            "sha256":  "6a15f74faa2c72fafd6ff07f03617cb3c57035114ecc61dd9d7082776b0284ad"
                                         }
                                     ],
-                        "reason":  "Reviewed test ranking, bounded Git grep batching, atomic query-cache writes, explicit task deltas, unconditional receipt hashes, and facade routing against focused regressions plus the green Core audit.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
-                        "reviewedAtUtc":  "2026-08-21T22:03:03.9534538Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:09.0157477Z"
                     },
                     {
                         "pageId":  "workflow-confidence-ledger",
@@ -341,14 +381,14 @@
                         "pageSha256":  "d59b6b99ff0c566de2b31579a916ee8e62adbeedea3d928970b2200fa0b63eb6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:38.7261163Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:09.4874388Z"
                     },
                     {
                         "pageId":  "workflow-context-budget-optimization",
@@ -371,18 +411,18 @@
                         "pageSha256":  "d5e1b60357672ab39c6e84d10132a391d72d5a46575afbffe7db0399b804a2cd",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+                                            "sha256":  "f6945ef758d416498b2eff63c7e5064685df3ca03e3004ba46cfdce1e668f3bd"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:39.3828451Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:09.9327229Z"
                     },
                     {
                         "pageId":  "workflow-context-quality-benchmark",
@@ -450,14 +490,18 @@
                         "pageSha256":  "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
-                                            "sha256":  "6f5967f385622dc126b38dd499f6379b6f27d09564e81becca34d10a9a33e924"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
                                         }
                                     ],
-                        "reason":  "Reviewed requirement assessment purity and learning-related source links; assess is now read-only while explicit create and seal remain the only persistence paths.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
-                        "reviewedAtUtc":  "2026-08-21T22:03:04.2135649Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:10.3861512Z"
                     },
                     {
                         "pageId":  "workflow-controlled-repair-loop",
@@ -465,18 +509,22 @@
                         "pageSha256":  "1a4c6620169d6fbe556feae253e1e80b1f7a4f4d232962b8fe8b13635bfb608a",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:41.3715761Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:10.8256139Z"
                     },
                     {
                         "pageId":  "workflow-cost-aware-verification",
@@ -529,14 +577,26 @@
                         "pageSha256":  "fb6ae4687c020a4c8bb6f4a47d37ba0c5aede515a055efc45e8e18ebfd3daa42",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+                                            "sha256":  "a9ea1ccfbc43f89fbc8d3a1e724596b268cf8559e6ae2cd9cb3697fcedbc86cb"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiWorkflowMetrics.ps1",
+                                            "sha256":  "f695b53b89e183d58364e8434708fe2c962a1734e01e5ee374060d31cdec429a"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-                                            "sha256":  "dda7492a6cd77898be9487c8c7e038acfe78d20be55f2e1797ef9db94c3bf209"
+                                            "sha256":  "2a73fda675af2e31ae56bc0f30e7607ab37af070360650316e29a5690838d9a0"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "6a15f74faa2c72fafd6ff07f03617cb3c57035114ecc61dd9d7082776b0284ad"
                                         }
                                     ],
-                        "reason":  "Query-cache replacement remains atomic and race-tolerant; focused cache smoke, MCP integration tests, diagnostics tests, and domain tests passed.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "42f1bd1204f90866c302ded80036f04ef64b3704",
-                        "reviewedAtUtc":  "2026-08-22T02:50:15.9589767Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:11.2757701Z"
                     },
                     {
                         "pageId":  "workflow-domain-data-review",
@@ -559,18 +619,18 @@
                         "pageSha256":  "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:42.0098036Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:11.7098937Z"
                     },
                     {
                         "pageId":  "workflow-failure-knowledge",
@@ -638,18 +698,22 @@
                         "pageSha256":  "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:43.0212193Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:12.6079592Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -669,21 +733,25 @@
                     {
                         "pageId":  "workflow-independent-change-critique",
                         "pagePath":  ".llm-wiki/workflows/independent-change-critique.md",
-                        "pageSha256":  "033f7616fa69222933f081cd5a872dadfb1266e95f95809f37fc2f619103b669",
+                        "pageSha256":  "d93e8bf4522a803da1d1a59bd2cd49e0d6a6b39360281f4df4f1792621027fb1",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:43.3382527Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:13.0815688Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",
@@ -691,14 +759,66 @@
                         "pageSha256":  "e3ced57c02bacfce6b76fbc8d3af6c09485e3888822e3145909ebdb247386368",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1",
+                                            "sha256":  "805b5884ad61c3e0fcd1cc551a4c6b45b6ba006c56358bf97e1089092b855fd5"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
+                                            "sha256":  "204fb7ca48335b34ca1669199504a3d89930cac89d78b7b1a5b101da6ce283d7"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1",
+                                            "sha256":  "e24baf3b6295515c49fe31581facadcd09091784efdc44aeeb31c001ffb6eae4"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+                                            "sha256":  "7460704f6498d20333535759965af64c86364d256fcee630bd1153fed05e8be1"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+                                            "sha256":  "494b6e0b5b5b2e69cc87f32baffae20fff52ad003a095f8e3b6ee849d49d779a"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
+                                            "sha256":  "a99c950221edcc1c1595b9bc2b77fb99b83a3da5f5cbaf101b9f3fb9ad82005f"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
+                                            "sha256":  "4698b80f909f699dbec785dd2fd783e7badcb5ba5e22a9a6195f68dca232dd33"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
+                                            "sha256":  "69e8d3b3cd765ce82eefb22bd07701379854644a75bcaed4b2fc94ffd035f82a"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/LlmWikiIndexTiming.ps1",
+                                            "sha256":  "9643fe8dfd27fc144decef6cc1616a4b5fdb57452649dbcb3065fa7a34af1028"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
-                                            "sha256":  "ef92b3256bcd821a33ef3dc85e95135aebe3e562ac16e83313bb7f923fdc9ba9"
+                                            "sha256":  "97e407968e6fac00058e5e6cafd99bf96bffaca31c8eb52ce502137c607a3092"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
+                                            "sha256":  "bbb687f52fa88e5ea13dda1a3f7a50faa11d5fa76ed110d93c9f0296a27cf708"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+                                            "sha256":  "4b5fb9148908b98f4fc29a2ad3b0d4528d3e5cb5be9d567db558bcc1d6e38a18"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
+                                            "sha256":  "829a4a427185d6b5908e536800d8c2d10de0f9d633b4c7ccbeb7f24774dac224"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "6a15f74faa2c72fafd6ff07f03617cb3c57035114ecc61dd9d7082776b0284ad"
                                         }
                                     ],
-                        "reason":  "Fixed a live crash in the primary `brief`/`ownership` commands: PowerShell can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices, common on Windows) into a terminating NativeCommandError under Set-StrictMode, and this survives a local 2\u003e$null redirect in some hosts. Routed the affected git invocations through Diagnostics.Process (stderr captured via .NET, never touching PowerShell native-command stream handling) and added a reusable Invoke-LlmWikiGitCommand helper alongside the existing Invoke-LlmWikiGitPathList. Documented HEAD/paths/fingerprint computation and rename discovery behavior is unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "97919d478a746ac9d987991f5ea6278eca59732a",
-                        "reviewedAtUtc":  "2026-08-23T00:57:11.7434047Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:13.5362312Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -722,13 +842,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "c7a49f17c4330d2a2692886071edb75f7ea238ef386419b3b4b1d57dab47a37b"
+                                            "sha256":  "a9ea1ccfbc43f89fbc8d3a1e724596b268cf8559e6ae2cd9cb3697fcedbc86cb"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:44.7079912Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:13.9967149Z"
                     },
                     {
                         "pageId":  "workflow-learned-regression-evals",
@@ -736,18 +856,18 @@
                         "pageSha256":  "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:45.0936491Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:14.4836493Z"
                     },
                     {
                         "pageId":  "workflow-model-routing",
@@ -800,18 +920,22 @@
                         "pageSha256":  "cc412c14328fb572376872cca0476a09251ab524bf64dd86398365cfae4a2bf6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:45.8109634Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:14.9316051Z"
                     },
                     {
                         "pageId":  "workflow-post-task-retrospective",
@@ -819,33 +943,33 @@
                         "pageSha256":  "dbcac0a7ae8c9e8975807cd711fc7680b3c731e74459583b85917d9bb8e1827d",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
                                         }
                                     ],
-                        "reason":  "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:46.1084595Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:15.3947876Z"
                     },
                     {
                         "pageId":  "workflow-privacy-review",
                         "pagePath":  ".llm-wiki/workflows/privacy-review.md",
-                        "pageSha256":  "ccc7ce4a406748d705aeca097cf3312ad16c1eea5f2bbabd1e362e7b4ac14d76",
+                        "pageSha256":  "86905cc0b6b7d4690837426aec9d50e7e8fe86420f2cc248a3d64687a15cfffc",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "fdcb917e73df5ade8f770c4a488ef7799d72210f286993dffa81da215d63cfb8"
+                                            "path":  ".llm-wiki/tools/Find-LlmWikiSensitiveData.ps1",
+                                            "sha256":  "c776a6c57a0821cfe2341439ea2e8b9b8c77a2e85c017611428bb494ac4e8251"
                                         }
                                     ],
-                        "reason":  "Reviewed the regenerated sensitive-data index after adding retrieval tooling and eval cases; no credential handling or private-data flow changed, and the generated index was verified.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5ef761aec358fde8b27f29fd63516db9fbd1e9fe",
-                        "reviewedAtUtc":  "2026-08-21T08:31:35.8353172Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:15.8711497Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -854,13 +978,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-                                            "sha256":  "caeebd3ece991397f90b59eadbe21ee3022f0de01f1b90c017725b068cba497f"
+                                            "sha256":  "fbadfc281a08c477205bdb84e4d5e37a4fc01ad266b7be644821899b7dbe3bc7"
                                         }
                                     ],
-                        "reason":  "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5dd602119e639889bf60bcc427f22c194b7e33d0",
-                        "reviewedAtUtc":  "2026-08-18T00:21:34.5555565Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:16.3795644Z"
                     },
                     {
                         "pageId":  "workflow-proof-of-change",
@@ -868,18 +992,22 @@
                         "pageSha256":  "7622935ab3aa92e0641117a4b5afc2b8faada090a2a8a83e9ea27a575f549281",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:46.3916930Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:16.9459225Z"
                     },
                     {
                         "pageId":  "workflow-quality-risk",
@@ -914,36 +1042,40 @@
                     {
                         "pageId":  "workflow-requirement-intelligence",
                         "pagePath":  ".llm-wiki/workflows/requirement-intelligence.md",
-                        "pageSha256":  "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
+                        "pageSha256":  "d6032fccda979d114e265f30e4f14d9593ded53c6b79d85a2dfc467b07fa3a61",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:46.9936989Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:17.9134944Z"
                     },
                     {
                         "pageId":  "workflow-review-report",
                         "pagePath":  ".llm-wiki/workflows/review-report.md",
-                        "pageSha256":  "9b6d5d7319915e804b736c3a089e76f843fe5b97955da5c933faf69165102e18",
+                        "pageSha256":  "5e6a677aea63de29735a1273138f3aaab35e410cb1f930a49d44d9270d162480",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-                                            "sha256":  "87ecbae893bc8e6cc5cc9914d327de41b5f0aaa1f737b91e1d33df920d9443c1"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
+                                            "sha256":  "8687d731b55cb5764c970f6ae0e69d9da636b42ffa93497427f28a60cad68468"
                                         }
                                     ],
-                        "reason":  "Release readiness now normalizes null, scalar, and array-shaped collections before counting and its regression covers scalar findings plus direct HeadRef invocation.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5139162b0a282013047d7fdc953943423039e067",
-                        "reviewedAtUtc":  "2026-08-21T01:31:02.8230751Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:18.8933554Z"
                     },
                     {
                         "pageId":  "workflow-risk-calibration",
@@ -951,18 +1083,18 @@
                         "pageSha256":  "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:47.6304793Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:19.3646978Z"
                     },
                     {
                         "pageId":  "workflow-runtime-impact",
@@ -985,18 +1117,18 @@
                         "pageSha256":  "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "de340a9ae9c9fa4cd7dd7ff66785b65937081527001e79a98a34a7eade0ebd2b"
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
                                         }
                                     ],
-                        "reason":  "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:47.9381463Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:19.8514832Z"
                     },
                     {
                         "pageId":  "workflow-task-brief",
@@ -1034,14 +1166,18 @@
                         "pageSha256":  "7b3ea1842edd2b40e621b8bef887a96786f9bff979e494b7832a71c176439ff0",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskGraph.ps1",
-                                            "sha256":  "44fa33ee13d87d726508cf2a7650751ca52016b18b7c4ca347231bc1389bfce1"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
                                         }
                                     ],
-                        "reason":  "Fixed a crash when the task graph is empty (Set-StrictMode PropertyNotFoundStrict on `$nodes.name`); documented dependency-graph/merge-wave behavior for non-empty graphs is unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2da4a09d49f10d30ff20b9e1020bf5d2665a5cf4",
-                        "reviewedAtUtc":  "2026-08-22T22:56:18.1888830Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:20.3359411Z"
                     },
                     {
                         "pageId":  "workflow-task-dispatch-receipts",
@@ -1050,13 +1186,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "3b771699618b28fa70e9031a252bdb486edce26d50276033fbfe982ddca1f558"
+                                            "sha256":  "6a15f74faa2c72fafd6ff07f03617cb3c57035114ecc61dd9d7082776b0284ad"
                                         }
                                     ],
-                        "reason":  "Reviewed test ranking, bounded Git grep batching, atomic query-cache writes, explicit task deltas, unconditional receipt hashes, and facade routing against focused regressions plus the green Core audit.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
-                        "reviewedAtUtc":  "2026-08-21T22:03:05.6829914Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:20.8118818Z"
                     },
                     {
                         "pageId":  "workflow-task-scheduler",
@@ -1064,18 +1200,18 @@
                         "pageSha256":  "b964048fb46e10eb6f3e28c3ddcfb451e3443691f1da29c8708d768c8ac1629c",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskGraph.ps1",
-                                            "sha256":  "44fa33ee13d87d726508cf2a7650751ca52016b18b7c4ca347231bc1389bfce1"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAgentRegistry.ps1",
-                                            "sha256":  "8651635b0e4b5a3077c060c295804cfd7946d251e440ba10baadbbfdf65a5491"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
                                         }
                                     ],
-                        "reason":  "Fixed strict-mode crashes in Get-LlmWikiTaskGraph.ps1 and Manage-LlmWikiAgentRegistry.ps1 on empty task/agent collections; documented scheduler and workspace-bootstrap behavior for non-empty state is unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2da4a09d49f10d30ff20b9e1020bf5d2665a5cf4",
-                        "reviewedAtUtc":  "2026-08-22T22:56:28.3637070Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:21.3299007Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
@@ -1083,14 +1219,34 @@
                         "pageSha256":  "19d360f7ae44b67345aa130aad1b1ab9d343d76912b945a5c75f9ce0627c3818",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskGraph.ps1",
-                                            "sha256":  "44fa33ee13d87d726508cf2a7650751ca52016b18b7c4ca347231bc1389bfce1"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
+                                            "sha256":  "8687d731b55cb5764c970f6ae0e69d9da636b42ffa93497427f28a60cad68468"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Initialize-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "c7d5ed643741f62f55230ec9ec4dfeeacbe3e2d4fa68f875906007564c25dd77"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
+                                            "sha256":  "fbadfc281a08c477205bdb84e4d5e37a4fc01ad266b7be644821899b7dbe3bc7"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
                                         }
                                     ],
-                        "reason":  "Fixed strict-mode crashes in Get-LlmWikiTaskGraph.ps1 and Manage-LlmWikiAgentRegistry.ps1 on empty task/agent collections; documented scheduler and workspace-bootstrap behavior for non-empty state is unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2da4a09d49f10d30ff20b9e1020bf5d2665a5cf4",
-                        "reviewedAtUtc":  "2026-08-22T22:56:28.8668379Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:21.8756910Z"
                     },
                     {
                         "pageId":  "workflow-test-plan",
@@ -1099,13 +1255,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
-                                            "sha256":  "ef92b3256bcd821a33ef3dc85e95135aebe3e562ac16e83313bb7f923fdc9ba9"
+                                            "sha256":  "97e407968e6fac00058e5e6cafd99bf96bffaca31c8eb52ce502137c607a3092"
                                         }
                                     ],
-                        "reason":  "Fixed a live crash in the primary `brief`/`ownership` commands: PowerShell can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices, common on Windows) into a terminating NativeCommandError under Set-StrictMode, and this survives a local 2\u003e$null redirect in some hosts. Routed the affected git invocations through Diagnostics.Process (stderr captured via .NET, never touching PowerShell native-command stream handling) and added a reusable Invoke-LlmWikiGitCommand helper alongside the existing Invoke-LlmWikiGitPathList. Documented HEAD/paths/fingerprint computation and rename discovery behavior is unchanged.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "97919d478a746ac9d987991f5ea6278eca59732a",
-                        "reviewedAtUtc":  "2026-08-23T00:57:12.2208517Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:22.3959313Z"
                     },
                     {
                         "pageId":  "workflow-trace-feature",
@@ -1147,14 +1303,14 @@
                         "pageSha256":  "9cc76f52e65dc93eb463ced774f1826e3433f33fb3ac620b0a5c280a106fd88d",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
-                                            "sha256":  "6f5967f385622dc126b38dd499f6379b6f27d09564e81becca34d10a9a33e924"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationTelemetry.ps1",
+                                            "sha256":  "8be4fb6da10a52cc1a3818f48aaeb6047f2f4639ad93c7be75cb40d87123b426"
                                         }
                                     ],
-                        "reason":  "Reviewed test ranking, bounded Git grep batching, atomic query-cache writes, explicit task deltas, unconditional receipt hashes, and facade routing against focused regressions plus the green Core audit.",
+                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b6ace2e22b7652b04e92d75dcf37d881640ea2b3",
-                        "reviewedAtUtc":  "2026-08-21T22:03:06.6110122Z"
+                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
+                        "reviewedAtUtc":  "2026-08-23T01:47:22.9354217Z"
                     }
                 ]
 }

@@ -8,6 +8,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 
 function Test-RelevantPath([string]$Path) {
@@ -51,11 +52,11 @@ function Test-RelevantPath([string]$Path) {
 
 $material = [Text.StringBuilder]::new()
 $null = $material.AppendLine("stage=$Stage")
-$null = $material.AppendLine("head=$((& git -C $repositoryRoot rev-parse HEAD).Trim())")
+$null = $material.AppendLine("head=$((Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the verification stage fingerprint.').Lines[0].Trim())")
 $canonicalArguments = [ordered]@{}
 foreach ($key in @($Arguments.Keys | Sort-Object)) { $canonicalArguments[[string]$key] = $Arguments[$key] }
 $null = $material.AppendLine("arguments=$(($canonicalArguments | ConvertTo-Json -Depth 8 -Compress))")
-foreach ($line in @(& git -C $repositoryRoot status --porcelain=v1 --untracked-files=all)) {
+foreach ($line in @((Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('status', '--porcelain=v1', '--untracked-files=all') -FailureMessage 'Unable to enumerate working-tree status for the verification stage fingerprint.').Lines)) {
     $path = ([string]$line).Substring(3).Trim('"')
     if ($path -match ' -> ') { $path = ($path -split ' -> ')[-1] }
     $path = $path.Replace('\', '/')

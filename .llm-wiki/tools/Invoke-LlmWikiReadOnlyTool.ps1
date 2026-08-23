@@ -114,8 +114,7 @@ function Get-ReadOnlySnapshotFingerprint {
         [Parameter(Mandatory)][AllowEmptyCollection()][string[]]$OverlayPath
     )
 
-    $head = (& git -C $RepositoryRoot rev-parse HEAD).Trim()
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve HEAD for the isolated read-only snapshot.' }
+    $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the isolated read-only snapshot.').Lines[0].Trim()
     $material = [Collections.Generic.List[string]]::new()
     $material.Add('schema=4')
     $material.Add("head=$head")
@@ -204,8 +203,7 @@ function Remove-StaleReadOnlySnapshots {
 function Get-GuardState {
     param([Parameter(Mandatory)][string]$RepositoryRoot)
 
-    $status = @(& git -C $RepositoryRoot status --porcelain=v1 --untracked-files=all)
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to capture read-only snapshot state.' }
+    $status = @((Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('status', '--porcelain=v1', '--untracked-files=all') -FailureMessage 'Unable to capture read-only snapshot state.').Lines)
     $status = @($status | Sort-Object)
     $hashes = [ordered]@{}
     foreach ($relativePath in @(Get-WorkspaceOverlayPaths -RepositoryRoot $RepositoryRoot)) {
@@ -249,8 +247,7 @@ function Invoke-ToolInsideSnapshot {
         [Parameter(Mandatory)][hashtable]$Arguments
     )
 
-    $gitDirectory = (& git -C $RepositoryRoot rev-parse --absolute-git-dir).Trim()
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve Git directory for the read-only Wiki guard.' }
+    $gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve Git directory for the read-only Wiki guard.').Lines[0].Trim()
     $lockDirectory = Join-Path $gitDirectory 'llm-wiki/index-transactions'
     $null = New-Item -ItemType Directory -Path $lockDirectory -Force
     $lockPath = Join-Path $lockDirectory 'update.lock'
@@ -373,8 +370,7 @@ try {
         }
         Remove-Item -LiteralPath $readyPath -Force -ErrorAction SilentlyContinue
         if (Test-Path -LiteralPath $snapshotRoot) { Remove-Item -LiteralPath $snapshotRoot -Recurse -Force }
-        $head = (& git -C $sourceRepositoryRoot rev-parse HEAD).Trim()
-        if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve HEAD for the isolated read-only snapshot clone.' }
+        $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $sourceRepositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the isolated read-only snapshot clone.').Lines[0].Trim()
         $previousErrorActionPreference = $ErrorActionPreference
         try {
             $ErrorActionPreference = 'Continue'
@@ -427,10 +423,9 @@ try {
         if (Test-Path -LiteralPath (Join-Path $snapshotRoot '.git') -PathType Container) {
             Remove-Item -LiteralPath $snapshotRoot -Recurse -Force -ErrorAction SilentlyContinue
         } else {
-            & git -C $sourceRepositoryRoot worktree remove --force $snapshotRoot 2>$null
-            if ($LASTEXITCODE -ne 0) {
+            $worktreeRemoveResult = Invoke-LlmWikiGitCommand -RepositoryRoot $sourceRepositoryRoot -Arguments @('worktree', 'remove', '--force', $snapshotRoot) -AllowedExitCode @(0..128)
+            if ($worktreeRemoveResult.ExitCode -ne 0) {
                 Write-Warning "Unable to remove isolated read-only snapshot: $snapshotRoot"
-                $global:LASTEXITCODE = 0
             }
         }
     }

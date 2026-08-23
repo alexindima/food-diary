@@ -6,14 +6,14 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $frontendRoot = Join-Path $repositoryRoot 'FoodDiary.Web.Client'
 $outputPath = Join-Path $wikiRoot 'generated/frontend-index.json'
 $cachePath = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-cache/frontend-index.json'
-$cacheInputs = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard -- 'FoodDiary.Web.Client/**/*.ts' 'FoodDiary.Web.Client/assets/i18n/**/*.json')
-if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate frontend-index cache inputs.' }
+$cacheInputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', 'FoodDiary.Web.Client/**/*.ts', 'FoodDiary.Web.Client/assets/i18n/**/*.json') -FailureMessage 'Unable to enumerate frontend-index cache inputs.')
 $cacheInputs = @($cacheInputs | Where-Object { $_ -notmatch '[\/](node_modules|dist|coverage|\.angular)[\/]' }) + @('.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1', '.llm-wiki/tools/LlmWikiJson.ps1', '.llm-wiki/tools/LlmWikiIndexCache.ps1')
 $inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInputs
 if ($ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) { Write-Host 'Frontend index cache hit: inputs, generator, and output are unchanged.'; exit 0 }

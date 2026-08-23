@@ -2,6 +2,7 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $planner = Join-Path $PSScriptRoot 'Invoke-LlmWikiAffectedSmoke.ps1'
 function Get-Groups([string[]]$ChangedPath) {
     $plan = & $planner -ChangedPath $ChangedPath -Plan -Format Json | ConvertFrom-Json
@@ -44,7 +45,7 @@ if ($plannerText -match 'elseif \(\$path -match ''\^\\\.llm-wiki') {
     throw 'Affected-smoke routing regressed to an imperative regex chain instead of the declarative catalog.'
 }
 $unmappedTools = @(
-    & git -C $repositoryRoot ls-files '.llm-wiki/tools/*' |
+    Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '.llm-wiki/tools/*') -FailureMessage 'Unable to enumerate wiki tool paths for affected-smoke planning regression.' |
         Where-Object { $_ -match '\.(?:ps1|mjs)$' } |
         Where-Object {
             $toolPath = $_.Replace('\', '/')

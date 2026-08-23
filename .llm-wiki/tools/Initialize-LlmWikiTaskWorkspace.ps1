@@ -15,6 +15,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $workspacePolicySnapshot = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -WithFingerprint -Format Json | ConvertFrom-Json
@@ -34,8 +35,9 @@ $ChangedPath = @($ChangedPath | Where-Object { $_ } | ForEach-Object { ([string]
 $PlannedPath = @($PlannedPath | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') } | Sort-Object -Unique)
 $AllowedPath = @($AllowedPath | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
 $ExcludedPath = @($ExcludedPath | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
-$resolvedBaseRef = [string](& git -C $repositoryRoot rev-parse --verify "$BaseRef^{commit}")
-if ($LASTEXITCODE -ne 0 -or $resolvedBaseRef -notmatch '^[a-f0-9]{40}$') {
+$baseRefResult = Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--verify', "$BaseRef^{commit}") -AllowedExitCode @(0, 128)
+$resolvedBaseRef = if (@($baseRefResult.Lines).Count -gt 0) { [string]$baseRefResult.Lines[0] } else { '' }
+if ($baseRefResult.ExitCode -ne 0 -or $resolvedBaseRef -notmatch '^[a-f0-9]{40}$') {
     throw "Unable to resolve task base '$BaseRef' to a commit SHA."
 }
 $BaseRef = $resolvedBaseRef

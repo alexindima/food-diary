@@ -18,6 +18,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $absoluteEvidencePath = if ([System.IO.Path]::IsPathRooted($EvidencePath)) { $EvidencePath } else { Join-Path $repositoryRoot $EvidencePath }
@@ -46,8 +47,7 @@ $dependencyPaths = if ($sourceRule -eq 'manual') {
         Where-Object $isProductDependency
 }
 $content = & (Join-Path $PSScriptRoot 'Get-LlmWikiContentFingerprint.ps1') -Path @($dependencyPaths) -Format Json | ConvertFrom-Json
-$head = & git rev-parse HEAD
-if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve HEAD for evidence lineage.' }
+$head = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for evidence lineage.').Lines[0]
 $policyHash = (Get-FileHash -LiteralPath (Join-Path $wikiRoot 'policies/change-policies.json') -Algorithm SHA256).Hash.ToLowerInvariant()
 $definitionValue = if (-not [string]::IsNullOrWhiteSpace($Definition)) { $Definition } elseif ($null -ne $requirement) {
     if ($Kind -eq 'review-attestation') { [string]$requirement.description } else { [string]$requirement.command }

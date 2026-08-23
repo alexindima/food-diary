@@ -12,14 +12,14 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $normalizedPaths = @($ScopePath | ForEach-Object { $_ -split '[;,]' } | ForEach-Object { $_.Trim().Replace('\', '/') } | Where-Object { $_ } | Sort-Object -Unique)
 $stopWords = @('about', 'after', 'before', 'change', 'create', 'from', 'into', 'that', 'this', 'with')
 $tokens = @([regex]::Matches($Objective.ToLowerInvariant(), '[\p{L}\p{Nd}]{4,}') | ForEach-Object Value | Where-Object { $_ -notin $stopWords } | Sort-Object -Unique)
 
-$raw = & git -C $repositoryRoot log --all -n 300 --date=iso-strict --pretty=format:'@@@%H%x09%ad%x09%s' --name-only
-if ($LASTEXITCODE -ne 0) { throw 'Unable to read Git history for precedent analysis.' }
+$raw = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('log', '--all', '-n', '300', '--date=iso-strict', '--pretty=format:@@@%H%x09%ad%x09%s', '--name-only') -FailureMessage 'Unable to read Git history for precedent analysis.').Lines
 $commits = [Collections.Generic.List[object]]::new()
 $current = $null
 foreach ($line in $raw) {

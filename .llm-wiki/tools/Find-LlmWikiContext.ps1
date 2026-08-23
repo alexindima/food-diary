@@ -20,6 +20,7 @@ $catalogPath = Join-Path $wikiRoot 'generated/repository-catalog.json'
 $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
 $frontendIndexPath = Join-Path $wikiRoot 'generated/frontend-index.json'
 . (Join-Path $PSScriptRoot 'LlmWikiQueryCache.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 
 if ([string]::IsNullOrWhiteSpace($Module) -and [string]::IsNullOrWhiteSpace($Query)) {
     throw 'Provide -Module, -Query, or both.'
@@ -377,10 +378,7 @@ if ($null -ne $frontendIndex) {
     $localizationResults = Select-ScoredItems $localizationCandidates
 
     $implementationFileCandidates = [System.Collections.Generic.List[object]]::new()
-    $trackedFrontendFiles = @(& git -C $repositoryRoot ls-files -- 'FoodDiary.Web.Client/**/*.ts' 'FoodDiary.Web.Client/**/*.html' 'FoodDiary.Web.Client/**/*.scss')
-    if ($LASTEXITCODE -ne 0) {
-        throw 'Unable to enumerate tracked frontend implementation files.'
-    }
+    $trackedFrontendFiles = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--', 'FoodDiary.Web.Client/**/*.ts', 'FoodDiary.Web.Client/**/*.html', 'FoodDiary.Web.Client/**/*.scss') -FailureMessage 'Unable to enumerate tracked frontend implementation files.')
     foreach ($implementationPath in $trackedFrontendFiles) {
         $scopeAffinity = Get-ScopeAffinity $implementationPath
         if ($scopePaths.Count -gt 0 -and $scopeAffinity -lt 0) {
@@ -559,8 +557,7 @@ $testSearchTokens = @(
 $testFiles = @()
 if ($existingTestRoots.Count -gt 0 -and $testSearchTokens.Count -gt 0) {
     $candidatePaths = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
-    $trackedTestPaths = @(& git -C $repositoryRoot ls-files -- 'tests/**/*.cs' 'MailRelay/tests/**/*.cs' 'MailInbox/tests/**/*.cs')
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate tracked backend test files.' }
+    $trackedTestPaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--', 'tests/**/*.cs', 'MailRelay/tests/**/*.cs', 'MailInbox/tests/**/*.cs') -FailureMessage 'Unable to enumerate tracked backend test files.')
     foreach ($trackedTestPath in $trackedTestPaths) {
         $normalizedTestPath = $trackedTestPath.Replace('\', '/')
         if (@($testSearchTokens | Where-Object { $normalizedTestPath.IndexOf($_, [StringComparison]::OrdinalIgnoreCase) -ge 0 }).Count -gt 0) {

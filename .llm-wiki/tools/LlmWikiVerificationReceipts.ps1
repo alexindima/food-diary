@@ -37,8 +37,7 @@ function Get-LlmWikiVerificationFingerprint([string]$RepositoryRoot) {
 }
 
 function Get-LlmWikiVerificationReceiptRoot([string]$RepositoryRoot) {
-    $gitDirectory = @(& git -C $RepositoryRoot rev-parse --absolute-git-dir)[0]
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the Git directory for verification receipts.' }
+    $gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve the Git directory for verification receipts.').Lines[0]
     return Join-Path $gitDirectory 'llm-wiki/verification-receipts'
 }
 

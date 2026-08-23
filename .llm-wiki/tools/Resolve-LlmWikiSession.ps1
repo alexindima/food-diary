@@ -9,9 +9,9 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $repositoryRoot = (Resolve-Path $RepositoryRoot).Path
-$gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
-if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the Git directory for the LLM Wiki session.' }
+$gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve the Git directory for the LLM Wiki session.').Lines[0].Trim()
 $stateDirectory = Join-Path $gitDirectory 'llm-wiki/sessions'
 $registryPath = Join-Path $stateDirectory 'registry.json'
 
@@ -51,9 +51,19 @@ $sessions = @($registry.sessions)
 # blocks auto-resolution for every later session with "Multiple active LLM Wiki
 # sessions exist". Reconciliation always runs so a read-only caller still resolves
 # correctly; only the persisted write is skipped in read-only mode.
+#
+# Guarded by age: not every caller of this script creates its session's nominal
+# workspacePath as a real directory (some only use the session for a stable id/mutex
+# and store their own state elsewhere), so a session that is merely seconds old must
+# not be reaped just because that directory does not exist yet -- or ever. Only
+# sessions untouched for a while are treated as plausibly abandoned.
+$reconciliationAgeThreshold = [TimeSpan]::FromHours(1)
 $reconciledCount = 0
 foreach ($session in $sessions) {
     if ([string]$session.state -ne 'active') { continue }
+    $lastActivityText = $(if (-not [string]::IsNullOrWhiteSpace([string]$session.lastSeenAtUtc)) { [string]$session.lastSeenAtUtc } else { [string]$session.createdAtUtc })
+    try { $lastActivity = ([DateTime]$lastActivityText).ToUniversalTime() } catch { continue }
+    if (([DateTime]::UtcNow - $lastActivity) -lt $reconciliationAgeThreshold) { continue }
     $sessionWorkspace = [string]$session.workspacePath
     $absoluteWorkspace = $(if ([string]::IsNullOrWhiteSpace($sessionWorkspace)) { $null } else { Join-Path $repositoryRoot $sessionWorkspace })
     if ($null -eq $absoluteWorkspace -or -not (Test-Path -LiteralPath $absoluteWorkspace -PathType Container)) {

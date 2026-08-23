@@ -15,6 +15,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $refreshStopwatch = if ($Action -eq 'refresh') { [Diagnostics.Stopwatch]::StartNew() } else { $null }
@@ -81,8 +82,9 @@ $requestedHeadRef = if ($PSBoundParameters.ContainsKey('HeadRef')) { $HeadRef } 
 $workspaceHead = [string]::IsNullOrWhiteSpace($requestedHeadRef)
 $resolvedHeadRef = ''
 if (-not [string]::IsNullOrWhiteSpace($requestedHeadRef)) {
-    $resolvedHeadOutput = @(& git -C $repositoryRoot rev-parse --verify "$requestedHeadRef^{commit}" 2>$null)
-    $resolveExitCode = $LASTEXITCODE
+    $resolvedHeadResult = Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--verify', "$requestedHeadRef^{commit}") -AllowedExitCode @(0, 128)
+    $resolvedHeadOutput = @($resolvedHeadResult.Lines)
+    $resolveExitCode = $resolvedHeadResult.ExitCode
     $resolvedHeadRef = if ($resolvedHeadOutput.Count -gt 0) { ([string]$resolvedHeadOutput[0]).Trim() } else { '' }
     if ($resolveExitCode -ne 0 -or $resolvedHeadRef -notmatch '^[a-f0-9]{40}$') {
         throw "HeadRef '$requestedHeadRef' does not resolve to a commit."

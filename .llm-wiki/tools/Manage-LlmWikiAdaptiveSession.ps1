@@ -15,6 +15,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 if ([IO.Path]::IsPathRooted($WorkspacePath)) { throw 'WorkspacePath must be repository-relative.' }
@@ -38,8 +39,7 @@ if ($Action -eq 'pause') {
         & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskWorkspace.ps1') status -WorkspacePath $normalizedWorkspace -Format Json | ConvertFrom-Json
     }
     $descriptor = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'workspace.json') -Raw | ConvertFrom-Json
-    $head = (& git -C $repositoryRoot rev-parse HEAD).Trim()
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve Git HEAD while pausing the task.' }
+    $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve Git HEAD while pausing the task.').Lines[0].Trim()
     if ($null -ne $HandoffMarkdown -and $HandoffMarkdown.Count -gt 0) {
         [IO.File]::WriteAllText($handoffPath, (($HandoffMarkdown -join [Environment]::NewLine) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
     } else {
@@ -80,13 +80,12 @@ if ($Action -eq 'pause') {
     $status = if ($null -ne $StatusInput) { $StatusInput } else {
         & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskWorkspace.ps1') status -WorkspacePath $normalizedWorkspace -Format Json | ConvertFrom-Json
     }
-    $currentHead = (& git -C $repositoryRoot rev-parse HEAD).Trim()
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve Git HEAD while resuming the task.' }
+    $currentHead = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve Git HEAD while resuming the task.').Lines[0].Trim()
     $repositoryDriftPaths = @()
     if ($currentHead -ne [string]$receipt.pausedHead) {
-        & git -C $repositoryRoot cat-file -e "$($receipt.pausedHead)^{commit}" 2>$null
-        if ($LASTEXITCODE -eq 0) {
-            $repositoryDriftPaths = @(& git -C $repositoryRoot diff --name-only "$($receipt.pausedHead)..$currentHead" | Where-Object { $_ } | Select-Object -First $Limit)
+        $pausedCommitCheck = Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('cat-file', '-e', "$($receipt.pausedHead)^{commit}") -AllowedExitCode @(0, 1, 128)
+        if ($pausedCommitCheck.ExitCode -eq 0) {
+            $repositoryDriftPaths = @((Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('diff', '--name-only', "$($receipt.pausedHead)..$currentHead") -FailureMessage 'Unable to enumerate repository drift while resuming the task.').Lines | Where-Object { $_ } | Select-Object -First $Limit)
         }
     }
     $packetDrift = [string]$receipt.packetFingerprint -ne [string]$status.currentPacketFingerprint

@@ -3,14 +3,14 @@ param([switch]$Check, [switch]$ReuseUnchangedCheck)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $frontendRoot = Join-Path $repositoryRoot 'FoodDiary.Web.Client'
 $outputPath = Join-Path $wikiRoot 'generated/frontend-contract-index.json'
 $cachePath = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-cache/frontend-contract-index.json'
-$cacheInputs = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard -- 'FoodDiary.Web.Client/**/*.ts' 'FoodDiary.Web.Client/**/*.html')
-if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate frontend-contract cache inputs.' }
+$cacheInputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', 'FoodDiary.Web.Client/**/*.ts', 'FoodDiary.Web.Client/**/*.html') -FailureMessage 'Unable to enumerate frontend-contract cache inputs.')
 $cacheInputs = @($cacheInputs | Where-Object { $_ -notmatch '[\/](node_modules|dist[^\/]*|coverage|\.angular)[\/]' }) + @('.llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1', '.llm-wiki/tools/LlmWikiJson.ps1', '.llm-wiki/tools/LlmWikiIndexCache.ps1')
 $inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInputs
 if ($ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) { Write-Host 'Frontend contract index cache hit: inputs, generator, and output are unchanged.'; exit 0 }

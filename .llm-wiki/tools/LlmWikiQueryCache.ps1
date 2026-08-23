@@ -56,8 +56,7 @@ function Get-LlmWikiQueryCacheEntry {
     $material.Add("pwsh=$($PSVersionTable.PSVersion)")
     $material.Add($argumentMaterial)
     $fingerprint = Get-LlmWikiSha256 ($material -join "`n")
-    $gitDirectory = (& git -C $RepositoryRoot rev-parse --absolute-git-dir).Trim()
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve Git directory for the Wiki query cache.' }
+    $gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve Git directory for the Wiki query cache.').Lines[0].Trim()
     $cacheDirectory = Join-Path $gitDirectory "llm-wiki/query-cache/$Namespace"
     $metadataPath = Join-Path $cacheDirectory "latest-$argumentFingerprint.meta"
     $missReason = 'cold cache; no prior entry for these arguments'

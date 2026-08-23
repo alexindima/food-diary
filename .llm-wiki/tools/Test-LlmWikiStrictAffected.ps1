@@ -89,7 +89,7 @@ if ($pipelineText -notmatch 'analytical indexes:' -or $pipelineText -notmatch 'A
 if ($pipelineText -notmatch 'affected pipeline cache hit' -or $pipelineText -notmatch 'Get-PipelineCacheState' -or $pipelineText -notmatch 'outputFingerprint') {
     throw 'Affected pipeline does not transfer exact successful index evidence to the pre-commit freshness check.'
 }
-if ($pipelineText -notmatch 'rev-parse --absolute-git-dir' -or $pipelineText -match 'receiptPath = Join-Path \$repositoryRoot "\.artifacts/llm-wiki/index-cache') {
+if ($pipelineText -notmatch "'rev-parse', '--absolute-git-dir'" -or $pipelineText -match 'receiptPath = Join-Path \$repositoryRoot "\.artifacts/llm-wiki/index-cache') {
     throw 'Affected pipeline receipt is stored under cleanup-prone .artifacts instead of the durable Git directory.'
 }
 if ($pipelineText -notmatch 'Restore-OrphanedIndexTransaction' -or $pipelineText -notmatch "status = 'in-progress'" -or $pipelineText -notmatch "status = 'committed'") {

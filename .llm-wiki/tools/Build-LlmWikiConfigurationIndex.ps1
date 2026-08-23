@@ -3,6 +3,7 @@ param([switch]$Check)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $outputPath = Join-Path $wikiRoot 'generated/configuration-index.json'
@@ -15,10 +16,7 @@ function ConvertTo-RepositoryPath {
 function Get-RepositoryFiles {
     param([string[]]$Pattern)
 
-    $paths = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard -- @Pattern)
-    if ($LASTEXITCODE -ne 0) {
-        throw "Unable to enumerate repository files for: $($Pattern -join ', ')"
-    }
+    $paths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments (@('ls-files', '--cached', '--others', '--exclude-standard', '--') + @($Pattern)) -FailureMessage "Unable to enumerate repository files for: $($Pattern -join ', ').")
     return @(
         $paths |
             Where-Object { $_ } |

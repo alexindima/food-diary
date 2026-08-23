@@ -11,15 +11,14 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $toolsRoot = [System.IO.Path]::GetFullPath($PSScriptRoot)
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
 $shellPath = [System.IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 
 function Get-VerificationFingerprint {
-    $head = (& git -C $repositoryRoot rev-parse HEAD).Trim()
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve HEAD for verification resume.' }
-    $status = @(& git -C $repositoryRoot status --porcelain=v1 --untracked-files=all)
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve working-tree state for verification resume.' }
+    $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for verification resume.').Lines[0].Trim()
+    $status = @((Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('status', '--porcelain=v1', '--untracked-files=all') -FailureMessage 'Unable to resolve working-tree state for verification resume.').Lines)
     $material = [Text.StringBuilder]::new()
     $null = $material.AppendLine($head)
     foreach ($line in $status) {
@@ -38,7 +37,7 @@ function Get-VerificationFingerprint {
 
 $verificationFingerprint = if ($ResumePassedStages) { Get-VerificationFingerprint } else { $null }
 $receiptRoot = if ($ResumePassedStages) {
-    $gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
+    $gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve the Git directory for verification resume.').Lines[0].Trim()
     Join-Path $gitDirectory "llm-wiki/verification-stages/$verificationFingerprint"
 } else { $null }
 if ($receiptRoot) { $null = New-Item -ItemType Directory -Path $receiptRoot -Force }

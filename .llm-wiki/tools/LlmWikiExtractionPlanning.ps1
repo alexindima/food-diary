@@ -1,4 +1,7 @@
 Set-StrictMode -Version Latest
+if (-not (Get-Command Invoke-LlmWikiGitPathList -ErrorAction SilentlyContinue)) {
+    . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+}
 
 function Get-LlmWikiExtractionModule([string]$Objective) {
     if ($Objective -match '(?i)\bextract(?:ion)?\s+(?:of\s+)?(?<module>[A-Z][A-Za-z0-9_]+)') { return [string]$Matches.module }
@@ -36,8 +39,7 @@ function Get-LlmWikiExtractionPlan([string]$Objective, [string]$RepositoryRoot) 
     )
     $referencePattern = "Add$([regex]::Escape($module))Module|FoodDiary\.Application\.$([regex]::Escape($module))(?:\.csproj)?"
     $referencePaths = @(
-        & git -C $RepositoryRoot ls-files --cached --others --exclude-standard -- '*.cs' '*.csproj' '*.slnx' 'Dockerfile' '**/Dockerfile' |
-            ForEach-Object { ([string]$_).Replace('\', '/') } |
+        Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', '*.cs', '*.csproj', '*.slnx', 'Dockerfile', '**/Dockerfile') -FailureMessage 'Unable to enumerate module extraction reference candidates.' |
             Where-Object {
                 $candidatePath = $_
                 if ($candidatePath.StartsWith("FoodDiary.Application.$module/", [StringComparison]::OrdinalIgnoreCase)) { return $false }

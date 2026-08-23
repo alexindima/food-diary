@@ -13,8 +13,9 @@ function Resolve-LlmWikiCommitRef {
         [Parameter(Mandatory)][string]$Ref
     )
 
-    $resolved = @(& git -C $RepositoryRoot rev-parse --verify "$Ref^{commit}" 2>$null)
-    if ($LASTEXITCODE -ne 0 -or $resolved.Count -ne 1 -or [string]$resolved[0] -notmatch '^[a-f0-9]{40}$') {
+    $result = Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('rev-parse', '--verify', "$Ref^{commit}") -AllowedExitCode @(0, 128)
+    $resolved = @($result.Lines)
+    if ($result.ExitCode -ne 0 -or $resolved.Count -ne 1 -or [string]$resolved[0] -notmatch '^[a-f0-9]{40}$') {
         throw "Unable to resolve Git ref '$Ref' to a commit."
     }
     return ([string]$resolved[0]).ToLowerInvariant()

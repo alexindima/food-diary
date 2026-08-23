@@ -1,3 +1,5 @@
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+
 function Test-LlmWikiPresentationOnlyTemplateDiff([string]$DiffText) {
     if ([string]::IsNullOrWhiteSpace($DiffText)) { return $false }
 
@@ -37,8 +39,7 @@ function Get-LlmWikiPathDiff([string]$RepositoryRoot, [string]$Path) {
         , @('diff', '--unified=0', '--', $Path)
     )
     foreach ($arguments in $diffArgumentSets) {
-        $text = (& git -C $RepositoryRoot @arguments) -join [Environment]::NewLine
-        if ($LASTEXITCODE -ne 0) { throw "Unable to inspect semantic diff for '$Path'." }
+        $text = @((Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments $arguments -FailureMessage "Unable to inspect semantic diff for '$Path'.").Lines) -join [Environment]::NewLine
         if (-not [string]::IsNullOrWhiteSpace($text)) { $parts.Add($text) }
     }
     return $parts -join [Environment]::NewLine

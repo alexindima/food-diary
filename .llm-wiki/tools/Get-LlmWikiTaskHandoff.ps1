@@ -538,7 +538,7 @@ if ($Format -eq 'Json') {
     $lines.Add('')
     foreach ($anchor in $compactHandoff.scope.sourceAnchors) {
         $reference = if ($anchor.anchorStatus -eq 'line') { "$($anchor.path):$($anchor.line)" } else { [string]$anchor.path }
-        $lines.Add("- ``$reference`` — $(ConvertTo-MarkdownText $anchor.kind)")
+        $lines.Add("- ``$reference`` - $(ConvertTo-MarkdownText $anchor.kind)")
     }
     $lines.Add('')
     $lines.Add('## Open acceptance, checks, and reviews')
