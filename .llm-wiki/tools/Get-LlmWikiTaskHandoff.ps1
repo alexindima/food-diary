@@ -266,9 +266,9 @@ $contextSecurity = if (Test-Path -LiteralPath $contextSecurityPath -PathType Lea
         -Format Json | ConvertFrom-Json
 } else { $null }
 $contextFeedback = & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextFeedback.ps1') metrics -Format Json | ConvertFrom-Json
-$contextFeedbackProfiles = if ($null -ne $contextBundle) {
+$contextFeedbackProfiles = @(if ($null -ne $contextBundle) {
     @($contextFeedback.metrics.profiles | Where-Object path -in @($contextBundle.bundle.items.path))
-} else { @() }
+} else { @() })
 $confidenceLedgerPath = Join-Path $absoluteWorkspacePath 'confidence-ledger.json'
 $confidenceLedger = if (Test-Path -LiteralPath $confidenceLedgerPath -PathType Leaf) {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') verify -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json

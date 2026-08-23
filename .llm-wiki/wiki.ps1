@@ -2331,7 +2331,7 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
     }
     'review' {
-        $pageReviewIds = if ($PSBoundParameters.ContainsKey('ReviewId')) { @($ReviewId) } elseif ($PSBoundParameters.ContainsKey('Id')) { @($Id) } else { @() }
+        $pageReviewIds = @(if ($PSBoundParameters.ContainsKey('ReviewId')) { @($ReviewId) } elseif ($PSBoundParameters.ContainsKey('Id')) { @($Id) } else { @() })
         $pageReviewIds = @($pageReviewIds | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
         if ($pageReviewIds.Count -eq 0) { throw 'review requires -Id or -ReviewId.' }
         foreach ($pageReviewId in $pageReviewIds) {

@@ -127,14 +127,14 @@
                         "pageSha256":  "d09bef3a0319b7a8b848d8b35f4b8415ad8b349af18b18892057db2b6e63fca1",
                         "sources":  [
                                         {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "17f3fd3be7fefc41afb02f2933f045778188dfc9c46ebf721bf3003419830c36"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+                                            "sha256":  "9eb74c08f415f8e0e829be2912de2c97c58f89b93157c1682fda56308ede6cec"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:38.0718173Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:30.1205909Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -143,13 +143,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-                                            "sha256":  "19d370c2e519b41051198b5d737ba1bb114d100b4acd64bce692ad344fc2f6c6"
+                                            "sha256":  "9eb74c08f415f8e0e829be2912de2c97c58f89b93157c1682fda56308ede6cec"
                                         }
                                     ],
-                        "reason":  "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5dd602119e639889bf60bcc427f22c194b7e33d0",
-                        "reviewedAtUtc":  "2026-08-18T00:21:31.8022183Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:36.1810804Z"
                     },
                     {
                         "pageId":  "workflow.evidence-bundle",
@@ -157,14 +157,14 @@
                         "pageSha256":  "f23f6110e42d7342e66693195c2772bf1325e0a2da4a3d51286d0fa18162353d",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/New-LlmWikiEvidenceLineage.ps1",
-                                            "sha256":  "43a2e2e4cc54a3218889f365334f6e02c1e9e8ec4790ca48ac8e571d6b1334b5"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+                                            "sha256":  "9eb74c08f415f8e0e829be2912de2c97c58f89b93157c1682fda56308ede6cec"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:12.1794563Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:36.7758941Z"
                     },
                     {
                         "pageId":  "workflow.frontend-contract-review",
@@ -202,18 +202,18 @@
                         "pageSha256":  "2fef1c903c42193a33f6c3de3fc4c406a2a718ff38e942ad7944df0e74c713af",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Add-LlmWikiSourceReview.ps1",
-                                            "sha256":  "769db8061edd564efa22092ef0ee88259170e4c544bbb08bbeacab2effa27646"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiImpact.ps1",
+                                            "sha256":  "234fc6f65227a996cdcba4c567b9df84fc8e4e012435335b0786753d862adda1"
                                         },
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "6a15f74faa2c72fafd6ff07f03617cb3c57035114ecc61dd9d7082776b0284ad"
+                                            "sha256":  "3e0c909f3dd700ce1926a18b203c2b01cdf2bc3e16516e27c21d9f378af0f333"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:18.4213675Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:46.1578873Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -222,17 +222,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "17f3fb3c9ff435af9715dcb28c21f5f169e17f5b41d66441ba4c7d05dd42c832"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-                                            "sha256":  "3fe3cc9e722f43fb132157c89a2ef14edefe9135ae7934af8cdb5c1e23ed635c"
+                                            "sha256":  "20f9cbd4d42ba6657378b7428514b0f830d07dad9f9ae5f704494eb8859f4dfe"
                                         }
                                     ],
-                        "reason":  "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5dd602119e639889bf60bcc427f22c194b7e33d0",
-                        "reviewedAtUtc":  "2026-08-18T00:21:29.2941862Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:16.7105898Z"
                     },
                     {
                         "pageId":  "workflow-adaptive-development",
@@ -240,50 +236,26 @@
                         "pageSha256":  "826ee326e4250f90576d9326fc66400c9191d37492400b624acf9d4bc69f6d52",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiGitPrecedents.ps1",
-                                            "sha256":  "e976f7c5da57c4c86a760fab115a2c34c4571337b3ffd864d828eb580dd0759a"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1",
+                                            "sha256":  "ed624912f80714771633473ce27f7dc04e9e72414bc3c77262d7999de3a50386"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "a9ea1ccfbc43f89fbc8d3a1e724596b268cf8559e6ae2cd9cb3697fcedbc86cb"
+                                            "sha256":  "572c2bda16ab36a3ea0814640b5bd872d5b3b49e18efa2dffb70c32b01129c4b"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-                                            "sha256":  "fbadfc281a08c477205bdb84e4d5e37a4fc01ad266b7be644821899b7dbe3bc7"
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-                                            "sha256":  "eb98e64ae239624221d3443d39b163b4571589468cf6d7ea515670eb1cb9e9e3"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-                                            "sha256":  "2a73fda675af2e31ae56bc0f30e7607ab37af070360650316e29a5690838d9a0"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAdaptiveSession.ps1",
-                                            "sha256":  "2b9891815fee9fe99db3cc9afa2514aa4d3498f68ae2a5f8d0954af6547a25b3"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskBaseline.ps1",
-                                            "sha256":  "732ba8ee955cd965091ad39be76502f28391970581860f8d4ce7812c6f56b3ee"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
-                                            "sha256":  "bbb687f52fa88e5ea13dda1a3f7a50faa11d5fa76ed110d93c9f0296a27cf708"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Resolve-LlmWikiSession.ps1",
-                                            "sha256":  "0a8f108df6494e98ee5561965c8719787d53e7467b6979910ece5682fa9f3f5b"
+                                            "sha256":  "7eebdf526d1d7f69db3abfad95b3b3aae984942e9ce4110e9dbd26a1328c9076"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:08.6241672Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:17.1322617Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -367,13 +339,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "6a15f74faa2c72fafd6ff07f03617cb3c57035114ecc61dd9d7082776b0284ad"
+                                            "sha256":  "3e0c909f3dd700ce1926a18b203c2b01cdf2bc3e16516e27c21d9f378af0f333"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:09.0157477Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:30.6352235Z"
                     },
                     {
                         "pageId":  "workflow-confidence-ledger",
@@ -411,18 +383,14 @@
                         "pageSha256":  "d5e1b60357672ab39c6e84d10132a391d72d5a46575afbffe7db0399b804a2cd",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-                                            "sha256":  "f6945ef758d416498b2eff63c7e5064685df3ca03e3004ba46cfdce1e668f3bd"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:09.9327229Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:31.2617377Z"
                     },
                     {
                         "pageId":  "workflow-context-quality-benchmark",
@@ -445,14 +413,14 @@
                         "pageSha256":  "893ec0218c13b7b7c053c337c5bf42d475f1143bf06f472905cb285f239b7395",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextSecurity.ps1",
+                                            "sha256":  "143a6117b84178de7ecfc72496bc5b441cdf54a00c0f1b3b67911c72ded520bc"
                                         }
                                     ],
-                        "reason":  "Reviewed the new policy subtree and compact anchors; anchors contain repository path/line metadata only, and existing context-security, redaction, quarantine, and privacy lifecycle behavior is unchanged.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:40.1112728Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:31.9335742Z"
                     },
                     {
                         "pageId":  "workflow-context-strategy-experiments",
@@ -475,14 +443,14 @@
                         "pageSha256":  "e4de9df2c7adeae34ec774eebca8f821c2a90f1b85fe27d16d59d8d581495c23",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextOutcome.ps1",
+                                            "sha256":  "be059a5bfc97f68a9088516dad008e8cee9e2ca5b19af529716322949ca4678e"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:40.7319460Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:32.6398118Z"
                     },
                     {
                         "pageId":  "workflow-controlled-learning-promotion",
@@ -490,18 +458,18 @@
                         "pageSha256":  "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+                                            "sha256":  "5893e421c6a30e21400547b06d9d5b0b6959321f7f7132c9f1a301f2f017e8ae"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:10.3861512Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:33.2702848Z"
                     },
                     {
                         "pageId":  "workflow-controlled-repair-loop",
@@ -509,37 +477,33 @@
                         "pageSha256":  "1a4c6620169d6fbe556feae253e1e80b1f7a4f4d232962b8fe8b13635bfb608a",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:10.8256139Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:33.7752951Z"
                     },
                     {
                         "pageId":  "workflow-cost-aware-verification",
                         "pagePath":  ".llm-wiki/workflows/cost-aware-verification.md",
-                        "pageSha256":  "89bba606d2635692a16e530538c4ccc5a89b7d983e5a9465a605a1aefdd34e7c",
+                        "pageSha256":  "d6a287a6000b102cd9e007a1630184aabad98def8c1ced3ede421ebff7fe4c37",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+                                            "sha256":  "5893e421c6a30e21400547b06d9d5b0b6959321f7f7132c9f1a301f2f017e8ae"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "383c1727051c2466855228d25afa3a12a1176b414699242e3abb7d8e457e3ec7"
                                         }
                                     ],
-                        "reason":  "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:41.7033536Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:34.4007857Z"
                     },
                     {
                         "pageId":  "workflow-decision-context",
@@ -578,25 +542,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "a9ea1ccfbc43f89fbc8d3a1e724596b268cf8559e6ae2cd9cb3697fcedbc86cb"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiWorkflowMetrics.ps1",
-                                            "sha256":  "f695b53b89e183d58364e8434708fe2c962a1734e01e5ee374060d31cdec429a"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-                                            "sha256":  "2a73fda675af2e31ae56bc0f30e7607ab37af070360650316e29a5690838d9a0"
+                                            "sha256":  "572c2bda16ab36a3ea0814640b5bd872d5b3b49e18efa2dffb70c32b01129c4b"
                                         },
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "6a15f74faa2c72fafd6ff07f03617cb3c57035114ecc61dd9d7082776b0284ad"
+                                            "sha256":  "3e0c909f3dd700ce1926a18b203c2b01cdf2bc3e16516e27c21d9f378af0f333"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:11.2757701Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:34.9693253Z"
                     },
                     {
                         "pageId":  "workflow-domain-data-review",
@@ -619,18 +575,14 @@
                         "pageSha256":  "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:11.7098937Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:35.5560975Z"
                     },
                     {
                         "pageId":  "workflow-failure-knowledge",
@@ -653,14 +605,14 @@
                         "pageSha256":  "f329d54afe5274a4bfce5e5cc7e77455554286b51569c8b214ef3fd44fe8be83",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "383c1727051c2466855228d25afa3a12a1176b414699242e3abb7d8e457e3ec7"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:42.3807890Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:37.3284681Z"
                     },
                     {
                         "pageId":  "workflow-frontend-visual-evidence",
@@ -698,22 +650,14 @@
                         "pageSha256":  "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:12.6079592Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:38.0915074Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -736,22 +680,14 @@
                         "pageSha256":  "d93e8bf4522a803da1d1a59bd2cd49e0d6a6b39360281f4df4f1792621027fb1",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:13.0815688Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:38.7935521Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",
@@ -759,66 +695,18 @@
                         "pageSha256":  "e3ced57c02bacfce6b76fbc8d3af6c09485e3888822e3145909ebdb247386368",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1",
-                                            "sha256":  "805b5884ad61c3e0fcd1cc551a4c6b45b6ba006c56358bf97e1089092b855fd5"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
-                                            "sha256":  "204fb7ca48335b34ca1669199504a3d89930cac89d78b7b1a5b101da6ce283d7"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1",
-                                            "sha256":  "e24baf3b6295515c49fe31581facadcd09091784efdc44aeeb31c001ffb6eae4"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-                                            "sha256":  "7460704f6498d20333535759965af64c86364d256fcee630bd1153fed05e8be1"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "494b6e0b5b5b2e69cc87f32baffae20fff52ad003a095f8e3b6ee849d49d779a"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
-                                            "sha256":  "a99c950221edcc1c1595b9bc2b77fb99b83a3da5f5cbaf101b9f3fb9ad82005f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-                                            "sha256":  "4698b80f909f699dbec785dd2fd783e7badcb5ba5e22a9a6195f68dca232dd33"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-                                            "sha256":  "69e8d3b3cd765ce82eefb22bd07701379854644a75bcaed4b2fc94ffd035f82a"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/LlmWikiIndexTiming.ps1",
-                                            "sha256":  "9643fe8dfd27fc144decef6cc1616a4b5fdb57452649dbcb3065fa7a34af1028"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
-                                            "sha256":  "97e407968e6fac00058e5e6cafd99bf96bffaca31c8eb52ce502137c607a3092"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
-                                            "sha256":  "bbb687f52fa88e5ea13dda1a3f7a50faa11d5fa76ed110d93c9f0296a27cf708"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
-                                            "sha256":  "4b5fb9148908b98f4fc29a2ad3b0d4528d3e5cb5be9d567db558bcc1d6e38a18"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
-                                            "sha256":  "829a4a427185d6b5908e536800d8c2d10de0f9d633b4c7ccbeb7f24774dac224"
+                                            "sha256":  "452792bc4c8747928113dae209cf6602f9b803d6291839264e06dae62a58f769"
                                         },
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "6a15f74faa2c72fafd6ff07f03617cb3c57035114ecc61dd9d7082776b0284ad"
+                                            "sha256":  "3e0c909f3dd700ce1926a18b203c2b01cdf2bc3e16516e27c21d9f378af0f333"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:13.5362312Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:39.5382320Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -842,13 +730,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "a9ea1ccfbc43f89fbc8d3a1e724596b268cf8559e6ae2cd9cb3697fcedbc86cb"
+                                            "sha256":  "572c2bda16ab36a3ea0814640b5bd872d5b3b49e18efa2dffb70c32b01129c4b"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:13.9967149Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:40.1938843Z"
                     },
                     {
                         "pageId":  "workflow-learned-regression-evals",
@@ -856,18 +744,14 @@
                         "pageSha256":  "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:14.4836493Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:40.8525652Z"
                     },
                     {
                         "pageId":  "workflow-model-routing",
@@ -875,14 +759,18 @@
                         "pageSha256":  "f2175e29d46c5bf4aca0b8bb756b10ce36fb1049494ab8ee1309f48f3f75fbe6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiModelRoutingOutcome.ps1",
+                                            "sha256":  "15c7441f5883fbf803d4cc4388caf89c3235d4071e977d7fcfd7889824d5f76a"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "383c1727051c2466855228d25afa3a12a1176b414699242e3abb7d8e457e3ec7"
                                         }
                                     ],
-                        "reason":  "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:45.4115892Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:41.5379187Z"
                     },
                     {
                         "pageId":  "workflow-ownership-impact",
@@ -920,22 +808,14 @@
                         "pageSha256":  "cc412c14328fb572376872cca0476a09251ab524bf64dd86398365cfae4a2bf6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:14.9316051Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:42.2679767Z"
                     },
                     {
                         "pageId":  "workflow-post-task-retrospective",
@@ -943,18 +823,14 @@
                         "pageSha256":  "dbcac0a7ae8c9e8975807cd711fc7680b3c731e74459583b85917d9bb8e1827d",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:15.3947876Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:42.9510434Z"
                     },
                     {
                         "pageId":  "workflow-privacy-review",
@@ -992,22 +868,22 @@
                         "pageSha256":  "7622935ab3aa92e0641117a4b5afc2b8faada090a2a8a83e9ea27a575f549281",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "20f9cbd4d42ba6657378b7428514b0f830d07dad9f9ae5f704494eb8859f4dfe"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiProofOfChange.ps1",
+                                            "sha256":  "b2a8d662c86e84305b79b1a725f6ee10a01abb03bf7f23565fe86bf28ef9080c"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:16.9459225Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:43.7538716Z"
                     },
                     {
                         "pageId":  "workflow-quality-risk",
@@ -1030,14 +906,14 @@
                         "pageSha256":  "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-                                            "sha256":  "87ecbae893bc8e6cc5cc9914d327de41b5f0aaa1f737b91e1d33df920d9443c1"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "20f9cbd4d42ba6657378b7428514b0f830d07dad9f9ae5f704494eb8859f4dfe"
                                         }
                                     ],
-                        "reason":  "Release readiness now normalizes null, scalar, and array-shaped collections before counting and its regression covers scalar findings plus direct HeadRef invocation.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5139162b0a282013047d7fdc953943423039e067",
-                        "reviewedAtUtc":  "2026-08-21T01:31:02.4906469Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:44.5155796Z"
                     },
                     {
                         "pageId":  "workflow-requirement-intelligence",
@@ -1045,22 +921,18 @@
                         "pageSha256":  "d6032fccda979d114e265f30e4f14d9593ded53c6b79d85a2dfc467b07fa3a61",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "20f9cbd4d42ba6657378b7428514b0f830d07dad9f9ae5f704494eb8859f4dfe"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:17.9134944Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:45.2762458Z"
                     },
                     {
                         "pageId":  "workflow-review-report",
@@ -1083,18 +955,18 @@
                         "pageSha256":  "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "383c1727051c2466855228d25afa3a12a1176b414699242e3abb7d8e457e3ec7"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:19.3646978Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:46.9140433Z"
                     },
                     {
                         "pageId":  "workflow-runtime-impact",
@@ -1117,18 +989,18 @@
                         "pageSha256":  "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "383c1727051c2466855228d25afa3a12a1176b414699242e3abb7d8e457e3ec7"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:19.8514832Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:47.7663719Z"
                     },
                     {
                         "pageId":  "workflow-task-brief",
@@ -1136,14 +1008,14 @@
                         "pageSha256":  "5b0035be778c175914d29999e36b30dae6b04e0683647ace85fe88ffdb4509fb",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "fa95f5656d4a6f3ec16614fd09caee6f4f51f76b145a59ed4bf4e43a2327fbbf"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+                                            "sha256":  "9eb74c08f415f8e0e829be2912de2c97c58f89b93157c1682fda56308ede6cec"
                                         }
                                     ],
-                        "reason":  "Reviewed dependent quality and workflow pages against the new FTS shadow smoke and graph fingerprint invalidation; their governed behavior remains accurate and the code-graph workflow documents the new lane.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "85771947b5e67aaadce22c194ef601d85ba0613c",
-                        "reviewedAtUtc":  "2026-08-21T03:26:21.4734464Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:48.6048527Z"
                     },
                     {
                         "pageId":  "workflow-task-contract",
@@ -1166,18 +1038,14 @@
                         "pageSha256":  "7b3ea1842edd2b40e621b8bef887a96786f9bff979e494b7832a71c176439ff0",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:20.3359411Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:49.3630567Z"
                     },
                     {
                         "pageId":  "workflow-task-dispatch-receipts",
@@ -1186,13 +1054,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "6a15f74faa2c72fafd6ff07f03617cb3c57035114ecc61dd9d7082776b0284ad"
+                                            "sha256":  "3e0c909f3dd700ce1926a18b203c2b01cdf2bc3e16516e27c21d9f378af0f333"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:20.8118818Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:50.3953726Z"
                     },
                     {
                         "pageId":  "workflow-task-scheduler",
@@ -1200,18 +1068,14 @@
                         "pageSha256":  "b964048fb46e10eb6f3e28c3ddcfb451e3443691f1da29c8708d768c8ac1629c",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:21.3299007Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:51.2101024Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
@@ -1219,34 +1083,26 @@
                         "pageSha256":  "19d360f7ae44b67345aa130aad1b1ab9d343d76912b945a5c75f9ce0627c3818",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
-                                            "sha256":  "8687d731b55cb5764c970f6ae0e69d9da636b42ffa93497427f28a60cad68468"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-                                            "sha256":  "7b02dc6f4324c5ada4317d2bb5499e92149fb01cacbf831b4ed7b5a65588b40f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "c935b9ec1dbf6508a15a4d2f486d0dcd4913d53c48e8036b382e0286f09d56e3"
+                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Initialize-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "c7d5ed643741f62f55230ec9ec4dfeeacbe3e2d4fa68f875906007564c25dd77"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "20f9cbd4d42ba6657378b7428514b0f830d07dad9f9ae5f704494eb8859f4dfe"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-                                            "sha256":  "fbadfc281a08c477205bdb84e4d5e37a4fc01ad266b7be644821899b7dbe3bc7"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "383c1727051c2466855228d25afa3a12a1176b414699242e3abb7d8e457e3ec7"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6"
+                                            "path":  ".llm-wiki/tools/Update-LlmWikiTaskEvidence.ps1",
+                                            "sha256":  "7cf5864d82c5e31a66aec9fa0c75d2884aa5fe5588894ff3d126d6c0c81769e2"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:21.8756910Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:52.0153480Z"
                     },
                     {
                         "pageId":  "workflow-test-plan",
@@ -1288,14 +1144,14 @@
                         "pageSha256":  "368dfe1e9684ead7a5e3207edd05e55477d432ae1f9627814d62bfeb9559fb84",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/workspace-policies.json",
-                                            "sha256":  "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "383c1727051c2466855228d25afa3a12a1176b414699242e3abb7d8e457e3ec7"
                                         }
                                     ],
-                        "reason":  "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-                        "reviewedAtUtc":  "2026-08-21T19:09:49.1408173Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:52.7783167Z"
                     },
                     {
                         "pageId":  "workflow-verification-telemetry",
@@ -1303,14 +1159,14 @@
                         "pageSha256":  "9cc76f52e65dc93eb463ced774f1826e3433f33fb3ac620b0a5c280a106fd88d",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationTelemetry.ps1",
-                                            "sha256":  "8be4fb6da10a52cc1a3818f48aaeb6047f2f4639ad93c7be75cb40d87123b426"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+                                            "sha256":  "5893e421c6a30e21400547b06d9d5b0b6959321f7f7132c9f1a301f2f017e8ae"
                                         }
                                     ],
-                        "reason":  "Ported native git invocations across the tool suite from the PowerShell \u0026 call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2\u003e$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1\u0027s default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-                        "reviewedAtUtc":  "2026-08-23T01:47:22.9354217Z"
+                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
+                        "reviewedAtUtc":  "2026-08-23T13:04:53.4410919Z"
                     }
                 ]
 }

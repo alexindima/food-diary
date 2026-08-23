@@ -11,11 +11,11 @@ function Get-LlmWikiChangeSetSnapshot {
 
     $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the Wiki change-set snapshot.').Lines[0].Trim()
     $normalizedRelevantPaths = @($RelevantPath | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') } | Sort-Object -Unique)
-    $gitPathspecs = if ($normalizedRelevantPaths.Count -gt 0) {
+    $gitPathspecs = @(if ($normalizedRelevantPaths.Count -gt 0) {
         @($normalizedRelevantPaths + @('.llm-wiki/tools', '.llm-wiki/policies', '.llm-wiki/wiki.ps1') | Sort-Object -Unique)
     } else {
         @()
-    }
+    })
     $diffArguments = @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') + @($gitPathspecs)
     $untrackedArguments = @('ls-files', '--others', '--exclude-standard', '--') + @($gitPathspecs)
     $workspacePaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments $diffArguments -FailureMessage 'Unable to resolve modified paths for the Wiki change-set snapshot.')

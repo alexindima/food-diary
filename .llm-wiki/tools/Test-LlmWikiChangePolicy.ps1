@@ -103,7 +103,7 @@ foreach ($rule in $policy.rules) {
         }
     }
 
-    $structuralChecks = if ($rule.PSObject.Properties['structuralChecks']) { @($rule.structuralChecks) } else { @() }
+    $structuralChecks = @(if ($rule.PSObject.Properties['structuralChecks']) { @($rule.structuralChecks) } else { @() })
     foreach ($structuralCheck in $structuralChecks) {
         if ($structuralCheck -eq 'paired-locales') {
             foreach ($localePath in $matchingPaths) {

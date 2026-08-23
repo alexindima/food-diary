@@ -13,6 +13,6 @@ function Write-LlmWikiLearningExperimentResult([object]$Result) {
         Write-Host " - $($experiment.candidateId): shadow=$($experiment.shadow.verdict), canary=$($experiment.canaryState), current=$($experiment.currentEvaluation.verdict), successful=$($experiment.successful)"
     }
 
-    $issues = if ($Result.PSObject.Properties['issues']) { @($Result.issues) } else { @() }
+    $issues = @(if ($Result.PSObject.Properties['issues']) { @($Result.issues) } else { @() })
     foreach ($issue in $issues) { Write-Host " - $issue" }
 }

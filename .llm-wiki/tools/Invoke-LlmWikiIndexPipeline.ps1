@@ -407,7 +407,7 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
     }
     if ($failed.Count -gt 0) {
         $failedToolNames = @($failed | ForEach-Object { ($_ -split ' \(exit=')[0] })
-        $workspaceChangedPaths = if ($DeferPossiblyConcurrentStale) { @(Get-WorkspaceChangedPaths) } else { @() }
+        $workspaceChangedPaths = @(if ($DeferPossiblyConcurrentStale) { @(Get-WorkspaceChangedPaths) } else { @() })
         $disposition = & (Join-Path $toolsRoot 'Get-LlmWikiStaleDisposition.ps1') `
             -FailedTool $failedToolNames `
             -WorkspaceChangedPath $workspaceChangedPaths

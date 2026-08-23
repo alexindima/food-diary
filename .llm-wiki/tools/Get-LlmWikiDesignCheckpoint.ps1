@@ -47,7 +47,7 @@ $decisionQuestions = @($research.openQuestions | ForEach-Object {
         id = $_.id
         question = $_.question
         blocking = [bool]$_.blocking -and -not $resolvedByInput
-        resolution = if ($resolvedByInput) { $decisionEvidence } else { @() }
+        resolution = @(if ($resolvedByInput) { $decisionEvidence } else { @() })
         resolutionEvidence = $_.evidenceNeeded
         resolutionCommand = if ($resolvedByInput) { $null } elseif ($_.PSObject.Properties['resolutionCommand']) { [string]$_.resolutionCommand } else { $null }
     }

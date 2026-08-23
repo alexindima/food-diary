@@ -123,11 +123,11 @@ $pages = @(
         Where-Object { $_.FullName -ne (Join-Path $wikiRoot 'README.md') } |
         ForEach-Object { Get-PageMetadata $_ }
 )
-$sourceReviews = if (Test-Path -LiteralPath $reviewLedgerPath) {
+$sourceReviews = @(if (Test-Path -LiteralPath $reviewLedgerPath) {
     @((Get-Content -LiteralPath $reviewLedgerPath -Raw | ConvertFrom-Json).reviews)
 } else {
     @()
-}
+})
 
 $impacts = [System.Collections.Generic.List[object]]::new()
 foreach ($page in $pages) {

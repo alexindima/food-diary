@@ -234,7 +234,11 @@ if ($Action -eq 'replan') {
         invalidationPreview = $preview.invalidation
         before = [pscustomobject][ordered]@{ valid = $before.valid; gates = $before.gates }
         after = [pscustomobject][ordered]@{ valid = $after.valid; gates = $after.gates }
-        note = 'Replanning atomically refreshes observed evidence, widens the task contract only to current observed product paths under the supplied rationale, and rebuilds the manifest; failures restore the complete workspace snapshot.'
+        note = if ($DryRun) {
+            'Dry-run replanning previews refresh and invalidation impact only; it does not widen the task contract or mutate the workspace.'
+        } else {
+            'Replanning atomically refreshes observed evidence, widens the task contract only to current observed product paths under the supplied rationale, and rebuilds the manifest; failures restore the complete workspace snapshot.'
+        }
     }
 } elseif ($Action -eq 'critique') {
     $assessment = if ($null -ne $AssessmentInput) { $AssessmentInput } else { Get-DeliveryAssessment }

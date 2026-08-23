@@ -331,7 +331,7 @@ if ($Action -eq 'create') {
 }
 
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 30 } else {
-    $firstFailedRun = if ($Action -eq 'run') { @($result.runs | Where-Object { [int]$_.result.failureCount -gt 0 } | Select-Object -First 1) } else { @() }
+    $firstFailedRun = @(if ($Action -eq 'run') { @($result.runs | Where-Object { [int]$_.result.failureCount -gt 0 } | Select-Object -First 1) } else { @() })
     if (-not $result.valid -and $firstFailedRun.Count -gt 0) {
         Write-Host "BLOCKED: verification '$($firstFailedRun[0].primaryCheckId)' failed."
         Write-Host "Repair: fix the reported failure, then ./.llm-wiki/wiki.ps1 task-verification-run -WorkspacePath $normalizedWorkspace"
@@ -346,7 +346,7 @@ if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 30 } else {
         foreach ($execution in @($result.plan.executions)) { Write-Host " - [$($execution.priority)] $($execution.primaryCheckId) covers $(@($execution.coversCheckIds) -join ', ')" }
         foreach ($decision in @($result.plan.decisions)) { Write-Host "   $($decision.checkId): $($decision.disposition) - $($decision.rationale)" }
     }
-    $resultIssues = if ($result.PSObject.Properties['issues']) { @($result.issues) } else { @() }
+    $resultIssues = @(if ($result.PSObject.Properties['issues']) { @($result.issues) } else { @() })
     foreach ($issue in $resultIssues) { Write-Host " - $issue" }
 }
 if ($FailOnInvalid -and -not $result.valid) { exit 1 }

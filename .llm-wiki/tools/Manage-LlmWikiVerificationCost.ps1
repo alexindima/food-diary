@@ -163,9 +163,9 @@ function Get-Forecast([bool]$PersistPrediction) {
 }
 function Get-Calibration([object[]]$Estimates) {
     $evidence = Get-Content -LiteralPath $evidencePath -Raw | ConvertFrom-Json
-    $repairs = if (Test-Path -LiteralPath $repairPath -PathType Leaf) {
+    $repairs = @(if (Test-Path -LiteralPath $repairPath -PathType Leaf) {
         (& (Join-Path $PSScriptRoot 'Manage-LlmWikiRepairLoop.ps1') verify -WorkspacePath $workspace -Format Json | ConvertFrom-Json).registry.attempts
-    } else { @() }
+    } else { @() })
     $outcomes = @($estimates | ForEach-Object {
         $estimate = $_
         $check = $evidence.checks | Where-Object id -eq $estimate.checkId | Select-Object -First 1
@@ -227,7 +227,7 @@ function Test-Receipt([object]$Receipt) {
             $issues.Add("Cost arithmetic is invalid for '$($estimate.checkId)'.")
         }
         if ([int]$estimate.priorityBoost -ne $boost) { $issues.Add("Cost priority boost is invalid for '$($estimate.checkId)'.") }
-        $snapshot = if ($Receipt.PSObject.Properties['appliedLearningSnapshot']) { @($Receipt.appliedLearningSnapshot) } else { @() }
+        $snapshot = @(if ($Receipt.PSObject.Properties['appliedLearningSnapshot']) { @($Receipt.appliedLearningSnapshot) } else { @() })
         $snapshotOverrides = @($snapshot | Where-Object { $estimate.checkId -in @($_.application.subjectIds) })
         if ($snapshotOverrides.Count -gt 0) {
             $expectedSeconds = [int][Math]::Round([double](($snapshotOverrides.application.recommendedSeconds | Measure-Object -Average).Average))

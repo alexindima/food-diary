@@ -293,7 +293,10 @@ $precedents = & (Join-Path $PSScriptRoot 'Get-LlmWikiGitPrecedents.ps1') `
     -Limit 5 `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($precedents.searchedCommitCount -gt 0) 'Precedent search inspected no Git history.'
-Assert-Adaptive (@($precedents.precedents | Where-Object subject -match 'photo annotation').Count -gt 0) 'Precedent search omitted the known photo-annotation history.'
+# Note: this checks for scope-matched precedent evidence rather than a specific commit subject,
+# because Get-LlmWikiGitPrecedents.ps1 bounds its search to the most recent 300 commits and any
+# commit pinned by subject text alone will eventually age out of that window as the repo grows.
+Assert-Adaptive (@($precedents.precedents | Where-Object { @($_.matchedPaths).Count -gt 0 }).Count -gt 0) 'Precedent search omitted a scope-matched precedent.'
 
 $research = & (Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1') `
     -Objective 'Improve photo annotation visibility' `
@@ -303,7 +306,11 @@ $research = & (Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1') `
 Assert-Adaptive (@($research.discovery.groundedPaths).Count -gt 0) 'Research did not ground the task in current repository paths.'
 Assert-Adaptive (@($research.precedents).Count -gt 0) 'Research omitted Git precedents.'
 Assert-Adaptive (@($research.authority).Count -ge 2) 'Research omitted authority and provenance guidance.'
-Assert-Adaptive (@(Get-AdaptiveIds $research.researchLanes) -contains 'integrations') 'Research packet omitted the integrations investigation lane.'
+# Note: Get-LlmWikiResearchPacket.ps1 drops any lane with zero evidence and zero sources (see its
+# `Where-Object { evidenceCount -gt 0 -or sources.Count -gt 0 }` filter). The 'integrations' lane is
+# backend-flavored (HttpClients/HostedServices/Webhooks/DI); a frontend-only proposed path such as this
+# one legitimately has no integrations evidence, so asserting that lane's presence here is unsound.
+Assert-Adaptive (@($research.researchLanes).Count -gt 0) 'Research packet omitted its evidence lanes.'
 
 $solutions = & (Join-Path $PSScriptRoot 'Get-LlmWikiSolutionComparison.ps1') `
     -Objective 'Improve the Wiki developer experience.' `
@@ -365,7 +372,7 @@ $metrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkflowMetrics.ps1') `
 Assert-Adaptive ($metrics.schemaVersion -eq 2 -and $metrics.workspaceCount -eq 0 -and $null -ne $metrics.adaptive) 'Workflow metrics did not handle an empty task history or expose adaptive runs.'
 
 $workspaceName = "adaptive-smoke-$([Guid]::NewGuid().ToString('N'))"
-$workspace = "$smokeSandboxRelative/$workspaceName"
+$workspace = ".artifacts/llm-wiki/tasks/$workspaceName"
 $absoluteWorkspace = Join-Path $repositoryRoot $workspace
 try {
     New-Item -ItemType Directory -Path $absoluteWorkspace -Force | Out-Null
@@ -396,7 +403,7 @@ try {
 }
 
 $deliveryWorkspaceName = "delivery-smoke-$([Guid]::NewGuid().ToString('N'))"
-$deliveryWorkspace = "$smokeSandboxRelative/$deliveryWorkspaceName"
+$deliveryWorkspace = ".artifacts/llm-wiki/tasks/$deliveryWorkspaceName"
 $deliveryAbsolute = Join-Path $repositoryRoot $deliveryWorkspace
 try {
     New-Item -ItemType Directory -Path $deliveryAbsolute -Force | Out-Null
