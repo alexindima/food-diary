@@ -22,6 +22,10 @@ try {
     $reordered = Get-LlmWikiIndexInputFingerprint $repositoryRoot @($firstRelative, $secondRelative)
     if ($first -cne $reordered) { throw 'Index fingerprint depends on input order, duplicates, or missing files.' }
 
+    $empty = Get-LlmWikiIndexInputFingerprint $repositoryRoot @()
+    $missingOnly = Get-LlmWikiIndexInputFingerprint $repositoryRoot @("$testRootRelative/missing.txt")
+    if ($empty -cne $missingOnly) { throw 'Index fingerprint does not handle an empty existing input set consistently.' }
+
     $originalTimestamp = [IO.File]::GetLastWriteTimeUtc($firstPath)
     [IO.File]::WriteAllText($firstPath, 'omega', [Text.UTF8Encoding]::new($false))
     [IO.File]::SetLastWriteTimeUtc($firstPath, $originalTimestamp)

@@ -30,7 +30,9 @@ function Get-LlmWikiIndexInputFingerprint([string]$RepositoryRoot, [string[]]$In
     $stdoutPath = [IO.Path]::GetTempFileName()
     $stderrPath = [IO.Path]::GetTempFileName()
     try {
-        [IO.File]::WriteAllText($stdinPath, (($existingPaths -join "`n") + "`n"), [Text.UTF8Encoding]::new($false))
+        # Do not append a trailing newline: Git for Linux treats the resulting
+        # empty record as an empty path when --stdin-paths consumes the file.
+        [IO.File]::WriteAllText($stdinPath, ($existingPaths -join "`n"), [Text.UTF8Encoding]::new($false))
         $process = Start-Process -FilePath 'git' -ArgumentList 'hash-object', '--stdin-paths' `
             -WorkingDirectory $RepositoryRoot -RedirectStandardInput $stdinPath `
             -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath `
