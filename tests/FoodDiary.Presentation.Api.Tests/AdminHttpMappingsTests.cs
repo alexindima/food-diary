@@ -77,12 +77,15 @@ public sealed class AdminHttpMappingsTests {
     [Fact]
     public void AdminUserSetPasswordHttpRequest_ToCommand_MapsUserIdAndPassword() {
         var userId = Guid.NewGuid();
+        var actorUserId = Guid.NewGuid();
         var request = new AdminUserSetPasswordHttpRequest("NewPassword123!");
 
-        SetAdminUserPasswordCommand command = request.ToCommand(userId);
+        SetAdminUserPasswordCommand command = request.ToCommand(userId, actorUserId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal("NewPassword123!", command.NewPassword);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(actorUserId, command.ActorUserId),
+            () => Assert.Equal("NewPassword123!", command.NewPassword));
     }
 
     [Fact]
@@ -477,7 +480,7 @@ public sealed class AdminHttpMappingsTests {
             () => Assert.Equal("Title", lesson.ToLessonHttpResponse().Title),
             () => Assert.Equal(1, new AdminLessonsImportModel(1, [lesson]).ToLessonsImportHttpResponse().ImportedCount),
             () => Assert.Equal("welcome", template.ToHttpResponse().Key),
-            () => Assert.Equal("token", impersonationStart.ToHttpResponse().AccessToken),
+            () => Assert.Equal("token", impersonationStart.ToHttpResponse().Code),
             () => Assert.Equal("actor@example.com", impersonationSession.ToHttpResponse().ActorEmail),
             () => Assert.Equal("Chrome", loginEvent.ToHttpResponse().BrowserName),
             () => Assert.Equal(3, device.ToHttpResponse().Count),

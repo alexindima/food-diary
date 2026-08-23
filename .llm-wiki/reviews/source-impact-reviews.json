@@ -158,17 +158,17 @@
     {
       "pageId": "workflow-api-compatibility",
       "pagePath": ".llm-wiki/workflows/api-compatibility.md",
-      "pageSha256": "41066a30ff014f0aa45610d740fa86faa28219567481c278dbc4e0650dce1cdb",
+      "pageSha256": "0d6adba3c4d6595ca442a79350bfcadafa1ea8364a359782139747dcf9a11608",
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "a61ebd512a10a2c222bbb06359e8091028d958b85e5b27bd309ba4770453c4b4"
+          "sha256": "ed051ae29681262a67f875b62005badb0c1ccdc747fdbfce1f96d8d93e903eff"
         }
       ],
-      "reason": "Reviewed the intentional MailInbox admin contract break: removed always-false verification properties, updated every in-repository producer and consumer, regenerated the OpenAPI snapshot, and passed the focused contract test; the workflow guidance remains current.",
+      "reason": "Reviewed intentional admin impersonation contract break: JWT response was replaced by a one-time code, both frontend consumers were updated, OpenAPI snapshots pass, and retaining accessToken would preserve the vulnerability.",
       "baseRef": "HEAD",
-      "gitHead": "57d59eb7271d3721a3fc1010502005c76625d3db",
-      "reviewedAtUtc": "2026-08-20T18:11:40.2780018Z"
+      "gitHead": "6b27621307bfea7fc295d0a5cfd6a257f9ee2c68",
+      "reviewedAtUtc": "2026-08-23T21:17:38.4328628Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -177,13 +177,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "f8dead9765be8cf3e14530c7796b7b59042fc75c45e69088b232a642dc7fa563"
+          "sha256": "74f786c94c63cdffb9069280d4ad5bc0a891666cac1e45e2beb17b1bdeb3e33c"
         }
       ],
-      "reason": "Quality and architecture indexes were regenerated for the new SQL search evals and neighboring test coverage; the strict 250-case SQL gate, 71 MCP tests, and affected code-graph smoke passed.",
+      "reason": "Reviewed architecture and quality impact: bulk mutation permission is limited to refresh-token repository, architecture tests pass 711/711, infrastructure tests pass 1000/1000, and PostgreSQL integration passes 19/19.",
       "baseRef": "HEAD",
-      "gitHead": "5ef761aec358fde8b27f29fd63516db9fbd1e9fe",
-      "reviewedAtUtc": "2026-08-21T12:39:07.4366698Z"
+      "gitHead": "6b27621307bfea7fc295d0a5cfd6a257f9ee2c68",
+      "reviewedAtUtc": "2026-08-23T21:17:39.1642005Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -192,13 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "639c1b65ae872eeedcde9e73fa2c05564bde04264c799c6af4f840fef781d62d"
+          "sha256": "6b8b300933cae167400f3e2eb1d5039215e7183fdf6e4f365c77afd9bec52e17"
         }
       ],
-      "reason": "Products detail authorization now includes public records, while route, payload, status-code, and OpenAPI response shapes remain unchanged; owner-only Comment mapping and mutation guards were verified by focused tests.",
+      "reason": "Reviewed the presentation split: the impersonation exchange URL, request, response, authorization and rate limit remain unchanged; focused OpenAPI snapshots pass 2/2.",
       "baseRef": "HEAD",
-      "gitHead": "70ed8722b0c4ea4bfe4b9c0527a37c5bedb6f690",
-      "reviewedAtUtc": "2026-08-23T17:25:39.0913626Z"
+      "gitHead": "6d7be35af17a4ba81f4db9e4c170f3a395c34e59",
+      "reviewedAtUtc": "2026-08-23T21:30:22.0055923Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -433,13 +433,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "8b848bce19ef1fc0ab70f9074c1d7f0ddcfe8507a4c7307814a8aaf56b70cc9a"
+          "sha256": "59d9841bae80ed22a44f85d7151ce5c3eba0464dfc0f7a2731b44d8cccf142f2"
         }
       ],
-      "reason": "Reviewed deployment impact: AllowUntrustedSources is explicitly wired in appsettings and Compose, the container health command is self-contained, and no package, database migration, or rollout-order change is required.",
+      "reason": "Reviewed regenerated indexes after access-token invalidation, SNS topic binding, migration, configuration, and tests.",
       "baseRef": "HEAD",
-      "gitHead": "57d59eb7271d3721a3fc1010502005c76625d3db",
-      "reviewedAtUtc": "2026-08-20T18:12:02.5783708Z"
+      "gitHead": "63f0c2dcb8163dbf1336bd0469e834036f2b62af",
+      "reviewedAtUtc": "2026-08-23T20:20:53.2441527Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -463,13 +463,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "7d09adbe74c90460f0c573af7e8629ad8a516df7a398c62ccb22680ad2f4d3e7"
+          "sha256": "369bccbf72edce1268e381ff84f041de02e2ab7ce00eec53476e4cf647ac6143"
         }
       ],
-      "reason": "The regenerated domain-data and quality-risk indexes were reviewed against the new profile value objects, guardrails, and focused test coverage.",
+      "reason": "Reviewed regenerated indexes after access-token invalidation, SNS topic binding, migration, configuration, and tests.",
       "baseRef": "HEAD",
-      "gitHead": "ba1226f4d35e4928ae3f3e4db634d867c3f0a9e5",
-      "reviewedAtUtc": "2026-08-20T01:22:15.5107073Z"
+      "gitHead": "63f0c2dcb8163dbf1336bd0469e834036f2b62af",
+      "reviewedAtUtc": "2026-08-23T20:20:53.5654716Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -609,18 +609,14 @@
       "pageSha256": "e3ced57c02bacfce6b76fbc8d3af6c09485e3888822e3145909ebdb247386368",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-          "sha256": "452792bc4c8747928113dae209cf6602f9b803d6291839264e06dae62a58f769"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3e0c909f3dd700ce1926a18b203c2b01cdf2bc3e16516e27c21d9f378af0f333"
+          "path": ".llm-wiki/tools/LlmWikiIndexCache.ps1",
+          "sha256": "ead15925c18422e67266c4903c9c51714bd941ff3bdbec3b4525ab09db4849e5"
         }
       ],
-      "reason": "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve 'zero output objects' as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+      "reason": "Reviewed regenerated indexes after access-token invalidation, SNS topic binding, migration, configuration, and tests.",
       "baseRef": "HEAD",
-      "gitHead": "c192eb68195dbbf020efcff1e647b8926267506d",
-      "reviewedAtUtc": "2026-08-23T13:04:39.5382320Z"
+      "gitHead": "63f0c2dcb8163dbf1336bd0469e834036f2b62af",
+      "reviewedAtUtc": "2026-08-23T20:20:53.9440113Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -764,14 +760,14 @@
       "pageSha256": "86905cc0b6b7d4690837426aec9d50e7e8fe86420f2cc248a3d64687a15cfffc",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiSensitiveData.ps1",
-          "sha256": "c776a6c57a0821cfe2341439ea2e8b9b8c77a2e85c017611428bb494ac4e8251"
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "95746fc0b63ec28edaee1c01f4cb4584f7f3857edfe0de7c08b8841e7fa42b0a"
         }
       ],
-      "reason": "Ported native git invocations across the tool suite from the PowerShell & call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2>$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1's default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+      "reason": "Reviewed credential lifecycle: access tokens remain server-side during handoff, codes are short-lived and consume-once, protocol separation and replay rejection are covered by tests, and no token is logged or placed in a URL.",
       "baseRef": "HEAD",
-      "gitHead": "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-      "reviewedAtUtc": "2026-08-23T01:47:15.8711497Z"
+      "gitHead": "6b27621307bfea7fc295d0a5cfd6a257f9ee2c68",
+      "reviewedAtUtc": "2026-08-23T21:17:42.5231983Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -814,13 +810,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "68984f2c5e8f340318e8eb3ddf9acfc18001a23cd6e4ce5c45dd2ef07cceb9d7"
+          "sha256": "711fe69b9fa4014776236b32339c7a817f6a6d1355c8b8ae960e9208e471745e"
         }
       ],
-      "reason": "Generated quality metrics and test-reference evidence were refreshed; the quality-risk workflow contract and interpretation remain unchanged.",
+      "reason": "Reviewed controller structure: the endpoint moved to a dedicated feature controller instead of weakening the eight-action guardrail; Presentation API tests pass 800/800.",
       "baseRef": "HEAD",
-      "gitHead": "8917de79c25ccf72d65a0694418c66114bd96e3e",
-      "reviewedAtUtc": "2026-08-23T17:09:30.5291708Z"
+      "gitHead": "6d7be35af17a4ba81f4db9e4c170f3a395c34e59",
+      "reviewedAtUtc": "2026-08-23T21:30:22.9158871Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1068,17 +1064,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "9f9017fce1f9a78cc338316975b4a1cf37575110d5b436c1129ffd9054c384ef"
-        },
-        {
-          "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "c20f2466c10879c0e89cd88e8d97d43d609090d456bd81689701770ed0462fe5"
+          "sha256": "27bd8f349dec3ddec82bb5784b97e626393be5e1df60acda05a30e661e1c096c"
         }
       ],
-      "reason": "Traced MailInbox behavior from SMTP admission through storage, HTTP DTOs, typed client, core integration mapping, OpenAPI, and the admin UI; all changed consumers and trust boundaries are covered.",
+      "reason": "Reviewed regenerated repository and frontend trace indexes against the changed Identity-Users-Admin flow; generated navigation matches the implementation and current scoped guides.",
       "baseRef": "HEAD",
-      "gitHead": "57d59eb7271d3721a3fc1010502005c76625d3db",
-      "reviewedAtUtc": "2026-08-20T18:12:06.7720232Z"
+      "gitHead": "6b27621307bfea7fc295d0a5cfd6a257f9ee2c68",
+      "reviewedAtUtc": "2026-08-23T21:17:45.1767644Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1162,13 +1154,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "9f9017fce1f9a78cc338316975b4a1cf37575110d5b436c1129ffd9054c384ef"
+          "sha256": "27bd8f349dec3ddec82bb5784b97e626393be5e1df60acda05a30e661e1c096c"
         }
       ],
-      "reason": "Reviewed the admin contract update end to end: removed misleading verification flags, made unverified warnings unconditional, updated both locales, and passed admin tests and build.",
+      "reason": "Reviewed intentional admin impersonation contract break: JWT response was replaced by a one-time code, both frontend consumers were updated, OpenAPI snapshots pass, and retaining accessToken would preserve the vulnerability.",
       "baseRef": "HEAD",
-      "gitHead": "57d59eb7271d3721a3fc1010502005c76625d3db",
-      "reviewedAtUtc": "2026-08-20T18:12:03.6258855Z"
+      "gitHead": "6b27621307bfea7fc295d0a5cfd6a257f9ee2c68",
+      "reviewedAtUtc": "2026-08-23T21:17:41.6560247Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1176,14 +1168,14 @@
       "pageSha256": "8439af4b89bf50398667ec91e06804d1fb6925969f3cfb30925553589f14ce9c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "f6945ef758d416498b2eff63c7e5064685df3ca03e3004ba46cfdce1e668f3bd"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "5e73fc190e3225d88f5a04cdde7d5962d2cacc436495eaf98c8cf625e62308a9"
         }
       ],
-      "reason": "Ported native git invocations across the tool suite from the PowerShell & call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2>$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1's default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+      "reason": "Reviewed regenerated repository navigation after introducing AuthImpersonationController; catalog and trace sources match the unchanged HTTP route and new controller ownership.",
       "baseRef": "HEAD",
-      "gitHead": "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-      "reviewedAtUtc": "2026-08-23T01:47:17.4376973Z"
+      "gitHead": "6d7be35af17a4ba81f4db9e4c170f3a395c34e59",
+      "reviewedAtUtc": "2026-08-23T21:30:23.9656831Z"
     },
     {
       "pageId": "workflow.review-diff",

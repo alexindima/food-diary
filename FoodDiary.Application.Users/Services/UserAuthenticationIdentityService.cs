@@ -377,7 +377,8 @@ internal sealed class UserAuthenticationIdentityService(
             user.Email,
             roles,
             accessTokenCapUtc,
-            user.ToModel());
+            user.ToModel(),
+            user.SecurityVersion);
     }
 
     private User CreateGoogleUser(UserGoogleAuthenticationModel identity) {

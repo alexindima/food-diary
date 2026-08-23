@@ -85,6 +85,7 @@ describe('adminAuthInterceptor', () => {
         const req = httpMock.expectOne('/api/admin/users');
         req.flush(null, { status: HttpStatusCode.Forbidden, statusText: 'Forbidden' });
 
+        expect(localStorage.getItem('authToken')).toBe('admin-token');
         expect(router.navigate).toHaveBeenCalledWith(['/unauthorized'], {
             queryParams: { reason: 'forbidden', returnUrl: '/users?page=2' },
         });

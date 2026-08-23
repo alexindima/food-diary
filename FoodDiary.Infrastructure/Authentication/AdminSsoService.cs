@@ -21,7 +21,7 @@ public sealed class AdminSsoService(IAdminSsoCodeStore codeStore, TimeProvider d
     }
 
     public async Task<UserId?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default) {
-        if (string.IsNullOrWhiteSpace(code)) {
+        if (!IsExpectedCode(code)) {
             return null;
         }
 
@@ -32,6 +32,11 @@ public sealed class AdminSsoService(IAdminSsoCodeStore codeStore, TimeProvider d
 
         return Guid.TryParse(value, out Guid id) ? new UserId(id) : null;
     }
+
+    private static bool IsExpectedCode(string code) =>
+        !string.IsNullOrWhiteSpace(code) &&
+        code.Length == 43 &&
+        code.All(static character => char.IsAsciiLetterOrDigit(character) || character is '-' or '_');
 
     private static string GenerateCode() {
         byte[] bytes = RandomNumberGenerator.GetBytes(32);

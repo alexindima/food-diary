@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Options;
@@ -47,7 +48,11 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
         _rememberMeRefreshTokenExpirationMinutes = rememberMeRefreshDays * 1440;
     }
 
-    public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) =>
+    public string GenerateAccessToken(
+        UserId userId,
+        string email,
+        IReadOnlyCollection<string> roles,
+        long securityVersion = 0) =>
         GenerateToken(
             userId,
             email,
@@ -55,13 +60,15 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
             JwtTokenUseClaimNames.Access,
             _accessTokenExpirationMinutes,
             expiresAtUtc: null,
-            impersonation: null);
+            impersonation: null,
+            securityVersion);
 
     public string GenerateAccessToken(
         UserId userId,
         string email,
         IReadOnlyCollection<string> roles,
-        DateTime? expiresAtUtc) =>
+        DateTime? expiresAtUtc,
+        long securityVersion = 0) =>
         GenerateToken(
             userId,
             email,
@@ -69,13 +76,15 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
             JwtTokenUseClaimNames.Access,
             _accessTokenExpirationMinutes,
             expiresAtUtc,
-            impersonation: null);
+            impersonation: null,
+            securityVersion);
 
     public string GenerateAccessToken(
         UserId userId,
         string email,
         IReadOnlyCollection<string> roles,
-        JwtImpersonationContext impersonation) =>
+        JwtImpersonationContext impersonation,
+        long securityVersion = 0) =>
         GenerateToken(
             userId,
             email,
@@ -83,7 +92,8 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
             JwtTokenUseClaimNames.Access,
             _accessTokenExpirationMinutes,
             expiresAtUtc: null,
-            impersonation);
+            impersonation,
+            securityVersion);
 
     public string GenerateRefreshToken(
         UserId userId,
@@ -99,6 +109,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
             rememberMe ? _rememberMeRefreshTokenExpirationMinutes : _refreshTokenExpirationMinutes,
             expiresAtUtc: null,
             impersonation: null,
+            securityVersion: null,
             rememberMe,
             refreshSessionId);
 
@@ -148,6 +159,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
         int expirationMinutes,
         DateTime? expiresAtUtc,
         JwtImpersonationContext? impersonation,
+        long? securityVersion,
         bool rememberMe = false,
         Guid? refreshSessionId = null) {
         var credentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
@@ -163,6 +175,12 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
             claims.Add(new Claim(JwtImpersonationClaimNames.IsImpersonation, "true"));
             claims.Add(new Claim(JwtImpersonationClaimNames.ActorUserId, impersonation.ActorUserId.Value.ToString()));
             claims.Add(new Claim(JwtImpersonationClaimNames.Reason, impersonation.Reason));
+        }
+
+        if (securityVersion.HasValue) {
+            claims.Add(new Claim(
+                JwtSecurityClaimNames.SecurityVersion,
+                securityVersion.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)));
         }
 
         if (rememberMe) {

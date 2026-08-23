@@ -52,13 +52,17 @@ public sealed class RefreshTokenCommandHandler(
         }
 
         UserAuthenticationPrincipalModel principal = authenticationResult.Value;
-        IssuedAuthenticationTokens tokens = await authenticationTokenService
-            .IssueFromPrincipalAsync(
+        IssuedAuthenticationTokens? tokens = await authenticationTokenService
+            .RotateFromPrincipalAsync(
                 principal,
-                cancellationToken,
-                rememberMe: rememberMe,
-                refreshSessionId: refreshSessionId)
+                refreshSessionId.Value,
+                session.RefreshTokenHash,
+                rememberMe,
+                cancellationToken)
             .ConfigureAwait(false);
+        if (tokens is null) {
+            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
+        }
         return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User));
     }
 

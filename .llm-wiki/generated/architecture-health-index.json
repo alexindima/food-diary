@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 151,
     "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 19,
+    "criticalSymbolsWithoutTestReferences": 21,
     "explicitDebtMarkers": 4
   },
   "projectDependencyViolations": [],
@@ -5301,6 +5301,14 @@
   ],
   "criticalSymbolsWithoutTestReferences": [
     {
+      "name": "ExchangeAdminImpersonationCommandHandler",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
       "name": "BillingWebhookEventValidator",
       "role": "Validator",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
@@ -5312,6 +5320,14 @@
       "name": "EnqueueMailRelayEmailCommandValidator",
       "role": "Validator",
       "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
+      "name": "ExchangeAdminImpersonationCommandValidator",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": []

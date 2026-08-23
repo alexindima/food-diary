@@ -3,8 +3,8 @@
   "summary": {
     "optionTypes": 56,
     "configurationFiles": 7,
-    "configurationKeys": 258,
-    "environmentVariables": 185
+    "configurationKeys": 259,
+    "environmentVariables": 186
   },
   "optionTypes": [
     {
@@ -404,6 +404,7 @@
       "section": "MailRelay",
       "properties": [
         "ApiKey",
+        "ExpectedAwsSesSnsTopicArn",
         "MailgunWebhookSigningKey",
         "RequireApiKey",
         "RequireAwsSesSnsSignature",
@@ -955,6 +956,7 @@
         "Logging:LogLevel:Microsoft.AspNetCore",
         "Logging:LogLevel:Microsoft.EntityFrameworkCore",
         "MailRelay:ApiKey",
+        "MailRelay:ExpectedAwsSesSnsTopicArn",
         "MailRelay:MailgunWebhookSigningKey",
         "MailRelay:RequireApiKey",
         "MailRelay:RequireAwsSesSnsSignature",
@@ -1165,6 +1167,7 @@
         "MailRelayQueue__MaxRetryDelaySeconds",
         "MailRelayQueue__PollIntervalSeconds",
         "MailRelay__ApiKey",
+        "MailRelay__ExpectedAwsSesSnsTopicArn",
         "MailRelay__MailgunWebhookSigningKey",
         "MailRelay__RequireApiKey",
         "MailRelay__RequireAwsSesSnsSignature",

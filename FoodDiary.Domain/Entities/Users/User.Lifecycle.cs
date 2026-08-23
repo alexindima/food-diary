@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Events;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Domain.Entities.Users;
 
@@ -10,7 +11,14 @@ public sealed partial class User {
     public void Deactivate(DateTime? changedAtUtc = null) {
         EnsureNotDeleted();
         DateTime effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(changedAtUtc, nameof(changedAtUtc));
-        ApplyAccountState(GetAccountState().Deactivate());
+        UserAccountState currentState = GetAccountState();
+        UserAccountState nextState = currentState.Deactivate();
+        if (nextState == currentState) {
+            return;
+        }
+
+        ApplyAccountState(nextState);
+        AdvanceSecurityVersion();
         SetModified(effectiveChangedAtUtc);
     }
 
@@ -20,7 +28,14 @@ public sealed partial class User {
         }
 
         DateTime effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(changedAtUtc, nameof(changedAtUtc));
-        ApplyAccountState(GetAccountState().Activate());
+        UserAccountState currentState = GetAccountState();
+        UserAccountState nextState = currentState.Activate();
+        if (nextState == currentState) {
+            return;
+        }
+
+        ApplyAccountState(nextState);
+        AdvanceSecurityVersion();
         SetModified(effectiveChangedAtUtc);
     }
 
@@ -33,6 +48,7 @@ public sealed partial class User {
 
         ApplySecurityState(GetSecurityState().WithoutTransientTokens());
         ApplyAccountState(GetAccountState().MarkDeleted(normalizedDeletedAtUtc));
+        AdvanceSecurityVersion();
         RaiseDomainEvent(new UserDeletedDomainEvent(Id, normalizedDeletedAtUtc, normalizedDeletedAtUtc));
         SetModified(normalizedDeletedAtUtc);
     }
@@ -44,6 +60,7 @@ public sealed partial class User {
 
         DateTime normalizedRestoredAtUtc = NormalizeOptionalAuditTimestamp(restoredAtUtc, nameof(restoredAtUtc));
         ApplyAccountState(GetAccountState().Restore());
+        AdvanceSecurityVersion();
         RaiseDomainEvent(new UserRestoredDomainEvent(Id, normalizedRestoredAtUtc));
         SetModified(normalizedRestoredAtUtc);
     }

@@ -222,7 +222,7 @@ public sealed class HttpResponseContractCoverageTests {
             () => Assert.Equal("received", mailSummary.Status),
             () => Assert.Equal(receivedAt, mailSummary.ReadAtUtc),
             () => Assert.Equal(receivedAt, mailSummary.ReceivedAtUtc),
-            () => Assert.Equal("token", impersonationStart.AccessToken),
+            () => Assert.Equal("token", impersonationStart.Code),
             () => Assert.NotEqual(Guid.Empty, impersonationStart.TargetUserId),
             () => Assert.Equal("target@example.com", impersonationStart.TargetEmail),
             () => Assert.NotEqual(Guid.Empty, impersonationStart.ActorUserId),

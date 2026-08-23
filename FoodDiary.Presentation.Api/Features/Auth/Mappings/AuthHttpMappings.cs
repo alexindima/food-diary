@@ -1,4 +1,5 @@
 using FoodDiary.Application.Identity.Authentication.Commands.AdminSsoExchange;
+using FoodDiary.Application.Admin.Commands.ExchangeAdminImpersonation;
 using FoodDiary.Application.Identity.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Application.Identity.Authentication.Commands.ConfirmPasswordReset;
 using FoodDiary.Application.Identity.Authentication.Commands.GoogleLogin;
@@ -21,6 +22,9 @@ using Microsoft.AspNetCore.Http;
 namespace FoodDiary.Presentation.Api.Features.Auth.Mappings;
 
 public static class AuthHttpMappings {
+    extension(ExchangeImpersonationHttpRequest request) {
+        public ExchangeAdminImpersonationCommand ToCommand() => new(request.Code);
+    }
     extension(RegisterHttpRequest request) {
         public RegisterCommand ToCommand() {
             return new RegisterCommand(

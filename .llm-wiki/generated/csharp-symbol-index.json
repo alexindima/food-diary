@@ -8,22 +8,22 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3427,
-    "symbols": 3435,
-    "interfaceImplementationLinks": 233,
-    "dependencyInjectionRegistrations": 238,
+    "sourceFiles": 3438,
+    "symbols": 3446,
+    "interfaceImplementationLinks": 234,
+    "dependencyInjectionRegistrations": 239,
     "kinds": {
-      "class": 1786,
+      "class": 1792,
       "enum": 61,
-      "interface": 417,
-      "record": 1051,
+      "interface": 419,
+      "record": 1054,
       "record struct": 120
     },
     "roles": {
-      "Command": 158,
-      "CommandHandler": 154,
+      "Command": 159,
+      "CommandHandler": 155,
       "Configuration": 90,
-      "Controller": 90,
+      "Controller": 91,
       "Entity": 84,
       "Event": 19,
       "Factory": 11,
@@ -32,16 +32,16 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 62,
-      "Other": 1319,
+      "Other": 1321,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
       "ReadRepository": 46,
       "Repository": 103,
-      "Request": 132,
-      "Response": 178,
-      "Service": 275,
-      "Validator": 202,
+      "Request": 133,
+      "Response": 179,
+      "Service": 277,
+      "Validator": 204,
       "ValueObject": 129,
       "WriteRepository": 46
     }
@@ -171,6 +171,13 @@
       "kind": "interface",
       "role": "Repository",
       "path": "FoodDiary.Application.Abstractions/Admin/Common/IAdminBillingRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IAdminImpersonationHandoffService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "FoodDiary.Application.Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs",
       "line": 2
     },
     {
@@ -781,6 +788,13 @@
       "role": "WriteRepository",
       "path": "FoodDiary.Application.Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs",
       "line": 4
+    },
+    {
+      "name": "JwtSecurityClaimNames",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Authentication/Common/JwtSecurityClaimNames.cs",
+      "line": 2
     },
     {
       "name": "PasswordResetMessage",
@@ -3828,6 +3842,13 @@
       "line": 5
     },
     {
+      "name": "IUserAccessTokenSecurityReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserAccessTokenSecurityReader.cs",
+      "line": 2
+    },
+    {
       "name": "IUserAdministrationMutationService",
       "kind": "interface",
       "role": "Service",
@@ -4612,6 +4633,27 @@
       "line": 7
     },
     {
+      "name": "ExchangeAdminImpersonationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "ExchangeAdminImpersonationCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "ExchangeAdminImpersonationCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandValidator.cs",
+      "line": 4
+    },
+    {
       "name": "ImportAdminLessonItem",
       "kind": "record",
       "role": "Other",
@@ -4707,7 +4749,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "SetAdminUserPasswordCommandValidator",
@@ -14073,7 +14115,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Users/User.Lifecycle.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "User",
@@ -15329,6 +15371,13 @@
       "line": 2
     },
     {
+      "name": "AdminImpersonationHandoffService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.Infrastructure/Authentication/AdminImpersonationHandoffService.cs",
+      "line": 6
+    },
+    {
       "name": "AdminSsoService",
       "kind": "class",
       "role": "Service",
@@ -15347,7 +15396,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Authentication/JwtTokenGenerator.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "WearableOAuthStateService",
@@ -15375,7 +15424,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "DependencyInjection",
@@ -18899,6 +18948,13 @@
       "line": 20
     },
     {
+      "name": "AuthImpersonationController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "FoodDiary.Presentation.Api/Features/Auth/AuthImpersonationController.cs",
+      "line": 22
+    },
+    {
       "name": "AuthPasswordController",
       "kind": "class",
       "role": "Controller",
@@ -18931,7 +18987,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpMappings.cs",
-      "line": 22
+      "line": 23
     },
     {
       "name": "AuthHttpResponseMappings",
@@ -18952,6 +19008,13 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/ConfirmPasswordResetHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "ExchangeImpersonationHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/ExchangeImpersonationHttpRequest.cs",
       "line": 4
     },
     {
@@ -19044,6 +19107,13 @@
       "role": "Response",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Responses/AuthenticationHttpResponse.cs",
       "line": 4
+    },
+    {
+      "name": "ExchangeImpersonationHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "FoodDiary.Presentation.Api/Features/Auth/Responses/ExchangeImpersonationHttpResponse.cs",
+      "line": 2
     },
     {
       "name": "BillingController",
@@ -21804,6 +21874,13 @@
       "line": 6
     },
     {
+      "name": "AccessTokenSecurityStateValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Web.Api/Extensions/AccessTokenSecurityStateValidator.cs",
+      "line": 7
+    },
+    {
       "name": "ApiApplicationBuilderExtensions",
       "kind": "class",
       "role": "Other",
@@ -21815,7 +21892,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "ApiAuthorizationMiddlewareResultHandler",
@@ -24183,6 +24260,13 @@
       "interfacePath": "FoodDiary.Application.Admin/Common/IAdminDashboardReadService.cs",
       "implementation": "AdminDashboardReadService",
       "implementationPath": "FoodDiary.Application.Admin/Services/AdminDashboardReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IAdminImpersonationHandoffService",
+      "interfacePath": "FoodDiary.Application.Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs",
+      "implementation": "AdminImpersonationHandoffService",
+      "implementationPath": "FoodDiary.Infrastructure/Authentication/AdminImpersonationHandoffService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26593,63 +26677,70 @@
       "implementation": "JwtTokenGenerator",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 18
+      "line": 19
     },
     {
       "service": "IPasswordHasher",
       "implementation": "PasswordHasher",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 19
+      "line": 20
     },
     {
       "service": "IAdminSsoCodeStore",
       "implementation": "InMemoryAdminSsoCodeStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 20
+      "line": 21
     },
     {
       "service": "IAdminSsoService",
       "implementation": "AdminSsoService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 21
+      "line": 22
+    },
+    {
+      "service": "IAdminImpersonationHandoffService",
+      "implementation": "AdminImpersonationHandoffService",
+      "lifetime": "Singleton",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
+      "line": 23
     },
     {
       "service": "ITelegramAssertionReplayGuard",
       "implementation": "TelegramAssertionReplayGuard",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 22
+      "line": 24
     },
     {
       "service": "IUserCleanupService",
       "implementation": "UserCleanupService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 23
+      "line": 25
     },
     {
       "service": "IEmailTemplateProvider",
       "implementation": "EmailTemplateProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 24
+      "line": 26
     },
     {
       "service": "IAiPromptProvider",
       "implementation": "AiPromptProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 25
+      "line": 27
     },
     {
       "service": "IAuditLogger",
       "implementation": "StructuredAuditLogger",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 26
+      "line": 28
     },
     {
       "service": "IBillingSubscriptionRepository",
@@ -27048,70 +27139,70 @@
       "implementation": "UserRoleCatalogService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 19
+      "line": 20
     },
     {
       "service": "IUserRoleMembershipService",
       "implementation": "UserRoleMembershipService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 20
+      "line": 21
     },
     {
       "service": "IUserCurrentWeightProvider",
       "implementation": "UserCurrentWeightProvider",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 21
+      "line": 22
     },
     {
       "service": "IUserCurrentWaistProvider",
       "implementation": "UserCurrentWaistProvider",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 22
+      "line": 23
     },
     {
       "service": "IUserLoginEventRepository",
       "implementation": "UserLoginEventRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 24
+      "line": 25
     },
     {
       "service": "IRefreshTokenSessionRepository",
       "implementation": "RefreshTokenSessionRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 28
+      "line": 29
     },
     {
       "service": "IAdminBillingRepository",
       "implementation": "AdminBillingRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 32
+      "line": 33
     },
     {
       "service": "IAdminImpersonationSessionRepository",
       "implementation": "AdminImpersonationSessionRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 34
+      "line": 35
     },
     {
       "service": "IAdminUserRoleAuditRepository",
       "implementation": "AdminUserRoleAuditRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 37
+      "line": 38
     },
     {
       "service": "IEmailTemplateRepository",
       "implementation": "EmailTemplateRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 39
+      "line": 40
     },
     {
       "service": "IWearableConnectionRepository",
@@ -27293,7 +27384,7 @@
       "implementation": "ApiAuthorizationMiddlewareResultHandler",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 38
+      "line": 39
     },
     {
       "service": "IWearableTokenProtector",

@@ -159,14 +159,14 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 32
+- Public contract files: 33
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 32
-- Interfaces: 14
+- Public contract types: 33
+- Interfaces: 15
 - DTO/read-model/projection types: 12
 - Enums: 0
 - Exported repository-shaped contracts: 11
@@ -174,6 +174,7 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 - `class AdminMailInboxErrors`
 - `interface IAdminBillingReadRepository`
 - `interface IAdminBillingRepository`
+- `interface IAdminImpersonationHandoffService`
 - `interface IAdminImpersonationSessionReadRepository`
 - `interface IAdminImpersonationSessionRepository`
 - `interface IAdminImpersonationSessionWriteRepository`
@@ -200,8 +201,7 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 - `record AdminUserRoleAuditEventReadModel`
 - `record AiUsageBreakdown`
 - `record AiUsageDailySummary`
-- `record AiUsageSummary`
-- ... 2 more type(s)
+- ... 3 more type(s)
 
 ## Focused Tests
 
@@ -223,6 +223,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/UserLoginActivityFeatureTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AdminModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/AdminInvariantTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Authentication/AdminImpersonationHandoffServiceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Authentication/AdminSsoServiceTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs`

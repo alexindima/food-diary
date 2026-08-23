@@ -79,6 +79,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     public DateTime? PremiumTrialEndsAtUtc { get; private set; }
     public bool IsActive { get; private set; } = true;
     public DateTime? DeletedAt { get; private set; }
+    public long SecurityVersion { get; private set; }
 
     private readonly List<Meal> _meals = [];
     private readonly List<Product> _products = [];
@@ -215,6 +216,10 @@ public sealed partial class User : AggregateRoot<UserId> {
         if (DeletedAt is not null) {
             throw new InvalidOperationException("Deleted user cannot be mutated. Use Restore() first.");
         }
+    }
+
+    private void AdvanceSecurityVersion() {
+        SecurityVersion = checked(SecurityVersion + 1);
     }
 
     public double? GetCalorieTargetForDate(DateTime date) {
@@ -571,6 +576,7 @@ public sealed partial class User : AggregateRoot<UserId> {
         _userRoles.Clear();
         _userRoles.AddRange(nextRoles);
 
+        AdvanceSecurityVersion();
         SetModified();
     }
 
@@ -580,6 +586,12 @@ public sealed partial class User : AggregateRoot<UserId> {
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Distinct(StringComparer.Ordinal)
             .ToArray();
+    }
+
+    public void RecordExternalRoleMembershipChange() {
+        EnsureNotDeleted();
+        AdvanceSecurityVersion();
+        SetModified();
     }
 
     public bool HasRole(string roleName) {

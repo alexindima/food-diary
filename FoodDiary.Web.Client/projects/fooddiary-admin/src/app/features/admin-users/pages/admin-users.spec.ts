@@ -140,7 +140,7 @@ describe('AdminUsersComponent dialogs', () => {
     });
 
     it('should open impersonation dialog and start session from dialog result', () => {
-        const close$ = new Subject<{ accessToken: string; expiresAtUtc: string; reason: string } | null>();
+        const close$ = new Subject<{ code: string; expiresAtUtc: string; reason: string } | null>();
         const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
         dialogService.open.mockReturnValue({
             afterClosed: () => close$.asObservable(),
@@ -148,7 +148,7 @@ describe('AdminUsersComponent dialogs', () => {
 
         component['startImpersonation'](pagedUsers.items[0]);
         close$.next({
-            accessToken: 'token',
+            code: 'code',
             expiresAtUtc: '2026-01-01T00:10:00Z',
             reason: 'Support case investigation',
         });
@@ -158,7 +158,7 @@ describe('AdminUsersComponent dialogs', () => {
             size: 'sm',
             data: pagedUsers.items[0],
         });
-        expect(openSpy).toHaveBeenCalledWith('http://localhost:4200/dashboard?impersonationToken=token', '_blank', 'noopener,noreferrer');
+        expect(openSpy).toHaveBeenCalledWith('http://localhost:4200/dashboard?impersonationCode=code', '_blank', 'noopener,noreferrer');
 
         openSpy.mockRestore();
     });

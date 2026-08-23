@@ -8,7 +8,13 @@ public interface IAuthenticationTokenService {
         UserAuthenticationPrincipalModel principal,
         CancellationToken cancellationToken,
         AuthenticationClientContext? clientContext = null,
-        bool rememberMe = false,
-        Guid? refreshSessionId = null);
+        bool rememberMe = false);
+
+    Task<IssuedAuthenticationTokens?> RotateFromPrincipalAsync(
+        UserAuthenticationPrincipalModel principal,
+        Guid refreshSessionId,
+        string expectedRefreshTokenHash,
+        bool rememberMe,
+        CancellationToken cancellationToken);
 
 }

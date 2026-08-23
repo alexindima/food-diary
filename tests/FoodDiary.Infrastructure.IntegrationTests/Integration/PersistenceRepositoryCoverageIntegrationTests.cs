@@ -1254,9 +1254,25 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             now);
         await repository.AddAsync(session);
         await context.SaveChangesAsync();
-        session.Rotate("refresh-hash-2", rememberMe: false, now.AddMinutes(1), TimeSpan.FromMinutes(5));
-        await repository.UpdateAsync(session);
-        await context.SaveChangesAsync();
+        bool firstRotation = await repository.TryRotateAsync(
+            session.Id,
+            userId,
+            "refresh-hash",
+            "refresh-hash-2",
+            rememberMe: false,
+            now.AddMinutes(1));
+        bool replayRotation = await repository.TryRotateAsync(
+            session.Id,
+            userId,
+            "refresh-hash",
+            "attacker-hash",
+            rememberMe: false,
+            now.AddMinutes(1));
+        await context.Entry(session).ReloadAsync();
+
+        Assert.True(firstRotation);
+        Assert.False(replayRotation);
+        Assert.Equal("refresh-hash-2", session.RefreshTokenHash);
 
         Assert.NotNull(await repository.GetByIdAsync(session.Id));
         Assert.Single(await repository.GetActiveByUserIdAsync(userId));

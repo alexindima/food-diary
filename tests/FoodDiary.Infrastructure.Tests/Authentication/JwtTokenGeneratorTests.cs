@@ -2,6 +2,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Infrastructure.Authentication;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Options;
@@ -42,6 +43,19 @@ public sealed class JwtTokenGeneratorTests {
         Assert.Contains(jwt.Claims, claim =>
             string.Equals(claim.Type, JwtTokenUseClaimNames.ClaimType, StringComparison.Ordinal) &&
             string.Equals(claim.Value, JwtTokenUseClaimNames.Access, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void GenerateAccessToken_WithSecurityVersion_AddsSecurityVersionClaim() {
+        var generator = new JwtTokenGenerator(CreateOptions(), new StubDateTimeProvider());
+        var userId = UserId.New();
+
+        string token = generator.GenerateAccessToken(userId, "versioned@example.com", [], securityVersion: 7);
+        JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+
+        Assert.Contains(jwt.Claims, claim =>
+            string.Equals(claim.Type, JwtSecurityClaimNames.SecurityVersion, StringComparison.Ordinal) &&
+            string.Equals(claim.Value, "7", StringComparison.Ordinal));
     }
 
     [Fact]

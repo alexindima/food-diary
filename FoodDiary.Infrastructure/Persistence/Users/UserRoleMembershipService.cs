@@ -15,11 +15,18 @@ internal sealed class UserRoleMembershipService(FoodDiaryDbContext context) : IU
         }
 
         FormattableString sql = $"""
-            INSERT INTO "UserRoles" ("UserId", "RoleId")
-            SELECT {userId.Value}, "Id"
-            FROM "Roles"
-            WHERE "Name" = {roleName.Trim()}
-            ON CONFLICT DO NOTHING
+            WITH inserted_role AS (
+                INSERT INTO "UserRoles" ("UserId", "RoleId")
+                SELECT {userId.Value}, "Id"
+                FROM "Roles"
+                WHERE "Name" = {roleName.Trim()}
+                ON CONFLICT DO NOTHING
+                RETURNING 1
+            )
+            UPDATE "Users"
+            SET "SecurityVersion" = "SecurityVersion" + 1
+            WHERE "Id" = {userId.Value}
+              AND EXISTS (SELECT 1 FROM inserted_role)
             """;
         await context.Database.ExecuteSqlInterpolatedAsync(sql, cancellationToken).ConfigureAwait(false);
     }
@@ -33,9 +40,23 @@ internal sealed class UserRoleMembershipService(FoodDiaryDbContext context) : IU
             return;
         }
 
-        await context.UserRoles
-            .Where(userRole => userRole.UserId == userId && userRole.Role.Name == normalizedRoleName)
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        FormattableString sql = $"""
+            WITH deleted_role AS (
+                DELETE FROM "UserRoles"
+                WHERE "UserId" = {userId.Value}
+                  AND "RoleId" IN (
+                      SELECT "Id"
+                      FROM "Roles"
+                      WHERE "Name" = {normalizedRoleName}
+                  )
+                RETURNING 1
+            )
+            UPDATE "Users"
+            SET "SecurityVersion" = "SecurityVersion" + 1
+            WHERE "Id" = {userId.Value}
+              AND EXISTS (SELECT 1 FROM deleted_role)
+            """;
+        await context.Database.ExecuteSqlInterpolatedAsync(sql, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task EnsureRoleWithTrackedEntitiesAsync(UserId userId, string roleName, CancellationToken cancellationToken) {
@@ -52,6 +73,7 @@ internal sealed class UserRoleMembershipService(FoodDiaryDbContext context) : IU
         }
 
         await context.UserRoles.AddAsync(new UserRole(userId, role.Id), cancellationToken).ConfigureAwait(false);
+        await AdvanceTrackedUserSecurityVersionAsync(userId, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task RemoveRoleWithTrackedEntitiesAsync(UserId userId, string roleName, CancellationToken cancellationToken) {
@@ -64,6 +86,13 @@ internal sealed class UserRoleMembershipService(FoodDiaryDbContext context) : IU
         }
 
         context.UserRoles.Remove(userRole);
+        await AdvanceTrackedUserSecurityVersionAsync(userId, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task AdvanceTrackedUserSecurityVersionAsync(UserId userId, CancellationToken cancellationToken) {
+        User? user = await context.Users
+            .FirstOrDefaultAsync(candidate => candidate.Id == userId, cancellationToken).ConfigureAwait(false);
+        user?.RecordExternalRoleMembershipChange();
     }
 
     private static void EnsureValidInput(UserId userId, string roleName) {

@@ -1,7 +1,7 @@
 namespace FoodDiary.Presentation.Api.Features.Admin.Responses;
 
 public sealed record AdminImpersonationStartHttpResponse(
-    string AccessToken,
+    string Code,
     Guid TargetUserId,
     string TargetEmail,
     Guid ActorUserId,

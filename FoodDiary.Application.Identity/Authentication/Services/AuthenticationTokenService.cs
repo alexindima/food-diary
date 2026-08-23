@@ -19,14 +19,14 @@ public sealed class AuthenticationTokenService(
         UserAuthenticationPrincipalModel principal,
         CancellationToken cancellationToken,
         AuthenticationClientContext? clientContext = null,
-        bool rememberMe = false,
-        Guid? refreshSessionId = null) {
+        bool rememberMe = false) {
         string accessToken = jwtTokenGenerator.GenerateAccessToken(
             principal.UserId,
             principal.Email,
             principal.Roles,
-            principal.AccessTokenCapUtc);
-        Guid resolvedRefreshSessionId = refreshSessionId ?? Guid.NewGuid();
+            principal.AccessTokenCapUtc,
+            principal.SecurityVersion);
+        var resolvedRefreshSessionId = Guid.NewGuid();
         string refreshToken = jwtTokenGenerator.GenerateRefreshToken(
             principal.UserId,
             principal.Email,
@@ -40,11 +40,40 @@ public sealed class AuthenticationTokenService(
             hashedRefreshToken,
             rememberMe,
             resolvedRefreshSessionId,
-            refreshSessionId,
             clientContext,
             nowUtc,
             cancellationToken).ConfigureAwait(false);
         return new IssuedAuthenticationTokens(accessToken, refreshToken);
+    }
+
+    public async Task<IssuedAuthenticationTokens?> RotateFromPrincipalAsync(
+        UserAuthenticationPrincipalModel principal,
+        Guid refreshSessionId,
+        string expectedRefreshTokenHash,
+        bool rememberMe,
+        CancellationToken cancellationToken) {
+        string accessToken = jwtTokenGenerator.GenerateAccessToken(
+            principal.UserId,
+            principal.Email,
+            principal.Roles,
+            principal.AccessTokenCapUtc,
+            principal.SecurityVersion);
+        string refreshToken = jwtTokenGenerator.GenerateRefreshToken(
+            principal.UserId,
+            principal.Email,
+            principal.Roles,
+            rememberMe,
+            refreshSessionId);
+        string newRefreshTokenHash = SecurityTokenGenerator.HashForStorage(refreshToken);
+        bool rotated = await refreshTokenSessionRepository.TryRotateAsync(
+            refreshSessionId,
+            principal.UserId,
+            expectedRefreshTokenHash,
+            newRefreshTokenHash,
+            rememberMe,
+            dateTimeProvider.GetUtcNow().UtcDateTime,
+            cancellationToken).ConfigureAwait(false);
+        return rotated ? new IssuedAuthenticationTokens(accessToken, refreshToken) : null;
     }
 
     private async Task PersistAuthenticationArtifactsAsync(
@@ -52,30 +81,19 @@ public sealed class AuthenticationTokenService(
         string hashedRefreshToken,
         bool rememberMe,
         Guid resolvedRefreshSessionId,
-        Guid? refreshSessionId,
         AuthenticationClientContext? clientContext,
         DateTime nowUtc,
         CancellationToken cancellationToken) {
-        if (refreshSessionId.HasValue) {
-            UserRefreshTokenSession? session = await refreshTokenSessionRepository
-                .GetByIdAsync(refreshSessionId.Value, cancellationToken)
-                .ConfigureAwait(false);
-            if (session is not null && session.UserId == userId && session.IsActive) {
-                session.Rotate(hashedRefreshToken, rememberMe, nowUtc, TimeSpan.Zero);
-                await refreshTokenSessionRepository.UpdateAsync(session, cancellationToken).ConfigureAwait(false);
-            }
-        } else {
-            var session = UserRefreshTokenSession.Create(
-                resolvedRefreshSessionId,
-                userId,
-                hashedRefreshToken,
-                rememberMe,
-                clientContext?.AuthProvider,
-                clientContext?.IpAddress,
-                clientContext?.UserAgent,
-                nowUtc);
-            await refreshTokenSessionRepository.AddAsync(session, cancellationToken).ConfigureAwait(false);
-        }
+        var session = UserRefreshTokenSession.Create(
+            resolvedRefreshSessionId,
+            userId,
+            hashedRefreshToken,
+            rememberMe,
+            clientContext?.AuthProvider,
+            clientContext?.IpAddress,
+            clientContext?.UserAgent,
+            nowUtc);
+        await refreshTokenSessionRepository.AddAsync(session, cancellationToken).ConfigureAwait(false);
 
         if (clientContext is not null) {
             ParsedUserAgent userAgent = UserAgentParser.Parse(clientContext.UserAgent);

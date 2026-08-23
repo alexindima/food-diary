@@ -46,6 +46,7 @@ public sealed class ProviderWebhookAuthorizer(
         }
 
         if (!HasRequiredSnsSignatureFields(request) ||
+            !string.Equals(request.TopicArn, _options.ExpectedAwsSesSnsTopicArn, StringComparison.Ordinal) ||
             !TryCreateValidatedSnsCertificateUri(request.SigningCertUrl, out Uri? certificateUri)) {
             return false;
         }

@@ -18,6 +18,9 @@ public sealed class AdminUserPasswordController(ISender mediator) : BaseApiContr
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> SetPassword(Guid id, [FromBody] AdminUserSetPasswordHttpRequest request) =>
-        HandleNoContent(request.ToCommand(id));
+    public Task<IActionResult> SetPassword(
+        Guid id,
+        [FromCurrentUser] Guid actorUserId,
+        [FromBody] AdminUserSetPasswordHttpRequest request) =>
+        HandleNoContent(request.ToCommand(id, actorUserId));
 }

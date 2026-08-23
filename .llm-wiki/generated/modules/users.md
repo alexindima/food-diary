@@ -83,14 +83,14 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - Physical isolation: assembly
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent
-- Public contract files: 66
+- Public contract files: 67
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 66
-- Interfaces: 29
+- Public contract types: 67
+- Interfaces: 30
 - DTO/read-model/projection types: 33
 - Enums: 2
 - Exported repository-shaped contracts: 6
@@ -102,6 +102,7 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - `interface ICurrentUserAccessService`
 - `interface IProfileDietologistReadService`
 - `interface IProfileNotificationReadService`
+- `interface IUserAccessTokenSecurityReader`
 - `interface IUserAdministrationMutationService`
 - `interface IUserAdministrationReadService`
 - `interface IUserAdminReadModelRepository`
@@ -124,8 +125,7 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - `interface IUserProfileReadService`
 - `interface IUserRepository`
 - `interface IUserRoleCatalogService`
-- `interface IUserRoleMembershipService`
-- ... 36 more type(s)
+- ... 37 more type(s)
 
 ## Extraction Readiness
 
@@ -159,6 +159,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/UsersModuleExtractionTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/UserSecurityVersionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsersControllerTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsersPasswordControllerTests.cs`
 

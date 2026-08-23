@@ -76,6 +76,7 @@ EmailDelivery__RelayApiKey=your-internal-relay-key
 ```env
 MailRelay__RequireApiKey=true
 MailRelay__ApiKey=your-internal-relay-key
+MailRelay__ExpectedAwsSesSnsTopicArn=arn:aws:sns:us-east-1:123456789012:fooddiary-ses-events
 
 MailRelayBroker__Backend=RabbitMq
 MailRelayBroker__HostName=rabbitmq

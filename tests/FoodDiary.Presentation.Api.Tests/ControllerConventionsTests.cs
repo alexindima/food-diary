@@ -77,6 +77,7 @@ public sealed class ControllerConventionsTests {
     public void AuthFeatureControllers_UseExpectedRoutePrefixes() {
         var expectedRoutes = new Dictionary<string, string>(StringComparer.Ordinal) {
             ["AdminSsoController"] = "api/v{version:apiVersion}/auth/admin-sso",
+            ["AuthImpersonationController"] = "api/v{version:apiVersion}/auth/impersonation",
             ["AuthPasswordController"] = "api/v{version:apiVersion}/auth/password-reset",
             ["AuthSessionController"] = "api/v{version:apiVersion}/auth",
             ["AuthTelegramController"] = "api/v{version:apiVersion}/auth/telegram",
@@ -170,6 +171,7 @@ public sealed class ControllerConventionsTests {
     public void AllowAnonymous_UsageMatchesReviewedAllowlist() {
         string[] expected = [
             "AdminSsoController.AdminSsoExchange",
+            "AuthImpersonationController.ExchangeImpersonation",
             "AuthPasswordController.ConfirmPasswordReset",
             "AuthPasswordController.RequestPasswordReset",
             "AuthSessionController.GoogleLogin",

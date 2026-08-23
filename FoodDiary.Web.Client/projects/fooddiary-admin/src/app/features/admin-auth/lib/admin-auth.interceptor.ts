@@ -29,15 +29,20 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
 
             const status = error instanceof HttpErrorResponse ? error.status : undefined;
 
-            if (status === HttpStatusCode.Unauthorized || status === HttpStatusCode.Forbidden) {
+            if (status === HttpStatusCode.Unauthorized) {
                 localStorageRef?.removeItem('authToken');
                 localStorageRef?.removeItem('refreshToken');
                 sessionStorageRef?.removeItem('authToken');
 
-                const reason = status === HttpStatusCode.Forbidden ? 'forbidden' : 'unauthenticated';
                 const returnUrl = router.url;
                 void router.navigate(['/unauthorized'], {
-                    queryParams: { reason, returnUrl },
+                    queryParams: { reason: 'unauthenticated', returnUrl },
+                });
+            }
+
+            if (status === HttpStatusCode.Forbidden) {
+                void router.navigate(['/unauthorized'], {
+                    queryParams: { reason: 'forbidden', returnUrl: router.url },
                 });
             }
 

@@ -203,13 +203,16 @@ public sealed class AdminControllersCoverageTests {
         CapturedSender sender = SubstituteSender.Capture(Result.Success());
         AdminUserPasswordController controller = CreateController(new AdminUserPasswordController(sender));
         var userId = Guid.NewGuid();
+        var actorUserId = Guid.NewGuid();
 
-        IActionResult result = await controller.SetPassword(userId, new AdminUserSetPasswordHttpRequest("NewPassword123!"));
+        IActionResult result = await controller.SetPassword(userId, actorUserId, new AdminUserSetPasswordHttpRequest("NewPassword123!"));
 
         Assert.IsType<NoContentResult>(result);
         SetAdminUserPasswordCommand command = Assert.IsType<SetAdminUserPasswordCommand>(sender.Request);
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal("NewPassword123!", command.NewPassword);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(actorUserId, command.ActorUserId),
+            () => Assert.Equal("NewPassword123!", command.NewPassword));
     }
 
     [Fact]

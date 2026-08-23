@@ -14,6 +14,8 @@ public static partial class Errors {
 
         public static Error PasswordAlreadySet => UserErrors.PasswordAlreadySet;
 
+        public static Error AdminPasswordResetForbidden => UserErrors.AdminPasswordResetForbidden;
+
         public static Error NotFound() => UserErrors.NotFound();
 
         public static Error InvalidCredentials => UserErrors.InvalidCredentials;

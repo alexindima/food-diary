@@ -221,7 +221,7 @@ public partial class AdminFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.Equal("impersonation-token", result.Value.AccessToken);
+        Assert.Equal("one-time-code", result.Value.Code);
         Assert.Equal(target.Id.Value, result.Value.TargetUserId);
         Assert.Equal(actor.Id.Value, result.Value.ActorUserId);
         Assert.Equal("Support case with billing issue", result.Value.Reason);
@@ -499,9 +499,19 @@ public partial class AdminFeatureTests {
         new(
             new UserAuthenticationIdentityService(repository, repository, repository, new PrefixPasswordHasher()),
             sessionRepository,
+            new StubImpersonationHandoffService(),
             new StubJwtTokenGenerator(),
             dateTimeProvider,
             new NullAuditLogger());
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubImpersonationHandoffService : IAdminImpersonationHandoffService {
+        public Task<string> CreateCodeAsync(string accessToken, CancellationToken cancellationToken = default) =>
+            Task.FromResult("one-time-code");
+
+        public Task<string?> ConsumeCodeAsync(string code, CancellationToken cancellationToken = default) =>
+            Task.FromResult<string?>(null);
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class NullAuditLogger : IAuditLogger {
@@ -655,9 +665,9 @@ public partial class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubJwtTokenGenerator : IJwtTokenGenerator {
-        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) => "access-token";
-        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, DateTime? expiresAtUtc) => "access-token";
-        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, JwtImpersonationContext impersonation) => "impersonation-token";
+        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, long securityVersion = 0) => "access-token";
+        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, DateTime? expiresAtUtc, long securityVersion = 0) => "access-token";
+        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, JwtImpersonationContext impersonation, long securityVersion = 0) => "impersonation-token";
         public string GenerateRefreshToken(
             UserId userId,
             string email,

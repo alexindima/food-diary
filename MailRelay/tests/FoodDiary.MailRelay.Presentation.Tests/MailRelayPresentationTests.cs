@@ -265,7 +265,7 @@ public sealed class MailRelayPresentationTests {
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsCertHostIsNotTrusted_RejectsBeforeDownloadingCertificate() {
         var handler = new RecordingHttpMessageHandler();
         var authorizer = new ProviderWebhookAuthorizer(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
+            CreateAwsSesSnsOptions(),
             new HttpClient(handler),
             FixedTime);
         var request = new AwsSesSnsWebhookHttpRequest(
@@ -299,7 +299,7 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsRequiredFieldsAreMissing_RejectsRequest() {
         var authorizer = new ProviderWebhookAuthorizer(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
+            CreateAwsSesSnsOptions(),
             new HttpClient(new RecordingHttpMessageHandler()),
             FixedTime);
 
@@ -309,10 +309,27 @@ public sealed class MailRelayPresentationTests {
     }
 
     [Fact]
+    public async Task ProviderWebhookAuthorizer_WhenAwsSnsTopicDoesNotMatch_RejectsBeforeDownloadingCertificate() {
+        var handler = new RecordingHttpMessageHandler();
+        var authorizer = new ProviderWebhookAuthorizer(
+            CreateAwsSesSnsOptions(),
+            new HttpClient(handler),
+            FixedTime);
+        AwsSesSnsWebhookHttpRequest request = CreateSignedAwsSnsRequest(
+            signature: Convert.ToBase64String(Encoding.UTF8.GetBytes("validly-formed")),
+            signingCertUrl: "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-test.pem") with {
+                TopicArn = "arn:aws:sns:us-east-1:999999999999:attacker-topic",
+            };
+
+        Assert.False(await authorizer.IsAwsSesSnsAuthorizedAsync(request, CancellationToken.None));
+        Assert.False(handler.WasCalled);
+    }
+
+    [Fact]
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsSignatureIsNotBase64_RejectsRequest() {
         var handler = new RecordingHttpMessageHandler();
         var authorizer = new ProviderWebhookAuthorizer(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
+            CreateAwsSesSnsOptions(),
             new HttpClient(handler),
             FixedTime);
 
@@ -325,7 +342,7 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsCertificateDownloadFails_RejectsRequest() {
         var authorizer = new ProviderWebhookAuthorizer(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
+            CreateAwsSesSnsOptions(),
             new HttpClient(new RecordingHttpMessageHandler(_ => throw new HttpRequestException("download failed"))),
             FixedTime);
 
@@ -337,7 +354,7 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsCertificatePemIsInvalid_RejectsRequest() {
         var authorizer = new ProviderWebhookAuthorizer(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
+            CreateAwsSesSnsOptions(),
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent("not a pem"),
             })),
@@ -364,7 +381,7 @@ public sealed class MailRelayPresentationTests {
             Signature = Convert.ToBase64String(signature),
         };
         var authorizer = new ProviderWebhookAuthorizer(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
+            CreateAwsSesSnsOptions(),
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent(certificate.ExportCertificatePem()),
             })),
@@ -380,7 +397,7 @@ public sealed class MailRelayPresentationTests {
         CertificateRequest certificateRequest = new("CN=sns.amazonaws.com", ecdsa, HashAlgorithmName.SHA256);
         using X509Certificate2 certificate = certificateRequest.CreateSelfSigned(DateTimeOffset.UtcNow.AddMinutes(-1), DateTimeOffset.UtcNow.AddMinutes(10));
         var authorizer = new ProviderWebhookAuthorizer(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
+            CreateAwsSesSnsOptions(),
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent(certificate.ExportCertificatePem()),
             })),
@@ -397,7 +414,7 @@ public sealed class MailRelayPresentationTests {
         using var rsa = RSA.Create(2048);
         using X509Certificate2 certificate = CreateSelfSignedCertificate(rsa);
         var authorizer = new ProviderWebhookAuthorizer(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
+            CreateAwsSesSnsOptions(),
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent(certificate.ExportCertificatePem()),
             })),
@@ -411,7 +428,7 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsConfirmationMessageHasInvalidPem_BuildsConfirmationCanonicalString() {
         var authorizer = new ProviderWebhookAuthorizer(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions()),
+            CreateAwsSesSnsOptions(),
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent("not a pem"),
             })),
@@ -845,8 +862,14 @@ public sealed class MailRelayPresentationTests {
             new HttpClient(new RecordingHttpMessageHandler()),
             FixedTime);
 
+    private static Microsoft.Extensions.Options.IOptions<MailRelayOptions> CreateAwsSesSnsOptions() =>
+        Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+            ExpectedAwsSesSnsTopicArn = ExpectedAwsSesSnsTopicArn,
+        });
+
     private static readonly DateTimeOffset FixedNow = new(2026, 7, 1, 8, 0, 0, TimeSpan.Zero);
     private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+    private const string ExpectedAwsSesSnsTopicArn = "arn:aws:sns:us-east-1:123456789012:topic";
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider : TimeProvider {
@@ -867,7 +890,7 @@ public sealed class MailRelayPresentationTests {
             Type: type,
             Message: "{}",
             MessageId: "message-id",
-            TopicArn: "arn:aws:sns:us-east-1:123456789012:topic",
+            TopicArn: ExpectedAwsSesSnsTopicArn,
             Subject: "subject",
             Timestamp: DateTimeOffset.UtcNow.ToString("O", CultureInfo.InvariantCulture),
             SignatureVersion: "2",

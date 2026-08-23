@@ -168,7 +168,7 @@ export class AdminUsersComponent {
                 }
 
                 const targetUrl = new URL('/dashboard', environment.mainAppUrl);
-                targetUrl.searchParams.set('impersonationToken', response.accessToken);
+                targetUrl.searchParams.set('impersonationCode', response.code);
                 this.document.defaultView?.open(targetUrl.toString(), '_blank', 'noopener,noreferrer');
             });
     }

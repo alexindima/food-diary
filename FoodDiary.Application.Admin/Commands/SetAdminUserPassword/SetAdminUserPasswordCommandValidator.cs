@@ -10,6 +10,11 @@ public sealed class SetAdminUserPasswordCommandValidator : AbstractValidator<Set
             .WithErrorCode("Validation.Required")
             .WithMessage("User id is required.");
 
+        RuleFor(x => x.ActorUserId)
+            .NotEmpty()
+            .WithErrorCode("Validation.Required")
+            .WithMessage("Actor user id is required.");
+
         RuleFor(x => x.NewPassword)
             .Cascade(CascadeMode.Stop)
             .NotEmpty()

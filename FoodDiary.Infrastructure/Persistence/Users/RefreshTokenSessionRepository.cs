@@ -29,6 +29,44 @@ public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : 
         return Task.CompletedTask;
     }
 
+    public async Task<bool> TryRotateAsync(
+        Guid id,
+        UserId userId,
+        string expectedRefreshTokenHash,
+        string newRefreshTokenHash,
+        bool rememberMe,
+        DateTime rotatedAtUtc,
+        CancellationToken cancellationToken = default) {
+        if (!context.Database.IsRelational()) {
+            UserRefreshTokenSession? session = await context.UserRefreshTokenSessions
+                .FirstOrDefaultAsync(candidate => candidate.Id == id, cancellationToken).ConfigureAwait(false);
+            if (session is null || session.UserId != userId || !session.IsActive ||
+                !string.Equals(session.RefreshTokenHash, expectedRefreshTokenHash, StringComparison.Ordinal)) {
+                return false;
+            }
+
+            session.Rotate(newRefreshTokenHash, rememberMe, rotatedAtUtc, TimeSpan.Zero);
+            return true;
+        }
+
+        int affected = await context.UserRefreshTokenSessions
+            .Where(session =>
+                session.Id == id &&
+                session.UserId == userId &&
+                session.RevokedAtUtc == null &&
+                session.RefreshTokenHash == expectedRefreshTokenHash)
+            .ExecuteUpdateAsync(
+                setters => setters
+                    .SetProperty(session => session.PreviousRefreshTokenHash, expectedRefreshTokenHash)
+                    .SetProperty(session => session.PreviousRefreshTokenValidUntilUtc, (DateTime?)null)
+                    .SetProperty(session => session.RefreshTokenHash, newRefreshTokenHash)
+                    .SetProperty(session => session.RememberMe, rememberMe)
+                    .SetProperty(session => session.LastRotatedAtUtc, rotatedAtUtc),
+                cancellationToken)
+            .ConfigureAwait(false);
+        return affected == 1;
+    }
+
     public async Task RevokeAllAsync(
         UserId userId,
         DateTime revokedAtUtc,

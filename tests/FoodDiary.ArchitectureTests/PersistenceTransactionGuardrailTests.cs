@@ -87,6 +87,7 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(infrastructureRoot, "Persistence", "Tracking", "FastingTelemetryEventRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Tracking", "MarketingAttributionEventRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Users", "UserLoginEventRepository.cs"),
+            Path.Combine(infrastructureRoot, "Persistence", "Users", "RefreshTokenSessionRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Users", "UserRoleMembershipService.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Users", "UserCleanupService.cs"),
         ];

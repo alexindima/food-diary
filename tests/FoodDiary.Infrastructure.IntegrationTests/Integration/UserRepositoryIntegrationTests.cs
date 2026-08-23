@@ -54,6 +54,28 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
     }
 
     [RequiresDockerFact]
+    public async Task IsCurrentAsync_RejectsOldVersionAndInactiveUser() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"security-version-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        var repository = new UserRepository(context);
+
+        Assert.True(await repository.IsCurrentAsync(user.Id.Value, securityVersion: 0));
+
+        user.UpdatePassword("next-hash");
+        await context.SaveChangesAsync();
+
+        Assert.False(await repository.IsCurrentAsync(user.Id.Value, securityVersion: 0));
+        Assert.True(await repository.IsCurrentAsync(user.Id.Value, securityVersion: 1));
+
+        user.Deactivate();
+        await context.SaveChangesAsync();
+
+        Assert.False(await repository.IsCurrentAsync(user.Id.Value, securityVersion: 2));
+    }
+
+    [RequiresDockerFact]
     public async Task GetByEmailAsync_DoesNotLoadGoalHistoryNeededOnlyByAggregateWorkflows() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"identity-query-{Guid.NewGuid():N}@example.com", "hash");

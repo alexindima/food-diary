@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence.Users;
 
-public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository, IUserGoogleIdentityRepository, IUserAdminReadRepository, IUserAdminReadModelRepository {
+public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository, IUserGoogleIdentityRepository, IUserAdminReadRepository, IUserAdminReadModelRepository, IUserAccessTokenSecurityReader {
     private const string LikeEscapeCharacter = "\\";
 
     private IQueryable<User> UsersWithRoles() =>
@@ -39,6 +39,17 @@ public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository
 
     public async Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
         await UsersWithRoles().FirstOrDefaultAsync(u => u.Id == id, cancellationToken).ConfigureAwait(false);
+
+    public Task<bool> IsCurrentAsync(
+        Guid userId,
+        long securityVersion,
+        CancellationToken cancellationToken = default) =>
+        context.Users.AsNoTracking().AnyAsync(
+            user => user.Id == new UserId(userId) &&
+                    user.IsActive &&
+                    user.DeletedAt == null &&
+                    user.SecurityVersion == securityVersion,
+            cancellationToken);
 
     public async Task<UserAdminReadModel?> GetByIdIncludingDeletedReadModelAsync(
         UserId id,

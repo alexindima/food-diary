@@ -86,7 +86,7 @@ public static class AdminHttpResponseMappings {
     extension(AdminImpersonationStartModel model) {
         public AdminImpersonationStartHttpResponse ToHttpResponse() {
             return new AdminImpersonationStartHttpResponse(
-                model.AccessToken,
+                model.Code,
                 model.TargetUserId,
                 model.TargetEmail,
                 model.ActorUserId,

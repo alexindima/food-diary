@@ -57,14 +57,31 @@ public sealed class MailRelayInfrastructureOptionsTests {
         Assert.False(MailRelayOptions.HasValidProviderWebhookConfiguration(new MailRelayOptions {
             RequireMailgunWebhookSignature = true,
             MailgunWebhookSigningKey = "",
+            ExpectedAwsSesSnsTopicArn = "arn:aws:sns:us-east-1:123456789012:topic",
         }));
         Assert.True(MailRelayOptions.HasValidProviderWebhookConfiguration(new MailRelayOptions {
             RequireMailgunWebhookSignature = true,
             MailgunWebhookSigningKey = "secret",
+            ExpectedAwsSesSnsTopicArn = "arn:aws:sns:us-east-1:123456789012:topic",
         }));
         Assert.True(MailRelayOptions.HasValidProviderWebhookConfiguration(new MailRelayOptions {
             RequireMailgunWebhookSignature = false,
             MailgunWebhookSigningKey = "",
+            RequireAwsSesSnsSignature = false,
+        }));
+    }
+
+    [Fact]
+    public void MailRelayOptions_WhenAwsSnsSignatureIsRequired_RequiresExpectedTopicArn() {
+        Assert.False(MailRelayOptions.HasValidProviderWebhookConfiguration(new MailRelayOptions {
+            RequireMailgunWebhookSignature = false,
+            RequireAwsSesSnsSignature = true,
+            ExpectedAwsSesSnsTopicArn = "",
+        }));
+        Assert.True(MailRelayOptions.HasValidProviderWebhookConfiguration(new MailRelayOptions {
+            RequireMailgunWebhookSignature = false,
+            RequireAwsSesSnsSignature = true,
+            ExpectedAwsSesSnsTopicArn = "arn:aws:sns:us-east-1:123456789012:topic",
         }));
     }
 

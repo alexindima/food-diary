@@ -23,6 +23,11 @@ public static class UserErrors {
         "Password is already configured for this account.",
         Kind: ErrorKind.Conflict);
 
+    public static Error AdminPasswordResetForbidden => new(
+        "User.AdminPasswordResetForbidden",
+        "Administrators cannot reset passwords for privileged accounts or their own account.",
+        Kind: ErrorKind.Forbidden);
+
     public static Error NotFound() => new(
         "User.NotFound",
         "User was not found.",

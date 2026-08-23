@@ -96,9 +96,10 @@ public static class AdminHttpMappings {
     }
 
     extension(AdminUserSetPasswordHttpRequest request) {
-        public SetAdminUserPasswordCommand ToCommand(Guid userId) {
+        public SetAdminUserPasswordCommand ToCommand(Guid userId, Guid actorUserId) {
             return new SetAdminUserPasswordCommand(
                 UserId: userId,
+                ActorUserId: actorUserId,
                 NewPassword: request.NewPassword);
         }
     }

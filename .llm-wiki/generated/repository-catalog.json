@@ -19,8 +19,8 @@
     "applicationModules": 0,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 33,
-    "controllers": 87,
-    "endpoints": 279,
+    "controllers": 88,
+    "endpoints": 280,
     "agentGuides": 74,
     "documentationPages": 50
   },
@@ -3946,6 +3946,18 @@
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/admin-sso/exchange",
             "line": 28
+          }
+        ]
+      },
+      {
+        "name": "AuthImpersonationController",
+        "path": "FoodDiary.Presentation.Api/Features/Auth/AuthImpersonationController.cs",
+        "routePrefix": "api/v{version:apiVersion}/auth/impersonation",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/impersonation/exchange",
+            "line": 24
           }
         ]
       },

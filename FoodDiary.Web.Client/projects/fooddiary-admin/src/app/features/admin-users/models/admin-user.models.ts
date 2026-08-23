@@ -85,7 +85,7 @@ export type AdminUserSetPassword = {
 };
 
 export type AdminImpersonationStart = {
-    accessToken: string;
+    code: string;
     targetUserId: string;
     targetEmail: string;
     actorUserId: string;

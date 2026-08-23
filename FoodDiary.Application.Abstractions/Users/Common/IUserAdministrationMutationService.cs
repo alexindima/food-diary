@@ -14,6 +14,7 @@ public interface IUserAdministrationMutationService {
 
     Task<Result> SetPasswordAsync(
         FoodDiary.Domain.ValueObjects.Ids.UserId userId,
+        FoodDiary.Domain.ValueObjects.Ids.UserId actorUserId,
         string newPassword,
         CancellationToken cancellationToken = default);
 }

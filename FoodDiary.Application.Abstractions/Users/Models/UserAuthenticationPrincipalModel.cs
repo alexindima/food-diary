@@ -7,4 +7,5 @@ public sealed record UserAuthenticationPrincipalModel(
     string Email,
     IReadOnlyCollection<string> Roles,
     DateTime? AccessTokenCapUtc,
-    UserModel User);
+    UserModel User,
+    long SecurityVersion = 0);

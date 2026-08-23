@@ -53,7 +53,7 @@ public sealed class SecretInputLimitValidatorTests {
             .TestValidate(new SetPasswordCommand(Guid.NewGuid(), OversizedPassword))
             .ShouldHaveValidationErrorFor(command => command.NewPassword);
         new SetAdminUserPasswordCommandValidator()
-            .TestValidate(new SetAdminUserPasswordCommand(Guid.NewGuid(), OversizedPassword))
+            .TestValidate(new SetAdminUserPasswordCommand(Guid.NewGuid(), Guid.NewGuid(), OversizedPassword))
             .ShouldHaveValidationErrorFor(command => command.NewPassword);
     }
 

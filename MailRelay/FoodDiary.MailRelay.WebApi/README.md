@@ -62,6 +62,7 @@ It accepts internal send requests over HTTP, persists them to PostgreSQL, writes
 - `MailRelay__RequireMailgunWebhookSignature`
 - `MailRelay__MailgunWebhookSigningKey`
 - `MailRelay__RequireAwsSesSnsSignature`
+- `MailRelay__ExpectedAwsSesSnsTopicArn` (required when AWS SNS signature verification is enabled)
 - `MailRelayQueue__*`
 - `MailRelayBroker__*`
 - `MailRelayDelivery__Mode`: `SmtpSubmission` or `DirectMx`

@@ -242,6 +242,7 @@ services:
       MailRelay__RequireMailgunWebhookSignature: ${MailRelay__RequireMailgunWebhookSignature:-false}
       MailRelay__MailgunWebhookSigningKey: ${MailRelay__MailgunWebhookSigningKey:-}
       MailRelay__RequireAwsSesSnsSignature: ${MailRelay__RequireAwsSesSnsSignature:-true}
+      MailRelay__ExpectedAwsSesSnsTopicArn: ${MailRelay__ExpectedAwsSesSnsTopicArn:-arn:aws:sns:us-east-1:000000000000:fooddiary-local}
       MailRelayBroker__HostName: rabbitmq
     env_file:
       - .env

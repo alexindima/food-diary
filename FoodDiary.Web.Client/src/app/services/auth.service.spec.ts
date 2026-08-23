@@ -56,6 +56,7 @@ let localizationServiceSpy: {
 let sessionEventsSpy: { notifyAuthenticated: ReturnType<typeof vi.fn>; notifySessionEnded: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
+    window.history.replaceState({}, '', '/');
     localStorage.clear();
     sessionStorage.clear();
 
@@ -93,6 +94,7 @@ beforeEach(() => {
 
 afterEach(() => {
     httpMock.verify();
+    window.history.replaceState({}, '', '/');
     localStorage.clear();
     sessionStorage.clear();
 });
@@ -409,6 +411,26 @@ describe('refreshToken', () => {
 });
 
 describe('session restore', () => {
+    it('should exchange a one-time impersonation code without storing the code in the URL', async () => {
+        const impersonationToken = createFakeJwt({
+            sub: 'impersonated-user',
+            exp: Math.floor(Date.now() / JWT_SECONDS_PER_MS) + JWT_ONE_HOUR_SECONDS,
+        });
+        window.history.replaceState({}, '', '/dashboard?impersonationCode=one-time-code&foo=1');
+
+        const restorePromise = service.restoreSessionAsync();
+
+        const req = httpMock.expectOne(`${authBaseUrl}/impersonation/exchange`);
+        expect(req.request.body).toEqual({ code: 'one-time-code' });
+        expect(window.location.search).toBe('?foo=1');
+        req.flush({ accessToken: impersonationToken });
+        await restorePromise;
+
+        expect(service.getToken()).toBe(impersonationToken);
+        expect(sessionStorage.getItem('authToken')).toBe(impersonationToken);
+        expect(localStorage.getItem('authToken')).toBeNull();
+    });
+
     it('should restore the session from refresh token when access token is missing', async () => {
         localStorage.setItem('refreshToken', 'existing-refresh-token');
         const restoredToken = createFakeJwt({

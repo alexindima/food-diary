@@ -16,7 +16,7 @@ public partial class AdminFeatureTests {
     public async Task SetAdminUserPasswordValidator_WithInvalidPayload_Fails() {
         var validator = new SetAdminUserPasswordCommandValidator();
 
-        ValidationResult result = await validator.ValidateAsync(new SetAdminUserPasswordCommand(Guid.Empty, "123"));
+        ValidationResult result = await validator.ValidateAsync(new SetAdminUserPasswordCommand(Guid.Empty, Guid.Empty, "123"));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "UserId", StringComparison.Ordinal));
@@ -30,15 +30,17 @@ public partial class AdminFeatureTests {
         var handler = new SetAdminUserPasswordCommandHandler(
             new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
             Substitute.For<IRefreshTokenSessionWriteRepository>(),
-            TimeProvider.System);
+            TimeProvider.System,
+            Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
 
         Result result = await handler.Handle(
-            new SetAdminUserPasswordCommand(user.Id.Value, "NewPassword123!"),
+            new SetAdminUserPasswordCommand(user.Id.Value, UserId.New().Value, "NewPassword123!"),
             CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.True(user.HasPassword);
         Assert.Equal("hashed:NewPassword123!", user.Password);
+        Assert.True(user.MustChangePassword);
         Assert.Equal(1, userRepository.UpdateCallCount);
     }
 
@@ -49,16 +51,38 @@ public partial class AdminFeatureTests {
         var handler = new SetAdminUserPasswordCommandHandler(
             new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
             Substitute.For<IRefreshTokenSessionWriteRepository>(),
-            TimeProvider.System);
+            TimeProvider.System,
+            Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
 
         Result result = await handler.Handle(
-            new SetAdminUserPasswordCommand(user.Id.Value, "FirstPassword123!"),
+            new SetAdminUserPasswordCommand(user.Id.Value, UserId.New().Value, "FirstPassword123!"),
             CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.True(user.HasPassword);
         Assert.Equal("hashed:FirstPassword123!", user.Password);
         Assert.Equal(1, userRepository.UpdateCallCount);
+    }
+
+    [Theory]
+    [InlineData(RoleNames.Owner)]
+    [InlineData(RoleNames.Admin)]
+    public async Task SetAdminUserPasswordHandler_WithPrivilegedTarget_ReturnsForbidden(string roleName) {
+        User user = CreateUserWithRoles("privileged-password@example.com", [roleName]);
+        var userRepository = new InMemoryUserRepository(user, availableRoles: [roleName]);
+        var handler = new SetAdminUserPasswordCommandHandler(
+            new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            TimeProvider.System,
+            Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
+
+        Result result = await handler.Handle(
+            new SetAdminUserPasswordCommand(user.Id.Value, UserId.New().Value, "NewPassword123!"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("User.AdminPasswordResetForbidden", result.Error.Code);
+        Assert.Equal(0, userRepository.UpdateCallCount);
     }
 
     [Fact]
@@ -68,10 +92,11 @@ public partial class AdminFeatureTests {
         var handler = new SetAdminUserPasswordCommandHandler(
             new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
             Substitute.For<IRefreshTokenSessionWriteRepository>(),
-            TimeProvider.System);
+            TimeProvider.System,
+            Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
 
         Result result = await handler.Handle(
-            new SetAdminUserPasswordCommand(Guid.Empty, "NewPassword123!"),
+            new SetAdminUserPasswordCommand(Guid.Empty, UserId.New().Value, "NewPassword123!"),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -86,10 +111,11 @@ public partial class AdminFeatureTests {
         var handler = new SetAdminUserPasswordCommandHandler(
             new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
             Substitute.For<IRefreshTokenSessionWriteRepository>(),
-            TimeProvider.System);
+            TimeProvider.System,
+            Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
 
         Result result = await handler.Handle(
-            new SetAdminUserPasswordCommand(Guid.NewGuid(), "NewPassword123!"),
+            new SetAdminUserPasswordCommand(Guid.NewGuid(), UserId.New().Value, "NewPassword123!"),
             CancellationToken.None);
 
         ResultAssert.Failure(result);

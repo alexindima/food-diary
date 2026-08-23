@@ -19,7 +19,7 @@ const user = {
 };
 
 const response = {
-    accessToken: 'token',
+    code: 'code',
     expiresAtUtc: '2026-01-01T00:10:00Z',
     reason: 'Support case investigation',
 };

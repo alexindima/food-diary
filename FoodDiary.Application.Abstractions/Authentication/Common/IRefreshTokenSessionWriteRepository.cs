@@ -10,5 +10,14 @@ public interface IRefreshTokenSessionWriteRepository {
 
     Task UpdateAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default);
 
+    Task<bool> TryRotateAsync(
+        Guid id,
+        UserId userId,
+        string expectedRefreshTokenHash,
+        string newRefreshTokenHash,
+        bool rememberMe,
+        DateTime rotatedAtUtc,
+        CancellationToken cancellationToken = default);
+
     Task RevokeAllAsync(UserId userId, DateTime revokedAtUtc, CancellationToken cancellationToken = default);
 }

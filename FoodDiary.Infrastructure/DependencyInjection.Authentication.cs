@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
@@ -19,6 +20,7 @@ public static partial class DependencyInjection {
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<IAdminSsoCodeStore, InMemoryAdminSsoCodeStore>();
         services.AddSingleton<IAdminSsoService, AdminSsoService>();
+        services.AddSingleton<IAdminImpersonationHandoffService, AdminImpersonationHandoffService>();
         services.AddScoped<ITelegramAssertionReplayGuard, TelegramAssertionReplayGuard>();
         services.AddScoped<IUserCleanupService, UserCleanupService>();
         services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();

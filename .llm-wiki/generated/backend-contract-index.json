@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1052,
+    "contracts": 1057,
     "ambiguousContracts": 3,
-    "consumerEdges": 7423,
-    "productionConsumerEdges": 4475,
-    "testConsumerEdges": 2948,
-    "consumedContracts": 1052,
+    "consumerEdges": 7445,
+    "productionConsumerEdges": 4494,
+    "testConsumerEdges": 2951,
+    "consumedContracts": 1057,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -3127,6 +3127,54 @@
       ],
       "definitionPaths": [
         "MailRelay/FoodDiary.MailRelay.Client/Models/EnqueueMailRelayEmailResponse.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "ExchangeAdminImpersonationCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "ExchangeImpersonationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Auth/Requests/ExchangeImpersonationHttpRequest.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "ExchangeImpersonationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Auth/Responses/ExchangeImpersonationHttpResponse.cs"
       ],
       "ambiguous": false
     },
@@ -6295,6 +6343,22 @@
       ],
       "definitionPaths": [
         "FoodDiary.Application.Admin/Common/IAdminDashboardReadService.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "IAdminImpersonationHandoffService",
+      "roles": [
+        "Service"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs"
       ],
       "ambiguous": false
     },
@@ -11867,6 +11931,22 @@
       ],
       "definitionPaths": [
         "FoodDiary.Application.Usda/Common/IUsdaProductSuggestionReadService.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "IUserAccessTokenSecurityReader",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserAccessTokenSecurityReader.cs"
       ],
       "ambiguous": false
     },
@@ -20968,7 +21048,7 @@
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
       "isTest": true,
-      "referenceCount": 13
+      "referenceCount": 14
     },
     {
       "contract": "BadgeHttpResponse",
@@ -29860,6 +29940,84 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Services/RelayEmailTransportTests.cs",
       "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ExchangeAdminImpersonationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ExchangeAdminImpersonationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ExchangeAdminImpersonationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ExchangeImpersonationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Auth/Requests/ExchangeImpersonationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/AuthImpersonationController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ExchangeImpersonationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Auth/Requests/ExchangeImpersonationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ExchangeImpersonationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Auth/Responses/ExchangeImpersonationHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/AuthImpersonationController.cs",
+      "isTest": false,
       "referenceCount": 2
     },
     {
@@ -42655,6 +42813,71 @@
       "referenceCount": 1
     },
     {
+      "contract": "IAdminImpersonationHandoffService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminImpersonationHandoffService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminImpersonationHandoffService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Authentication/AdminImpersonationHandoffService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminImpersonationHandoffService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminImpersonationHandoffService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IAdminImpersonationSessionReadRepository",
       "roles": [
         "ReadRepository"
@@ -42939,6 +43162,19 @@
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "IAdminSsoCodeStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Authentication/AdminImpersonationHandoffService.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "IAdminSsoCodeStore",
@@ -44678,6 +44914,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Audit/IAuditLogger.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAuditLogger",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Audit/IAuditLogger.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -44811,6 +45060,19 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IAuditLogger",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Audit/IAuditLogger.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "IAuditLogger",
@@ -47356,6 +47618,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Commands/ImportAdminLessons/ImportAdminLessonsCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -49203,6 +49478,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Commands/DismissContentReport/DismissContentReportCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80858,7 +81146,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "IRefreshTokenSessionWriteRepository",
@@ -82924,6 +83212,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/AuthImpersonationController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -86956,6 +87257,71 @@
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IUserAccessTokenSecurityReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserAccessTokenSecurityReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAccessTokenSecurityReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserAccessTokenSecurityReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAccessTokenSecurityReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserAccessTokenSecurityReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Web.Api/Extensions/AccessTokenSecurityStateValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAccessTokenSecurityReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserAccessTokenSecurityReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserAccessTokenSecurityReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserAccessTokenSecurityReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Web.Api.Tests/Extensions/AccessTokenSecurityStateValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 8
     },
     {
       "contract": "IUserAchievementStore",
@@ -102139,7 +102505,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 12
+      "referenceCount": 13
     },
     {
       "contract": "RefreshTokenCommand",
@@ -104986,7 +105352,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 6
     },
     {
       "contract": "SetAdminUserPasswordCommand",

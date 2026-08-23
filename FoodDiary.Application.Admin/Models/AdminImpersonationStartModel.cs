@@ -1,7 +1,7 @@
 namespace FoodDiary.Application.Admin.Models;
 
 public sealed record AdminImpersonationStartModel(
-    string AccessToken,
+    string Code,
     Guid TargetUserId,
     string TargetEmail,
     Guid ActorUserId,

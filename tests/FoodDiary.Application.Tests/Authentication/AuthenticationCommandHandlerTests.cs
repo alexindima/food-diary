@@ -164,13 +164,20 @@ public sealed partial class AuthenticationCommandHandlerTests : IDisposable {
             UserAuthenticationPrincipalModel principal,
             CancellationToken cancellationToken,
             AuthenticationClientContext? clientContext = null,
-            bool rememberMe = false,
-            Guid? refreshSessionId = null) {
+            bool rememberMe = false) {
             LastPrincipal = principal;
             LastClientContext = clientContext;
             LastRememberMe = rememberMe;
             return Task.FromResult(new IssuedAuthenticationTokens("access", "refresh"));
         }
+
+        public Task<IssuedAuthenticationTokens?> RotateFromPrincipalAsync(
+            UserAuthenticationPrincipalModel principal,
+            Guid refreshSessionId,
+            string expectedRefreshTokenHash,
+            bool rememberMe,
+            CancellationToken cancellationToken) =>
+            Task.FromResult<IssuedAuthenticationTokens?>(new IssuedAuthenticationTokens("access", "refresh"));
 
     }
 

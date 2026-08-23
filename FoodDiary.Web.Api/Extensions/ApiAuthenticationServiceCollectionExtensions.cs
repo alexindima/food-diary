@@ -1,4 +1,5 @@
 using System.Text;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Presentation.Api.Features.Version;
 using FoodDiary.Web.Api.Build;
@@ -54,12 +55,20 @@ public static class ApiAuthenticationServiceCollectionExtensions {
             ClockSkew = TimeSpan.Zero,
         };
         options.Events = new JwtBearerEvents {
-            OnTokenValidated = context => {
+            OnTokenValidated = async context => {
                 if (!JwtTokenUseValidator.IsAccessToken(context.Principal)) {
                     context.Fail("The token is not an access token.");
+                    return;
                 }
 
-                return Task.CompletedTask;
+                IUserAccessTokenSecurityReader securityReader = context.HttpContext.RequestServices
+                    .GetRequiredService<IUserAccessTokenSecurityReader>();
+                bool isCurrent = await AccessTokenSecurityStateValidator
+                    .IsCurrentAsync(context.Principal, securityReader, context.HttpContext.RequestAborted)
+                    .ConfigureAwait(false);
+                if (!isCurrent) {
+                    context.Fail("The token is no longer valid for the current account security state.");
+                }
             },
             OnMessageReceived = context => {
                 ExtractSignalRAccessToken(context);

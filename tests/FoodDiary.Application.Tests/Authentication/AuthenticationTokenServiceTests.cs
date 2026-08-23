@@ -98,12 +98,14 @@ public class AuthenticationTokenServiceTests {
             dateTimeProvider.GetUtcNow().UtcDateTime.AddMinutes(-1));
         await sessions.AddAsync(existingSession, CancellationToken.None);
 
-        await service.IssueFromPrincipalAsync(
+        IssuedAuthenticationTokens? tokens = await service.RotateFromPrincipalAsync(
             principal,
-            CancellationToken.None,
+            refreshSessionId,
+            "old-refresh-hash",
             rememberMe: true,
-            refreshSessionId: refreshSessionId);
+            CancellationToken.None);
 
+        Assert.NotNull(tokens);
         UserRefreshTokenSession rotatedSession = Assert.Single(sessions.Items);
         Assert.Same(existingSession, rotatedSession);
         Assert.Equal(
@@ -180,6 +182,24 @@ public class AuthenticationTokenServiceTests {
         public Task UpdateAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
 
+        public Task<bool> TryRotateAsync(
+            Guid id,
+            UserId userId,
+            string expectedRefreshTokenHash,
+            string newRefreshTokenHash,
+            bool rememberMe,
+            DateTime rotatedAtUtc,
+            CancellationToken cancellationToken = default) {
+            UserRefreshTokenSession? session = Items.FirstOrDefault(item => item.Id == id);
+            if (session is null || session.UserId != userId || !session.IsActive ||
+                !string.Equals(session.RefreshTokenHash, expectedRefreshTokenHash, StringComparison.Ordinal)) {
+                return Task.FromResult(result: false);
+            }
+
+            session.Rotate(newRefreshTokenHash, rememberMe, rotatedAtUtc, TimeSpan.Zero);
+            return Task.FromResult(result: true);
+        }
+
         public Task RevokeAllAsync(UserId userId, DateTime revokedAtUtc, CancellationToken cancellationToken = default) {
             foreach (UserRefreshTokenSession session in Items.Where(session => session.UserId == userId && session.IsActive)) {
                 session.Revoke(revokedAtUtc);
@@ -197,7 +217,7 @@ public class AuthenticationTokenServiceTests {
         public DateTime? LastAccessExpiresAtUtc { get; private set; }
         public bool LastRefreshRememberMe { get; private set; }
 
-        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) {
+        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, long securityVersion = 0) {
             LastAccessUserId = userId;
             LastAccessEmail = email;
             LastAccessRoles = roles.ToArray();
@@ -209,7 +229,8 @@ public class AuthenticationTokenServiceTests {
             UserId userId,
             string email,
             IReadOnlyCollection<string> roles,
-            DateTime? expiresAtUtc) {
+            DateTime? expiresAtUtc,
+            long securityVersion = 0) {
             LastAccessUserId = userId;
             LastAccessEmail = email;
             LastAccessRoles = roles.ToArray();
@@ -221,7 +242,8 @@ public class AuthenticationTokenServiceTests {
             UserId userId,
             string email,
             IReadOnlyCollection<string> roles,
-            JwtImpersonationContext impersonation) {
+            JwtImpersonationContext impersonation,
+            long securityVersion = 0) {
             LastAccessUserId = userId;
             LastAccessEmail = email;
             LastAccessRoles = roles.ToArray();

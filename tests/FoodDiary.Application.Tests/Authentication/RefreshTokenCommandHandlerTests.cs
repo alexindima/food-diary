@@ -60,6 +60,31 @@ public sealed class RefreshTokenCommandHandlerTests {
     }
 
     [Fact]
+    public async Task Handle_WhenAtomicRotationLosesRace_ReturnsInvalidToken() {
+        User user = CreateUser("refresh-race@example.com");
+        var repository = new InMemoryUserRepository(user);
+        var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
+        var refreshSessions = new InMemoryRefreshTokenSessionRepository(
+            jwt.RefreshSessionId,
+            user.Id,
+            $"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("current-refresh-token")}");
+        var authTokenService = new FakeAuthenticationTokenService { RotationSucceeds = false };
+        RefreshTokenCommandHandler handler = CreateHandler(
+            repository,
+            jwt,
+            new FakePasswordHasher(),
+            refreshSessions,
+            authTokenService);
+
+        Result<AuthenticationModel> result = await handler.Handle(
+            new RefreshTokenCommand("current-refresh-token"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task Handle_WithMismatchedStoredRefreshToken_ReturnsInvalidToken() {
         User user = CreateUser("refresh@example.com");
         user.UpdateRefreshToken($"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("other-refresh-token")}");
@@ -325,17 +350,19 @@ public sealed class RefreshTokenCommandHandlerTests {
     private sealed class FakeJwtTokenGenerator(UserId userId, string email) : IJwtTokenGenerator {
         public Guid RefreshSessionId { get; } = Guid.Parse("f48a7411-0e37-4b0f-8094-c6b7c8bdb931");
 
-        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) => "unused-access-token";
+        public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, long securityVersion = 0) => "unused-access-token";
         public string GenerateAccessToken(
             UserId userId,
             string email,
             IReadOnlyCollection<string> roles,
-            DateTime? expiresAtUtc) => "unused-access-token";
+            DateTime? expiresAtUtc,
+            long securityVersion = 0) => "unused-access-token";
         public string GenerateAccessToken(
             UserId userId,
             string email,
             IReadOnlyCollection<string> roles,
-            JwtImpersonationContext impersonation) => "unused-impersonation-access-token";
+            JwtImpersonationContext impersonation,
+            long securityVersion = 0) => "unused-impersonation-access-token";
         public string GenerateRefreshToken(
             UserId userId,
             string email,
@@ -387,6 +414,24 @@ public sealed class RefreshTokenCommandHandlerTests {
         public Task UpdateAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
 
+        public Task<bool> TryRotateAsync(
+            Guid id,
+            UserId userId,
+            string expectedRefreshTokenHash,
+            string newRefreshTokenHash,
+            bool rememberMe,
+            DateTime rotatedAtUtc,
+            CancellationToken cancellationToken = default) {
+            UserRefreshTokenSession? session = _sessions.FirstOrDefault(item => item.Id == id);
+            if (session is null || session.UserId != userId || !session.IsActive ||
+                !string.Equals(session.RefreshTokenHash, expectedRefreshTokenHash, StringComparison.Ordinal)) {
+                return Task.FromResult(result: false);
+            }
+
+            session.Rotate(newRefreshTokenHash, rememberMe, rotatedAtUtc, TimeSpan.Zero);
+            return Task.FromResult(result: true);
+        }
+
         public Task RevokeAllAsync(UserId userId, DateTime revokedAtUtc, CancellationToken cancellationToken = default) {
             foreach (UserRefreshTokenSession session in _sessions.Where(session => session.UserId == userId && session.IsActive)) {
                 session.Revoke(revokedAtUtc);
@@ -406,16 +451,29 @@ public sealed class RefreshTokenCommandHandlerTests {
     private sealed class FakeAuthenticationTokenService : IAuthenticationTokenService {
         public int IssueFromPrincipalCallCount { get; private set; }
         public bool LastRememberMe { get; private set; }
+        public bool RotationSucceeds { get; init; } = true;
 
         public Task<IssuedAuthenticationTokens> IssueFromPrincipalAsync(
             FoodDiary.Application.Abstractions.Users.Models.UserAuthenticationPrincipalModel principal,
             CancellationToken cancellationToken,
             AuthenticationClientContext? clientContext = null,
-            bool rememberMe = false,
-            Guid? refreshSessionId = null) {
+            bool rememberMe = false) {
             IssueFromPrincipalCallCount++;
             LastRememberMe = rememberMe;
             return Task.FromResult(new IssuedAuthenticationTokens("new-access-token", "new-refresh-token"));
+        }
+
+        public Task<IssuedAuthenticationTokens?> RotateFromPrincipalAsync(
+            FoodDiary.Application.Abstractions.Users.Models.UserAuthenticationPrincipalModel principal,
+            Guid refreshSessionId,
+            string expectedRefreshTokenHash,
+            bool rememberMe,
+            CancellationToken cancellationToken) {
+            IssueFromPrincipalCallCount++;
+            LastRememberMe = rememberMe;
+            return Task.FromResult<IssuedAuthenticationTokens?>(RotationSucceeds
+                ? new IssuedAuthenticationTokens("new-access-token", "new-refresh-token")
+                : null);
         }
 
     }

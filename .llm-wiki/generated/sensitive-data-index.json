@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1497,
-    "credential": 164,
+    "candidateFields": 1496,
+    "credential": 163,
     "identity": 155,
     "health": 672,
     "financial": 202,
     "privateContent": 304,
-    "boundaryFiles": 186,
+    "boundaryFiles": 187,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -176,14 +176,7 @@
       "name": "NewPassword",
       "type": "string",
       "path": "FoodDiary.Application.Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommand.cs",
-      "line": 8
-    },
-    {
-      "category": "credential",
-      "name": "AccessToken",
-      "type": "string",
-      "path": "FoodDiary.Application.Admin/Models/AdminImpersonationStartModel.cs",
-      "line": 4
+      "line": 9
     },
     {
       "category": "credential",
@@ -372,7 +365,7 @@
       "name": "PasswordResetSentAtUtc",
       "type": "normalizedIssuedAtUtc,",
       "path": "FoodDiary.Domain/Entities/Users/User.Credentials.cs",
-      "line": 109
+      "line": 111
     },
     {
       "category": "credential",
@@ -435,28 +428,28 @@
       "name": "HasPassword",
       "type": "Password,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 375
+      "line": 380
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "MustChangePassword,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 377
+      "line": 382
     },
     {
       "category": "credential",
       "name": "EmailConfirmationTokenHash",
       "type": "IsEmailConfirmed,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 379
+      "line": 384
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenExpiresAtUtc",
       "type": "PasswordResetTokenHash,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 383
+      "line": 388
     },
     {
       "category": "credential",
@@ -775,13 +768,6 @@
     },
     {
       "category": "credential",
-      "name": "AccessToken",
-      "type": "string",
-      "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminImpersonationStartHttpResponse.cs",
-      "line": 4
-    },
-    {
-      "category": "credential",
       "name": "TemporaryPassword",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminUserCreationHttpResponse.cs",
@@ -877,6 +863,13 @@
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Responses/AuthenticationHttpResponse.cs",
       "line": 7
+    },
+    {
+      "category": "credential",
+      "name": "AccessToken",
+      "type": "string",
+      "path": "FoodDiary.Presentation.Api/Features/Auth/Responses/ExchangeImpersonationHttpResponse.cs",
+      "line": 3
     },
     {
       "category": "credential",
@@ -5531,98 +5524,98 @@
       "name": "TuesdayCalories",
       "type": "MondayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 242
+      "line": 247
     },
     {
       "category": "health",
       "name": "ThursdayCalories",
       "type": "WednesdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 244
+      "line": 249
     },
     {
       "category": "health",
       "name": "SaturdayCalories",
       "type": "FridayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 246
+      "line": 251
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "DesiredWeightKg,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 259
+      "line": 264
     },
     {
       "category": "health",
       "name": "MondayCalories",
       "type": "CalorieCyclingEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 261
+      "line": 266
     },
     {
       "category": "health",
       "name": "WednesdayCalories",
       "type": "TuesdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 263
+      "line": 268
     },
     {
       "category": "health",
       "name": "FridayCalories",
       "type": "ThursdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 265
+      "line": 270
     },
     {
       "category": "health",
       "name": "SundayCalories",
       "type": "SaturdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 267
+      "line": 272
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "StepGoal,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 302
+      "line": 307
     },
     {
       "category": "health",
       "name": "BirthDate",
       "type": "LastName,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 314
+      "line": 319
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "Gender,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 316
+      "line": 321
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "HeightCm,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 318
+      "line": 323
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "PushNotificationsEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 326
+      "line": 331
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "SocialPushNotificationsEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 328
+      "line": 333
     },
     {
       "category": "health",
@@ -7883,7 +7876,7 @@
       "name": "EmailConfirmationSentAtUtc",
       "type": "normalizedIssuedAtUtc,",
       "path": "FoodDiary.Domain/Entities/Users/User.Credentials.cs",
-      "line": 81
+      "line": 83
     },
     {
       "category": "identity",
@@ -7932,7 +7925,7 @@
       "name": "EmailConfirmationSentAtUtc",
       "type": "EmailConfirmationTokenExpiresAtUtc,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 381
+      "line": 386
     },
     {
       "category": "identity",
@@ -9745,7 +9738,7 @@
       "name": "ProfileImageAssetId",
       "type": "ProfileImage,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 320
+      "line": 325
     },
     {
       "category": "privateContent",
@@ -10720,10 +10713,9 @@
     {
       "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminImpersonationStartHttpResponse.cs",
       "categories": [
-        "credential",
         "identity"
       ],
-      "fieldCount": 2
+      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminUserCreationHttpResponse.cs",
@@ -10857,6 +10849,13 @@
         "credential"
       ],
       "fieldCount": 2
+    },
+    {
+      "path": "FoodDiary.Presentation.Api/Features/Auth/Responses/ExchangeImpersonationHttpResponse.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Billing/Responses/BillingOverviewHttpResponse.cs",

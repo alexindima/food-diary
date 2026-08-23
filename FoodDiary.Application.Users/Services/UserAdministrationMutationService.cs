@@ -23,6 +23,10 @@ internal sealed class UserAdministrationMutationService(
         [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support, RoleNames.Dietologist],
         StringComparer.Ordinal);
 
+    private static readonly HashSet<string> CreatableRoles = new(
+        [RoleNames.Admin, RoleNames.Premium, RoleNames.Support, RoleNames.Dietologist],
+        StringComparer.Ordinal);
+
     public async Task<Result<UserAdminReadModel>> CreateAsync(
         UserAdminCreateModel request,
         CancellationToken cancellationToken = default) {
@@ -34,6 +38,10 @@ internal sealed class UserAdministrationMutationService(
         }
 
         string[] requestedRoles = NormalizeRoles(request.Roles);
+        if (requestedRoles.Any(role => !CreatableRoles.Contains(role))) {
+            return Result.Failure<UserAdminReadModel>(Errors.Validation.Invalid("Roles", "Unknown or protected role."));
+        }
+
         IReadOnlyList<Role> roles = await roleCatalogService
             .GetRolesByNamesAsync(requestedRoles, cancellationToken)
             .ConfigureAwait(false);
@@ -114,6 +122,7 @@ internal sealed class UserAdministrationMutationService(
 
     public async Task<Result> SetPasswordAsync(
         FoodDiary.Domain.ValueObjects.Ids.UserId userId,
+        FoodDiary.Domain.ValueObjects.Ids.UserId actorUserId,
         string newPassword,
         CancellationToken cancellationToken = default) {
         User? user = await userLookupRepository
@@ -123,7 +132,12 @@ internal sealed class UserAdministrationMutationService(
             return Result.Failure(Errors.User.NotFound(userId));
         }
 
+        if (userId == actorUserId || user.HasRole(RoleNames.Owner) || user.HasRole(RoleNames.Admin)) {
+            return Result.Failure(Errors.User.AdminPasswordResetForbidden);
+        }
+
         user.UpdatePassword(passwordHasher.Hash(newPassword));
+        user.RequirePasswordChange();
         await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }

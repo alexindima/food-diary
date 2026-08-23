@@ -49,14 +49,13 @@ describe('AdminAuthService token state', () => {
         expect(service.isAdmin()).toBe(false);
     });
 
-    it('should capture auth token from query and clear token params', () => {
-        const replaceStateSpy = vi.spyOn(window.history, 'replaceState');
+    it('should ignore legacy auth token query parameters', () => {
         window.history.replaceState({}, '', '/?authToken=query-token&foo=1');
 
         service.refreshTokenState();
 
-        expect(service.getToken()).toBe('query-token');
-        expect(replaceStateSpy).toHaveBeenCalledWith({}, '', '/?foo=1');
+        expect(service.getToken()).toBeNull();
+        expect(window.location.search).toBe('?authToken=query-token&foo=1');
     });
 });
 

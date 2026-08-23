@@ -21,6 +21,7 @@ public sealed partial class User {
             .WithPassword(NormalizeRequiredPasswordHash(hashedPassword))
             .WithoutPasswordResetToken();
         ApplySecurityState(nextState);
+        AdvanceSecurityVersion();
         SetModified();
     }
 
@@ -59,6 +60,7 @@ public sealed partial class User {
     public void UpdatePassword(string hashedPassword) {
         EnsureNotDeleted();
         ApplySecurityState(GetSecurityState().WithPassword(NormalizeRequiredPasswordHash(hashedPassword)));
+        AdvanceSecurityVersion();
         SetModified();
     }
 

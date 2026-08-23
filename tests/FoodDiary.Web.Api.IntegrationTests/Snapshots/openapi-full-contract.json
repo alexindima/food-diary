@@ -2976,6 +2976,71 @@
       ]
     },
     {
+      "Path": "/api/v{version}/auth/impersonation/exchange",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/ExchangeImpersonationHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/ExchangeImpersonationHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/ExchangeImpersonationHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "413",
+            "429",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/ExchangeImpersonationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/ExchangeImpersonationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/ExchangeImpersonationHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/auth/login",
       "Operations": [
         {
@@ -16392,17 +16457,17 @@
       "Name": "AdminImpersonationStartHttpResponse",
       "Properties": [
         {
-          "Name": "accessToken",
-          "Required": false,
-          "Type": "string",
-          "Nullable": true
-        },
-        {
           "Name": "actorUserId",
           "Required": false,
           "Type": "string",
           "Format": "uuid",
           "Nullable": false
+        },
+        {
+          "Name": "code",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
         },
         {
           "Name": "reason",
@@ -20834,6 +20899,28 @@
         },
         {
           "Name": "status",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "ExchangeImpersonationHttpRequest",
+      "Properties": [
+        {
+          "Name": "code",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "ExchangeImpersonationHttpResponse",
+      "Properties": [
+        {
+          "Name": "accessToken",
           "Required": false,
           "Type": "string",
           "Nullable": true

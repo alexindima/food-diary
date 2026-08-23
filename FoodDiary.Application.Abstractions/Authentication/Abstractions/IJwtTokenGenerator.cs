@@ -3,17 +3,23 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Abstractions.Authentication.Abstractions;
 
 public interface IJwtTokenGenerator {
-    string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles);
     string GenerateAccessToken(
         UserId userId,
         string email,
         IReadOnlyCollection<string> roles,
-        DateTime? expiresAtUtc);
+        long securityVersion = 0);
     string GenerateAccessToken(
         UserId userId,
         string email,
         IReadOnlyCollection<string> roles,
-        JwtImpersonationContext impersonation);
+        DateTime? expiresAtUtc,
+        long securityVersion = 0);
+    string GenerateAccessToken(
+        UserId userId,
+        string email,
+        IReadOnlyCollection<string> roles,
+        JwtImpersonationContext impersonation,
+        long securityVersion = 0);
     string GenerateRefreshToken(
         UserId userId,
         string email,

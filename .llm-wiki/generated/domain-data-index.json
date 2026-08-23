@@ -4385,189 +4385,189 @@
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Issuance date cannot be in the future.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.Credentials.cs",
-      "line": 119
+      "line": 121
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Issuance date cannot be earlier than the previous issuance date.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.Credentials.cs",
-      "line": 125
+      "line": 127
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Password hash is required.\", nameof(value)) : value",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 137
+      "line": 138
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Token hash is required.\", paramName)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 146
+      "line": 147
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 151
+      "line": 152
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Date must be in the future (UTC).\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 162
+      "line": 163
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Expiration must be later than issuance.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 168
+      "line": 169
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(birthDate), \"Birth date cannot be in the future.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 179
+      "line": 180
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, ex.Message)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 210
+      "line": 211
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Deleted user cannot be mutated. Use Restore() first.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 216
+      "line": 217
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Language must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 434
+      "line": 439
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Theme must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 444
+      "line": 449
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UI style must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 454
+      "line": 459
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, ex.Message)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 466
+      "line": 471
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, ex.Message)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 478
+      "line": 483
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be a finite number.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 488
+      "line": 493
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be non-negative.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 492
+      "line": 497
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Activity level must be one of the supported values.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 498
+      "line": 503
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Gender must be one of the supported codes.\") : gender.Value",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 503
+      "line": 508
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Language must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 508
+      "line": 513
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Theme must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 514
+      "line": 519
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UI style must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 520
+      "line": 525
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(roles)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 545
+      "line": 550
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Roles must not contain null elements.\", nameof(roles))",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 548
+      "line": 553
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(duration), \"Premium trial duration must be positive.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 604
+      "line": 616
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Premium trial has already been used.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 608
+      "line": 620
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Deleted user cannot be activated directly. Use Restore().\")",
       "path": "FoodDiary.Domain/Entities/Users/User.Lifecycle.cs",
-      "line": 19
+      "line": 27
     },
     {
       "area": "FoodDiary",

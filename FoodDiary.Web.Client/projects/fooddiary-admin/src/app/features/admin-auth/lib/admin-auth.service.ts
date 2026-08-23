@@ -36,7 +36,6 @@ export class AdminAuthService {
     }
 
     public refreshTokenState(): void {
-        this.captureTokenFromQuery();
         this.tokenSignal.set(this.getToken());
     }
 
@@ -136,29 +135,8 @@ export class AdminAuthService {
         }
     }
 
-    private captureTokenFromQuery(): void {
-        if (!this.isBrowser) {
-            return;
-        }
-
-        const params = new URLSearchParams(this.document.location.search);
-        const token = params.get('authToken') ?? params.get('accessToken');
-        if (token === null || token.length === 0) {
-            return;
-        }
-
-        this.localStorageRef?.setItem('authToken', token);
-        this.clearTokenParams(params);
-    }
-
     private clearCodeFromUrl(params: URLSearchParams): void {
         params.delete('code');
-        this.replaceCurrentUrl(params);
-    }
-
-    private clearTokenParams(params: URLSearchParams): void {
-        params.delete('authToken');
-        params.delete('accessToken');
         this.replaceCurrentUrl(params);
     }
 

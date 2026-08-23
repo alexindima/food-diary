@@ -17,6 +17,7 @@ namespace FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
 public sealed class StartAdminImpersonationCommandHandler(
     IUserAuthenticationIdentityService userIdentityService,
     IAdminImpersonationSessionWriteRepository sessionRepository,
+    IAdminImpersonationHandoffService handoffService,
     IJwtTokenGenerator jwtTokenGenerator,
     TimeProvider dateTimeProvider,
     IAuditLogger auditLogger)
@@ -44,11 +45,12 @@ public sealed class StartAdminImpersonationCommandHandler(
 
         UserAuthenticationPrincipalModel target = targetResult.Value;
         string token = GenerateToken(target, actorUserId, reason);
+        string code = await handoffService.CreateCodeAsync(token, cancellationToken).ConfigureAwait(false);
         await StartSessionAsync(command, actorUserId, target.UserId, reason, cancellationToken).ConfigureAwait(false);
         LogStart(actorUserId, target, reason);
 
         return Result.Success(new AdminImpersonationStartModel(
-            token,
+            code,
             target.UserId.Value,
             target.Email,
             actorUserId.Value,
@@ -116,7 +118,8 @@ public sealed class StartAdminImpersonationCommandHandler(
             target.UserId,
             target.Email,
             target.Roles,
-            new JwtImpersonationContext(actorUserId, reason));
+            new JwtImpersonationContext(actorUserId, reason),
+            target.SecurityVersion);
     }
 
     private async Task StartSessionAsync(

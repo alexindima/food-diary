@@ -33,18 +33,20 @@ public sealed class UserRoleMembershipServiceTests {
     public async Task EnsureRoleAsync_WithInMemoryDatabase_AddsMissingRoleMembership() {
         await using FoodDiaryDbContext context = CreateContext();
         var role = Role.Create(RoleNames.Premium);
+        User user = CreateUser();
         context.Roles.Add(role);
+        context.Users.Add(user);
         await context.SaveChangesAsync();
         var service = new UserRoleMembershipService(context);
-        var userId = UserId.New();
 
-        await service.EnsureRoleAsync(userId, $" {RoleNames.Premium} ", CancellationToken.None);
+        await service.EnsureRoleAsync(user.Id, $" {RoleNames.Premium} ", CancellationToken.None);
         await context.SaveChangesAsync();
 
         UserRole userRole = Assert.Single(context.UserRoles);
         Assert.Multiple(
-            () => Assert.Equal(userId, userRole.UserId),
-            () => Assert.Equal(role.Id, userRole.RoleId));
+            () => Assert.Equal(user.Id, userRole.UserId),
+            () => Assert.Equal(role.Id, userRole.RoleId),
+            () => Assert.Equal(1, user.SecurityVersion));
     }
 
     [Fact]
@@ -61,31 +63,35 @@ public sealed class UserRoleMembershipServiceTests {
     public async Task EnsureRoleAsync_WithInMemoryDatabase_WhenMembershipExists_DoesNotDuplicateMembership() {
         await using FoodDiaryDbContext context = CreateContext();
         var role = Role.Create(RoleNames.Premium);
-        var userId = UserId.New();
+        User user = CreateUser();
         context.Roles.Add(role);
-        context.UserRoles.Add(new UserRole(userId, role.Id));
+        context.Users.Add(user);
+        context.UserRoles.Add(new UserRole(user.Id, role.Id));
         await context.SaveChangesAsync();
         var service = new UserRoleMembershipService(context);
 
-        await service.EnsureRoleAsync(userId, RoleNames.Premium, CancellationToken.None);
+        await service.EnsureRoleAsync(user.Id, RoleNames.Premium, CancellationToken.None);
 
         Assert.Single(context.UserRoles);
+        Assert.Equal(0, user.SecurityVersion);
     }
 
     [Fact]
     public async Task RemoveRoleAsync_WithInMemoryDatabase_RemovesExistingRoleMembership() {
         await using FoodDiaryDbContext context = CreateContext();
         var role = Role.Create(RoleNames.Premium);
-        var userId = UserId.New();
+        User user = CreateUser();
         context.Roles.Add(role);
-        context.UserRoles.Add(new UserRole(userId, role.Id));
+        context.Users.Add(user);
+        context.UserRoles.Add(new UserRole(user.Id, role.Id));
         await context.SaveChangesAsync();
         var service = new UserRoleMembershipService(context);
 
-        await service.RemoveRoleAsync(userId, $" {RoleNames.Premium} ", CancellationToken.None);
+        await service.RemoveRoleAsync(user.Id, $" {RoleNames.Premium} ", CancellationToken.None);
         await context.SaveChangesAsync();
 
         Assert.Empty(context.UserRoles);
+        Assert.Equal(1, user.SecurityVersion);
     }
 
     [Fact]
@@ -126,4 +132,6 @@ public sealed class UserRoleMembershipServiceTests {
 
         return new FoodDiaryDbContext(options);
     }
+
+    private static User CreateUser() => User.Create("security-version@example.com", "PasswordHash1!");
 }

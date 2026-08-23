@@ -327,7 +327,10 @@ export class AuthService extends ApiService {
     }
 
     private async restoreSessionInternalAsync(): Promise<void> {
-        this.captureImpersonationTokenFromQuery();
+        const impersonationExchange = this.captureImpersonationCodeFromQueryAsync();
+        if (impersonationExchange !== null) {
+            await impersonationExchange;
+        }
         this.initializeAuth();
         if (this.isAuthenticated()) {
             return;
@@ -386,25 +389,36 @@ export class AuthService extends ApiService {
         return this.browserWindow.getOrigin();
     }
 
-    private captureImpersonationTokenFromQuery(): void {
+    private captureImpersonationCodeFromQueryAsync(): Promise<void> | null {
         const currentHref = this.browserWindow.getHref();
         if (currentHref === null) {
-            return;
+            return null;
         }
 
         const url = new URL(currentHref);
-        const token = url.searchParams.get('impersonationToken');
-        if (token === null || token.length === 0) {
-            return;
+        const code = url.searchParams.get('impersonationCode');
+        if (code === null || code.length === 0) {
+            return null;
         }
 
-        this.tokenStorage.clearAll();
-        this.tokenStorage.setToken(token, false);
-        this.authTokenSignal.set(token);
-
-        url.searchParams.delete('impersonationToken');
+        url.searchParams.delete('impersonationCode');
         const nextUrl = `${url.pathname}${url.search}${url.hash}`;
         this.browserWindow.replaceCurrentUrl(nextUrl);
+
+        return firstValueFrom(
+            this.post<{ accessToken: string }>('impersonation/exchange', { code }).pipe(
+                catchError((error: unknown) => fallbackApiError('impersonation exchange error', error, null)),
+            ),
+        ).then(response => {
+            const token = response?.accessToken;
+            if (token === undefined || token.length === 0) {
+                return;
+            }
+
+            this.tokenStorage.clearAll();
+            this.tokenStorage.setToken(token, false);
+            this.authTokenSignal.set(token);
+        });
     }
 }
 
