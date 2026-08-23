@@ -395,9 +395,7 @@ public partial class BillingFeatureTests {
                 7.99m,
                 "USD",
                 ProviderMetadataJson: null,
-                user.Id.Value,
-                OccurredAtUtc: Now,
-                IsAuthoritativeSnapshot: true));
+                user.Id.Value));
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
             userRepository,
@@ -512,9 +510,7 @@ public partial class BillingFeatureTests {
                     7.99m,
                     "USD",
                     ProviderMetadataJson: null,
-                    user.Id.Value,
-                    OccurredAtUtc: Now,
-                    IsAuthoritativeSnapshot: true)),
+                    user.Id.Value)),
             new FakeUserRepository(user),
             subscriptionRepository,
             paymentRepository,

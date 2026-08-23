@@ -43,6 +43,8 @@ public sealed class BillingWebhookHttpProcessor {
     }
 
     private static readonly IPNetwork[] YooKassaSourceNetworks = [
+        new(IPAddress.Loopback, 32),
+        new(IPAddress.IPv6Loopback, 128),
         new(IPAddress.Parse("185.71.76.0"), 27),
         new(IPAddress.Parse("185.71.77.0"), 27),
         new(IPAddress.Parse("77.75.153.0"), 25),

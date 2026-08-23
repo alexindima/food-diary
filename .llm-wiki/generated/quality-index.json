@@ -22584,11 +22584,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookHttpProcessor.cs",
-      "nonBlankLines": 80,
+      "nonBlankLines": 82,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.1
+      "structuralRiskScore": 15.14
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookRequestLimits.cs",
