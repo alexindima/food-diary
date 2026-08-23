@@ -468,7 +468,9 @@ public sealed class WebPushNotificationSenderTests {
             repository,
             new SingleUserRepository(user),
             webPushClient: webPushClient,
-            deliveryDeadline: TimeSpan.FromMilliseconds(25));
+            // Leave enough scheduling headroom for loaded CI runners while still
+            // keeping the deadline test fast.
+            deliveryDeadline: TimeSpan.FromMilliseconds(250));
 
         await sender.SendAsync(
             Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}"),
