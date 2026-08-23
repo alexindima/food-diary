@@ -202,6 +202,39 @@ public partial class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task GetProductByIdQueryHandler_WithAnotherUsersPublicProduct_ReturnsDetailWithoutComment() {
+        var owner = User.Create("public-product-owner@example.com", "hash");
+        var currentUser = User.Create("public-product-reader@example.com", "hash");
+        var product = Product.Create(
+            owner.Id,
+            name: "Public chicken",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 165,
+            proteinsPerBase: 31,
+            fatsPerBase: 3.6,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+            comment: "Owner-only note",
+            visibility: Visibility.Public);
+        var handler = new GetProductByIdQueryHandler(
+            new OverviewProductReadService(productsByIdWithUsage: new Dictionary<ProductId, (Product Product, int UsageCount)> {
+                [product.Id] = (product, 0),
+            }),
+            new StubUserRepository(currentUser));
+
+        Result<ProductModel> result = await handler.Handle(
+            new GetProductByIdQuery(currentUser.Id.Value, product.Id.Value),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.False(result.Value.IsOwnedByCurrentUser);
+        Assert.Null(result.Value.Comment);
+    }
+
+    [Fact]
     public async Task GetProductsOverviewQueryHandler_WithoutSearch_ReturnsRecentFavoritesAndFavoriteFlags() {
         var user = User.Create("overview-products@example.com", "hash");
         var breakfast = Product.Create(

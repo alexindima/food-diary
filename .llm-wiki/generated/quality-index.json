@@ -13608,11 +13608,11 @@
     },
     {
       "path": "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
-      "nonBlankLines": 68,
+      "nonBlankLines": 69,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.86
+      "structuralRiskScore": 7.88
     },
     {
       "path": "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommandValidator.cs",
@@ -20016,11 +20016,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Products/CachedProductRepository.cs",
-      "nonBlankLines": 62,
-      "decisionPoints": 2,
+      "nonBlankLines": 63,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.24
+      "structuralRiskScore": 8.76
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",

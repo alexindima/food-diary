@@ -93,7 +93,10 @@ public partial class ProductsFeatureTests {
             UserId userId,
             bool includePublic = true,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<Product?>(id == product.Id && userId == product.UserId ? product : null);
+            Task.FromResult<Product?>(
+                id == product.Id && (userId == product.UserId || (includePublic && product.Visibility == Visibility.Public))
+                    ? product
+                    : null);
 
         public Task<Product?> GetByIdForUpdateAsync(
             ProductId id,

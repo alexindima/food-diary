@@ -48,6 +48,7 @@ public sealed class DuplicateProductCommandHandler(
             return Result.Failure<ProductModel>(Errors.Product.NotAccessible(command.ProductId));
         }
 
+        bool isOwnedByCurrentUser = original.UserId == userId;
         var duplicate = Product.Create(
             userId,
             original.Name,
@@ -65,7 +66,7 @@ public sealed class DuplicateProductCommandHandler(
             original.ProductType,
             original.Category,
             original.Description,
-            original.Comment,
+            isOwnedByCurrentUser ? original.Comment : null,
             original.ImageUrl,
             imageAssetId: null,
             original.Visibility);

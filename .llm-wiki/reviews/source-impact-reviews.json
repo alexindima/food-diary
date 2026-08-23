@@ -192,13 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "c774bb841f9a95749ef3311ba451ad96375e986f1e56c463a2ec3e853ef23735"
+          "sha256": "639c1b65ae872eeedcde9e73fa2c05564bde04264c799c6af4f840fef781d62d"
         }
       ],
-      "reason": "Backend contract index changes only add or update test consumers; no routes, payloads, status codes, or public contracts changed.",
+      "reason": "Products detail authorization now includes public records, while route, payload, status-code, and OpenAPI response shapes remain unchanged; owner-only Comment mapping and mutation guards were verified by focused tests.",
       "baseRef": "HEAD",
-      "gitHead": "8917de79c25ccf72d65a0694418c66114bd96e3e",
-      "reviewedAtUtc": "2026-08-23T17:09:29.6380260Z"
+      "gitHead": "70ed8722b0c4ea4bfe4b9c0527a37c5bedb6f690",
+      "reviewedAtUtc": "2026-08-23T17:25:39.0913626Z"
     },
     {
       "pageId": "workflow-change-manifest",

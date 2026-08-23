@@ -69,6 +69,43 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     private static readonly TimeProvider FixedTime = new FixedDateTimeProvider(FixedNow);
 
     [RequiresDockerFact]
+    public async Task CachedProductRepository_WhenPublicProductBecomesPrivate_RevokesOtherUsersCachedAccess() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var owner = User.Create($"cache-owner-{Guid.NewGuid():N}@example.com", "hash");
+        var reader = User.Create($"cache-reader-{Guid.NewGuid():N}@example.com", "hash");
+        var product = Product.Create(
+            owner.Id,
+            "Cached public product",
+            MeasurementUnit.G,
+            100,
+            100,
+            100,
+            10,
+            5,
+            10,
+            1,
+            0,
+            visibility: Visibility.Public);
+        context.Users.AddRange(owner, reader);
+        context.Products.Add(product);
+        await context.SaveChangesAsync();
+
+        var repository = new ProductRepository(context);
+        using var cache = new MemoryCache(new MemoryCacheOptions());
+        var cachedRepository = new CachedProductRepository(repository, cache);
+        Assert.NotNull(await cachedRepository.GetByIdAsync(product.Id, reader.Id, includePublic: true));
+
+        Product? tracked = await cachedRepository.GetByIdForUpdateAsync(product.Id, owner.Id, includePublic: false);
+        Assert.NotNull(tracked);
+        tracked.ChangeVisibility(Visibility.Private);
+        await cachedRepository.UpdateAsync(tracked);
+        await context.SaveChangesAsync();
+
+        Assert.Null(await cachedRepository.GetByIdAsync(product.Id, reader.Id, includePublic: true));
+        Assert.NotNull(await cachedRepository.GetByIdAsync(product.Id, owner.Id, includePublic: false));
+    }
+
+    [RequiresDockerFact]
     public async Task OutboxDeadLetterReplayService_ReplaysImageAndWebPushInsideTransactions() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"replay-{Guid.NewGuid():N}@example.com", "hash");

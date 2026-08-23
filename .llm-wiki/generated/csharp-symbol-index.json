@@ -16908,7 +16908,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Products/CachedProductRepository.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ProductOverviewReadService",

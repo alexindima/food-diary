@@ -40,7 +40,7 @@ public sealed class GetProductByIdQueryHandler(
         IReadOnlyDictionary<ProductId, ProductOverviewReadItem> productsById = await productOverviewReadService.GetByIdsWithUsageAsync(
             [productId],
             userId,
-            includePublic: false,
+            includePublic: true,
             cancellationToken).ConfigureAwait(false);
         ProductOverviewReadItem? product = productsById.GetValueOrDefault(productId);
         if (product is null) {

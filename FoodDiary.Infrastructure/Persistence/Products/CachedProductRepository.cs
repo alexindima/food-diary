@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence.Products;
@@ -12,7 +13,7 @@ public sealed class CachedProductRepository(
 
     public async Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) {
         Product result = await inner.AddAsync(product, cancellationToken).ConfigureAwait(false);
-        Evict(result.Id, result.UserId);
+        Evict(result.Id);
         return result;
     }
 
@@ -21,9 +22,9 @@ public sealed class CachedProductRepository(
         UserId userId,
         bool includePublic = true,
         CancellationToken cancellationToken = default) {
-        string key = CacheKey(id, userId, includePublic);
+        string key = CacheKey(id);
         if (cache.TryGetValue(key, out Product? cached)) {
-            return cached;
+            return IsAccessible(cached, userId, includePublic) ? cached : null;
         }
 
         Product? product = await inner.GetByIdAsync(id, userId, includePublic, cancellationToken).ConfigureAwait(false);
@@ -57,19 +58,20 @@ public sealed class CachedProductRepository(
 
     public async Task UpdateAsync(Product product, CancellationToken cancellationToken = default) {
         await inner.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
-        Evict(product.Id, product.UserId);
+        Evict(product.Id);
     }
 
     public async Task DeleteAsync(Product product, CancellationToken cancellationToken = default) {
         await inner.DeleteAsync(product, cancellationToken).ConfigureAwait(false);
-        Evict(product.Id, product.UserId);
+        Evict(product.Id);
     }
 
-    private void Evict(ProductId id, UserId userId) {
-        cache.Remove(CacheKey(id, userId, includePublic: true));
-        cache.Remove(CacheKey(id, userId, includePublic: false));
+    private void Evict(ProductId id) {
+        cache.Remove(CacheKey(id));
     }
 
-    private static string CacheKey(ProductId id, UserId userId, bool includePublic) =>
-        $"Product:{id}:{userId}:{includePublic}";
+    private static bool IsAccessible(Product? product, UserId userId, bool includePublic) =>
+        product is not null && (product.UserId == userId || (includePublic && product.Visibility == Visibility.Public));
+
+    private static string CacheKey(ProductId id) => $"Product:{id}";
 }

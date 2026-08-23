@@ -237,10 +237,43 @@ public partial class ProductsFeatureTests {
         Assert.NotEqual(original.Id, repository.LastAddedProduct.Id);
         Assert.Equal(original.Name, repository.LastAddedProduct.Name);
         Assert.Equal(original.Barcode, repository.LastAddedProduct.Barcode);
+        Assert.Equal("Original note", repository.LastAddedProduct.Comment);
         Assert.Equal(original.ImageUrl, repository.LastAddedProduct.ImageUrl);
         Assert.Null(repository.LastAddedProduct.ImageAssetId);
         Assert.Equal(user.Id, repository.LastAddedProduct.UserId);
         Assert.True(result.Value.IsOwnedByCurrentUser);
+    }
+
+    [Fact]
+    public async Task DuplicateProductCommandHandler_WithAnotherUsersPublicProduct_DoesNotCopyComment() {
+        var owner = User.Create("duplicate-public-owner@example.com", "hash");
+        var currentUser = User.Create("duplicate-public-reader@example.com", "hash");
+        var original = Product.Create(
+            owner.Id,
+            name: "Public yogurt",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 73,
+            proteinsPerBase: 9.5,
+            fatsPerBase: 2.1,
+            carbsPerBase: 3.8,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+            comment: "Owner-only note",
+            visibility: Visibility.Public);
+
+        var repository = new SingleProductRepository(original);
+        var handler = new DuplicateProductCommandHandler(repository, repository, new StubUserRepository(currentUser));
+
+        Result<ProductModel> result = await handler.Handle(
+            new DuplicateProductCommand(currentUser.Id.Value, original.Id.Value),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.NotNull(repository.LastAddedProduct);
+        Assert.Null(repository.LastAddedProduct.Comment);
+        Assert.Null(result.Value.Comment);
     }
 
 }
