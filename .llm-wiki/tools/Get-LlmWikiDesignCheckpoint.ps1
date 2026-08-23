@@ -70,7 +70,7 @@ $contractEvidence = @(Get-CollectionPropertyValues $contractPhases 'evidence')
 $publicationFiles = @(Get-CollectionPropertyValues $publicationPhases 'files')
 $publicationActions = @(Get-CollectionPropertyValues $publicationPhases 'actions')
 $publicationEvidence = @(Get-CollectionPropertyValues $publicationPhases 'evidence')
-$designSlices = if ($usesVerticalSlices) {
+$designSlices = @(if ($usesVerticalSlices) {
     @(
         [pscustomobject][ordered]@{
             id = 'slice-minimum-behavior'
@@ -100,7 +100,7 @@ $designSlices = if ($usesVerticalSlices) {
             checkpoint = 'Complete only after strict gates and acceptance evidence pass on the final diff.'
         }
     )
-} else { @() }
+} else { @() })
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     objective = $Objective

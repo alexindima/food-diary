@@ -161,8 +161,8 @@ foreach ($item in $items) {
     $graphNode = $taskGraph.nodes | Where-Object name -eq $item.name | Select-Object -First 1
     $item | Add-Member -NotePropertyName graphEdgeCount -NotePropertyValue $(if ($null -ne $graphNode) { [int]$graphNode.edgeCount } else { 0 })
     $item | Add-Member -NotePropertyName blockingConflictCount -NotePropertyValue $(if ($null -ne $graphNode) { [int]$graphNode.blockingConflictCount } else { 0 })
-    $item | Add-Member -NotePropertyName prerequisiteTasks -NotePropertyValue $(if ($null -ne $graphNode) { @($graphNode.prerequisiteTasks) } else { @() })
-    $item | Add-Member -NotePropertyName dependentTasks -NotePropertyValue $(if ($null -ne $graphNode) { @($graphNode.dependentTasks) } else { @() })
+    $item | Add-Member -NotePropertyName prerequisiteTasks -NotePropertyValue @(if ($null -ne $graphNode) { @($graphNode.prerequisiteTasks) } else { @() })
+    $item | Add-Member -NotePropertyName dependentTasks -NotePropertyValue @(if ($null -ne $graphNode) { @($graphNode.dependentTasks) } else { @() })
     $activeLease = $taskLeases.leases | Where-Object { $_.active -and $_.workspace -eq $item.path } | Select-Object -First 1
     $item | Add-Member -NotePropertyName lease -NotePropertyValue $activeLease
     $item | Add-Member -NotePropertyName leased -NotePropertyValue ($null -ne $activeLease)

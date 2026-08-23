@@ -33,7 +33,7 @@ $phases = @($manifest.plan.phases | Sort-Object order | ForEach-Object {
         id = $phaseKey; order = [int]$_.order; title = [string]$_.title
         files = $files; changedFiles = $present
         state = $phaseState
-        missingFiles = $(if ($phaseKey -eq 'context') { @($files | Where-Object { -not (Test-Path -LiteralPath (Join-Path $repositoryRoot $_)) }) } elseif ($phaseKey -eq 'implementation') { @($files | Where-Object { $_ -notin $changed }) } else { @() })
+        missingFiles = @(if ($phaseKey -eq 'context') { @($files | Where-Object { -not (Test-Path -LiteralPath (Join-Path $repositoryRoot $_)) }) } elseif ($phaseKey -eq 'implementation') { @($files | Where-Object { $_ -notin $changed }) } else { @() })
     }
 })
 $selected = if (-not [string]::IsNullOrWhiteSpace($PhaseId)) { $phases | Where-Object id -eq $PhaseId | Select-Object -First 1 } else { $phases | Where-Object state -in @('blocked', 'pending', 'in-progress', 'ready-for-check') | Select-Object -First 1 }

@@ -103,11 +103,11 @@ $dispatchMetrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiDispatchMetrics.ps1') 
 $ownerReliability = if ($null -ne $currentDispatch) {
     $dispatchMetrics.owners | Where-Object owner -eq $currentDispatch.owner | Select-Object -First 1
 } else { $null }
-$capabilityReliability = if ($null -ne $currentDispatch) {
+$capabilityReliability = @(if ($null -ne $currentDispatch) {
     @($dispatchMetrics.capabilityProfiles | Where-Object {
         $_.owner -eq $currentDispatch.owner -and $_.capability -in @($currentDispatch.requiredCapabilities)
     })
-} else { @() }
+} else { @() })
 $agentRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiAgentRegistry.ps1') list -Format Json | ConvertFrom-Json
 $registeredAgent = if ($null -ne $currentDispatch) {
     $agentRegistry.agents | Where-Object { $_.active -and $_.owner -eq $currentDispatch.owner } | Select-Object -First 1
@@ -315,7 +315,7 @@ $sourceAnchors = @(
                 line = $line
                 anchorStatus = $(if ($null -ne $line) { 'line' } else { 'path' })
                 kind = $(if ($item.PSObject.Properties['kind']) { [string]$item.kind } else { 'context' })
-                reasons = $(if ($item.PSObject.Properties['reasons']) { @($item.reasons) } else { @() })
+                reasons = @(if ($item.PSObject.Properties['reasons']) { @($item.reasons) } else { @() })
             }
         }
     }
@@ -359,8 +359,8 @@ $handoff = [pscustomobject][ordered]@{
         valid = [bool]$taskGraph.valid
         edgeCount = $(if ($null -ne $graphNode) { [int]$graphNode.edgeCount } else { 0 })
         blockingConflictCount = $(if ($null -ne $graphNode) { [int]$graphNode.blockingConflictCount } else { 0 })
-        prerequisiteTasks = $(if ($null -ne $graphNode) { @($graphNode.prerequisiteTasks) } else { @() })
-        dependentTasks = $(if ($null -ne $graphNode) { @($graphNode.dependentTasks) } else { @() })
+        prerequisiteTasks = @(if ($null -ne $graphNode) { @($graphNode.prerequisiteTasks) } else { @() })
+        dependentTasks = @(if ($null -ne $graphNode) { @($graphNode.dependentTasks) } else { @() })
         relatedEdges = @($taskGraph.edges | Where-Object { $_.left -eq (Split-Path -Leaf $normalizedWorkspacePath) -or $_.right -eq (Split-Path -Leaf $normalizedWorkspacePath) })
     }
     lease = $activeLease
@@ -437,10 +437,10 @@ $handoff = [pscustomobject][ordered]@{
         qualityAdjustmentFingerprint = $contextFeedback.metrics.qualityAdjustmentFingerprint
         validReceiptCount = $contextFeedback.metrics.validReceiptCount
         validQualityAdjustmentCount = $contextFeedback.metrics.validQualityAdjustmentCount
-        qualityAdjustments = $(if ($null -ne $currentDispatch) { @($contextFeedback.metrics.qualityAdjustmentProfiles | Where-Object dispatchId -eq $currentDispatch.dispatchId) } else { @() })
+        qualityAdjustments = @(if ($null -ne $currentDispatch) { @($contextFeedback.metrics.qualityAdjustmentProfiles | Where-Object dispatchId -eq $currentDispatch.dispatchId) } else { @() })
         profiles = $contextFeedbackProfiles
         ownerQuality = $(if ($null -ne $currentDispatch) { $contextFeedback.metrics.ownerQualityProfiles | Where-Object owner -eq $currentDispatch.owner | Select-Object -First 1 } else { $null })
-        capabilityQuality = $(if ($null -ne $currentDispatch) { @($contextFeedback.metrics.capabilityQualityProfiles | Where-Object { $_.owner -eq $currentDispatch.owner -and $_.capability -in @($currentDispatch.requiredCapabilities) }) } else { @() })
+        capabilityQuality = @(if ($null -ne $currentDispatch) { @($contextFeedback.metrics.capabilityQualityProfiles | Where-Object { $_.owner -eq $currentDispatch.owner -and $_.capability -in @($currentDispatch.requiredCapabilities) }) } else { @() })
     }
     durableMemory = [pscustomobject][ordered]@{
         valid = $durableMemory.valid

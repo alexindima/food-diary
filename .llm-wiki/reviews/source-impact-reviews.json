@@ -237,25 +237,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1",
-                                            "sha256":  "ed624912f80714771633473ce27f7dc04e9e72414bc3c77262d7999de3a50386"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "572c2bda16ab36a3ea0814640b5bd872d5b3b49e18efa2dffb70c32b01129c4b"
+                                            "sha256":  "29f6dfaeeb1bd3a3d90fbf17d72a8a58f8298254851726a7cd2d1768780c490b"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-                                            "sha256":  "7eebdf526d1d7f69db3abfad95b3b3aae984942e9ce4110e9dbd26a1328c9076"
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Wrapped remaining if/else expressions used as hashtable-property or Add-Member values in an outer @() so they no longer collapse to $null under Set-StrictMode when the else branch fires; verified via wiki lint/verify and direct PowerShell reproduction of the null-collapse behavior for each affected assignment shape.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:17.1322617Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:52:55.9729233Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -384,13 +376,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
+                                            "sha256":  "e4491af15d87a22a5f33838311130bd5f58c7a539275ff19d378d9c194df08f6"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Same null-safety fix touched task-audit/task-handoff/task-dispatch source files referenced by these workflow docs; no behavioral or documented-contract change, only null-vs-empty-array output fidelity under strict mode.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:31.2617377Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:14.0368347Z"
                     },
                     {
                         "pageId":  "workflow-context-quality-benchmark",
@@ -458,18 +454,18 @@
                         "pageSha256":  "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
-                                            "sha256":  "5893e421c6a30e21400547b06d9d5b0b6959321f7f7132c9f1a301f2f017e8ae"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Same null-safety fix touched task-audit/task-handoff/task-dispatch source files referenced by these workflow docs; no behavioral or documented-contract change, only null-vs-empty-array output fidelity under strict mode.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:33.2702848Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:14.4404606Z"
                     },
                     {
                         "pageId":  "workflow-controlled-repair-loop",
@@ -477,14 +473,18 @@
                         "pageSha256":  "1a4c6620169d6fbe556feae253e1e80b1f7a4f4d232962b8fe8b13635bfb608a",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Same null-safety fix touched task-audit/task-handoff/task-dispatch source files referenced by these workflow docs; no behavioral or documented-contract change, only null-vs-empty-array output fidelity under strict mode.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:33.7752951Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:14.8276540Z"
                     },
                     {
                         "pageId":  "workflow-cost-aware-verification",
@@ -541,18 +541,14 @@
                         "pageSha256":  "fb6ae4687c020a4c8bb6f4a47d37ba0c5aede515a055efc45e8e18ebfd3daa42",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "572c2bda16ab36a3ea0814640b5bd872d5b3b49e18efa2dffb70c32b01129c4b"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "3e0c909f3dd700ce1926a18b203c2b01cdf2bc3e16516e27c21d9f378af0f333"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiPhaseStatus.ps1",
+                                            "sha256":  "7ab5eca3a51d7b325e8bcdc702e78da3672594daf9866430ae69bd52289e8f59"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Wrapped remaining if/else expressions used as hashtable-property or Add-Member values in an outer @() so they no longer collapse to $null under Set-StrictMode when the else branch fires; verified via wiki lint/verify and direct PowerShell reproduction of the null-collapse behavior for each affected assignment shape.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:34.9693253Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:15.2564345Z"
                     },
                     {
                         "pageId":  "workflow-domain-data-review",
@@ -575,14 +571,18 @@
                         "pageSha256":  "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Same null-safety fix touched task-audit/task-handoff/task-dispatch source files referenced by these workflow docs; no behavioral or documented-contract change, only null-vs-empty-array output fidelity under strict mode.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:35.5560975Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:15.7411174Z"
                     },
                     {
                         "pageId":  "workflow-failure-knowledge",
@@ -650,14 +650,18 @@
                         "pageSha256":  "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Same null-safety fix touched task-audit/task-handoff/task-dispatch source files referenced by these workflow docs; no behavioral or documented-contract change, only null-vs-empty-array output fidelity under strict mode.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:38.0915074Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:16.2578279Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -680,14 +684,18 @@
                         "pageSha256":  "d93e8bf4522a803da1d1a59bd2cd49e0d6a6b39360281f4df4f1792621027fb1",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Same null-safety fix touched task-audit/task-handoff/task-dispatch source files referenced by these workflow docs; no behavioral or documented-contract change, only null-vs-empty-array output fidelity under strict mode.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:38.7935521Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:16.7816427Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",
@@ -744,14 +752,18 @@
                         "pageSha256":  "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Same null-safety fix touched task-audit/task-handoff/task-dispatch source files referenced by these workflow docs; no behavioral or documented-contract change, only null-vs-empty-array output fidelity under strict mode.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:40.8525652Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:17.2912201Z"
                     },
                     {
                         "pageId":  "workflow-model-routing",
@@ -808,14 +820,18 @@
                         "pageSha256":  "cc412c14328fb572376872cca0476a09251ab524bf64dd86398365cfae4a2bf6",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Same null-safety fix touched task-audit/task-handoff/task-dispatch source files referenced by these workflow docs; no behavioral or documented-contract change, only null-vs-empty-array output fidelity under strict mode.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:42.2679767Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:17.8180225Z"
                     },
                     {
                         "pageId":  "workflow-post-task-retrospective",
@@ -823,14 +839,18 @@
                         "pageSha256":  "dbcac0a7ae8c9e8975807cd711fc7680b3c731e74459583b85917d9bb8e1827d",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Wrapped remaining if/else expressions used as hashtable-property or Add-Member values in an outer @() so they no longer collapse to $null under Set-StrictMode when the else branch fires; verified via wiki lint/verify and direct PowerShell reproduction of the null-collapse behavior for each affected assignment shape.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:42.9510434Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:18.3421774Z"
                     },
                     {
                         "pageId":  "workflow-privacy-review",
@@ -868,22 +888,18 @@
                         "pageSha256":  "7622935ab3aa92e0641117a4b5afc2b8faada090a2a8a83e9ea27a575f549281",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "20f9cbd4d42ba6657378b7428514b0f830d07dad9f9ae5f704494eb8859f4dfe"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiProofOfChange.ps1",
-                                            "sha256":  "b2a8d662c86e84305b79b1a725f6ee10a01abb03bf7f23565fe86bf28ef9080c"
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Same null-safety fix touched task-audit/task-handoff/task-dispatch source files referenced by these workflow docs; no behavioral or documented-contract change, only null-vs-empty-array output fidelity under strict mode.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:43.7538716Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:18.9421383Z"
                     },
                     {
                         "pageId":  "workflow-quality-risk",
@@ -921,18 +937,18 @@
                         "pageSha256":  "d6032fccda979d114e265f30e4f14d9593ded53c6b79d85a2dfc467b07fa3a61",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "20f9cbd4d42ba6657378b7428514b0f830d07dad9f9ae5f704494eb8859f4dfe"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Same null-safety fix touched task-audit/task-handoff/task-dispatch source files referenced by these workflow docs; no behavioral or documented-contract change, only null-vs-empty-array output fidelity under strict mode.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:45.2762458Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:19.5509780Z"
                     },
                     {
                         "pageId":  "workflow-review-report",
@@ -955,18 +971,18 @@
                         "pageSha256":  "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "383c1727051c2466855228d25afa3a12a1176b414699242e3abb7d8e457e3ec7"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Same null-safety fix touched task-audit/task-handoff/task-dispatch source files referenced by these workflow docs; no behavioral or documented-contract change, only null-vs-empty-array output fidelity under strict mode.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:46.9140433Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:20.1407362Z"
                     },
                     {
                         "pageId":  "workflow-runtime-impact",
@@ -989,18 +1005,18 @@
                         "pageSha256":  "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "383c1727051c2466855228d25afa3a12a1176b414699242e3abb7d8e457e3ec7"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Wrapped remaining if/else expressions used as hashtable-property or Add-Member values in an outer @() so they no longer collapse to $null under Set-StrictMode when the else branch fires; verified via wiki lint/verify and direct PowerShell reproduction of the null-collapse behavior for each affected assignment shape.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:47.7663719Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:20.6705431Z"
                     },
                     {
                         "pageId":  "workflow-task-brief",
@@ -1038,14 +1054,22 @@
                         "pageSha256":  "7b3ea1842edd2b40e621b8bef887a96786f9bff979e494b7832a71c176439ff0",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskWorkspaces.ps1",
+                                            "sha256":  "c760e3e7ec49875af2bd7ee54b8bbf689927c8d349bb3f82e829fd6a1a323c08"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Wrapped remaining if/else expressions used as hashtable-property or Add-Member values in an outer @() so they no longer collapse to $null under Set-StrictMode when the else branch fires; verified via wiki lint/verify and direct PowerShell reproduction of the null-collapse behavior for each affected assignment shape.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:49.3630567Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:21.2452175Z"
                     },
                     {
                         "pageId":  "workflow-task-dispatch-receipts",
@@ -1053,14 +1077,14 @@
                         "pageSha256":  "d0a2b7fd2b51f7c02d228efb6e23130eff42e68885eb5349dc126e22e6d4f98d",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "3e0c909f3dd700ce1926a18b203c2b01cdf2bc3e16516e27c21d9f378af0f333"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
+                                            "sha256":  "e4491af15d87a22a5f33838311130bd5f58c7a539275ff19d378d9c194df08f6"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Wrapped remaining if/else expressions used as hashtable-property or Add-Member values in an outer @() so they no longer collapse to $null under Set-StrictMode when the else branch fires; verified via wiki lint/verify and direct PowerShell reproduction of the null-collapse behavior for each affected assignment shape.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:50.3953726Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:21.7601144Z"
                     },
                     {
                         "pageId":  "workflow-task-scheduler",
@@ -1068,14 +1092,30 @@
                         "pageSha256":  "b964048fb46e10eb6f3e28c3ddcfb451e3443691f1da29c8708d768c8ac1629c",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskWorkspaces.ps1",
+                                            "sha256":  "c760e3e7ec49875af2bd7ee54b8bbf689927c8d349bb3f82e829fd6a1a323c08"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiSchedulePlan.ps1",
+                                            "sha256":  "9ee355076cb31b3468b54f8364ca3ef404f1c6fca0420c41f4536bc3a150cbd3"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
+                                            "sha256":  "e4491af15d87a22a5f33838311130bd5f58c7a539275ff19d378d9c194df08f6"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Wrapped remaining if/else expressions used as hashtable-property or Add-Member values in an outer @() so they no longer collapse to $null under Set-StrictMode when the else branch fires; verified via wiki lint/verify and direct PowerShell reproduction of the null-collapse behavior for each affected assignment shape.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:51.2101024Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:22.3502639Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
@@ -1083,26 +1123,22 @@
                         "pageSha256":  "19d360f7ae44b67345aa130aad1b1ab9d343d76912b945a5c75f9ce0627c3818",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+                                            "sha256":  "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-                                            "sha256":  "df0f64197a5e553b2144a75d80d628cab92697ef74bced089ee6fd09e63c9ddb"
+                                            "sha256":  "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "20f9cbd4d42ba6657378b7428514b0f830d07dad9f9ae5f704494eb8859f4dfe"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "383c1727051c2466855228d25afa3a12a1176b414699242e3abb7d8e457e3ec7"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Update-LlmWikiTaskEvidence.ps1",
-                                            "sha256":  "7cf5864d82c5e31a66aec9fa0c75d2884aa5fe5588894ff3d126d6c0c81769e2"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskWorkspaces.ps1",
+                                            "sha256":  "c760e3e7ec49875af2bd7ee54b8bbf689927c8d349bb3f82e829fd6a1a323c08"
                                         }
                                     ],
-                        "reason":  "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve \u0027zero output objects\u0027 as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+                        "reason":  "Wrapped remaining if/else expressions used as hashtable-property or Add-Member values in an outer @() so they no longer collapse to $null under Set-StrictMode when the else branch fires; verified via wiki lint/verify and direct PowerShell reproduction of the null-collapse behavior for each affected assignment shape.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c192eb68195dbbf020efcff1e647b8926267506d",
-                        "reviewedAtUtc":  "2026-08-23T13:04:52.0153480Z"
+                        "gitHead":  "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
+                        "reviewedAtUtc":  "2026-08-23T13:53:22.8803738Z"
                     },
                     {
                         "pageId":  "workflow-test-plan",

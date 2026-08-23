@@ -351,7 +351,7 @@ if ($Action -eq 'reconcile') {
         workspace = $normalizedWorkspace
         owner = $Owner
         agentId = $(if ($null -ne $registeredAgent) { [string]$registeredAgent.agentId } else { '' })
-        agentCapabilities = $(if ($null -ne $registeredAgent) { @($registeredAgent.capabilities) } else { @() })
+        agentCapabilities = @(if ($null -ne $registeredAgent) { @($registeredAgent.capabilities) } else { @() })
         requiredCapabilities = $requiredCapabilities
         leaseId = [string]$leaseResult.lease.leaseId
         lane = $Lane
@@ -368,7 +368,7 @@ if ($Action -eq 'reconcile') {
     $receipt.events = @(New-Event @() 'started' ([pscustomobject][ordered]@{
         owner = $Owner
         agentId = $(if ($null -ne $registeredAgent) { [string]$registeredAgent.agentId } else { '' })
-        agentCapabilities = $(if ($null -ne $registeredAgent) { @($registeredAgent.capabilities) } else { @() })
+        agentCapabilities = @(if ($null -ne $registeredAgent) { @($registeredAgent.capabilities) } else { @() })
         requiredCapabilities = $requiredCapabilities
         leaseId = [string]$leaseResult.lease.leaseId
         lane = $Lane
