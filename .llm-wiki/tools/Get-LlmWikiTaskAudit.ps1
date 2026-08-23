@@ -755,8 +755,8 @@ if (Test-Path -LiteralPath $absoluteTasksPath -PathType Container) {
             taskGraph = [pscustomobject][ordered]@{
                 edgeCount = $(if ($null -ne $graphNode) { [int]$graphNode.edgeCount } else { 0 })
                 blockingConflictCount = $(if ($null -ne $graphNode) { [int]$graphNode.blockingConflictCount } else { 0 })
-                prerequisiteTasks = $(if ($null -ne $graphNode) { @($graphNode.prerequisiteTasks) } else { @() })
-                dependentTasks = $(if ($null -ne $graphNode) { @($graphNode.dependentTasks) } else { @() })
+                prerequisiteTasks = @(if ($null -ne $graphNode) { @($graphNode.prerequisiteTasks) } else { @() })
+                dependentTasks = @(if ($null -ne $graphNode) { @($graphNode.dependentTasks) } else { @() })
             }
             reasons = @($reasons)
             remediation = @($actions)

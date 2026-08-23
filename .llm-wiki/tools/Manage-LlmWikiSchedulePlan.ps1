@@ -176,7 +176,7 @@ try {
                 lane = $_.lane
                 owner = $(if ($null -ne $_.assignedAgent) { [string]$_.assignedAgent.owner } else { '<agent>' })
                 agentId = $(if ($null -ne $_.assignedAgent) { [string]$_.assignedAgent.agentId } else { '' })
-                agentCapabilities = $(if ($null -ne $_.assignedAgent) { @($_.assignedAgent.capabilities) } else { @() })
+                agentCapabilities = @(if ($null -ne $_.assignedAgent) { @($_.assignedAgent.capabilities) } else { @() })
                 routingScore = $(if ($null -ne $_.assignmentRationale) { $_.assignmentRationale.selectedScore } else { $null })
                 requiredCapabilities = @($_.requiredCapabilities)
             }
