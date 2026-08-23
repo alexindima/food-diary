@@ -111,11 +111,11 @@ function Get-Selection([object]$Current, [bool]$RequestedIncludePassed) {
     $executions = @($eligible | Where-Object { $primaryById[[string]$_.id] -eq [string]$_.id } | ForEach-Object {
         $primaryId = [string]$_.id
         $coveredIds = @($eligible.id | Where-Object { $primaryById[[string]$_] -eq $primaryId } | Sort-Object)
-        $failureProbability = [int](($Current.prediction.prediction.predictions | Where-Object checkId -in $coveredIds | Measure-Object probabilityPercent -Maximum).Maximum)
+        $failureProbability = [int](($Current.prediction.prediction.predictions | Where-Object checkId -in $coveredIds | ForEach-Object { $_.probabilityPercent } | Measure-Object -Maximum).Maximum)
         $costEstimates = @($Current.cost.forecast.estimates | Where-Object checkId -in $coveredIds)
         $basePriority = Get-Priority $primaryId
         $predictionBoost = [int][Math]::Floor($failureProbability / [int]$workspacePolicy.scheduler.verificationPlanner.failurePrediction.priorityBoostDivisor)
-        $costBoost = [int](($costEstimates | Measure-Object priorityBoost -Maximum).Maximum)
+        $costBoost = [int](($costEstimates | ForEach-Object { $_.priorityBoost } | Measure-Object -Maximum).Maximum)
         [pscustomobject][ordered]@{
             primaryCheckId = $primaryId
             command = [string]$_.command
@@ -124,10 +124,10 @@ function Get-Selection([object]$Current, [bool]$RequestedIncludePassed) {
             predictedFailureProbability = $failureProbability
             predictionPriorityBoost = $predictionBoost
             costPriorityBoost = $costBoost
-            expectedVerificationSeconds = [double](($costEstimates | Measure-Object verificationSeconds -Maximum).Maximum)
-            expectedFailureSeconds = [Math]::Round([double](($costEstimates | Measure-Object expectedFailureSeconds -Sum).Sum), 2)
-            expectedTotalSeconds = [Math]::Round([double](($costEstimates | Measure-Object expectedTotalSeconds -Sum).Sum), 2)
-            valueDensity = [double](($costEstimates | Measure-Object valueDensity -Maximum).Maximum)
+            expectedVerificationSeconds = [double](($costEstimates | ForEach-Object { $_.verificationSeconds } | Measure-Object -Maximum).Maximum)
+            expectedFailureSeconds = [Math]::Round([double](($costEstimates | ForEach-Object { $_.expectedFailureSeconds } | Measure-Object -Sum).Sum), 2)
+            expectedTotalSeconds = [Math]::Round([double](($costEstimates | ForEach-Object { $_.expectedTotalSeconds } | Measure-Object -Sum).Sum), 2)
+            valueDensity = [double](($costEstimates | ForEach-Object { $_.valueDensity } | Measure-Object -Maximum).Maximum)
             coversCheckIds = $coveredIds
         }
     } | Sort-Object priority, primaryCheckId)
@@ -166,9 +166,9 @@ function Get-Selection([object]$Current, [bool]$RequestedIncludePassed) {
             rationale = $rationale
         }
     } | Sort-Object checkId)
-    $fullRequiredSeconds = [double](($Current.cost.forecast.estimates | Where-Object checkId -in @($checks.id) | Measure-Object verificationSeconds -Sum).Sum)
-    $eligibleSeconds = [double](($Current.cost.forecast.estimates | Where-Object checkId -in @($eligible.id) | Measure-Object verificationSeconds -Sum).Sum)
-    $selectedSeconds = [double](($executions | Measure-Object expectedVerificationSeconds -Sum).Sum)
+    $fullRequiredSeconds = [double](($Current.cost.forecast.estimates | Where-Object checkId -in @($checks | ForEach-Object { $_.id }) | ForEach-Object { $_.verificationSeconds } | Measure-Object -Sum).Sum)
+    $eligibleSeconds = [double](($Current.cost.forecast.estimates | Where-Object checkId -in @($eligible | ForEach-Object { $_.id }) | ForEach-Object { $_.verificationSeconds } | Measure-Object -Sum).Sum)
+    $selectedSeconds = [double](($executions | ForEach-Object { $_.expectedVerificationSeconds } | Measure-Object -Sum).Sum)
     $selectionSummary = [pscustomobject][ordered]@{
         requiredCheckCount = $checks.Count
         eligibleCheckCount = $eligible.Count

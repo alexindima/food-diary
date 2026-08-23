@@ -616,7 +616,7 @@ if ($result.extractionDelta) {
     if (@($delta.nextOwner).Count -gt 0) { Write-Host "  Next owner: $($delta.nextOwner -join ', ')" }
     foreach ($cluster in $delta.capabilityClusters) { Write-Host "  Capability $($cluster.capability): $($cluster.count) path(s), consumers=$($cluster.consumers -join ', ')" }
 }
-if ($null -ne $result.nextQuestion) {
+if ($result.PSObject.Properties['nextQuestion'] -and $null -ne $result.nextQuestion) {
     $anchorText = if ($result.nextQuestion.anchorStatus -eq 'line') { "$($result.nextQuestion.anchor.path):$($result.nextQuestion.anchor.line)" } elseif ($result.nextQuestion.anchorStatus -eq 'path') { [string]$result.nextQuestion.anchor.path } else { 'anchor missing' }
     Write-Host "  NEXT QUESTION [$($result.nextQuestion.id)] ($anchorText): $($result.nextQuestion.question)"
     if (@($result.openQuestions).Count -gt 1) { Write-Host "  Additional questions deferred: $(@($result.openQuestions).Count - 1)" }

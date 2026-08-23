@@ -1750,7 +1750,7 @@ switch ($Command) {
         Invoke-WikiTool 'Manage-LlmWikiRepairLoop.ps1' @{
             Action = $repairAction
             WorkspacePath = $WorkspacePath
-            CheckId = $(if (@($CheckId).Count -gt 0) { [string]$CheckId[0] } else { $null })
+            CheckId = $(if ($null -ne $CheckId -and $CheckId.Count -gt 0) { [string]$CheckId[0] } else { $null })
             AttemptId = $RepairAttemptId
             Symptom = $Symptom
             Hypothesis = $RepairHypothesis
@@ -1774,7 +1774,7 @@ switch ($Command) {
             Action = $repairLearningAction
             WorkspacePath = $WorkspacePath
             CandidateId = $RepairCandidateId
-            CheckId = $(if (@($CheckId).Count -gt 0) { [string]$CheckId[0] } else { $null })
+            CheckId = $(if ($null -ne $CheckId -and $CheckId.Count -gt 0) { [string]$CheckId[0] } else { $null })
             Category = $Query
             Path = $ChangedPath
             Owner = $Owner
@@ -1933,7 +1933,7 @@ switch ($Command) {
         }[$Command]
         Invoke-WikiTool 'Manage-LlmWikiVerificationTelemetry.ps1' @{
             Action = $telemetryAction
-            CheckId = $(if (@($CheckId).Count -gt 0) { [string]$CheckId[0] } else { $null })
+            CheckId = $(if ($null -ne $CheckId -and $CheckId.Count -gt 0) { [string]$CheckId[0] } else { $null })
             AsOfUtc = $AsOfUtc
             FailOnInvalid = $FailOnInvalid
             Format = $Format

@@ -69,7 +69,7 @@ function Get-Current {
 function Get-CanonicalRoute([object]$Current) {
     $scopes = @($Current.packet.brief.change.scopes | ForEach-Object { [string]$_ } | Sort-Object -Unique)
     $reviewIds = @($Current.packet.policy.reviewObligations.id)
-    $maximumFailure = [int](($Current.prediction.prediction.predictions | Measure-Object probabilityPercent -Maximum).Maximum)
+    $maximumFailure = [int](($Current.prediction.prediction.predictions | ForEach-Object { $_.probabilityPercent } | Measure-Object -Maximum).Maximum)
     $executionCount = @($Current.verification.plan.executions).Count
     $failurePoints = [int][Math]::Round($maximumFailure * [double]$routingPolicy.predictedFailureWeightPercent / 100)
     $executionPoints = [Math]::Min(
@@ -103,8 +103,8 @@ function Get-CanonicalRoute([object]$Current) {
         @($routingPolicy.routes).Count,
         $healthRequiredRank + [int]$optimizationPolicy.maximumEscalationRanks
     )
-    $maximumCost = [double](($routingPolicy.routes | Measure-Object relativeCostUnits -Maximum).Maximum)
-    $minimumCost = [double](($routingPolicy.routes | Measure-Object relativeCostUnits -Minimum).Minimum)
+    $maximumCost = [double](($routingPolicy.routes | ForEach-Object { $_.relativeCostUnits } | Measure-Object -Maximum).Maximum)
+    $minimumCost = [double](($routingPolicy.routes | ForEach-Object { $_.relativeCostUnits } | Measure-Object -Minimum).Minimum)
     $costRange = [Math]::Max(1.0, $maximumCost - $minimumCost)
     $baseQuality = if ($null -eq $outcomeProfile -or [int]$outcomeProfile.sampleCount -lt [int]$optimizationPolicy.minimumSamplesPerRoute) {
         $null

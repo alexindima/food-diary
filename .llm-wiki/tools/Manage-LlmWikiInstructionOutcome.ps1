@@ -113,7 +113,7 @@ function Get-Profiles([object]$Registry) {
     @($observations | Group-Object path, fingerprint | ForEach-Object {
         $items = @($_.Group | Sort-Object { [DateTime]$_.recordedAtUtc })
         $recent = @($items | Select-Object -Last ([Math]::Min($items.Count, [int]$outcomePolicy.recentWindowSamples)))
-        $baseline = if ($items.Count -gt $recent.Count) { @($items | Select-Object -First ($items.Count - $recent.Count)) } else { @() }
+        $baseline = @(if ($items.Count -gt $recent.Count) { @($items | Select-Object -First ($items.Count - $recent.Count)) } else { @() })
         $average = [Math]::Round([double](($items.score | Measure-Object -Average).Average), 2)
         $recentAverage = [Math]::Round([double](($recent.score | Measure-Object -Average).Average), 2)
         $recentSuccess = [Math]::Round(100.0 * @($recent | Where-Object success).Count / $recent.Count, 2)
@@ -269,7 +269,7 @@ if ($Action -eq 'observe') {
     }
     $result = [pscustomobject][ordered]@{ action = 'verify'; valid = $issues.Count -eq 0; issues = @($issues); registryFingerprint = $validation.registryFingerprint; headHash = $validation.headHash; outcome = $workspaceReceipt }
 } elseif ($Action -eq 'metrics') {
-    $profiles = Get-Profiles $registry
+    $profiles = @(Get-Profiles $registry)
     $result = [pscustomobject][ordered]@{
         action = 'metrics'; valid = $validation.valid; issues = @($validation.issues)
         metrics = [pscustomobject][ordered]@{
@@ -282,7 +282,7 @@ if ($Action -eq 'observe') {
         }
     }
 } elseif ($Action -eq 'candidates') {
-    $profiles = Get-Profiles $registry
+    $profiles = @(Get-Profiles $registry)
     $candidates = @($profiles | Where-Object health -eq 'degraded' | ForEach-Object {
         $profile = $_
         $absolute = Join-Path $repositoryRoot $profile.path
@@ -307,10 +307,10 @@ if ($Action -eq 'observe') {
 
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 30 } else {
     Write-Host "Instruction outcomes: action=$Action, valid=$($result.valid), registry=$($validation.registryFingerprint)"
-    if ($null -ne $result.metrics) {
+    if ($result.PSObject.Properties['metrics']) {
         Write-Host "Events=$($result.metrics.validEventCount), profiles=$($result.metrics.profileCount), degraded=$($result.metrics.degradedProfileCount)"
     }
-    foreach ($candidate in @($result.candidates)) { Write-Host " - [$($candidate.score)] $($candidate.path): current=$($candidate.current)" }
-    foreach ($issue in @($result.issues)) { Write-Host " - $issue" }
+    if ($result.PSObject.Properties['candidates']) { foreach ($candidate in @($result.candidates)) { Write-Host " - [$($candidate.score)] $($candidate.path): current=$($candidate.current)" } }
+    if ($result.PSObject.Properties['issues']) { foreach ($issue in @($result.issues)) { Write-Host " - $issue" } }
 }
 if ($FailOnInvalid -and -not $result.valid) { exit 1 }

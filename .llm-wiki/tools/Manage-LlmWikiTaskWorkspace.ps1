@@ -570,7 +570,7 @@ if ($Format -eq 'Json') {
     Write-Host "Engineering readiness: $($result.engineeringReadiness.verdict); governance completeness: $($result.governanceCompleteness.verdict); combined=$($result.verdict) ($($result.score)/100), risk=$($result.risk.level)"
     Write-Host "Change: $($result.changedPathCount) path(s), since start=$($result.fingerprintChanged), refresh required=$($result.refreshRequired)"
     Write-Host "Open: $(@($result.pendingCriteria).Count) acceptance, $(@($result.unresolvedChecks).Count) checks, $(@($result.unresolvedReviews).Count) reviews, $($result.openJournalBlockers) journal blockers, $(@($result.outOfScopePaths).Count) out of scope"
-    if ($null -ne $result.invalidation) {
+    if ($result.PSObject.Properties['invalidation'] -and $null -ne $result.invalidation) {
         Write-Host "Invalidation: $(@($result.invalidation.invalidatedChecks).Count) checks, $(@($result.invalidation.invalidatedReviews).Count) reviews, $(@($result.invalidation.invalidatedCriteria).Count) criteria; applied=$($result.invalidation.applied)"
     }
     Write-Host 'Next actions:'

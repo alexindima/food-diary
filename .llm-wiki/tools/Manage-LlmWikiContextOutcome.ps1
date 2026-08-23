@@ -388,15 +388,15 @@ if ($Action -eq 'observe') {
 
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 20 } else {
     Write-Host "Context strategy outcomes: action=$($result.action), valid=$($result.valid)"
-    if ($null -ne $result.metrics) {
+    if ($result.PSObject.Properties['metrics']) {
         Write-Host "Events=$($result.metrics.validEventCount), fingerprint=$($result.metrics.registryFingerprint)"
         foreach ($profile in @($result.metrics.profiles)) { Write-Host " - $($profile.variantId): samples=$($profile.sampleCount), posterior=$($profile.posteriorOutcomeScore), confidence=$($profile.confidencePercent)%, health=$($profile.health), adjustment=$($profile.experimentAdjustmentPoints)" }
         foreach ($profile in @($result.metrics.cohortProfiles)) { Write-Host " - cohort $($profile.cohortKey)/$($profile.variantId): samples=$($profile.sampleCount), posterior=$($profile.posteriorOutcomeScore), health=$($profile.health), adjustment=$($profile.experimentAdjustmentPoints)" }
     } elseif ($result.action -eq 'health') {
         Write-Host "Degraded profiles=$($result.degradedProfileCount), degraded cohorts=$($result.degradedCohortProfileCount), rollbackRecommended=$($result.rollbackRecommended)"
-    } elseif ($null -ne $result.profile) {
+    } elseif ($result.PSObject.Properties['profile']) {
         Write-Host "Cohort=$($result.profile.cohortKey), modules=$(@($result.profile.modules) -join ', ')"
-    } elseif ($null -ne $result.totalCount) { Write-Host "Events=$($result.totalCount)" }
-    foreach ($issue in @($result.issues)) { Write-Host " - $issue" }
+    } elseif ($result.PSObject.Properties['totalCount']) { Write-Host "Events=$($result.totalCount)" }
+    if ($result.PSObject.Properties['issues']) { foreach ($issue in @($result.issues)) { Write-Host " - $issue" } }
 }
 if ($FailOnInvalid -and -not $result.valid) { exit 1 }

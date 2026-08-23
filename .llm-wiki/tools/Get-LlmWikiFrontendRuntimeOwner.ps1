@@ -41,7 +41,7 @@ $ranked = foreach ($component in @($contracts.components)) {
         [pscustomobject]@{ component = $component; score = $semanticScore + $(if ($explicit) { 100 } else { 0 }); explicit = $explicit }
     }
 }
-$maximumScore = @($ranked | Measure-Object score -Maximum).Maximum
+$maximumScore = @($ranked | ForEach-Object { $_.score } | Measure-Object -Maximum).Maximum
 $owners = @($ranked | Where-Object score -eq $maximumScore | Sort-Object { $_.component.path } | Select-Object -First $Limit)
 
 function Find-ComponentByTemplate([string]$TemplatePath) {
