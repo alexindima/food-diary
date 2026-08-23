@@ -275,6 +275,63 @@ public partial class CyclesFeatureTests {
     }
 
     [Fact]
+    public void CyclePredictionService_CalculatePredictions_MergesConfirmedStartWithDistantInferredStart() {
+        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 1, 1));
+        AddBleedingEpisode(profile, new DateOnly(2026, 1, 1));
+        AddBleedingEpisode(profile, new DateOnly(2026, 3, 1));
+        profile.ConfirmPeriodStart(new DateOnly(2026, 1, 1));
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, new DateOnly(2026, 3, 1));
+
+        Assert.Multiple(
+            () => Assert.Equal(2, predictions.UsedEpisodeCount),
+            () => Assert.Equal(0, predictions.ExcludedEpisodeCount),
+            () => Assert.Null(predictions.NextPeriodStartFrom),
+            () => Assert.Contains("insufficient_completed_cycles", predictions.ReasonCodes, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public void CyclePredictionService_ForReadModel_ResolvesConfirmedAndExcludedEpisodesFromNonEmptyHistory() {
+        var profileId = Guid.NewGuid();
+        DateOnly confirmedStart = new(2026, 1, 1);
+        DateOnly excludedStart = new(2026, 2, 1);
+        DateOnly inferredOnlyStart = new(2026, 4, 1);
+        var profile = new CycleProfileReadModel(
+            profileId,
+            UserId.New().Value,
+            CycleTrackingMode.PeriodTracking,
+            CycleConfidence.Medium,
+            confirmedStart,
+            AverageCycleLength: 28,
+            AveragePeriodLength: 5,
+            LutealLength: 14,
+            IsRegular: true,
+            IsOnboardingComplete: true,
+            ShowFertilityEstimates: false,
+            DiscreetNotifications: false,
+            Notes: null,
+            BleedingEntries: [
+                new BleedingEntryReadModel(Guid.NewGuid(), profileId, inferredOnlyStart, BleedingType.Bleeding, CycleFlowLevel.Medium, PainImpact: null, Notes: null),
+            ],
+            SymptomEntries: [],
+            Factors: [],
+            FertilitySignals: [],
+            MenstrualEpisodes: [
+                new MenstrualEpisodeReadModel(Guid.NewGuid(), profileId, confirmedStart, confirmedStart.AddDays(4), MenstrualEpisodeStatus.Confirmed, ExcludedFromPredictions: false),
+                new MenstrualEpisodeReadModel(Guid.NewGuid(), profileId, excludedStart, excludedStart.AddDays(4), MenstrualEpisodeStatus.Confirmed, ExcludedFromPredictions: true),
+            ]);
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, inferredOnlyStart);
+
+        Assert.Multiple(
+            () => Assert.Equal(2, predictions.UsedEpisodeCount),
+            () => Assert.Equal(1, predictions.ExcludedEpisodeCount),
+            () => Assert.Equal(1, predictions.CompletedCycleCount),
+            () => Assert.Null(predictions.NextPeriodStartFrom),
+            () => Assert.Contains("insufficient_completed_cycles", predictions.ReasonCodes, StringComparer.Ordinal));
+    }
+
+    [Fact]
     public void CycleProfile_RevokeFertilityConsent_DeletesSignalsAndHidesFertilityEstimates() {
         var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 1, 1));
         profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UtcNow);

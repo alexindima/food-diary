@@ -46,6 +46,89 @@ public sealed class MarketingAttributionCoverageTests {
         Assert.Null(repository.Record);
     }
 
+    [Fact]
+    public async Task Handle_WithUnsupportedEventType_ReturnsValidationFailure() {
+        var repository = new RecordingRepository();
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
+        RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
+            EventType = "unsupported_event",
+        };
+
+        Result result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Null(repository.Record);
+    }
+
+    [Fact]
+    public async Task Handle_WithMissingEventId_ReturnsValidationFailure() {
+        var repository = new RecordingRepository();
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
+        RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
+            EventId = Guid.Empty,
+        };
+
+        Result result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Null(repository.Record);
+    }
+
+    [Fact]
+    public async Task Handle_WithUserIdOnAnonymousLandingEvent_ReturnsValidationFailure() {
+        var repository = new RecordingRepository();
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
+        RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
+            EventType = MarketingAttributionEventTypes.PageLanding,
+            UserId = Guid.NewGuid(),
+        };
+
+        Result result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Anonymous", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Null(repository.Record);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("00000000-0000-0000-0000-000000000000")]
+    public async Task Handle_WithoutAuthenticatedUserOnSignupCompletedEvent_ReturnsValidationFailure(string? userIdText) {
+        var repository = new RecordingRepository();
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
+        Guid? userId = userIdText is null ? null : Guid.Parse(userIdText);
+        RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
+            EventType = MarketingAttributionEventTypes.SignupCompleted,
+            UserId = userId,
+        };
+
+        Result result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Signup", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Null(repository.Record);
+    }
+
+    [Fact]
+    public async Task Handle_WithSignupCompletedEventAndAuthenticatedUser_RecordsAttribution() {
+        var repository = new RecordingRepository();
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
+        RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
+            EventType = MarketingAttributionEventTypes.SignupCompleted,
+            UserId = Guid.NewGuid(),
+        };
+
+        Result result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.NotNull(repository.Record);
+        Assert.Equal(command.UserId, repository.Record.UserId);
+    }
+
     private static RecordMarketingAttributionCommand CreateCommand(string timestamp) =>
         new(
             EventType: MarketingAttributionEventTypes.PageLanding,

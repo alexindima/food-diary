@@ -303,6 +303,46 @@ public sealed class OpenFoodFactsServiceTests {
     }
 
     [Fact]
+    public async Task SearchAsync_WhenQueryIsNullOrWhitespace_ReturnsEmptyWithoutProviderRequest() {
+        var handler = new CountingHttpMessageHandler("""{"products": []}""");
+        OpenFoodFactsService service = CreateService(handler);
+
+        IReadOnlyList<OpenFoodFactsProductModel> nullResult = await service.SearchAsync(null!);
+        IReadOnlyList<OpenFoodFactsProductModel> whitespaceResult = await service.SearchAsync("   ");
+
+        Assert.Empty(nullResult);
+        Assert.Empty(whitespaceResult);
+        Assert.Equal(0, handler.RequestCount);
+    }
+
+    [Fact]
+    public async Task SearchAsync_WhenProviderReturnsServerError_ReturnsEmptyList() {
+        OpenFoodFactsService service = CreateService(new ErrorHttpMessageHandler(HttpStatusCode.InternalServerError));
+
+        IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync($"server-error-{Guid.NewGuid():N}");
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task SearchAsync_WhenAllProductsAreFilteredOut_ReturnsEmptyListWithoutCaching() {
+        const string json = """
+            {
+              "products": [
+                { "code": "", "product_name": "No code", "nutriments": {} },
+                { "code": "111", "product_name": "", "nutriments": {} },
+                { "code": "222", "product_name": null, "nutriments": {} }
+              ]
+            }
+            """;
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
+
+        IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync($"filtered-{Guid.NewGuid():N}");
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
     public async Task SearchAsync_WhenTransportFails_ReturnsEmptyList() {
         OpenFoodFactsService service = CreateService(new ThrowingHttpMessageHandler(new HttpRequestException("network error")));
 
@@ -400,6 +440,39 @@ public sealed class OpenFoodFactsServiceTests {
         IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync("milk");
 
         Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task SearchAsync_WhenProviderReturnsNullResponseBody_ReturnsEmptyList() {
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler("null"));
+
+        IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync($"null-body-{Guid.NewGuid():N}");
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task SearchAsync_WhenManyConcurrentCallsRaceToRegisterTheSameQuery_StillSendsOnlyOneProviderRequest() {
+        const string json = """{"products":[{"code":"111","product_name":"Milk","nutriments":{}}]}""";
+        var handler = new CountingHttpMessageHandler(json);
+        OpenFoodFactsService service = CreateService(handler);
+        string query = $"race-{Guid.NewGuid():N}";
+        const int concurrency = 64;
+        ThreadPool.GetMinThreads(out int minWorkerThreads, out int minCompletionPortThreads);
+        ThreadPool.SetMinThreads(Math.Max(minWorkerThreads, concurrency), minCompletionPortThreads);
+        using var barrier = new Barrier(concurrency);
+
+        Task<IReadOnlyList<OpenFoodFactsProductModel>>[] tasks = [
+            .. Enumerable.Range(0, concurrency)
+                .Select(_ => Task.Run(async () => {
+                    barrier.SignalAndWait();
+                    return await service.SearchAsync(query);
+                })),
+        ];
+        IReadOnlyList<OpenFoodFactsProductModel>[] results = await Task.WhenAll(tasks);
+
+        Assert.Equal(1, handler.RequestCount);
+        Assert.All(results, static result => Assert.Single(result));
     }
 
     [Fact]
@@ -521,6 +594,39 @@ public sealed class OpenFoodFactsServiceTests {
 
         Assert.Empty(result);
         Assert.Equal(0, handler.RequestCount);
+    }
+
+    [Fact]
+    public async Task SearchProviderAsync_WhenInvokedWithAnAlreadyCanceledCallerToken_RecordsCanceledOutcomeAndRethrows() {
+        string? outcome = null;
+        string? errorType = null;
+        using MeterListener listener = CreateExternalProviderListener(
+            onRequest: (_, tags) => {
+                if (string.Equals(GetTagValue(tags, "fooddiary.external_provider.operation"), "search", StringComparison.Ordinal)) {
+                    outcome = GetTagValue(tags, "fooddiary.external_provider.outcome");
+                    errorType = GetTagValue(tags, "error.type");
+                }
+            },
+            onDuration: null);
+        OpenFoodFactsService service = CreateService(new ThrowingHttpMessageHandler(new HttpRequestException("must not be called")));
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+        string query = $"canceled-provider-{Guid.NewGuid():N}";
+        string cacheKey = OpenFoodFactsService.GetSearchCacheKey(query, 10);
+        System.Reflection.MethodInfo method = typeof(OpenFoodFactsService).GetMethod(
+            "SearchProviderAsync",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+
+        // SearchAsync always invokes SearchProviderAsync with CancellationToken.None; the
+        // "caller cancellation" branch inside SearchProviderAsync's cancellation handling is
+        // only reachable by calling it directly with a real, already-canceled token.
+        var task = (Task<IReadOnlyList<OpenFoodFactsProductModel>>)method.Invoke(
+            service,
+            [query, 10, cacheKey, cancellationTokenSource.Token])!;
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => task);
+        Assert.Equal("canceled", outcome);
+        Assert.Equal(nameof(OperationCanceledException), errorType);
     }
 
     [Fact]
@@ -658,6 +764,26 @@ public sealed class OpenFoodFactsServiceTests {
         OpenFoodFactsProductModel product = Assert.Single(await refreshed.SearchAsync(query));
 
         Assert.Equal("new", product.Barcode);
+    }
+
+    [Fact]
+    public void CacheSearchResult_WhenResultExceedsMaxCacheSize_DoesNotCache() {
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler("{}"));
+        string key = OpenFoodFactsService.GetSearchCacheKey($"too-large-{Guid.NewGuid():N}", 10);
+        System.Reflection.MethodInfo method = typeof(OpenFoodFactsService).GetMethod(
+            "CacheSearchResult",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        IReadOnlyList<OpenFoodFactsProductModel> oversizedProducts = [
+            CreateProductModel("1", new string('x', (int)OpenFoodFactsService.MaxSearchCacheSizeBytes)),
+        ];
+
+        method.Invoke(service, [key, oversizedProducts]);
+
+        System.Reflection.FieldInfo cacheField = typeof(OpenFoodFactsService).GetField(
+            "SearchCache",
+            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+        var cache = (System.Collections.IDictionary)cacheField.GetValue(null)!;
+        Assert.False(cache.Contains(key));
     }
 
     [Fact]

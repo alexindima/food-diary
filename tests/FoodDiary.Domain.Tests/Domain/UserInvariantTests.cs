@@ -360,6 +360,21 @@ public class UserInvariantTests {
     }
 
     [Fact]
+    public void EnsureExpiresAfterIssuance_WhenExpiryDoesNotFollowIssuance_Throws() {
+        MethodInfo? method = typeof(User).GetMethod(
+            "EnsureExpiresAfterIssuance",
+            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+
+        DateTime issuedAtUtc = DateTime.UtcNow;
+        DateTime expiresAtUtc = issuedAtUtc.AddMinutes(-1);
+
+        TargetInvocationException exception = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
+            method!.Invoke(null, [expiresAtUtc, issuedAtUtc, "expiresAtUtc"]));
+
+        Assert.IsType<ArgumentOutOfRangeException>(exception.InnerException);
+    }
+
+    [Fact]
     public void SetEmailConfirmationToken_WithValidData_UpdatesFields() {
         var user = User.Create("test@example.com", "hash");
         DateTime expiresAtUtc = DateTime.UtcNow.AddMinutes(30);

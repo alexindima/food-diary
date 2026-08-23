@@ -120,6 +120,23 @@ public sealed class YooKassaApiClientTests {
     }
 
     [Fact]
+    public async Task SendAsync_WhenRequestTimesOutWithoutCallerCancellation_ReturnsSafeTimeoutFailure() {
+        YooKassaApiClient client = CreateClient(new RecordingHandler(_ => throw new OperationCanceledException("internal http timeout")));
+
+        Result<TestResponse> result = await client.SendAsync<TestResponse>(
+            HttpMethod.Get,
+            "payments/payment-1",
+            body: null,
+            idempotenceKey: null,
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.True(result.IsFailure),
+            () => Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code),
+            () => Assert.Contains("timed out", result.Error.Message, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public async Task SendAsync_WhenCallerCancels_PropagatesCancellation() {
         using CancellationTokenSource cancellation = new();
         await cancellation.CancelAsync();

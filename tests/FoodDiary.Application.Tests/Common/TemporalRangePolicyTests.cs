@@ -97,6 +97,20 @@ public sealed class TemporalRangePolicyTests {
     }
 
     [Fact]
+    public void BuildDateBuckets_WithMultipleFullBucketsAndPartialFinalBucket_YieldsAllBucketsInOrder() {
+        DateTime from = new(2025, 1, 1);
+        DateTime to = new(2025, 1, 9);
+
+        (DateTime Start, DateTime End)[] buckets = [.. TemporalRangePolicy.BuildDateBuckets(from, to, 3)];
+
+        Assert.Collection(
+            buckets,
+            bucket => Assert.Equal((from, new DateTime(2025, 1, 3)), bucket),
+            bucket => Assert.Equal((new DateTime(2025, 1, 4), new DateTime(2025, 1, 6)), bucket),
+            bucket => Assert.Equal((new DateTime(2025, 1, 7), to), bucket));
+    }
+
+    [Fact]
     public void BuildDateBuckets_WhenPeriodExceedsLimit_Throws() {
         DateTime from = new(2025, 1, 1);
 

@@ -145,6 +145,35 @@ public sealed class EmailOutboxTests {
     }
 
     [Fact]
+    public async Task ProcessDueAsync_WithInvalidProcessingOptions_ThrowsArgumentException() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var options = new OutboxProcessingOptions {
+            LeaseDuration = TimeSpan.Zero,
+            DispatchTimeout = TimeSpan.FromMinutes(4),
+            FinalizationTimeout = TimeSpan.FromSeconds(15),
+        };
+        EmailOutboxProcessor processor = CreateProcessor(context, new RecordingEmailTransport(), options);
+
+        ArgumentException exception = await Assert.ThrowsAsync<ArgumentException>(() =>
+            processor.ProcessDueAsync(batchSize: 1, CancellationToken.None));
+
+        Assert.Equal("options", exception.ParamName);
+    }
+
+    [Fact]
+    public void RecordOutcome_WithUnsupportedOutcome_ThrowsArgumentOutOfRangeException() {
+        MethodInfo recordOutcome = typeof(OutboxProcessingEngine).GetMethod(
+            "RecordOutcome",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+
+        TargetInvocationException invocationException = Assert.Throws<TargetInvocationException>(() =>
+            recordOutcome.Invoke(obj: null, ["email", "unsupported-outcome"]));
+
+        ArgumentOutOfRangeException innerException = Assert.IsType<ArgumentOutOfRangeException>(invocationException.InnerException);
+        Assert.Equal("outcome", innerException.ParamName);
+    }
+
+    [Fact]
     public async Task ProcessDueAsync_WhenSecondFinalizationFails_PreservesFirstMessageProgress() {
         var databaseRoot = new InMemoryDatabaseRoot();
         string databaseName = Guid.NewGuid().ToString("N");

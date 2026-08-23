@@ -41,6 +41,19 @@ public sealed class PostCommitRecentItemUsageRecorderTests {
     }
 
     [Fact]
+    public async Task RegisterUsageAsync_WithNoProductsOrRecipes_ReturnsWithoutEnqueueing() {
+        IRecentItemWriteRepository repository = Substitute.For<IRecentItemWriteRepository>();
+        IPostCommitActionQueue queue = Substitute.For<IPostCommitActionQueue>();
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        var recorder = new PostCommitRecentItemUsageRecorder(repository, queue, unitOfWork);
+
+        await recorder.RegisterUsageAsync(UserId.New(), [], [], CancellationToken.None);
+
+        queue.DidNotReceiveWithAnyArgs().Enqueue(default!, default!);
+        await repository.DidNotReceiveWithAnyArgs().RegisterUsageAsync(default, [], [], default);
+    }
+
+    [Fact]
     public async Task RegisterUsageAsync_WhenPostCommitWriteTracksChanges_SavesThem() {
         IRecentItemWriteRepository repository = Substitute.For<IRecentItemWriteRepository>();
         IPostCommitActionQueue queue = Substitute.For<IPostCommitActionQueue>();

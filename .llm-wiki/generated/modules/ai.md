@@ -104,6 +104,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/AiUsageInvariantTests.cs`
 - [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs`
 - [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiUsageRepositoryIntegrationTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/AiQuotaRepositoryTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/AiPromptProviderTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/AiFoodControllerTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/AiHttpMappingsTests.cs`

@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1052,
     "ambiguousContracts": 3,
-    "consumerEdges": 7422,
+    "consumerEdges": 7423,
     "productionConsumerEdges": 4475,
-    "testConsumerEdges": 2947,
+    "testConsumerEdges": 2948,
     "consumedContracts": 1052,
     "unconsumedContracts": 0
   },
@@ -20111,6 +20111,19 @@
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 5
+    },
+    {
+      "contract": "AiQuotaReservationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/AiQuotaRepositoryTests.cs",
+      "isTest": true,
+      "referenceCount": 14
     },
     {
       "contract": "AnalyzeFoodImageCommand",
@@ -73487,7 +73500,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/PostCommitRecentItemUsageRecorderTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "IProductLookupService",
@@ -77868,7 +77881,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/PostCommitRecentItemUsageRecorderTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "IRecentProductReadService",
@@ -86409,7 +86422,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/PostCommitRecentItemUsageRecorderTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "IUnitOfWork",
@@ -101892,7 +101905,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Marketing/MarketingAttributionCoverageTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 7
     },
     {
       "contract": "RecordMarketingAttributionCommand",
@@ -112149,7 +112162,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/UserAuditEventInvariantTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "UserRoleAuditEvent",

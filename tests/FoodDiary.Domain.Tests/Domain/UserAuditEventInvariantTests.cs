@@ -146,6 +146,14 @@ public class UserAuditEventInvariantTests {
     }
 
     [Fact]
+    public void UserRoleAuditEvent_Create_WithEmptyRoleId_Throws() {
+        var role = (Role)Activator.CreateInstance(typeof(Role), nonPublic: true)!;
+
+        Assert.Throws<ArgumentException>(() =>
+            UserRoleAuditEvent.Create(UserId.New(), role, UserRoleAuditAction.Added, actorUserId: null, "Admin", DateTime.UtcNow));
+    }
+
+    [Fact]
     public void UserRoleAuditEvent_Create_WithInvalidValues_Throws() {
         Assert.Throws<ArgumentNullException>(() =>
             UserRoleAuditEvent.Create(UserId.New(), null!, UserRoleAuditAction.Added, actorUserId: null, "Admin", DateTime.UtcNow));

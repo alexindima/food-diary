@@ -141,6 +141,39 @@ public partial class RecipesFeatureTests {
     }
 
     [Fact]
+    public async Task RecipeIngredientAccessValidator_WithSharedNestedDependencyAcrossSiblings_RevisitsWithoutFailing() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var sharedDependency = Recipe.Create(userId, "Shared", servings: 1);
+        var siblingWithSharedRef = Recipe.Create(userId, "Sibling", servings: 1);
+        siblingWithSharedRef.AddStep(1, "Mix").AddNestedRecipeIngredient(sharedDependency.Id, 1);
+        var lookup = new GraphRecipeLookupService([
+            TestRecipeOverview.From(siblingWithSharedRef, userId),
+            TestRecipeOverview.From(sharedDependency, userId),
+        ]);
+        var step = new RecipeStepInput(
+            Order: 1,
+            Description: "Mix",
+            Title: null,
+            ImageUrl: null,
+            ImageAssetId: null,
+            Ingredients: [
+                new RecipeIngredientInput(ProductId: null, NestedRecipeId: siblingWithSharedRef.Id.Value, Amount: 1),
+                new RecipeIngredientInput(ProductId: null, NestedRecipeId: sharedDependency.Id.Value, Amount: 1),
+            ]);
+
+        Result result = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
+            [step],
+            recipeId,
+            userId,
+            new AllowAllProductLookupService(),
+            lookup,
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+    }
+
+    [Fact]
     public async Task RecipeNutritionUpdater_WhenManualNutrition_DoesNotUpdateRepository() {
         var recipe = Recipe.Create(UserId.New(), "Manual", servings: 1);
         recipe.SetManualNutrition(100, 10, 1, 2, 3, 0);

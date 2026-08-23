@@ -214,6 +214,44 @@ public sealed class BillingGatewayTests {
     }
 
     [Fact]
+    public async Task PaddleWebhook_WhenDateValueIsMalformed_ReturnsValidationFailure() {
+        var userId = Guid.NewGuid();
+        string payload = JsonSerializer.Serialize(new {
+            event_id = "evt_bad_date",
+            event_type = "subscription.updated",
+            data = new {
+                id = "sub_123",
+                customer_id = "ctm_123",
+                status = "active",
+                current_billing_period = new {
+                    starts_at = "not-a-real-date",
+                    ends_at = "2026-06-01T00:00:00Z",
+                },
+                custom_data = new {
+                    user_id = userId.ToString(),
+                    plan = "monthly",
+                },
+                items = new[] {
+                    new {
+                        quantity = 1,
+                        price = new { id = "pri_monthly" },
+                    },
+                },
+            },
+        });
+        PaddleBillingGateway gateway = CreateConfiguredPaddleWebhookGateway();
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreatePaddleSignature(payload, "secret"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
+        Assert.Contains("numeric value", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task PaddleWebhook_WithZeroDecimalCurrency_DoesNotDivideMinorUnits() {
         string payload = JsonSerializer.Serialize(new {
             event_id = "evt_clp",
@@ -2521,6 +2559,26 @@ public sealed class BillingGatewayTests {
     }
 
     [Fact]
+    public async Task StripeCreateCheckoutSession_WhenCreatedCustomerIdIsMissing_ReturnsProviderOperationFailure() {
+        RecordingHttpMessageHandler handler = new(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent("""{ "id": "", "object": "customer" }"""),
+        });
+
+        await WithStripeHttpClientAsync(handler, async () => {
+            StripeBillingGateway gateway = CreateConfiguredStripeGateway(handler);
+
+            Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+                new BillingCheckoutSessionRequestModel(Guid.NewGuid(), "buyer@example.com", "monthly", ExistingCustomerId: null),
+                CancellationToken.None).ConfigureAwait(false);
+
+            Assert.True(result.IsFailure);
+            Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+            Assert.Contains("customer identifier is missing", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.Single(handler.Requests);
+        }).ConfigureAwait(true);
+    }
+
+    [Fact]
     public async Task StripeCreateCheckoutSession_WhenProviderReturnsUnsafeUrl_ReturnsFailure() {
         RecordingHttpMessageHandler handler = new(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent("""{"id":"cs_unsafe","object":"checkout.session","url":"javascript:alert(1)"}"""),
@@ -2610,6 +2668,29 @@ public sealed class BillingGatewayTests {
             Assert.Equal(userId, result.Value.UserId);
             Assert.Equal("https://api.stripe.com/v1/subscriptions/sub_123", handler.LastRequest?.RequestUri?.ToString());
         }).ConfigureAwait(true);
+    }
+
+    [Fact]
+    public async Task StripeWebhook_WhenCheckoutCompletedSubscriptionFetchFails_MapsProviderOperationFailure() {
+        var userId = Guid.NewGuid();
+        string payload = CreateStripeCheckoutSessionCompletedPayload(userId);
+        var handler = new ScriptedHttpMessageHandler(
+            new HttpRequestException("sensitive network details"),
+            new HttpRequestException("sensitive network details"),
+            new HttpRequestException("sensitive network details"),
+            new HttpRequestException("sensitive network details"),
+            new HttpRequestException("sensitive network details"));
+        StripeBillingGateway gateway = CreateConfiguredStripeGateway(handler);
+
+        Result<BillingWebhookEventModel?> result = await gateway.ParseWebhookEventAsync(
+            payload,
+            CreateStripeSignature(payload, "whsec_test"),
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.True(result.IsFailure),
+            () => Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code),
+            () => Assert.DoesNotContain("sensitive network details", result.Error.Message, StringComparison.Ordinal));
     }
 
     [Fact]

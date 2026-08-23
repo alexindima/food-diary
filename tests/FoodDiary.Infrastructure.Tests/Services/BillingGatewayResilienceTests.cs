@@ -136,6 +136,21 @@ public sealed class BillingGatewayResilienceTests {
     }
 
     [Fact]
+    public async Task StripePortal_WhenTransportFails_MapsProviderOperationFailure() {
+        StripeBillingGateway gateway = CreateStripeGateway(
+            new ScriptedHttpMessageHandler(new HttpRequestException("sensitive network details")));
+
+        Result<BillingPortalSessionModel> result = await gateway.CreatePortalSessionAsync(
+            new BillingPortalSessionRequestModel("cus_123"),
+            CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.True(result.IsFailure),
+            () => Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code),
+            () => Assert.DoesNotContain("sensitive network details", result.Error.Message, StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task StripePortal_WhenUrlIsMissing_ReturnsProviderOperationFailure() {
         StripeBillingGateway gateway = CreateStripeGateway(new ScriptedHttpMessageHandler(
             StripeResponse("""{ "id": "bps_missing_url", "object": "billing_portal.session", "url": null }""")));
