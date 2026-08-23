@@ -18,6 +18,15 @@ function Get-LlmWikiIndexInputFingerprint([string]$RepositoryRoot, [string[]]$In
     [string[]]$existingPaths = @($pathSet)
     [Array]::Sort($existingPaths, [StringComparer]::Ordinal)
 
+    if ($existingPaths.Count -eq 0) {
+        $emptySha = [Security.Cryptography.SHA256]::Create()
+        try {
+            return ([BitConverter]::ToString($emptySha.ComputeHash([byte[]]::new(0))) -replace '-', '').ToLowerInvariant()
+        } finally {
+            $emptySha.Dispose()
+        }
+    }
+
     # One Git process hashes the complete set substantially faster than opening
     # thousands of files through PowerShell. Explicit BOM-free UTF-8 keeps Unicode
     # paths stable. A live redirected pipe needs StandardInputEncoding to stay BOM-free,
