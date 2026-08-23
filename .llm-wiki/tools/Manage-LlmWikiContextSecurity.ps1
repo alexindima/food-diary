@@ -36,7 +36,7 @@ function Get-FileSha([string]$Value) {
     (Get-FileHash -LiteralPath $Value -Algorithm SHA256).Hash.ToLowerInvariant()
 }
 function Get-Trust([string]$RelativePath) {
-    $trustZones = if ($null -ne $securityPolicy -and $securityPolicy.PSObject.Properties['trustZones']) { @($securityPolicy.trustZones) } else { @() }
+    $trustZones = @(if ($null -ne $securityPolicy -and $securityPolicy.PSObject.Properties['trustZones']) { @($securityPolicy.trustZones) } else { @() })
     foreach ($zone in @($trustZones | Where-Object { $null -ne $_ })) {
         if ($RelativePath -match [string]$zone.pattern) {
             return [pscustomobject]@{ zone = [string]$zone.id; trust = [string]$zone.trust; instructionAuthority = [bool]$zone.instructionAuthority }
@@ -159,7 +159,7 @@ function Test-Assessment([object]$Receipt) {
     if ([string]$Receipt.packetFingerprint -cne [string]$packet.fingerprint) { $issues.Add('Task packet drifted.') }
     if ([string]$Receipt.policyFingerprint -cne (Get-FileSha $policyPath)) { $issues.Add('Context security policy drifted.') }
     if ([string]$Receipt.scannerFingerprint -cne (Get-FileSha $PSCommandPath)) { $issues.Add('Context security scanner changed.') }
-    $receiptSources = if ($null -ne $Receipt -and $Receipt.PSObject.Properties['sources']) { @($Receipt.sources | Where-Object { $null -ne $_ }) } else { @() }
+    $receiptSources = @(if ($null -ne $Receipt -and $Receipt.PSObject.Properties['sources']) { @($Receipt.sources | Where-Object { $null -ne $_ }) } else { @() })
     $currentSources = @($receiptSources | ForEach-Object { Get-ScanEntry ([string]$_.path) } | Where-Object { $null -ne $_ })
     foreach ($source in $receiptSources) {
         $current = Get-ScanEntry ([string]$source.path)

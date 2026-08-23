@@ -106,15 +106,15 @@ switch ($Action) {
         $packet = & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') @packetArguments | ConvertFrom-Json
         $criteria = [System.Collections.Generic.List[object]]::new()
         $testOnlyPacket = Test-TestOnlyPacket $packet
-        $automaticChangedPaths = if ($testOnlyPacket) {
+        $automaticChangedPaths = @(if ($testOnlyPacket) {
             @($packet.diff.changedPaths | Where-Object { $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' })
-        } else { @() }
-        $automaticCheckIds = if ($testOnlyPacket) {
+        } else { @() })
+        $automaticCheckIds = @(if ($testOnlyPacket) {
             @($packet.policy.requiredChecks | ForEach-Object {
                 if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id }
             } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
-        } else { @() }
-        $automaticTestPaths = if ($testOnlyPacket) { @($packet.testPlan.focusedTestFiles) } else { @() }
+        } else { @() })
+        $automaticTestPaths = @(if ($testOnlyPacket) { @($packet.testPlan.focusedTestFiles) } else { @() })
         for ($index = 0; $index -lt $criteriaText.Count; $index++) {
             $criterionTokens = @([regex]::Matches($criteriaText[$index].ToLowerInvariant(), '[\p{L}\p{Nd}]+') | ForEach-Object Value | Where-Object { $_.Length -ge 4 } | Sort-Object -Unique)
             $suggestedChangedPaths = @($packet.diff.changedPaths | Where-Object {
@@ -183,10 +183,10 @@ switch ($Action) {
         $availableScenarioIds = @($matrix.availableEvidence.scenarios | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
         $availableCheckIds = @($matrix.availableEvidence.checks | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
         $availableReviewIds = @($matrix.availableEvidence.reviews | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
-        $availableChangedPaths = if ($matrix.availableEvidence.PSObject.Properties['changedPaths']) {
+        $availableChangedPaths = @(if ($matrix.availableEvidence.PSObject.Properties['changedPaths']) {
             @($matrix.availableEvidence.changedPaths | ForEach-Object { ([string]$_).Replace('\', '/') })
-        } else { @() }
-        $knownRenames = if ($matrix.availableEvidence.PSObject.Properties['renames']) { @($matrix.availableEvidence.renames) } else { @() }
+        } else { @() })
+        $knownRenames = @(if ($matrix.availableEvidence.PSObject.Properties['renames']) { @($matrix.availableEvidence.renames) } else { @() })
         $baseRef = if ($matrix.git.PSObject.Properties['base']) { [string]$matrix.git.base } else { '' }
         if (-not [string]::IsNullOrWhiteSpace($baseRef)) {
             $knownRenames = @($knownRenames) + @(Get-LlmWikiGitRenames -RepositoryRoot $repositoryRoot -BaseRef $baseRef)

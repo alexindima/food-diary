@@ -220,7 +220,7 @@ $autoLinkedPaths = @{}
 $newProductPaths = @($newPacket.diff.changedPaths | Where-Object {
     $_ -notin @($oldPacket.diff.changedPaths) -and -not (Test-GovernanceArtifactPath $_)
 })
-$packetRenames = if ($newPacket.diff.PSObject.Properties['renames']) { @($newPacket.diff.renames) } else { @() }
+$packetRenames = @(if ($newPacket.diff.PSObject.Properties['renames']) { @($newPacket.diff.renames) } else { @() })
 $renameDestinations = @{}
 foreach ($rename in $packetRenames) {
     if ($null -ne $rename -and $rename.PSObject.Properties['from'] -and $rename.PSObject.Properties['to']) {
@@ -241,7 +241,7 @@ foreach ($newPath in $newProductPaths) {
     }
 }
 foreach ($criterion in @($acceptance.criteria)) {
-    $mappedChangedPaths = if ($null -ne $criterion.mapping.PSObject.Properties['changedPaths']) { @($criterion.mapping.changedPaths) } else { @() }
+    $mappedChangedPaths = @(if ($null -ne $criterion.mapping.PSObject.Properties['changedPaths']) { @($criterion.mapping.changedPaths) } else { @() })
     $mappedChangedPaths = @($mappedChangedPaths | ForEach-Object {
         $normalizedMappedPath = ([string]$_).Replace('\', '/')
         if ($renameDestinations.ContainsKey($normalizedMappedPath)) { $renameDestinations[$normalizedMappedPath] } else { $normalizedMappedPath }
@@ -297,7 +297,7 @@ $evidence.change.scopes = @($newPacket.diff.scopes)
 $evidence.change.modules = @($newPacket.diff.modules | ForEach-Object {
     if ($_ -is [string]) { [string]$_ } elseif ($null -ne $_ -and $_.PSObject.Properties['name']) { [string]$_.name }
 } | Where-Object { $_ } | Sort-Object -Unique)
-$priorHistory = if ($evidence.PSObject.Properties['invalidationHistory']) { @($evidence.invalidationHistory | Where-Object { $null -ne $_ }) } else { @() }
+$priorHistory = @(if ($evidence.PSObject.Properties['invalidationHistory']) { @($evidence.invalidationHistory | Where-Object { $null -ne $_ }) } else { @() })
 $combinedHistory = @($priorHistory) + @($history)
 $evidence | Add-Member -NotePropertyName invalidationHistory -NotePropertyValue $combinedHistory -Force
 $acceptance.availableEvidence.scenarios = $newAvailableScenarios

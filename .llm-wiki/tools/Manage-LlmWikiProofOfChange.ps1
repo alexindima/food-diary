@@ -67,7 +67,7 @@ function Get-Assessment {
     $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
     $packet = Get-Content -LiteralPath $packetPath -Raw | ConvertFrom-Json
     $actualPaths = @($packet.diff.changedPaths | Sort-Object -Unique)
-    $renames = if ($acceptance.availableEvidence.PSObject.Properties['renames']) { @($acceptance.availableEvidence.renames) } else { @() }
+    $renames = @(if ($acceptance.availableEvidence.PSObject.Properties['renames']) { @($acceptance.availableEvidence.renames) } else { @() })
     $pending = @($acceptance.criteria | Where-Object status -eq 'pending')
     $applicable = $pending.Count -eq 0
     $criterionProofs = [Collections.Generic.List[object]]::new()

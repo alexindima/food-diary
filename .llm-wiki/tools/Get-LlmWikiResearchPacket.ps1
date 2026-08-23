@@ -189,14 +189,14 @@ $contextArguments = @{ Query = $contextQuery; Format = 'Json'; Limit = $Limit }
 if ($scopePaths.Count -gt 0) { $contextArguments.ScopePath = $scopePaths }
 $context = & (Join-Path $PSScriptRoot 'Find-LlmWikiContext.ps1') @contextArguments | ConvertFrom-Json
 Write-Host 'Research [2/3]: current-source context ready.'
-$contextHttpClients = if ($context.PSObject.Properties['httpClients']) { @($context.httpClients) } else { @() }
-$contextHostedServices = if ($context.PSObject.Properties['hostedServices']) { @($context.hostedServices) } else { @() }
-$contextWebhooks = if ($context.PSObject.Properties['webhooks']) { @($context.webhooks) } else { @() }
-$contextDependencyInjection = if ($context.PSObject.Properties['dependencyInjection']) { @($context.dependencyInjection) } else { @() }
-$contextTests = if ($context.PSObject.Properties['tests']) { @($context.tests) } else { @() }
-$contextAgentGuides = if ($context.PSObject.Properties['agentGuides']) { @($context.agentGuides) } else { @() }
-$contextWikiPages = if ($context.PSObject.Properties['wikiPages']) { @($context.wikiPages) } else { @() }
-$contextFrontendRoutes = if ($context.PSObject.Properties['frontendRoutes']) { @($context.frontendRoutes) } else { @() }
+$contextHttpClients = @(if ($context.PSObject.Properties['httpClients']) { @($context.httpClients) } else { @() })
+$contextHostedServices = @(if ($context.PSObject.Properties['hostedServices']) { @($context.hostedServices) } else { @() })
+$contextWebhooks = @(if ($context.PSObject.Properties['webhooks']) { @($context.webhooks) } else { @() })
+$contextDependencyInjection = @(if ($context.PSObject.Properties['dependencyInjection']) { @($context.dependencyInjection) } else { @() })
+$contextTests = @(if ($context.PSObject.Properties['tests']) { @($context.tests) } else { @() })
+$contextAgentGuides = @(if ($context.PSObject.Properties['agentGuides']) { @($context.agentGuides) } else { @() })
+$contextWikiPages = @(if ($context.PSObject.Properties['wikiPages']) { @($context.wikiPages) } else { @() })
+$contextFrontendRoutes = @(if ($context.PSObject.Properties['frontendRoutes']) { @($context.frontendRoutes) } else { @() })
 $precedentScopeCandidates = $scopePaths +
     @(Get-ObjectPropertyValues @($context.implementationFiles) 'path' | Select-Object -First $Limit) +
     @(Get-ObjectPropertyValues @($context.symbols) 'path' | Select-Object -First $Limit) +
@@ -364,7 +364,7 @@ if ($Objective -match '(?i)IUserContextService|extraction|profile.{0,20}boundar|
     $baselineText = $baselineShowResult.StandardOutput
     $initialConsumers = if ($baselineAvailable -and $baselineText -match 'Implementation-owned IUserContextService consumers: (\d+)') { [int]$Matches[1] } else { $null }
     $initialAggregate = if ($baselineAvailable -and $baselineText -match 'Consumers receiving the User aggregate: (\d+)') { [int]$Matches[1] } else { $null }
-    $baselineGroups = if ($baselineAvailable) { @([regex]::Matches($baselineText, '(?m)^\| ([^|]+) \| IUserContextService \|') | ForEach-Object { $_.Groups[1].Value.Trim() } | Sort-Object -Unique) } else { @() }
+    $baselineGroups = @(if ($baselineAvailable) { @([regex]::Matches($baselineText, '(?m)^\| ([^|]+) \| IUserContextService \|') | ForEach-Object { $_.Groups[1].Value.Trim() } | Sort-Object -Unique) } else { @() })
     $currentGroups = @($currentExtraction.consumers | Where-Object { -not $_.compositionRegistration } | ForEach-Object consumer | Sort-Object -Unique)
     $remainingAggregateGroups = @($currentExtraction.consumers | Where-Object access -eq 'aggregate-read' | ForEach-Object consumer | Sort-Object -Unique)
     $capabilityClusters = @($currentExtraction.consumers | Group-Object {

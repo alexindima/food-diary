@@ -133,7 +133,7 @@ function Get-ProfileStatistics([object[]]$Events) {
     $posterior = [Math]::Round((([double](($ordered.actualOutcome.score | Measure-Object -Sum).Sum)) + ($prior * $priorStrength)) / ($count + $priorStrength), 2)
     $recent = @($ordered | Select-Object -Last ([Math]::Min($count, [int]$outcomePolicy.recentWindowSamples)))
     $baselineCount = $count - $recent.Count
-    $baseline = if ($baselineCount -gt 0) { @($ordered | Select-Object -First $baselineCount) } else { @() }
+    $baseline = @(if ($baselineCount -gt 0) { @($ordered | Select-Object -First $baselineCount) } else { @() })
     $recentAverage = [Math]::Round([double](($recent.actualOutcome.score | Measure-Object -Average).Average), 2)
     $recentSuccessRate = [Math]::Round(100.0 * @($recent | Where-Object success).Count / $recent.Count, 2)
     $baselineAverage = if ($baseline.Count -eq 0) { $null } else { [Math]::Round([double](($baseline.actualOutcome.score | Measure-Object -Average).Average), 2) }

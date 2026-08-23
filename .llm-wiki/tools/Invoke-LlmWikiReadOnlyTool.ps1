@@ -50,11 +50,11 @@ function Get-WorkspaceOverlayPaths {
     )
 
     $normalizedRelevantPaths = @($RelevantPath | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') } | Sort-Object -Unique)
-    $pathspecs = if ($normalizedRelevantPaths.Count -gt 0) {
+    $pathspecs = @(if ($normalizedRelevantPaths.Count -gt 0) {
         @($normalizedRelevantPaths + @('.llm-wiki') | Sort-Object -Unique)
     } else {
         @()
-    }
+    })
     $trackedArguments = @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') + @($pathspecs)
     $untrackedArguments = @('ls-files', '--others', '--exclude-standard', '--') + @($pathspecs)
     $tracked = @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments $trackedArguments -FailureMessage 'Unable to enumerate tracked workspace changes for the read-only snapshot.')
