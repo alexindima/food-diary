@@ -71,6 +71,7 @@ $stdinPath = [IO.Path]::GetTempFileName()
 $stdoutPath = [IO.Path]::GetTempFileName()
 $stderrPath = [IO.Path]::GetTempFileName()
 $exitCodePath = [IO.Path]::GetTempFileName()
+$shellPath = [IO.Path]::GetTempFileName()
 try {
     [IO.File]::WriteAllText($stdinPath, $payload, [Text.UTF8Encoding]::new($false))
     $extractorMode = $(if ($BuildBackendIndex) { '--backend-index' } else { '--stdin' })
@@ -81,7 +82,13 @@ try {
             -WorkingDirectory $RepositoryRoot -NoNewWindow -PassThru
     } else {
         $inner = "dotnet '$extractorDllPath' $extractorMode < '$stdinPath' > '$stdoutPath' 2> '$stderrPath'; echo `$? > '$exitCodePath'"
-        $process = Start-Process -FilePath '/bin/sh' -ArgumentList @('-c', $inner) `
+        # Start-Process flattens ArgumentList into a single command line. On Unix,
+        # passing `-c` plus an unquoted command therefore makes /bin/sh execute only
+        # the first word (`dotnet`) and treat the remainder as positional parameters.
+        # A temporary script preserves the command as one shell program without a
+        # second layer of argument quoting.
+        [IO.File]::WriteAllText($shellPath, $inner, [Text.UTF8Encoding]::new($false))
+        $process = Start-Process -FilePath '/bin/sh' -ArgumentList @($shellPath) `
             -WorkingDirectory $RepositoryRoot -PassThru
     }
     $deadline = [DateTime]::UtcNow.AddMilliseconds(120000)
@@ -109,7 +116,7 @@ try {
         throw "Contract-reference extractor failed with exit code $extractorExitCode.$(if ($errorText) { " $errorText" })"
     }
 } finally {
-    Remove-Item -LiteralPath $stdinPath, $stdoutPath, $stderrPath, $exitCodePath -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $stdinPath, $stdoutPath, $stderrPath, $exitCodePath, $shellPath -Force -ErrorAction SilentlyContinue
 }
 
 if ($BuildBackendIndex) {
