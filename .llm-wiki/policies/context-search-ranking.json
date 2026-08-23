@@ -1619,7 +1619,7 @@
     },
     {
       "id": "frontend-api-service-role",
-      "queryTerms": ["frontend", "api", "service", "load", "loads", "update", "updates", "user", "profile"],
+      "queryTerms": ["frontend", "angular", "admin", "client", "api", "service", "manage", "load", "loads", "update", "updates", "user", "profile"],
       "minimumMatches": 3,
       "candidateTerms": ["service"],
       "minimumCandidateMatches": 1,
@@ -1630,7 +1630,10 @@
       "identityScope": "file",
       "changeTypes": ["Frontend"],
       "recordTypes": ["code"],
-      "pathPrefixes": ["FoodDiary.Web.Client/src/app/shared/api/"],
+      "pathPrefixes": [
+        "FoodDiary.Web.Client/src/app/shared/api/",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/"
+      ],
       "pathSuffixes": [".ts"],
       "excludeTests": true
     },
