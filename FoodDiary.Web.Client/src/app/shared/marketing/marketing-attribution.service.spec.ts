@@ -77,7 +77,7 @@ describe('MarketingAttributionService', () => {
         expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
         expect(req.request.body).toMatchObject({
             anonymousId: 'fd-anon-existing',
-            sessionId: 'fd-session-test',
+            sessionId: 'fd-session-first',
             landingPath: '/food-diary?utm_source=telegram',
             utmSource: 'telegram',
             utmMedium: 'social',

@@ -6,7 +6,7 @@
     "valueObjects": 115,
     "invariants": 482,
     "persistenceMappings": 86,
-    "indexes": 151,
+    "indexes": 152,
     "relationships": 100
   },
   "domainTypes": [
@@ -5834,6 +5834,7 @@
         "e => e.OccurredAtUtc)",
         "e => new { e.AnonymousId, e.OccurredAtUtc })",
         "e => new { e.SessionId, e.OccurredAtUtc })",
+        "e => new { e.UserId, e.EventType })",
         "e => new { e.UserId, e.OccurredAtUtc })",
         "e => new { e.UtmSource, e.UtmMedium, e.UtmCampaign, e.OccurredAtUtc })"
       ],

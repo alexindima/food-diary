@@ -50,7 +50,8 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
         Assert.Equal(0, noneDeletedCount);
         Assert.Equal(1, firstDeletedCount);
         Assert.Equal(1, secondDeletedCount);
-        MarketingAttributionEventRecord remaining = Assert.Single(await repository.GetSinceAsync(cutoffUtc.AddDays(-10)));
+        MarketingAttributionSummaryRecord summary = await repository.GetSummaryAsync(cutoffUtc.AddDays(-10));
+        MarketingAttributionEventRecord remaining = Assert.Single(summary.RecentEvents);
         Assert.Equal("premium_started", remaining.EventType);
         Assert.Equal("session-fresh", remaining.SessionId);
         Assert.Equal(1, await context.MarketingAttributionEvents.AsNoTracking().CountAsync());
@@ -82,6 +83,35 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
             () => Assert.True(premiumExists),
             () => Assert.False(trialExists),
             () => Assert.Null(missing));
+    }
+
+    [RequiresDockerFact]
+    public async Task LifecycleEvents_EnforceOneEventPerUserAndType() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var userId = Guid.NewGuid();
+        var now = new DateTime(2030, 7, 9, 12, 0, 0, DateTimeKind.Utc);
+        var repository = new MarketingAttributionEventRepository(context);
+        await repository.AddAsync(CreateRecord("premium_started", now, "session-first", userId));
+        await repository.AddAsync(CreateRecord("premium_started", now.AddSeconds(1), "session-second", userId));
+
+        await Assert.ThrowsAsync<DbUpdateException>(() => context.SaveChangesAsync());
+    }
+
+    [RequiresDockerFact]
+    public async Task GetLandingAsync_RequiresMatchingServerObservedIdentity() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var now = new DateTime(2030, 7, 9, 12, 0, 0, DateTimeKind.Utc);
+        var repository = new MarketingAttributionEventRepository(context);
+        await repository.AddAsync(CreateRecord("page_landing", now, "session-trusted"));
+        await context.SaveChangesAsync();
+
+        MarketingAttributionEventRecord? trusted = await repository.GetLandingAsync(
+            "anon-session-trusted", "session-trusted", now.AddMinutes(-1));
+        MarketingAttributionEventRecord? forged = await repository.GetLandingAsync(
+            "anon-session-trusted", "session-forged", now.AddMinutes(-1));
+
+        Assert.NotNull(trusted);
+        Assert.Null(forged);
     }
 
     private static MarketingAttributionEventRecord CreateRecord(

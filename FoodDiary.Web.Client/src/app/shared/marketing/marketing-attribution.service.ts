@@ -108,7 +108,7 @@ export class MarketingAttributionService {
         return {
             timestamp: new Date().toISOString(),
             anonymousId: source.anonymousId,
-            sessionId: this.telemetrySession.getSessionId(),
+            sessionId: source.sessionId,
             landingPath: source.landingPath,
             ...(source.referrerHost !== undefined ? { referrerHost: source.referrerHost } : {}),
             ...(source.utmSource !== undefined ? { utmSource: source.utmSource } : {}),

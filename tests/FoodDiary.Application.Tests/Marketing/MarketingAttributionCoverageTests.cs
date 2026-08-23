@@ -115,7 +115,9 @@ public sealed class MarketingAttributionCoverageTests {
 
     [Fact]
     public async Task Handle_WithSignupCompletedEventAndAuthenticatedUser_RecordsAttribution() {
-        var repository = new RecordingRepository();
+        var repository = new RecordingRepository {
+            Landing = CreateLandingRecord(),
+        };
         var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = MarketingAttributionEventTypes.SignupCompleted,
@@ -128,6 +130,39 @@ public sealed class MarketingAttributionCoverageTests {
         Assert.NotNull(repository.Record);
         Assert.Equal(command.UserId, repository.Record.UserId);
     }
+
+    [Fact]
+    public async Task Handle_WithSignupCompletedEvent_CopiesOnlyServerStoredLanding() {
+        var repository = new RecordingRepository { Landing = CreateLandingRecord() };
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
+        RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
+            EventType = MarketingAttributionEventTypes.SignupCompleted,
+            UserId = Guid.NewGuid(),
+            UtmSource = "attacker",
+        };
+
+        Result result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal("trusted", repository.Record?.UtmSource);
+    }
+
+    private static MarketingAttributionEventRecord CreateLandingRecord() =>
+        new(
+            EventType: MarketingAttributionEventTypes.PageLanding,
+            OccurredAtUtc: new DateTime(2026, 4, 2, 11, 55, 0, DateTimeKind.Utc),
+            UserId: null,
+            AnonymousId: "anonymous",
+            SessionId: "session",
+            LandingPath: "/trusted",
+            ReferrerHost: null,
+            UtmSource: "trusted",
+            UtmMedium: null,
+            UtmCampaign: null,
+            UtmContent: null,
+            UtmTerm: null,
+            BuildVersion: null,
+            EventId: Guid.NewGuid());
 
     private static RecordMarketingAttributionCommand CreateCommand(string timestamp) =>
         new(
@@ -147,8 +182,9 @@ public sealed class MarketingAttributionCoverageTests {
             EventId: Guid.NewGuid());
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingRepository : IMarketingAttributionEventWriteRepository {
+    private sealed class RecordingRepository : IMarketingAttributionEventRepository {
         public MarketingAttributionEventRecord? Record { get; private set; }
+        public MarketingAttributionEventRecord? Landing { get; init; }
 
         public Task AddAsync(MarketingAttributionEventRecord record, CancellationToken cancellationToken = default) {
             Record = record;
@@ -157,6 +193,18 @@ public sealed class MarketingAttributionCoverageTests {
 
         public Task<int> DeleteOlderThanAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+
+        public Task<MarketingAttributionSummaryRecord> GetSummaryAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<MarketingAttributionEventRecord?> GetLandingAsync(string anonymousId, string sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Landing);
+
+        public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<MarketingAttributionEventRecord?>(null);
+
+        public Task<bool> ExistsForUserAsync(Guid userId, string eventType, CancellationToken cancellationToken = default) =>
+            Task.FromResult(false);
     }
 
     [ExcludeFromCodeCoverage]

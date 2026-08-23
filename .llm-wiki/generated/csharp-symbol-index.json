@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3438,
-    "symbols": 3446,
+    "sourceFiles": 3440,
+    "symbols": 3448,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 239,
     "kinds": {
       "class": 1792,
       "enum": 61,
       "interface": 419,
-      "record": 1054,
+      "record": 1056,
       "record struct": 120
     },
     "roles": {
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 62,
-      "Other": 1321,
+      "Other": 1323,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -2876,10 +2876,24 @@
       "line": 2
     },
     {
+      "name": "MarketingAttributionBreakdownRecord",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Marketing/Common/MarketingAttributionBreakdownRecord.cs",
+      "line": 2
+    },
+    {
       "name": "MarketingAttributionEventRecord",
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Marketing/Common/MarketingAttributionEventRecord.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionSummaryRecord",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Marketing/Common/MarketingAttributionSummaryRecord.cs",
       "line": 2
     },
     {

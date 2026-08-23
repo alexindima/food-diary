@@ -1,7 +1,13 @@
 namespace FoodDiary.Application.Abstractions.Marketing.Common;
 
 public interface IMarketingAttributionEventReadRepository {
-    Task<IReadOnlyList<MarketingAttributionEventRecord>> GetSinceAsync(DateTime sinceUtc, CancellationToken cancellationToken = default);
+    Task<MarketingAttributionSummaryRecord> GetSummaryAsync(DateTime sinceUtc, CancellationToken cancellationToken = default);
+
+    Task<MarketingAttributionEventRecord?> GetLandingAsync(
+        string anonymousId,
+        string sessionId,
+        DateTime sinceUtc,
+        CancellationToken cancellationToken = default);
 
     Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default);
 

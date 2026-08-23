@@ -8,7 +8,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Marketing.Commands.RecordMarketingAttribution;
 
 public sealed class RecordMarketingAttributionCommandHandler(
-    IMarketingAttributionEventWriteRepository repository,
+    IMarketingAttributionEventRepository repository,
     TimeProvider timeProvider)
     : IRequestHandler<RecordMarketingAttributionCommand, Result> {
     private const int EventTypeMaxLength = 32;
@@ -53,20 +53,36 @@ public sealed class RecordMarketingAttributionCommandHandler(
             return Result.Failure(timestampResult.Error);
         }
 
+        MarketingAttributionEventRecord? trustedLanding = null;
+        if (string.Equals(request.EventType, MarketingAttributionEventTypes.SignupCompleted, StringComparison.Ordinal)) {
+            if (await repository.ExistsForUserAsync(request.UserId!.Value, MarketingAttributionEventTypes.SignupCompleted, cancellationToken).ConfigureAwait(false)) {
+                return Result.Success();
+            }
+
+            trustedLanding = await repository.GetLandingAsync(
+                NormalizeRequired(request.AnonymousId, AnonymousIdMaxLength, "unknown"),
+                NormalizeRequired(request.SessionId, SessionIdMaxLength, "unknown"),
+                timeProvider.GetUtcNow().UtcDateTime - MaximumPastTimestampAge,
+                cancellationToken).ConfigureAwait(false);
+            if (trustedLanding is null) {
+                return Result.Success();
+            }
+        }
+
         var record = new MarketingAttributionEventRecord(
             NormalizeRequired(request.EventType, EventTypeMaxLength, "page_landing"),
             timestampResult.Value,
             request.UserId,
-            NormalizeRequired(request.AnonymousId, AnonymousIdMaxLength, "unknown"),
-            NormalizeRequired(request.SessionId, SessionIdMaxLength, "unknown"),
-            NormalizeRequired(request.LandingPath, LandingPathMaxLength, "/"),
-            NormalizeOptional(request.ReferrerHost, ReferrerHostMaxLength),
-            NormalizeOptional(request.UtmSource, UtmValueMaxLength),
-            NormalizeOptional(request.UtmMedium, UtmValueMaxLength),
-            NormalizeOptional(request.UtmCampaign, UtmValueMaxLength),
-            NormalizeOptional(request.UtmContent, UtmValueMaxLength),
-            NormalizeOptional(request.UtmTerm, UtmValueMaxLength),
-            NormalizeOptional(request.BuildVersion, BuildVersionMaxLength),
+            trustedLanding?.AnonymousId ?? NormalizeRequired(request.AnonymousId, AnonymousIdMaxLength, "unknown"),
+            trustedLanding?.SessionId ?? NormalizeRequired(request.SessionId, SessionIdMaxLength, "unknown"),
+            trustedLanding?.LandingPath ?? NormalizeRequired(request.LandingPath, LandingPathMaxLength, "/"),
+            trustedLanding?.ReferrerHost ?? NormalizeOptional(request.ReferrerHost, ReferrerHostMaxLength),
+            trustedLanding?.UtmSource ?? NormalizeOptional(request.UtmSource, UtmValueMaxLength),
+            trustedLanding?.UtmMedium ?? NormalizeOptional(request.UtmMedium, UtmValueMaxLength),
+            trustedLanding?.UtmCampaign ?? NormalizeOptional(request.UtmCampaign, UtmValueMaxLength),
+            trustedLanding?.UtmContent ?? NormalizeOptional(request.UtmContent, UtmValueMaxLength),
+            trustedLanding?.UtmTerm ?? NormalizeOptional(request.UtmTerm, UtmValueMaxLength),
+            trustedLanding?.BuildVersion ?? NormalizeOptional(request.BuildVersion, BuildVersionMaxLength),
             eventId);
 
         await repository.AddAsync(record, cancellationToken).ConfigureAwait(false);

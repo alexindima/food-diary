@@ -44,13 +44,13 @@ Source: `FoodDiary.Presentation.Api/Features/Marketing/MarketingAttributionContr
 - Physical isolation: assembly
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: not yet enumerated
-- Public contract files: 4
+- Public contract files: 6
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 4
+- Public contract types: 6
 - Interfaces: 3
 - DTO/read-model/projection types: 0
 - Enums: 0
@@ -59,7 +59,9 @@ Source: `FoodDiary.Presentation.Api/Features/Marketing/MarketingAttributionContr
 - `interface IMarketingAttributionEventReadRepository`
 - `interface IMarketingAttributionEventRepository`
 - `interface IMarketingAttributionEventWriteRepository`
+- `record MarketingAttributionBreakdownRecord`
 - `record MarketingAttributionEventRecord`
+- `record MarketingAttributionSummaryRecord`
 
 ## Focused Tests
 

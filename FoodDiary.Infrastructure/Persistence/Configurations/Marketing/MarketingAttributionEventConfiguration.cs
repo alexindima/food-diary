@@ -55,6 +55,9 @@ internal sealed class MarketingAttributionEventConfiguration : IEntityTypeConfig
 
         builder.HasIndex(e => e.OccurredAtUtc);
         builder.HasIndex(e => new { e.UserId, e.OccurredAtUtc });
+        builder.HasIndex(e => new { e.UserId, e.EventType })
+            .IsUnique()
+            .HasFilter("\"UserId\" IS NOT NULL AND \"EventType\" IN ('signup_completed', 'premium_started')");
         builder.HasIndex(e => new { e.AnonymousId, e.OccurredAtUtc });
         builder.HasIndex(e => new { e.SessionId, e.OccurredAtUtc });
         builder.HasIndex(e => new { e.UtmSource, e.UtmMedium, e.UtmCampaign, e.OccurredAtUtc });

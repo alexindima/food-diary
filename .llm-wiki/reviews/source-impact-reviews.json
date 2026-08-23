@@ -192,13 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "6b8b300933cae167400f3e2eb1d5039215e7183fdf6e4f365c77afd9bec52e17"
+          "sha256": "a87e4539fa3cf74e8c8e6226f5f921ab5359b918a0d79a7ffd28435fdcd8b8be"
         }
       ],
-      "reason": "Reviewed the presentation split: the impersonation exchange URL, request, response, authorization and rate limit remain unchanged; focused OpenAPI snapshots pass 2/2.",
+      "reason": "Regenerated backend contract index remains schema-compatible and the consumer-review workflow still matches the current contract and consumer model.",
       "baseRef": "HEAD",
-      "gitHead": "6d7be35af17a4ba81f4db9e4c170f3a395c34e59",
-      "reviewedAtUtc": "2026-08-23T21:30:22.0055923Z"
+      "gitHead": "e04a6614a503877233cb2307dc672c05fa381e8b",
+      "reviewedAtUtc": "2026-08-23T22:41:16.9572064Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -761,13 +761,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "95746fc0b63ec28edaee1c01f4cb4584f7f3857edfe0de7c08b8841e7fa42b0a"
+          "sha256": "7f976602384fdabe1358cceecd90bda73203a56d648af4b8d7db09282e71ed4b"
         }
       ],
-      "reason": "Reviewed credential lifecycle: access tokens remain server-side during handoff, codes are short-lived and consume-once, protocol separation and replay rejection are covered by tests, and no token is logged or placed in a URL.",
+      "reason": "Regenerated sensitive-data index retains the documented categories and boundary semantics; the privacy review workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "6b27621307bfea7fc295d0a5cfd6a257f9ee2c68",
-      "reviewedAtUtc": "2026-08-23T21:17:42.5231983Z"
+      "gitHead": "e04a6614a503877233cb2307dc672c05fa381e8b",
+      "reviewedAtUtc": "2026-08-23T22:41:18.2293499Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -810,13 +810,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "711fe69b9fa4014776236b32339c7a817f6a6d1355c8b8ae960e9208e471745e"
+          "sha256": "529e163ab83f6eff546a23d96b79db6d1224ac131299c53b582e65528a58a151"
         }
       ],
-      "reason": "Reviewed controller structure: the endpoint moved to a dedicated feature controller instead of weakening the eight-action guardrail; Presentation API tests pass 800/800.",
+      "reason": "Regenerated quality index retains the documented hotspot, test-reference, and debt semantics; the quality-risk workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "6d7be35af17a4ba81f4db9e4c170f3a395c34e59",
-      "reviewedAtUtc": "2026-08-23T21:30:22.9158871Z"
+      "gitHead": "e04a6614a503877233cb2307dc672c05fa381e8b",
+      "reviewedAtUtc": "2026-08-23T22:41:19.6702624Z"
     },
     {
       "pageId": "workflow-release-readiness",

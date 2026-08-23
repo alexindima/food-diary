@@ -34,8 +34,17 @@ public sealed class MarketingConversionRecorder(
                 EventType = MarketingAttributionEventTypes.PremiumStarted,
                 OccurredAtUtc = dateTimeProvider.GetUtcNow().UtcDateTime,
                 UserId = userId,
-                EventId = null,
+                EventId = CreateStableEventId(userId, MarketingAttributionEventTypes.PremiumStarted),
             },
             cancellationToken).ConfigureAwait(false);
+    }
+
+    private static Guid CreateStableEventId(Guid userId, string eventType) {
+        Span<byte> source = stackalloc byte[16 + 32];
+        userId.TryWriteBytes(source);
+        int written = System.Text.Encoding.UTF8.GetBytes(eventType, source[16..]);
+        Span<byte> hash = stackalloc byte[32];
+        System.Security.Cryptography.SHA256.HashData(source[..(16 + written)], hash);
+        return new Guid(hash[..16]);
     }
 }

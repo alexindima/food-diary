@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "description": "Sixth blind context-search probe, frozen before first execution. Its baseline was 9/30 top-1, 18/30 top-10, and 0.4028 MRR; promotion requires the general structural ranking policy to keep at least 95% top-1, 100% top-10, and 0.97 MRR.",
+  "diagnosticLimit": 100,
+  "thresholds": {
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 30,
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "cases": [
+    {
+      "id": "export-date-range-policy-probe-6",
+      "query": "политика экспорта дневника нормализует диапазон дат и безопасно применяет часовой сдвиг",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryDateRangePolicy.cs"]
+    },
+    {
+      "id": "diary-csv-generator-probe-6",
+      "query": "generate a UTF-8 CSV diary export with escaped meal comments and nutrition totals",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Export/Services/DiaryCsvGenerator.cs"]
+    },
+    {
+      "id": "weekly-goal-progress-reader-probe-6",
+      "query": "посчитать прогресс недельной цели по уникальным дням с приемами пищи",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.WeeklyGoals/Common/WeeklyGoalProgressReader.cs"]
+    },
+    {
+      "id": "weekly-check-in-read-service-probe-6",
+      "query": "build a seven-day check-in summary from nutrition meals weight waist and hydration",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs"]
+    },
+    {
+      "id": "gamification-read-service-probe-6",
+      "query": "load streaks badges weekly adherence and health score for a gamification profile",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Gamification/Services/GamificationReadService.cs"]
+    },
+    {
+      "id": "web-push-endpoint-policy-probe-6",
+      "query": "проверить endpoint web push: только HTTPS, без localhost, IP, userinfo и нестандартного порта",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Notifications/Common/WebPushEndpointPolicy.cs"]
+    },
+    {
+      "id": "notification-factory-probe-6",
+      "query": "create domain notifications for recommendations client tasks invitations and fasting reminders",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Notifications/Common/NotificationFactory.cs"]
+    },
+    {
+      "id": "content-report-target-parser-probe-6",
+      "query": "разобрать обязательный тип цели жалобы без учета регистра или вернуть ошибку валидации",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.ContentReports/Common/ContentReportTargetTypeParser.cs"]
+    },
+    {
+      "id": "dashboard-section-data-loader-probe-6",
+      "query": "validate dashboard date and timezone then conditionally load advice fasting exercise TDEE and cycle sections",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs"]
+    },
+    {
+      "id": "job-execution-observer-probe-6",
+      "query": "записать старт успех отмену или сбой фоновой задачи вместе с длительностью и счетчиками",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.JobManager/Services/JobExecutionObserver.cs"]
+    },
+    {
+      "id": "mail-inbox-request-authorizer-probe-6",
+      "query": "authorize a mail inbox request by hashing the API key and using fixed-time comparison per permission",
+      "changeType": "Backend",
+      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Presentation/Security/MailInboxRequestAuthorizer.cs"]
+    },
+    {
+      "id": "mail-relay-api-key-filter-probe-6",
+      "query": "фильтр авторизации Mail Relay возвращает стабильный UnauthorizedObjectResult при неверном API key",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Presentation/Filters/RelayApiKeyAuthorizationFilter.cs"]
+    },
+    {
+      "id": "unsaved-changes-service-probe-6",
+      "query": "Angular service registers a save and discard handler for unsaved form changes",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/services/unsaved-changes.service.ts"]
+    },
+    {
+      "id": "retry-interceptor-probe-6",
+      "query": "повторять только GET запросы с exponential backoff и не повторять ошибки 4xx",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/interceptor/retry.interceptor.ts"]
+    },
+    {
+      "id": "global-loading-interceptor-probe-6",
+      "query": "HTTP interceptor tracks global loading for GET or explicitly forced requests and finalizes it",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/interceptor/global-loading.interceptor.ts"]
+    },
+    {
+      "id": "frontend-observability-interceptor-probe-6",
+      "query": "записать длительность статус и outcome API запроса во frontend observability",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/interceptor/frontend-observability.interceptor.ts"]
+    },
+    {
+      "id": "auth-interceptor-probe-6",
+      "query": "attach a bearer token and refresh authentication after a 401 before retrying the request",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.ts"]
+    },
+    {
+      "id": "ai-photo-edit-utils-probe-6",
+      "query": "редактирование распознанных по фото продуктов, перевод названий и определение пересчета nutrition",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/ai-photo-edit.utils.ts"]
+    },
+    {
+      "id": "ai-nutrition-edit-utils-probe-6",
+      "query": "recalculate AI nutrition macros proportionally after the user changes ingredient amounts",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/ai-nutrition-edit.utils.ts"]
+    },
+    {
+      "id": "weekly-check-in-mapper-probe-6",
+      "query": "преобразовать недельные тренды check-in в карточки с иконками цветами и единицами измерения",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/features/weekly-check-in/lib/weekly-check-in.mapper.ts"]
+    },
+    {
+      "id": "weight-history-bmi-mapper-probe-6",
+      "query": "calculate BMI category chart segments and pointer position for weight history",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history-bmi.mapper.ts"]
+    },
+    {
+      "id": "sidebar-view-utils-probe-6",
+      "query": "построить пункты sidebar для админа и диетолога, определить активный route и процент прогресса",
+      "changeType": "Frontend",
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shell/sidebar/sidebar-lib/sidebar-view.utils.ts"]
+    },
+    {
+      "id": "task-scheduler-workflow-probe-6",
+      "query": "Wiki workflow schedules conflict-free concurrent agent tasks using leases capacity and dependencies",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/task-scheduler.md"]
+    },
+    {
+      "id": "task-dispatch-receipts-workflow-probe-6",
+      "query": "Wiki workflow хранит hash-chained dispatch receipts со стартом heartbeat завершением и orphan detection",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/task-dispatch-receipts.md"]
+    },
+    {
+      "id": "plan-diff-conformance-workflow-probe-6",
+      "query": "compare the implementation plan with the live Git diff and require an explicit replan for scope drift",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/plan-diff-conformance.md"]
+    },
+    {
+      "id": "learned-regression-evals-workflow-probe-6",
+      "query": "превратить подтвержденные сбои завершенных задач в управляемые regression eval cases",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/learned-regression-evals.md"]
+    },
+    {
+      "id": "instruction-effectiveness-workflow-probe-6",
+      "query": "measure AGENTS.md revision outcomes with matched cohorts confidence intervals and sequential looks",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/instruction-effectiveness.md"]
+    },
+    {
+      "id": "verification-telemetry-workflow-probe-6",
+      "query": "Wiki workflow собирает длительность и исходы проверок, выявляет flaky checks и улучшает прогнозы",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/workflows/verification-telemetry.md"]
+    },
+    {
+      "id": "find-context-tool-probe-6",
+      "query": "PowerShell tool returns ranked Wiki pages implementation files symbols tests and recommended checks for a change",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Find-LlmWikiContext.ps1"]
+    },
+    {
+      "id": "export-task-workspace-tool-probe-6",
+      "query": "экспортировать governed task workspace с redaction чувствительных данных и проверяемой SHA-256 seal",
+      "changeType": "Any",
+      "expectedPaths": [".llm-wiki/tools/Export-LlmWikiTaskWorkspace.ps1"]
+    }
+  ]
+}

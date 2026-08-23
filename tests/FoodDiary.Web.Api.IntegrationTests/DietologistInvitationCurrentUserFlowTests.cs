@@ -59,6 +59,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
             $"/api/v1/dietologist/invitations/{relationship.InvitationId}/accept-current-user",
             new { });
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, acceptResponse);
+        SetDietologistToken(dietologistUser);
 
         HttpResponseMessage acceptedResponse = await dietologistUser.Client.GetAsync($"/api/v1/dietologist/invitations/{relationship.InvitationId}/current-user");
         await AssertStatusCodeAsync(HttpStatusCode.OK, acceptedResponse);
@@ -112,7 +113,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
         await EnsureDietologistRoleAsync();
         AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync();
         AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
-        SetDietologistToken(dietologistUser);
+        await RefreshAccessTokenAsync(dietologistUser);
 
         HttpResponseMessage inviteResponse = await clientUser.Client.PostAsJsonAsync(
             "/api/v1/dietologist/invite",
@@ -123,6 +124,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
             $"/api/v1/dietologist/invitations/{relationship.InvitationId}/accept-current-user",
             new { });
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, acceptResponse);
+        await RefreshAccessTokenAsync(dietologistUser);
 
         string dashboardUrl = $"/api/v1/dietologist/clients/{clientUser.UserId}/dashboard?dateFrom=2026-07-01&dateTo=2026-07-14&page=1&pageSize=10&trendDays=14&locale=en";
         await AssertStatusCodeAsync(HttpStatusCode.OK, await dietologistUser.Client.GetAsync(dashboardUrl));
@@ -140,6 +142,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
             "/api/v1/dietologist/permissions",
             new UpdateDietologistPermissionsHttpRequest(noPermissions));
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, updateResponse);
+        await RefreshAccessTokenAsync(dietologistUser);
 
         HttpResponseMessage revokedPermissionResponse = await dietologistUser.Client.GetAsync(dashboardUrl);
         Assert.Equal(HttpStatusCode.Forbidden, revokedPermissionResponse.StatusCode);
@@ -148,10 +151,12 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
             "/api/v1/dietologist/permissions",
             new UpdateDietologistPermissionsHttpRequest(new DietologistPermissionsHttpRequest()));
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, restoreResponse);
+        await RefreshAccessTokenAsync(dietologistUser);
         await AssertStatusCodeAsync(HttpStatusCode.OK, await dietologistUser.Client.GetAsync(dashboardUrl));
 
         HttpResponseMessage disconnectResponse = await clientUser.Client.DeleteAsync("/api/v1/dietologist/relationship");
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, disconnectResponse);
+        await RefreshAccessTokenAsync(dietologistUser);
         HttpResponseMessage disconnectedResponse = await dietologistUser.Client.GetAsync(dashboardUrl);
         Assert.Equal(HttpStatusCode.Forbidden, disconnectedResponse.StatusCode);
     }
@@ -197,6 +202,16 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
             [RoleNames.Dietologist],
             securityVersion);
         user.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+    }
+
+    private static async Task RefreshAccessTokenAsync(AuthenticatedUser user) {
+        HttpResponseMessage response = await user.Client.PostAsJsonAsync(
+            "/api/v1/auth/login",
+            new LoginHttpRequest(user.Email, "Password123!")).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+        AuthPayload? authPayload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
+        Assert.NotNull(authPayload);
+        user.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
     }
 
     private async Task<DietologistRelationshipPayload> GetRelationshipAsync(HttpClient client) {

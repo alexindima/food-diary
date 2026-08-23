@@ -741,14 +741,11 @@ public partial class BillingFeatureTests {
         public Task<int> DeleteOlderThanAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<IReadOnlyList<MarketingAttributionEventRecord>> GetSinceAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) {
-            IReadOnlyList<MarketingAttributionEventRecord> matchingRecords = [
-                .. Records
-                .Where(record => record.OccurredAtUtc >= sinceUtc)
-                .OrderByDescending(record => record.OccurredAtUtc),
-            ];
-            return Task.FromResult(matchingRecords);
-        }
+        public Task<MarketingAttributionSummaryRecord> GetSummaryAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<MarketingAttributionEventRecord?> GetLandingAsync(string anonymousId, string sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) =>
+            Task.FromResult<MarketingAttributionEventRecord?>(null);
 
         public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) =>
             Task.FromResult(Records

@@ -458,9 +458,18 @@ public sealed class MarketingAttributionTests {
         public Task<int> DeleteOlderThanAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<IReadOnlyList<MarketingAttributionEventRecord>> GetSinceAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) {
-            return Task.FromResult<IReadOnlyList<MarketingAttributionEventRecord>>(_events.Where(x => x.OccurredAtUtc >= sinceUtc).ToList());
+        public Task<MarketingAttributionSummaryRecord> GetSummaryAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) {
+            List<MarketingAttributionEventRecord> events = [.. _events.Where(x => x.OccurredAtUtc >= sinceUtc)];
+            return Task.FromResult(new MarketingAttributionSummaryRecord(
+                events.Count, events.Count(x => x.EventType == "page_landing"), events.Count(x => x.EventType == "signup_completed"),
+                events.Count(x => x.EventType == "premium_started"), events.Select(x => x.AnonymousId).Distinct().Count(),
+                events.Select(x => x.SessionId).Distinct().Count(), events.Count(x => x.UtmSource is not null),
+                events.Count(x => x.EventType == "page_landing" && x.UtmSource is not null), events.MaxBy(x => x.OccurredAtUtc)?.OccurredAtUtc,
+                [], [], [.. events.OrderByDescending(x => x.OccurredAtUtc).Take(50)]));
         }
+
+        public Task<MarketingAttributionEventRecord?> GetLandingAsync(string anonymousId, string sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_events.Where(x => x.EventType == "page_landing" && x.AnonymousId == anonymousId && x.SessionId == sessionId && x.OccurredAtUtc >= sinceUtc).MaxBy(x => x.OccurredAtUtc));
 
         public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) {
             return Task.FromResult(_events
