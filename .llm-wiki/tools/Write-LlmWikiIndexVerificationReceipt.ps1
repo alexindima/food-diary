@@ -2,6 +2,7 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $manifestPath = Join-Path $repositoryRoot '.llm-wiki/policies/query-indexes.json'
 if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
@@ -19,8 +20,7 @@ function Add-Text([Security.Cryptography.IncrementalHash]$Hash, [string]$Value) 
     $Hash.AppendData([Text.Encoding]::UTF8.GetBytes($Value))
 }
 
-$head = (& git -C $repositoryRoot rev-parse HEAD).Trim()
-if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve HEAD for the Wiki index verification receipt.' }
+$head = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the Wiki index verification receipt.').Lines[0].Trim()
 function Get-GitBlobHashes([string[]]$Paths) {
     # A live redirected pipe needs an explicit BOM-free StandardInputEncoding to stay
     # stable, but that ProcessStartInfo property exists only on .NET 5+ (PowerShell 7+);
@@ -53,8 +53,8 @@ function Get-GitBlobHashes([string[]]$Paths) {
     }
 }
 
-$deletedPaths = @(& git -C $repositoryRoot ls-files --deleted) | ForEach-Object { ([string]$_).TrimStart([char]0xFEFF).Replace('\', '/') }
-$sourcePaths = @(& git -C $repositoryRoot ls-files -co --exclude-standard) | ForEach-Object { ([string]$_).TrimStart([char]0xFEFF).Replace('\', '/') } | Where-Object {
+$deletedPaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--deleted') -FailureMessage 'Unable to enumerate deleted paths for the Wiki index verification receipt.')
+$sourcePaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '-co', '--exclude-standard') -FailureMessage 'Unable to enumerate source paths for the Wiki index verification receipt.') | Where-Object {
     $_ -and $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' -and
     $_ -notmatch '^\.artifacts/' -and $_ -notmatch '(?i)(review-receipt|source-impact-review)' -and
     $_ -notin $deletedPaths
@@ -83,8 +83,7 @@ try {
     $indexFingerprint = ([BitConverter]::ToString($indexHash.GetHashAndReset()) -replace '-', '').ToLowerInvariant()
 } finally { $indexHash.Dispose() }
 
-$gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
-if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the Git directory for the Wiki index verification receipt.' }
+$gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve the Git directory for the Wiki index verification receipt.').Lines[0].Trim()
 $receiptPath = Join-Path $gitDirectory 'llm-wiki/index-verification.json'
 $null = New-Item -ItemType Directory -Path (Split-Path -Parent $receiptPath) -Force
 $receipt = [ordered]@{

@@ -6,6 +6,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $root = Join-Path $repositoryRoot $TasksPath
 $items = [Collections.Generic.List[object]]::new()
@@ -34,9 +35,10 @@ if (Test-Path -LiteralPath $root -PathType Container) {
 }
 $failedCheckMeasure = $items | Measure-Object failedChecks -Sum
 $failedCheckSum = if ($null -ne $failedCheckMeasure -and $failedCheckMeasure.PSObject.Properties['Sum'] -and $null -ne $failedCheckMeasure.Sum) { [int]$failedCheckMeasure.Sum } else { 0 }
-$gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
+$gitDirectoryResult = Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -AllowedExitCode @(0..128)
+$gitDirectory = if (@($gitDirectoryResult.Lines).Count -gt 0) { $gitDirectoryResult.Lines[0].Trim() } else { '' }
 $adaptiveItems = @()
-if ($LASTEXITCODE -eq 0) {
+if ($gitDirectoryResult.ExitCode -eq 0) {
     $adaptiveRoot = Join-Path $gitDirectory 'llm-wiki/workflow-metrics'
     if (Test-Path -LiteralPath $adaptiveRoot -PathType Container) {
         $adaptiveItems = @(Get-ChildItem -LiteralPath $adaptiveRoot -Filter '*.json' -File | ForEach-Object {

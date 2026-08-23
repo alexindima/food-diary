@@ -10,6 +10,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $workspacePolicy = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -Format Json | ConvertFrom-Json
@@ -50,9 +51,7 @@ function Convert-ToUtc([object]$Value, [DateTime]$Fallback) {
     return $Fallback.ToUniversalTime()
 }
 
-$currentHead = & git rev-parse HEAD 2>$null
-if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve repository HEAD.' }
-$currentHead = [string]$currentHead
+$currentHead = [string](Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve repository HEAD.').Lines[0]
 $taskGraph = if ($normalizedTasksPath -ceq '.artifacts/llm-wiki/tasks') {
     & (Join-Path $PSScriptRoot 'Get-LlmWikiTaskGraph.ps1') -TasksPath $normalizedTasksPath -Format Json | ConvertFrom-Json
 } else { $null }

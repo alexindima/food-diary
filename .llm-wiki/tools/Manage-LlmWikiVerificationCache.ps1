@@ -12,9 +12,7 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 
 function Invoke-Git([string[]]$Arguments) {
-    $output = @(& git -C $RepositoryRoot @Arguments)
-    if ($LASTEXITCODE -ne 0) { throw "git $($Arguments -join ' ') failed." }
-    return $output
+    return (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments $Arguments -FailureMessage "git $($Arguments -join ' ') failed.").Lines
 }
 
 function Get-Sha256([string]$Value) {

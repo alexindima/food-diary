@@ -5,6 +5,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $repositoryPathHasher = [Security.Cryptography.SHA256]::Create()
 try {
@@ -80,7 +81,6 @@ foreach ($readyFile in @($readyFiles | Select-Object -Skip $Retain)) {
     }
 }
 
-& git -C $repositoryRoot worktree prune
-if ($LASTEXITCODE -ne 0) { throw 'Git failed to prune stale read-only worktree registrations.' }
+$null = Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('worktree', 'prune') -FailureMessage 'Git failed to prune stale read-only worktree registrations.'
 Write-Host "LLM Wiki read-only snapshot cache cleanup: removed=$removed, retained=$([Math]::Min($Retain, $readyFiles.Count)), busy=$busy, failed=$($failed.Count)."
 if ($failed.Count -gt 0) { Write-Warning ($failed -join [Environment]::NewLine) }

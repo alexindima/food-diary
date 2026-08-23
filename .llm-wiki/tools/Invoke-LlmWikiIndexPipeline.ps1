@@ -100,8 +100,7 @@ function Get-PipelineCacheState([string[]]$ToolNames) {
     $generatedOutputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', '.llm-wiki/generated/**') -FailureMessage 'Unable to enumerate pipeline cache outputs.')
     $toolSet = @($ToolNames | Sort-Object -Unique) -join '|'
     $toolSetHash = (Get-StringSha256 $toolSet).Substring(0, 16)
-    $gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve Git directory for pipeline cache receipts.' }
+    $gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve Git directory for pipeline cache receipts.').Lines[0].Trim()
     return [pscustomobject]@{
         receiptPath = Join-Path $gitDirectory "llm-wiki/index-cache/pipeline-$toolSetHash.json"
         inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $repositoryInputs
@@ -443,8 +442,7 @@ $transactionRoot = $null
 $generatedRoot = Join-Path $repositoryRoot '.llm-wiki/generated'
 try {
     if (-not $Check) {
-        $gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
-        if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve Git directory for the index transaction.' }
+        $gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve Git directory for the index transaction.').Lines[0].Trim()
         $transactionStateRoot = Join-Path $gitDirectory 'llm-wiki/index-transactions'
         $null = New-Item -ItemType Directory -Path $transactionStateRoot -Force
         $lockPath = Join-Path $transactionStateRoot 'update.lock'

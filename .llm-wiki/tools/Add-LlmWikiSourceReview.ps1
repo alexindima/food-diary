@@ -82,7 +82,7 @@ $review = [pscustomobject][ordered]@{
     })
     reason = $Reason
     baseRef = $BaseRef
-    gitHead = (& git rev-parse HEAD).Trim()
+    gitHead = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the source review.').Lines[0].Trim()
     reviewedAtUtc = [DateTime]::UtcNow.ToString('o')
 }
 

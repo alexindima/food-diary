@@ -20,6 +20,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $planner = Join-Path $PSScriptRoot 'Invoke-LlmWikiAffectedSmoke.ps1'
 $smokeCatalog = Import-PowerShellDataFile -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/policies/affected-smoke-catalog.psd1')
@@ -77,8 +78,7 @@ if (-not $NoCache) {
     $sha = [Security.Cryptography.SHA256]::Create()
     try { $groupKey = ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($groupMaterial))) -replace '-', '').ToLowerInvariant() }
     finally { $sha.Dispose() }
-    $gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the Git directory for the parallel smoke receipt.' }
+    $gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve the Git directory for the parallel smoke receipt.').Lines[0].Trim()
     $aggregateReceiptRoot = Join-Path $gitDirectory 'llm-wiki/parallel-smoke'
     $aggregateReceiptPath = Join-Path $aggregateReceiptRoot "$groupKey.json"
     $aggregateFingerprint = & (Join-Path $PSScriptRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') `
@@ -101,8 +101,7 @@ $runId = "$PID-$([guid]::NewGuid().ToString('N'))"
 $runRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/parallel-smoke/$runId"
 $null = New-Item -ItemType Directory -Path $runRoot -Force
 $cancelPath = Join-Path $runRoot 'cancel.requested.json'
-$worktreeBaseline = @(& git -C $repositoryRoot status --porcelain=v1 --untracked-files=all)
-if ($LASTEXITCODE -ne 0) { throw 'Unable to capture the pre-smoke worktree state.' }
+$worktreeBaseline = @((Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('status', '--porcelain=v1', '--untracked-files=all') -FailureMessage 'Unable to capture the pre-smoke worktree state.').Lines)
 
 function Request-SmokeCancellation([object[]]$Items, [string]$Reason) {
     [IO.File]::WriteAllText($cancelPath, (([ordered]@{
@@ -260,8 +259,7 @@ try {
             Remove-Item -LiteralPath $resolvedTaskSandbox -Recurse -Force -ErrorAction SilentlyContinue
         }
     }
-    $worktreeAfter = @(& git -C $repositoryRoot status --porcelain=v1 --untracked-files=all)
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to capture the post-smoke worktree state.' }
+    $worktreeAfter = @((Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('status', '--porcelain=v1', '--untracked-files=all') -FailureMessage 'Unable to capture the post-smoke worktree state.').Lines)
     if (($worktreeBaseline -join "`n") -cne ($worktreeAfter -join "`n")) {
         $addedState = @($worktreeAfter | Where-Object { $_ -notin $worktreeBaseline })
         Write-Warning "The worktree changed concurrently outside owned smoke sandboxes; those paths are not attributed to this run: $($addedState -join '; '). Sandbox/logs: $runRoot"

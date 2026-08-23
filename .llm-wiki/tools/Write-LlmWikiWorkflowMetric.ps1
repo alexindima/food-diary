@@ -7,9 +7,9 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
-if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the Git directory for workflow metrics.' }
+$gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve the Git directory for workflow metrics.').Lines[0].Trim()
 $root = Join-Path $gitDirectory 'llm-wiki/workflow-metrics'
 $null = New-Item -ItemType Directory -Path $root -Force
 $metric = [ordered]@{

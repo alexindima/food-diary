@@ -13,6 +13,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $index = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/sensitive-data-index.json') -Raw | ConvertFrom-Json
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
@@ -26,8 +27,8 @@ $scopePaths = @(
 )
 $scopeMode = if ($scopePaths.Count -gt 0) { 'explicit' } else { 'none' }
 if (-not $NoImplicitScope -and $scopePaths.Count -eq 0 -and [string]::IsNullOrWhiteSpace($Query) -and $Category -eq 'all') {
-    $gitPaths = @(& git -C $repositoryRoot diff --name-only HEAD --)
-    $gitPaths += @(& git -C $repositoryRoot ls-files --others --exclude-standard)
+    $gitPaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('diff', '--name-only', 'HEAD', '--') -FailureMessage 'Unable to enumerate changed paths for sensitive-data scope.')
+    $gitPaths += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to enumerate untracked paths for sensitive-data scope.')
     $scopePaths = @(
         $gitPaths |
             ForEach-Object { $_.Replace('\', '/') } |

@@ -5,6 +5,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $catalogPath = Join-Path $wikiRoot 'generated/repository-catalog.json'
@@ -36,10 +37,7 @@ function ConvertTo-Slug {
 }
 
 function Get-RepositoryFilePaths {
-    $paths = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard)
-    if ($LASTEXITCODE -ne 0) {
-        throw 'Unable to enumerate repository files.'
-    }
+    $paths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard') -FailureMessage 'Unable to enumerate repository files.')
     return @($paths | Where-Object { $_ } | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique)
 }
 

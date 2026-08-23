@@ -94,9 +94,7 @@ if ($Plan -and $Format -eq 'Json') { $planResult | ConvertTo-Json -Depth 3; exit
 Write-Host "Affected tools smoke: $($paths.Count) changed path(s), groups=$(@($smokeGroups | Sort-Object) -join ',')."
 if ($Plan) { exit 0 }
 
-$gitDirectoryOutput = @(& git -C $repositoryRoot rev-parse --absolute-git-dir)
-if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the Git directory for smoke receipts.' }
-$gitDirectory = [string]($gitDirectoryOutput | Select-Object -First 1)
+$gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve the Git directory for smoke receipts.').Lines[0]
 $receiptRoot = Join-Path $gitDirectory 'llm-wiki/affected-smoke-groups'
 $null = New-Item -ItemType Directory -Path $receiptRoot -Force
 foreach ($group in @($smokeGroups | Sort-Object)) {
