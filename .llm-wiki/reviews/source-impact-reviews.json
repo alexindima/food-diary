@@ -691,22 +691,14 @@
                         "pageSha256":  "e3ced57c02bacfce6b76fbc8d3af6c09485e3888822e3145909ebdb247386368",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1",
-                                            "sha256":  "894e26d1fa403a34c07e882fb1ac3bac0b4a2c68e7bdf512eb1d507351e26dfb"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/LlmWikiIndexCache.ps1",
-                                            "sha256":  "ada8c38017c8da856e9ef1d3947f01ea6e8a0361e116ded157389b4a7d9983cd"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
-                                            "sha256":  "da4da7cab74f246b0bed7649c25c9c28804d90f1a11a051acab031c3fb75503b"
+                                            "path":  ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
+                                            "sha256":  "ef92b3256bcd821a33ef3dc85e95135aebe3e562ac16e83313bb7f923fdc9ba9"
                                         }
                                     ],
-                        "reason":  "Made native-process stdin/stdout/stderr handling (git hash-object, and the dotnet contract-reference extractor) portable across Windows PowerShell 5.1 and PowerShell 7+: guarded StandardInputEncoding/ArgumentList (.NET 5+ only), replaced live-pipe writes with temp-file redirection to avoid a StandardInput BOM-injection quirk, normalized BOM-prefixed paths, forced UTF-8 decoding of subprocess output instead of the platform-default codepage, and fixed a ConvertFrom-Json array-enumeration quirk across a script boundary. Documented index-pipeline behavior and output shape are unchanged; the extractor Program.cs source encoding fix is covered by the existing regression test.",
+                        "reason":  "Fixed a live crash in the primary `brief`/`ownership` commands: PowerShell can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices, common on Windows) into a terminating NativeCommandError under Set-StrictMode, and this survives a local 2\u003e$null redirect in some hosts. Routed the affected git invocations through Diagnostics.Process (stderr captured via .NET, never touching PowerShell native-command stream handling) and added a reusable Invoke-LlmWikiGitCommand helper alongside the existing Invoke-LlmWikiGitPathList. Documented HEAD/paths/fingerprint computation and rename discovery behavior is unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2da4a09d49f10d30ff20b9e1020bf5d2665a5cf4",
-                        "reviewedAtUtc":  "2026-08-22T23:32:04.0088035Z"
+                        "gitHead":  "97919d478a746ac9d987991f5ea6278eca59732a",
+                        "reviewedAtUtc":  "2026-08-23T00:57:11.7434047Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -1103,17 +1095,17 @@
                     {
                         "pageId":  "workflow-test-plan",
                         "pagePath":  ".llm-wiki/workflows/test-plan.md",
-                        "pageSha256":  "05dc26b1d03620e485e2f40385843a949fcc25e2b55f22fb74a1524d44b67b76",
+                        "pageSha256":  "a7f77b54cea25754f34f6ad8036f542dd112bda2cc489c6e7b3fbf9e9b3db03e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-                                            "sha256":  "75fe1da3d8d02e5b6605520cd75f3dc6b9ed3b53f64f80e8976cc6b30c6942d9"
+                                            "path":  ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
+                                            "sha256":  "ef92b3256bcd821a33ef3dc85e95135aebe3e562ac16e83313bb7f923fdc9ba9"
                                         }
                                     ],
-                        "reason":  "Reviewed Development MCP lifecycle, revision baseline, structured parsing, scope ranking, source-bound freshness, and local metrics against current implementation plus focused MCP and Wiki smoke tests.",
+                        "reason":  "Fixed a live crash in the primary `brief`/`ownership` commands: PowerShell can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices, common on Windows) into a terminating NativeCommandError under Set-StrictMode, and this survives a local 2\u003e$null redirect in some hosts. Routed the affected git invocations through Diagnostics.Process (stderr captured via .NET, never touching PowerShell native-command stream handling) and added a reusable Invoke-LlmWikiGitCommand helper alongside the existing Invoke-LlmWikiGitPathList. Documented HEAD/paths/fingerprint computation and rename discovery behavior is unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5ab731c87193b12d56168869162cdbd838f50407",
-                        "reviewedAtUtc":  "2026-08-17T11:17:52.0971969Z"
+                        "gitHead":  "97919d478a746ac9d987991f5ea6278eca59732a",
+                        "reviewedAtUtc":  "2026-08-23T00:57:12.2208517Z"
                     },
                     {
                         "pageId":  "workflow-trace-feature",

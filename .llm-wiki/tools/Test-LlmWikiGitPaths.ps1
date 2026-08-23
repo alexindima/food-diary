@@ -37,9 +37,13 @@ if ((($boundedPatterns -join '|').Split('|') -join '|') -cne ($largeAlternatives
     throw 'Git grep alternative batching lost or reordered search terms.'
 }
 $gitPathHelperText = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1') -Raw
-if (($gitPathHelperText | Select-String -Pattern 'StandardOutput\.ReadToEndAsync\(\)' -AllMatches).Matches.Count -ne 1 -or
-    ($gitPathHelperText | Select-String -Pattern 'StandardError\.ReadToEndAsync\(\)' -AllMatches).Matches.Count -ne 1) {
+$standardOutputDrainCount = ($gitPathHelperText | Select-String -Pattern 'StandardOutput\.ReadToEndAsync\(\)' -AllMatches).Matches.Count
+$standardErrorDrainCount = ($gitPathHelperText | Select-String -Pattern 'StandardError\.ReadToEndAsync\(\)' -AllMatches).Matches.Count
+if ($standardOutputDrainCount -eq 0 -or $standardOutputDrainCount -ne $standardErrorDrainCount) {
     throw 'Git path enumeration must drain stdout and stderr concurrently.'
+}
+if ($gitPathHelperText -notmatch 'function Invoke-LlmWikiGitCommand\b') {
+    throw 'Git path helpers no longer expose a general-purpose safe git invocation for non-path-list output (diff --name-status, log, rev-parse, ...); native `&' + " git`` calls elsewhere silently regain the Set-StrictMode NativeCommandError risk on any stderr warning (e.g. core.autocrlf CRLF notices)."
 }
 $warningRepository = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'git-stderr-pressure'
 try {
