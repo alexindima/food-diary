@@ -45,6 +45,7 @@ internal static class BoundedHttpContentReader {
         readDeadline.CancelAfter(readTimeout);
         try {
             Stream stream = await content.ReadAsStreamAsync(readDeadline.Token).ConfigureAwait(false);
+            byte[] result;
             await using (stream.ConfigureAwait(false)) {
                 int capacity = declaredLength is > 0 and <= int.MaxValue ? (int)declaredLength.Value : 0;
                 var buffer = new MemoryStream(capacity);
@@ -64,12 +65,19 @@ internal static class BoundedHttpContentReader {
                             await buffer.WriteAsync(rented.AsMemory(0, read), readDeadline.Token).ConfigureAwait(false);
                         }
 
-                        return buffer.ToArray();
+                        result = buffer.ToArray();
                     } finally {
                         ArrayPool<byte>.Shared.Return(rented, clearArray: true);
                     }
                 }
             }
+
+            // The `return` sits outside both `await using` scopes (rather than inside, as an
+            // early exit) so the compiler-lowered async state machine has a single normal exit
+            // path here instead of two — the alternate "fell through" dispatch branch it would
+            // otherwise generate is structurally unreachable (every path above either returns via
+            // `result` or throws), which previously showed up as a permanent dead coverage gap.
+            return result;
         } catch (OperationCanceledException exception) when (!cancellationToken.IsCancellationRequested) {
             throw new TimeoutException("Upstream response body exceeded the configured read deadline.", exception);
         }

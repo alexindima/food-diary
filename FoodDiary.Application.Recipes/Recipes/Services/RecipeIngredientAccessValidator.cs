@@ -71,7 +71,11 @@ public static class RecipeIngredientAccessValidator {
         var visited = new HashSet<RecipeId>();
         IReadOnlyCollection<RecipeOverviewReadItem> currentRecipes = [.. initialRecipes];
 
-        while (currentRecipes.Count > 0) {
+        // Invariant: currentRecipes is non-empty on entry (the caller only invokes this
+        // method with a non-empty nested-recipe set) and is re-established at the bottom
+        // of every iteration that doesn't return early, so the loop never falls out
+        // through a false condition check; while (true) makes that explicit.
+        while (true) {
             var nextIds = new HashSet<RecipeId>();
             foreach (RecipeOverviewReadItem recipe in currentRecipes) {
                 if (!visited.Add(recipe.Id)) {
@@ -110,8 +114,6 @@ public static class RecipeIngredientAccessValidator {
 
             currentRecipes = [.. nextRecipes.Values];
         }
-
-        return Result.Success();
     }
 
     private static Result<IReadOnlyList<ProductId>> ParseProductIds(IReadOnlyList<RecipeStepInput> steps) =>

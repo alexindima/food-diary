@@ -57,6 +57,49 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
     }
 
     [RequiresDockerFact]
+    public async Task ReserveAsync_WithExistingRequestIdForDifferentOperation_ReturnsDuplicate() {
+        (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
+        var repository = new AiQuotaRepository(options, timeProvider);
+        AiQuotaReservationRequest request = CreateRequest(
+            RequestIdFor(20),
+            userId,
+            inputTokens: 100,
+            outputTokens: 50,
+            inputLimit: 1_000,
+            outputLimit: 1_000);
+        await repository.ReserveAsync(request);
+
+        AiQuotaReservationStatus status = await repository.ReserveAsync(request with { Operation = "meal_plan" });
+
+        Assert.Equal(AiQuotaReservationStatus.Duplicate, status);
+    }
+
+    [RequiresDockerFact]
+    public async Task ReserveAsync_WithUnsupportedPersistedState_Throws() {
+        (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
+        var repository = new AiQuotaRepository(options, timeProvider);
+        AiQuotaReservationRequest request = CreateRequest(
+            RequestIdFor(21),
+            userId,
+            inputTokens: 100,
+            outputTokens: 50,
+            inputLimit: 1_000,
+            outputLimit: 1_000);
+        await repository.ReserveAsync(request);
+        await using (var context = new FoodDiaryDbContext(options)) {
+            await context.Database.ExecuteSqlInterpolatedAsync(
+                $"UPDATE \"AiQuotaReservations\" SET \"State\" = {int.MaxValue} WHERE \"RequestId\" = {request.RequestId}");
+        }
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            repository.ReserveAsync(request));
+
+        Assert.Equal("Unsupported AI quota reservation state.", exception.Message);
+    }
+
+    [RequiresDockerFact]
     public async Task ReconcileAsync_IsIdempotentAndReturnsUnusedBudget() {
         (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
         var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
@@ -193,6 +236,27 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
         await Assert.ThrowsAsync<InvalidOperationException>(() => repository.ReconcileAsync(
             requestId,
             new AiQuotaUsage("nutrition", "gpt-test", 11, 10, 21)));
+    }
+
+    [RequiresDockerFact]
+    public async Task ReconcileAsync_WhenReservationWasReleased_Throws() {
+        (DbContextOptions<FoodDiaryDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc));
+        var repository = new AiQuotaRepository(options, timeProvider);
+        string requestId = RequestIdFor(22);
+        await repository.ReserveAsync(CreateRequest(
+            requestId,
+            userId,
+            inputTokens: 10,
+            outputTokens: 10,
+            inputLimit: 100,
+            outputLimit: 100));
+        await repository.ReleaseAsync(requestId);
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            repository.ReconcileAsync(requestId, new AiQuotaUsage("nutrition", "gpt-test", 5, 5, 10)));
+
+        Assert.Equal("Only pending or orphaned AI quota reservations can be reconciled.", exception.Message);
     }
 
     [RequiresDockerFact]

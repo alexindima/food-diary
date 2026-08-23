@@ -456,23 +456,33 @@ public sealed class OpenFoodFactsServiceTests {
         const string json = """{"products":[{"code":"111","product_name":"Milk","nutriments":{}}]}""";
         var handler = new CountingHttpMessageHandler(json);
         OpenFoodFactsService service = CreateService(handler);
-        string query = $"race-{Guid.NewGuid():N}";
-        const int concurrency = 64;
+        string queryPrefix = $"race-{Guid.NewGuid():N}";
+        const int concurrency = 256;
+        const int rounds = 8;
         ThreadPool.GetMinThreads(out int minWorkerThreads, out int minCompletionPortThreads);
         ThreadPool.SetMinThreads(Math.Max(minWorkerThreads, concurrency), minCompletionPortThreads);
-        using var barrier = new Barrier(concurrency);
 
-        Task<IReadOnlyList<OpenFoodFactsProductModel>>[] tasks = [
-            .. Enumerable.Range(0, concurrency)
-                .Select(_ => Task.Run(async () => {
-                    barrier.SignalAndWait();
-                    return await service.SearchAsync(query);
-                })),
-        ];
-        IReadOnlyList<OpenFoodFactsProductModel>[] results = await Task.WhenAll(tasks);
+        for (int round = 0; round < rounds; round++) {
+            using var barrier = new Barrier(concurrency);
+            string query = string.Create(CultureInfo.InvariantCulture, $"{queryPrefix}-{round}");
+            Task<IReadOnlyList<OpenFoodFactsProductModel>>[] tasks = [
+                .. Enumerable.Range(0, concurrency)
+                    .Select(_ => Task.Run(async () => {
+                        barrier.SignalAndWait();
+                        return await service.SearchAsync(query);
+                    })),
+            ];
+            IReadOnlyList<OpenFoodFactsProductModel>[] results = await Task.WhenAll(tasks);
 
-        Assert.Equal(1, handler.RequestCount);
-        Assert.All(results, static result => Assert.Single(result));
+            Assert.All(results, static result => Assert.Single(result));
+            Assert.True(
+                SpinWait.SpinUntil(
+                    static () => OpenFoodFactsService.InFlightSearchCount == 0,
+                    TimeSpan.FromSeconds(2)),
+                "The completed search registration was not removed from shared in-flight state.");
+        }
+
+        Assert.Equal(rounds, handler.RequestCount);
     }
 
     [Fact]

@@ -52,7 +52,11 @@ public static class TemporalRangePolicy {
 
         DateTime current = dateFrom.Date;
         DateTime end = dateTo.Date;
-        while (current <= end) {
+
+        // Invariant: current <= end holds on entry (validated above) and is re-established
+        // at the bottom of every iteration that doesn't exit via yield break, so the loop
+        // never falls out through a false condition check; while (true) makes that explicit.
+        while (true) {
             int remainingDays = (end - current).Days;
             int bucketDays = Math.Min(quantizationDays, remainingDays + 1);
             DateTime bucketEnd = current.AddDays(bucketDays - 1);

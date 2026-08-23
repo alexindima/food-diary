@@ -2352,11 +2352,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/Common/Validation/TemporalRangePolicy.cs",
-      "nonBlankLines": 86,
-      "decisionPoints": 9,
+      "nonBlankLines": 89,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.22
+      "structuralRiskScore": 16.78
     },
     {
       "path": "FoodDiary.Application.Abstractions/Common/Validation/UserIdParser.cs",
@@ -14512,11 +14512,11 @@
     },
     {
       "path": "FoodDiary.Application.Recipes/Recipes/Services/RecipeIngredientAccessValidator.cs",
-      "nonBlankLines": 130,
-      "decisionPoints": 19,
+      "nonBlankLines": 133,
+      "decisionPoints": 20,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 33.1
+      "structuralRiskScore": 34.66
     },
     {
       "path": "FoodDiary.Application.Recipes/Recipes/Services/RecipeManualNutritionValidator.cs",
@@ -20792,11 +20792,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Http/BoundedHttpContentReader.cs",
-      "nonBlankLines": 69,
+      "nonBlankLines": 76,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.38
+      "structuralRiskScore": 10.52
     },
     {
       "path": "FoodDiary.Integrations/Options/BillingOptions.cs",
@@ -22504,11 +22504,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookHttpProcessor.cs",
-      "nonBlankLines": 53,
+      "nonBlankLines": 56,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.06
+      "structuralRiskScore": 10.12
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookRequestLimits.cs",

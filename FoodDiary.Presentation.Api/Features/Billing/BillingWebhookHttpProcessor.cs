@@ -34,12 +34,14 @@ public sealed class BillingWebhookHttpProcessor {
         try {
             var payload = new MemoryStream(
                 request.ContentLength is > 0 ? (int)request.ContentLength.Value : 0);
+            string payloadText;
             await using (payload.ConfigureAwait(false)) {
                 int totalBytes = 0;
                 while (true) {
                     int bytesRead = await request.Body.ReadAsync(buffer.AsMemory(), cancellationToken).ConfigureAwait(false);
                     if (bytesRead == 0) {
-                        return Encoding.UTF8.GetString(payload.GetBuffer(), 0, totalBytes);
+                        payloadText = Encoding.UTF8.GetString(payload.GetBuffer(), 0, totalBytes);
+                        break;
                     }
 
                     totalBytes += bytesRead;
@@ -52,6 +54,8 @@ public sealed class BillingWebhookHttpProcessor {
                     await payload.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken).ConfigureAwait(false);
                 }
             }
+
+            return payloadText;
         } finally {
             ArrayPool<byte>.Shared.Return(buffer);
             if (request.Body.CanSeek) {
