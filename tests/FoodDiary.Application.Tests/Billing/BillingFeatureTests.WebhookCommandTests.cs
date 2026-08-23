@@ -639,11 +639,11 @@ public partial class BillingFeatureTests {
             user,
             "evt_authoritative",
             "subscription_authoritative") with {
-                ExternalCustomerId = "customer_authoritative",
-                Status = "canceled",
-                OccurredAtUtc = Now,
-                IsAuthoritativeSnapshot = true,
-            };
+            ExternalCustomerId = "customer_authoritative",
+            Status = "canceled",
+            OccurredAtUtc = Now,
+            IsAuthoritativeSnapshot = true,
+        };
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             new FakeBillingProviderGateway(BillingProviderNames.Stripe, webhookEvent: authoritativeEvent),
             new FakeUserRepository(user),

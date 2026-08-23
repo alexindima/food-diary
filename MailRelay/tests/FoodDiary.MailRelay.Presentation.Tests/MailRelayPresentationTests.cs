@@ -318,8 +318,8 @@ public sealed class MailRelayPresentationTests {
         AwsSesSnsWebhookHttpRequest request = CreateSignedAwsSnsRequest(
             signature: Convert.ToBase64String(Encoding.UTF8.GetBytes("validly-formed")),
             signingCertUrl: "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-test.pem") with {
-                TopicArn = "arn:aws:sns:us-east-1:999999999999:attacker-topic",
-            };
+            TopicArn = "arn:aws:sns:us-east-1:999999999999:attacker-topic",
+        };
 
         Assert.False(await authorizer.IsAwsSesSnsAuthorizedAsync(request, CancellationToken.None));
         Assert.False(handler.WasCalled);
