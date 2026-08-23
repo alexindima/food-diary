@@ -1,3 +1,5 @@
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+
 function Get-LlmWikiSha256([string]$Value) {
     $sha = [Security.Cryptography.SHA256]::Create()
     try { return ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($Value))) -replace '-', '').ToLowerInvariant() }
@@ -17,11 +19,10 @@ function Normalize-LlmWikiVerificationCommand([string]$Command) {
 }
 
 function Get-LlmWikiVerificationFingerprint([string]$RepositoryRoot) {
-    $head = @(& git -C $RepositoryRoot rev-parse HEAD)[0]
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve HEAD for verification receipts.' }
+    $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for verification receipts.').Lines[0]
     $paths = @(
-        @(& git -C $RepositoryRoot diff --name-only --diff-filter=ACMRD HEAD --)
-        @(& git -C $RepositoryRoot ls-files --others --exclude-standard)
+        (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') -FailureMessage 'Unable to enumerate changed paths for verification receipts.').Lines
+        (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to enumerate untracked paths for verification receipts.').Lines
     ) | Where-Object {
         $_ -and $_ -notmatch '^(?:\.artifacts/|\.llm-wiki/reviews/|\.llm-wiki/generated/)'
     } | ForEach-Object { $_.Replace('\', '/') } | Sort-Object -Unique

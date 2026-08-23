@@ -27,8 +27,38 @@ function Get-LlmWikiGitRenames {
     $arguments = @('-c', 'core.quotepath=false', '-C', $RepositoryRoot, 'diff', '--name-status', '--find-renames', '--diff-filter=R', $BaseRef)
     if (-not [string]::IsNullOrWhiteSpace($HeadRef) -and $HeadRef -ine 'HEAD') { $arguments += $HeadRef }
     $arguments += '--'
-    $lines = @(& git @arguments)
-    if ($LASTEXITCODE -ne 0) { throw "git rename discovery failed for base '$BaseRef' and head '$HeadRef'." }
+    # Invoke git via Diagnostics.Process with stderr captured through .NET instead of
+    # PowerShell's native-command stream: under Set-StrictMode/$ErrorActionPreference =
+    # 'Stop', the `&` call operator can promote even a harmless git warning (e.g. "CRLF
+    # will be replaced by LF", common with core.autocrlf=true on Windows) into a
+    # terminating NativeCommandError, and that promotion happens regardless of a local
+    # `2>$null` redirect in some hosts (verified: reproduces from a fresh
+    # `powershell.exe -File` invocation even with `2>$null` present). Routing stderr
+    # through .NET's ReadToEndAsync never touches that PowerShell machinery at all.
+    $startInfo = [Diagnostics.ProcessStartInfo]::new()
+    $startInfo.FileName = 'git'
+    $startInfo.UseShellExecute = $false
+    $startInfo.RedirectStandardOutput = $true
+    $startInfo.RedirectStandardError = $true
+    $startInfo.StandardOutputEncoding = [Text.UTF8Encoding]::new($false)
+    $startInfo.StandardErrorEncoding = [Text.UTF8Encoding]::new($false)
+    $startInfo.Arguments = (@($arguments | ForEach-Object { '"' + ([string]$_).Replace('"', '\"') + '"' }) -join ' ')
+    $process = [Diagnostics.Process]::new()
+    $process.StartInfo = $startInfo
+    $stdout = ''
+    $stderr = ''
+    $exitCode = -1
+    try {
+        if (-not $process.Start()) { throw "Unable to start git rename discovery for base '$BaseRef' and head '$HeadRef'." }
+        $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+        $stderrTask = $process.StandardError.ReadToEndAsync()
+        $process.WaitForExit()
+        $stdout = [string]$stdoutTask.GetAwaiter().GetResult()
+        $stderr = [string]$stderrTask.GetAwaiter().GetResult()
+        $exitCode = $process.ExitCode
+    } finally { $process.Dispose() }
+    if ($exitCode -ne 0) { throw "git rename discovery failed for base '$BaseRef' and head '$HeadRef'.$(if ($stderr.Trim()) { " $($stderr.Trim())" })" }
+    $lines = @($stdout -split '\r?\n')
     @(ConvertFrom-LlmWikiGitNameStatus $lines)
 }
 
