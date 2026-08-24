@@ -14,10 +14,10 @@ analysis entrypoints without replacing repository source-of-truth checks.
 - `get_development_context` selects scope through the in-process SQLite FTS
   projection, then runs a compact brief and fast test plan concurrently. It
   accepts the projection only for the exact Git/worktree fingerprint, attempts
-  one graph refresh when the projection is missing or stale, and falls back to
-  the established JSON trace if SQL remains unavailable or returns no scope.
-  It refreshes the fingerprint between phases and rejects the result if the
-  snapshot changed.
+  one graph refresh when the projection is missing or stale, and returns an
+  explicit partial result with a recovery action if SQL remains unavailable or
+  returns no scope. It never invokes the JSON trace automatically. It refreshes
+  the fingerprint between phases and rejects the result if the snapshot changed.
 - `get_server_status` reports repository, Git HEAD, Wiki, index presence, and
   runtime identity (PID, process start, startup HEAD, build HEAD/source
   fingerprint, assembly MVID/hash, and build timestamps).
@@ -44,17 +44,22 @@ in-process, read-only `Microsoft.Data.Sqlite` reader. A fresh, non-empty result
 is the primary source of expanded code scope and avoids the legacy trace
 subprocess. The Node graph manager remains the only writer. It publishes the
 complete Git/worktree content fingerprint transactionally and rolls back when
-the worktree changes during a build. Missing, stale, invalid, or empty local
-graph state uses the JSON trace fallback without failing the request.
+the worktree changes during a build. Missing, stale, invalid, locked, or empty
+local graph state produces `context_search_unavailable`, preserves any explicit
+`plannedPath` as bounded scope, and describes how to rebuild, retry, or refine
+the query. `trace_backend_flow` remains available only as an explicit tool.
 
 Both the Node and MCP readers consume
 `.llm-wiki/policies/context-search-ranking.json`. Routing counts appear in
 runtime telemetry as `context-routing/sqlite-primary` and
-`context-routing/json-fallback`; SQLite query timing appears as
-`context-search/in-process-sqlite`. ADR 0014 defines the freshness protocol,
-fallback boundary, and evidence required before the compatibility trace can be
-removed. Git-backed source, tests, policies, ADRs, and scoped instructions stay
-authoritative regardless of retrieval route.
+`context-routing/sqlite-unavailable`; historical `json-fallback` events remain
+readable for the retirement audit. SQLite query timing appears as
+`context-search/in-process-sqlite`. `get_server_status` also derives refresh
+attempt/success/failure counts, the current SQLite-primary streak, unavailable
+count/rate, and the frozen fallback-retirement evidence. These aggregates do not
+expand the persisted event envelope with queries, paths, or payloads. ADR 0014
+records the fallback retirement decision. Git-backed source, tests, policies,
+ADRs, and scoped instructions stay authoritative regardless of retrieval route.
 
 MCP queries request JSON from the Wiki. This enables its snapshot-keyed query
 cache; repeated requests against the same Git HEAD and worktree avoid repeating

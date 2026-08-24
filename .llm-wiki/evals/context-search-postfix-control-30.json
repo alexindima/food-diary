@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "description": "Post-fix control corpus frozen before its first retrieval run. Thirty unique targets were excluded from every earlier context-search corpus. Six equal cohorts exercise Russian/English role retrieval after the blind-100 fixes; this corpus is diagnostic and must retain its first-run baseline if later used for tuning.",
+  "diagnosticLimit": 100,
+  "blindBaseline": {
+    "recordedAtUtc": "2026-08-24T00:00:00Z",
+    "node": {
+      "top1Count": 17,
+      "top10Count": 29,
+      "meanReciprocalRank": 0.7079,
+      "p95QueryDurationMs": 207.15
+    },
+    "cohortTop1Counts": {
+      "api-roles": 3,
+      "behavior-to-test": 3,
+      "frontend": 4,
+      "jobs-options": 2,
+      "persistence": 3,
+      "wiki-tooling": 2
+    }
+  },
+  "postFixEvaluation": {
+    "recordedAtUtc": "2026-08-24T00:00:00Z",
+    "node": {
+      "top1Count": 27,
+      "top10Count": 30,
+      "meanReciprocalRank": 0.95,
+      "p95QueryDurationMs": 226.24
+    },
+    "dotnet": {
+      "top1Count": 27,
+      "top10Count": 30,
+      "meanReciprocalRank": 0.95,
+      "p95QueryDurationMs": 296.13
+    },
+    "parity": {
+      "exactRankDifferences": 0,
+      "top5Differences": 0
+    }
+  },
+  "thresholds": {
+    "minimumCaseCount": 30,
+    "minimumTop1Rate": 0.0,
+    "minimumTop10Rate": 0.0,
+    "minimumMeanReciprocalRank": 0.0
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 30,
+    "minimumTop1Rate": 0.0,
+    "minimumTop10Rate": 0.0,
+    "minimumMeanReciprocalRank": 0.0
+  },
+  "cases": [
+    { "id": "postfix-api-001", "cohort": "api-roles", "query": "атрибут подавляющий access log для запроса API", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Telemetry/SuppressRequestAccessLogAttribute.cs"] },
+    { "id": "postfix-api-002", "cohort": "api-roles", "query": "атрибут запрещающий impersonated access к endpoint", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Security/BlockImpersonatedAccessAttribute.cs"] },
+    { "id": "postfix-api-003", "cohort": "api-roles", "query": "notifier отправляющий письмо подтверждения email", "changeType": "Backend", "expectedPaths": ["FoodDiary.Presentation.Api/Services/EmailVerificationNotifier.cs"] },
+    { "id": "postfix-api-004", "cohort": "api-roles", "query": "атрибут требующий secret телеграм бота для API", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Security/RequireTelegramBotSecretAttribute.cs"] },
+    { "id": "postfix-api-005", "cohort": "api-roles", "query": "presentation notification pusher отправляет доменное уведомление", "changeType": "Backend", "expectedPaths": ["FoodDiary.Presentation.Api/Services/NotificationPusher.cs"] },
+
+    { "id": "postfix-test-001", "cohort": "behavior-to-test", "query": "тест безопасности endpoint Web Push", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs"] },
+    { "id": "postfix-test-002", "cohort": "behavior-to-test", "query": "тест structured audit logger", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Infrastructure.Tests/Services/StructuredAuditLoggerTests.cs"] },
+    { "id": "postfix-test-003", "cohort": "behavior-to-test", "query": "тест границ temporal repository", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Infrastructure.Tests/Persistence/TemporalRepositoryBoundaryTests.cs"] },
+    { "id": "postfix-test-004", "cohort": "behavior-to-test", "query": "тест валидатора даты wearable", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Application.Tests/Wearables/WearableDateValidatorTests.cs"] },
+    { "id": "postfix-test-005", "cohort": "behavior-to-test", "query": "тест SQL primary и JSON fallback в Wiki query service", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs"] },
+
+    { "id": "postfix-job-001", "cohort": "jobs-options", "query": "options еженедельного reminder цели", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/WeeklyGoalReminderOptions.cs"] },
+    { "id": "postfix-job-002", "cohort": "jobs-options", "query": "настройки фоновой очистки пользователя", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/UserCleanupOptions.cs"] },
+    { "id": "postfix-job-003", "cohort": "jobs-options", "query": "snapshot состояния выполнения background job", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/JobExecutionStateSnapshot.cs"] },
+    { "id": "postfix-job-004", "cohort": "jobs-options", "query": "контракт проверки регистрации recurring jobs", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/IRecurringJobRegistrationVerifier.cs"] },
+    { "id": "postfix-job-005", "cohort": "jobs-options", "query": "options удаления старых изображений", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/ImageCleanupOptions.cs"] },
+
+    { "id": "postfix-wiki-001", "cohort": "wiki-tooling", "query": "wiki tool сравнивает task policy", "changeType": "Any", "expectedPaths": [".llm-wiki/tools/Compare-LlmWikiTaskPolicy.ps1"] },
+    { "id": "postfix-wiki-002", "cohort": "wiki-tooling", "query": "получить stale disposition для wiki знаний", "changeType": "Any", "expectedPaths": [".llm-wiki/tools/Get-LlmWikiStaleDisposition.ps1"] },
+    { "id": "postfix-wiki-003", "cohort": "wiki-tooling", "query": "wiki сравнение вариантов solution", "changeType": "Any", "expectedPaths": [".llm-wiki/tools/Get-LlmWikiSolutionComparison.ps1"] },
+    { "id": "postfix-wiki-004", "cohort": "wiki-tooling", "query": "найти git precedents для изменения", "changeType": "Any", "expectedPaths": [".llm-wiki/tools/Get-LlmWikiGitPrecedents.ps1"] },
+    { "id": "postfix-wiki-005", "cohort": "wiki-tooling", "query": "статус текущей implementation phase wiki", "changeType": "Any", "expectedPaths": [".llm-wiki/tools/Get-LlmWikiPhaseStatus.ps1"] },
+
+    { "id": "postfix-front-001", "cohort": "frontend", "query": "Angular guard доступа диетолога", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/src/app/guards/dietologist.guard.ts"] },
+    { "id": "postfix-front-002", "cohort": "frontend", "query": "facade истории веса", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history.facade.ts"] },
+    { "id": "postfix-front-003", "cohort": "frontend", "query": "toast service в fd ui kit", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/toast/fd-ui-toast.service.ts"] },
+    { "id": "postfix-front-004", "cohort": "frontend", "query": "route resolver рецепта", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/src/app/features/recipes/resolvers/recipe.resolver.ts"] },
+    { "id": "postfix-front-005", "cohort": "frontend", "query": "диалог impersonation пользователя администратором", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-impersonation-dialog.ts"] },
+
+    { "id": "postfix-db-001", "cohort": "persistence", "query": "репозиторий подключения wearable", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Wearables/WearableConnectionRepository.cs"] },
+    { "id": "postfix-db-002", "cohort": "persistence", "query": "репозиторий уроков питания", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Content/NutritionLessonRepository.cs"] },
+    { "id": "postfix-db-003", "cohort": "persistence", "query": "repository подписок Web Push", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Notifications/WebPushSubscriptionRepository.cs"] },
+    { "id": "postfix-db-004", "cohort": "persistence", "query": "хранилище любимых рецептов пользователя", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs"] },
+    { "id": "postfix-db-005", "cohort": "persistence", "query": "repository основной сущности пользователя", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs"] }
+  ]
+}

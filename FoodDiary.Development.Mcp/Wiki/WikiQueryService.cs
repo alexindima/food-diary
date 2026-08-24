@@ -154,52 +154,35 @@ public sealed class WikiQueryService(
             }
         }
         bool useSqlContext = sqlContext is { Ready: true, Fresh: true, Candidates.Count: > 0 };
-        string? fallbackReason = useSqlContext
+        string? contextUnavailableReason = useSqlContext
             ? null
             : refreshFailureReason ?? sqlContext?.UnavailableReason ??
                 (contextSearch is null ? "sqlite-reader-not-configured" : "sqlite-no-candidates");
         string[] initialRelevantPaths = NormalizePaths([plannedPath]);
         List<DevelopmentContextComponentError> errors = [];
-        ChangeSetSnapshot? snapshot = null;
-        WikiCommandResult? trace;
         string[] expandedScopePaths;
         if (useSqlContext) {
-            trace = null;
             expandedScopePaths = [.. new[] { plannedPath }
                 .Where(path => !string.IsNullOrWhiteSpace(path))
                 .Cast<string>()
                 .Concat(sqlContext!.Candidates.Take(10).Select(candidate => candidate.Path))
                 .Distinct(StringComparer.OrdinalIgnoreCase)];
         } else {
-            if (initialRelevantPaths.Length > 0) {
-                snapshot = await snapshots.GetAsync(initialRelevantPaths, cancellationToken).ConfigureAwait(false);
-                trace = await ExecuteComponentAsync(
-                    "trace",
-                    ["-Format", "Json", "-Fast", "-Query", query],
-                    snapshot,
-                    errors,
-                    cancellationToken).ConfigureAwait(false);
-            } else {
-                trace = await ExecuteComponentUncachedAsync(
-                    "trace",
-                    ["-Format", "Json", "-Fast", "-Query", query],
-                    errors,
-                    cancellationToken).ConfigureAwait(false);
-            }
-            expandedScopePaths = [.. new[] { plannedPath }
-                .Where(path => !string.IsNullOrWhiteSpace(path))
-                .Cast<string>()
-                .Concat(trace?.GetScopePaths() ?? [])
-                .Distinct(StringComparer.OrdinalIgnoreCase)];
+            errors.Add(CreateContextSearchError(contextUnavailableReason!));
+            expandedScopePaths = initialRelevantPaths;
         }
         routingStopwatch.Stop();
         _telemetry.RecordContextRoute(
-            useSqlContext,
-            fallbackReason,
+            useSqlContext
+                ? ContextRoutingOutcome.SqlitePrimary
+                : ContextRoutingOutcome.SqliteUnavailable,
+            contextUnavailableReason,
             routingStopwatch.Elapsed,
             refreshAttempted,
             refreshSucceeded);
-        snapshot = await snapshots.GetAsync(expandedScopePaths, cancellationToken).ConfigureAwait(false);
+        ChangeSetSnapshot snapshot = await snapshots
+            .GetAsync(expandedScopePaths, cancellationToken)
+            .ConfigureAwait(false);
 
         List<string> briefArguments = [
             "-Format", "Json", "-Compact", "-SkipTestPlan", "-Objective", intent,
@@ -243,20 +226,40 @@ public sealed class WikiQueryService(
             snapshot.Fingerprint,
             snapshot.GitHead,
             await briefTask.ConfigureAwait(false),
-            trace,
+            BackendTrace: null,
             await testPlanTask.ConfigureAwait(false),
             PartialSuccess: errors.Count > 0,
             ComponentErrors: errors,
             ExpandedScopePaths: expandedScopePaths,
-            ScopeMismatch: HasScopeMismatch(plannedPath, trace?.GetScopePaths()),
+            ScopeMismatch: false,
             EffectiveLayers: effectiveLayers,
             CrossLayerScope: effectiveLayers.Length > 1,
             BaseRevision: baselineAvailable ? baseRevision ?? snapshot.GitHead : null,
             HeadRevision: headRevision ?? snapshot.GitHead,
             BaselineAvailable: baselineAvailable,
             SqlContextSearch: sqlContext,
-            ContextRetrievalSource: useSqlContext ? "sqlite" : "json",
-            ContextFallbackReason: fallbackReason);
+            ContextRetrievalSource: useSqlContext ? "sqlite" : "unavailable",
+            ContextFallbackReason: contextUnavailableReason);
+    }
+
+    private static DevelopmentContextComponentError CreateContextSearchError(string unavailableReason) {
+        string recovery = unavailableReason switch {
+            "sqlite-error-5" =>
+                "The SQLite projection is locked by its writer. Retry after the graph writer completes.",
+            "snapshot-mismatch" =>
+                "The worktree changed while the projection was refreshed. Retry after the worktree stabilizes.",
+            "sqlite-no-candidates" =>
+                "Refine the query or provide plannedPath to continue with an explicitly bounded scope.",
+            _ when unavailableReason.StartsWith("graph-refresh-", StringComparison.Ordinal) =>
+                "Run ./.llm-wiki/wiki.ps1 graph-build, resolve the reported refresh failure, and retry.",
+            _ =>
+                "Run ./.llm-wiki/wiki.ps1 graph-build and retry, or provide plannedPath for bounded context.",
+        };
+        return new DevelopmentContextComponentError(
+            "context-search",
+            DevelopmentMcpErrorCodes.ContextSearchUnavailable,
+            $"SQLite development-context search is unavailable ({unavailableReason}). {recovery} " +
+            "Use trace_backend_flow explicitly only when a backend trace is required.");
     }
 
     private static async Task<WikiContextSearchResult?> SearchSqlContextAsync(
@@ -268,7 +271,7 @@ public sealed class WikiQueryService(
         return await contextSearch.SearchAsync(
             query,
             limit: 20,
-            changeType: InferSearchChangeType(plannedPath),
+            changeType: InferSearchChangeType(plannedPath, query),
             module: null,
             scopePaths: string.IsNullOrWhiteSpace(plannedPath) ? [] : [plannedPath],
             cancellationToken,
@@ -425,19 +428,6 @@ public sealed class WikiQueryService(
         return baselineAvailable;
     }
 
-    private static bool HasScopeMismatch(string? plannedPath, IReadOnlyList<string>? tracedPaths) {
-        if (string.IsNullOrWhiteSpace(plannedPath)) {
-            return false;
-        }
-
-        string normalizedPlannedPath = plannedPath.Replace('\\', '/').TrimEnd('/');
-        return (tracedPaths ?? []).Any(path => {
-            string normalizedPath = path.Replace('\\', '/');
-            return !normalizedPath.Equals(normalizedPlannedPath, StringComparison.OrdinalIgnoreCase) &&
-                !normalizedPath.StartsWith($"{normalizedPlannedPath}/", StringComparison.OrdinalIgnoreCase);
-        });
-    }
-
     private static string[] InferLayers(IEnumerable<string> paths) => [.. paths
         .Select(InferLayer)
         .Where(layer => layer is not null)
@@ -466,9 +456,9 @@ public sealed class WikiQueryService(
         return null;
     }
 
-    private static string InferSearchChangeType(string? plannedPath) {
+    private static string InferSearchChangeType(string? plannedPath, string query) {
         if (string.IsNullOrWhiteSpace(plannedPath)) {
-            return "Any";
+            return HasTestIntent(query) ? "Tests" : "Any";
         }
         string normalized = plannedPath.Replace('\\', '/');
         if (normalized.StartsWith("FoodDiary.Web.Client/", StringComparison.OrdinalIgnoreCase)) {
@@ -487,5 +477,17 @@ public sealed class WikiQueryService(
             return "Tests";
         }
         return "Backend";
+    }
+
+    private static bool HasTestIntent(string query) {
+        string normalized = string.Concat(query.Select(character =>
+            char.IsLetterOrDigit(character)
+                ? char.ToLowerInvariant(character)
+                : ' '));
+        return normalized
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Any(term =>
+                term is "test" or "tests" or "testing" or "spec" or "specs" ||
+                term.StartsWith("тест", StringComparison.Ordinal));
     }
 }

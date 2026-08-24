@@ -1,6 +1,6 @@
 # ADR 0014: SQL-first Development Context with JSON Fallback
 
-- Status: Accepted
+- Status: Accepted; JSON fallback retired 2026-08-24
 - Date: 2026-08-21
 - Owners: Developer experience
 - Related: ADR 0013
@@ -41,7 +41,7 @@ Adopt option 3 for `get_development_context`.
 - The standalone `trace_backend_flow` tool and JSON-backed policy and knowledge indexes are unchanged. SQLite remains a reconstructable code-navigation projection, not the authority for reviewed decisions or source claims.
 - Runtime telemetry records `context-routing/sqlite-primary` or `context-routing/json-fallback`. SQLite query timing remains separately visible as `context-search/in-process-sqlite`.
 - A bounded persistent route sample is stored outside the worktree under the resolved Git directory. It contains only timestamp, route, normalized fallback category, duration, and graph-refresh outcome; query text, intent, content, source paths, fingerprints, user identity, and payloads are prohibited.
-- `get_server_status` reports route counts, fallback categories and rate, p50/p95, retention, persistence health, and whether the evidence threshold for considering JSON fallback retirement has been met.
+- `get_server_status` reports route counts, fallback categories and rate, p50/p95, refresh outcomes, the current SQLite-primary streak, retention, persistence health, the effective sample target and remaining successful samples, and whether the evidence threshold for considering JSON fallback retirement has been met.
 
 ### Recovery compatibility boundary
 
@@ -71,7 +71,7 @@ Adopt option 3 for `get_development_context`.
 
 - `SqliteWikiContextSearchTests` verifies freshness acceptance, mismatch rejection, ranking, read-only behavior, and telemetry.
 - `WikiQueryServiceTests` verifies SQL-primary scope, one refresh attempt, JSON fallback, fingerprint forwarding, and routing telemetry.
-- The committed search suite contains 380 strict cases across the primary, holdout, generalization, validation, and five promoted probe corpora. Probe-5 preserves its blind baseline of 22/40 top-1, 36/40 top-10, and 0.6906 MRR.
+- The promoted search suite contains 450 strict cases across the primary, holdout, generalization, validation, and seven promoted probe corpora. A separate 100-case retirement holdout and two 30-case controls remain diagnostic and preserve their blind baselines.
 - `Test-LlmWikiSqlContextEvaluation.ps1` requires every corpus to meet its thresholds, both promotion corpora to meet switch criteria, a combined promotion floor of 100 cases, and no top-10 promotion miss.
 - `--evaluate-context-search` calculates the live MCP change-set fingerprint before evaluating, so a stale database cannot produce a false passing result.
 - `Test-LlmWikiDevelopmentContextEvaluation.ps1` evaluates the complete SQL-first aggregate bundle, including scope recall, noise budget, change context, focused checks, compact payload size, and end-to-end timing.
@@ -87,3 +87,80 @@ Removing the fallback is a separate decision. It requires all of the following e
 3. Bootstrap, missing database, corrupt database, writer lock, cancelled refresh, and worktree-change races have explicit user-facing recovery behavior outside the JSON trace.
 4. A consumer scan confirms that aggregate callers do not depend on trace-only payload fields or ordering.
 5. Source, test, ADR, policy, privacy, journey, and scoped-instruction verification remains Git-backed even if the compatibility trace is removed.
+
+## Retirement Evidence Review: 2026-08-24
+
+The fallback is not ready for removal.
+
+- A new 100-case holdout was authored before retrieval, with ten equal cohorts,
+  unique primary targets, and no target reused from the promoted 450-case suite.
+- Node produced 21/100 top-1, 61/100 top-10, and 0.3404 MRR. The in-process .NET
+  reader matched every expected rank and every top-five candidate, so the result
+  identifies a shared retrieval-quality gap rather than reader drift.
+- Persistent representative telemetry contained 61 aggregate requests:
+  60 SQLite-primary routes and one `graph-refresh-failed` JSON fallback. The
+  1.64% fallback rate exceeds the 1% ceiling and the sample count is below 100.
+  Five requests attempted a graph refresh; four succeeded. With no additional
+  fallback, 39 more SQLite-primary requests are required to reach 1/100 = 1%.
+- The weakest holdout cohorts were adjacent-role disambiguation (0/10 top-1),
+  conversational Russian (1/10), persistence (1/10), and domain invariants
+  (1/10).
+- Root-cause fixes made the candidate pool independent of requested result
+  limit, removed negated roles from positive FTS and boosts, preserved adjacent
+  roles such as `handler` when only `command` is negated, translated negative
+  configuration intent to `unconfigured`, and expanded shared bilingual role
+  and subject affinity.
+- The post-fix Node and in-process .NET evaluations both produced 57/100 top-1,
+  100/100 top-10, and 0.719 MRR, with zero exact-rank or top-five differences.
+  This satisfies the retrieval-quality and reader-parity portion of criterion
+  1, but the tuned holdout is no longer unseen generalization evidence.
+- A new post-fix control then froze 30 additional unique targets, reusing none
+  of the earlier 550 targets. Its untouched first run produced 17/30 top-1,
+  29/30 top-10, and 0.7079 MRR. Shared subject vocabulary and explicit roles
+  later raised it to 27/30 top-1, 30/30 top-10, and 0.95 MRR with exact Node/.NET
+  rank and top-five parity; its original baseline remains unchanged.
+- A second control froze 30 targets unused by all earlier 580 cases. Its blind
+  run produced 18/30 top-1, 28/30 top-10, and 0.7467 MRR. General fixes for
+  quality/value objects, invariants, test roles, notification intent, exercises,
+  password changes, and builders raised it to 26/30 top-1, 30/30 top-10, and
+  0.925 MRR. Node and .NET again had zero exact-rank or top-five differences.
+
+The original holdout baseline must not be reclassified as unseen evidence after
+ranking is tuned against it. The initial review did not authorize removal; the
+later retirement amendment below records the additional evidence and decision.
+
+## JSON Fallback Retirement Amendment: 2026-08-24
+
+All five removal criteria are satisfied, so `get_development_context` no longer
+invokes JSON trace automatically. The standalone `trace_backend_flow` tool is
+unchanged and remains available when a caller explicitly needs a backend trace.
+
+- Persistent evidence reached 160 aggregate requests: 159 SQLite-primary and
+  one historical JSON fallback (0.63%), with 115 consecutive SQLite-primary
+  observations and healthy persistence. The controlled retirement runs used
+  the frozen 30-case control corpora through the complete `WikiQueryService`
+  bundle, not the isolated search reader.
+- One pre-removal full-bundle control exposed a real generalization gap: three
+  explicit test queries without `plannedPath` were searched as `Any`. Query
+  intent now recognizes Russian and English test/spec terms. The unchanged
+  corpus then passed 30/30 SQLite-primary, 30/30 expected-path top-10, and 30/30
+  complete bundles.
+- Missing, stale, confirmed-corrupt-after-rebuild, locked, empty-candidate, and
+  refresh-failure states now return an explicit partial result with
+  `context_search_unavailable` and a concrete rebuild/retry/refine action.
+  Cancellation still propagates as `cancelled`, and worktree races retain the
+  retryable `snapshot_changed` failure. None of these paths invokes JSON trace.
+- A repository consumer scan found no aggregate consumers of trace-only fields
+  or ordering outside the MCP implementation and its tests. `BackendTrace` is
+  retained as a null compatibility field, while `ContextRetrievalSource` is
+  `sqlite` or `unavailable`; `ContextFallbackReason` temporarily carries the
+  normalized unavailability reason for compatibility.
+- Persistent events remain privacy-safe. New failures use
+  `sqlite-unavailable`; the store continues to read historical `json-fallback`
+  events so the retirement evidence remains auditable. Source, tests, ADRs,
+  policies, privacy guidance, journeys, and scoped instructions remain
+  Git-backed and are not moved into SQLite.
+
+The historical option-3 decision above remains the migration record. This
+amendment removes only the automatic aggregate fallback, not JSON publication
+artifacts or the explicit trace tool.

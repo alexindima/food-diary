@@ -79,9 +79,23 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             }
 
             RankingPolicy policy = _policy.Value;
-            string[] queryTerms = ExpandQueryTerms(query, policy);
-            string[] directQueryTerms = GetDirectQueryTerms(query, policy);
-            string[] rankingTerms = ExpandRankingTerms(query, policy);
+            IReadOnlyList<HashSet<string>> negativeRoleGroups = GetNegatedRoleTermGroups(query, policy);
+            HashSet<string> negativeRoleTerms = new(
+                negativeRoleGroups.SelectMany(group => group),
+                StringComparer.Ordinal);
+            string[] alternativeTerms = GetNegatedRoleAlternatives(negativeRoleGroups, policy);
+            string[] queryTerms = [.. ExpandQueryTerms(query, policy)
+                .Where(term => !negativeRoleTerms.Contains(term))
+                .Concat(alternativeTerms)
+                .Distinct(StringComparer.Ordinal)
+                .Take(policy.MaximumQueryTerms)];
+            string[] directQueryTerms = [.. GetDirectQueryTerms(query, policy)
+                .Where(term => !negativeRoleTerms.Contains(term))];
+            string[] rankingTerms = [.. ExpandRankingTerms(query, policy)
+                .Where(term => !negativeRoleTerms.Contains(term))
+                .Concat(alternativeTerms)
+                .Distinct(StringComparer.Ordinal)
+                .Take(policy.MaximumQueryTerms)];
             if (queryTerms.Length == 0) {
                 return Unavailable("query-has-no-search-terms", stopwatch, queryTerms);
             }
@@ -128,12 +142,12 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                     gitHead);
             }
 
-            int candidateLimit = Math.Min(Math.Max(limit * 8, 40), 500);
+            int candidateLimit = policy.CandidatePoolLimit;
             List<RawCandidate> rawCandidates = await ReadCandidatesAsync(
                 connection,
                 queryTerms,
-                limit,
                 candidateLimit,
+                policy.IdentityCandidatePoolLimit,
                 cancellationToken).ConfigureAwait(false);
             WikiContextSearchCandidate[] candidates = Rank(
                 rawCandidates,
@@ -141,6 +155,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 queryTerms,
                 directQueryTerms,
                 rankingTerms,
+                negativeRoleGroups,
                 limit,
                 candidateLimit,
                 changeType,
@@ -213,8 +228,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
     private static async Task<List<RawCandidate>> ReadCandidatesAsync(
         SqliteConnection connection,
         IReadOnlyList<string> queryTerms,
-        int limit,
         int candidateLimit,
+        int identityCandidateLimit,
         CancellationToken cancellationToken) {
         string match = string.Join(
             " OR ",
@@ -257,7 +272,6 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 string escaped = term.Replace("\"", "\"\"", StringComparison.Ordinal);
                 return new[] { $"path : \"{escaped}\"*", $"title : \"{escaped}\"*" };
             }));
-        int identityLimit = Math.Min(Math.Max(limit * 2, 20), 100);
         {
             SqliteCommand command = connection.CreateCommand();
             await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
@@ -272,7 +286,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 LIMIT $limit;
                 """;
             command.Parameters.AddWithValue("$match", identityMatch);
-            command.Parameters.AddWithValue("$limit", identityLimit);
+            command.Parameters.AddWithValue("$limit", identityCandidateLimit);
             SqliteDataReader reader = await command
                 .ExecuteReaderAsync(cancellationToken)
                 .ConfigureAwait(false);
@@ -307,6 +321,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         IReadOnlyList<string> queryTerms,
         IReadOnlyList<string> directQueryTerms,
         IReadOnlyList<string> rankingTerms,
+        IReadOnlyList<HashSet<string>> negativeRoleGroups,
         int limit,
         int candidateLimit,
         string changeType,
@@ -321,14 +336,15 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         HashSet<string> terms = new(rankingTerms, StringComparer.Ordinal);
         HashSet<string> directTerms = new(directQueryTerms, StringComparer.Ordinal);
         bool explicitlyRequestsTest = terms.Contains("test");
-        IReadOnlyList<HashSet<string>> negativeRoleGroups = GetNegatedRoleTermGroups(query, policy);
         List<RankedCandidate> ranked = [];
         for (int index = 0; index < candidates.Count; index++) {
             RawCandidate candidate = candidates[index];
             string normalizedPath = NormalizePath(candidate.Path).ToLowerInvariant();
             bool isTest = TestPath.IsMatch(candidate.Path);
+            string fileName = Path.GetFileName(candidate.Path);
             bool isExplicitTestCandidate = isTest ||
-                Path.GetFileName(candidate.Path).StartsWith("Test", StringComparison.OrdinalIgnoreCase);
+                (fileName.StartsWith("Test", StringComparison.OrdinalIgnoreCase) &&
+                    Path.GetExtension(fileName) is ".cs" or ".ps1" or ".ts" or ".js" or ".mjs" or ".cjs");
             string normalizedTitle = ExpandSearchText(candidate.Title).ToLowerInvariant();
             List<string> reasons = ["SQLite FTS5 lexical match"];
             int score = candidateLimit - index;
@@ -511,8 +527,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 score -= penalty;
                 reasons.Add($"negated role penalty {string.Join(", ", matchedNegativeRoles)}");
             }
-            if (isTest && !string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase)) {
+            if (isExplicitTestCandidate &&
+                !string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase)) {
                 score -= policy.NonTestPenalty;
+                reasons.Add("test candidate ranked after production");
             }
             bool isFrontendPath = normalizedPath.StartsWith(
                 "fooddiary.web.client/",
@@ -669,15 +687,35 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             StringComparer.Ordinal);
         List<HashSet<string>> groups = [];
         foreach (Match match in expression.Matches(ExpandSearchText(query).ToLowerInvariant())) {
-            HashSet<string> group = new(
-                ExpandQueryTerms(match.Groups["phrase"].Value, policy).Where(roleTerms.Contains),
-                StringComparer.Ordinal);
+            HashSet<string> group = new(StringComparer.Ordinal);
+            foreach (string term in GetDirectQueryTerms(match.Groups["phrase"].Value, policy)) {
+                if (roleTerms.Contains(term)) {
+                    group.Add(term);
+                    continue;
+                }
+                List<string> expansions = [];
+                AddConfiguredExpansions(
+                    [term],
+                    policy,
+                    expansions,
+                    new HashSet<string>(StringComparer.Ordinal));
+                group.UnionWith(expansions.Where(roleTerms.Contains));
+            }
             if (group.Count > 0) {
                 groups.Add(group);
             }
         }
         return groups;
     }
+
+    private static string[] GetNegatedRoleAlternatives(
+        IReadOnlyList<HashSet<string>> negativeRoleGroups,
+        RankingPolicy policy) =>
+        [.. negativeRoleGroups
+            .SelectMany(group => group)
+            .Where(policy.NegatedRoleAlternatives.ContainsKey)
+            .SelectMany(term => policy.NegatedRoleAlternatives[term])
+            .Distinct(StringComparer.Ordinal)];
 
     private static void AddExpansions(
         IReadOnlyList<string> expansions,
@@ -709,6 +747,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         if (policy is null ||
             policy.SchemaVersion != 1 ||
             policy.MaximumQueryTerms < 1 ||
+            policy.CandidatePoolLimit < 1 ||
+            policy.IdentityCandidatePoolLimit < 1 ||
             policy.StopTerms is null ||
             policy.PathTermAffinity is null ||
             policy.MatchedPolicyFileNameAffinity is null ||
@@ -716,6 +756,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             policy.NegatedRolePenalty is null ||
             policy.QueryTermExpansions is null ||
             policy.QueryPrefixExpansions is null ||
+            policy.NegatedRoleAlternatives is null ||
             policy.PathBoosts is null ||
             policy.IdentityBoosts is null ||
             policy.IdentityBoosts?.Any(boost =>
@@ -778,6 +819,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
     private sealed record RankingPolicy(
         int SchemaVersion,
         int MaximumQueryTerms,
+        int CandidatePoolLimit,
+        int IdentityCandidatePoolLimit,
         string[] StopTerms,
         PathTermAffinity PathTermAffinity,
         PathTermAffinity MatchedPolicyFileNameAffinity,
@@ -791,6 +834,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         int CrossLayerPenalty,
         Dictionary<string, string[]> QueryTermExpansions,
         Dictionary<string, string[]> QueryPrefixExpansions,
+        Dictionary<string, string[]> NegatedRoleAlternatives,
         PathBoost[] PathBoosts,
         IdentityBoost[] IdentityBoosts,
         StructuralRoleBoost[]? StructuralRoleBoosts = null);

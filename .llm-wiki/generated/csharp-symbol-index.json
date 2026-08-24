@@ -8,13 +8,13 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3441,
-    "symbols": 3449,
+    "sourceFiles": 3443,
+    "symbols": 3451,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 239,
     "kinds": {
-      "class": 1792,
-      "enum": 61,
+      "class": 1793,
+      "enum": 62,
       "interface": 420,
       "record": 1056,
       "record struct": 120
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 62,
-      "Other": 1323,
+      "Other": 1325,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -13460,6 +13460,20 @@
       "line": 6
     },
     {
+      "name": "ContextRoutingOutcome",
+      "kind": "enum",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingOutcome.cs",
+      "line": 2
+    },
+    {
+      "name": "ContextRoutingRetirementEvaluationRunner",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingRetirementEvaluationRunner.cs",
+      "line": 7
+    },
+    {
       "name": "ContextRoutingTelemetryStore",
       "kind": "class",
       "role": "Other",
@@ -26614,28 +26628,28 @@
       "implementation": "SqliteWikiContextSearch",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 76
+      "line": 112
     },
     {
       "service": "IServerStatusService",
       "implementation": "ServerStatusService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 77
+      "line": 113
     },
     {
       "service": "IChangeSetSnapshotService",
       "implementation": "ChangeSetSnapshotService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 78
+      "line": 114
     },
     {
       "service": "IWikiCommandExecutor",
       "implementation": "PowerShellWikiCommandExecutor",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 79
+      "line": 115
     },
     {
       "service": "IAchievementDefinitionStore",

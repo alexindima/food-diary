@@ -24,6 +24,26 @@ $probe6Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-6.json'
 $probe6Evaluation = & $measure -CorpusPath $probe6Corpus -SkipBuild -Format Json | ConvertFrom-Json
 $probe7Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-7.json'
 $probe7Evaluation = & $measure -CorpusPath $probe7Corpus -SkipBuild -Format Json | ConvertFrom-Json
+$retirementHoldoutCorpusPath = Join-Path $PSScriptRoot '../evals/context-search-holdout-100.json'
+$retirementHoldoutCorpus = [IO.File]::ReadAllText(
+    (Resolve-Path -LiteralPath $retirementHoldoutCorpusPath).Path,
+    [Text.Encoding]::UTF8) | ConvertFrom-Json
+$postFixControlCorpusPath = Join-Path $PSScriptRoot '../evals/context-search-postfix-control-30.json'
+$postFixControlCorpus = [IO.File]::ReadAllText(
+    (Resolve-Path -LiteralPath $postFixControlCorpusPath).Path,
+    [Text.Encoding]::UTF8) | ConvertFrom-Json
+$postFixControlEvaluation = & $measure `
+    -CorpusPath $postFixControlCorpusPath `
+    -SkipBuild `
+    -Format Json | ConvertFrom-Json
+$postTuneControlCorpusPath = Join-Path $PSScriptRoot '../evals/context-search-posttune-control-30.json'
+$postTuneControlCorpus = [IO.File]::ReadAllText(
+    (Resolve-Path -LiteralPath $postTuneControlCorpusPath).Path,
+    [Text.Encoding]::UTF8) | ConvertFrom-Json
+$postTuneControlEvaluation = & $measure `
+    -CorpusPath $postTuneControlCorpusPath `
+    -SkipBuild `
+    -Format Json | ConvertFrom-Json
 $allEvaluations = @($primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation, $probe6Evaluation, $probe7Evaluation)
 foreach ($evaluation in $allEvaluations) {
     if (-not $evaluation.passed) {
@@ -60,6 +80,167 @@ foreach ($cohortMetric in @($probe7Evaluation.cohortMetrics)) {
         throw "Seventh promoted probe cohort '$($cohortMetric.cohort)' must retain 8/8 top-1 cases."
     }
 }
+$retirementHoldoutCases = @($retirementHoldoutCorpus.cases)
+if ($retirementHoldoutCases.Count -ne 100) {
+    throw 'Independent JSON fallback retirement holdout must preserve exactly 100 frozen cases.'
+}
+$expectedRetirementCohorts = @(
+    'adjacent-role-disambiguation',
+    'api-transport',
+    'behavior-to-test',
+    'conversational-ru',
+    'domain-invariants',
+    'frontend',
+    'integrations-jobs',
+    'mixed-ru-en',
+    'persistence',
+    'wiki-tooling')
+$retirementCohorts = @($retirementHoldoutCases | Group-Object cohort | Sort-Object Name)
+if ($retirementCohorts.Count -ne $expectedRetirementCohorts.Count -or
+    @(Compare-Object $expectedRetirementCohorts @($retirementCohorts.Name)).Count -ne 0 -or
+    @($retirementCohorts | Where-Object Count -ne 10).Count -ne 0) {
+    throw 'Independent JSON fallback retirement holdout must preserve ten methodology cohorts with ten cases each.'
+}
+$duplicateRetirementIds = @($retirementHoldoutCases | Group-Object id | Where-Object Count -gt 1)
+$retirementPrimaryTargets = @($retirementHoldoutCases | ForEach-Object { [string]@($_.expectedPaths)[0] })
+$duplicateRetirementTargets = @($retirementPrimaryTargets | Group-Object | Where-Object Count -gt 1)
+if ($duplicateRetirementIds.Count -gt 0 -or $duplicateRetirementTargets.Count -gt 0) {
+    throw 'Independent JSON fallback retirement holdout must preserve unique case IDs and primary targets.'
+}
+$promotedExpectedPaths = @($allEvaluations.results.expectedPaths | ForEach-Object { [string]$_ } | Sort-Object -Unique)
+$reusedRetirementTargets = @($retirementPrimaryTargets | Where-Object { $_ -in $promotedExpectedPaths })
+if ($reusedRetirementTargets.Count -gt 0) {
+    throw "Independent JSON fallback retirement holdout reused promoted targets: $($reusedRetirementTargets -join ', ')."
+}
+$repositoryRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
+$missingRetirementTargets = @($retirementPrimaryTargets | Where-Object {
+        -not (Test-Path -LiteralPath (Join-Path $repositoryRoot $_))
+    })
+if ($missingRetirementTargets.Count -gt 0) {
+    throw "Independent JSON fallback retirement holdout targets are missing: $($missingRetirementTargets -join ', ')."
+}
+if ([int]$retirementHoldoutCorpus.blindBaseline.node.top1Count -ne 21 -or
+    [int]$retirementHoldoutCorpus.blindBaseline.node.top10Count -ne 61 -or
+    [double]$retirementHoldoutCorpus.blindBaseline.node.meanReciprocalRank -ne 0.3404 -or
+    [int]$retirementHoldoutCorpus.blindBaseline.parity.exactRankAndTop5Differences -ne 0) {
+    throw 'Independent JSON fallback retirement holdout must retain its frozen blind baseline and parity evidence.'
+}
+if ([int]$retirementHoldoutCorpus.postFixEvaluation.node.top1Count -ne 57 -or
+    [int]$retirementHoldoutCorpus.postFixEvaluation.node.top10Count -ne 100 -or
+    [double]$retirementHoldoutCorpus.postFixEvaluation.node.meanReciprocalRank -ne 0.719 -or
+    [int]$retirementHoldoutCorpus.postFixEvaluation.parity.exactRankDifferences -ne 0 -or
+    [int]$retirementHoldoutCorpus.postFixEvaluation.parity.top5Differences -ne 0) {
+    throw 'Independent JSON fallback retirement holdout must retain its post-fix quality and parity evidence.'
+}
+$runtimeRetirementEvidence = $retirementHoldoutCorpus.runtimeRetirementEvidence
+$runtimeSampleCount = [int]$runtimeRetirementEvidence.sampleCount
+$runtimeSqlitePrimaryCount = [int]$runtimeRetirementEvidence.sqlitePrimaryCount
+$runtimeSqliteUnavailableCount = [int]$runtimeRetirementEvidence.sqliteUnavailableCount
+$runtimeJsonFallbackCount = [int]$runtimeRetirementEvidence.jsonFallbackCount
+$runtimeMaximumFallbackRate = [double]$runtimeRetirementEvidence.maximumJsonFallbackRate
+$runtimeMinimumSampleCount = [int]$runtimeRetirementEvidence.minimumSampleCount
+$expectedRuntimeFallbackRate = if ($runtimeSampleCount -eq 0) {
+    0.0
+} else {
+    [Math]::Round(
+        $runtimeJsonFallbackCount / $runtimeSampleCount,
+        4,
+        [MidpointRounding]::AwayFromZero)
+}
+$runtimeRequiredSampleCount = [Math]::Max(
+    $runtimeMinimumSampleCount,
+    $(if ($runtimeJsonFallbackCount -eq 0) {
+            $runtimeMinimumSampleCount
+        } else {
+            [Math]::Ceiling($runtimeJsonFallbackCount / $runtimeMaximumFallbackRate)
+        }))
+$expectedAdditionalRuntimeSamples = [Math]::Max(0, $runtimeRequiredSampleCount - $runtimeSampleCount)
+if ($runtimeSampleCount -ne
+        $runtimeSqlitePrimaryCount + $runtimeSqliteUnavailableCount + $runtimeJsonFallbackCount -or
+    [double]$runtimeRetirementEvidence.jsonFallbackRate -ne $expectedRuntimeFallbackRate -or
+    [int]$runtimeRetirementEvidence.refreshAttemptCount -ne
+        [int]$runtimeRetirementEvidence.refreshSuccessCount + [int]$runtimeRetirementEvidence.refreshFailureCount -or
+    [int]$runtimeRetirementEvidence.consecutiveSqlitePrimaryCount -gt $runtimeSqlitePrimaryCount -or
+    [int]$runtimeRetirementEvidence.minimumAdditionalSqlitePrimarySamplesRequired -ne
+        $expectedAdditionalRuntimeSamples) {
+    throw 'Committed runtime fallback-retirement evidence is internally inconsistent.'
+}
+$postFixControlCases = @($postFixControlCorpus.cases)
+$postFixControlTargets = @($postFixControlCases | ForEach-Object { [string]@($_.expectedPaths)[0] })
+if ($postFixControlCases.Count -ne 30 -or
+    @($postFixControlCases.id | Sort-Object -Unique).Count -ne 30 -or
+    @($postFixControlTargets | Sort-Object -Unique).Count -ne 30) {
+    throw 'Post-fix control corpus must preserve 30 unique cases and targets.'
+}
+$reusedPostFixControlTargets = @($postFixControlTargets | Where-Object {
+        $_ -in $promotedExpectedPaths -or $_ -in $retirementPrimaryTargets
+    })
+if ($reusedPostFixControlTargets.Count -gt 0) {
+    throw "Post-fix control corpus reused earlier targets: $($reusedPostFixControlTargets -join ', ')."
+}
+$missingPostFixControlTargets = @($postFixControlTargets | Where-Object {
+        -not (Test-Path -LiteralPath (Join-Path $repositoryRoot $_))
+    })
+if ($missingPostFixControlTargets.Count -gt 0) {
+    throw "Post-fix control corpus targets are missing: $($missingPostFixControlTargets -join ', ')."
+}
+if ([int]$postFixControlCorpus.blindBaseline.node.top1Count -ne 17 -or
+    [int]$postFixControlCorpus.blindBaseline.node.top10Count -ne 29 -or
+    [double]$postFixControlCorpus.blindBaseline.node.meanReciprocalRank -ne 0.7079) {
+    throw 'Post-fix control corpus must retain its frozen first-run baseline.'
+}
+if ([int]$postFixControlCorpus.postFixEvaluation.node.top1Count -ne 27 -or
+    [int]$postFixControlCorpus.postFixEvaluation.node.top10Count -ne 30 -or
+    [double]$postFixControlCorpus.postFixEvaluation.node.meanReciprocalRank -ne 0.95 -or
+    [int]$postFixControlCorpus.postFixEvaluation.parity.exactRankDifferences -ne 0 -or
+    [int]$postFixControlCorpus.postFixEvaluation.parity.top5Differences -ne 0) {
+    throw 'Post-fix control corpus must retain its tuned quality and parity evidence.'
+}
+if ([int]$postFixControlEvaluation.metrics.top1Count -lt 27 -or
+    [int]$postFixControlEvaluation.metrics.top10Count -ne 30 -or
+    [double]$postFixControlEvaluation.metrics.meanReciprocalRank -lt 0.95) {
+    throw "Post-fix control regressed: top1=$($postFixControlEvaluation.metrics.top1Count)/30, top10=$($postFixControlEvaluation.metrics.top10Count)/30, MRR=$($postFixControlEvaluation.metrics.meanReciprocalRank)."
+}
+$postTuneControlCases = @($postTuneControlCorpus.cases)
+$postTuneControlTargets = @($postTuneControlCases | ForEach-Object { [string]@($_.expectedPaths)[0] })
+if ($postTuneControlCases.Count -ne 30 -or
+    @($postTuneControlCases.id | Sort-Object -Unique).Count -ne 30 -or
+    @($postTuneControlTargets | Sort-Object -Unique).Count -ne 30) {
+    throw 'Second post-tuning control corpus must preserve 30 unique cases and targets.'
+}
+$reusedPostTuneControlTargets = @($postTuneControlTargets | Where-Object {
+        $_ -in $promotedExpectedPaths -or
+        $_ -in $retirementPrimaryTargets -or
+        $_ -in $postFixControlTargets
+    })
+if ($reusedPostTuneControlTargets.Count -gt 0) {
+    throw "Second post-tuning control corpus reused earlier targets: $($reusedPostTuneControlTargets -join ', ')."
+}
+$missingPostTuneControlTargets = @($postTuneControlTargets | Where-Object {
+        -not (Test-Path -LiteralPath (Join-Path $repositoryRoot $_))
+    })
+if ($missingPostTuneControlTargets.Count -gt 0) {
+    throw "Second post-tuning control corpus targets are missing: $($missingPostTuneControlTargets -join ', ')."
+}
+if ([int]$postTuneControlCorpus.blindBaseline.node.top1Count -ne 18 -or
+    [int]$postTuneControlCorpus.blindBaseline.node.top10Count -ne 28 -or
+    [double]$postTuneControlCorpus.blindBaseline.node.meanReciprocalRank -ne 0.7467 -or
+    [int]$postTuneControlCorpus.blindBaseline.parity.exactRankDifferences -ne 0 -or
+    [int]$postTuneControlCorpus.blindBaseline.parity.top5Differences -ne 0) {
+    throw 'Second post-tuning control corpus must retain its frozen blind baseline and parity evidence.'
+}
+if ([int]$postTuneControlCorpus.postFixEvaluation.node.top1Count -ne 26 -or
+    [int]$postTuneControlCorpus.postFixEvaluation.node.top10Count -ne 30 -or
+    [double]$postTuneControlCorpus.postFixEvaluation.node.meanReciprocalRank -ne 0.925 -or
+    [int]$postTuneControlCorpus.postFixEvaluation.parity.exactRankDifferences -ne 0 -or
+    [int]$postTuneControlCorpus.postFixEvaluation.parity.top5Differences -ne 0) {
+    throw 'Second post-tuning control corpus must retain its post-fix quality and parity evidence.'
+}
+if ([int]$postTuneControlEvaluation.metrics.top1Count -lt 26 -or
+    [int]$postTuneControlEvaluation.metrics.top10Count -ne 30 -or
+    [double]$postTuneControlEvaluation.metrics.meanReciprocalRank -lt 0.925) {
+    throw "Second post-tuning control regressed: top1=$($postTuneControlEvaluation.metrics.top1Count)/30, top10=$($postTuneControlEvaluation.metrics.top10Count)/30, MRR=$($postTuneControlEvaluation.metrics.meanReciprocalRank)."
+}
 $combinedCaseCount = [int]$primaryEvaluation.caseCount + [int]$challengeEvaluation.caseCount
 $combinedTop10Count = [int]$primaryEvaluation.metrics.top10Count + [int]$challengeEvaluation.metrics.top10Count
 if ($combinedCaseCount -lt 100) { throw 'Combined SQL context evaluation must contain at least 100 representative cases.' }
@@ -91,4 +272,4 @@ if ($strictTop1Count -ne $strictCaseCount) {
 }
 $probeCaseCount = [int](($probeEvaluation.caseCount, $probe2Evaluation.caseCount, $probe3Evaluation.caseCount, $probe4Evaluation.caseCount, $probe5Evaluation.caseCount, $probe6Evaluation.caseCount, $probe7Evaluation.caseCount | Measure-Object -Sum).Sum)
 $probeTop1Count = [int](($probeEvaluation.metrics.top1Count, $probe2Evaluation.metrics.top1Count, $probe3Evaluation.metrics.top1Count, $probe4Evaluation.metrics.top1Count, $probe5Evaluation.metrics.top1Count, $probe6Evaluation.metrics.top1Count, $probe7Evaluation.metrics.top1Count | Measure-Object -Sum).Sum)
-Write-Host "LLM Wiki SQL context evaluation passed: strict top1=$strictTop1Count/$strictCaseCount; promotion top10=$combinedTop10Count/$combinedCaseCount; primary MRR=$($primaryEvaluation.metrics.meanReciprocalRank), p95=$($primaryEvaluation.metrics.p95SqlDurationMs)ms; challenge MRR=$($challengeEvaluation.metrics.meanReciprocalRank), p95=$($challengeEvaluation.metrics.p95SqlDurationMs)ms; generalization MRR=$($generalizationEvaluation.metrics.meanReciprocalRank), p95=$($generalizationEvaluation.metrics.p95SqlDurationMs)ms; validation MRR=$($validationEvaluation.metrics.meanReciprocalRank), p95=$($validationEvaluation.metrics.p95SqlDurationMs)ms; probes top1=$probeTop1Count/$probeCaseCount; probe5 baseline=22/40 and promoted=$($probe5Evaluation.metrics.top1Count)/$($probe5Evaluation.caseCount); probe6 baseline=9/30 and promoted=$($probe6Evaluation.metrics.top1Count)/$($probe6Evaluation.caseCount); probe7 corrected baseline=18/40 and promoted=$($probe7Evaluation.metrics.top1Count)/$($probe7Evaluation.caseCount)."
+Write-Host "LLM Wiki SQL context evaluation passed: strict top1=$strictTop1Count/$strictCaseCount; promotion top10=$combinedTop10Count/$combinedCaseCount; primary MRR=$($primaryEvaluation.metrics.meanReciprocalRank), p95=$($primaryEvaluation.metrics.p95SqlDurationMs)ms; challenge MRR=$($challengeEvaluation.metrics.meanReciprocalRank), p95=$($challengeEvaluation.metrics.p95SqlDurationMs)ms; generalization MRR=$($generalizationEvaluation.metrics.meanReciprocalRank), p95=$($generalizationEvaluation.metrics.p95SqlDurationMs)ms; validation MRR=$($validationEvaluation.metrics.meanReciprocalRank), p95=$($validationEvaluation.metrics.p95SqlDurationMs)ms; probes top1=$probeTop1Count/$probeCaseCount; probe5 baseline=22/40 and promoted=$($probe5Evaluation.metrics.top1Count)/$($probe5Evaluation.caseCount); probe6 baseline=9/30 and promoted=$($probe6Evaluation.metrics.top1Count)/$($probe6Evaluation.caseCount); probe7 corrected baseline=18/40 and promoted=$($probe7Evaluation.metrics.top1Count)/$($probe7Evaluation.caseCount); controls=$($postFixControlEvaluation.metrics.top1Count)/30 and $($postTuneControlEvaluation.metrics.top1Count)/30 top1, both 30/30 top10."

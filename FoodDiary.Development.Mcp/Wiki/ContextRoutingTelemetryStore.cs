@@ -10,6 +10,7 @@ public sealed class ContextRoutingTelemetryStore(
     TimeProvider? timeProvider = null,
     int maximumEvents = 1000) {
     private const int MinimumRetirementSamples = 100;
+    private const double MaximumRetirementJsonFallbackRate = 0.01;
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web) {
         WriteIndented = true,
     };
@@ -25,7 +26,7 @@ public sealed class ContextRoutingTelemetryStore(
     private DateTimeOffset? _lastPersistenceFailureAtUtc;
 
     public void Record(
-        bool usedSqlite,
+        ContextRoutingOutcome outcome,
         string? fallbackReason,
         TimeSpan duration,
         bool refreshAttempted,
@@ -35,8 +36,15 @@ public sealed class ContextRoutingTelemetryStore(
                 List<ContextRoutingEvent> events = ReadEvents();
                 events.Add(new ContextRoutingEvent(
                     _timeProvider.GetUtcNow(),
-                    usedSqlite ? "sqlite-primary" : "json-fallback",
-                    usedSqlite ? null : NormalizeFallbackReason(fallbackReason),
+                    outcome switch {
+                        ContextRoutingOutcome.SqlitePrimary => "sqlite-primary",
+                        ContextRoutingOutcome.SqliteUnavailable => "sqlite-unavailable",
+                        ContextRoutingOutcome.JsonFallback => "json-fallback",
+                        _ => throw new ArgumentOutOfRangeException(nameof(outcome)),
+                    },
+                    outcome == ContextRoutingOutcome.SqlitePrimary
+                        ? null
+                        : NormalizeFallbackReason(fallbackReason),
                     Math.Round(Math.Max(0, duration.TotalMilliseconds), 2, MidpointRounding.AwayFromZero),
                     refreshAttempted,
                     refreshSucceeded));
@@ -67,11 +75,26 @@ public sealed class ContextRoutingTelemetryStore(
             item.Route,
             "sqlite-primary",
             StringComparison.Ordinal));
-        int jsonFallback = events.Count - sqlitePrimary;
+        int sqliteUnavailable = events.Count(item => string.Equals(
+            item.Route,
+            "sqlite-unavailable",
+            StringComparison.Ordinal));
+        int jsonFallback = events.Count(item => string.Equals(
+            item.Route,
+            "json-fallback",
+            StringComparison.Ordinal));
         int noCandidateFallbacks = events.Count(item => string.Equals(
             item.FallbackReason,
             "sqlite-no-candidates",
             StringComparison.Ordinal));
+        int refreshAttempts = events.Count(item => item.RefreshAttempted);
+        int refreshSuccesses = events.Count(item => item.RefreshAttempted && item.RefreshSucceeded);
+        int refreshFailures = refreshAttempts - refreshSuccesses;
+        int consecutiveSqlitePrimary = events
+            .AsEnumerable()
+            .Reverse()
+            .TakeWhile(item => string.Equals(item.Route, "sqlite-primary", StringComparison.Ordinal))
+            .Count();
         double[] durations = [.. events.Select(item => item.DurationMilliseconds).Order()];
         long persistenceFailures = Interlocked.Read(ref _persistenceFailures);
         var fallbackReasons = events
@@ -82,10 +105,24 @@ public sealed class ContextRoutingTelemetryStore(
         double fallbackRate = events.Count == 0
             ? 0
             : Math.Round((double)jsonFallback / events.Count, 4, MidpointRounding.AwayFromZero);
+        double unavailableRate = events.Count == 0
+            ? 0
+            : Math.Round((double)sqliteUnavailable / events.Count, 4, MidpointRounding.AwayFromZero);
+        int sampleCountRequiredForFallbackRate = jsonFallback == 0
+            ? MinimumRetirementSamples
+            : checked((int)Math.Ceiling(jsonFallback / MaximumRetirementJsonFallbackRate));
+        int requiredRetirementSampleCount = Math.Max(
+            MinimumRetirementSamples,
+            sampleCountRequiredForFallbackRate);
+        int minimumAdditionalSqlitePrimarySamplesRequired = Math.Max(
+            0,
+            requiredRetirementSampleCount - events.Count);
 
         return new ContextRoutingHealth(
             SampleCount: events.Count,
             SqlitePrimaryCount: sqlitePrimary,
+            SqliteUnavailableCount: sqliteUnavailable,
+            SqliteUnavailableRate: unavailableRate,
             JsonFallbackCount: jsonFallback,
             JsonFallbackRate: fallbackRate,
             SqliteNoCandidateFallbackCount: noCandidateFallbacks,
@@ -94,10 +131,17 @@ public sealed class ContextRoutingTelemetryStore(
             OldestSampleAtUtc: events.Count == 0 ? null : events[0].RecordedAtUtc,
             LatestSampleAtUtc: events.Count == 0 ? null : events[^1].RecordedAtUtc,
             FallbackReasonCounts: fallbackReasons,
+            RefreshAttemptCount: refreshAttempts,
+            RefreshSuccessCount: refreshSuccesses,
+            RefreshFailureCount: refreshFailures,
+            ConsecutiveSqlitePrimaryCount: consecutiveSqlitePrimary,
             RetentionLimit: _maximumEvents,
             MinimumRetirementSamples,
+            MaximumRetirementJsonFallbackRate,
+            RequiredRetirementSampleCount: requiredRetirementSampleCount,
+            MinimumAdditionalSqlitePrimarySamplesRequired: minimumAdditionalSqlitePrimarySamplesRequired,
             JsonFallbackRetirementReady: events.Count >= MinimumRetirementSamples &&
-                fallbackRate <= 0.01 && persistenceFailures == 0,
+                fallbackRate <= MaximumRetirementJsonFallbackRate && persistenceFailures == 0,
             PersistenceHealthy: persistenceFailures == 0,
             PersistenceFailures: persistenceFailures,
             LastPersistenceFailureAtUtc: _lastPersistenceFailureAtUtc);

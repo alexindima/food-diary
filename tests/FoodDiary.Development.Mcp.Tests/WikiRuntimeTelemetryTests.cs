@@ -74,25 +74,25 @@ public sealed class WikiRuntimeTelemetryTests {
         try {
             ContextRoutingTelemetryStore store = new(path, maximumEvents: 3);
             store.Record(
-                usedSqlite: true,
+                outcome: ContextRoutingOutcome.SqlitePrimary,
                 fallbackReason: null,
                 TimeSpan.FromMilliseconds(10),
                 refreshAttempted: false,
                 refreshSucceeded: false);
             store.Record(
-                usedSqlite: false,
+                outcome: ContextRoutingOutcome.JsonFallback,
                 fallbackReason: "graph-refresh-secret-query-and-path",
                 TimeSpan.FromMilliseconds(40),
                 refreshAttempted: true,
                 refreshSucceeded: false);
             store.Record(
-                usedSqlite: false,
+                outcome: ContextRoutingOutcome.JsonFallback,
                 fallbackReason: "sqlite-no-candidates",
                 TimeSpan.FromMilliseconds(20),
                 refreshAttempted: false,
                 refreshSucceeded: false);
             store.Record(
-                usedSqlite: true,
+                outcome: ContextRoutingOutcome.SqlitePrimary,
                 fallbackReason: null,
                 TimeSpan.FromMilliseconds(30),
                 refreshAttempted: false,
@@ -108,11 +108,20 @@ public sealed class WikiRuntimeTelemetryTests {
             Assert.Equal(30, health.P50Milliseconds);
             Assert.Equal(40, health.P95Milliseconds);
             Assert.Equal(1, health.FallbackReasonCounts["graph-refresh-failed"]);
+            Assert.Equal(1, health.RefreshAttemptCount);
+            Assert.Equal(0, health.RefreshSuccessCount);
+            Assert.Equal(1, health.RefreshFailureCount);
+            Assert.Equal(1, health.ConsecutiveSqlitePrimaryCount);
+            Assert.Equal(0.01, health.MaximumRetirementJsonFallbackRate);
+            Assert.Equal(200, health.RequiredRetirementSampleCount);
+            Assert.Equal(197, health.MinimumAdditionalSqlitePrimarySamplesRequired);
             Assert.True(health.PersistenceHealthy);
             Assert.False(health.JsonFallbackRetirementReady);
             string persisted = File.ReadAllText(path);
             Assert.DoesNotContain("secret-query", persisted, StringComparison.OrdinalIgnoreCase);
             Assert.DoesNotContain("query-and-path", persisted, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("consecutiveSqlitePrimaryCount", persisted, StringComparison.Ordinal);
+            Assert.DoesNotContain("minimumAdditionalSqlitePrimarySamplesRequired", persisted, StringComparison.Ordinal);
         } finally {
             if (Directory.Exists(directory)) {
                 Directory.Delete(directory, recursive: true);
@@ -130,7 +139,7 @@ public sealed class WikiRuntimeTelemetryTests {
         try {
             ContextRoutingTelemetryStore store = new(path, maximumEvents: 100);
             await Task.WhenAll(Enumerable.Range(0, 100).Select(_ => Task.Run(() => store.Record(
-                usedSqlite: true,
+                outcome: ContextRoutingOutcome.SqlitePrimary,
                 fallbackReason: null,
                 TimeSpan.FromMilliseconds(5),
                 refreshAttempted: false,
@@ -141,8 +150,92 @@ public sealed class WikiRuntimeTelemetryTests {
             Assert.Equal(100, health.SampleCount);
             Assert.Equal(100, health.SqlitePrimaryCount);
             Assert.Equal(0, health.JsonFallbackCount);
+            Assert.Equal(100, health.ConsecutiveSqlitePrimaryCount);
+            Assert.Equal(100, health.RequiredRetirementSampleCount);
+            Assert.Equal(0, health.MinimumAdditionalSqlitePrimarySamplesRequired);
             Assert.True(health.JsonFallbackRetirementReady);
             Assert.Equal(0, health.PersistenceFailures);
+        } finally {
+            if (Directory.Exists(directory)) {
+                Directory.Delete(directory, recursive: true);
+            }
+        }
+    }
+
+    [Fact]
+    public void ContextRoutingTelemetry_ReportsMinimumSuccessfulSamplesNeededForRetirement() {
+        string directory = Path.Combine(
+            Path.GetTempPath(),
+            "fooddiary-development-mcp-tests",
+            Guid.NewGuid().ToString("N"));
+        string path = Path.Combine(directory, "context-routing.json");
+        try {
+            ContextRoutingTelemetryStore store = new(path, maximumEvents: 1000);
+            store.Record(
+                outcome: ContextRoutingOutcome.JsonFallback,
+                fallbackReason: "graph-refresh-failed",
+                TimeSpan.FromMilliseconds(40),
+                refreshAttempted: true,
+                refreshSucceeded: false);
+            foreach (int duration in Enumerable.Range(1, 60)) {
+                store.Record(
+                    outcome: ContextRoutingOutcome.SqlitePrimary,
+                    fallbackReason: null,
+                    TimeSpan.FromMilliseconds(duration),
+                    refreshAttempted: false,
+                    refreshSucceeded: false);
+            }
+
+            ContextRoutingHealth health = store.Capture();
+
+            Assert.Multiple(
+                () => Assert.Equal(61, health.SampleCount),
+                () => Assert.Equal(60, health.SqlitePrimaryCount),
+                () => Assert.Equal(1, health.JsonFallbackCount),
+                () => Assert.Equal(0.0164, health.JsonFallbackRate),
+                () => Assert.Equal(60, health.ConsecutiveSqlitePrimaryCount),
+                () => Assert.Equal(1, health.RefreshAttemptCount),
+                () => Assert.Equal(0, health.RefreshSuccessCount),
+                () => Assert.Equal(1, health.RefreshFailureCount),
+                () => Assert.Equal(100, health.RequiredRetirementSampleCount),
+                () => Assert.Equal(39, health.MinimumAdditionalSqlitePrimarySamplesRequired),
+                () => Assert.False(health.JsonFallbackRetirementReady));
+        } finally {
+            if (Directory.Exists(directory)) {
+                Directory.Delete(directory, recursive: true);
+            }
+        }
+    }
+
+    [Fact]
+    public void ContextRoutingTelemetry_DistinguishesSqliteUnavailableFromHistoricalJsonFallback() {
+        string directory = Path.Combine(
+            Path.GetTempPath(),
+            "fooddiary-development-mcp-tests",
+            Guid.NewGuid().ToString("N"));
+        string path = Path.Combine(directory, "context-routing.json");
+        try {
+            ContextRoutingTelemetryStore store = new(path);
+            store.Record(
+                ContextRoutingOutcome.SqliteUnavailable,
+                fallbackReason: "sqlite-error-5",
+                TimeSpan.FromMilliseconds(20),
+                refreshAttempted: false,
+                refreshSucceeded: false);
+
+            ContextRoutingHealth health = store.Capture();
+
+            Assert.Multiple(
+                () => Assert.Equal(1, health.SampleCount),
+                () => Assert.Equal(0, health.SqlitePrimaryCount),
+                () => Assert.Equal(1, health.SqliteUnavailableCount),
+                () => Assert.Equal(1, health.SqliteUnavailableRate),
+                () => Assert.Equal(0, health.JsonFallbackCount),
+                () => Assert.Equal(0, health.JsonFallbackRate),
+                () => Assert.Equal(1, health.FallbackReasonCounts["sqlite-error"]));
+            string persisted = File.ReadAllText(path);
+            Assert.Contains("sqlite-unavailable", persisted, StringComparison.Ordinal);
+            Assert.DoesNotContain("json-fallback", persisted, StringComparison.Ordinal);
         } finally {
             if (Directory.Exists(directory)) {
                 Directory.Delete(directory, recursive: true);
@@ -165,7 +258,7 @@ public sealed class WikiRuntimeTelemetryTests {
         try {
             var store = new ContextRoutingTelemetryStore(path);
             store.Record(
-                usedSqlite: false,
+                outcome: ContextRoutingOutcome.JsonFallback,
                 fallbackReason: reason,
                 duration: TimeSpan.FromMilliseconds(-5),
                 refreshAttempted: false,
@@ -235,7 +328,7 @@ public sealed class WikiRuntimeTelemetryTests {
             var store = new ContextRoutingTelemetryStore(path);
 
             store.Record(
-                usedSqlite: true,
+                outcome: ContextRoutingOutcome.SqlitePrimary,
                 fallbackReason: null,
                 duration: TimeSpan.Zero,
                 refreshAttempted: false,

@@ -173,6 +173,89 @@ public sealed class EvaluationRunnerTests {
         }
     }
 
+    [Fact]
+    public async Task ContextRoutingRetirementEvaluationRunner_WithPrimaryCompleteHit_RecordsEvidence() {
+        string corpusPath = await WriteCorpusAsync("""
+            {
+              "schemaVersion": 1,
+              "cases": [{
+                "id": "users",
+                "query": "user handler",
+                "expectedPaths": ["FoodDiary.Application.Users/Handler.cs"]
+              }]
+            }
+            """);
+        string telemetryDirectory = Path.Combine(
+            Path.GetTempPath(),
+            "fooddiary-mcp-evaluation",
+            Guid.NewGuid().ToString("N"));
+        string telemetryPath = Path.Combine(telemetryDirectory, "routing.json");
+        IWikiCommandExecutor executor = Substitute.For<IWikiCommandExecutor>();
+        executor.ExecuteAsync(Arg.Any<string>(), Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(call => Task.FromResult(CreateCommandResult(call.ArgAt<string>(0))));
+        IChangeSetSnapshotService snapshots = Substitute.For<IChangeSetSnapshotService>();
+        var snapshot = new ChangeSetSnapshot("head", "fingerprint", [], DateTimeOffset.UtcNow);
+        snapshots.GetAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
+        snapshots.RefreshAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
+        var search = new SequencedContextSearch([CreateSearchResult([
+            new WikiContextSearchCandidate(1, "FoodDiary.Application.Users/Handler.cs", "symbol", "Application", 100, 1, []),
+        ])]);
+        ContextRoutingTelemetryStore routingStore = new(telemetryPath);
+        WikiRuntimeTelemetry telemetry = new(routingStore);
+        var queries = new WikiQueryService(executor, snapshots, contextSearch: search, telemetry: telemetry);
+        await using var output = new StringWriter();
+
+        try {
+            await ContextRoutingRetirementEvaluationRunner.RunAsync(
+                queries,
+                routingStore,
+                corpusPath,
+                output,
+                CancellationToken.None);
+
+            using var document = JsonDocument.Parse(output.ToString());
+            JsonElement root = document.RootElement;
+            Assert.Multiple(
+                () => Assert.True(root.GetProperty("passed").GetBoolean()),
+                () => Assert.Equal(1, root.GetProperty("caseCount").GetInt32()),
+                () => Assert.Equal(1, root.GetProperty("metrics").GetProperty("sqlitePrimaryCount").GetInt32()),
+                () => Assert.Equal(1, root.GetProperty("persistentEvidenceAfter").GetProperty("sampleCount").GetInt32()));
+        } finally {
+            File.Delete(corpusPath);
+            if (Directory.Exists(telemetryDirectory)) {
+                Directory.Delete(telemetryDirectory, recursive: true);
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData("null")]
+    [InlineData("{\"schemaVersion\":2,\"cases\":[]}")]
+    [InlineData("{\"schemaVersion\":1,\"cases\":[]}")]
+    [InlineData("{\"schemaVersion\":1,\"cases\":[{\"id\":\"\",\"query\":\"q\",\"expectedPaths\":[\"p\"]}]}")]
+    [InlineData("{\"schemaVersion\":1,\"cases\":[{\"id\":\"same\",\"query\":\"q\",\"expectedPaths\":[\"p\"]},{\"id\":\"same\",\"query\":\"q\",\"expectedPaths\":[\"p\"]}]}")]
+    public async Task ContextRoutingRetirementEvaluationRunner_WithInvalidCorpus_Throws(string corpus) {
+        string corpusPath = await WriteCorpusAsync(corpus);
+        string telemetryPath = Path.Combine(
+            Path.GetTempPath(),
+            $"fooddiary-mcp-routing-{Guid.NewGuid():N}.json");
+        var queries = new WikiQueryService(
+            Substitute.For<IWikiCommandExecutor>(),
+            Substitute.For<IChangeSetSnapshotService>());
+
+        try {
+            await Assert.ThrowsAsync<InvalidDataException>(() => ContextRoutingRetirementEvaluationRunner.RunAsync(
+                queries,
+                new ContextRoutingTelemetryStore(telemetryPath),
+                corpusPath,
+                TextWriter.Null,
+                CancellationToken.None));
+        } finally {
+            File.Delete(corpusPath);
+            File.Delete(telemetryPath);
+        }
+    }
+
     private static WikiCommandResult CreateCommandResult(string command) {
         JsonElement structured = string.Equals(command, "test-plan", StringComparison.Ordinal)
             ? JsonSerializer.SerializeToElement(new { commands = new[] { "dotnet test focused" } })

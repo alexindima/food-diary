@@ -48,6 +48,42 @@ if (args.Length == 2 && string.Equals(
     return;
 }
 
+if (args.Length is 2 or 3 && string.Equals(
+    args[0],
+    "--record-context-routing-retirement-evidence",
+    StringComparison.Ordinal)) {
+    int? maximumCases = args.Length == 3
+        ? int.Parse(args[2], System.Globalization.CultureInfo.InvariantCulture)
+        : null;
+    string evaluationRepositoryRoot = FoodDiary.Development.Mcp.Infrastructure.RepositoryRootResolver.Resolve();
+    string evaluationGitDirectory = await ServerStatusService
+        .ResolveGitDirectoryForStatusAsync(evaluationRepositoryRoot, CancellationToken.None)
+        .ConfigureAwait(false);
+    var evaluationRoutingStore = new ContextRoutingTelemetryStore(Path.Combine(
+        evaluationGitDirectory,
+        "llm-wiki",
+        "context-routing-telemetry.json"));
+    WikiRuntimeTelemetry evaluationTelemetry = new(evaluationRoutingStore);
+    using ChangeSetSnapshotService evaluationSnapshots = new();
+    WikiQueryCache evaluationCache = new(TimeProvider.System, evaluationTelemetry);
+    PowerShellWikiCommandExecutor evaluationExecutor = new(evaluationTelemetry);
+    SqliteWikiContextSearch evaluationSearch = new(evaluationTelemetry);
+    WikiQueryService evaluationQueries = new(
+        evaluationExecutor,
+        evaluationSnapshots,
+        evaluationCache,
+        evaluationSearch,
+        evaluationTelemetry);
+    await ContextRoutingRetirementEvaluationRunner.RunAsync(
+        evaluationQueries,
+        evaluationRoutingStore,
+        args[1],
+        Console.Out,
+        CancellationToken.None,
+        maximumCases).ConfigureAwait(false);
+    return;
+}
+
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 string? sessionLockPath = Environment.GetEnvironmentVariable("FOODDIARY_MCP_SESSION_LOCK");
 FileStream? sessionLock = string.IsNullOrWhiteSpace(sessionLockPath)

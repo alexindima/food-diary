@@ -910,8 +910,19 @@ function negatedRoleTermGroups(query) {
   const markerPattern = markers.map((marker) => marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
   const expression = new RegExp(`(?:^|\\s)(?:${markerPattern})\\s+(.+?)(?=(?:\\s+(?:и\\s+)?(?:${markerPattern})\\s+)|[,;:—–]|\\s+(?:а|but)\\s+|$)`, 'giu');
   return [...expandSearchText(query).toLowerCase().matchAll(expression)]
-    .map((match) => [...new Set(searchTerms(match[1]).filter((term) => roleTerms.has(term)))])
+    .map((match) => directSearchTerms(match[1]).flatMap((term) =>
+      roleTerms.has(term)
+        ? [term]
+        : configuredSearchTermExpansions([term]).filter((expanded) => roleTerms.has(expanded))))
+    .map((terms) => [...new Set(terms)])
     .filter((terms) => terms.length > 0);
+}
+
+function negatedRoleAlternatives(negativeRoleGroups) {
+  const configured = contextSearchRanking.negatedRoleAlternatives ?? {};
+  return [...new Set(negativeRoleGroups
+    .flat()
+    .flatMap((term) => configured[term] ?? []))];
 }
 
 function englishMorphologicalVariants(term) {
@@ -930,11 +941,20 @@ function englishMorphologicalVariants(term) {
 
 function searchContext(database, query, limit, filters = {}) {
   const started = performance.now();
-  const terms = searchTerms(query);
-  const directTerms = directSearchTerms(query);
-  const boostTerms = rankingTerms(query);
-  const explicitlyRequestsTest = boostTerms.includes('test');
   const negativeRoleGroups = negatedRoleTermGroups(query);
+  const negativeRoleTerms = new Set(negativeRoleGroups.flat());
+  const alternativeTerms = negatedRoleAlternatives(negativeRoleGroups);
+  const maximumQueryTerms = Number(contextSearchRanking.maximumQueryTerms ?? 24);
+  const terms = [...new Set([
+    ...searchTerms(query).filter((term) => !negativeRoleTerms.has(term)),
+    ...alternativeTerms,
+  ])].slice(0, maximumQueryTerms);
+  const directTerms = directSearchTerms(query).filter((term) => !negativeRoleTerms.has(term));
+  const boostTerms = [...new Set([
+    ...rankingTerms(query).filter((term) => !negativeRoleTerms.has(term)),
+    ...alternativeTerms,
+  ])].slice(0, maximumQueryTerms);
+  const explicitlyRequestsTest = boostTerms.includes('test');
   const fingerprint = database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value ?? null;
   const indexedDocuments = database.prepare('SELECT COUNT(*) count FROM context_search').get().count;
   if (terms.length === 0 || !fingerprint || indexedDocuments === 0) {
@@ -949,7 +969,7 @@ function searchContext(database, query, limit, filters = {}) {
     };
   }
   const match = terms.map((term) => `"${term.replaceAll('"', '""')}"*`).join(' OR ');
-  const candidateLimit = Math.min(Math.max(limit * 8, 40), 500);
+  const candidateLimit = Number(contextSearchRanking.candidatePoolLimit ?? 500);
   const candidates = database.prepare(`
     SELECT record_type recordType, record_key recordKey, path, source_path sourcePath,
       category, title, bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexicalRank
@@ -962,7 +982,7 @@ function searchContext(database, query, limit, filters = {}) {
     const escaped = term.replaceAll('"', '""');
     return [`path : "${escaped}"*`, `title : "${escaped}"*`];
   }).join(' OR ');
-  const identityLimit = Math.min(Math.max(limit * 2, 20), 100);
+  const identityLimit = Number(contextSearchRanking.identityCandidatePoolLimit ?? 100);
   const identityCandidates = database.prepare(`
     SELECT record_type recordType, record_key recordKey, path, source_path sourcePath,
       category, title, bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexicalRank
@@ -991,7 +1011,9 @@ function searchContext(database, query, limit, filters = {}) {
     const path = String(item.path ?? '').replaceAll('\\', '/');
     const normalizedPath = path.toLowerCase();
     const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(path);
-    const isExplicitTestCandidate = isTest || /^test[-_.]?/i.test(basename(path));
+    const fileName = basename(path);
+    const isExplicitTestCandidate = isTest ||
+      (/^test[-_.]?/i.test(fileName) && /\.(?:cs|ps1|ts|js|mjs|cjs)$/i.test(fileName));
     const normalizedTitle = expandSearchText(item.title).toLowerCase();
     const reasons = ['SQLite FTS5 lexical match'];
     let score = candidateLimit - index;
@@ -1122,7 +1144,10 @@ function searchContext(database, query, limit, filters = {}) {
       score -= penalty;
       reasons.push(`negated role penalty ${matchedNegativeRoles.join(', ')}`);
     }
-    if (isTest && changeType !== 'tests') score -= Number(contextSearchRanking.nonTestPenalty ?? 25);
+    if (isExplicitTestCandidate && changeType !== 'tests') {
+      score -= Number(contextSearchRanking.nonTestPenalty ?? 25);
+      reasons.push('test candidate ranked after production');
+    }
     const isFrontendPath = normalizedPath.startsWith('fooddiary.web.client/');
     const isCode = item.recordType === 'code';
     if (isCode && changeType === 'frontend' && !isFrontendPath) {

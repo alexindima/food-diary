@@ -341,6 +341,159 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         Assert.Contains(
             validator.Reasons,
             reason => reason.StartsWith("negated role penalty", StringComparison.Ordinal));
+        Assert.DoesNotContain("validator", result.QueryTerms, StringComparer.Ordinal);
+        Assert.DoesNotContain("command", result.QueryTerms, StringComparer.Ordinal);
+    }
+
+    [Fact]
+    public async Task SearchAsync_UsesAStableCandidatePoolForEveryRequestedLimit() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult five = await search.SearchAsync(
+            "coveragebranch",
+            limit: 5,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        WikiContextSearchResult twenty = await search.SearchAsync(
+            "coveragebranch",
+            limit: 20,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Equal(
+            five.Candidates.Select(candidate => candidate.Path),
+            twenty.Candidates.Take(five.Candidates.Count).Select(candidate => candidate.Path),
+            StringComparer.Ordinal);
+    }
+
+    [Fact]
+    public async Task SearchAsync_ExpandsRussianTechnicalVocabularyBeforeFts() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "валидатор настроенных URL интеграции, репозиторий идемпотентности и отчет покрытия",
+            limit: 10,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Multiple(
+            () => Assert.Contains("validator", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("configuration", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("repository", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("idempotency", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("coverage", result.QueryTerms, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task SearchAsync_ExpandsRussianSubjectAndRoleVocabularyBeforeFts() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "безопасность изображений, любимый статус, подтверждение контракта и сравнение",
+            limit: 10,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Multiple(
+            () => Assert.Contains("security", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("image", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("favorite", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("status", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("verification", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("interface", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("comparison", result.QueryTerms, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task SearchAsync_ExpandsQualityAndInvariantVocabulary() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "builder качества еды, упражнение, инвариант, смена и уведомление",
+            limit: 10,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Multiple(
+            () => Assert.Contains("build", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("quality", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("grade", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("food", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("exercise", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("invariant", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("change", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("notification", result.QueryTerms, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task SearchAsync_DoesNotTranslateRegistrationIntoAHostedService() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "контракт проверки регистрации recurring jobs",
+            limit: 10,
+            changeType: "Backend",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Multiple(
+            () => Assert.Contains("interface", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("verification", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("verifier", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("registration", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.DoesNotContain("hostedservice", result.QueryTerms, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task SearchAsync_DoesNotExpandANegatedRoleIntoItsNeighborRole() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "handler cleanup, not command DTO",
+            limit: 10,
+            changeType: "Backend",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Contains("handler", result.QueryTerms, StringComparer.Ordinal);
+        Assert.DoesNotContain("command", result.QueryTerms, StringComparer.Ordinal);
+    }
+
+    [Fact]
+    public async Task SearchAsync_TranslatesNegatedConfigurationIntoUnconfiguredIntent() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "хранилище картинок не настроено",
+            limit: 10,
+            changeType: "Backend",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Contains("unconfigured", result.QueryTerms, StringComparer.Ordinal);
+        Assert.DoesNotContain("configuration", result.QueryTerms, StringComparer.Ordinal);
+        Assert.DoesNotContain("configured", result.QueryTerms, StringComparer.Ordinal);
     }
 
     [Fact]

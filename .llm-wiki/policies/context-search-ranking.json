@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
-  "maximumQueryTerms": 24,
+  "maximumQueryTerms": 48,
+  "candidatePoolLimit": 500,
+  "identityCandidatePoolLimit": 100,
   "stopTerms": ["a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in", "is", "of", "on", "or", "the", "to", "when", "with", "а", "без", "в", "во", "где", "для", "если", "за", "и", "из", "или", "как", "какая", "какой", "когда", "кто", "куда", "которого", "который", "которым", "кому", "мы", "на", "от", "по", "после", "при", "с", "уже", "что", "это"],
   "pathTermAffinity": {
     "minimumTermLength": 3,
@@ -20,9 +22,14 @@
   },
   "negatedRolePenalty": {
     "markers": ["not", "не"],
-    "roleTerms": ["admin", "administration", "auth", "billing", "checkout", "client", "command", "component", "context", "controller", "facade", "handler", "host", "integration", "mutation", "provider", "query", "repository", "resolver", "service", "tour", "validator", "webhook"],
+    "roleTerms": ["admin", "administration", "attribute", "auth", "billing", "binder", "checkout", "client", "command", "component", "configuration", "configured", "context", "controller", "dialog", "entity", "exception", "facade", "gateway", "handler", "host", "integration", "interceptor", "mapping", "mutation", "options", "provider", "query", "renderer", "repository", "resolver", "result", "service", "store", "tour", "tracker", "validator", "webhook"],
     "scorePerMatch": 180,
     "maximumScorePerPhrase": 360
+  },
+  "negatedRoleAlternatives": {
+    "configured": ["unconfigured"],
+    "configuration": ["unconfigured"],
+    "options": ["unconfigured"]
   },
   "applicationAbstractionPenalty": 35,
   "interfacePathPenalty": 35,
@@ -92,6 +99,11 @@
     "suppressed": ["suppress"],
     "saves": ["save"],
     "themes": ["theme"],
+    "builder": ["build"],
+    "еды": ["food"],
+    "настройки": ["options", "settings"],
+    "настройке": ["options", "settings"],
+    "настроек": ["options", "settings"],
     "definitions": ["definition"],
     "workers": ["runtime", "topology"],
     "finds": ["find"],
@@ -162,7 +174,7 @@
     "восстановлен": ["restore", "reset"],
     "парол": ["password"],
     "скрипт": ["script", "tool"],
-    "провер": ["check", "validate", "verification"],
+    "провер": ["check", "validate", "verification", "verifier"],
     "принадлеж": ["ownership"],
     "состоян": ["state"],
     "фронтенд": ["frontend"],
@@ -178,7 +190,7 @@
     "день": ["day"],
     "период": ["periodic", "recurring", "job"],
     "запуска": ["run", "hostedservice", "job"],
-    "регистр": ["registration", "hostedservice"],
+    "регистр": ["registration"],
     "физическ": ["persistence", "store"],
     "очеред": ["queue"],
     "исходящ": ["outbound", "mail"],
@@ -194,7 +206,7 @@
     "нормализ": ["normalize"],
     "диапазон": ["range"],
     "дат": ["date"],
-    "безопас": ["safe", "validate"],
+    "безопас": ["safe", "security"],
     "примен": ["apply"],
     "часов": ["time"],
     "сдвиг": ["offset"],
@@ -224,7 +236,7 @@
     "фот": ["photo", "image"],
     "перевод": ["translation", "translate"],
     "назван": ["name"],
-    "определ": ["detect", "resolve"],
+    "определ": ["detect", "resolve", "definition"],
     "преобраз": ["map", "mapper"],
     "тренд": ["trend"],
     "карточ": ["card"],
@@ -268,7 +280,8 @@
     ,"фасад": ["facade"]
     ,"методик": ["wiki", "workflow"]
     ,"критик": ["critique", "review"]
-    ,"сравнив": ["compare", "experiment"]
+    ,"сравн": ["compare", "comparison"]
+    ,"сравнив": ["compare", "comparison"]
     ,"вариант": ["strategy", "experiment"]
     ,"наход": ["find", "resolve"]
     ,"урок": ["lesson"]
@@ -280,6 +293,96 @@
     ,"вебхук": ["webhook"]
     ,"подпис": ["subscription"]
     ,"оплат": ["billing", "payment"]
+    ,"валидатор": ["validator", "validation"]
+    ,"репозитор": ["repository", "store"]
+    ,"идемпотент": ["idempotency", "replay"]
+    ,"достижен": ["achievement"]
+    ,"создан": ["create"]
+    ,"общ": ["common"]
+    ,"помощ": ["helper", "util", "guard"]
+    ,"обязат": ["required", "guard"]
+    ,"значен": ["value"]
+    ,"домен": ["domain", "entity"]
+    ,"хранилищ": ["repository", "store", "storage"]
+    ,"аудит": ["audit"]
+    ,"рол": ["role"]
+    ,"телеграм": ["telegram"]
+    ,"утвержд": ["assertion"]
+    ,"локализ": ["localized", "localization", "resource", "renderer"]
+    ,"текст": ["text", "resource", "renderer"]
+    ,"ресурс": ["resource", "renderer"]
+    ,"пдф": ["pdf"]
+    ,"отчет": ["report"]
+    ,"отчёт": ["report"]
+    ,"поставщик": ["provider"]
+    ,"настро": ["configured", "configuration"]
+    ,"шлюз": ["gateway"]
+    ,"картинк": ["image"]
+    ,"биндинг": ["binder", "binding"]
+    ,"модел": ["model"]
+    ,"метрик": ["metric", "telemetry"]
+    ,"сущност": ["entity"]
+    ,"сервис": ["service"]
+    ,"исполн": ["execution"]
+    ,"помет": ["mark"]
+    ,"прочитан": ["read"]
+    ,"конфигурац": ["configuration"]
+    ,"готовност": ["readiness", "healthcheck"]
+    ,"ответ": ["response", "mapping"]
+    ,"правил": ["validation", "policy"]
+    ,"миграц": ["migration"]
+    ,"снимок": ["snapshot", "fingerprint"]
+    ,"парс": ["parse", "parser"]
+    ,"загруз": ["load", "read"]
+    ,"страниц": ["page"]
+    ,"сесси": ["session"]
+    ,"таблиц": ["table", "configuration"]
+    ,"искусств": ["ai"]
+    ,"периодич": ["recurring"]
+    ,"очист": ["cleanup", "clear"]
+    ,"заглуш": ["noop"]
+    ,"персонал": ["privacy", "personal"]
+    ,"расширен": ["extensions"]
+    ,"покрыт": ["coverage"]
+    ,"флот": ["fleet"]
+    ,"агент": ["agent"]
+    ,"архитектур": ["architecture"]
+    ,"решен": ["decision"]
+    ,"индекс": ["index"]
+    ,"потребител": ["consumer"]
+    ,"ручн": ["manual"]
+    ,"записыв": ["write", "add"]
+    ,"результат": ["result"]
+    ,"резерв": ["reservation"]
+    ,"журнал": ["audit", "log"]
+    ,"медиатор": ["mediator", "behavior"]
+    ,"выполн": ["execution"]
+    ,"диалог": ["dialog"]
+    ,"панел": ["panel"]
+    ,"доста": ["get", "extract", "resolve"]
+    ,"параметр": ["parameter"]
+    ,"анализатор": ["analyzer", "analysis"]
+    ,"пуст": ["empty", "redundant"]
+    ,"скоб": ["parameterlist"]
+    ,"квот": ["quota"]
+    ,"ежедневн": ["daily"]
+    ,"совет": ["advice"]
+    ,"питан": ["nutrition"]
+    ,"атрибут": ["attribute"]
+    ,"просмотр": ["read", "overview"]
+    ,"почт": ["mail", "inbox"]
+    ,"входа": ["auth", "login"]
+    ,"lease": ["lease"]
+    ,"receipts": ["receipt"]
+    ,"изображ": ["image"]
+    ,"любим": ["favorite"]
+    ,"подтвержд": ["verification", "confirm"]
+    ,"статус": ["status"]
+    ,"контракт": ["contract", "interface"]
+    ,"качеств": ["quality", "grade"]
+    ,"упражн": ["exercise"]
+    ,"инвариант": ["invariant"]
+    ,"смен": ["change"]
   },
   "pathBoosts": [
     {
@@ -407,6 +510,28 @@
       "score": 230,
       "directOnly": true,
       "excludedQueryTerms": ["workflow"]
+    },
+    {
+      "id": "wiki-dispatch-lease-metrics-intent",
+      "queryTerms": ["dispatch", "lease", "receipt", "metric"],
+      "minimumMatches": 3,
+      "pathPrefixes": [".llm-wiki/tools/"],
+      "score": 900
+    },
+    {
+      "id": "domain-daily-advice-entity-intent",
+      "queryTerms": ["entity", "daily", "advice"],
+      "minimumMatches": 3,
+      "pathPrefixes": ["FoodDiary.Domain/Entities/"],
+      "score": 750
+    },
+    {
+      "id": "domain-value-object-intent",
+      "queryTerms": ["value", "object"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["FoodDiary.Domain/ValueObjects/"],
+      "score": 500,
+      "directOnly": true
     },
     {
       "id": "wiki-test-planning-intent",
@@ -628,7 +753,6 @@
       "minimumMatches": 1,
       "identityTerms": ["repository"],
       "score": 400,
-      "directOnly": true,
       "identityScope": "file",
       "changeTypes": ["Database"]
     },
@@ -645,7 +769,134 @@
       "minimumMatches": 1,
       "identityTerms": ["validator", "validationhandler"],
       "score": 120,
-      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-options-role",
+      "queryTerms": ["options", "settings"],
+      "minimumMatches": 1,
+      "identityTerms": ["options"],
+      "score": 850,
+      "identityScope": "file",
+      "changeTypes": ["Any", "Api", "Backend", "Database", "Frontend"]
+    },
+    {
+      "id": "ef-configuration-role",
+      "queryTerms": ["ef", "mapping", "configuration"],
+      "minimumMatches": 2,
+      "identityTerms": ["configuration"],
+      "score": 700,
+      "identityScope": "file",
+      "changeTypes": ["Database"]
+    },
+    {
+      "id": "database-table-configuration-role",
+      "queryTerms": ["configuration", "table", "ef", "mapping"],
+      "minimumMatches": 2,
+      "identityTerms": ["configuration"],
+      "score": 850,
+      "identityScope": "file",
+      "changeTypes": ["Database"]
+    },
+    {
+      "id": "explicit-model-binder-role",
+      "queryTerms": ["binder", "binding"],
+      "minimumMatches": 1,
+      "identityTerms": ["binder"],
+      "score": 750,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-attribute-role",
+      "queryTerms": ["attribute"],
+      "minimumMatches": 1,
+      "identityTerms": ["attribute"],
+      "score": 750,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-analyzer-test-role",
+      "queryTerms": ["analyzer", "analysis"],
+      "minimumMatches": 1,
+      "identityTerms": ["analyzer"],
+      "score": 700,
+      "identityScope": "file",
+      "changeTypes": ["Tests"]
+    },
+    {
+      "id": "gateway-accessor-test-role",
+      "queryTerms": ["billing", "provider", "gateway"],
+      "minimumMatches": 3,
+      "identityTerms": ["gateway", "accessor", "tests"],
+      "minimumIdentityMatches": 3,
+      "score": 300,
+      "identityScope": "file",
+      "changeTypes": ["Tests"]
+    },
+    {
+      "id": "notification-resource-registration-role",
+      "queryTerms": ["registration", "resource", "renderer", "notification"],
+      "minimumMatches": 3,
+      "identityTerms": ["notification", "resource", "extensions"],
+      "minimumIdentityMatches": 3,
+      "score": 850,
+      "identityScope": "file"
+    },
+    {
+      "id": "telemetry-privacy-processor-role",
+      "queryTerms": ["telemetry", "privacy", "personal", "sensitive"],
+      "minimumMatches": 2,
+      "identityTerms": ["telemetry", "privacy", "processor"],
+      "minimumIdentityMatches": 3,
+      "score": 900,
+      "identityScope": "file"
+    },
+    {
+      "id": "frontend-admin-auth-service-role",
+      "queryTerms": ["frontend", "admin", "auth", "login", "session", "service"],
+      "minimumMatches": 5,
+      "identityTerms": ["admin", "auth", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 700,
+      "identityScope": "file",
+      "changeTypes": ["Frontend"]
+    },
+    {
+      "id": "mail-inbox-readiness-handler-role",
+      "queryTerms": ["mail", "inbox", "readiness", "handler"],
+      "minimumMatches": 3,
+      "identityTerms": ["mail", "inbox", "readiness", "handler"],
+      "minimumIdentityMatches": 4,
+      "score": 900,
+      "identityScope": "file"
+    },
+    {
+      "id": "admin-mail-inbox-controller-role",
+      "queryTerms": ["admin", "mail", "inbox", "controller"],
+      "minimumMatches": 3,
+      "identityTerms": ["admin", "mail", "inbox", "controller"],
+      "minimumIdentityMatches": 4,
+      "score": 350,
+      "identityScope": "file",
+      "changeTypes": ["Api"]
+    },
+    {
+      "id": "configured-provider-gateway-accessor-role",
+      "queryTerms": ["configured", "select", "provider", "gateway"],
+      "minimumMatches": 3,
+      "identityTerms": ["provider", "gateway", "accessor"],
+      "minimumIdentityMatches": 3,
+      "score": 750,
+      "identityScope": "file",
+      "changeTypes": ["Backend", "Database"]
+    },
+    {
+      "id": "audit-entry-service-role",
+      "queryTerms": ["audit", "entry", "service"],
+      "minimumMatches": 3,
+      "identityTerms": ["audit", "entry", "service"],
+      "minimumIdentityMatches": 3,
+      "score": 700,
       "identityScope": "file"
     },
     {
@@ -1615,6 +1866,204 @@
   ],
   "structuralRoleBoosts": [
     {
+      "id": "endpoint-security-test-role",
+      "queryTerms": ["endpoint", "security"],
+      "minimumMatches": 2,
+      "candidateTerms": ["endpoint", "security", "test"],
+      "minimumCandidateMatches": 3,
+      "minimumQueryIdentityMatches": 3,
+      "score": 320,
+      "scorePerQueryIdentityMatch": 45,
+      "maximumQueryIdentityScore": 225,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Tests"]
+    },
+    {
+      "id": "query-service-test-role",
+      "queryTerms": ["query", "service"],
+      "minimumMatches": 2,
+      "candidateTerms": ["query", "service", "test"],
+      "minimumCandidateMatches": 3,
+      "minimumQueryIdentityMatches": 3,
+      "score": 320,
+      "scorePerQueryIdentityMatch": 45,
+      "maximumQueryIdentityScore": 225,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Tests"]
+    },
+    {
+      "id": "sender-test-role",
+      "queryTerms": ["sender", "test"],
+      "minimumMatches": 2,
+      "candidateTerms": ["sender", "test"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 2,
+      "score": 280,
+      "scorePerQueryIdentityMatch": 45,
+      "maximumQueryIdentityScore": 225,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Tests"]
+    },
+    {
+      "id": "job-test-role",
+      "queryTerms": ["job", "test"],
+      "minimumMatches": 2,
+      "candidateTerms": ["job", "test"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 3,
+      "score": 260,
+      "scorePerQueryIdentityMatch": 45,
+      "maximumQueryIdentityScore": 225,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Tests"]
+    },
+    {
+      "id": "push-controller-test-role",
+      "queryTerms": ["push", "controller", "test"],
+      "minimumMatches": 3,
+      "candidateTerms": ["push", "controller", "test"],
+      "minimumCandidateMatches": 3,
+      "minimumQueryIdentityMatches": 3,
+      "score": 300,
+      "scorePerQueryIdentityMatch": 45,
+      "maximumQueryIdentityScore": 225,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Tests"]
+    },
+    {
+      "id": "notification-push-controller-role",
+      "queryTerms": ["notification", "push", "controller"],
+      "minimumMatches": 3,
+      "candidateTerms": ["notification", "push", "controller"],
+      "minimumCandidateMatches": 3,
+      "minimumQueryIdentityMatches": 3,
+      "score": 360,
+      "scorePerQueryIdentityMatch": 55,
+      "maximumQueryIdentityScore": 275,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Api"],
+      "excludeTests": true
+    },
+    {
+      "id": "domain-invariant-test-role",
+      "queryTerms": ["domain", "invariant", "test"],
+      "minimumMatches": 2,
+      "candidateTerms": ["invariant", "test"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 2,
+      "score": 320,
+      "scorePerQueryIdentityMatch": 55,
+      "maximumQueryIdentityScore": 275,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Tests"]
+    },
+    {
+      "id": "explicit-notifier-role",
+      "queryTerms": ["notifier"],
+      "minimumMatches": 1,
+      "candidateTerms": ["notifier"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 1,
+      "score": 180,
+      "scorePerQueryIdentityMatch": 70,
+      "maximumQueryIdentityScore": 280,
+      "directOnly": true,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "excludeTests": true
+    },
+    {
+      "id": "explicit-pusher-role",
+      "queryTerms": ["pusher"],
+      "minimumMatches": 1,
+      "candidateTerms": ["pusher"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 1,
+      "score": 220,
+      "scorePerQueryIdentityMatch": 60,
+      "maximumQueryIdentityScore": 240,
+      "directOnly": true,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "excludeTests": true
+    },
+    {
+      "id": "explicit-guard-role",
+      "queryTerms": ["guard"],
+      "minimumMatches": 1,
+      "candidateTerms": ["guard"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 1,
+      "score": 260,
+      "scorePerQueryIdentityMatch": 50,
+      "maximumQueryIdentityScore": 200,
+      "directOnly": true,
+      "identityScope": "file"
+    },
+    {
+      "id": "explicit-verifier-role",
+      "queryTerms": ["verification", "verifier"],
+      "minimumMatches": 1,
+      "candidateTerms": ["verifier"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 2,
+      "score": 260,
+      "scorePerQueryIdentityMatch": 55,
+      "maximumQueryIdentityScore": 275,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "excludeTests": true
+    },
+    {
+      "id": "wiki-comparison-tool-role",
+      "queryTerms": ["compare", "comparison"],
+      "minimumMatches": 1,
+      "candidateTerms": ["comparison"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 2,
+      "score": 240,
+      "scorePerQueryIdentityMatch": 55,
+      "maximumQueryIdentityScore": 220,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "pathPrefixes": [".llm-wiki/tools/"]
+    },
+    {
+      "id": "wiki-precedent-tool-role",
+      "queryTerms": ["precedent", "precedents"],
+      "minimumMatches": 1,
+      "candidateTerms": ["precedent"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 2,
+      "score": 240,
+      "scorePerQueryIdentityMatch": 55,
+      "maximumQueryIdentityScore": 220,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "pathPrefixes": [".llm-wiki/tools/"]
+    },
+    {
+      "id": "explicit-status-role",
+      "queryTerms": ["status"],
+      "minimumMatches": 1,
+      "candidateTerms": ["status"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 1,
+      "score": 160,
+      "scorePerQueryIdentityMatch": 45,
+      "maximumQueryIdentityScore": 180,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "excludedQueryTerms": ["http", "api", "endpoint", "controller"]
+    },
+    {
       "id": "explicit-backend-job-role",
       "queryTerms": ["job", "background"],
       "minimumMatches": 1,
@@ -2238,15 +2687,16 @@
     },
     {
       "id": "backend-parser-role",
-      "queryTerms": ["parse", "parser", "type", "validation"],
+      "queryTerms": ["parse", "parser", "type"],
       "minimumMatches": 1,
       "candidateTerms": ["parser"],
       "minimumCandidateMatches": 1,
       "minimumQueryIdentityMatches": 1,
       "score": 480,
       "scorePerQueryIdentityMatch": 85,
-      "maximumQueryIdentityScore": 340,
-      "identityScope": "file",
+      "maximumQueryIdentityScore": 680,
+      "identityScope": "identity",
+      "affinityDirectOnly": false,
       "changeTypes": ["Backend"],
       "recordTypes": ["code"],
       "excludeTests": true
@@ -2446,7 +2896,8 @@
       "identityScope": "identity",
       "affinityDirectOnly": false,
       "recordTypes": ["wiki-page"],
-      "pathPrefixes": [".llm-wiki/workflows/"]
+      "pathPrefixes": [".llm-wiki/workflows/"],
+      "excludedQueryTerms": ["solution"]
     },
     {
       "id": "powershell-feedback-subject-role",

@@ -18,7 +18,7 @@ public sealed record DevelopmentContext(
     string? HeadRevision = null,
     bool BaselineAvailable = false,
     WikiContextSearchResult? SqlContextSearch = null,
-    string ContextRetrievalSource = "json",
+    string ContextRetrievalSource = "sqlite",
     string? ContextFallbackReason = null) {
     public DevelopmentContext WithoutRawOutput() => this with {
         ChangeContext = ChangeContext?.WithoutRawOutput(),

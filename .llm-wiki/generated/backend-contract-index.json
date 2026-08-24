@@ -47285,7 +47285,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/EvaluationRunnerTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 6
     },
     {
       "contract": "IChangeSetSnapshotService",
@@ -96203,7 +96203,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/EvaluationRunnerTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 6
     },
     {
       "contract": "IWikiCommandExecutor",
@@ -96294,7 +96294,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
       "isTest": true,
-      "referenceCount": 18
+      "referenceCount": 26
     },
     {
       "contract": "LessonDetailHttpResponse",

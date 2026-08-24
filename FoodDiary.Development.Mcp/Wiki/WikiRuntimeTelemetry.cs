@@ -51,17 +51,22 @@ public sealed class WikiRuntimeTelemetry(ContextRoutingTelemetryStore? contextRo
     }
 
     public void RecordContextRoute(
-        bool usedSqlite,
+        ContextRoutingOutcome outcome,
         string? fallbackReason,
         TimeSpan duration,
         bool refreshAttempted,
         bool refreshSucceeded) {
         RecordCommandStage(
             "context-routing",
-            usedSqlite ? "sqlite-primary" : "json-fallback",
+            outcome switch {
+                ContextRoutingOutcome.SqlitePrimary => "sqlite-primary",
+                ContextRoutingOutcome.SqliteUnavailable => "sqlite-unavailable",
+                ContextRoutingOutcome.JsonFallback => "json-fallback",
+                _ => throw new ArgumentOutOfRangeException(nameof(outcome)),
+            },
             duration);
         contextRoutingStore?.Record(
-            usedSqlite,
+            outcome,
             fallbackReason,
             duration,
             refreshAttempted,

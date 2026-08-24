@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "description": "Second post-tuning control corpus frozen before its first retrieval run. Thirty unique targets are excluded from every earlier context-search corpus. Six equal cohorts test whether the bilingual subject and explicit-role fixes generalize beyond the diagnostic corpus used for tuning.",
+  "diagnosticLimit": 100,
+  "blindBaseline": {
+    "recordedAtUtc": "2026-08-24T00:00:00Z",
+    "node": {
+      "top1Count": 18,
+      "top10Count": 28,
+      "meanReciprocalRank": 0.7467,
+      "p95QueryDurationMs": 222.98
+    },
+    "dotnet": {
+      "top1Count": 18,
+      "top10Count": 28,
+      "meanReciprocalRank": 0.7467,
+      "p95QueryDurationMs": 238.19
+    },
+    "parity": {
+      "exactRankDifferences": 0,
+      "top5Differences": 0
+    },
+    "cohortTop1Counts": {
+      "api-roles": 3,
+      "backend-roles": 4,
+      "behavior-to-test": 1,
+      "domain-persistence": 3,
+      "frontend": 3,
+      "wiki-tooling": 4
+    }
+  },
+  "postFixEvaluation": {
+    "recordedAtUtc": "2026-08-24T00:00:00Z",
+    "node": {
+      "top1Count": 26,
+      "top10Count": 30,
+      "meanReciprocalRank": 0.925,
+      "p95QueryDurationMs": 279.13
+    },
+    "dotnet": {
+      "top1Count": 26,
+      "top10Count": 30,
+      "meanReciprocalRank": 0.925,
+      "p95QueryDurationMs": 249.7
+    },
+    "parity": {
+      "exactRankDifferences": 0,
+      "top5Differences": 0
+    }
+  },
+  "thresholds": {
+    "minimumCaseCount": 30,
+    "minimumTop1Rate": 0.0,
+    "minimumTop10Rate": 0.0,
+    "minimumMeanReciprocalRank": 0.0
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 30,
+    "minimumTop1Rate": 0.0,
+    "minimumTop10Rate": 0.0,
+    "minimumMeanReciprocalRank": 0.0
+  },
+  "cases": [
+    { "id": "posttune-api-001", "cohort": "api-roles", "query": "billing HTTP controller для подписки и платежей", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Features/Billing/BillingController.cs"] },
+    { "id": "posttune-api-002", "cohort": "api-roles", "query": "SignalR hub подтверждения email", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Hubs/EmailVerificationHub.cs"] },
+    { "id": "posttune-api-003", "cohort": "api-roles", "query": "API controller Web Push уведомлений", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Features/Notifications/NotificationPushController.cs"] },
+    { "id": "posttune-api-004", "cohort": "api-roles", "query": "options rate limiting для API", "changeType": "Api", "expectedPaths": ["FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs"] },
+    { "id": "posttune-api-005", "cohort": "api-roles", "query": "constant time сравнение secret в presentation security", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Security/SecretComparison.cs"] },
+
+    { "id": "posttune-back-001", "cohort": "backend-roles", "query": "read service текущего menstrual cycle", "changeType": "Backend", "expectedPaths": ["FoodDiary.Application.Cycles/Services/CycleReadService.cs"] },
+    { "id": "posttune-back-002", "cohort": "backend-roles", "query": "admin read service уроков питания", "changeType": "Backend", "expectedPaths": ["FoodDiary.Application.Lessons/Services/LessonAdministrationReadService.cs"] },
+    { "id": "posttune-back-003", "cohort": "backend-roles", "query": "planner intermittent fasting notifications", "changeType": "Backend", "expectedPaths": ["FoodDiary.Application.Fasting/Services/FastingIntermittentNotificationPlanner.cs"] },
+    { "id": "posttune-back-004", "cohort": "backend-roles", "query": "обязательный parser id упражнения", "changeType": "Backend", "expectedPaths": ["FoodDiary.Application.Exercises/Internal/RequiredIdParser.cs"] },
+    { "id": "posttune-back-005", "cohort": "backend-roles", "query": "options USDA API integration", "changeType": "Backend", "expectedPaths": ["FoodDiary.Integrations/Options/UsdaApiOptions.cs"] },
+
+    { "id": "posttune-data-001", "cohort": "domain-persistence", "query": "доменная session refresh token пользователя", "changeType": "Backend", "expectedPaths": ["FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs"] },
+    { "id": "posttune-data-002", "cohort": "domain-persistence", "query": "value object оценки качества еды", "changeType": "Backend", "expectedPaths": ["FoodDiary.Domain/ValueObjects/FoodQualityGrade.cs"] },
+    { "id": "posttune-data-003", "cohort": "domain-persistence", "query": "repository квоты AI", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs"] },
+    { "id": "posttune-data-004", "cohort": "domain-persistence", "query": "outbox удаления image object", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs"] },
+    { "id": "posttune-data-005", "cohort": "domain-persistence", "query": "EF configuration шаблона email", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Configurations/Email/EmailTemplateConfiguration.cs"] },
+
+    { "id": "posttune-front-001", "cohort": "frontend", "query": "frontend facade внешнего продукта OpenFoodFacts USDA", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/src/app/features/products/lib/manage/product-external-food.facade.ts"] },
+    { "id": "posttune-front-002", "cohort": "frontend", "query": "Angular dialog смены пароля профиля", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/src/app/features/profile/dialogs/change-password-dialog/change-password-dialog.ts"] },
+    { "id": "posttune-front-003", "cohort": "frontend", "query": "компонент barcode scanner", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/src/app/components/shared/barcode-scanner/barcode-scanner.ts"] },
+    { "id": "posttune-front-004", "cohort": "frontend", "query": "service публичного auth dialog", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/src/app/features/public/lib/public-auth-dialog.service.ts"] },
+    { "id": "posttune-front-005", "cohort": "frontend", "query": "facade целей пользователя", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/src/app/features/goals/lib/goals.facade.ts"] },
+
+    { "id": "posttune-test-001", "cohort": "behavior-to-test", "query": "тест parser значений enum", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Application.Tests/Validation/EnumValueParserTests.cs"] },
+    { "id": "posttune-test-002", "cohort": "behavior-to-test", "query": "тест sender Web Push notification", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs"] },
+    { "id": "posttune-test-003", "cohort": "behavior-to-test", "query": "тест job очистки fasting telemetry", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.JobManager.Tests/FastingTelemetryCleanupJobTests.cs"] },
+    { "id": "posttune-test-004", "cohort": "behavior-to-test", "query": "тест API controller push notifications", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Presentation.Api.Tests/NotificationPushControllerTests.cs"] },
+    { "id": "posttune-test-005", "cohort": "behavior-to-test", "query": "domain tests инвариантов favorites", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Domain.Tests/Domain/FavoriteInvariantTests.cs"] },
+
+    { "id": "posttune-wiki-001", "cohort": "wiki-tooling", "query": "wiki builder sensitive data index", "changeType": "Any", "expectedPaths": [".llm-wiki/tools/Build-LlmWikiSensitiveDataIndex.ps1"] },
+    { "id": "posttune-wiki-002", "cohort": "wiki-tooling", "query": "wiki manager прогнозирует failure", "changeType": "Any", "expectedPaths": [".llm-wiki/tools/Manage-LlmWikiFailurePrediction.ps1"] },
+    { "id": "posttune-wiki-003", "cohort": "wiki-tooling", "query": "wiki helper verification receipts", "changeType": "Any", "expectedPaths": [".llm-wiki/tools/LlmWikiVerificationReceipts.ps1"] },
+    { "id": "posttune-wiki-004", "cohort": "wiki-tooling", "query": "workflow dependency rollout", "changeType": "Any", "expectedPaths": [".llm-wiki/workflows/dependency-rollout.md"] },
+    { "id": "posttune-wiki-005", "cohort": "wiki-tooling", "query": "wiki test сканирует contract consumers", "changeType": "Tests", "expectedPaths": [".llm-wiki/tools/Test-LlmWikiContractConsumers.ps1"] }
+  ]
+}

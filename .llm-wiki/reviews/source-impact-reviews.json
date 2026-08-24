@@ -192,13 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "b09bd42bb3ad1d03231c1c3cf6d65b56789eeafe43901dc78eb2f4203a640f21"
+          "sha256": "08a2d09e97b9a40c53d3e904cbf4a1ee0d5260707739cd65e88ddfd18a05baae"
         }
       ],
-      "reason": "Regenerated backend-contract output preserves contract and consumer-edge semantics while reflecting the current ContentReports and identity consumers; the contract generator check passed, so review instructions remain current.",
+      "reason": "The generated contract delta only increases test references to IChangeSetSnapshotService and IWikiCommandExecutor for the retirement runner and recovery scenarios; no backend HTTP route, DTO, status code, or Swagger-visible contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "851b93397552a5e1911ff5616abb5e4ff43c84b4",
-      "reviewedAtUtc": "2026-08-24T01:43:09.5076075Z"
+      "gitHead": "36d60d6501b3b078e3eac46d79242bf7f07ce024",
+      "reviewedAtUtc": "2026-08-24T09:29:51.9547674Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -769,13 +769,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "e2932b4fd71ca8334192ca8cf3cf4da9787ed3af3f1c9bada7136c4ac3423f7e"
+          "sha256": "644e45fb81c4a514e36f811c505f1f8a352b160fd6ad509db1ecf84a0ff7a245"
         }
       ],
-      "reason": "The sensitive-data diff is only a two-line source-position shift in OutboxProcessingEngine; boundary classification and privacy-review semantics are unchanged.",
+      "reason": "Sensitive-data index was regenerated and verified after merging origin/master; candidate and boundary counts remain tool-validated.",
       "baseRef": "HEAD",
-      "gitHead": "851b93397552a5e1911ff5616abb5e4ff43c84b4",
-      "reviewedAtUtc": "2026-08-24T01:43:10.6660173Z"
+      "gitHead": "36d60d6501b3b078e3eac46d79242bf7f07ce024",
+      "reviewedAtUtc": "2026-08-24T05:49:13.9554982Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -818,13 +818,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2e4edfd53c6426936a689984937978159b5b3216d2a877570a97d5ca52a50cfa"
+          "sha256": "c280a0391f11411cb5184ae7143a5831eaade3c005f828ede2711284552524c6"
         }
       ],
-      "reason": "Regenerated quality output preserves its scoring schema and reflects the larger context-search implementation plus current worktree changes; the quality-review procedure itself is unchanged.",
+      "reason": "Quality changes reflect the explicit retirement evaluator, routing outcome telemetry, and recovery tests; WikiQueryService decision points decreased, the new branches are covered by 194 passing MCP tests, and the full SQL/control evaluations passed.",
       "baseRef": "HEAD",
-      "gitHead": "851b93397552a5e1911ff5616abb5e4ff43c84b4",
-      "reviewedAtUtc": "2026-08-24T01:43:11.2249978Z"
+      "gitHead": "36d60d6501b3b078e3eac46d79242bf7f07ce024",
+      "reviewedAtUtc": "2026-08-24T09:29:53.1594732Z"
     },
     {
       "pageId": "workflow-release-readiness",

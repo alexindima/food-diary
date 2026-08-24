@@ -122,8 +122,12 @@ route, normalized fallback category, duration, and refresh outcome. It never
 stores the query, intent, content, repository paths, fingerprints, user IDs, or
 payloads. The last 1000 samples live under the resolved Git directory at
 `llm-wiki/context-routing-telemetry.json`, outside the worktree. JSON fallback
-retirement is reported ready only after at least 100 samples, at most 1%
-fallback, and healthy telemetry persistence.
+retirement evidence reached 160 samples with one historical fallback before the
+automatic route was removed. New failed routes are recorded as
+`sqlite-unavailable`, never as JSON fallback. The status derives unavailable
+count/rate, refresh attempt/success/failure counts, the current SQLite-primary
+streak, and the frozen retirement threshold fields. These fields do not add
+data to the persisted event envelope.
 
 The unified developer entrypoint is:
 

@@ -23,6 +23,9 @@ sources:
   - .llm-wiki/evals/context-search-probe-5.json
   - .llm-wiki/evals/context-search-probe-6.json
   - .llm-wiki/evals/context-search-probe-7.json
+  - .llm-wiki/evals/context-search-holdout-100.json
+  - .llm-wiki/evals/context-search-postfix-control-30.json
+  - .llm-wiki/evals/context-search-posttune-control-30.json
   - .llm-wiki/evals/development-context-bundles.json
   - .llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
@@ -142,6 +145,12 @@ combined gate:
   -CorpusPath .llm-wiki/evals/context-search-probe-6.json
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
   -CorpusPath .llm-wiki/evals/context-search-probe-7.json
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
+  -CorpusPath .llm-wiki/evals/context-search-holdout-100.json
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
+  -CorpusPath .llm-wiki/evals/context-search-postfix-control-30.json
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
+  -CorpusPath .llm-wiki/evals/context-search-posttune-control-30.json
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 -FailOnRegression
 ./.llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
 ```
@@ -159,6 +168,32 @@ the validation corpus, 30/30 top-1 on each of the first four promoted probes,
 are top-1. Probe-4, probe-5, probe-6, and probe-7 preserve their blind baselines in their committed
 descriptions. Timing is diagnostic rather than a correctness gate because
 workstation load varies.
+
+The separate 100-case fallback-retirement holdout is not a tuned promotion
+corpus and is not included in the 450-case strict total. Its queries and unique
+targets were frozen before the first search run. The blind Node result was
+21/100 top-1, 61/100 top-10, and 0.3404 MRR; the in-process .NET reader produced
+the same ranks and top-five candidates for all 100 cases. After fixing
+limit-dependent candidate pools, positive expansion of negated roles,
+Russian/English technical normalization, and structural role affinity, both
+readers reached 57/100 top-1, 100/100 top-10, and 0.719 MRR with zero exact-rank
+or top-five differences. The original blind result remains immutable; the
+post-fix result is regression evidence, not a new blind baseline. Use a new
+unseen holdout for any later generalization claim.
+
+A separate post-fix control froze 30 additional unique targets before its first
+run and reused none of the earlier 550 targets. Without further tuning it
+produced 17/30 top-1, 29/30 top-10, and 0.7079 MRR. Preserve that first-run
+baseline. Shared bilingual subject terms and explicit file roles later raised
+it to 27/30 top-1, 30/30 top-10, and 0.95 MRR with exact Node/.NET parity.
+
+A second post-tuning control then froze 30 more targets that appear in none of
+the previous 580 cases. Its untouched first run produced 18/30 top-1, 28/30
+top-10, and 0.7467 MRR with exact Node/.NET rank and top-five parity. General
+quality, invariant, test-role, notification, exercise, and change vocabulary
+raised it to 26/30 top-1, 30/30 top-10, and 0.925 MRR. Both control baselines
+remain immutable and neither control is part of the strict 450-case promotion
+total.
 
 The Development MCP reads the existing projection directly with
 `Microsoft.Data.Sqlite`. It opens the database read-only, uses the same ranking
@@ -205,13 +240,17 @@ The evaluation calculates the live change-set fingerprint, so it fails closed
 when the database is stale. The graph manager remains the only SQLite writer.
 It records the fingerprint in the projection transaction and rolls back if the
 worktree changes during the build. `get_development_context` attempts one graph
-refresh for missing or stale state, then uses the JSON trace fallback when SQL
-is still unavailable, invalid, or empty. `get_server_status` exposes both
+refresh for missing or stale state, then returns an explicit partial recovery
+result when SQL is still unavailable, invalid, locked, or empty. It does not
+invoke JSON trace automatically; `trace_backend_flow` remains an explicit
+standalone tool. `get_server_status` exposes both
 process-local timings and the last 1000 persistent route decisions. Persistent
 events contain no query, intent, path, fingerprint, content, or payload data;
 they record only route, normalized fallback category, duration, refresh
-outcome, and timestamp. See ADR 0014 for freshness, fallback, and eventual
-compatibility-trace removal criteria.
+outcome, and timestamp. Status derives SQLite-unavailable count/rate, refresh
+attempt/success/failure counts, the current SQLite-primary streak, and the
+historical retirement threshold without expanding the stored event schema. See
+ADR 0014 for the freshness protocol and completed compatibility-trace retirement.
 
 Build or incrementally refresh the graph:
 
@@ -242,7 +281,8 @@ from current sources. Custom database paths publish isolated fingerprint
 sidecars. Busy/locked databases, cancellation, permission failures, and
 unclassified SQLite errors are not corruption and never trigger quarantine.
 The aggregate MCP route refreshes once for the two confirmed corruption codes;
-if rebuilding still fails, the compatibility JSON trace remains the fallback.
+if rebuilding still fails, it returns `context_search_unavailable` with a
+recovery action and records `sqlite-unavailable` telemetry.
 
 Semantic enrichment is automatic for ordinary incremental updates. SQLite
 selects declaration files referenced by the changed C# identifiers, and Roslyn
