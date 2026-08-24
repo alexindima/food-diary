@@ -21,6 +21,7 @@ sources:
   - .llm-wiki/evals/context-search-probe-3.json
   - .llm-wiki/evals/context-search-probe-4.json
   - .llm-wiki/evals/context-search-probe-5.json
+  - .llm-wiki/evals/context-search-probe-6.json
   - .llm-wiki/evals/development-context-bundles.json
   - .llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
@@ -99,6 +100,13 @@ general query normalization raised it to 40/40 top-1. Fourteen probe-4
 file-specific identity rules were removed during that work; the replacement
 policy uses candidate role, source scope, query/candidate terms, and filename
 affinity in both Node and .NET.
+A sixth independent probe in `.llm-wiki/evals/context-search-probe-6.json` was
+frozen with 30 more previously unused backend, frontend, and Wiki targets. It
+deliberately mixes Russian and English behavior-level queries. Its blind
+baseline was 9/30 top-1, 18/30 top-10, and 0.4028 MRR. Shared bilingual query
+normalization plus structural policy, parser, observer, interceptor, utility,
+mapper, workflow, and tool roles raised it to 30/30 top-1 without changing its
+cases. It is now part of the strict regression gate.
 Run either corpus without changing the JSON-authoritative path, or run the
 combined gate:
 
@@ -120,6 +128,8 @@ combined gate:
   -CorpusPath .llm-wiki/evals/context-search-probe-4.json
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
   -CorpusPath .llm-wiki/evals/context-search-probe-5.json
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
+  -CorpusPath .llm-wiki/evals/context-search-probe-6.json
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 -FailOnRegression
 ./.llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
 ```
@@ -131,9 +141,10 @@ separate from stricter `switchCriteria`. The combined gate requires at least
 The current Node result is 60/60 top-1 on the regression corpus, 40/40 top-1 on
 the challenge corpus, 70/70 top-1 on the generalization corpus, 50/50 top-1 on
 the validation corpus, 30/30 top-1 on each of the first four promoted probes,
-and 40/40 on probe-5. All 380 strict cases are top-1. Probe-4 and probe-5
-preserve their blind baselines in their committed descriptions. Timing is
-diagnostic rather than a correctness gate because workstation load varies.
+40/40 on probe-5, and 30/30 on probe-6. All 410 strict cases are top-1. Probe-4,
+probe-5, and probe-6 preserve their blind baselines in their committed
+descriptions. Timing is diagnostic rather than a correctness gate because
+workstation load varies.
 
 The Development MCP reads the existing projection directly with
 `Microsoft.Data.Sqlite`. It opens the database read-only, uses the same ranking
@@ -160,6 +171,8 @@ dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll
   --evaluate-context-search .llm-wiki/evals/context-search-probe-4.json
 dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search-probe-5.json
+dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+  --evaluate-context-search .llm-wiki/evals/context-search-probe-6.json
 ```
 
 The separate full-bundle evaluation runs real SQL retrieval, compact brief,

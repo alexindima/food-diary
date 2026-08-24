@@ -102,7 +102,9 @@
     "summary": ["read"],
     "authentication": ["auth"],
     "retrying": ["retry"],
-    "ranked": ["search", "find", "context"]
+    "ranked": ["context"],
+    "sections": ["section"],
+    "agents": ["instruction", "guidance"]
   },
   "queryPrefixExpansions": {
     "вычищ": ["sanitize", "privacy", "sensitive"],
@@ -1565,7 +1567,7 @@
       "changeTypes": ["Backend"],
       "excludeTests": true,
       "excludedPathPrefixes": ["FoodDiary.Application.Abstractions/"],
-      "excludedQueryTerms": ["job", "background", "http", "response", "maximum", "size"]
+      "excludedQueryTerms": ["job", "background", "http", "response", "maximum", "size", "update", "preferences"]
     },
     {
       "id": "backend-subject-service-role",
@@ -1579,6 +1581,23 @@
       "maximumQueryIdentityScore": 325,
       "identityScope": "file",
       "changeTypes": ["Backend"],
+      "excludeTests": true,
+      "excludedPathPrefixes": ["FoodDiary.Application.Abstractions/"]
+    },
+    {
+      "id": "backend-summary-read-service-role",
+      "queryTerms": ["summary"],
+      "minimumMatches": 1,
+      "candidateTerms": ["read", "service"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 1,
+      "score": 420,
+      "scorePerQueryIdentityMatch": 90,
+      "maximumQueryIdentityScore": 360,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Backend"],
+      "recordTypes": ["code"],
       "excludeTests": true,
       "excludedPathPrefixes": ["FoodDiary.Application.Abstractions/"]
     },
@@ -1992,12 +2011,13 @@
       "identityScope": "file",
       "changeTypes": ["Backend"],
       "recordTypes": ["code"],
+      "pathSuffixes": ["Generator.cs"],
       "excludeTests": true
     },
     {
       "id": "backend-policy-role",
-      "queryTerms": ["policy", "validate", "safe", "endpoint", "range"],
-      "minimumMatches": 1,
+      "queryTerms": ["policy", "safe", "range", "https", "localhost", "port"],
+      "minimumMatches": 2,
       "candidateTerms": ["policy"],
       "minimumCandidateMatches": 1,
       "minimumQueryIdentityMatches": 1,
@@ -2026,8 +2046,8 @@
     },
     {
       "id": "backend-loader-role",
-      "queryTerms": ["section", "loader"],
-      "minimumMatches": 1,
+      "queryTerms": ["load", "section", "loader"],
+      "minimumMatches": 2,
       "candidateTerms": ["loader"],
       "minimumCandidateMatches": 1,
       "minimumQueryIdentityMatches": 1,
@@ -2057,7 +2077,7 @@
     {
       "id": "frontend-service-source-role",
       "queryTerms": ["angular", "frontend", "service", "save", "form"],
-      "minimumMatches": 2,
+      "minimumMatches": 3,
       "candidateTerms": ["service"],
       "minimumCandidateMatches": 1,
       "minimumQueryIdentityMatches": 2,
@@ -2083,6 +2103,7 @@
       "maximumQueryIdentityScore": 360,
       "identityScope": "file",
       "affinityDirectOnly": false,
+      "excludedQueryTerms": ["run", "runner", "controller", "state"],
       "changeTypes": ["Frontend"],
       "recordTypes": ["code"],
       "pathPrefixes": ["FoodDiary.Web.Client/src/app/interceptor/"],
@@ -2092,7 +2113,7 @@
     {
       "id": "frontend-transformation-utility-role",
       "queryTerms": ["calculate", "recalculate", "edit", "translate", "map", "normalize", "update", "resolve", "build"],
-      "minimumMatches": 1,
+      "minimumMatches": 2,
       "candidateTerms": ["utils", "util"],
       "minimumCandidateMatches": 1,
       "minimumQueryIdentityMatches": 2,
@@ -2111,9 +2132,9 @@
       "id": "frontend-ai-edit-utility-role",
       "queryTerms": ["ai", "edit", "recalculate", "update", "ingredient"],
       "minimumMatches": 2,
-      "candidateTerms": ["ai", "edit", "utils"],
-      "minimumCandidateMatches": 3,
-      "minimumQueryIdentityMatches": 2,
+      "candidateTerms": ["ai", "utils"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 1,
       "score": 560,
       "scorePerQueryIdentityMatch": 90,
       "maximumQueryIdentityScore": 360,
