@@ -9,13 +9,13 @@ const ringColors = ['#b8db36', '#ff7657', '#f0ad27', '#4a93d8'];
 const ringNames = ['ADOPT', 'TRIAL', 'ASSESS', 'HOLD'];
 
 function pointFor(entry, index) {
-  const radiusBands = [[24, 31], [34, 47], [51, 64], [68, 82]];
+  const radiusBands = [[6, 13], [16, 26], [30, 40], [44, 48]];
   const [min, max] = radiusBands[entry.ring];
   const seed = ((index + 1) * 47 + entry.quadrant * 23) % 100;
   const radius = min + ((max - min) * seed) / 100;
   const quadrantStart = [-90, 0, 90, 180][entry.quadrant];
   const angle = (quadrantStart + 12 + ((index * 67) % 66)) * (Math.PI / 180);
-  return { x: 50 + Math.cos(angle) * radius / 2, y: 50 + Math.sin(angle) * radius / 2 };
+  return { x: 50 + Math.cos(angle) * radius, y: 50 + Math.sin(angle) * radius };
 }
 
 function Radar({ entries, selectedId, onSelect }) {
@@ -95,4 +95,5 @@ function App() {
   </main>;
 }
 
-createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);
+const root = globalThis.__foodDiaryRadarRoot ??= createRoot(document.getElementById('root'));
+root.render(<React.StrictMode><App /></React.StrictMode>);

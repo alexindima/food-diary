@@ -1,1 +1,29 @@
-{"generatedAt":"bootstrap","technologies":{}}
+{
+  "generatedAt": "2026-08-24T22:40:19.269Z",
+  "technologies": {
+    "dotnet": {
+      "version": "10.0.11",
+      "source": "Directory.Packages.props"
+    },
+    "angular": {
+      "version": "^22.1.3",
+      "source": "FoodDiary.Web.Client/package.json"
+    },
+    "typescript": {
+      "version": "6.0.3",
+      "source": "FoodDiary.Web.Client/package.json"
+    },
+    "postgresql": {
+      "version": "10.0.3",
+      "source": "Directory.Packages.props"
+    },
+    "opentelemetry": {
+      "version": "1.17.0",
+      "source": "Directory.Packages.props"
+    },
+    "playwright": {
+      "version": "^1.62.1",
+      "source": "FoodDiary.Web.Client/package.json"
+    }
+  }
+}

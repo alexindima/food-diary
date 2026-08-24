@@ -13,11 +13,15 @@ npm run build
 npm run validate
 ```
 
-Run these commands from `FoodDiary.TechRadar`. The production image uses the repository root as its Docker build context:
+Run these commands from `FoodDiary.TechRadar`. Refresh and validate repository-backed data, then use this project as the isolated Docker build context:
 
 ```powershell
-docker build -f FoodDiary.TechRadar/Dockerfile -t fooddiary-tech-radar .
+npm run discover
+npm run validate
+docker build -t fooddiary-tech-radar .
 ```
+
+The container compiles the committed catalog and generated inventory. Repository discovery and evidence validation intentionally happen before the image build because its context contains no application source or internal documentation.
 
 ## Updating the radar
 

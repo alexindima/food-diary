@@ -66,3 +66,5 @@ Thumbs.db
 /output/playwright/
 /FoodDiary.Web.Client/test-results/
 /FoodDiary.Web.Client/playwright-report/
+/FoodDiary.TechRadar/node_modules/
+/FoodDiary.TechRadar/dist/
