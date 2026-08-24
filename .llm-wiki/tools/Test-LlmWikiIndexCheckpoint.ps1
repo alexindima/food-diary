@@ -17,6 +17,7 @@ foreach ($requiredFragment in @(
     'Concurrent LLM Wiki index result reused'
     'Test-PipelineCacheReceipt'
     'Write-PipelineCacheReceipt'
+    '$(@($selectedToolNames).Count) generator(s)'
 )) {
     if (-not $pipelineText.Contains($requiredFragment)) { throw "Index pipeline resumability contract is missing: $requiredFragment" }
 }

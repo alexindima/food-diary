@@ -62,15 +62,16 @@ public sealed class WeeklyGoalRepositoryIntegrationTests(PostgresDatabaseFixture
         setupContext.Users.Add(user);
         await setupContext.SaveChangesAsync();
         var weekStartUtc = new DateTime(2026, 8, 17, 0, 0, 0, DateTimeKind.Utc);
+        string connectionString = setupContext.Database.GetConnectionString()!;
 
-        await using FoodDiaryDbContext firstContext = await databaseFixture.CreateDbContextAsync();
-        await using FoodDiaryDbContext secondContext = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext firstContext = databaseFixture.CreateDbContext(connectionString);
+        await using FoodDiaryDbContext secondContext = databaseFixture.CreateDbContext(connectionString);
 
         Task first = CreateGoalWithRunnerAsync(firstContext, user.Id, weekStartUtc);
         Task second = CreateGoalWithRunnerAsync(secondContext, user.Id, weekStartUtc);
         await Task.WhenAll(first, second);
 
-        await using FoodDiaryDbContext verificationContext = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext verificationContext = databaseFixture.CreateDbContext(connectionString);
         Assert.Equal(1, await verificationContext.WeeklyGoals.CountAsync(
             goal => goal.UserId == user.Id && goal.WeekStartUtc == weekStartUtc));
     }

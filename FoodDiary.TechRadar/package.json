@@ -1,0 +1,21 @@
+{
+  "name": "fooddiary-tech-radar",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "discover": "node scripts/discover.mjs",
+    "validate": "node scripts/validate.mjs",
+    "build": "npm run discover && npm run validate && vite build",
+    "dev": "npm run discover && vite --host 0.0.0.0",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "d3": "^7.9.0",
+    "vite": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {}
+}

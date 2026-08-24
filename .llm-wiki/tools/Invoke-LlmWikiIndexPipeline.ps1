@@ -402,7 +402,7 @@ if (-not $RequiredOnly -and 'Build-LlmWikiQualityIndex.ps1' -in $selectedToolNam
 if ($ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
     $pipelineCacheState = Get-PipelineCacheState $selectedToolNames
     if ($Check -and (Test-PipelineCacheReceipt $pipelineCacheState)) {
-        Write-Host "LLM Wiki affected pipeline cache hit: $($selectedToolNames.Count) generator(s), source and generated hashes unchanged."
+        Write-Host "LLM Wiki affected pipeline cache hit: $(@($selectedToolNames).Count) generator(s), source and generated hashes unchanged."
         exit 0
     }
 }
