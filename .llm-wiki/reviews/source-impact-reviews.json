@@ -818,13 +818,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c280a0391f11411cb5184ae7143a5831eaade3c005f828ede2711284552524c6"
+          "sha256": "6ce257b33bb7a0321593202fb325f470a9544edae28d91e48df96c9ae4cd19ac"
         }
       ],
-      "reason": "Quality changes reflect the explicit retirement evaluator, routing outcome telemetry, and recovery tests; WikiQueryService decision points decreased, the new branches are covered by 194 passing MCP tests, and the full SQL/control evaluations passed.",
+      "reason": "The merged API cancellation classification adds focused TelemetryActionFilter coverage and only updates generated structural counts; the combined Wiki adaptive evaluations and context bundle passed on the merge HEAD.",
       "baseRef": "HEAD",
-      "gitHead": "36d60d6501b3b078e3eac46d79242bf7f07ce024",
-      "reviewedAtUtc": "2026-08-24T09:29:53.1594732Z"
+      "gitHead": "fdbb2d31317e9583625ae951aba8c9843d07bb2d",
+      "reviewedAtUtc": "2026-08-24T09:43:48.7457565Z"
     },
     {
       "pageId": "workflow-release-readiness",
