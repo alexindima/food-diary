@@ -16,6 +16,8 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiManualQaPlan.ps1
   - .llm-wiki/tools/Get-LlmWikiWorkflowMetrics.ps1
   - .llm-wiki/tools/Get-LlmWikiResearchPacket.ps1
+  - .llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1
+  - .llm-wiki/tools/Get-LlmWikiChangePacket.ps1
   - .llm-wiki/tools/LlmWikiQueryCache.ps1
   - .llm-wiki/tools/Test-LlmWikiQueryCache.ps1
   - .llm-wiki/policies/experience-policies.json
@@ -106,10 +108,14 @@ decision evidence but never test scenarios. Diff context reads catalog metadata
 and exact changed-path C# symbols from SQLite, then enumerates focused C# test
 candidates from Git once instead of recursively scanning the working tree for
 every matched module. Task-brief intent inference also starts from SQL-filtered
-symbol candidates. Impact indexes are parsed only when their raw payload
-contains one of the normalized changed paths; an absent path is equivalent to
-the existing empty filtered result and avoids repeatedly materializing unrelated
-multi-megabyte JSON during routing regressions and MCP queries.
+symbol candidates and reuses that same compiled result for its exact nested
+diff, avoiding both a frontend-index JSON parse and a second Node process.
+Task-brief impact analysis then performs one SQLite query across seven projected
+indexes. It verifies every normalized source hash but materializes only exact
+changed-path records and global architecture violations, avoiding repeated
+multi-megabyte PowerShell JSON parses during routing regressions and MCP queries.
+Missing or stale projections stop the route explicitly; JSON is available only
+when a caller requests the diagnostic baseline.
 
 The Development MCP keeps an additional bounded in-memory cache for successful
 read-only Wiki results. Planned paths and trace candidates define a scoped
@@ -156,6 +162,10 @@ The broader frontend trace now uses the same process boundary for frontend symbo
 routes, component contracts, selector consumers, API calls, and source traversal.
 JSON remains a committed generation and parity source, but normal `trace` calls no
 longer materialize both indexes in PowerShell.
+Impact simulation likewise reuses a minimal frontend feature catalog from the
+change packet's existing compiled-context round trip. Normal simulation no
+longer parses frontend-index JSON, and research cache keys rely on the graph
+dependency fingerprint instead of hashing frontend and quality indexes again.
 
 The `maintenance` budget treats concrete CI diagnostics, manifest/lockfile
 compatibility errors, and Docker or deployment-build failures as primary

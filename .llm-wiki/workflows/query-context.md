@@ -35,12 +35,14 @@ Diff context uses the same projection in `changed-paths` mode. SQLite applies
 the exact changed-path predicate before transporting C# and frontend symbol payloads, while
 catalog-derived modules, projects, and guides retain their previous shape.
 Task-brief intent inference also uses SQLite candidates before applying its
-existing PowerShell scoring. Both commands keep `-CompiledIndexSource Json` as
-an explicit test/diagnostic baseline and never select it automatically.
+existing PowerShell scoring, then reuses the same selection for exact nested
+diff filtering. Both commands keep `-CompiledIndexSource Json` as an explicit
+test/diagnostic baseline and never select it automatically.
 
 JSON result callers reuse an exact content-addressed result keyed by the query
-arguments, HEAD, relevant worktree paths, the graph dependency fingerprint, and
-the frontend index hash. `-ScopePath` supplies the explicit cache boundary; `-Module` derives the
+arguments, HEAD, relevant worktree paths, and the selected source dependencies.
+SQLite routes use the graph dependency fingerprint; explicit JSON baselines hash
+their generated source files. `-ScopePath` supplies the explicit cache boundary; `-Module` derives the
 corresponding application project paths. An unrelated edit no longer invalidates
 the query, while an edit inside the scope or a dependent-index change does.
 Unchanged orchestration calls avoid querying and transporting catalog/symbol
@@ -51,9 +53,11 @@ Required smoke tests compare SQLite and JSON-baseline output for context, diff,
 and task-brief routes. They check exact functional parity, normalized source
 hashes, changed-path candidate reduction, and bounded SQL/transport overhead.
 Context parity includes frontend results and test recommendations across
-frontend-specific queries. Task brief retains its direct frontend-index parse
-until candidate selection can share an existing process call; adding a separate
-SQL process was measured as more expensive than the roughly 15 ms JSON parse.
+frontend-specific queries. Task-brief parity excludes only route diagnostics,
+requires exact functional output, proves that the SQLite intent selection is
+reused by nested diff, and checks the seven-source impact projection across
+compact and full results. It guards duplicate preservation, normalized source
+hashes, freshness bytes, materialized payload reduction, and end-to-end latency.
 Backend- and frontend-contract query tools apply the same freshness/no-fallback
 contract in specialized SQL views with their own exact parity groups. This
 protects result quality while the remaining build-time and explicit baseline

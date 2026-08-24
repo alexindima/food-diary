@@ -58,17 +58,29 @@ decision, or compiled-index analysis. With no task evidence to rank, avoiding
 those repository-wide dependencies keeps the result fast and deterministic
 across shells and CI environments.
 
-C# intent candidates and the nested diff context use the refreshed SQLite
-compiled-index projection by default; the nested diff selects exact changed C#
-and frontend symbol paths before transport. Candidate filtering happens before
-the existing brief scoring, so risk, provenance, inferred paths, and downstream
-planning shapes remain unchanged. Standalone frontend intent inference retains
-the generated frontend JSON source because its measured local parse cost is
-lower than an additional SQLite process round trip. Missing or stale required
+C# and frontend intent candidates use one refreshed SQLite compiled-context
+selection by default. After the established PowerShell scoring infers paths,
+the nested diff filters that same safe candidate superset to exact C# and
+frontend symbol paths instead of starting a second Node process. This removes
+the direct frontend-index JSON parse without adding a round trip; risk,
+provenance, inferred paths, and downstream planning shapes remain unchanged.
+The `analysis.compiledIndex` diagnostic reports source, selection mode, SQL and
+round-trip duration, scanned/candidate counts, source hashes, direct source
+bytes, and whether the selection was reused for diff. Missing or stale required
 projections fail explicitly; `-CompiledIndexSource Json` exists for parity tests
 and diagnostics only. The query cache keys the selected source and uses the
 graph dependency fingerprint for the SQLite route, preventing SQL and
 JSON-baseline results from colliding.
+
+Risk impact records also use SQLite by default. One `task-brief-impact` action
+selects exact changed-path records from quality, runtime topology, sensitive
+data, frontend contracts, domain data, backend contracts, and architecture
+health. It preserves source order and repeated records, includes the global
+architecture violation sets, and fails if any projected source hash is missing
+or stale. `analysis.impactIndex` reports scanned/candidate/returned records, SQL
+and round-trip timing, all seven hashes, bytes verified for freshness, and bytes
+actually materialized. `-CompiledIndexSource Json` is the explicit full-parse
+baseline, not an automatic fallback.
 
 The brief combines changed scopes, directly affected and downstream modules,
 scoped instructions, relevant wiki pages, focused tests, mandatory checks,

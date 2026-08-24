@@ -8,6 +8,9 @@ param(
     [string]$Objective,
     [DateTime]$AsOfUtc = [DateTime]::UtcNow,
     [switch]$FailOnInvalid,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
+    [switch]$IncludeDiagnostics,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'
 )
@@ -109,7 +112,7 @@ function Get-ImpactSnapshot([object]$Packet) {
 function Get-Unexpected([object[]]$Actual, [object[]]$Forecast) {
     @($Actual | Where-Object { $_ -notin $Forecast } | Sort-Object -Unique)
 }
-function Get-ScopeAlignment([string]$ObjectiveText, [string[]]$Paths) {
+function Get-ScopeAlignment([string]$ObjectiveText, [string[]]$Paths, [object[]]$FrontendFeatures) {
     $normalizedObjective = ([string]$ObjectiveText).ToLowerInvariant()
     $aliases = @{
         'dashboard' = @('dashboard')
@@ -133,9 +136,8 @@ function Get-ScopeAlignment([string]$ObjectiveText, [string[]]$Paths) {
     }
     $pathText = (@($Paths) -join ' ').ToLowerInvariant()
     $matched = @($expanded | Where-Object { $pathText.Contains($_) } | Sort-Object)
-    $featureIndex = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/frontend-index.json') -Raw | ConvertFrom-Json
     $expectedFeatures = @(
-        $featureIndex.features |
+        $FrontendFeatures |
             Where-Object {
                 $feature = $_
                 $feature.name -in @($expanded)
@@ -146,7 +148,7 @@ function Get-ScopeAlignment([string]$ObjectiveText, [string[]]$Paths) {
     $requiredFeatures = @(
         @(
             foreach ($term in $terms) {
-                if ($term -in @($featureIndex.features.name)) { $term }
+                if ($term -in @($FrontendFeatures.name)) { $term }
                 if ($term -eq 'meal') { 'meals' }
             }
         ) | Sort-Object -Unique
@@ -154,7 +156,7 @@ function Get-ScopeAlignment([string]$ObjectiveText, [string[]]$Paths) {
     $coveredFeatures = @($expectedFeatures | Where-Object { $pathText -match "/features/$([regex]::Escape($_))/" })
     $suggestedPaths = @(
         @(
-            $featureIndex.features |
+            $FrontendFeatures |
                 Where-Object name -in $expectedFeatures |
                 ForEach-Object root
             if ($normalizedObjective -match 'photo|image|vision|annotation') {
@@ -313,8 +315,44 @@ if ($Action -eq 'simulate') {
     if ($paths.Count -eq 0) { throw 'simulate requires ProposedPath.' }
     $packet = & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') -Objective $Objective -ChangedPath $paths -Format Json | ConvertFrom-Json
     $snapshot = Get-ImpactSnapshot $packet
-    $alignment = Get-ScopeAlignment $Objective $paths
+    $featureCatalogStopwatch = [Diagnostics.Stopwatch]::StartNew()
+    if ($CompiledIndexSource -eq 'Sqlite') {
+        $frontendFeatures = @($packet.diff.compiledIndex.frontendFeatures)
+        $frontendSourceHash = [string]$packet.diff.compiledIndex.sourceHashes.frontend
+        if ([string]$packet.diff.compiledIndex.source -ne 'sqlite-compiled-index' -or
+            $frontendFeatures.Count -eq 0 -or [string]::IsNullOrWhiteSpace($frontendSourceHash)) {
+            throw 'SQLite frontend feature projection is unavailable in the change packet. Run ./.llm-wiki/wiki.ps1 graph-build and retry.'
+        }
+        $featureCatalogStopwatch.Stop()
+        $featureCatalogJson = $frontendFeatures | ConvertTo-Json -Depth 8 -Compress
+        $featureCatalogDiagnostics = [ordered]@{
+            source = 'sqlite-compiled-index-reused'
+            sourceHash = $frontendSourceHash
+            sourceRecords = $frontendFeatures.Count
+            sourceBytesVerified = [int64]$packet.diff.compiledIndex.sourceBytesVerified.frontend
+            sourceBytesMaterialized = [Text.Encoding]::UTF8.GetByteCount($featureCatalogJson)
+            selectionRoundTripDurationMs = [double]$packet.diff.compiledIndex.roundTripDurationMs
+            incrementalRoundTripDurationMs = [Math]::Round($featureCatalogStopwatch.Elapsed.TotalMilliseconds, 2)
+        }
+    } else {
+        $frontendIndexRaw = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/frontend-index.json') -Raw
+        $frontendIndex = $frontendIndexRaw | ConvertFrom-Json
+        $frontendFeatures = @($frontendIndex.features)
+        $featureCatalogStopwatch.Stop()
+        $sourceBytes = [Text.Encoding]::UTF8.GetByteCount($frontendIndexRaw)
+        $featureCatalogDiagnostics = [ordered]@{
+            source = 'json-baseline'
+            sourceHash = $null
+            sourceRecords = $frontendFeatures.Count
+            sourceBytesVerified = $sourceBytes
+            sourceBytesMaterialized = $sourceBytes
+            selectionRoundTripDurationMs = $null
+            incrementalRoundTripDurationMs = [Math]::Round($featureCatalogStopwatch.Elapsed.TotalMilliseconds, 2)
+        }
+    }
+    $alignment = Get-ScopeAlignment $Objective $paths $frontendFeatures
     $result = [pscustomobject][ordered]@{ action = 'simulate'; valid = $true; proposedPaths = $paths; packetFingerprint = $packet.fingerprint; alignment = $alignment; impact = $snapshot }
+    if ($IncludeDiagnostics) { $result | Add-Member -NotePropertyName _diagnostics -NotePropertyValue ([pscustomobject]@{ frontendFeatures = [pscustomobject]$featureCatalogDiagnostics }) }
 } elseif ($Action -in @('assess', 'create')) {
     $receipt = New-Receipt (Get-Assessment)
     if ($Action -eq 'create') {

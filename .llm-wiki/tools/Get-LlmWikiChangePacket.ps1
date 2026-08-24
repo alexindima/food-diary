@@ -24,7 +24,9 @@ if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $Chan
 
 $diffArguments = @{} + $common
 $diffArguments.Limit = [Math]::Min($Limit, 20)
+$diffArguments.IncludeFrontendFeatures = $true
 $diff = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') @diffArguments | ConvertFrom-Json
+$diffArguments.Remove('IncludeFrontendFeatures')
 $policy = & (Join-Path $toolsRoot 'Test-LlmWikiChangePolicy.ps1') @common | ConvertFrom-Json
 $ownership = & (Join-Path $toolsRoot 'Get-LlmWikiOwnershipImpact.ps1') @common -DiffInput $diff | ConvertFrom-Json
 $testPlan = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') @diffArguments -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json

@@ -197,6 +197,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiFrontendRuntimeOwnerSqlParity.ps1')
             if (-not $?) { exit 1 }
         }
+        'sensitive-data-query' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiSensitiveDataSqlParity.ps1')
+            if (-not $?) { exit 1 }
+        }
         'git-paths' {
             & (Join-Path $toolsRoot 'Test-LlmWikiGitPaths.ps1')
             if (-not $?) { exit 1 }
@@ -320,6 +324,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiGovernedDeliveryRegression.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiReviewReport.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiImpactSimulationSqlParity.ps1')
             if (-not $?) { exit 1 }
         }
         'tool-contract' {

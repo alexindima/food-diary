@@ -10,7 +10,7 @@ const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-gr
 const parserVersion = '11-javascript-context-v1';
 const contextSearchSchemaVersion = '1';
 const compiledIndexSchemaVersion = '4';
-const queryDocumentSchemaVersion = '4';
+const queryDocumentSchemaVersion = '7';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
 const roslynDll = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll');
 const typescriptExtractor = resolve(repositoryRoot, '.llm-wiki/tools/typescript-extractor.mjs');
@@ -472,6 +472,10 @@ function refreshQueryLayer(database) {
     ['contracts', '.llm-wiki/generated/backend-contract-index.json'],
     ['frontend-contracts', '.llm-wiki/generated/frontend-contract-index.json'],
     ['risks', '.llm-wiki/generated/quality-index.json'],
+    ['runtime', '.llm-wiki/generated/runtime-topology.json'],
+    ['sensitive', '.llm-wiki/generated/sensitive-data-index.json'],
+    ['domain', '.llm-wiki/generated/domain-data-index.json'],
+    ['architecture-health', '.llm-wiki/generated/architecture-health-index.json'],
   ];
   const replaceCategory = database.prepare('DELETE FROM query_documents WHERE category = ?');
   const insert = database.prepare(`
@@ -494,17 +498,41 @@ function refreshQueryLayer(database) {
     } else if (category === 'contracts') {
       let ordinal = 0;
       for (const value of document.contracts ?? []) records.push({ key: value.id ?? value.name ?? value.symbol ?? JSON.stringify(value), path: value.path ?? value.sourcePath ?? '', kind: 'contract', ordinal: ordinal++, value });
-      for (const value of document.consumerEdges ?? []) records.push({ key: `consumer:${value.contract ?? ''}:${value.consumerPath ?? ''}`, path: value.consumerPath ?? '', kind: 'consumer', ordinal: ordinal++, value });
+      for (const value of document.consumerEdges ?? []) records.push({ key: `consumer:${value.contract ?? ''}:${value.consumerPath ?? ''}:${ordinal}`, path: value.consumerPath ?? '', kind: 'consumer', ordinal: ordinal++, value });
     } else if (category === 'frontend-contracts') {
       let ordinal = 0;
       for (const value of document.components ?? []) records.push({ key: `component:${value.class ?? ''}:${value.path ?? ''}`, path: value.path ?? '', kind: 'component', ordinal: ordinal++, value });
       for (const value of document.consumerEdges ?? []) records.push({ key: `consumer:${value.component ?? ''}:${value.consumerPath ?? ''}:${ordinal}`, path: value.consumerPath ?? '', kind: 'consumer', ordinal: ordinal++, value });
       for (const value of document.apiCalls ?? []) records.push({ key: `api-call:${value.path ?? ''}:${value.method ?? ''}:${value.line ?? ordinal}`, path: value.path ?? '', kind: 'api-call', ordinal: ordinal++, value });
       for (const value of document.translationUsage ?? []) records.push({ key: `translation:${value.path ?? value.templatePath ?? ''}:${ordinal}`, path: value.path ?? value.templatePath ?? '', kind: 'translation', ordinal: ordinal++, value });
-    } else {
+    } else if (category === 'risks') {
       let ordinal = 0;
       for (const [recordKind, values] of Object.entries({ hotspot: document.hotspots ?? [], file: document.files ?? [], criticalSymbol: document.criticalSymbols ?? [], debtMarker: document.debtMarkers ?? [] })) {
-        for (const value of values) records.push({ key: `${recordKind}:${value.path ?? ''}:${value.name ?? value.symbol ?? value.line ?? ''}`, path: value.path ?? value.sourcePath ?? '', kind: recordKind, ordinal: ordinal++, value: { recordKind, ...value } });
+        for (const value of values) records.push({ key: `${recordKind}:${value.path ?? ''}:${value.name ?? value.symbol ?? value.line ?? ''}:${ordinal}`, path: value.path ?? value.sourcePath ?? '', kind: recordKind, ordinal: ordinal++, value: { recordKind, ...value } });
+      }
+    } else if (category === 'runtime') {
+      let ordinal = 0;
+      for (const [recordKind, values] of Object.entries({ composeService: document.composeServices ?? [], hostedService: document.hostedServices ?? [], httpClient: document.httpClients ?? [], webhook: document.webhooks ?? [], recurringJob: document.recurringJobRegistrations ?? [] })) {
+        for (const value of values) {
+          const path = recordKind === 'composeService' ? 'docker-compose.yml' : value.path ?? value.registrationPath ?? '';
+          records.push({ key: `${recordKind}:${path}:${value.name ?? value.contract ?? value.api ?? ''}:${ordinal}`, path, kind: recordKind, ordinal: ordinal++, value });
+        }
+      }
+    } else if (category === 'sensitive') {
+      let ordinal = 0;
+      records.push({ key: 'summary', path: '', kind: 'summary', ordinal: ordinal++, value: document.summary ?? {} });
+      for (const [recordKind, values] of Object.entries({ field: document.fields ?? [], boundary: document.boundaryFiles ?? [], potentialLogging: document.potentialLogging ?? [], externalTransfer: document.externalTransfers ?? [] })) {
+        for (const value of values) records.push({ key: `${recordKind}:${value.path ?? ''}:${value.name ?? value.line ?? ''}:${ordinal}`, path: value.path ?? '', kind: recordKind, ordinal: ordinal++, value });
+      }
+    } else if (category === 'domain') {
+      let ordinal = 0;
+      for (const [recordKind, values] of Object.entries({ domainType: document.domainTypes ?? [], invariant: document.invariants ?? [], persistenceMapping: document.persistenceMappings ?? [] })) {
+        for (const value of values) records.push({ key: `${recordKind}:${value.path ?? ''}:${value.name ?? value.type ?? value.entity ?? value.line ?? ''}:${ordinal}`, path: value.path ?? '', kind: recordKind, ordinal: ordinal++, value });
+      }
+    } else if (category === 'architecture-health') {
+      let ordinal = 0;
+      for (const [recordKind, values] of Object.entries({ dependencyViolation: document.projectDependencyViolations ?? [], untrackedProject: document.untrackedProductionProjects ?? [], moduleCycle: document.moduleCycleNodes ?? [], selectorUnreferenced: document.selectorUnreferencedComponents ?? [], componentWithoutSpec: document.componentsWithoutDirectSpecs ?? [], criticalSymbolWithoutTest: document.criticalSymbolsWithoutTestReferences ?? [], debtMarker: document.explicitDebtMarkers ?? [] })) {
+        for (const value of values) records.push({ key: `${recordKind}:${value.path ?? ''}:${value.name ?? value.class ?? value.module ?? value.line ?? ''}:${ordinal}`, path: value.path ?? '', kind: recordKind, ordinal: ordinal++, value });
       }
     }
     replaceCategory.run(category);
@@ -645,9 +673,12 @@ function compiledContext(database, options) {
       durationMs: Math.round((performance.now() - started) * 100) / 100,
     };
   }
-  const currentCatalogHash = normalizedTextHash(readFileSync(resolve(repositoryRoot, catalogRow.sourcePath), 'utf8'));
-  const currentSymbolHash = normalizedTextHash(readFileSync(resolve(repositoryRoot, symbolIndex.sourcePath), 'utf8'));
-  const currentFrontendHash = normalizedTextHash(readFileSync(resolve(repositoryRoot, frontendIndex.sourcePath), 'utf8'));
+  const catalogSourceText = readFileSync(resolve(repositoryRoot, catalogRow.sourcePath), 'utf8');
+  const symbolSourceText = readFileSync(resolve(repositoryRoot, symbolIndex.sourcePath), 'utf8');
+  const frontendSourceText = readFileSync(resolve(repositoryRoot, frontendIndex.sourcePath), 'utf8');
+  const currentCatalogHash = normalizedTextHash(catalogSourceText);
+  const currentSymbolHash = normalizedTextHash(symbolSourceText);
+  const currentFrontendHash = normalizedTextHash(frontendSourceText);
   if (currentCatalogHash !== catalogRow.contentHash || currentSymbolHash !== symbolIndex.contentHash || currentFrontendHash !== frontendIndex.contentHash) {
     return {
       ready: false,
@@ -664,6 +695,7 @@ function compiledContext(database, options) {
   const module = options.module ?? '';
   const scopePaths = (options.path ?? '').split(';').filter(Boolean);
   const selectionMode = options['compiled-mode'] ?? 'context';
+  const includeFrontendFeatures = options['include-frontend-features'] === 'true';
   if (!['context', 'changed-paths'].includes(selectionMode)) {
     throw new Error(`Unsupported compiled-context selection mode: ${selectionMode}`);
   }
@@ -693,6 +725,12 @@ function compiledContext(database, options) {
       SELECT COUNT(*) count FROM compiled_index_records
       WHERE index_name = 'frontend' AND record_kind = 'symbol'
     `).get().count;
+    if (includeFrontendFeatures) {
+      scannedRecords += database.prepare(`
+        SELECT COUNT(*) count FROM compiled_index_records
+        WHERE index_name = 'frontend' AND record_kind = 'feature'
+      `).get().count;
+    }
     if (scopePaths.length === 0) {
       rows = [];
       frontendRows = [];
@@ -710,6 +748,14 @@ function compiledContext(database, options) {
         WHERE index_name = 'frontend' AND record_kind = 'symbol' AND path IN (${placeholders})
         ORDER BY source_ordinal
       `).all(...scopePaths);
+    }
+    if (includeFrontendFeatures) {
+      frontendRows.push(...database.prepare(`
+        SELECT record_kind recordKind, path, search_text searchText, payload_json payloadJson
+        FROM compiled_index_records
+        WHERE index_name = 'frontend' AND record_kind = 'feature'
+        ORDER BY source_ordinal
+      `).all());
     }
     selected = rows;
     frontendSelected = frontendRows;
@@ -796,7 +842,13 @@ function compiledContext(database, options) {
     dependencyInjectionRegistrations: selected
       .filter((row) => row.recordKind === 'dependency-injection')
       .map((row) => JSON.parse(row.payloadJson)),
-    frontendFeatures: frontendSelected.filter((row) => row.recordKind === 'feature').map((row) => JSON.parse(row.payloadJson)),
+    frontendFeatures: selectionMode === 'changed-paths' ? [] : frontendSelected.filter((row) => row.recordKind === 'feature').map((row) => JSON.parse(row.payloadJson)),
+    frontendFeatureCatalog: includeFrontendFeatures
+      ? frontendSelected.filter((row) => row.recordKind === 'feature').map((row) => {
+        const feature = JSON.parse(row.payloadJson);
+        return { name: feature.name, root: feature.root };
+      })
+      : [],
     frontendSymbols: frontendSelected.filter((row) => row.recordKind === 'symbol').map((row) => JSON.parse(row.payloadJson)),
     frontendRoutes: frontendSelected.filter((row) => row.recordKind === 'route').map((row) => JSON.parse(row.payloadJson)),
     frontendLocalization: frontendSelected.filter((row) => row.recordKind === 'localization').map((row) => JSON.parse(row.payloadJson)),
@@ -804,6 +856,11 @@ function compiledContext(database, options) {
       repositoryCatalog: catalogRow.contentHash,
       csharpSymbols: symbolIndex.contentHash,
       frontend: frontendIndex.contentHash,
+    },
+    sourceBytesVerified: {
+      repositoryCatalog: Buffer.byteLength(catalogSourceText, 'utf8'),
+      csharpSymbols: Buffer.byteLength(symbolSourceText, 'utf8'),
+      frontend: Buffer.byteLength(frontendSourceText, 'utf8'),
     },
     scannedRecords,
     returnedRecords: selected.length + frontendSelected.length,
@@ -1158,6 +1215,246 @@ function frontendContractContext(database, view, query, limit) {
     sourceHash: projectedHash,
     scannedRecords: database.prepare("SELECT COUNT(*) count FROM query_documents WHERE category = 'frontend-contracts'").get().count,
     returnedRecords: Object.values(groups).reduce((count, records) => count + records.length, 0),
+    durationMs: Math.round((performance.now() - started) * 100) / 100,
+  };
+}
+
+function taskBriefImpactContext(database, changedPaths) {
+  const started = performance.now();
+  const sources = [
+    ['quality', 'risks', '.llm-wiki/generated/quality-index.json'],
+    ['runtime', 'runtime', '.llm-wiki/generated/runtime-topology.json'],
+    ['sensitiveData', 'sensitive', '.llm-wiki/generated/sensitive-data-index.json'],
+    ['frontendContract', 'frontend-contracts', '.llm-wiki/generated/frontend-contract-index.json'],
+    ['domainData', 'domain', '.llm-wiki/generated/domain-data-index.json'],
+    ['backendContract', 'contracts', '.llm-wiki/generated/backend-contract-index.json'],
+    ['architectureHealth', 'architecture-health', '.llm-wiki/generated/architecture-health-index.json'],
+  ];
+  const sourceHashes = {};
+  let sourceBytesVerified = 0;
+  for (const [name, category, sourcePath] of sources) {
+    const projectedHash = database.prepare("SELECT value FROM metadata WHERE key = ?").get(`query_source:${category}`)?.value;
+    if (!projectedHash) {
+      return {
+        ready: false,
+        unavailableReason: `task-brief-impact-${category}-projection-missing`,
+        durationMs: Math.round((performance.now() - started) * 100) / 100,
+      };
+    }
+    const sourceText = readFileSync(resolve(repositoryRoot, sourcePath), 'utf8');
+    sourceBytesVerified += Buffer.byteLength(sourceText, 'utf8');
+    const currentHash = normalizedTextHash(sourceText);
+    if (projectedHash !== currentHash) {
+      return {
+        ready: false,
+        unavailableReason: `task-brief-impact-${category}-projection-stale`,
+        sourceHashes: { [name]: { projected: projectedHash, current: currentHash } },
+        durationMs: Math.round((performance.now() - started) * 100) / 100,
+      };
+    }
+    sourceHashes[name] = projectedHash;
+  }
+
+  const paths = [...new Set((changedPaths ?? []).map((path) => String(path).replaceAll('\\', '/')).filter(Boolean))]
+    .sort((left, right) => left.toLowerCase().localeCompare(right.toLowerCase()) || left.localeCompare(right));
+  const pathPlaceholders = paths.map(() => '?').join(', ');
+  let sourceBytesMaterialized = 0;
+  const parseRows = (rows) => rows.map((row) => {
+    sourceBytesMaterialized += Buffer.byteLength(row.payloadJson, 'utf8');
+    return JSON.parse(row.payloadJson);
+  });
+  const selectAll = (category, recordKind) => parseRows(database.prepare(`
+    SELECT payload_json payloadJson
+    FROM query_documents
+    WHERE category = ? AND record_kind = ?
+    ORDER BY source_ordinal
+  `).all(category, recordKind));
+  const selectByPaths = (category, recordKind, expressions = ['q.path']) => {
+    if (paths.length === 0) return [];
+    const predicates = expressions.map((expression) => `${expression} COLLATE NOCASE IN (${pathPlaceholders})`);
+    const parameters = expressions.flatMap(() => paths);
+    return parseRows(database.prepare(`
+      SELECT q.payload_json payloadJson
+      FROM query_documents q
+      WHERE q.category = ? AND q.record_kind = ? AND (${predicates.join(' OR ')})
+      ORDER BY q.source_ordinal
+    `).all(category, recordKind, ...parameters));
+  };
+
+  const changedBackendContracts = (() => {
+    if (paths.length === 0) return [];
+    return parseRows(database.prepare(`
+      SELECT q.payload_json payloadJson
+      FROM query_documents q
+      WHERE q.category = 'contracts' AND q.record_kind = 'contract'
+        AND EXISTS (
+          SELECT 1 FROM json_each(q.payload_json, '$.definitionPaths') definition
+          WHERE definition.value COLLATE NOCASE IN (${pathPlaceholders})
+        )
+      ORDER BY q.source_ordinal
+    `).all(...paths));
+  })();
+  const changedBackendContractNames = [...new Set(changedBackendContracts.map((item) => String(item.name ?? '')).filter(Boolean))];
+  const changedBackendConsumers = changedBackendContractNames.length === 0 ? [] : (() => {
+    const placeholders = changedBackendContractNames.map(() => '?').join(', ');
+    return parseRows(database.prepare(`
+      SELECT payload_json payloadJson
+      FROM query_documents
+      WHERE category = 'contracts' AND record_kind = 'consumer'
+        AND json_extract(payload_json, '$.contract') COLLATE NOCASE IN (${placeholders})
+      ORDER BY source_ordinal
+    `).all(...changedBackendContractNames));
+  })();
+
+  const groups = {
+    quality: {
+      files: selectByPaths('risks', 'file').map(({ recordKind, ...item }) => item),
+      criticalSymbols: selectByPaths('risks', 'criticalSymbol').map(({ recordKind, ...item }) => item),
+    },
+    runtime: {
+      composeServices: selectByPaths('runtime', 'composeService'),
+      hostedServices: selectByPaths('runtime', 'hostedService'),
+      httpClients: selectByPaths('runtime', 'httpClient'),
+      webhooks: selectByPaths('runtime', 'webhook'),
+      recurringJobRegistrations: selectByPaths('runtime', 'recurringJob'),
+    },
+    sensitiveData: {
+      fields: selectByPaths('sensitive', 'field'),
+      boundaryFiles: selectByPaths('sensitive', 'boundary'),
+      potentialLogging: selectByPaths('sensitive', 'potentialLogging'),
+      externalTransfers: selectByPaths('sensitive', 'externalTransfer'),
+    },
+    frontendContract: {
+      components: selectByPaths('frontend-contracts', 'component', ['q.path', "json_extract(q.payload_json, '$.templatePath')"]),
+      apiCalls: selectByPaths('frontend-contracts', 'api-call'),
+      translationUsage: selectByPaths('frontend-contracts', 'translation'),
+      consumerEdges: selectByPaths('frontend-contracts', 'consumer', ["json_extract(q.payload_json, '$.componentPath')", 'q.path']),
+    },
+    domainData: {
+      domainTypes: selectByPaths('domain', 'domainType'),
+      invariants: selectByPaths('domain', 'invariant'),
+      persistenceMappings: selectByPaths('domain', 'persistenceMapping'),
+    },
+    backendContract: {
+      contracts: changedBackendContracts,
+      consumerEdges: changedBackendConsumers,
+    },
+    architectureHealth: {
+      projectDependencyViolations: selectAll('architecture-health', 'dependencyViolation'),
+      untrackedProductionProjects: selectAll('architecture-health', 'untrackedProject'),
+      moduleCycleNodes: selectAll('architecture-health', 'moduleCycle'),
+      selectorUnreferencedComponents: selectByPaths('architecture-health', 'selectorUnreferenced', ['q.path', "json_extract(q.payload_json, '$.templatePath')"]),
+      componentsWithoutDirectSpecs: selectByPaths('architecture-health', 'componentWithoutSpec'),
+      criticalSymbolsWithoutTestReferences: selectByPaths('architecture-health', 'criticalSymbolWithoutTest'),
+      explicitDebtMarkers: selectByPaths('architecture-health', 'debtMarker'),
+    },
+  };
+  const returnedRecords = Object.values(groups).reduce((total, group) => total
+    + Object.values(group).reduce((count, records) => count + records.length, 0), 0);
+  const categories = sources.map(([, category]) => category);
+  const categoryPlaceholders = categories.map(() => '?').join(', ');
+  return {
+    ready: true,
+    source: 'sqlite-task-brief-impact',
+    selectionMode: 'exact-changed-paths',
+    changedPaths: paths,
+    groups,
+    sourceHashes,
+    scannedRecords: database.prepare(`SELECT COUNT(*) count FROM query_documents WHERE category IN (${categoryPlaceholders})`).get(...categories).count,
+    candidateRecords: returnedRecords,
+    returnedRecords,
+    sourceBytesVerified,
+    sourceBytesMaterialized,
+    durationMs: Math.round((performance.now() - started) * 100) / 100,
+  };
+}
+
+function sensitiveDataContext(database, view, queryTerms, scopePaths, filterRequested, limit) {
+  const started = performance.now();
+  const sourcePath = '.llm-wiki/generated/sensitive-data-index.json';
+  const projectedHash = database.prepare("SELECT value FROM metadata WHERE key = 'query_source:sensitive'").get()?.value;
+  if (!projectedHash) {
+    return { ready: false, unavailableReason: 'sensitive-data-projection-missing', durationMs: Math.round((performance.now() - started) * 100) / 100 };
+  }
+  const sourceText = readFileSync(resolve(repositoryRoot, sourcePath), 'utf8');
+  const currentHash = normalizedTextHash(sourceText);
+  if (projectedHash !== currentHash) {
+    return {
+      ready: false,
+      unavailableReason: 'sensitive-data-projection-stale',
+      sourceHashes: { projected: projectedHash, current: currentHash },
+      durationMs: Math.round((performance.now() - started) * 100) / 100,
+    };
+  }
+
+  const normalizedView = ['all', 'credential', 'identity', 'health', 'financial', 'privateContent', 'logging', 'boundaries', 'external'].includes(view) ? view : 'all';
+  const predicates = [];
+  const parameters = [];
+  if (normalizedView === 'logging') {
+    predicates.push("record_kind = 'potentialLogging'");
+  } else if (normalizedView === 'boundaries') {
+    predicates.push("record_kind = 'boundary'");
+  } else if (normalizedView === 'external') {
+    predicates.push("record_kind = 'externalTransfer'");
+  } else if (normalizedView === 'all') {
+    predicates.push("record_kind IN ('field', 'externalTransfer')");
+  } else {
+    predicates.push("record_kind = 'field'");
+    predicates.push("json_extract(payload_json, '$.category') = ?");
+    parameters.push(normalizedView);
+  }
+  const rows = database.prepare(`
+    SELECT payload_json payloadJson
+    FROM query_documents
+    WHERE category = 'sensitive' AND ${predicates.join(' AND ')}
+    ORDER BY source_ordinal
+  `).all(...parameters);
+  const terms = [...new Set((queryTerms ?? []).map((term) => String(term).toLowerCase()).filter(Boolean))];
+  const paths = [...new Set((scopePaths ?? []).map((path) => String(path).replaceAll('\\', '/')).filter(Boolean))]
+    .sort((left, right) => left.toLowerCase().localeCompare(right.toLowerCase()) || left.localeCompare(right));
+  const matches = [];
+  for (const row of rows) {
+    const item = JSON.parse(row.payloadJson);
+    let score = 0;
+    let scopeMatch = false;
+    if (filterRequested) {
+      const searchText = row.payloadJson.toLowerCase();
+      const matchCount = terms.filter((term) => searchText.includes(term)).length;
+      const itemPath = String(item.path ?? '');
+      scopeMatch = paths.some((scopePath) => {
+        const scopeDirectory = extname(scopePath) ? dirname(scopePath) : scopePath;
+        const normalizedDirectory = scopeDirectory.replaceAll('\\', '/').replace(/\/$/, '');
+        return itemPath.toLowerCase() === scopePath.toLowerCase()
+          || itemPath.startsWith(`${normalizedDirectory}/`);
+      });
+      score = matchCount + (scopeMatch ? 20 : 0);
+      const minimumMatches = paths.length > 0 && !scopeMatch ? 2 : 1;
+      if (!scopeMatch && matchCount < minimumMatches) continue;
+    }
+    matches.push({ item, score, scopeMatch });
+    if (!filterRequested && matches.length >= limit) break;
+  }
+  const summaryRow = database.prepare(`
+    SELECT payload_json payloadJson
+    FROM query_documents
+    WHERE category = 'sensitive' AND record_kind = 'summary'
+    LIMIT 1
+  `).get();
+  const summary = summaryRow ? JSON.parse(summaryRow.payloadJson) : {};
+  const sourceBytesMaterialized = matches.reduce((total, match) => total + Buffer.byteLength(JSON.stringify(match.item), 'utf8'), 0)
+    + Buffer.byteLength(JSON.stringify(summary), 'utf8');
+  return {
+    ready: true,
+    source: 'sqlite-sensitive-data',
+    view: normalizedView,
+    matches,
+    summary,
+    sourceHash: projectedHash,
+    scannedRecords: database.prepare("SELECT COUNT(*) count FROM query_documents WHERE category = 'sensitive' AND record_kind <> 'summary'").get().count,
+    candidateRecords: rows.length,
+    returnedRecords: matches.length,
+    sourceBytesVerified: Buffer.byteLength(sourceText, 'utf8'),
+    sourceBytesMaterialized,
     durationMs: Math.round((performance.now() - started) * 100) / 100,
   };
 }
@@ -2124,6 +2421,8 @@ try {
   else if (action === 'query') result = queryDocuments(database, options.category ?? 'modules', options.query ?? '', Number(options.limit ?? 50));
   else if (action === 'backend-contract') result = backendContractContext(database, options.view ?? 'all', options.query ?? '', Number(options.limit ?? 30));
   else if (action === 'frontend-contract') result = frontendContractContext(database, options.view ?? 'all', options.query ?? '', Number(options.limit ?? 30));
+  else if (action === 'task-brief-impact') result = taskBriefImpactContext(database, (options.path ?? '').split(';').filter(Boolean));
+  else if (action === 'sensitive-data') result = sensitiveDataContext(database, options.view ?? 'all', (options.query ?? '').split(';').filter(Boolean), (options.path ?? '').split(';').filter(Boolean), options.filter === 'true', Number(options.limit ?? 30));
   else if (action === 'frontend-runtime-owner') result = frontendRuntimeOwnerContext(database, options.query ?? '', (options.path ?? '').split(';').filter(Boolean), Number(options.limit ?? 5));
   else if (action === 'frontend-trace') result = frontendTraceContext(database, options.query ?? '', Number(options.limit ?? 10));
   else if (action === 'compiled-context') result = compiledContext(database, options);

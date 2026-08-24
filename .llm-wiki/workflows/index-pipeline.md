@@ -27,6 +27,7 @@ sources:
   - .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1
   - .llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1
   - .llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1
+  - .llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1
   - .llm-wiki/tools/Test-LlmWikiChangedTools.ps1
   - .llm-wiki/tools/Test-LlmWikiStrictAffected.ps1
   - .llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1
@@ -112,10 +113,24 @@ without contention from other smoke workers. The serial `context-bundle` group
 owns query-context compiled-index SQLite/JSON parity, payload-reduction,
 source-hash, and transport-envelope checks. The graph-dependent `task-baseline`
 and query-cache groups separately guard exact diff-context and task-brief parity
-plus their latency envelopes. The serial `backend-contract-query` group checks
+plus their latency envelopes. Task-brief parity also verifies that intent context
+is reused by nested diff. Its 13-case compact/full corpus additionally covers
+quality, runtime, sensitive-data, frontend-contract, domain, backend-contract,
+and architecture-health impact records, rejects duplicate loss, compares all
+seven normalized hashes, and measures materialized bytes against the explicit
+JSON baseline. The
+serial `backend-contract-query` group checks
 all seven backend views, while `frontend-contract-query` checks all six frontend
 views. Both guard exact JSON parity, source lineage, payload reduction, and SQL
 latency without automatic fallback.
+The serial `sensitive-data-query` group applies the same contract to all nine
+privacy views with 14 query, category, scope, alias, and empty-result cases. It
+requires a measured filtered and overall improvement and bounds the small fixed
+process cost for unfiltered category listings.
+The graph-dependent `governed-delivery` group also checks impact-simulation
+frontend feature reuse. Four complete SQL/JSON simulations must preserve exact
+alignment and impact output, reduce the feature payload, add no process round
+trip, and stay inside the end-to-end latency envelope.
 
 Parallel smoke gives every worker a run-local fixture sandbox and redirects
 `TEMP`/`TMP` plus task IDs into that owned run directory. Cleanup validates exact

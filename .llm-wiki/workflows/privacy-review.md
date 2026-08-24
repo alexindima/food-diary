@@ -11,6 +11,8 @@ tags:
 sources:
   - .llm-wiki/generated/sensitive-data-index.json
   - .llm-wiki/tools/Find-LlmWikiSensitiveData.ps1
+  - .llm-wiki/tools/code-graph.mjs
+  - .llm-wiki/tools/Test-LlmWikiSensitiveDataSqlParity.ps1
   - docs/backend/PERSONAL_DATA_LIFECYCLE.md
   - docs/privacy/PRIVACY_RELEASE_CHECKLIST.md
 ---
@@ -34,6 +36,17 @@ terms. For example, an AI photo path can still surface the external OpenAI
 image boundary without flooding the result with every image-named field.
 Use `-NoImplicitScope` for deterministic automation that must ignore unrelated
 working-tree changes and require an explicit query or planned path.
+
+The privacy query reads the refreshed SQLite sensitive-data projection by
+default. SQLite selects the requested category and evaluates query/scope
+candidates before transport; PowerShell retains the established final ranking
+and output shape. The source summary and every record keep their source order,
+and a missing or stale normalized source hash fails with the `graph-build`
+recovery command instead of silently parsing JSON. `-CompiledIndexSource Json`
+is an explicit parity baseline only. Diagnostics report scanned, candidate, and
+returned records, SQL and round-trip duration, source bytes verified, and bytes
+materialized. The dedicated 14-case smoke covers all views, aliases, scoped and
+empty results, exact parity, payload reduction, and filtered/unfiltered latency.
 
 For a changed field or flow, review purpose/minimization, consent or lawful
 basis, ownership/authorization, encryption and secret handling, cache/queue/log

@@ -13,6 +13,9 @@ sources:
   - .llm-wiki/tools/Find-LlmWikiContext.ps1
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
+  - .llm-wiki/tools/Get-LlmWikiChangePacket.ps1
+  - .llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1
+  - .llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1
   - .llm-wiki/tools/Find-LlmWikiBackendContract.ps1
   - .llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1
   - .llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1
@@ -89,10 +92,11 @@ knowledge, and source claims remain Git-backed.
 Context and diff queries retrieve a safe frontend candidate superset in their
 existing compiled-context round trip, then keep the established PowerShell
 scoring and output shape. Changed frontend paths use exact symbol-path selection.
-The task-brief intent prefilter still reads the 0.23 MiB JSON source: its measured
-parse cost is about 15 ms, less than a second Node process round trip, so that
-consumer remains explicitly reported as partial migration rather than being
-made slower for architectural uniformity.
+Task-brief intent discovery retrieves C# and frontend candidates together, keeps
+the established PowerShell scoring, and reuses the selected context for its
+nested exact-path diff. This removes both the direct frontend JSON parse and a
+second SQLite/Node round trip. Per-query diagnostics expose selection reuse,
+source bytes, source hashes, candidate counts, SQL time, and full round-trip time.
 
 The `query_documents` projection also stores record kind and source ordinal.
 Backend-contract discovery uses specialized SQL views for contracts, consumers,
@@ -110,6 +114,32 @@ owners, and follows only the selected render chains instead of materializing the
 1.19 MiB source in PowerShell. Its parity smoke compares ten explicit-path,
 query-only, Unicode, and empty-result cases and requires both payload reduction
 and a measured end-to-end improvement over the explicit JSON baseline.
+
+Task-brief impact analysis uses one fail-closed `task-brief-impact` query over
+quality, runtime, sensitive-data, frontend-contract, domain-data,
+backend-contract, and architecture-health documents. The query verifies the
+normalized hash of every generated source, applies exact changed-path predicates
+in SQLite, and transports only matching payloads plus repository-wide
+architecture violations. Diagnostics distinguish bytes read to verify freshness
+from bytes materialized across the Node/PowerShell boundary. The explicit JSON
+baseline remains available for parity only; the default route never falls back.
+Record keys include source ordinals so repeated fields or consumer edges cannot
+be collapsed by the projection's uniqueness constraint.
+
+Standalone privacy discovery uses a specialized query over the same sensitive
+documents. Category selection and token/scope matching run before payload
+transport, while the existing PowerShell ordering remains the output contract.
+The projection also stores the generated summary. Its 14-case SQL/JSON parity
+smoke covers all privacy views, aliases, paths, empty guidance, source lineage,
+payload reduction, and separate filtered/unfiltered latency envelopes. The
+default route fails closed and never selects the JSON baseline automatically.
+
+Impact simulation requests a minimal `{name, root}` frontend feature catalog in
+the compiled-context call that its change packet already needs. Ordinary diff
+queries do not request or transport this catalog. Alignment therefore avoids a
+separate process and the frontend-index JSON parse while retaining exact output;
+its dedicated parity smoke measures both complete simulation latency and the
+incremental reuse cost.
 
 General frontend trace also joins the compiled frontend symbol/route records with
 frontend-contract documents in one SQLite process. It preserves the established

@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('build', 'build-plan', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search', 'compiled-context', 'backend-contract', 'frontend-contract', 'frontend-runtime-owner', 'frontend-trace')]
+    [ValidateSet('build', 'build-plan', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search', 'compiled-context', 'backend-contract', 'frontend-contract', 'task-brief-impact', 'sensitive-data', 'frontend-runtime-owner', 'frontend-trace')]
     [string]$Action = 'status',
     [string]$Query,
     [ValidateSet('modules', 'contracts', 'risks', 'tests')]
@@ -11,10 +11,14 @@ param(
     [string]$PathPrefix,
     [ValidateSet('Context', 'ChangedPaths')]
     [string]$CompiledMode = 'Context',
+    [switch]$IncludeFrontendFeatures,
     [ValidateSet('all', 'contracts', 'consumers', 'production', 'tests', 'ambiguous', 'unconsumed')]
     [string]$BackendContractView = 'all',
     [ValidateSet('all', 'components', 'consumers', 'api', 'translations', 'spec-gaps')]
     [string]$FrontendContractView = 'all',
+    [ValidateSet('all', 'credential', 'identity', 'health', 'financial', 'privateContent', 'logging', 'boundaries', 'external')]
+    [string]$SensitiveDataView = 'all',
+    [switch]$SensitiveDataFilter,
     [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Tests')]
     [string]$ChangeType = 'Any',
     [ValidateSet('Any', 'HostedService', 'Service', 'Handler', 'Controller', 'Repository', 'Component')]
@@ -40,8 +44,11 @@ if ($Action -eq 'query') { $arguments += "--category=$Category" }
 if (-not [string]::IsNullOrWhiteSpace($Module)) { $arguments += "--module=$Module" }
 if (-not [string]::IsNullOrWhiteSpace($PathPrefix)) { $arguments += "--path-prefix=$PathPrefix" }
 if ($Action -eq 'compiled-context') { $arguments += "--compiled-mode=$($CompiledMode.ToLowerInvariant() -replace 'changedpaths', 'changed-paths')" }
+if ($IncludeFrontendFeatures) { $arguments += '--include-frontend-features=true' }
 if ($Action -eq 'backend-contract') { $arguments += "--view=$BackendContractView" }
 if ($Action -eq 'frontend-contract') { $arguments += "--view=$FrontendContractView" }
+if ($Action -eq 'sensitive-data') { $arguments += "--view=$SensitiveDataView" }
+if ($SensitiveDataFilter) { $arguments += '--filter=true' }
 if ($Action -eq 'search') { $arguments += "--change-type=$ChangeType" }
 if ($SymbolKind -ne 'Any') { $arguments += "--symbol-kind=$SymbolKind" }
 $normalizedChangedPaths = [string[]]@($ChangedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
@@ -112,6 +119,12 @@ switch ($Action) {
     }
     'frontend-contract' {
         Write-Host "Code graph frontend contracts: ready=$($result.ready), view=$($result.view), returned=$($result.returnedRecords)/$($result.scannedRecords), SQL=$($result.durationMs)ms."
+    }
+    'task-brief-impact' {
+        Write-Host "Code graph task-brief impact: ready=$($result.ready), returned=$($result.returnedRecords)/$($result.scannedRecords), materialized=$($result.sourceBytesMaterialized)/$($result.sourceBytesVerified) bytes, SQL=$($result.durationMs)ms."
+    }
+    'sensitive-data' {
+        Write-Host "Code graph sensitive data: ready=$($result.ready), view=$($result.view), returned=$($result.returnedRecords)/$($result.candidateRecords), materialized=$($result.sourceBytesMaterialized)/$($result.sourceBytesVerified) bytes, SQL=$($result.durationMs)ms."
     }
     'frontend-runtime-owner' {
         Write-Host "Code graph frontend runtime owner: ready=$($result.ready), candidates=$($result.candidateRecords), returned=$($result.returnedRecords)/$($result.scannedRecords), SQL=$($result.durationMs)ms."

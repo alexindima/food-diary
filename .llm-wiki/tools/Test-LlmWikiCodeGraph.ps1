@@ -16,7 +16,7 @@ foreach ($corruptionSafetyFragment in @('isDatabaseCorruption(error)', 'quaranti
 foreach ($compiledIndexSafetyFragment in @('compiled-index-projection-stale', 'compiled_index_schema_version', 'source_ordinal')) {
     if (-not $graphToolText.Contains($compiledIndexSafetyFragment)) { throw "Compiled-index projection safety is missing: $compiledIndexSafetyFragment" }
 }
-foreach ($queryDocumentSafetyFragment in @('backend-contract-projection-stale', 'frontend-contract-projection-stale', 'query_document_schema_version')) {
+foreach ($queryDocumentSafetyFragment in @('backend-contract-projection-stale', 'frontend-contract-projection-stale', 'sensitive-data-projection-stale', 'task-brief-impact-${category}-projection-stale', 'query_document_schema_version')) {
     if (-not $graphToolText.Contains($queryDocumentSafetyFragment)) { throw "Query-document projection safety is missing: $queryDocumentSafetyFragment" }
 }
 $recipesBoundary = if (Test-Path -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Application.Recipes') -PathType Container) { 'FoodDiary.Application.Recipes' } else { 'FoodDiary.Application/Recipes' }
@@ -43,16 +43,31 @@ foreach ($indexPath in @('.llm-wiki/generated/repository-catalog.json', '.llm-wi
 foreach ($indexPath in @('.llm-wiki/generated/backend-contract-index.json', '.llm-wiki/generated/frontend-contract-index.json')) {
     $migrationIndex = @($migration.indexes | Where-Object path -eq $indexPath | Select-Object -First 1)
     if ($migrationIndex.Count -ne 1 -or [string]$migrationIndex[0].queryLayer -ne 'migrated' -or
-        [string]$migrationIndex[0].defaultRoute -ne 'sqlite-query-documents' -or
+        [string]$migrationIndex[0].defaultRoute -ne 'sqlite-query-documents-and-task-brief-impact' -or
         [bool]$migrationIndex[0].automaticJsonFallback) {
         throw "Query-document migration status is not SQLite-primary without fallback: $indexPath"
     }
 }
 $frontendMigration = @($migration.indexes | Where-Object path -eq '.llm-wiki/generated/frontend-index.json' | Select-Object -First 1)
-if ($frontendMigration.Count -ne 1 -or [string]$frontendMigration[0].queryLayer -ne 'partial' -or
-    [string]$frontendMigration[0].defaultRoute -ne 'sqlite-context-diff-and-trace; json-task-brief' -or
+if ($frontendMigration.Count -ne 1 -or [string]$frontendMigration[0].queryLayer -ne 'migrated' -or
+    [string]$frontendMigration[0].defaultRoute -ne 'sqlite-context-diff-task-brief-trace-and-impact-simulation' -or
     [bool]$frontendMigration[0].automaticJsonFallback) {
-    throw 'Frontend-index migration status does not expose the measured partial SQL route without fallback.'
+    throw 'Frontend-index migration status is not fully SQLite-primary without fallback.'
+}
+foreach ($indexPath in @(
+    '.llm-wiki/generated/quality-index.json'
+    '.llm-wiki/generated/runtime-topology.json'
+    '.llm-wiki/generated/sensitive-data-index.json'
+    '.llm-wiki/generated/domain-data-index.json'
+    '.llm-wiki/generated/architecture-health-index.json'
+)) {
+    $migrationIndex = @($migration.indexes | Where-Object path -eq $indexPath | Select-Object -First 1)
+    $expectedRoute = if ($indexPath -eq '.llm-wiki/generated/sensitive-data-index.json') { 'sqlite-sensitive-data-and-task-brief-impact' } else { 'sqlite-task-brief-impact; json-standalone-query' }
+    if ($migrationIndex.Count -ne 1 -or [string]$migrationIndex[0].queryLayer -ne 'migrated' -or
+        [string]$migrationIndex[0].defaultRoute -ne $expectedRoute -or
+        [bool]$migrationIndex[0].automaticJsonFallback) {
+        throw "Task-brief impact migration status is not SQLite-primary without fallback: $indexPath"
+    }
 }
 $compiledCounts = @{}
 foreach ($record in @($build.compiledIndexes.records)) { $compiledCounts["$($record.indexName)/$($record.recordKind)"] = [int]$record.count }
@@ -65,6 +80,17 @@ if (@($build.compiledIndexes.indexes).Count -ne 3 -or
     [int]$compiledCounts['frontend/route'] -ne @($frontendSource.routes).Count -or
     [int]$compiledCounts['frontend/localization'] -ne @($frontendSource.localization).Count) {
     throw 'Code graph build did not publish the catalog, C# symbol, and frontend compiled-index projections.'
+}
+$taskBriefImpactPath = 'FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs'
+$taskBriefImpact = & $manager task-brief-impact -ChangedPath $taskBriefImpactPath -SkipRefresh -Format Json | ConvertFrom-Json
+$sensitiveSource = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/generated/sensitive-data-index.json') -Raw | ConvertFrom-Json
+$expectedSensitiveFields = @($sensitiveSource.fields | Where-Object path -eq $taskBriefImpactPath).Count
+if (-not $taskBriefImpact.ready -or
+    [string]$taskBriefImpact.source -ne 'sqlite-task-brief-impact' -or
+    @($taskBriefImpact.sourceHashes.PSObject.Properties).Count -ne 7 -or
+    [int64]$taskBriefImpact.sourceBytesMaterialized -ge [int64]$taskBriefImpact.sourceBytesVerified -or
+    @($taskBriefImpact.groups.sensitiveData.fields).Count -ne $expectedSensitiveFields) {
+    throw 'SQLite task-brief impact projection is stale, lossy, or did not reduce its materialized payload.'
 }
 $warm = & $manager build -Format Json | ConvertFrom-Json
 if ([int]$warm.updated -ne 0 -or [int]$warm.scanned -ne 0) { throw 'Unchanged code graph build was not incremental.' }

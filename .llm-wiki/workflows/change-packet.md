@@ -14,6 +14,7 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiChangePacket.ps1
   - .llm-wiki/tools/Test-LlmWikiChangePacketMetadata.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
+  - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1
 ---
 
@@ -32,6 +33,9 @@ Use one compiled packet when several change-aware views are needed:
 ```
 
 The packet contains the exact diff classification, policy result, ownership graph, test plan, rollout plan, ADR context, task brief, and implementation plan. Shared intermediate objects are computed once.
+Impact simulation asks this compilation for a minimal frontend feature catalog;
+the catalog is attached only to compiled-index diagnostics and reuses the diff
+query's existing SQLite process. Other diff callers do not request it.
 The objective is forwarded into the compiled brief even when intermediate diff,
 policy, ownership, and test-plan objects are injected. This prevents a clean
 pre-implementation packet from degrading into an unscoped abbreviated brief.

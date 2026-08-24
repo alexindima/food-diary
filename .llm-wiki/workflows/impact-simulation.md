@@ -12,6 +12,9 @@ tags:
 sources:
   - .llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1
   - .llm-wiki/tools/Get-LlmWikiChangePacket.ps1
+  - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
+  - .llm-wiki/tools/code-graph.mjs
+  - .llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
   - .llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1
   - .llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1
@@ -49,6 +52,15 @@ does not hide a path mismatch. This is a planning warning rather than a validity
 failure: the agent must still confirm suggestions in source.
 The direct `brief` and `test-plan` commands also accept `-ProposedPath` for a
 smaller pre-diff view when a complete impact simulation is unnecessary.
+
+Frontend objective/path alignment uses the feature catalog already selected by
+the change packet's SQLite compiled-context call. Only feature names and roots
+are carried through diff diagnostics, so simulation adds no Node process and no
+frontend-index parse. Missing or stale projection lineage fails explicitly;
+`-CompiledIndexSource Json` is an explicit parity baseline. Optional diagnostics
+report the reused source hash, verified/materialized bytes, selection timing,
+and incremental reuse cost. The four-case parity smoke covers aligned,
+misaligned, feature, and shared photo paths and bounds end-to-end latency.
 
 For an active workspace, the manifest's planned paths form the forecast and
 the stored task packet forms the actual impact:

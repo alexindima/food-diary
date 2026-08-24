@@ -6,6 +6,8 @@ param(
     [string[]]$BaselineExcludedPath,
     [ValidateSet('Sqlite', 'Json')]
     [string]$CompiledIndexSource = 'Sqlite',
+    [switch]$IncludeFrontendFeatures,
+    [object]$CompiledIndexInput,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 20)]
@@ -126,12 +128,34 @@ function Read-IndexWhenPathIsPresent([string]$Path, [string[]]$CandidatePath) {
 $compiledIndexStopwatch = [Diagnostics.Stopwatch]::StartNew()
 $compiledIndexDiagnostics = $null
 if ($CompiledIndexSource -eq 'Sqlite') {
-    $compiledResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
-        -Action compiled-context `
-        -CompiledMode ChangedPaths `
-        -ChangedPath $changedPaths `
-        -SkipRefresh `
-        -Format Json | ConvertFrom-Json
+    $reusedCompiledInput = $null -ne $CompiledIndexInput
+    if ($reusedCompiledInput) {
+        if (-not [bool]$CompiledIndexInput.ready -or
+            [string]$CompiledIndexInput.source -ne 'sqlite-compiled-index' -or
+            [string]$CompiledIndexInput.selectionMode -ne 'context') {
+            throw 'Reused SQLite compiled-index input must be a ready context selection.'
+        }
+        $compiledResult = [pscustomobject]@{
+            ready = $true
+            source = [string]$CompiledIndexInput.source
+            selectionMode = 'changed-paths-reused'
+            catalog = $CompiledIndexInput.catalog
+            symbols = @($CompiledIndexInput.symbols | Where-Object { $changedPaths -contains [string]$_.path })
+            frontendSymbols = @($CompiledIndexInput.frontendSymbols | Where-Object { $changedPaths -contains [string]$_.path })
+            sourceHashes = $CompiledIndexInput.sourceHashes
+            scannedRecords = [int]$CompiledIndexInput.scannedRecords
+            returnedRecords = [int]$CompiledIndexInput.returnedRecords
+            durationMs = 0
+        }
+    } else {
+        $compiledResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
+            -Action compiled-context `
+            -CompiledMode ChangedPaths `
+            -ChangedPath $changedPaths `
+            -IncludeFrontendFeatures:$IncludeFrontendFeatures `
+            -SkipRefresh `
+            -Format Json | ConvertFrom-Json
+    }
     if (-not [bool]$compiledResult.ready) {
         throw "SQLite compiled-index projection is unavailable ($($compiledResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
     }
@@ -147,6 +171,14 @@ if ($CompiledIndexSource -eq 'Sqlite') {
         returnedRecords = 0
         sourceBytesRead = $null
         sourceHashes = $compiledResult.sourceHashes
+    }
+    if ($IncludeFrontendFeatures) {
+        $compiledIndexDiagnostics['frontendFeatures'] = @($compiledResult.frontendFeatureCatalog)
+        $compiledIndexDiagnostics['sourceBytesVerified'] = $compiledResult.sourceBytesVerified
+    }
+    if ($reusedCompiledInput) {
+        $compiledIndexDiagnostics['reusedFromSelectionMode'] = [string]$CompiledIndexInput.selectionMode
+        $compiledIndexDiagnostics['reusedSqlDurationMs'] = [double]$CompiledIndexInput.durationMs
     }
 } else {
     if (-not (Test-Path -LiteralPath $catalogPath -PathType Leaf)) {
