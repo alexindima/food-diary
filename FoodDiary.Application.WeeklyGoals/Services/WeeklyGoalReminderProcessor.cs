@@ -12,36 +12,49 @@ public sealed class WeeklyGoalReminderProcessor(
     IUnitOfWork unitOfWork,
     TimeProvider timeProvider) {
     private const int BatchSize = 500;
-    private static readonly TimeSpan DueWindow = TimeSpan.FromMinutes(15);
-
     public async Task<int> ProcessAsync(CancellationToken cancellationToken = default) {
         DateTime utcNow = timeProvider.GetUtcNow().UtcDateTime;
-        IReadOnlyList<WeeklyGoal> candidates = await goalRepository.GetReminderCandidatesAsync(
-            StartOfWeek(utcNow.AddHours(-14)),
-            StartOfWeek(utcNow.AddHours(14)),
-            BatchSize,
-            cancellationToken).ConfigureAwait(false);
         int sent = 0;
-
-        foreach (WeeklyGoal goal in candidates) {
-            if (!TryGetDueLocalDate(goal, utcNow, out DateOnly localDate)) {
-                continue;
+        int offset = 0;
+        while (true) {
+            IReadOnlyList<WeeklyGoal> candidates = await goalRepository.GetReminderCandidatesAsync(
+                StartOfWeek(utcNow.AddHours(-14)),
+                StartOfWeek(utcNow.AddHours(14)),
+                offset,
+                BatchSize,
+                cancellationToken).ConfigureAwait(false);
+            if (candidates.Count == 0) {
+                break;
             }
 
-            await notificationWriter.AddAsync(
-                Notification.Create(
-                    goal.UserId,
-                    NotificationTypes.WeeklyGoalReminder,
-                    NotificationPayloads.Empty(),
-                    goal.Id.Value.ToString()),
-                sendWebPush: true,
-                cancellationToken).ConfigureAwait(false);
-            goal.MarkReminderSent(localDate, utcNow);
-            sent++;
-        }
+            int sentInBatch = 0;
+            foreach (WeeklyGoal goal in candidates) {
+                if (!TryGetDueLocalDate(goal, utcNow, out DateOnly localDate)) {
+                    continue;
+                }
 
-        if (sent > 0) {
-            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                await notificationWriter.AddAsync(
+                    Notification.Create(
+                        goal.UserId,
+                        NotificationTypes.WeeklyGoalReminder,
+                        NotificationPayloads.Empty(),
+                        goal.Id.Value.ToString()),
+                    sendWebPush: true,
+                    cancellationToken).ConfigureAwait(false);
+                goal.MarkReminderSent(localDate, utcNow);
+                sent++;
+                sentInBatch++;
+            }
+
+            if (sentInBatch > 0) {
+                await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            if (candidates.Count < BatchSize) {
+                break;
+            }
+
+            offset = checked(offset + candidates.Count);
         }
 
         return sent;
@@ -60,8 +73,7 @@ public sealed class WeeklyGoalReminderProcessor(
             return false;
         }
 
-        TimeSpan elapsed = localNow.TimeOfDay - TimeSpan.FromMinutes(reminderMinutes);
-        return elapsed >= TimeSpan.Zero && elapsed < DueWindow;
+        return localNow.TimeOfDay >= TimeSpan.FromMinutes(reminderMinutes);
     }
 
     private static DateTime StartOfWeek(DateTime value) {

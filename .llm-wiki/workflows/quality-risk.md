@@ -11,6 +11,8 @@ tags:
 sources:
   - .llm-wiki/generated/quality-index.json
   - .llm-wiki/tools/Find-LlmWikiQualityRisk.ps1
+  - .llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1
+  - .llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1
 ---
 
 # Review structural hotspots and test gaps
@@ -29,6 +31,11 @@ medium confidence and identifies its evidence as static symbol-name matching.
 Integration, dynamic, reflection-based, or differently named tests may still
 cover the behavior; `test-gaps` is an investigation queue, never proof of
 missing execution coverage.
+
+Standalone quality queries already use the SQLite `query_documents` projection;
+the generated JSON is retained as its projection source, not as an automatic
+runtime fallback. The compiled-index migration report classifies this route as
+fully migrated alongside task-brief impact selection.
 
 For account linking, cover the success path, provider validation failure, email
 mismatch, identity owned by another user, idempotent retry, and refusal to

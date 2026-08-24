@@ -6,8 +6,8 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1496,
-    "credential": 163,
+    "candidateFields": 1497,
+    "credential": 164,
     "identity": 155,
     "health": 672,
     "financial": 202,
@@ -17,6 +17,13 @@
     "externalTransferLeads": 2
   },
   "fields": [
+    {
+      "category": "credential",
+      "name": "SqliteConnectionStringBuilder",
+      "type": "new",
+      "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
+      "line": 48
+    },
     {
       "category": "credential",
       "name": "TemporaryPassword",

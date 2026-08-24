@@ -11,14 +11,20 @@ public sealed class ExportDiaryReadService(IMealExportReadService mealExportRead
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
+        int limit,
         CancellationToken cancellationToken) {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(limit);
         IReadOnlyList<MealProjectionReadModel> meals = await mealExportReadService.GetByPeriodAsync(
             userId,
             dateFrom,
             dateTo,
+            checked(limit + 1),
             cancellationToken).ConfigureAwait(false);
 
+        List<MealProjectionReadModel> matchingMeals = [.. meals.Where(meal => meal.Date >= dateFrom && meal.Date <= dateTo)];
+
         return new ExportDiaryMealsReadModel(
-            [.. meals.Where(meal => meal.Date >= dateFrom && meal.Date <= dateTo)]);
+            [.. matchingMeals.Take(limit)],
+            matchingMeals.Count > limit);
     }
 }

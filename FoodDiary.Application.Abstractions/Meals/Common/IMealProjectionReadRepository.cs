@@ -17,6 +17,13 @@ public interface IMealProjectionReadRepository {
         DateTime dateTo,
         CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<MealProjectionReadModel>> GetByPeriodMealProjectionsAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        int limit,
+        CancellationToken cancellationToken = default);
+
     Task<MealProjectionReadModel?> GetByIdMealProjectionAsync(
         MealId id,
         UserId userId,

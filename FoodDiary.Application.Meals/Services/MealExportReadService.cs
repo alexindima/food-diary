@@ -10,6 +10,7 @@ public sealed class MealExportReadService(IMealProjectionReadRepository reposito
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
+        int limit,
         CancellationToken cancellationToken) =>
-        repository.GetByPeriodMealProjectionsAsync(userId, dateFrom, dateTo, cancellationToken);
+        repository.GetByPeriodMealProjectionsAsync(userId, dateFrom, dateTo, limit, cancellationToken);
 }

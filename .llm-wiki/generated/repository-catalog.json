@@ -703,6 +703,10 @@
           {
             "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
             "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Logging.Abstractions",
+            "version": null
           }
         ]
       },
@@ -1167,6 +1171,18 @@
           },
           {
             "name": "Microsoft.AspNetCore.DataProtection",
+            "version": null
+          },
+          {
+            "name": "Microsoft.CodeAnalysis.Common",
+            "version": null
+          },
+          {
+            "name": "Microsoft.CodeAnalysis.CSharp.Workspaces",
+            "version": null
+          },
+          {
+            "name": "Microsoft.CodeAnalysis.Workspaces.MSBuild",
             "version": null
           },
           {

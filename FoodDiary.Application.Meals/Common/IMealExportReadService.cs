@@ -8,5 +8,6 @@ public interface IMealExportReadService {
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
+        int limit,
         CancellationToken cancellationToken);
 }

@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Application.Abstractions.Export.Models;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Cycles.Models;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
@@ -9,6 +10,7 @@ using FoodDiary.Application.Export.Queries.ExportCycle;
 using FoodDiary.Application.Export.Queries.ExportDiary;
 using FoodDiary.Application.Export.Services;
 using FoodDiary.Application.Meals.Services;
+using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -301,6 +303,53 @@ public class ExportFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
+    [Fact]
+    public async Task ExportDiary_WithMoreThanPdfMealLimit_RejectsBeforeRendering() {
+        var userId = UserId.New();
+        IExportDiaryReadService diaryReadService = Substitute.For<IExportDiaryReadService>();
+        diaryReadService
+            .GetMealsAsync(
+                userId,
+                Arg.Any<DateTime>(),
+                Arg.Any<DateTime>(),
+                ExportDiaryQueryHandler.MaxPdfMealCount,
+                Arg.Any<CancellationToken>())
+            .Returns(new ExportDiaryMealsReadModel([], HasMore: true));
+        IDiaryPdfGenerator pdfGenerator = Substitute.For<IDiaryPdfGenerator>();
+        var handler = new ExportDiaryQueryHandler(diaryReadService, CreateCurrentUserAccessService(), pdfGenerator);
+
+        Result<FileExportResult> result = await handler.Handle(
+            new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        await pdfGenerator.DidNotReceiveWithAnyArgs().GenerateAsync(
+            default!, default, default, default, default, default, default);
+    }
+
+    [Fact]
+    public async Task ExportDiaryReadService_ReadsOnlyLimitPlusSentinelAndReportsMore() {
+        var userId = UserId.New();
+        IMealExportReadService mealExportReadService = Substitute.For<IMealExportReadService>();
+        MealProjectionReadModel[] meals = [
+            ToReadModel(CreateMeal(userId, TestDate)),
+            ToReadModel(CreateMeal(userId, TestDate.AddMinutes(1))),
+            ToReadModel(CreateMeal(userId, TestDate.AddMinutes(2))),
+        ];
+        mealExportReadService
+            .GetByPeriodAsync(userId, TestDate, TestDate.AddDays(1), 3, Arg.Any<CancellationToken>())
+            .Returns(meals);
+        var service = new ExportDiaryReadService(mealExportReadService);
+
+        ExportDiaryMealsReadModel result = await service.GetMealsAsync(
+            userId, TestDate, TestDate.AddDays(1), limit: 2, CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(2, result.Meals.Count),
+            () => Assert.True(result.HasMore));
+    }
+
     [Theory]
     [InlineData(true, 840)]
     [InlineData(true, null)]
@@ -565,6 +614,20 @@ public class ExportFeatureTests {
         Assert.Contains("\"first line\nsecond line\"", content, StringComparison.Ordinal);
     }
 
+    [Theory]
+    [InlineData("=HYPERLINK(\"https://example.invalid\")")]
+    [InlineData(" +SUM(1,2)")]
+    [InlineData("\t@SUM(1,2)")]
+    [InlineData("-1+2")]
+    public void CsvGenerator_WithFormulaLikeComment_NeutralizesSpreadsheetInterpretation(string comment) {
+        Meal meal = CreateMeal(comment: comment);
+
+        string content = System.Text.Encoding.UTF8.GetString(DiaryCsvGenerator.Generate([ToReadModel(meal)]));
+        string normalizedComment = comment.Trim();
+
+        Assert.Contains($"'{normalizedComment.Replace("\"", "\"\"", StringComparison.Ordinal)}", content, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void CsvGenerator_WithNoMealType_WritesEmptyField() {
         Meal meal = CreateMeal(mealType: null);
@@ -651,6 +714,19 @@ public class ExportFeatureTests {
                 lastDateFrom = call.ArgAt<DateTime>(1);
                 lastDateTo = call.ArgAt<DateTime>(2);
                 return Task.FromResult<IReadOnlyList<MealProjectionReadModel>>([.. meals.Select(ToReadModel)]);
+            });
+        repository
+            .GetByPeriodMealProjectionsAsync(
+                Arg.Any<UserId>(),
+                Arg.Any<DateTime>(),
+                Arg.Any<DateTime>(),
+                Arg.Any<int>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => {
+                lastDateFrom = call.ArgAt<DateTime>(1);
+                lastDateTo = call.ArgAt<DateTime>(2);
+                int limit = call.ArgAt<int>(3);
+                return Task.FromResult<IReadOnlyList<MealProjectionReadModel>>([.. meals.Select(ToReadModel).Take(limit)]);
             });
 
         return repository;

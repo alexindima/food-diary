@@ -362,6 +362,13 @@ public partial class MealsFeatureTests {
             DateTime dateTo,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<IReadOnlyList<MealProjectionReadModel>> GetByPeriodMealProjectionsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            int limit,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task<int> GetCountAsync(
             UserId userId,
             MealQueryFilters filters,
@@ -440,6 +447,13 @@ public partial class MealsFeatureTests {
             DateTime dateTo,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<IReadOnlyList<MealProjectionReadModel>> GetByPeriodMealProjectionsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            int limit,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task<int> GetCountAsync(
             UserId userId,
             MealQueryFilters filters,
@@ -516,6 +530,13 @@ public partial class MealsFeatureTests {
             UserId userId,
             DateTime dateFrom,
             DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<MealProjectionReadModel>> GetByPeriodMealProjectionsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            int limit,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<int> GetCountAsync(
@@ -603,6 +624,13 @@ public partial class MealsFeatureTests {
             UserId userId,
             DateTime dateFrom,
             DateTime dateTo,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<MealProjectionReadModel>> GetByPeriodMealProjectionsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            int limit,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<int> GetCountAsync(

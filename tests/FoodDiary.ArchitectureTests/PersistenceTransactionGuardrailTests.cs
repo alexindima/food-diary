@@ -29,6 +29,7 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(persistenceRoot, "RecentItems", "PostCommitRecentItemUsageRecorder.cs"),
             Path.Combine(persistenceRoot, "Users", "UserCleanupService.cs"),
             Path.Combine(persistenceRoot, "Wearables", "EfWearableTransactionRunner.cs"),
+            Path.Combine(persistenceRoot, "WeeklyGoals", "EfWeeklyGoalTransactionRunner.cs"),
         ];
 
         HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -56,6 +57,7 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxMessageClaimer.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Users", "UserCleanupService.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Wearables", "EfWearableTransactionRunner.cs"),
+            Path.Combine(infrastructureRoot, "Persistence", "WeeklyGoals", "EfWeeklyGoalTransactionRunner.cs"),
         ];
         string[] forbiddenPatterns = [
             "BeginTransaction(",

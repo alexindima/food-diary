@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3443,
-    "symbols": 3451,
+    "sourceFiles": 3447,
+    "symbols": 3455,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 239,
+    "dependencyInjectionRegistrations": 240,
     "kinds": {
-      "class": 1793,
+      "class": 1796,
       "enum": 62,
-      "interface": 420,
+      "interface": 421,
       "record": 1056,
       "record struct": 120
     },
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 62,
-      "Other": 1325,
+      "Other": 1329,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -4500,6 +4500,13 @@
       "line": 5
     },
     {
+      "name": "IWeeklyGoalTransactionRunner",
+      "kind": "interface",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalTransactionRunner.cs",
+      "line": 4
+    },
+    {
       "name": "IWeightEntryReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
@@ -8075,6 +8082,13 @@
       "role": "Validator",
       "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
       "line": 5
+    },
+    {
+      "name": "CsvFieldEscaper",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Export/Services/CsvFieldEscaper.cs",
+      "line": 2
     },
     {
       "name": "CycleCsvGenerator",
@@ -13205,14 +13219,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "UpsertWeeklyGoalCommandValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "IWeeklyGoalReadService",
@@ -13234,6 +13248,13 @@
       "role": "Other",
       "path": "FoodDiary.Application.WeeklyGoals/Common/WeeklyGoalProgressReader.cs",
       "line": 5
+    },
+    {
+      "name": "WeeklyGoalWeekPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.WeeklyGoals/Common/WeeklyGoalWeekPolicy.cs",
+      "line": 2
     },
     {
       "name": "DependencyInjection",
@@ -17258,6 +17279,13 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Wearables/WearableSyncRepository.cs",
+      "line": 9
+    },
+    {
+      "name": "EfWeeklyGoalTransactionRunner",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/WeeklyGoals/EfWeeklyGoalTransactionRunner.cs",
       "line": 9
     },
     {
@@ -27273,6 +27301,13 @@
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.WeeklyGoals.cs",
       "line": 9
+    },
+    {
+      "service": "IWeeklyGoalTransactionRunner",
+      "implementation": "EfWeeklyGoalTransactionRunner",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.WeeklyGoals.cs",
+      "line": 10
     },
     {
       "service": "IEmailVerificationNotifier",

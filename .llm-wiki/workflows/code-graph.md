@@ -10,6 +10,13 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiGraphResearch.ps1
   - .llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1
   - .llm-wiki/tools/Test-LlmWikiCodeGraph.ps1
+  - .llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1
+  - .llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1
+  - .llm-wiki/tools/Test-LlmWikiStandaloneIndexRoutes.ps1
+  - .llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1
+  - .llm-wiki/tools/LlmWikiInProcessSqlite.ps1
+  - .llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs
+  - .llm-wiki/tools/Test-LlmWikiDomainDataSqlParity.ps1
   - .llm-wiki/tools/Find-LlmWikiContext.ps1
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
@@ -125,6 +132,18 @@ from bytes materialized across the Node/PowerShell boundary. The explicit JSON
 baseline remains available for parity only; the default route never falls back.
 Record keys include source ordinals so repeated fields or consumer edges cannot
 be collapsed by the projection's uniqueness constraint.
+
+Standalone migration status distinguishes a SQLite task-brief route from a
+SQLite standalone route. Quality and domain-data queries are fully SQLite-backed.
+Domain-data uses a fingerprinted tooling-only `Microsoft.Data.Sqlite` assembly
+inside the current PowerShell process; graph build publishes it under
+`.artifacts`, and the loader reuses both the build and loaded assembly. Runtime
+and architecture-health remain partial because their standalone commands still
+read JSON intentionally. `Measure-LlmWikiStandaloneIndexRoutes.ps1` measures the
+exact in-process domain default while retaining process-boundary shadows for the
+two remaining candidates. Architecture-health additionally lacks three
+standalone record kinds in the projection. A default may change only after a
+dedicated exact-parity test and a non-regressing complete-command measurement.
 
 Standalone privacy discovery uses a specialized query over the same sensitive
 documents. Category selection and token/scope matching run before payload

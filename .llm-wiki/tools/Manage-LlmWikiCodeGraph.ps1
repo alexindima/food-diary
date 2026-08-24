@@ -59,6 +59,10 @@ if ($Force) { $arguments += '--force=true' }
 $json = & node @arguments
 if ($LASTEXITCODE -ne 0) { throw "Code graph action '$Action' failed with exit code $LASTEXITCODE." }
 $result = $json | ConvertFrom-Json
+if ($Action -eq 'build') {
+    $readerBuild = & (Join-Path $PSScriptRoot 'Build-LlmWikiInProcessSqliteReader.ps1') -Format Json | ConvertFrom-Json
+    $result | Add-Member -NotePropertyName inProcessSqliteReader -NotePropertyValue $readerBuild
+}
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 12; return }
 
 switch ($Action) {

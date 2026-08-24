@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.WeeklyGoals;
 using FoodDiary.Domain.Enums;
@@ -43,6 +44,7 @@ public sealed class WeeklyGoalRepositoryIntegrationTests(PostgresDatabaseFixture
         IReadOnlyList<WeeklyGoal> reminders = await repository.GetReminderCandidatesAsync(
             weekStartUtc.AddDays(-7),
             weekStartUtc.AddDays(7),
+            offset: 0,
             limit: 10,
             CancellationToken.None);
 
@@ -51,5 +53,63 @@ public sealed class WeeklyGoalRepositoryIntegrationTests(PostgresDatabaseFixture
             () => Assert.Equal(EntityState.Unchanged, context.Entry(tracked).State),
             () => Assert.Equal(goal.Id, tracked.Id),
             () => Assert.Equal(goal.Id, Assert.Single(reminders).Id));
+    }
+
+    [RequiresDockerFact]
+    public async Task TransactionRunner_SerializesConcurrentCreationForSameUserAndWeek() {
+        await using FoodDiaryDbContext setupContext = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"weekly-goal-race-{Guid.NewGuid():N}@example.com", "hash");
+        setupContext.Users.Add(user);
+        await setupContext.SaveChangesAsync();
+        var weekStartUtc = new DateTime(2026, 8, 17, 0, 0, 0, DateTimeKind.Utc);
+
+        await using FoodDiaryDbContext firstContext = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext secondContext = await databaseFixture.CreateDbContextAsync();
+
+        Task first = CreateGoalWithRunnerAsync(firstContext, user.Id, weekStartUtc);
+        Task second = CreateGoalWithRunnerAsync(secondContext, user.Id, weekStartUtc);
+        await Task.WhenAll(first, second);
+
+        await using FoodDiaryDbContext verificationContext = await databaseFixture.CreateDbContextAsync();
+        Assert.Equal(1, await verificationContext.WeeklyGoals.CountAsync(
+            goal => goal.UserId == user.Id && goal.WeekStartUtc == weekStartUtc));
+    }
+
+    private static async Task CreateGoalWithRunnerAsync(
+        FoodDiaryDbContext context,
+        FoodDiary.Domain.ValueObjects.Ids.UserId userId,
+        DateTime weekStartUtc) {
+        var repository = new WeeklyGoalRepository(context);
+        var runner = new EfWeeklyGoalTransactionRunner(context, new TestUnitOfWork(context));
+        await runner.ExecuteSerializedAsync(
+            userId,
+            weekStartUtc,
+            async cancellationToken => {
+                WeeklyGoal? goal = await repository.GetAsync(
+                    userId, weekStartUtc, asTracking: true, cancellationToken);
+                if (goal is null) {
+                    await repository.AddAsync(
+                        WeeklyGoal.Create(
+                            userId,
+                            weekStartUtc,
+                            WeeklyGoalType.DiaryLogging,
+                            targetDays: 5,
+                            reminderEnabled: false,
+                            reminderTimeMinutes: null,
+                            timeZoneOffsetMinutes: null),
+                        cancellationToken);
+                }
+
+                return true;
+            },
+            CancellationToken.None);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class TestUnitOfWork(FoodDiaryDbContext context) : IUnitOfWork {
+        public bool HasPendingChanges => context.ChangeTracker.HasChanges();
+
+        public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
+            context.SaveChangesAsync(cancellationToken);
     }
 }

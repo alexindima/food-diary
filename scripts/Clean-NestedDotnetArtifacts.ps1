@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [switch] $IncludeRoot
+    [switch] $IncludeRoot,
+    [string] $RootArtifactPath
 )
 
 $ErrorActionPreference = 'Stop'
@@ -23,6 +24,28 @@ foreach ($directory in $nestedArtifacts) {
     }
 
     [IO.Directory]::Delete($path, $true)
+}
+
+if ($IncludeRoot -and -not [string]::IsNullOrWhiteSpace($RootArtifactPath)) {
+    throw 'Specify either IncludeRoot or RootArtifactPath, not both.'
+}
+
+if (-not [string]::IsNullOrWhiteSpace($RootArtifactPath)) {
+    $resolvedTarget = [IO.Path]::GetFullPath($(if ([IO.Path]::IsPathRooted($RootArtifactPath)) {
+        $RootArtifactPath
+    } else {
+        Join-Path $repositoryRoot $RootArtifactPath
+    }))
+    $rootPrefix = $rootArtifacts + [IO.Path]::DirectorySeparatorChar
+    if (-not $resolvedTarget.StartsWith($rootPrefix, [StringComparison]::OrdinalIgnoreCase) -or
+        $resolvedTarget -eq $rootArtifacts) {
+        throw "Refusing to remove artifact path outside a scoped root child: $resolvedTarget"
+    }
+
+    if ([IO.Directory]::Exists($resolvedTarget)) {
+        [IO.Directory]::Delete($resolvedTarget, $true)
+        Write-Output "Scoped .NET artifact directory removed: $resolvedTarget"
+    }
 }
 
 if ($IncludeRoot -and [IO.Directory]::Exists($rootArtifacts)) {

@@ -111,9 +111,8 @@ if [ -z "$WIKI_POWERSHELL" ]; then
   echo "PowerShell is required for nested .NET artifact cleanup."
   exit 1
 fi
-hook_run "Root and nested .NET artifact cleanup" "$WIKI_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -IncludeRoot || exit 1
-
-PRE_COMMIT_ARTIFACTS_PATH=.artifacts/pre-commit
+PRE_COMMIT_ARTIFACTS_PATH=".artifacts/pre-commit/$$"
+hook_run "Scoped and nested .NET artifact cleanup" "$WIKI_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -RootArtifactPath "$PRE_COMMIT_ARTIFACTS_PATH" || exit 1
 
 if [ "$HAS_CS" -gt 0 ]; then
   hook_run "Backend solution build" dotnet build FoodDiary.slnx --artifacts-path "$PRE_COMMIT_ARTIFACTS_PATH" || exit 1
@@ -151,6 +150,6 @@ fi
 echo "=== Skipping API contract integration tests in pre-commit (full suite runs in CI) ==="
 hook_progress_done
 
-if ! "$WIKI_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -IncludeRoot; then
+if ! "$WIKI_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -RootArtifactPath "$PRE_COMMIT_ARTIFACTS_PATH"; then
   echo "Warning: successful pre-commit checks could not remove generated .NET artifacts."
 fi

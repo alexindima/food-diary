@@ -225,6 +225,25 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         return [.. meals.Select(ToMealProjectionReadModel)];
     }
 
+    public async Task<IReadOnlyList<MealProjectionReadModel>> GetByPeriodMealProjectionsAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        int limit,
+        CancellationToken cancellationToken = default) {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(limit);
+        DateTime from = NormalizeUtcInstant(dateFrom);
+        DateTime toInclusive = NormalizeUtcInstant(dateTo);
+
+        List<Meal> meals = await IncludeMealGraph(context.Meals.AsNoTracking())
+            .Where(meal => meal.UserId == userId && meal.Date >= from && meal.Date <= toInclusive)
+            .OrderBy(meal => meal.Date)
+            .ThenBy(meal => meal.CreatedOnUtc)
+            .Take(limit)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+        return [.. meals.Select(ToMealProjectionReadModel)];
+    }
+
     public async Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
         UserId userId,
         DateTime dateFrom,

@@ -27,6 +27,11 @@ $results = foreach ($indexPath in $indexes) {
     $isFrontendContract = $indexPath -eq '.llm-wiki/generated/frontend-contract-index.json'
     $isFrontend = $indexPath -eq '.llm-wiki/generated/frontend-index.json'
     $isSensitiveData = $indexPath -eq '.llm-wiki/generated/sensitive-data-index.json'
+    $isQuality = $indexPath -eq '.llm-wiki/generated/quality-index.json'
+    $isRuntime = $indexPath -eq '.llm-wiki/generated/runtime-topology.json'
+    $isDomainData = $indexPath -eq '.llm-wiki/generated/domain-data-index.json'
+    $isArchitectureHealth = $indexPath -eq '.llm-wiki/generated/architecture-health-index.json'
+    $hasJsonStandaloneQuery = $isRuntime -or $isArchitectureHealth
     $isTaskBriefImpact = $indexPath -in @(
         '.llm-wiki/generated/backend-contract-index.json',
         '.llm-wiki/generated/frontend-contract-index.json',
@@ -45,7 +50,9 @@ $results = foreach ($indexPath in $indexes) {
     } | Sort-Object -Unique)
     [pscustomobject][ordered]@{
         path = $indexPath
-        queryLayer = if ($indexPath -in @(
+        queryLayer = if ($hasJsonStandaloneQuery) {
+            'partial'
+        } elseif ($indexPath -in @(
             '.llm-wiki/generated/backend-contract-index.json',
             '.llm-wiki/generated/frontend-contract-index.json',
             '.llm-wiki/generated/frontend-index.json',
@@ -61,9 +68,9 @@ $results = foreach ($indexPath in $indexes) {
         } else {
             'pending'
         }
-        defaultRoute = if ($isCatalogOrSymbol) { 'sqlite-compiled-index' } elseif ($isFrontend) { 'sqlite-context-diff-task-brief-trace-and-impact-simulation' } elseif ($isBackendContract -or $isFrontendContract) { 'sqlite-query-documents-and-task-brief-impact' } elseif ($isSensitiveData) { 'sqlite-sensitive-data-and-task-brief-impact' } elseif ($isTaskBriefImpact) { 'sqlite-task-brief-impact; json-standalone-query' } else { 'index-specific' }
+        defaultRoute = if ($isCatalogOrSymbol) { 'sqlite-compiled-index' } elseif ($isFrontend) { 'sqlite-context-diff-task-brief-trace-and-impact-simulation' } elseif ($isBackendContract -or $isFrontendContract) { 'sqlite-query-documents-and-task-brief-impact' } elseif ($isSensitiveData) { 'sqlite-sensitive-data-and-task-brief-impact' } elseif ($isQuality) { 'sqlite-query-documents-and-task-brief-impact' } elseif ($isDomainData) { 'in-process-sqlite-domain-data-and-task-brief-impact' } elseif ($hasJsonStandaloneQuery) { 'json-standalone-query; sqlite-task-brief-impact' } else { 'index-specific' }
         automaticJsonFallback = if ($isCatalogOrSymbol -or $isFrontend -or $isTaskBriefImpact) { $false } else { $null }
-        retainedAs = if ($isFrontend -or $isCatalogOrSymbol -or $isBackendContract -or $isFrontendContract -or $isSensitiveData) { 'projection-source-and-explicit-parity-baseline' } elseif ($isTaskBriefImpact) { 'projection-source-explicit-parity-and-standalone-query-source' } else { 'compiled-source' }
+        retainedAs = if ($isFrontend -or $isCatalogOrSymbol -or $isBackendContract -or $isFrontendContract -or $isSensitiveData -or $isDomainData) { 'projection-source-and-explicit-parity-baseline' } elseif ($isQuality) { 'projection-source-for-sqlite-query-layer' } elseif ($hasJsonStandaloneQuery) { 'projection-source-and-intentional-standalone-query-source' } else { 'compiled-source' }
         consumerCount = $consumers.Count
         removable = $consumers.Count -eq 0
         consumers = [string[]]$consumers
@@ -71,7 +78,7 @@ $results = foreach ($indexPath in $indexes) {
 }
 
 $report = [pscustomobject][ordered]@{
-    schemaVersion = 6
+    schemaVersion = 8
     migratedQueryLayerCount = @($results | Where-Object queryLayer -eq 'migrated').Count
     partialQueryLayerCount = @($results | Where-Object queryLayer -eq 'partial').Count
     removableCount = @($results | Where-Object removable).Count

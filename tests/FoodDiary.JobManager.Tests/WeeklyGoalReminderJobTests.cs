@@ -79,6 +79,7 @@ public sealed class WeeklyGoalReminderJobTests {
         public Task<IReadOnlyList<WeeklyGoal>> GetReminderCandidatesAsync(
             DateTime earliestWeekStartUtc,
             DateTime latestWeekStartUtc,
+            int offset,
             int limit,
             CancellationToken cancellationToken = default) {
             CallCount++;

@@ -35,13 +35,17 @@ public sealed class BuildWorkflowGuardrailTests {
     }
 
     [Fact]
-    public void SuccessfulGitHooks_RemoveGeneratedDotnetArtifacts() {
+    public void SuccessfulGitHooks_RemoveOnlyTheirGeneratedDotnetArtifacts() {
         string preCommit = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-commit"));
         string prePush = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-push"));
 
         Assert.Multiple(
-            () => Assert.True(CountOccurrences(preCommit, "Clean-NestedDotnetArtifacts.ps1 -IncludeRoot") >= 2),
-            () => Assert.True(CountOccurrences(prePush, "Clean-NestedDotnetArtifacts.ps1 -IncludeRoot") >= 2));
+            () => Assert.Contains("PRE_COMMIT_ARTIFACTS_PATH=\".artifacts/pre-commit/$$\"", preCommit, StringComparison.Ordinal),
+            () => Assert.Contains("PRE_PUSH_ARTIFACTS_PATH=\".artifacts/pre-push/$$\"", prePush, StringComparison.Ordinal),
+            () => Assert.True(CountOccurrences(preCommit, "Clean-NestedDotnetArtifacts.ps1 -RootArtifactPath") >= 2),
+            () => Assert.True(CountOccurrences(prePush, "Clean-NestedDotnetArtifacts.ps1 -RootArtifactPath") >= 2),
+            () => Assert.DoesNotContain("Clean-NestedDotnetArtifacts.ps1 -IncludeRoot", preCommit, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("Clean-NestedDotnetArtifacts.ps1 -IncludeRoot", prePush, StringComparison.Ordinal));
     }
 
     [Fact]

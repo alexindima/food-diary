@@ -52,7 +52,7 @@ public sealed class WeeklyGoalFeatureTests {
 
     [Fact]
     public async Task UpsertValidator_CoversSupportedTargetsAndReminderRequirements() {
-        var validator = new UpsertWeeklyGoalCommandValidator();
+        var validator = new UpsertWeeklyGoalCommandValidator(new FixedTimeProvider(WeekStartUtc.AddHours(12)));
         ValidationResult valid = await validator.ValidateAsync(
             new UpsertWeeklyGoalCommand(null, WeekStart, 3, false, null, null));
         ValidationResult invalid = await validator.ValidateAsync(
@@ -64,6 +64,21 @@ public sealed class WeeklyGoalFeatureTests {
             () => Assert.Contains(invalid.Errors, error => string.Equals(error.PropertyName, "TargetDays", StringComparison.Ordinal)),
             () => Assert.Contains(invalid.Errors, error => string.Equals(error.PropertyName, "ReminderTime", StringComparison.Ordinal)),
             () => Assert.Contains(invalid.Errors, error => string.Equals(error.PropertyName, "TimeZoneOffsetMinutes", StringComparison.Ordinal)));
+    }
+
+    [Theory]
+    [InlineData(-14, false)]
+    [InlineData(-7, true)]
+    [InlineData(0, true)]
+    [InlineData(7, true)]
+    [InlineData(14, false)]
+    public async Task UpsertValidator_AllowsOnlyAdjacentCurrentWeeks(int dayOffset, bool expectedValid) {
+        var validator = new UpsertWeeklyGoalCommandValidator(new FixedTimeProvider(WeekStartUtc.AddDays(2)));
+
+        ValidationResult result = await validator.ValidateAsync(
+            new UpsertWeeklyGoalCommand(null, WeekStart.AddDays(dayOffset), 5, false, null, null));
+
+        Assert.Equal(expectedValid, result.IsValid);
     }
 
     [Fact]
@@ -202,6 +217,7 @@ public sealed class WeeklyGoalFeatureTests {
         IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
         var handler = new UpsertWeeklyGoalCommandHandler(
             repository,
+            new InlineWeeklyGoalTransactionRunner(),
             new WeeklyGoalProgressReader(Substitute.For<IMealActivityReadService>()),
             CreateFailingUserContext(),
             TimeProvider.System);
@@ -213,13 +229,49 @@ public sealed class WeeklyGoalFeatureTests {
         await repository.DidNotReceiveWithAnyArgs().GetAsync(default, default, default, default);
     }
 
+    [Fact]
+    public async Task UpsertHandler_WhenWeekIsOutsideWritableWindow_RejectsBeforeTransaction() {
+        var userId = UserId.New();
+        IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
+        IWeeklyGoalTransactionRunner transactionRunner = Substitute.For<IWeeklyGoalTransactionRunner>();
+        var handler = new UpsertWeeklyGoalCommandHandler(
+            repository,
+            transactionRunner,
+            new WeeklyGoalProgressReader(Substitute.For<IMealActivityReadService>()),
+            CreateAccessibleUserContext(),
+            new FixedTimeProvider(WeekStartUtc.AddDays(2)));
+
+        Result<WeeklyGoalModel> result = await handler.Handle(
+            new UpsertWeeklyGoalCommand(userId.Value, WeekStart.AddDays(-14), 5, false, null, null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        await transactionRunner.DidNotReceiveWithAnyArgs().ExecuteSerializedAsync<Result<WeeklyGoalModel>>(
+            default, default, default!, default);
+    }
+
     private static UpsertWeeklyGoalCommandHandler CreateUpsertHandler(
         IWeeklyGoalRepository repository,
         IMealActivityReadService meals) => new(
             repository,
+            new InlineWeeklyGoalTransactionRunner(),
             new WeeklyGoalProgressReader(meals),
             CreateAccessibleUserContext(),
-            TimeProvider.System);
+            new FixedTimeProvider(WeekStartUtc.AddHours(12)));
+
+    [ExcludeFromCodeCoverage]
+    private sealed class InlineWeeklyGoalTransactionRunner : IWeeklyGoalTransactionRunner {
+        public Task<T> ExecuteSerializedAsync<T>(
+            UserId userId,
+            DateTime weekStartUtc,
+            Func<CancellationToken, Task<T>> operation,
+            CancellationToken cancellationToken = default) => operation(cancellationToken);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
+    }
 
     private static WeeklyGoal CreateGoal(UserId userId, bool reminderEnabled) => WeeklyGoal.Create(
         userId,

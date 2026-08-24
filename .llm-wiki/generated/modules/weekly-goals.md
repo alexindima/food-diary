@@ -46,19 +46,20 @@ Source: `FoodDiary.Presentation.Api/Features/WeeklyGoals/WeeklyGoalsController.c
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 1
+- Public contract files: 2
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 1
-- Interfaces: 1
+- Public contract types: 2
+- Interfaces: 2
 - DTO/read-model/projection types: 0
 - Enums: 0
 - Exported repository-shaped contracts: 1
 - Contracts referencing domain entities: 1
 - `interface IWeeklyGoalRepository`
+- `interface IWeeklyGoalTransactionRunner`
 
 ## Focused Tests
 

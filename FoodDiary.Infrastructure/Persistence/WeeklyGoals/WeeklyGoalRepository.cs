@@ -28,6 +28,7 @@ public sealed class WeeklyGoalRepository(FoodDiaryDbContext context) : IWeeklyGo
     public async Task<IReadOnlyList<WeeklyGoal>> GetReminderCandidatesAsync(
         DateTime earliestWeekStartUtc,
         DateTime latestWeekStartUtc,
+        int offset,
         int limit,
         CancellationToken cancellationToken = default) {
         return await context.WeeklyGoals
@@ -37,6 +38,7 @@ public sealed class WeeklyGoalRepository(FoodDiaryDbContext context) : IWeeklyGo
                 goal.WeekStartUtc <= latestWeekStartUtc)
             .OrderBy(goal => goal.WeekStartUtc)
             .ThenBy(goal => goal.Id)
+            .Skip(offset)
             .Take(limit)
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);

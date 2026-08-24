@@ -1051,6 +1051,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
                 MealAiItemData.Create("Oats", nameLocal: null, 50, "g", 190, 6, 4, 32, 5, 0),
             ]);
         await repository.AddAsync(meal);
+        var secondMeal = Meal.Create(userId, now.Date.AddHours(12), MealType.Lunch, "Second");
+        await repository.AddAsync(secondMeal);
         await context.SaveChangesAsync();
 
         meal.UpdateComment("Updated");
@@ -1068,11 +1070,13 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.True(await repository.GetCountAsync(userId, new MealQueryFilters(DateFrom: null, DateTo: null)) >= 1);
         Assert.NotEmpty(await repository.GetByPeriodAsync(userId, now.Date.AddDays(-1), now.Date.AddDays(1)));
         Assert.NotEmpty(await repository.GetByPeriodMealProjectionsAsync(userId, now.Date.AddDays(-1), now.Date.AddDays(1)));
+        Assert.Single(await repository.GetByPeriodMealProjectionsAsync(userId, now.Date.AddDays(-1), now.Date.AddDays(1), limit: 1));
         Assert.NotEmpty(await repository.GetDistinctMealDatesAsync(userId, now.Date.AddDays(-1), now.Date.AddDays(1)));
         Assert.True(await repository.GetTotalMealCountAsync(userId) >= 1);
         Assert.NotNull(await repository.GetWithItemsAndProductsAsync(userId, now.Date));
 
         await repository.DeleteAsync(meal);
+        await repository.DeleteAsync(secondMeal);
         await context.SaveChangesAsync();
         await repository.DeleteAsync(meal);
     }

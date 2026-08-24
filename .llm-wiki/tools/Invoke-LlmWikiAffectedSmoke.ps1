@@ -201,6 +201,14 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiSensitiveDataSqlParity.ps1')
             if (-not $?) { exit 1 }
         }
+        'domain-data-query' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiDomainDataSqlParity.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'standalone-index-migration' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiStandaloneIndexRoutes.ps1')
+            if (-not $?) { exit 1 }
+        }
         'git-paths' {
             & (Join-Path $toolsRoot 'Test-LlmWikiGitPaths.ps1')
             if (-not $?) { exit 1 }
@@ -215,6 +223,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiContractReferenceExtractor.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiIndexCheckpoint.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiConcurrentIndexUpdate.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiIndexSelection.ps1')
             if (-not $?) { exit 1 }

@@ -54,20 +54,34 @@ if ($frontendMigration.Count -ne 1 -or [string]$frontendMigration[0].queryLayer 
     [bool]$frontendMigration[0].automaticJsonFallback) {
     throw 'Frontend-index migration status is not fully SQLite-primary without fallback.'
 }
-foreach ($indexPath in @(
-    '.llm-wiki/generated/quality-index.json'
-    '.llm-wiki/generated/runtime-topology.json'
-    '.llm-wiki/generated/sensitive-data-index.json'
-    '.llm-wiki/generated/domain-data-index.json'
-    '.llm-wiki/generated/architecture-health-index.json'
-)) {
+foreach ($indexPath in @('.llm-wiki/generated/quality-index.json', '.llm-wiki/generated/sensitive-data-index.json', '.llm-wiki/generated/domain-data-index.json')) {
     $migrationIndex = @($migration.indexes | Where-Object path -eq $indexPath | Select-Object -First 1)
-    $expectedRoute = if ($indexPath -eq '.llm-wiki/generated/sensitive-data-index.json') { 'sqlite-sensitive-data-and-task-brief-impact' } else { 'sqlite-task-brief-impact; json-standalone-query' }
+    $expectedRoute = if ($indexPath -eq '.llm-wiki/generated/sensitive-data-index.json') {
+        'sqlite-sensitive-data-and-task-brief-impact'
+    } elseif ($indexPath -eq '.llm-wiki/generated/domain-data-index.json') {
+        'in-process-sqlite-domain-data-and-task-brief-impact'
+    } else {
+        'sqlite-query-documents-and-task-brief-impact'
+    }
     if ($migrationIndex.Count -ne 1 -or [string]$migrationIndex[0].queryLayer -ne 'migrated' -or
         [string]$migrationIndex[0].defaultRoute -ne $expectedRoute -or
         [bool]$migrationIndex[0].automaticJsonFallback) {
-        throw "Task-brief impact migration status is not SQLite-primary without fallback: $indexPath"
+        throw "Standalone and task-brief migration status is not SQLite-primary without fallback: $indexPath"
     }
+}
+foreach ($indexPath in @(
+    '.llm-wiki/generated/runtime-topology.json'
+    '.llm-wiki/generated/architecture-health-index.json'
+)) {
+    $migrationIndex = @($migration.indexes | Where-Object path -eq $indexPath | Select-Object -First 1)
+    if ($migrationIndex.Count -ne 1 -or [string]$migrationIndex[0].queryLayer -ne 'partial' -or
+        [string]$migrationIndex[0].defaultRoute -ne 'json-standalone-query; sqlite-task-brief-impact' -or
+        [bool]$migrationIndex[0].automaticJsonFallback) {
+        throw "Intentional standalone JSON route is not reported as a partial migration: $indexPath"
+    }
+}
+if ([int]$migration.migratedQueryLayerCount -ne 8 -or [int]$migration.partialQueryLayerCount -ne 2) {
+    throw "Compiled-index migration totals are inaccurate: migrated=$($migration.migratedQueryLayerCount), partial=$($migration.partialQueryLayerCount)."
 }
 $compiledCounts = @{}
 foreach ($record in @($build.compiledIndexes.records)) { $compiledCounts["$($record.indexName)/$($record.recordKind)"] = [int]$record.count }

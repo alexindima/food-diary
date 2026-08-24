@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4459,
+    "productionFiles": 4463,
     "criticalSymbols": 573,
     "criticalSymbolsWithTestReferences": 552,
     "criticalSymbolsWithoutTestReferences": 21,
@@ -221,6 +221,14 @@
       "structuralRiskScore": 83.82
     },
     {
+      "path": "FoodDiary.Infrastructure/Persistence/Meals/MealRepository.cs",
+      "nonBlankLines": 361,
+      "decisionPoints": 49,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 80.72
+    },
+    {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiOutputParser.cs",
       "nonBlankLines": 171,
       "decisionPoints": 51,
@@ -243,14 +251,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 79.3
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Meals/MealRepository.cs",
-      "nonBlankLines": 344,
-      "decisionPoints": 47,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 77.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
@@ -3104,19 +3104,19 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/Export/Common/IExportDiaryReadService.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.22
     },
     {
       "path": "FoodDiary.Application.Abstractions/Export/Models/ExportDiaryMealsReadModel.cs",
-      "nonBlankLines": 3,
+      "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.1
     },
     {
       "path": "FoodDiary.Application.Abstractions/Fasting/Common/FastingErrors.cs",
@@ -3944,11 +3944,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/Meals/Common/IMealProjectionReadRepository.cs",
-      "nonBlankLines": 20,
+      "nonBlankLines": 26,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
+      "structuralRiskScore": 0.52
     },
     {
       "path": "FoodDiary.Application.Abstractions/Meals/Common/IMealReadRepository.cs",
@@ -5664,11 +5664,19 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalRepository.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.34
+    },
+    {
+      "path": "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalTransactionRunner.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
     },
     {
       "path": "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs",
@@ -9832,11 +9840,11 @@
     },
     {
       "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
-      "nonBlankLines": 82,
-      "decisionPoints": 8,
+      "nonBlankLines": 91,
+      "decisionPoints": 9,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.64
+      "structuralRiskScore": 17.32
     },
     {
       "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
@@ -9847,28 +9855,36 @@
       "structuralRiskScore": 2.76
     },
     {
-      "path": "FoodDiary.Application.Export/Services/CycleCsvGenerator.cs",
-      "nonBlankLines": 165,
-      "decisionPoints": 22,
+      "path": "FoodDiary.Application.Export/Services/CsvFieldEscaper.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 36.3
+      "structuralRiskScore": 14.04
+    },
+    {
+      "path": "FoodDiary.Application.Export/Services/CycleCsvGenerator.cs",
+      "nonBlankLines": 152,
+      "decisionPoints": 17,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 28.54
     },
     {
       "path": "FoodDiary.Application.Export/Services/DiaryCsvGenerator.cs",
-      "nonBlankLines": 68,
-      "decisionPoints": 14,
+      "nonBlankLines": 55,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.36
+      "structuralRiskScore": 14.6
     },
     {
       "path": "FoodDiary.Application.Export/Services/ExportDiaryReadService.cs",
-      "nonBlankLines": 21,
+      "nonBlankLines": 26,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.92
+      "structuralRiskScore": 2.02
     },
     {
       "path": "FoodDiary.Application.Fasting/AssemblyInfo.cs",
@@ -12720,11 +12736,11 @@
     },
     {
       "path": "FoodDiary.Application.Meals/Common/IMealExportReadService.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.22
     },
     {
       "path": "FoodDiary.Application.Meals/Common/IMealProductNutritionReadService.cs",
@@ -12984,11 +13000,11 @@
     },
     {
       "path": "FoodDiary.Application.Meals/Services/MealExportReadService.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.28
     },
     {
       "path": "FoodDiary.Application.Meals/Services/MealItemValidator.cs",
@@ -15880,19 +15896,19 @@
     },
     {
       "path": "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
-      "nonBlankLines": 52,
-      "decisionPoints": 2,
+      "nonBlankLines": 66,
+      "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.04
+      "structuralRiskScore": 9.32
     },
     {
       "path": "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
+      "nonBlankLines": 21,
+      "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.34
+      "structuralRiskScore": 3.92
     },
     {
       "path": "FoodDiary.Application.WeeklyGoals/Common/IWeeklyGoalReadService.cs",
@@ -15917,6 +15933,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.28
+    },
+    {
+      "path": "FoodDiary.Application.WeeklyGoals/Common/WeeklyGoalWeekPolicy.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.72
     },
     {
       "path": "FoodDiary.Application.WeeklyGoals/DependencyInjection.cs",
@@ -15968,11 +15992,11 @@
     },
     {
       "path": "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
-      "nonBlankLines": 61,
-      "decisionPoints": 9,
+      "nonBlankLines": 72,
+      "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.72
+      "structuralRiskScore": 17.94
     },
     {
       "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshot.cs",
@@ -18680,11 +18704,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.WeeklyGoals.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.2
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.cs",
@@ -20000,11 +20024,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Meals/MealRepository.cs",
-      "nonBlankLines": 344,
-      "decisionPoints": 47,
+      "nonBlankLines": 361,
+      "decisionPoints": 49,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 77.38
+      "structuralRiskScore": 80.72
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Notifications/NotificationRepository.cs",
@@ -20423,12 +20447,20 @@
       "structuralRiskScore": 8.4
     },
     {
+      "path": "FoodDiary.Infrastructure/Persistence/WeeklyGoals/EfWeeklyGoalTransactionRunner.cs",
+      "nonBlankLines": 49,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.48
+    },
+    {
       "path": "FoodDiary.Infrastructure/Persistence/WeeklyGoals/WeeklyGoalRepository.cs",
-      "nonBlankLines": 39,
+      "nonBlankLines": 41,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.78
+      "structuralRiskScore": 6.82
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
@@ -20552,11 +20584,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
-      "nonBlankLines": 68,
+      "nonBlankLines": 92,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.36
+      "structuralRiskScore": 1.84
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DiaryPdf/RemoteImageAddressPolicy.cs",
@@ -38116,7 +38148,7 @@
       "name": "UpsertWeeklyGoalCommandHandler",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
-      "line": 12,
+      "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
         "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs"
@@ -42511,7 +42543,7 @@
       "name": "UpsertWeeklyGoalCommandValidator",
       "role": "Validator",
       "path": "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
-      "line": 4,
+      "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
         "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs"

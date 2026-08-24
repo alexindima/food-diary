@@ -15,6 +15,10 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiPortable.ps1
   - .llm-wiki/tools/Test-LlmWikiLinux.ps1
   - .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1
+  - .llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1
+  - scripts/Clean-NestedDotnetArtifacts.ps1
+  - FoodDiary.Web.Client/.husky/pre-commit
+  - FoodDiary.Web.Client/.husky/pre-push
   - .llm-wiki/policies/affected-smoke-catalog.psd1
   - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
   - .llm-wiki/tools/Test-LlmWikiKnowledgeIsolation.ps1
@@ -28,6 +32,13 @@ sources:
   - .llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1
   - .llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1
   - .llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1
+  - .llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1
+  - .llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1
+  - .llm-wiki/tools/Test-LlmWikiStandaloneIndexRoutes.ps1
+  - .llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1
+  - .llm-wiki/tools/LlmWikiInProcessSqlite.ps1
+  - .llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs
+  - .llm-wiki/tools/Test-LlmWikiDomainDataSqlParity.ps1
   - .llm-wiki/tools/Test-LlmWikiChangedTools.ps1
   - .llm-wiki/tools/Test-LlmWikiStrictAffected.ps1
   - .llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1
@@ -127,6 +138,16 @@ The serial `sensitive-data-query` group applies the same contract to all nine
 privacy views with 14 query, category, scope, alias, and empty-result cases. It
 requires a measured filtered and overall improvement and bounds the small fixed
 process cost for unfiltered category listings.
+The serial `standalone-index-migration` group validates the migration report and
+measures domain-data's exact in-process default plus the remaining runtime and
+architecture-health process-boundary shadows. The report is deliberately honest:
+eight query layers are migrated and two are partial. Quality and domain-data are
+SQLite-backed; a task-brief SQLite projection alone does not make a standalone
+JSON command fully migrated.
+The serial `domain-data-query` group separately requires 11-case exact parity,
+source lineage, fail-closed recovery guidance, payload reduction, a warm latency
+improvement, and a bounded cold assembly-load envelope. The graph-build manager
+publishes the fingerprinted reader before dependent smoke workers start.
 The graph-dependent `governed-delivery` group also checks impact-simulation
 frontend feature reuse. Four complete SQL/JSON simulations must preserve exact
 alignment and impact output, reduce the feature payload, add no process round
@@ -321,6 +342,23 @@ all relevant repository inputs and compiled outputs. This lets an immediately
 following pre-commit freshness check return after one native hash pass instead
 of replaying uncached catalog, symbol, domain, sensitive-data, and module-page
 generators. Strict affected verification and CI do not request this reuse.
+
+Concurrent index updates serialize on the durable Git-directory lock. A second
+session waits instead of failing immediately, then recomputes its input and
+output fingerprints while holding the lock. When they match the receipt written
+by the first session before lock release, the waiter reuses that result and does
+not rerun the generators. If the worktree changed while it waited, it performs
+its own atomic update normally. The focused concurrency regression launches two
+real domain-index updates and requires the second process to take the reuse path.
+
+Git hooks isolate .NET outputs under PID-specific
+`.artifacts/pre-commit/<pid>` and `.artifacts/pre-push/<pid>` directories. Their
+cleanup removes only the current hook's directory plus invalid nested
+`.artifacts` folders; it does not delete `.artifacts/llm-wiki`, another hook's
+build outputs, or another development session's task-scoped artifacts. This
+keeps the code graph, compiled helper runtimes, and index caches warm across
+commits and prevents a hook from deleting a SQLite database used by another
+session.
 
 Frontend and C# test-source-only changes select the quality index without
 forcing catalog, symbol, contract, sensitive-data, module-page, or architecture

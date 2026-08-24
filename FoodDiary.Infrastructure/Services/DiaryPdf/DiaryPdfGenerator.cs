@@ -10,6 +10,7 @@ internal sealed partial class DiaryPdfGenerator(
     HttpClient httpClient,
     IDiaryPdfReportTextProvider textProvider,
     TimeProvider timeProvider) : IDiaryPdfGenerator {
+    private static readonly SemaphoreSlim PdfRenderGate = new(initialCount: 2, maxCount: 2);
     private readonly TimeSpan _remoteImageDownloadTimeout = DefaultRemoteImageDownloadTimeout;
     private readonly TimeSpan _remoteImageReportTimeout = DefaultRemoteImageReportTimeout;
 
@@ -39,7 +40,29 @@ internal sealed partial class DiaryPdfGenerator(
         string? reportOrigin,
         CancellationToken cancellationToken) {
         QuestPDF.Settings.License = LicenseType.Community;
+        await PdfRenderGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try {
+            return await GenerateCoreAsync(
+                meals,
+                dateFrom,
+                dateTo,
+                locale,
+                timeZoneOffsetMinutes,
+                reportOrigin,
+                cancellationToken).ConfigureAwait(false);
+        } finally {
+            PdfRenderGate.Release();
+        }
+    }
 
+    private async Task<byte[]> GenerateCoreAsync(
+        IReadOnlyList<MealProjectionReadModel> meals,
+        DateTime dateFrom,
+        DateTime dateTo,
+        string? locale,
+        int? timeZoneOffsetMinutes,
+        string? reportOrigin,
+        CancellationToken cancellationToken) {
         DiaryPdfReportTexts texts = textProvider.GetTexts(locale);
         bool useCompactMealsMode = ShouldUseCompactMealsMode(dateFrom, dateTo);
         IReadOnlyDictionary<Guid, byte[]> mealImages = useCompactMealsMode
@@ -69,6 +92,7 @@ internal sealed partial class DiaryPdfGenerator(
             });
         });
 
+        cancellationToken.ThrowIfCancellationRequested();
         return document.GeneratePdf();
     }
 

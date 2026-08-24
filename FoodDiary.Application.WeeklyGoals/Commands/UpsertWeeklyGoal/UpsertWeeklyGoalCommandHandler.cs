@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.WeeklyGoals.Common;
 using FoodDiary.Application.WeeklyGoals.Models;
@@ -12,6 +13,7 @@ namespace FoodDiary.Application.WeeklyGoals.Commands.UpsertWeeklyGoal;
 
 public sealed class UpsertWeeklyGoalCommandHandler(
     IWeeklyGoalRepository goalRepository,
+    IWeeklyGoalTransactionRunner transactionRunner,
     WeeklyGoalProgressReader progressReader,
     ICurrentUserAccessService userContextService,
     TimeProvider timeProvider)
@@ -27,30 +29,43 @@ public sealed class UpsertWeeklyGoalCommandHandler(
 
         UserId userId = userIdResult.Value;
         var weekStartUtc = DateTime.SpecifyKind(command.WeekStart.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+        DateTime utcNow = timeProvider.GetUtcNow().UtcDateTime;
+        if (!WeeklyGoalWeekPolicy.CanWrite(command.WeekStart, utcNow)) {
+            return Result.Failure<WeeklyGoalModel>(Errors.Validation.Invalid(
+                nameof(command.WeekStart),
+                "A weekly goal can be changed only for an adjacent current week."));
+        }
+
         int? reminderMinutes = command.ReminderTime is { } reminderTime
             ? (int)reminderTime.ToTimeSpan().TotalMinutes
             : null;
-        WeeklyGoal? goal = await goalRepository.GetAsync(userId, weekStartUtc, asTracking: true, cancellationToken).ConfigureAwait(false);
-        if (goal is null) {
-            goal = WeeklyGoal.Create(
-                userId,
-                weekStartUtc,
-                WeeklyGoalType.DiaryLogging,
-                command.TargetDays,
-                command.ReminderEnabled,
-                reminderMinutes,
-                command.TimeZoneOffsetMinutes);
-            await goalRepository.AddAsync(goal, cancellationToken).ConfigureAwait(false);
-        } else {
-            goal.Update(
-                command.TargetDays,
-                command.ReminderEnabled,
-                reminderMinutes,
-                command.TimeZoneOffsetMinutes,
-                timeProvider.GetUtcNow().UtcDateTime);
-        }
+        return await transactionRunner.ExecuteSerializedAsync(
+            userId,
+            weekStartUtc,
+            async token => {
+                WeeklyGoal? goal = await goalRepository.GetAsync(userId, weekStartUtc, asTracking: true, token).ConfigureAwait(false);
+                if (goal is null) {
+                    goal = WeeklyGoal.Create(
+                        userId,
+                        weekStartUtc,
+                        WeeklyGoalType.DiaryLogging,
+                        command.TargetDays,
+                        command.ReminderEnabled,
+                        reminderMinutes,
+                        command.TimeZoneOffsetMinutes);
+                    await goalRepository.AddAsync(goal, token).ConfigureAwait(false);
+                } else {
+                    goal.Update(
+                        command.TargetDays,
+                        command.ReminderEnabled,
+                        reminderMinutes,
+                        command.TimeZoneOffsetMinutes,
+                        utcNow);
+                }
 
-        int progressDays = await progressReader.GetProgressDaysAsync(goal, cancellationToken).ConfigureAwait(false);
-        return Result.Success(goal.ToModel(progressDays));
+                int progressDays = await progressReader.GetProgressDaysAsync(goal, token).ConfigureAwait(false);
+                return Result.Success(goal.ToModel(progressDays));
+            },
+            cancellationToken).ConfigureAwait(false);
     }
 }

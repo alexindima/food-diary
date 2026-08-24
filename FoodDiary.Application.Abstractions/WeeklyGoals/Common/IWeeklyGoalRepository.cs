@@ -15,6 +15,7 @@ public interface IWeeklyGoalRepository {
     Task<IReadOnlyList<WeeklyGoal>> GetReminderCandidatesAsync(
         DateTime earliestWeekStartUtc,
         DateTime latestWeekStartUtc,
+        int offset,
         int limit,
         CancellationToken cancellationToken = default);
 }

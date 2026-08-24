@@ -12,6 +12,8 @@ tags:
 sources:
   - .llm-wiki/generated/architecture-health-index.json
   - .llm-wiki/tools/Find-LlmWikiArchitectureHealth.ps1
+  - .llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1
+  - .llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1
   - tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs
   - docs/architecture/backend-modules.json
 ---
@@ -31,3 +33,10 @@ Adding an in-process authentication command that reuses existing application
 services should not require new project edges. Confirm this through the
 architecture-health index and architecture tests rather than treating a clean
 handler dependency list as sufficient proof.
+
+Task-brief impact already reads architecture-health records from SQLite, while
+the standalone command intentionally remains on JSON. Its current projection
+does not contain every standalone view (`allowances`, ambiguous contracts, and
+unconsumed contracts), and the measured Node process route is slower. The
+migration report therefore marks this index partial rather than overstating it
+as fully migrated.

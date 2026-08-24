@@ -109,6 +109,66 @@ function Get-PipelineCacheState([string[]]$ToolNames) {
     }
 }
 
+function Test-PipelineCacheReceipt([object]$State) {
+    if (-not (Test-Path -LiteralPath $State.receiptPath -PathType Leaf)) { return $false }
+    try {
+        $receipt = Get-Content -LiteralPath $State.receiptPath -Raw | ConvertFrom-Json
+        return [int]$receipt.schemaVersion -eq 1 -and
+            [string]$receipt.toolSet -ceq [string]$State.toolSet -and
+            [string]$receipt.inputFingerprint -ceq [string]$State.inputFingerprint -and
+            [string]$receipt.outputFingerprint -ceq [string]$State.outputFingerprint
+    } catch {
+        Write-Verbose "Ignoring invalid affected pipeline receipt: $($_.Exception.Message)"
+        return $false
+    }
+}
+
+function Write-PipelineCacheReceipt([object]$State) {
+    $null = New-Item -ItemType Directory -Path (Split-Path -Parent $State.receiptPath) -Force
+    $receipt = [ordered]@{
+        schemaVersion = 1
+        recordedAtUtc = [DateTime]::UtcNow.ToString('o')
+        toolSet = [string]$State.toolSet
+        inputFingerprint = [string]$State.inputFingerprint
+        outputFingerprint = [string]$State.outputFingerprint
+    }
+    [IO.File]::WriteAllText(
+        $State.receiptPath,
+        (($receipt | ConvertTo-Json -Depth 4) + [Environment]::NewLine),
+        [Text.UTF8Encoding]::new($false))
+}
+
+function Enter-IndexUpdateLock([string]$LockPath) {
+    $timeoutMs = 300000
+    if (-not [string]::IsNullOrWhiteSpace($env:LLM_WIKI_INDEX_LOCK_TIMEOUT_MS)) {
+        $timeoutMs = [int]$env:LLM_WIKI_INDEX_LOCK_TIMEOUT_MS
+    }
+    if ($timeoutMs -lt 1) { throw 'LLM_WIKI_INDEX_LOCK_TIMEOUT_MS must be a positive integer.' }
+
+    $stopwatch = [Diagnostics.Stopwatch]::StartNew()
+    $waitingReported = $false
+    while ($true) {
+        try {
+            $handle = [IO.File]::Open($LockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+            $stopwatch.Stop()
+            return [pscustomobject]@{
+                handle = $handle
+                waited = $waitingReported
+                waitDurationSeconds = $stopwatch.Elapsed.TotalSeconds
+            }
+        } catch [IO.IOException] {
+            if ($stopwatch.ElapsedMilliseconds -ge $timeoutMs) {
+                throw "Timed out after ${timeoutMs}ms waiting for another LLM Wiki index update: $LockPath"
+            }
+            if (-not $waitingReported) {
+                Write-Host 'Another LLM Wiki index update is running; waiting to reuse its result when inputs match.'
+                $waitingReported = $true
+            }
+            Start-Sleep -Milliseconds 100
+        }
+    }
+}
+
 function Get-WorkspaceChangedPaths {
     $paths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') -FailureMessage 'Unable to collect workspace changes for stale-index diagnostics.')
     $paths += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to collect untracked paths for stale-index diagnostics.')
@@ -341,17 +401,9 @@ if (-not $RequiredOnly -and 'Build-LlmWikiQualityIndex.ps1' -in $selectedToolNam
 }
 if ($ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
     $pipelineCacheState = Get-PipelineCacheState $selectedToolNames
-    if ($Check -and (Test-Path -LiteralPath $pipelineCacheState.receiptPath -PathType Leaf)) {
-        try {
-            $pipelineReceipt = Get-Content -LiteralPath $pipelineCacheState.receiptPath -Raw | ConvertFrom-Json
-            if ([int]$pipelineReceipt.schemaVersion -eq 1 -and
-                [string]$pipelineReceipt.toolSet -ceq [string]$pipelineCacheState.toolSet -and
-                [string]$pipelineReceipt.inputFingerprint -ceq [string]$pipelineCacheState.inputFingerprint -and
-                [string]$pipelineReceipt.outputFingerprint -ceq [string]$pipelineCacheState.outputFingerprint) {
-                Write-Host "LLM Wiki affected pipeline cache hit: $($selectedToolNames.Count) generator(s), source and generated hashes unchanged."
-                exit 0
-            }
-        } catch { Write-Verbose "Ignoring invalid affected pipeline receipt: $($_.Exception.Message)" }
+    if ($Check -and (Test-PipelineCacheReceipt $pipelineCacheState)) {
+        Write-Host "LLM Wiki affected pipeline cache hit: $($selectedToolNames.Count) generator(s), source and generated hashes unchanged."
+        exit 0
     }
 }
 
@@ -439,6 +491,7 @@ $pipelineStopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 $script:completedToolTimings = [Collections.Generic.List[object]]::new()
 $updateLock = $null
 $transactionRoot = $null
+$pipelineReceiptRecorded = $false
 $generatedRoot = Join-Path $repositoryRoot '.llm-wiki/generated'
 try {
     if (-not $Check) {
@@ -446,10 +499,16 @@ try {
         $transactionStateRoot = Join-Path $gitDirectory 'llm-wiki/index-transactions'
         $null = New-Item -ItemType Directory -Path $transactionStateRoot -Force
         $lockPath = Join-Path $transactionStateRoot 'update.lock'
-        try {
-            $updateLock = [IO.File]::Open($lockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
-        } catch {
-            throw 'Another LLM Wiki index update is already running. Wait for it to finish instead of producing overlapping generated files.'
+        $lock = Enter-IndexUpdateLock $lockPath
+        $updateLock = $lock.handle
+        if ($lock.waited -and $ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
+            $pipelineCacheState = Get-PipelineCacheState $selectedToolNames
+            if (Test-PipelineCacheReceipt $pipelineCacheState) {
+                Write-Host "Concurrent LLM Wiki index result reused after $([Math]::Round($lock.waitDurationSeconds, 2))s; inputs and outputs match."
+                $updateLock.Dispose()
+                $updateLock = $null
+                exit 0
+            }
         }
         Restore-OrphanedIndexTransaction -TransactionStateRoot $transactionStateRoot -GeneratedRoot $generatedRoot
         $transactionRoot = Join-Path $transactionStateRoot ([guid]::NewGuid().ToString('N'))
@@ -498,6 +557,11 @@ try {
             schemaVersion = 2; status = 'committed'; ownerPid = $PID; completedAtUtc = [DateTime]::UtcNow.ToString('o')
         })
     }
+    if (-not $Check -and $ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
+        $finalPipelineCacheState = Get-PipelineCacheState $selectedToolNames
+        Write-PipelineCacheReceipt $finalPipelineCacheState
+        $pipelineReceiptRecorded = $true
+    }
 } catch {
     if ($transactionRoot) {
         Write-Warning 'LLM Wiki index update failed; restoring the generated tree from the transaction snapshot.'
@@ -518,17 +582,9 @@ try {
 }
 $pipelineStopwatch.Stop()
 Add-LlmWikiIndexTimings -RepositoryRoot $repositoryRoot -Mode $timingMode -Timings @($script:completedToolTimings)
-if ($ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
+if (-not $pipelineReceiptRecorded -and $ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
     $finalPipelineCacheState = Get-PipelineCacheState $selectedToolNames
-    $null = New-Item -ItemType Directory -Path (Split-Path -Parent $finalPipelineCacheState.receiptPath) -Force
-    $pipelineReceipt = [ordered]@{
-        schemaVersion = 1
-        recordedAtUtc = [DateTime]::UtcNow.ToString('o')
-        toolSet = [string]$finalPipelineCacheState.toolSet
-        inputFingerprint = [string]$finalPipelineCacheState.inputFingerprint
-        outputFingerprint = [string]$finalPipelineCacheState.outputFingerprint
-    }
-    [IO.File]::WriteAllText($finalPipelineCacheState.receiptPath, (($pipelineReceipt | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+    Write-PipelineCacheReceipt $finalPipelineCacheState
 }
 Write-Host "LLM Wiki index pipeline completed in $(if ($Check) { 'check' } else { 'update' }) mode in $([Math]::Round($pipelineStopwatch.Elapsed.TotalSeconds, 2))s."
 if ($AffectedOnly) {

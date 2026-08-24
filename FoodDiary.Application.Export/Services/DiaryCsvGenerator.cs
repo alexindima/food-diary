@@ -36,7 +36,7 @@ public static class DiaryCsvGenerator {
             sb.Append(',');
             sb.Append(Math.Round(alcohol, 1, MidpointRounding.ToEven).ToString(CultureInfo.InvariantCulture));
             sb.Append(',');
-            sb.AppendLine(EscapeCsv(meal.Comment));
+            sb.AppendLine(CsvFieldEscaper.Escape(meal.Comment));
         }
 
         byte[] preamble = Encoding.UTF8.GetPreamble();
@@ -45,22 +45,6 @@ public static class DiaryCsvGenerator {
         preamble.CopyTo(result, 0);
         content.CopyTo(result, preamble.Length);
         return result;
-    }
-
-    private static string EscapeCsv(string? value) {
-        if (string.IsNullOrEmpty(value)) {
-            return "";
-        }
-
-        ReadOnlySpan<char> valueSpan = value.AsSpan();
-        if (valueSpan.Contains('"') ||
-            valueSpan.Contains(',') ||
-            valueSpan.Contains('\n') ||
-            valueSpan.Contains('\r')) {
-            return $"\"{value.Replace("\"", "\"\"", StringComparison.Ordinal)}\"";
-        }
-
-        return value;
     }
 
     private static TimeSpan ResolveDisplayOffset(int? timeZoneOffsetMinutes) =>

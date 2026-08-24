@@ -151,7 +151,7 @@ public static class CycleCsvGenerator {
             notes ?? "",
         ];
 
-        sb.AppendLine(string.Join(',', fields.Select(EscapeCsv)));
+        sb.AppendLine(string.Join(',', fields.Select(CsvFieldEscaper.Escape)));
     }
 
     private static bool IsInRange(DateOnly date, DateOnly dateFrom, DateOnly dateTo) =>
@@ -163,19 +163,4 @@ public static class CycleCsvGenerator {
     private static string FormatDate(DateOnly value) =>
         value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-    private static string EscapeCsv(string value) {
-        if (string.IsNullOrEmpty(value)) {
-            return "";
-        }
-
-        ReadOnlySpan<char> valueSpan = value.AsSpan();
-        if (valueSpan.Contains('"') ||
-            valueSpan.Contains(',') ||
-            valueSpan.Contains('\n') ||
-            valueSpan.Contains('\r')) {
-            return $"\"{value.Replace("\"", "\"\"", StringComparison.Ordinal)}\"";
-        }
-
-        return value;
-    }
 }

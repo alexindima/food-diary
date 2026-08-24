@@ -24,6 +24,7 @@ public sealed class WeeklyGoalReminderProcessorTests {
                 Arg.Any<DateTime>(),
                 Arg.Any<DateTime>(),
                 Arg.Any<int>(),
+                Arg.Any<int>(),
                 Arg.Any<CancellationToken>())
             .Returns([goal]);
         INotificationWriter notificationWriter = Substitute.For<INotificationWriter>();
@@ -55,7 +56,8 @@ public sealed class WeeklyGoalReminderProcessorTests {
             reminderEnabled: false, reminderTimeMinutes: null, timeZoneOffsetMinutes: null);
         IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
         repository.GetReminderCandidatesAsync(
-                Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+                Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<int>(),
+                Arg.Any<CancellationToken>())
             .Returns([goal]);
         INotificationWriter writer = Substitute.For<INotificationWriter>();
         IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
@@ -67,6 +69,55 @@ public sealed class WeeklyGoalReminderProcessorTests {
         Assert.Equal(0, sent);
         await writer.DidNotReceiveWithAnyArgs().AddAsync(default!, default, default);
         await unitOfWork.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
+    }
+
+    [Fact]
+    public async Task ProcessAsync_WhenExecutionIsDelayed_SendsCatchUpReminderForSameLocalDay() {
+        var goal = WeeklyGoal.Create(
+            UserId.New(), WeekStart, WeeklyGoalType.DiaryLogging, targetDays: 5,
+            reminderEnabled: true, reminderTimeMinutes: 9 * 60, timeZoneOffsetMinutes: 0);
+        IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
+        repository.GetReminderCandidatesAsync(
+                Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns([goal]);
+        INotificationWriter writer = Substitute.For<INotificationWriter>();
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        var processor = new WeeklyGoalReminderProcessor(
+            repository, writer, unitOfWork, new FixedTimeProvider(WeekStart.AddHours(18)));
+
+        int sent = await processor.ProcessAsync(CancellationToken.None);
+
+        Assert.Equal(1, sent);
+        await writer.Received(1).AddAsync(
+            Arg.Any<Notification>(),
+            sendWebPush: true,
+            cancellationToken: Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task ProcessAsync_WithMoreThanOneBatch_ProcessesEveryCandidate() {
+        WeeklyGoal[] goals = [.. Enumerable.Range(0, 501).Select(_ => WeeklyGoal.Create(
+            UserId.New(), WeekStart, WeeklyGoalType.DiaryLogging, targetDays: 5,
+            reminderEnabled: true, reminderTimeMinutes: 9 * 60, timeZoneOffsetMinutes: 0))];
+        IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
+        repository.GetReminderCandidatesAsync(
+                Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                int offset = call.ArgAt<int>(2);
+                int limit = call.ArgAt<int>(3);
+                return Task.FromResult<IReadOnlyList<WeeklyGoal>>([.. goals.Skip(offset).Take(limit)]);
+            });
+        INotificationWriter writer = Substitute.For<INotificationWriter>();
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        var processor = new WeeklyGoalReminderProcessor(
+            repository, writer, unitOfWork, new FixedTimeProvider(WeekStart.AddHours(18)));
+
+        int sent = await processor.ProcessAsync(CancellationToken.None);
+
+        Assert.Equal(501, sent);
+        await repository.Received(1).GetReminderCandidatesAsync(
+            Arg.Any<DateTime>(), Arg.Any<DateTime>(), 500, 500, Arg.Any<CancellationToken>());
+        await unitOfWork.Received(2).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
     [ExcludeFromCodeCoverage]

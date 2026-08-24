@@ -6,9 +6,8 @@ if [ -z "$HOOK_POWERSHELL" ]; then
   echo "PowerShell is required for nested .NET artifact cleanup."
   exit 1
 fi
-hook_run "Root and nested .NET artifact cleanup" "$HOOK_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -IncludeRoot || exit 1
-
-PRE_PUSH_ARTIFACTS_PATH=.artifacts/pre-push
+PRE_PUSH_ARTIFACTS_PATH=".artifacts/pre-push/$$"
+hook_run "Scoped and nested .NET artifact cleanup" "$HOOK_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -RootArtifactPath "$PRE_PUSH_ARTIFACTS_PATH" || exit 1
 
 run_frontend_checks() {
   cd FoodDiary.Web.Client || return 1
@@ -62,6 +61,6 @@ fi
 
 hook_progress_done
 
-if ! "$HOOK_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -IncludeRoot; then
+if ! "$HOOK_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -RootArtifactPath "$PRE_PUSH_ARTIFACTS_PATH"; then
   echo "Warning: successful pre-push checks could not remove generated .NET artifacts."
 fi

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1058,
+    "contracts": 1059,
     "ambiguousContracts": 3,
-    "consumerEdges": 7452,
-    "productionConsumerEdges": 4499,
-    "testConsumerEdges": 2953,
-    "consumedContracts": 1058,
+    "consumerEdges": 7459,
+    "productionConsumerEdges": 4503,
+    "testConsumerEdges": 2956,
+    "consumedContracts": 1059,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -12987,6 +12987,22 @@
       ],
       "definitionPaths": [
         "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalRepository.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "IWeeklyGoalTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalTransactionRunner.cs"
       ],
       "ambiguous": false
     },
@@ -30385,7 +30401,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 13
+      "referenceCount": 14
     },
     {
       "contract": "ExportDiaryQuery",
@@ -56138,7 +56154,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 7
     },
     {
       "contract": "IDiaryPdfGenerator",
@@ -60441,7 +60457,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IFastingAnalyticsService",
@@ -67383,7 +67399,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 12
+      "referenceCount": 13
     },
     {
       "contract": "IMealExportReadService",
@@ -67423,6 +67439,19 @@
       "consumerPath": "FoodDiary.Application.Meals/Services/MealExportReadService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IMealExportReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Meals/Common/IMealExportReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IMealFavoriteReadService",
@@ -71516,7 +71545,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 8
     },
     {
       "contract": "INotificationWriter",
@@ -86620,6 +86649,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/WeeklyGoals/EfWeeklyGoalTransactionRunner.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/Services/InitialAdminBootstrapServiceTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -86791,7 +86833,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 8
     },
     {
       "contract": "IUnitOfWork",
@@ -86803,6 +86845,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/JobManagerGuardrailTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/WeeklyGoalRepositoryIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -95592,7 +95647,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 13
+      "referenceCount": 15
     },
     {
       "contract": "IWeeklyGoalRepository",
@@ -95605,7 +95660,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 8
     },
     {
       "contract": "IWeeklyGoalRepository",
@@ -95619,6 +95674,58 @@
       "consumerPath": "tests/FoodDiary.JobManager.Tests/WeeklyGoalReminderJobTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IWeeklyGoalTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWeeklyGoalTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.WeeklyGoals.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWeeklyGoalTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/WeeklyGoals/EfWeeklyGoalTransactionRunner.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWeeklyGoalTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IWeightEntryReadModelRepository",
@@ -111764,7 +111871,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 9
     },
     {
       "contract": "UpsertWeeklyGoalCommand",
