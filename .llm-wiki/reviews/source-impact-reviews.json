@@ -4,17 +4,17 @@
     {
       "pageId": "index",
       "pagePath": ".llm-wiki/index.md",
-      "pageSha256": "c4bb6a75a90ab7c79f6a01e1fda3fe34b619a09e6123e4040fe43a566260875a",
+      "pageSha256": "08a0a00cfc3f2f52223fa5049e7fe070f844f3892184bc2735f8208059cf2e7e",
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "17f3fd3be7fefc41afb02f2933f045778188dfc9c46ebf721bf3003419830c36"
+          "sha256": "fbade0d1d8ee469a80ba3c60d8715e81a7fcd7973e0aed1ea8b58b4efde48dc6"
         }
       ],
-      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+      "reason": "Reviewed after root hook-artifact guidance changed: the change only isolates PID-scoped .NET outputs and preserves shared Wiki caches; this overview remains accurate, while operational behavior is documented in workflow-index-pipeline.",
       "baseRef": "HEAD",
-      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-      "reviewedAtUtc": "2026-08-21T19:09:37.4477791Z"
+      "gitHead": "70ff5e9c225a74242ac5eb2032aad58b629818ce",
+      "reviewedAtUtc": "2026-08-24T22:42:30.4631086Z"
     },
     {
       "pageId": "module.mail-services",
@@ -98,13 +98,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "17f3fd3be7fefc41afb02f2933f045778188dfc9c46ebf721bf3003419830c36"
+          "sha256": "fbade0d1d8ee469a80ba3c60d8715e81a7fcd7973e0aed1ea8b58b4efde48dc6"
         }
       ],
-      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
+      "reason": "Reviewed after root hook-artifact guidance changed: the change only isolates PID-scoped .NET outputs and preserves shared Wiki caches; this overview remains accurate, while operational behavior is documented in workflow-index-pipeline.",
       "baseRef": "HEAD",
-      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-      "reviewedAtUtc": "2026-08-21T19:09:37.7502111Z"
+      "gitHead": "70ff5e9c225a74242ac5eb2032aad58b629818ce",
+      "reviewedAtUtc": "2026-08-24T22:42:30.7605101Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -1108,14 +1108,14 @@
       "pageSha256": "d09bef3a0319b7a8b848d8b35f4b8415ad8b349af18b18892057db2b6e63fca1",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "9eb74c08f415f8e0e829be2912de2c97c58f89b93157c1682fda56308ede6cec"
+          "path": "AGENTS.md",
+          "sha256": "fbade0d1d8ee469a80ba3c60d8715e81a7fcd7973e0aed1ea8b58b4efde48dc6"
         }
       ],
-      "reason": "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve 'zero output objects' as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+      "reason": "Reviewed after root hook-artifact guidance changed: the change only isolates PID-scoped .NET outputs and preserves shared Wiki caches; this overview remains accurate, while operational behavior is documented in workflow-index-pipeline.",
       "baseRef": "HEAD",
-      "gitHead": "c192eb68195dbbf020efcff1e647b8926267506d",
-      "reviewedAtUtc": "2026-08-23T13:04:30.1205909Z"
+      "gitHead": "70ff5e9c225a74242ac5eb2032aad58b629818ce",
+      "reviewedAtUtc": "2026-08-24T22:42:30.9992828Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1165,17 +1165,17 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "eedb432ceb5f9c703aee1f89aa2f774bfd7623d44fc43611e8a2bcb3a22c401f",
+      "pageSha256": "930668a8337c26264220ec069d062d4d90d8c52910cb7e00b79576180fe92478",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "ef493ba7ec8e1cdb127112e0f3f1d69e7519c891360938856920656ae54e5f8d"
+          "path": "AGENTS.md",
+          "sha256": "fbade0d1d8ee469a80ba3c60d8715e81a7fcd7973e0aed1ea8b58b4efde48dc6"
         }
       ],
-      "reason": "The frontend-trace action is isolated from compiled-context; compiled-index parity still passes 8/8 cases across all 13 functional sections with payload reduction in every case.",
+      "reason": "Reviewed after root hook-artifact guidance changed: the change only isolates PID-scoped .NET outputs and preserves shared Wiki caches; this overview remains accurate, while operational behavior is documented in workflow-index-pipeline.",
       "baseRef": "HEAD",
-      "gitHead": "b5a287795942a82e097a7714703b76aab5f6f8ef",
-      "reviewedAtUtc": "2026-08-24T17:32:30.6972044Z"
+      "gitHead": "70ff5e9c225a74242ac5eb2032aad58b629818ce",
+      "reviewedAtUtc": "2026-08-24T22:42:31.3735074Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1183,14 +1183,14 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "67ef83f498b51f42722b13179e710725308c946a599d9bf88605c07b21843480"
+          "path": "AGENTS.md",
+          "sha256": "fbade0d1d8ee469a80ba3c60d8715e81a7fcd7973e0aed1ea8b58b4efde48dc6"
         }
       ],
-      "reason": "Ordinary diff output remains unchanged because the feature catalog is opt-in; SQL-vs-JSON diff parity passed all 6 cases.",
+      "reason": "Reviewed after root hook-artifact guidance changed: the change only isolates PID-scoped .NET outputs and preserves shared Wiki caches; this overview remains accurate, while operational behavior is documented in workflow-index-pipeline.",
       "baseRef": "HEAD",
-      "gitHead": "c9e2f667ef95a5ecbe4eab25eb0d77a36dbaa6d8",
-      "reviewedAtUtc": "2026-08-24T21:03:44.5561354Z"
+      "gitHead": "70ff5e9c225a74242ac5eb2032aad58b629818ce",
+      "reviewedAtUtc": "2026-08-24T22:42:31.8622858Z"
     }
   ]
 }

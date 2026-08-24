@@ -8,7 +8,6 @@ const packageJson = JSON.parse(fs.readFileSync(path.join(repoRoot, 'FoodDiary.We
 const packages = fs.readFileSync(path.join(repoRoot, 'Directory.Packages.props'), 'utf8');
 const version = (name) => packages.match(new RegExp(`PackageVersion Include="${name}" Version="([^"]+)"`))?.[1];
 const inventory = {
-  generatedAt: new Date().toISOString(),
   technologies: {
     dotnet: { version: packages.match(/Microsoft\.Extensions\.Hosting" Version="([^"]+)/)?.[1], source: 'Directory.Packages.props' },
     angular: { version: packageJson.dependencies?.['@angular/core'], source: 'FoodDiary.Web.Client/package.json' },
