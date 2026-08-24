@@ -29,6 +29,10 @@ if (-not $fts.ready -or
     @($fts.records | Where-Object path -eq "$recipesSourcePrefix/Services/RecipeNutritionUpdater.cs").Count -ne 1) {
     throw 'SQLite FTS context search did not locate RecipeNutritionUpdater.'
 }
+$prototypeTermSearch = & $manager search -Query 'primary constructor backing field' -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
+if (-not $prototypeTermSearch.ready) {
+    throw 'SQLite FTS context search did not safely handle a query term inherited by Object.prototype.'
+}
 foreach ($searchCase in @(
     @{ Query = 'MCP PowerShell command stage telemetry'; ExpectedPath = 'FoodDiary.Development.Mcp/Wiki/PowerShellWikiCommandExecutor.cs' }
     @{ Query = 'Mail inbox SMTP rate limiter'; ExpectedPath = 'MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs' }

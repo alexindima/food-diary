@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3440,
-    "symbols": 3448,
+    "sourceFiles": 3441,
+    "symbols": 3449,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 239,
     "kinds": {
       "class": 1792,
       "enum": 61,
-      "interface": 419,
+      "interface": 420,
       "record": 1056,
       "record struct": 120
     },
@@ -40,7 +40,7 @@
       "Repository": 103,
       "Request": 133,
       "Response": 179,
-      "Service": 277,
+      "Service": 278,
       "Validator": 204,
       "ValueObject": 129,
       "WriteRepository": 46
@@ -1634,6 +1634,13 @@
       "kind": "interface",
       "role": "ReadModelRepository",
       "path": "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IContentReportTargetReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportTargetReadService.cs",
       "line": 5
     },
     {
@@ -9481,7 +9488,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "RestoreAccountCommandValidator",
@@ -12526,7 +12533,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommandHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "DeleteUserCommandValidator",
@@ -15683,7 +15690,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutbox.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "AchievementEvaluationOutboxMessage",
@@ -15697,7 +15704,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "AchievementMetricReader",
@@ -19204,7 +19211,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/ContentReports/ContentReportsController.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "ContentReportHttpMappings",

@@ -139,21 +139,21 @@
     {
       "pageId": "workflow-adaptive-development",
       "pagePath": ".llm-wiki/workflows/adaptive-development.md",
-      "pageSha256": "826ee326e4250f90576d9326fc66400c9191d37492400b624acf9d4bc69f6d52",
+      "pageSha256": "ce5b83013428f01f44e45ede31f85d01185773afed67acdd7d8ac18d5939ac99",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1",
-          "sha256": "29f6dfaeeb1bd3a3d90fbf17d72a8a58f8298254851726a7cd2d1768780c490b"
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "1fc79453a5cb73c9e04515cf8a25af078a3cc36247727742b41fcaf05caac689"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
+          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
+          "sha256": "123e0f84f6fce6a2b13a570b66b9e557671bccc54b0a20954c367b1c10ae11b5"
         }
       ],
-      "reason": "Wrapped remaining if/else expressions used as hashtable-property or Add-Member values in an outer @() so they no longer collapse to $null under Set-StrictMode when the else branch fires; verified via wiki lint/verify and direct PowerShell reproduction of the null-collapse behavior for each affected assignment shape.",
+      "reason": "The scoped query-cache contract is unchanged; stale-entry retention now uses idempotent file deletion, and the cache regression verifies repeated removal while preserving scoped invalidation.",
       "baseRef": "HEAD",
-      "gitHead": "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
-      "reviewedAtUtc": "2026-08-23T13:52:55.9729233Z"
+      "gitHead": "268c9b8b8d1cea90a22c7f927dcacf9e2ff14cbf",
+      "reviewedAtUtc": "2026-08-23T23:52:05.6051726Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -177,13 +177,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "74f786c94c63cdffb9069280d4ad5bc0a891666cac1e45e2beb17b1bdeb3e33c"
+          "sha256": "633d023ea9627637a9846e2398c464f59580f6b7b92b794761b709fffa59364b"
         }
       ],
-      "reason": "Reviewed architecture and quality impact: bulk mutation permission is limited to refresh-token repository, architecture tests pass 711/711, infrastructure tests pass 1000/1000, and PostgreSQL integration passes 19/19.",
+      "reason": "Regenerated architecture-health output preserves its schema and accurately records the current worktree debt-marker delta; generator check mode passed, so the review workflow needs no prose change.",
       "baseRef": "HEAD",
-      "gitHead": "6b27621307bfea7fc295d0a5cfd6a257f9ee2c68",
-      "reviewedAtUtc": "2026-08-23T21:17:39.1642005Z"
+      "gitHead": "851b93397552a5e1911ff5616abb5e4ff43c84b4",
+      "reviewedAtUtc": "2026-08-24T01:43:08.8090011Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -192,13 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "a87e4539fa3cf74e8c8e6226f5f921ab5359b918a0d79a7ffd28435fdcd8b8be"
+          "sha256": "b09bd42bb3ad1d03231c1c3cf6d65b56789eeafe43901dc78eb2f4203a640f21"
         }
       ],
-      "reason": "Regenerated backend contract index remains schema-compatible and the consumer-review workflow still matches the current contract and consumer model.",
+      "reason": "Regenerated backend-contract output preserves contract and consumer-edge semantics while reflecting the current ContentReports and identity consumers; the contract generator check passed, so review instructions remain current.",
       "baseRef": "HEAD",
-      "gitHead": "e04a6614a503877233cb2307dc672c05fa381e8b",
-      "reviewedAtUtc": "2026-08-23T22:41:16.9572064Z"
+      "gitHead": "851b93397552a5e1911ff5616abb5e4ff43c84b4",
+      "reviewedAtUtc": "2026-08-24T01:43:09.5076075Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -447,14 +447,22 @@
       "pageSha256": "fb6ae4687c020a4c8bb6f4a47d37ba0c5aede515a055efc45e8e18ebfd3daa42",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiPhaseStatus.ps1",
-          "sha256": "7ab5eca3a51d7b325e8bcdc702e78da3672594daf9866430ae69bd52289e8f59"
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "1fc79453a5cb73c9e04515cf8a25af078a3cc36247727742b41fcaf05caac689"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
+          "sha256": "123e0f84f6fce6a2b13a570b66b9e557671bccc54b0a20954c367b1c10ae11b5"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "1aa0de5446c4a403d0fcb0b0372e2303f6af4846eae05e2e4dca91257ba69b96"
         }
       ],
-      "reason": "Wrapped remaining if/else expressions used as hashtable-property or Add-Member values in an outer @() so they no longer collapse to $null under Set-StrictMode when the else branch fires; verified via wiki lint/verify and direct PowerShell reproduction of the null-collapse behavior for each affected assignment shape.",
+      "reason": "The documented atomic and idempotent cache behavior is now enforced under concurrent pruning; the affected-verify budget changes timing only and preserves resumable stage semantics.",
       "baseRef": "HEAD",
-      "gitHead": "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
-      "reviewedAtUtc": "2026-08-23T13:53:15.2564345Z"
+      "gitHead": "268c9b8b8d1cea90a22c7f927dcacf9e2ff14cbf",
+      "reviewedAtUtc": "2026-08-23T23:52:06.0277577Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -463,13 +471,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "369bccbf72edce1268e381ff84f041de02e2ab7ce00eec53476e4cf647ac6143"
+          "sha256": "bbb62e130bbf5c8c01523c69495a70f7c87b9ccf8649cf883b7885d5cdac5e79"
         }
       ],
-      "reason": "Reviewed regenerated indexes after access-token invalidation, SNS topic binding, migration, configuration, and tests.",
+      "reason": "Regenerated domain-data output preserves its schema and reflects the current ContentReport invariants and unique-index metadata; no domain-review procedure changed.",
       "baseRef": "HEAD",
-      "gitHead": "63f0c2dcb8163dbf1336bd0469e834036f2b62af",
-      "reviewedAtUtc": "2026-08-23T20:20:53.5654716Z"
+      "gitHead": "851b93397552a5e1911ff5616abb5e4ff43c84b4",
+      "reviewedAtUtc": "2026-08-24T01:43:10.0861671Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -761,13 +769,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "7f976602384fdabe1358cceecd90bda73203a56d648af4b8d7db09282e71ed4b"
+          "sha256": "e2932b4fd71ca8334192ca8cf3cf4da9787ed3af3f1c9bada7136c4ac3423f7e"
         }
       ],
-      "reason": "Regenerated sensitive-data index retains the documented categories and boundary semantics; the privacy review workflow remains accurate.",
+      "reason": "The sensitive-data diff is only a two-line source-position shift in OutboxProcessingEngine; boundary classification and privacy-review semantics are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "e04a6614a503877233cb2307dc672c05fa381e8b",
-      "reviewedAtUtc": "2026-08-23T22:41:18.2293499Z"
+      "gitHead": "851b93397552a5e1911ff5616abb5e4ff43c84b4",
+      "reviewedAtUtc": "2026-08-24T01:43:10.6660173Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -810,13 +818,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "529e163ab83f6eff546a23d96b79db6d1224ac131299c53b582e65528a58a151"
+          "sha256": "2e4edfd53c6426936a689984937978159b5b3216d2a877570a97d5ca52a50cfa"
         }
       ],
-      "reason": "Regenerated quality index retains the documented hotspot, test-reference, and debt semantics; the quality-risk workflow remains accurate.",
+      "reason": "Regenerated quality output preserves its scoring schema and reflects the larger context-search implementation plus current worktree changes; the quality-review procedure itself is unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "e04a6614a503877233cb2307dc672c05fa381e8b",
-      "reviewedAtUtc": "2026-08-23T22:41:19.6702624Z"
+      "gitHead": "851b93397552a5e1911ff5616abb5e4ff43c84b4",
+      "reviewedAtUtc": "2026-08-24T01:43:11.2249978Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -979,14 +987,14 @@
       "pageSha256": "d0a2b7fd2b51f7c02d228efb6e23130eff42e68885eb5349dc126e22e6d4f98d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
-          "sha256": "e4491af15d87a22a5f33838311130bd5f58c7a539275ff19d378d9c194df08f6"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "1aa0de5446c4a403d0fcb0b0372e2303f6af4846eae05e2e4dca91257ba69b96"
         }
       ],
-      "reason": "Wrapped remaining if/else expressions used as hashtable-property or Add-Member values in an outer @() so they no longer collapse to $null under Set-StrictMode when the else branch fires; verified via wiki lint/verify and direct PowerShell reproduction of the null-collapse behavior for each affected assignment shape.",
+      "reason": "The facade timeout adjustment is confined to affected Wiki smoke execution and does not enter dispatch payloads, leases, receipt hashes, or lifecycle commands.",
       "baseRef": "HEAD",
-      "gitHead": "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
-      "reviewedAtUtc": "2026-08-23T13:53:21.7601144Z"
+      "gitHead": "268c9b8b8d1cea90a22c7f927dcacf9e2ff14cbf",
+      "reviewedAtUtc": "2026-08-23T23:52:06.9828563Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1169,13 +1177,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "5e73fc190e3225d88f5a04cdde7d5962d2cacc436495eaf98c8cf625e62308a9"
+          "sha256": "d0beb745418d13f5345ef61781069a19b2f85095f0ff1943bcb627ce6dbdba04"
         }
       ],
-      "reason": "Reviewed regenerated repository navigation after introducing AuthImpersonationController; catalog and trace sources match the unchanged HTTP route and new controller ownership.",
+      "reason": "The repository-catalog diff contains only updated source line numbers for two unchanged HTTP routes; query-context navigation semantics are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "6d7be35af17a4ba81f4db9e4c170f3a395c34e59",
-      "reviewedAtUtc": "2026-08-23T21:30:23.9656831Z"
+      "gitHead": "851b93397552a5e1911ff5616abb5e4ff43c84b4",
+      "reviewedAtUtc": "2026-08-24T01:43:11.7325902Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1183,18 +1191,14 @@
       "pageSha256": "2fef1c903c42193a33f6c3de3fc4c406a2a718ff38e942ad7944df0e74c713af",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiImpact.ps1",
-          "sha256": "234fc6f65227a996cdcba4c567b9df84fc8e4e012435335b0786753d862adda1"
-        },
-        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3e0c909f3dd700ce1926a18b203c2b01cdf2bc3e16516e27c21d9f378af0f333"
+          "sha256": "1aa0de5446c4a403d0fcb0b0372e2303f6af4846eae05e2e4dca91257ba69b96"
         }
       ],
-      "reason": "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve 'zero output objects' as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+      "reason": "The facade change only raises the affected-smoke expected and hard time budgets for the expanded eval suite; review-diff routing, inputs, and output contracts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c192eb68195dbbf020efcff1e647b8926267506d",
-      "reviewedAtUtc": "2026-08-23T13:04:46.1578873Z"
+      "gitHead": "268c9b8b8d1cea90a22c7f927dcacf9e2ff14cbf",
+      "reviewedAtUtc": "2026-08-23T23:52:06.4369423Z"
     }
   ]
 }

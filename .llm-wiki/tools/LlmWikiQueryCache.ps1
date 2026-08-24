@@ -124,6 +124,19 @@ function Move-LlmWikiQueryCacheFile {
     }
 }
 
+function Remove-LlmWikiQueryCacheFileIfPresent {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][string]$Path)
+
+    try {
+        [IO.File]::Delete($Path)
+    } catch [IO.FileNotFoundException] {
+        return
+    } catch [IO.DirectoryNotFoundException] {
+        return
+    }
+}
+
 function Write-LlmWikiQueryCache {
     [CmdletBinding()]
     param(
@@ -154,6 +167,6 @@ function Write-LlmWikiQueryCache {
     }
     $staleEntries = @(Get-ChildItem -LiteralPath $directory -Filter '*.json' -File | Sort-Object LastWriteTimeUtc -Descending | Select-Object -Skip $Retain)
     foreach ($staleEntry in $staleEntries) {
-        Remove-Item -LiteralPath $staleEntry.FullName -Force -ErrorAction SilentlyContinue
+        Remove-LlmWikiQueryCacheFileIfPresent -Path $staleEntry.FullName
     }
 }

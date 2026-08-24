@@ -320,11 +320,15 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             .Select(path => NormalizePath(path).ToLowerInvariant())];
         HashSet<string> terms = new(rankingTerms, StringComparer.Ordinal);
         HashSet<string> directTerms = new(directQueryTerms, StringComparer.Ordinal);
+        bool explicitlyRequestsTest = terms.Contains("test");
+        IReadOnlyList<HashSet<string>> negativeRoleGroups = GetNegatedRoleTermGroups(query, policy);
         List<RankedCandidate> ranked = [];
         for (int index = 0; index < candidates.Count; index++) {
             RawCandidate candidate = candidates[index];
             string normalizedPath = NormalizePath(candidate.Path).ToLowerInvariant();
             bool isTest = TestPath.IsMatch(candidate.Path);
+            bool isExplicitTestCandidate = isTest ||
+                Path.GetFileName(candidate.Path).StartsWith("Test", StringComparison.OrdinalIgnoreCase);
             string normalizedTitle = ExpandSearchText(candidate.Title).ToLowerInvariant();
             List<string> reasons = ["SQLite FTS5 lexical match"];
             int score = candidateLimit - index;
@@ -361,6 +365,23 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 score += identityScore;
                 reasons.Add($"path/title affinity {string.Join(", ", identityMatches)}");
             }
+            if (string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase) &&
+                isExplicitTestCandidate &&
+                explicitlyRequestsTest) {
+                int explicitTestScore = Math.Min(
+                    identityMatches.Length * policy.ExplicitTestAffinity.ScorePerMatch,
+                    policy.ExplicitTestAffinity.MaximumScore);
+                score += explicitTestScore;
+                if (explicitTestScore > 0) {
+                    reasons.Add($"explicit test behavior affinity {identityMatches.Length} terms");
+                }
+            }
+            if (string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase) &&
+                !isExplicitTestCandidate &&
+                explicitlyRequestsTest) {
+                score -= policy.ExplicitTestAffinity.NonTestPenalty;
+                reasons.Add("production candidate penalty for explicit test intent");
+            }
             foreach (IdentityBoost boost in policy.IdentityBoosts) {
                 bool matchesChangeType = boost.ChangeTypes is null ||
                     boost.ChangeTypes.Length == 0 ||
@@ -370,6 +391,15 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                     continue;
                 }
                 HashSet<string> eligibleQueryTerms = boost.DirectOnly ? directTerms : terms;
+                if (string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase) &&
+                    isTest &&
+                    !boost.Id.Contains("test", StringComparison.OrdinalIgnoreCase)) {
+                    continue;
+                }
+                if (boost.ExcludedQueryTerms?.Any(term =>
+                    eligibleQueryTerms.Contains(term.ToLowerInvariant())) == true) {
+                    continue;
+                }
                 string eligibleIdentity = string.Equals(
                     boost.IdentityScope,
                     "file",
@@ -440,6 +470,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             }
             foreach (PathBoost boost in policy.PathBoosts) {
                 HashSet<string> eligibleQueryTerms = boost.DirectOnly ? directTerms : terms;
+                if (boost.ExcludedQueryTerms?.Any(term =>
+                    eligibleQueryTerms.Contains(term.ToLowerInvariant())) == true) {
+                    continue;
+                }
                 int matchedTerms = boost.QueryTerms.Count(term =>
                     eligibleQueryTerms.Contains(term.ToLowerInvariant()));
                 bool matchesPath = boost.PathPrefixes.Any(prefix =>
@@ -463,6 +497,19 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                     score += roleAffinityScore;
                     reasons.Add($"matched-role file-name affinity {string.Join(", ", fileNameMatches)}");
                 }
+            }
+            foreach (HashSet<string> negativeRoleGroup in negativeRoleGroups) {
+                string[] matchedNegativeRoles = [.. negativeRoleGroup.Where(term =>
+                    searchableFileIdentity.Contains(term, StringComparison.Ordinal))];
+                int requiredMatches = Math.Min(2, negativeRoleGroup.Count);
+                if (matchedNegativeRoles.Length < requiredMatches) {
+                    continue;
+                }
+                int penalty = Math.Min(
+                    matchedNegativeRoles.Length * policy.NegatedRolePenalty.ScorePerMatch,
+                    policy.NegatedRolePenalty.MaximumScorePerPhrase);
+                score -= penalty;
+                reasons.Add($"negated role penalty {string.Join(", ", matchedNegativeRoles)}");
             }
             if (isTest && !string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase)) {
                 score -= policy.NonTestPenalty;
@@ -492,7 +539,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             if (!requestsAbstraction && InterfacePath.IsMatch(candidate.Path)) {
                 score -= policy.InterfacePathPenalty;
             }
-            if (CompanionPath.IsMatch(candidate.Path)) {
+            if (!string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase) &&
+                CompanionPath.IsMatch(candidate.Path)) {
                 score -= policy.CompanionFilePenalty;
                 reasons.Add("companion file ranked after primary declaration");
             }
@@ -602,6 +650,35 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         return [.. variants];
     }
 
+    private static IReadOnlyList<HashSet<string>> GetNegatedRoleTermGroups(
+        string query,
+        RankingPolicy policy) {
+        if (policy.NegatedRolePenalty.Markers.Length == 0 ||
+            policy.NegatedRolePenalty.RoleTerms.Length == 0) {
+            return [];
+        }
+        string markerPattern = string.Join(
+            '|',
+            policy.NegatedRolePenalty.Markers.Select(Regex.Escape));
+        Regex expression = new(
+            $@"(?:^|\s)(?:{markerPattern})\s+(?<phrase>.+?)(?=(?:\s+(?:и\s+)?(?:{markerPattern})\s+)|[,;:—–]|\s+(?:а|but)\s+|$)",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture,
+            TimeSpan.FromMilliseconds(100));
+        HashSet<string> roleTerms = new(
+            policy.NegatedRolePenalty.RoleTerms.Select(term => term.ToLowerInvariant()),
+            StringComparer.Ordinal);
+        List<HashSet<string>> groups = [];
+        foreach (Match match in expression.Matches(ExpandSearchText(query).ToLowerInvariant())) {
+            HashSet<string> group = new(
+                ExpandQueryTerms(match.Groups["phrase"].Value, policy).Where(roleTerms.Contains),
+                StringComparer.Ordinal);
+            if (group.Count > 0) {
+                groups.Add(group);
+            }
+        }
+        return groups;
+    }
+
     private static void AddExpansions(
         IReadOnlyList<string> expansions,
         List<string> terms,
@@ -635,6 +712,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             policy.StopTerms is null ||
             policy.PathTermAffinity is null ||
             policy.MatchedPolicyFileNameAffinity is null ||
+            policy.ExplicitTestAffinity is null ||
+            policy.NegatedRolePenalty is null ||
             policy.QueryTermExpansions is null ||
             policy.QueryPrefixExpansions is null ||
             policy.PathBoosts is null ||
@@ -702,6 +781,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         string[] StopTerms,
         PathTermAffinity PathTermAffinity,
         PathTermAffinity MatchedPolicyFileNameAffinity,
+        ScoreCap ExplicitTestAffinity,
+        NegatedRolePenalty NegatedRolePenalty,
         int NonTestPenalty,
         int ApplicationAbstractionPenalty,
         int InterfacePathPenalty,
@@ -719,13 +800,25 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         int ScorePerMatch,
         int MaximumScore);
 
+    private sealed record ScoreCap(
+        int ScorePerMatch,
+        int MaximumScore,
+        int NonTestPenalty = 0);
+
+    private sealed record NegatedRolePenalty(
+        string[] Markers,
+        string[] RoleTerms,
+        int ScorePerMatch,
+        int MaximumScorePerPhrase);
+
     private sealed record PathBoost(
         string Id,
         string[] QueryTerms,
         int MinimumMatches,
         string[] PathPrefixes,
         int Score,
-        bool DirectOnly = false);
+        bool DirectOnly = false,
+        string[]? ExcludedQueryTerms = null);
 
     private sealed record IdentityBoost(
         string Id,
@@ -736,7 +829,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         int Score,
         bool DirectOnly = false,
         string? IdentityScope = null,
-        string[]? ChangeTypes = null);
+        string[]? ChangeTypes = null,
+        string[]? ExcludedQueryTerms = null);
 
     private sealed record StructuralRoleBoost(
         string Id,

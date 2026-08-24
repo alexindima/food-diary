@@ -20,10 +20,17 @@ $probe4Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-4.json'
 $probe4Evaluation = & $measure -CorpusPath $probe4Corpus -SkipBuild -Format Json | ConvertFrom-Json
 $probe5Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-5.json'
 $probe5Evaluation = & $measure -CorpusPath $probe5Corpus -SkipBuild -Format Json | ConvertFrom-Json
-$allEvaluations = @($primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation)
+$probe6Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-6.json'
+$probe6Evaluation = & $measure -CorpusPath $probe6Corpus -SkipBuild -Format Json | ConvertFrom-Json
+$probe7Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-7.json'
+$probe7Evaluation = & $measure -CorpusPath $probe7Corpus -SkipBuild -Format Json | ConvertFrom-Json
+$allEvaluations = @($primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation, $probe6Evaluation, $probe7Evaluation)
 foreach ($evaluation in $allEvaluations) {
     if (-not $evaluation.passed) {
-        throw "SQL context evaluation missed its thresholds for '$($evaluation.corpusPath)': top1=$($evaluation.metrics.top1Rate), top10=$($evaluation.metrics.top10Rate), MRR=$($evaluation.metrics.meanReciprocalRank); misses=$(@($evaluation.misses.id) -join ', ')."
+        $missIds = @($evaluation.misses | ForEach-Object {
+                if ($null -ne $_.PSObject.Properties['id']) { $_.id } else { '<unknown>' }
+            })
+        throw "SQL context evaluation missed its thresholds for '$($evaluation.corpusPath)': top1=$($evaluation.metrics.top1Rate), top10=$($evaluation.metrics.top10Rate), MRR=$($evaluation.metrics.meanReciprocalRank); misses=$($missIds -join ', ')."
     }
 }
 foreach ($evaluation in @($primaryEvaluation, $challengeEvaluation)) {
@@ -41,6 +48,18 @@ if ([int]$probe2Evaluation.caseCount -lt 30) { throw 'Second promoted probe SQL 
 if ([int]$probe3Evaluation.caseCount -lt 30) { throw 'Third promoted probe SQL context evaluation must contain at least 30 frozen cases.' }
 if ([int]$probe4Evaluation.caseCount -lt 30) { throw 'Fourth promoted probe SQL context evaluation must contain at least 30 frozen cases.' }
 if ([int]$probe5Evaluation.caseCount -lt 40) { throw 'Fifth promoted probe SQL context evaluation must contain at least 40 frozen cases.' }
+if ([int]$probe6Evaluation.caseCount -lt 30) { throw 'Sixth promoted probe SQL context evaluation must contain at least 30 frozen cases.' }
+if ([int]$probe7Evaluation.caseCount -lt 40) { throw 'Seventh promoted probe SQL context evaluation must contain at least 40 frozen cases.' }
+$expectedProbe7Cohorts = @('adjacent-role-disambiguation', 'behavior-to-test', 'conversational-ru', 'mixed-ru-en', 'wiki-intent')
+if (@($probe7Evaluation.cohortMetrics).Count -ne $expectedProbe7Cohorts.Count -or
+    @(Compare-Object $expectedProbe7Cohorts @($probe7Evaluation.cohortMetrics.cohort)).Count -ne 0) {
+    throw 'Seventh promoted probe SQL context evaluation did not preserve its five methodology cohorts.'
+}
+foreach ($cohortMetric in @($probe7Evaluation.cohortMetrics)) {
+    if ([int]$cohortMetric.caseCount -ne 8 -or [int]$cohortMetric.top1Count -ne 8) {
+        throw "Seventh promoted probe cohort '$($cohortMetric.cohort)' must retain 8/8 top-1 cases."
+    }
+}
 $combinedCaseCount = [int]$primaryEvaluation.caseCount + [int]$challengeEvaluation.caseCount
 $combinedTop10Count = [int]$primaryEvaluation.metrics.top10Count + [int]$challengeEvaluation.metrics.top10Count
 if ($combinedCaseCount -lt 100) { throw 'Combined SQL context evaluation must contain at least 100 representative cases.' }
@@ -59,7 +78,9 @@ if ([double]$primaryEvaluation.metrics.p95SqlDurationMs -lt 0 -or
     [double]$probe2Evaluation.metrics.p95SqlDurationMs -lt 0 -or
     [double]$probe3Evaluation.metrics.p95SqlDurationMs -lt 0 -or
     [double]$probe4Evaluation.metrics.p95SqlDurationMs -lt 0 -or
-    [double]$probe5Evaluation.metrics.p95SqlDurationMs -lt 0) {
+    [double]$probe5Evaluation.metrics.p95SqlDurationMs -lt 0 -or
+    [double]$probe6Evaluation.metrics.p95SqlDurationMs -lt 0 -or
+    [double]$probe7Evaluation.metrics.p95SqlDurationMs -lt 0) {
     throw 'SQL context evaluation reported an invalid p95 duration.'
 }
 
@@ -68,6 +89,6 @@ $strictTop1Count = [int](($allEvaluations.metrics.top1Count | Measure-Object -Su
 if ($strictTop1Count -ne $strictCaseCount) {
     throw "Strict SQL context evaluation requires every case at top-1: top1=$strictTop1Count/$strictCaseCount."
 }
-$probeCaseCount = [int](($probeEvaluation.caseCount, $probe2Evaluation.caseCount, $probe3Evaluation.caseCount, $probe4Evaluation.caseCount, $probe5Evaluation.caseCount | Measure-Object -Sum).Sum)
-$probeTop1Count = [int](($probeEvaluation.metrics.top1Count, $probe2Evaluation.metrics.top1Count, $probe3Evaluation.metrics.top1Count, $probe4Evaluation.metrics.top1Count, $probe5Evaluation.metrics.top1Count | Measure-Object -Sum).Sum)
-Write-Host "LLM Wiki SQL context evaluation passed: strict top1=$strictTop1Count/$strictCaseCount; promotion top10=$combinedTop10Count/$combinedCaseCount; primary MRR=$($primaryEvaluation.metrics.meanReciprocalRank), p95=$($primaryEvaluation.metrics.p95SqlDurationMs)ms; challenge MRR=$($challengeEvaluation.metrics.meanReciprocalRank), p95=$($challengeEvaluation.metrics.p95SqlDurationMs)ms; generalization MRR=$($generalizationEvaluation.metrics.meanReciprocalRank), p95=$($generalizationEvaluation.metrics.p95SqlDurationMs)ms; validation MRR=$($validationEvaluation.metrics.meanReciprocalRank), p95=$($validationEvaluation.metrics.p95SqlDurationMs)ms; probes top1=$probeTop1Count/$probeCaseCount; probe5 baseline=22/40 and promoted=$($probe5Evaluation.metrics.top1Count)/$($probe5Evaluation.caseCount)."
+$probeCaseCount = [int](($probeEvaluation.caseCount, $probe2Evaluation.caseCount, $probe3Evaluation.caseCount, $probe4Evaluation.caseCount, $probe5Evaluation.caseCount, $probe6Evaluation.caseCount, $probe7Evaluation.caseCount | Measure-Object -Sum).Sum)
+$probeTop1Count = [int](($probeEvaluation.metrics.top1Count, $probe2Evaluation.metrics.top1Count, $probe3Evaluation.metrics.top1Count, $probe4Evaluation.metrics.top1Count, $probe5Evaluation.metrics.top1Count, $probe6Evaluation.metrics.top1Count, $probe7Evaluation.metrics.top1Count | Measure-Object -Sum).Sum)
+Write-Host "LLM Wiki SQL context evaluation passed: strict top1=$strictTop1Count/$strictCaseCount; promotion top10=$combinedTop10Count/$combinedCaseCount; primary MRR=$($primaryEvaluation.metrics.meanReciprocalRank), p95=$($primaryEvaluation.metrics.p95SqlDurationMs)ms; challenge MRR=$($challengeEvaluation.metrics.meanReciprocalRank), p95=$($challengeEvaluation.metrics.p95SqlDurationMs)ms; generalization MRR=$($generalizationEvaluation.metrics.meanReciprocalRank), p95=$($generalizationEvaluation.metrics.p95SqlDurationMs)ms; validation MRR=$($validationEvaluation.metrics.meanReciprocalRank), p95=$($validationEvaluation.metrics.p95SqlDurationMs)ms; probes top1=$probeTop1Count/$probeCaseCount; probe5 baseline=22/40 and promoted=$($probe5Evaluation.metrics.top1Count)/$($probe5Evaluation.caseCount); probe6 baseline=9/30 and promoted=$($probe6Evaluation.metrics.top1Count)/$($probe6Evaluation.caseCount); probe7 corrected baseline=18/40 and promoted=$($probe7Evaluation.metrics.top1Count)/$($probe7Evaluation.caseCount)."

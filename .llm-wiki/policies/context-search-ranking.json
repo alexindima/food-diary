@@ -13,6 +13,17 @@
     "maximumScore": 140
   },
   "nonTestPenalty": 120,
+  "explicitTestAffinity": {
+    "scorePerMatch": 25,
+    "maximumScore": 500,
+    "nonTestPenalty": 500
+  },
+  "negatedRolePenalty": {
+    "markers": ["not", "не"],
+    "roleTerms": ["admin", "administration", "auth", "billing", "checkout", "client", "command", "component", "context", "controller", "facade", "handler", "host", "integration", "mutation", "provider", "query", "repository", "resolver", "service", "tour", "validator", "webhook"],
+    "scorePerMatch": 180,
+    "maximumScorePerPhrase": 360
+  },
   "applicationAbstractionPenalty": 35,
   "interfacePathPenalty": 35,
   "agentGuideBoost": 40,
@@ -102,7 +113,17 @@
     "summary": ["read"],
     "authentication": ["auth"],
     "retrying": ["retry"],
-    "ranked": ["search", "find", "context"]
+    "ranked": ["context"],
+    "sections": ["section"],
+    "agents": ["instruction", "guidance"]
+    ,"autofill": ["form", "input", "login"]
+    ,"facade": ["service"]
+    ,"storage": ["store", "persist"]
+    ,"quota": ["usage", "limit"]
+    ,"qa": ["visual", "evidence", "verify"]
+    ,"density": ["cost"]
+    ,"estimate": ["cost", "forecast"]
+    ,"isolate": ["invoke", "run"]
   },
   "queryPrefixExpansions": {
     "вычищ": ["sanitize", "privacy", "sensitive"],
@@ -141,7 +162,7 @@
     "восстановлен": ["restore", "reset"],
     "парол": ["password"],
     "скрипт": ["script", "tool"],
-    "провер": ["check", "validate"],
+    "провер": ["check", "validate", "verification"],
     "принадлеж": ["ownership"],
     "состоян": ["state"],
     "фронтенд": ["frontend"],
@@ -227,6 +248,38 @@
     "чувствитель": ["sensitive", "privacy"],
     "рабоч": ["workspace"],
     "пространств": ["workspace"]
+    ,"тест": ["test"]
+    ,"команд": ["command", "tool"]
+    ,"найт": ["find", "search"]
+    ,"вопрос": ["question"]
+    ,"исслед": ["research"]
+    ,"приоритет": ["priority"]
+    ,"стоим": ["cost"]
+    ,"секунд": ["seconds", "duration"]
+    ,"калибр": ["calibrate"]
+    ,"фильтр": ["filter"]
+    ,"привод": ["normalize"]
+    ,"кроп": ["crop"]
+    ,"рамк": ["bounds"]
+    ,"столб": ["bar"]
+    ,"масштаб": ["scale"]
+    ,"позици": ["position"]
+    ,"синхрон": ["sync"]
+    ,"фасад": ["facade"]
+    ,"методик": ["wiki", "workflow"]
+    ,"критик": ["critique", "review"]
+    ,"сравнив": ["compare", "experiment"]
+    ,"вариант": ["strategy", "experiment"]
+    ,"наход": ["find", "resolve"]
+    ,"урок": ["lesson"]
+    ,"заглав": ["uppercase", "naming"]
+    ,"компонент": ["component"]
+    ,"событ": ["event"]
+    ,"wiki-": ["wiki", "tool", "command"]
+    ,"контекст": ["context"]
+    ,"вебхук": ["webhook"]
+    ,"подпис": ["subscription"]
+    ,"оплат": ["billing", "payment"]
   },
   "pathBoosts": [
     {
@@ -337,6 +390,23 @@
       "pathPrefixes": [".llm-wiki/workflows/"],
       "score": 350,
       "directOnly": true
+    },
+    {
+      "id": "explicit-workflow-document-intent",
+      "queryTerms": ["workflow"],
+      "minimumMatches": 1,
+      "pathPrefixes": [".llm-wiki/workflows/"],
+      "score": 300,
+      "directOnly": true
+    },
+    {
+      "id": "explicit-wiki-tool-intent",
+      "queryTerms": ["wiki"],
+      "minimumMatches": 1,
+      "pathPrefixes": [".llm-wiki/tools/"],
+      "score": 230,
+      "directOnly": true,
+      "excludedQueryTerms": ["workflow"]
     },
     {
       "id": "wiki-test-planning-intent",
@@ -637,6 +707,15 @@
       "minimumMatches": 1,
       "identityTerms": ["parser"],
       "score": 100
+    },
+    {
+      "id": "explicit-health-check-role",
+      "queryTerms": ["health", "check", "verify"],
+      "minimumMatches": 2,
+      "identityTerms": ["healthcheck"],
+      "minimumIdentityMatches": 1,
+      "score": 220,
+      "identityScope": "file"
     },
     {
       "id": "explicit-generator-role",
@@ -1265,7 +1344,8 @@
       "identityTerms": ["browser", "storage", "service"],
       "minimumIdentityMatches": 3,
       "score": 400,
-      "identityScope": "file"
+      "identityScope": "file",
+      "excludedQueryTerms": ["tour"]
     },
     {
       "id": "google-identity-service-intent",
@@ -1565,7 +1645,7 @@
       "changeTypes": ["Backend"],
       "excludeTests": true,
       "excludedPathPrefixes": ["FoodDiary.Application.Abstractions/"],
-      "excludedQueryTerms": ["job", "background", "http", "response", "maximum", "size"]
+      "excludedQueryTerms": ["job", "background", "http", "response", "maximum", "size", "update", "preferences"]
     },
     {
       "id": "backend-subject-service-role",
@@ -1579,6 +1659,23 @@
       "maximumQueryIdentityScore": 325,
       "identityScope": "file",
       "changeTypes": ["Backend"],
+      "excludeTests": true,
+      "excludedPathPrefixes": ["FoodDiary.Application.Abstractions/"]
+    },
+    {
+      "id": "backend-summary-read-service-role",
+      "queryTerms": ["summary"],
+      "minimumMatches": 1,
+      "candidateTerms": ["read", "service"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 1,
+      "score": 420,
+      "scorePerQueryIdentityMatch": 90,
+      "maximumQueryIdentityScore": 360,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Backend"],
+      "recordTypes": ["code"],
       "excludeTests": true,
       "excludedPathPrefixes": ["FoodDiary.Application.Abstractions/"]
     },
@@ -1992,12 +2089,142 @@
       "identityScope": "file",
       "changeTypes": ["Backend"],
       "recordTypes": ["code"],
+      "pathSuffixes": ["Generator.cs"],
+      "excludeTests": true
+    },
+    {
+      "id": "backend-helper-source-role",
+      "queryTerms": ["helper", "utility", "standalone", "shared"],
+      "minimumMatches": 1,
+      "candidateTerms": ["resolver", "parser", "normalizer", "filters", "policy"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 2,
+      "score": 520,
+      "scorePerQueryIdentityMatch": 80,
+      "maximumQueryIdentityScore": 320,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Backend"],
+      "recordTypes": ["code"],
+      "excludeTests": true
+    },
+    {
+      "id": "backend-context-resolver-role",
+      "queryTerms": ["context", "resolve", "find", "subscription", "payment", "webhook"],
+      "minimumMatches": 4,
+      "candidateTerms": ["context", "resolver"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 2,
+      "score": 520,
+      "scorePerQueryIdentityMatch": 80,
+      "maximumQueryIdentityScore": 320,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Backend"],
+      "recordTypes": ["code"],
+      "excludeTests": true
+    },
+    {
+      "id": "backend-filter-role",
+      "queryTerms": ["filter", "normalize", "provider", "status", "date", "search"],
+      "minimumMatches": 2,
+      "candidateTerms": ["filter"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 2,
+      "score": 480,
+      "scorePerQueryIdentityMatch": 70,
+      "maximumQueryIdentityScore": 280,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Backend"],
+      "recordTypes": ["code"],
+      "excludeTests": true
+    },
+    {
+      "id": "backend-recorder-role",
+      "queryTerms": ["record", "payment", "add", "update", "deduplicate"],
+      "minimumMatches": 2,
+      "candidateTerms": ["recorder"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 2,
+      "score": 560,
+      "scorePerQueryIdentityMatch": 80,
+      "maximumQueryIdentityScore": 320,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Backend"],
+      "recordTypes": ["code"],
+      "excludeTests": true
+    },
+    {
+      "id": "backend-syncer-role",
+      "queryTerms": ["sync", "role", "premium", "subscription"],
+      "minimumMatches": 2,
+      "candidateTerms": ["syncer"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 2,
+      "score": 560,
+      "scorePerQueryIdentityMatch": 80,
+      "maximumQueryIdentityScore": 320,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Backend"],
+      "recordTypes": ["code"],
+      "excludeTests": true
+    },
+    {
+      "id": "backend-event-processor-role",
+      "queryTerms": ["process", "processor", "apply", "event", "writer", "sync"],
+      "minimumMatches": 2,
+      "candidateTerms": ["processor"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 2,
+      "score": 560,
+      "scorePerQueryIdentityMatch": 80,
+      "maximumQueryIdentityScore": 320,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Backend"],
+      "recordTypes": ["code"],
+      "excludeTests": true
+    },
+    {
+      "id": "backend-outbox-processor-role",
+      "queryTerms": ["evaluate", "process", "processing", "outbox", "record", "records"],
+      "minimumMatches": 2,
+      "candidateTerms": ["processor"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 1,
+      "score": 520,
+      "scorePerQueryIdentityMatch": 80,
+      "maximumQueryIdentityScore": 320,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "excludedQueryTerms": ["job", "background"],
+      "changeTypes": ["Backend"],
+      "recordTypes": ["code"],
+      "excludeTests": true
+    },
+    {
+      "id": "backend-review-command-handler-role",
+      "queryTerms": ["review", "pending", "admin", "report"],
+      "minimumMatches": 3,
+      "candidateTerms": ["review", "handler"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 2,
+      "score": 520,
+      "scorePerQueryIdentityMatch": 80,
+      "maximumQueryIdentityScore": 320,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Backend"],
+      "recordTypes": ["code"],
       "excludeTests": true
     },
     {
       "id": "backend-policy-role",
-      "queryTerms": ["policy", "validate", "safe", "endpoint", "range"],
-      "minimumMatches": 1,
+      "queryTerms": ["policy", "safe", "range", "https", "localhost", "port", "retry", "batch", "behavior", "control", "processing"],
+      "minimumMatches": 2,
       "candidateTerms": ["policy"],
       "minimumCandidateMatches": 1,
       "minimumQueryIdentityMatches": 1,
@@ -2026,8 +2253,8 @@
     },
     {
       "id": "backend-loader-role",
-      "queryTerms": ["section", "loader"],
-      "minimumMatches": 1,
+      "queryTerms": ["load", "section", "loader"],
+      "minimumMatches": 2,
       "candidateTerms": ["loader"],
       "minimumCandidateMatches": 1,
       "minimumQueryIdentityMatches": 1,
@@ -2057,7 +2284,7 @@
     {
       "id": "frontend-service-source-role",
       "queryTerms": ["angular", "frontend", "service", "save", "form"],
-      "minimumMatches": 2,
+      "minimumMatches": 3,
       "candidateTerms": ["service"],
       "minimumCandidateMatches": 1,
       "minimumQueryIdentityMatches": 2,
@@ -2083,6 +2310,7 @@
       "maximumQueryIdentityScore": 360,
       "identityScope": "file",
       "affinityDirectOnly": false,
+      "excludedQueryTerms": ["run", "runner", "controller", "state"],
       "changeTypes": ["Frontend"],
       "recordTypes": ["code"],
       "pathPrefixes": ["FoodDiary.Web.Client/src/app/interceptor/"],
@@ -2091,8 +2319,8 @@
     },
     {
       "id": "frontend-transformation-utility-role",
-      "queryTerms": ["calculate", "recalculate", "edit", "translate", "map", "normalize", "update", "resolve", "build"],
-      "minimumMatches": 1,
+      "queryTerms": ["calculate", "recalculate", "edit", "translate", "map", "normalize", "update", "resolve", "build", "autofill", "detect", "crop", "resize", "move", "bounds", "bar", "scale", "position", "percent"],
+      "minimumMatches": 2,
       "candidateTerms": ["utils", "util"],
       "minimumCandidateMatches": 1,
       "minimumQueryIdentityMatches": 2,
@@ -2111,17 +2339,52 @@
       "id": "frontend-ai-edit-utility-role",
       "queryTerms": ["ai", "edit", "recalculate", "update", "ingredient"],
       "minimumMatches": 2,
-      "candidateTerms": ["ai", "edit", "utils"],
-      "minimumCandidateMatches": 3,
-      "minimumQueryIdentityMatches": 2,
+      "candidateTerms": ["ai", "utils"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 1,
       "score": 560,
       "scorePerQueryIdentityMatch": 90,
       "maximumQueryIdentityScore": 360,
       "identityScope": "file",
       "affinityDirectOnly": false,
+      "excludedQueryTerms": ["facade"],
       "changeTypes": ["Frontend"],
       "recordTypes": ["code"],
       "pathPrefixes": ["FoodDiary.Web.Client/"],
+      "pathSuffixes": [".ts"],
+      "excludeTests": true
+    },
+    {
+      "id": "frontend-facade-role",
+      "queryTerms": ["facade", "state", "analysis", "nutrition", "channel"],
+      "minimumMatches": 2,
+      "candidateTerms": ["facade"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 2,
+      "score": 620,
+      "scorePerQueryIdentityMatch": 90,
+      "maximumQueryIdentityScore": 450,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Frontend"],
+      "recordTypes": ["code"],
+      "pathSuffixes": [".ts"],
+      "excludeTests": true
+    },
+    {
+      "id": "frontend-storage-role",
+      "queryTerms": ["storage", "store", "persist", "localstorage", "ssr", "tour"],
+      "minimumMatches": 2,
+      "candidateTerms": ["storage"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 2,
+      "score": 520,
+      "scorePerQueryIdentityMatch": 80,
+      "maximumQueryIdentityScore": 320,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Frontend"],
+      "recordTypes": ["code"],
       "pathSuffixes": [".ts"],
       "excludeTests": true
     },
@@ -2154,6 +2417,77 @@
       "identityScope": "identity",
       "recordTypes": ["wiki-page"],
       "pathPrefixes": [".llm-wiki/workflows/"]
+    },
+    {
+      "id": "wiki-critique-workflow-role",
+      "queryTerms": ["critique", "independent"],
+      "minimumMatches": 1,
+      "candidateTerms": ["critique"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 2,
+      "score": 520,
+      "scorePerQueryIdentityMatch": 90,
+      "maximumQueryIdentityScore": 360,
+      "identityScope": "identity",
+      "affinityDirectOnly": false,
+      "recordTypes": ["wiki-page"],
+      "pathPrefixes": [".llm-wiki/workflows/"]
+    },
+    {
+      "id": "wiki-context-experiment-role",
+      "queryTerms": ["context", "strategy", "experiment", "variant", "compare"],
+      "minimumMatches": 3,
+      "candidateTerms": ["context", "experiment"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 2,
+      "score": 560,
+      "scorePerQueryIdentityMatch": 90,
+      "maximumQueryIdentityScore": 360,
+      "identityScope": "identity",
+      "affinityDirectOnly": false,
+      "recordTypes": ["wiki-page"],
+      "pathPrefixes": [".llm-wiki/workflows/"]
+    },
+    {
+      "id": "powershell-feedback-subject-role",
+      "queryTerms": ["feedback"],
+      "minimumMatches": 1,
+      "candidateTerms": ["feedback"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 1,
+      "score": 420,
+      "identityScope": "file",
+      "recordTypes": ["code"],
+      "pathPrefixes": [".llm-wiki/tools/"],
+      "pathSuffixes": [".ps1"]
+    },
+    {
+      "id": "powershell-research-question-role",
+      "queryTerms": ["question", "priority", "developer", "evidence"],
+      "minimumMatches": 2,
+      "candidateTerms": ["research", "question"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 1,
+      "score": 650,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "recordTypes": ["code"],
+      "pathPrefixes": [".llm-wiki/tools/"],
+      "pathSuffixes": [".ps1"]
+    },
+    {
+      "id": "powershell-verification-cost-role",
+      "queryTerms": ["cost", "forecast", "estimate", "seconds", "density", "calibrate"],
+      "minimumMatches": 2,
+      "candidateTerms": ["cost"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 1,
+      "score": 650,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "recordTypes": ["code"],
+      "pathPrefixes": [".llm-wiki/tools/"],
+      "pathSuffixes": [".ps1"]
     },
     {
       "id": "powershell-ranked-context-role",

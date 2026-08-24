@@ -44,20 +44,21 @@ Source: `FoodDiary.Presentation.Api/Features/ContentReports/ContentReportsContro
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 4
+- Public contract files: 5
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 4
-- Interfaces: 2
+- Public contract types: 5
+- Interfaces: 3
 - DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 2
 - Contracts referencing domain entities: 1
 - `class ContentReportErrors`
 - `interface IContentReportReadModelRepository`
+- `interface IContentReportTargetReadService`
 - `interface IContentReportWriteRepository`
 - `record ContentReportAdminReadModel`
 

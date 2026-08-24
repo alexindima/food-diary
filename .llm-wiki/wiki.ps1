@@ -681,12 +681,12 @@ switch ($Command) {
             $parallelSmokeArguments = @{} + $affectedSmokeArguments
             $effectiveSmokeConcurrency = if ($null -eq $MaxConcurrency) { 4 } else { [int]$MaxConcurrency }
             $parallelSmokeArguments.MaxConcurrency = $effectiveSmokeConcurrency
-            $script:verifyStageExpectedSeconds['affected smoke'] = 60
+            $script:verifyStageExpectedSeconds['affected smoke'] = 240
             $smokeStages = @([pscustomobject]@{
                 Name = 'affected smoke'
                 Tool = 'Invoke-LlmWikiParallelSmoke.ps1'
                 Arguments = $parallelSmokeArguments
-                Timeout = 240
+                Timeout = 420
                 Standalone = './.llm-wiki/wiki.ps1 verify -Stage ''affected smoke'''
             })
         }

@@ -23,6 +23,11 @@ try {
     if (Read-LlmWikiQueryCache -Entry $first) { throw 'A corrupt query-cache entry was returned.' }
     if (Test-Path -LiteralPath $first.path) { throw 'A corrupt query-cache entry was not removed.' }
     Write-LlmWikiQueryCache -Entry $first -Content '{"value":1}'
+    $alreadyRemovedPath = Join-Path (Split-Path -Parent $first.path) 'already-removed.json'
+    [IO.File]::WriteAllText($alreadyRemovedPath, '{}', [Text.UTF8Encoding]::new($false))
+    Remove-LlmWikiQueryCacheFileIfPresent -Path $alreadyRemovedPath
+    Remove-LlmWikiQueryCacheFileIfPresent -Path $alreadyRemovedPath
+    if (Test-Path -LiteralPath $alreadyRemovedPath) { throw 'Idempotent query-cache removal retained a stale entry.' }
 
     [IO.File]::WriteAllText((Join-Path $tempRoot 'unrelated.txt'), 'two', [Text.UTF8Encoding]::new($false))
     $unrelated = Get-LlmWikiQueryCacheEntry -RepositoryRoot $tempRoot -Namespace test -Arguments $arguments -RelevantPath 'source.txt' -DependencyPath 'dependency.txt'
@@ -40,7 +45,7 @@ try {
     if ($dependencyChanged.missReason -cne 'dependent Wiki indexes changed') { throw "Scoped cache reported the wrong dependency miss reason: $($dependencyChanged.missReason)" }
     $differentArguments = Get-LlmWikiQueryCacheEntry -RepositoryRoot $tempRoot -Namespace test -Arguments @{ Intent = 'different request' }
     if ($differentArguments.fingerprint -ceq $changed.fingerprint) { throw 'Changed arguments did not invalidate the query cache.' }
-    Write-Host 'LLM Wiki query-cache smoke passed: exact reuse, scoped invalidation, dependency lineage, and miss diagnostics work.'
+    Write-Host 'LLM Wiki query-cache smoke passed: exact reuse, idempotent stale removal, scoped invalidation, dependency lineage, and miss diagnostics work.'
 } finally {
     if (Test-Path -LiteralPath $tempRoot) { Remove-Item -LiteralPath $tempRoot -Recurse -Force }
 }

@@ -624,7 +624,7 @@
       "name": "CancellationToken",
       "type": "Func<TMessage,",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
-      "line": 89
+      "line": 91
     },
     {
       "category": "credential",

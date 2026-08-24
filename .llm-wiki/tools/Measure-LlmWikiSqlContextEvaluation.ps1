@@ -25,6 +25,12 @@ foreach ($case in $cases) {
     $expectedPaths = [string[]]@($case.expectedPaths | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
     if ($expectedPaths.Count -eq 0) { throw "SQL context evaluation case '$($case.id)' has no expected path." }
     $changeType = if ([string]::IsNullOrWhiteSpace([string]$case.changeType)) { 'Any' } else { [string]$case.changeType }
+    $cohortProperty = $case.PSObject.Properties['cohort']
+    $cohort = if ($null -eq $cohortProperty -or [string]::IsNullOrWhiteSpace([string]$cohortProperty.Value)) {
+        'unclassified'
+    } else {
+        [string]$cohortProperty.Value
+    }
     $search = & $manager search `
         -Query ([string]$case.query) `
         -ChangeType $changeType `
@@ -38,6 +44,7 @@ foreach ($case in $cases) {
         id = [string]$case.id
         query = [string]$case.query
         changeType = $changeType
+        cohort = $cohort
         expectedPaths = $expectedPaths
         rank = $rank
         reciprocalRank = $(if ($null -eq $rank) { 0.0 } else { 1.0 / $rank })
@@ -55,6 +62,20 @@ $top10Rate = $top10Count / $results.Count
 $mrr = [double](($results.reciprocalRank | Measure-Object -Average).Average)
 $durations = [double[]]@($results.sqlDurationMs | Sort-Object)
 $p95Index = [Math]::Max(0, [Math]::Ceiling($durations.Count * 0.95) - 1)
+$cohortMetrics = @($results | Group-Object cohort | Sort-Object Name | ForEach-Object {
+        $cohortResults = @($_.Group)
+        $cohortTop1Count = @($cohortResults | Where-Object top1).Count
+        $cohortTop10Count = @($cohortResults | Where-Object top10).Count
+        [pscustomobject][ordered]@{
+            cohort = [string]$_.Name
+            caseCount = $cohortResults.Count
+            top1Count = $cohortTop1Count
+            top1Rate = [Math]::Round($cohortTop1Count / $cohortResults.Count, 4)
+            top10Count = $cohortTop10Count
+            top10Rate = [Math]::Round($cohortTop10Count / $cohortResults.Count, 4)
+            meanReciprocalRank = [Math]::Round([double](($cohortResults.reciprocalRank | Measure-Object -Average).Average), 4)
+        }
+    })
 $thresholds = [pscustomobject][ordered]@{
     minimumTop1Rate = [double]$corpus.thresholds.minimumTop1Rate
     minimumTop10Rate = [double]$corpus.thresholds.minimumTop10Rate
@@ -101,6 +122,7 @@ $evaluation = [pscustomobject][ordered]@{
         averageSqlDurationMs = [Math]::Round([double](($durations | Measure-Object -Average).Average), 2)
         p95SqlDurationMs = [Math]::Round($durations[$p95Index], 2)
     }
+    cohortMetrics = $cohortMetrics
     thresholds = $thresholds
     switchCriteria = $switchCriteria
     switchGaps = @($switchGaps)
@@ -112,6 +134,9 @@ if ($Format -eq 'Json') {
     $evaluation | ConvertTo-Json -Depth 10
 } else {
     Write-Host "SQL context evaluation: passed=$passed, switchReady=$switchReady, cases=$($results.Count), top1=$top1Count/$($results.Count) ($([Math]::Round($top1Rate * 100, 1))%), top10=$top10Count/$($results.Count) ($([Math]::Round($top10Rate * 100, 1))%), MRR=$([Math]::Round($mrr, 4)), SQL p95=$($evaluation.metrics.p95SqlDurationMs)ms."
+    foreach ($cohortMetric in $cohortMetrics) {
+        Write-Host " Cohort $($cohortMetric.cohort): top1=$($cohortMetric.top1Count)/$($cohortMetric.caseCount), top10=$($cohortMetric.top10Count)/$($cohortMetric.caseCount), MRR=$($cohortMetric.meanReciprocalRank)."
+    }
     if (-not $switchReady) {
         Write-Host " Switch gaps: $($switchGaps -join '; ')"
     }

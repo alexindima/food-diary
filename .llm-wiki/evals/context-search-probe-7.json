@@ -1,0 +1,382 @@
+{
+  "schemaVersion": 1,
+  "description": "Seventh blind context-search probe, frozen before first execution. Its raw baseline was 17/40 top-1, 32/40 top-10, and 0.5574 MRR. One module-ambiguous UTC normalizer case was adjudicated to accept all behaviorally matching implementations, producing a corrected baseline of 18/40 top-1, 33/40 top-10, and 0.5812 MRR. Forty previously unused primary targets are split evenly across conversational Russian, mixed RU/EN, adjacent-role disambiguation, behavior-to-test, and Wiki-intent cohorts. Promotion requires at least 95% top-1, 100% top-10, and 0.97 MRR without target-specific identity boosts.",
+  "diagnosticLimit": 100,
+  "thresholds": {
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 40,
+    "minimumTop1Rate": 0.95,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 0.97
+  },
+  "cases": [
+    {
+      "id": "billing-webhook-context-conversational-probe-7",
+      "cohort": "conversational-ru",
+      "query": "где у нас собирают контекст вебхука оплаты: находят подписку, связанный платеж и пользователя, включая удаленного",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs"
+      ]
+    },
+    {
+      "id": "admin-billing-filters-conversational-probe-7",
+      "cohort": "conversational-ru",
+      "query": "нужен кусок админки который приводит фильтры платежей к нормальному виду: провайдер, статус, даты UTC и поиск",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.Admin/Services/AdminBillingQueryFilters.cs"
+      ]
+    },
+    {
+      "id": "required-id-parser-conversational-probe-7",
+      "cohort": "conversational-ru",
+      "query": "где для body metrics разбирают обязательный строковый id и перекидывают его ошибку в обычный Result",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.BodyMetrics/Common/RequiredIdParser.cs"
+      ]
+    },
+    {
+      "id": "utc-date-normalizer-conversational-probe-7",
+      "cohort": "conversational-ru",
+      "query": "покажи маленький helper который дату без kind считает UTC, а local сначала переводит в UTC",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.BodyMetrics/Common/UtcDateNormalizer.cs",
+        "FoodDiary.Application.Meals/Common/Time/UtcDateNormalizer.cs",
+        "FoodDiary.Application.Dashboard/Internal/UtcDateNormalizer.cs",
+        "FoodDiary.Application.Cycles/Internal/UtcDateNormalizer.cs",
+        "FoodDiary.Application.Export/Internal/UtcDateNormalizer.cs"
+      ]
+    },
+    {
+      "id": "admin-return-url-conversational-probe-7",
+      "cohort": "conversational-ru",
+      "query": "где фронт безопасно собирает возврат в админку после unauthorized и отбрасывает подозрительный returnUrl",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-admin-return-url.utils.ts"
+      ]
+    },
+    {
+      "id": "login-autofill-conversational-probe-7",
+      "cohort": "conversational-ru",
+      "query": "браузер сам подставил логин и пароль — где UI определяет полное или частичное autofill даже без native input события",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-login-autofill.utils.ts"
+      ]
+    },
+    {
+      "id": "image-crop-conversational-probe-7",
+      "cohort": "conversational-ru",
+      "query": "где лежит математика кропа картинки: вписать изображение, двигать и ресайзить рамку, потом сделать canvas",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field-crop.utils.ts"
+      ]
+    },
+    {
+      "id": "day-nutrition-bars-conversational-probe-7",
+      "cohort": "conversational-ru",
+      "query": "нужна утилита дневной сводки питания которая считает проценты, общий масштаб столбиков и позицию цели",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.utils.ts"
+      ]
+    },
+    {
+      "id": "billing-payment-recorder-mixed-probe-7",
+      "cohort": "mixed-ru-en",
+      "query": "billing webhook: где add-or-update payment, deduplicate provider payment id и resolve payment kind",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs"
+      ]
+    },
+    {
+      "id": "premium-role-syncer-mixed-probe-7",
+      "cohort": "mixed-ru-en",
+      "query": "после subscription event синхронизировать Premium role и record marketing conversion только когда premium начался",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs"
+      ]
+    },
+    {
+      "id": "admin-locale-parser-mixed-probe-7",
+      "cohort": "mixed-ru-en",
+      "query": "admin parser для required language: trim locale, validate supported value и вернуть localized validation error",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.Admin/Common/AdminLocaleParser.cs"
+      ]
+    },
+    {
+      "id": "ai-user-context-mixed-probe-7",
+      "cohort": "mixed-ru-en",
+      "query": "AI user context service загружает профиль и решает active ли пользователь и какой у него subscription tier",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.Ai/Services/AiUserContextService.cs"
+      ]
+    },
+    {
+      "id": "dynamic-progress-mixed-probe-7",
+      "cohort": "mixed-ru-en",
+      "query": "shared progress bar math: percent, width, max marker position, label placement и contrast text color",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/components/shared/dynamic-progress-bar/dynamic-progress-bar.utils.ts"
+      ]
+    },
+    {
+      "id": "cycle-page-mapper-mixed-probe-7",
+      "cohort": "mixed-ru-en",
+      "query": "cycle tracking mapper строит current overview prediction nutrition day observations care prompts и factor view models",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page-lib/cycle-tracking-page.mapper.ts"
+      ]
+    },
+    {
+      "id": "ai-input-facade-mixed-probe-7",
+      "cohort": "mixed-ru-en",
+      "query": "facade AI input bar держит separate text/photo channel state, запускает analysis и nutrition, умеет clear/edit result",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.facade.ts"
+      ]
+    },
+    {
+      "id": "tour-storage-mixed-probe-7",
+      "cohort": "mixed-ru-en",
+      "query": "fd-tour storage помечает tour version completed в localStorage, но безопасно работает при SSR без browser storage",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-storage.ts"
+      ]
+    },
+    {
+      "id": "admin-lesson-enum-parser-adjacent-probe-7",
+      "cohort": "adjacent-role-disambiguation",
+      "query": "не validator команды урока, а общий parser значений category и difficulty в enum с именем поля",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.Admin/Common/AdminLessonValueParser.cs"
+      ]
+    },
+    {
+      "id": "user-ai-usage-summary-adjacent-probe-7",
+      "cohort": "adjacent-role-disambiguation",
+      "query": "не сервис AI-провайдера: read service пользовательской квоты собирает usage за текущий UTC месяц и лимит тарифа",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.Ai/Services/UserAiUsageSummaryReadService.cs"
+      ]
+    },
+    {
+      "id": "billing-current-user-resolver-adjacent-probe-7",
+      "cohort": "adjacent-role-disambiguation",
+      "query": "не billing user context и не checkout handler — helper получает текущего UserId, проверяет его и преобразует failure",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.Billing/Common/BillingCurrentUserAccessResolver.cs"
+      ]
+    },
+    {
+      "id": "admin-user-reader-adjacent-probe-7",
+      "cohort": "adjacent-role-disambiguation",
+      "query": "не mutation administration service: фасад чтения админ-пользователей отдает deleted user, paged list, dashboard summary и exists",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.Admin/Services/AdminUserReadService.cs"
+      ]
+    },
+    {
+      "id": "auth-countdown-adjacent-probe-7",
+      "cohort": "adjacent-role-disambiguation",
+      "query": "не auth component: standalone utility запускает секундный countdown в WritableSignal и очищает interval через DestroyRef",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-countdown.utils.ts"
+      ]
+    },
+    {
+      "id": "tour-target-directive-adjacent-probe-7",
+      "cohort": "adjacent-role-disambiguation",
+      "query": "не tour service и не host: минимальная Angular directive объявляет required fdTourTarget input на DOM элементе",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-target.directive.ts"
+      ]
+    },
+    {
+      "id": "billing-webhook-event-processor-adjacent-probe-7",
+      "cohort": "adjacent-role-disambiguation",
+      "query": "не главный webhook handler и не context resolver: компонент применяет распознанное событие к billing entities через writer и sync helpers",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs"
+      ]
+    },
+    {
+      "id": "admin-billing-read-service-adjacent-probe-7",
+      "cohort": "adjacent-role-disambiguation",
+      "query": "не repository и не query handler: admin billing read facade загружает payments subscriptions webhook events и revenue summary",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.Admin/Services/AdminBillingReadService.cs"
+      ]
+    },
+    {
+      "id": "parameter-naming-analyzer-test-probe-7",
+      "cohort": "behavior-to-test",
+      "query": "какой тест анализатора доказывает что параметр метода с заглавной буквы дает diagnostic, а record positional parameter допустим",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Analyzers.Tests/ParameterNamingAnalyzerTests.cs"
+      ]
+    },
+    {
+      "id": "primary-constructor-backing-field-test-probe-7",
+      "cohort": "behavior-to-test",
+      "query": "найти тест правила: readonly field нельзя просто инициализировать параметром primary constructor, но transform или mutable field разрешены",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Analyzers.Tests/PrimaryConstructorBackingFieldAnalyzerTests.cs"
+      ]
+    },
+    {
+      "id": "user-agent-parser-test-probe-7",
+      "cohort": "behavior-to-test",
+      "query": "в каком тестовом файле проверены desktop mobile tablet user agents, browser OS device и маркер версии без значения",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Application.Tests/Authentication/UserAgentParserTests.cs"
+      ]
+    },
+    {
+      "id": "pagination-policy-test-probe-7",
+      "cohort": "behavior-to-test",
+      "query": "тесты нормализации page/page size, feature-specific bounds, collection limit и fallback на default",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Application.Tests/Common/PaginationPolicyTests.cs"
+      ]
+    },
+    {
+      "id": "temporal-range-policy-test-probe-7",
+      "cohort": "behavior-to-test",
+      "query": "где тестируют inclusive date buckets, quantization, overflow у DateTime.MaxValue и reversed range",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Application.Tests/Common/TemporalRangePolicyTests.cs"
+      ]
+    },
+    {
+      "id": "ai-validator-test-probe-7",
+      "cohort": "behavior-to-test",
+      "query": "тестовый набор для AnalyzeFoodImage и CalculateFoodNutrition validation: empty ids, non-hex request id, missing asset, inactive user",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs"
+      ]
+    },
+    {
+      "id": "cycle-consent-test-probe-7",
+      "cohort": "behavior-to-test",
+      "query": "какие tests покрывают confirm period start и update cycle consent: owner, missing profile, invalid user и validator failures",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs"
+      ]
+    },
+    {
+      "id": "openai-food-service-test-probe-7",
+      "cohort": "behavior-to-test",
+      "query": "найти тесты AI orchestration где quota reservation идет до generation, actual tokens reconcile, unknown cost остается pending и cancellation пробрасывается",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Application.Tests/Ai/OpenAiFoodServiceTests.cs"
+      ]
+    },
+    {
+      "id": "next-research-question-wiki-probe-7",
+      "cohort": "wiki-intent",
+      "query": "Wiki-команда должна задать только самый приоритетный открытый вопрос разработчику и показать anchor, причину и нужное evidence",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Get-LlmWikiNextResearchQuestion.ps1"
+      ]
+    },
+    {
+      "id": "verification-cost-wiki-probe-7",
+      "cohort": "wiki-intent",
+      "query": "какой Wiki tool прогнозирует секунды проверок, value density и потом калибрует estimate по verification receipts",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1"
+      ]
+    },
+    {
+      "id": "contract-consumers-wiki-probe-7",
+      "cohort": "wiki-intent",
+      "query": "PowerShell анализ для extraction readiness контракта: declaration owner, production consumers, aggregate/mutation blockers и replacement contract",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Get-LlmWikiContractConsumers.ps1"
+      ]
+    },
+    {
+      "id": "context-feedback-wiki-probe-7",
+      "cohort": "wiki-intent",
+      "query": "Wiki tool записывает integrity-protected feedback о выданном context bundle, outcome задачи и метрики профилей, умеет verify и prune",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1"
+      ]
+    },
+    {
+      "id": "frontend-trace-wiki-probe-7",
+      "cohort": "wiki-intent",
+      "query": "найти frontend symbol и показать его route, upstream consumers, template selector consumers, API calls и tests",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Find-LlmWikiFrontendTrace.ps1"
+      ]
+    },
+    {
+      "id": "independent-critique-wiki-probe-7",
+      "cohort": "wiki-intent",
+      "query": "workflow отдельной критики AI change заново проверяет intent scope proof verification architecture security и operability перед seal",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/workflows/independent-change-critique.md"
+      ]
+    },
+    {
+      "id": "frontend-visual-evidence-wiki-probe-7",
+      "cohort": "wiki-intent",
+      "query": "методика visual QA требует route, DOM, console, interaction, screenshot и mobile viewport для измененного UI",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/workflows/frontend-visual-evidence.md"
+      ]
+    },
+    {
+      "id": "context-strategy-experiment-wiki-probe-7",
+      "cohort": "wiki-intent",
+      "query": "workflow безопасно сравнивает isolated compact coverage depth и policy-balanced варианты контекста через benchmark",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/workflows/context-strategy-experiments.md"
+      ]
+    }
+  ]
+}

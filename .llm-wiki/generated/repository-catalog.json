@@ -3811,7 +3811,7 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/admin/moderation/{id:guid}/dismiss",
-            "line": 30
+            "line": 33
           }
         ]
       },
@@ -4099,7 +4099,7 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/reports",
-            "line": 15
+            "line": 16
           }
         ]
       },

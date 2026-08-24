@@ -892,13 +892,26 @@ function directSearchTerms(query) {
 
 function configuredSearchTermExpansions(direct) {
   const expanded = [];
+  const configuredTerms = contextSearchRanking.queryTermExpansions ?? {};
   for (const term of direct) {
-    expanded.push(...(contextSearchRanking.queryTermExpansions?.[term] ?? []));
+    if (Object.hasOwn(configuredTerms, term)) expanded.push(...configuredTerms[term]);
     for (const [prefix, expansions] of Object.entries(contextSearchRanking.queryPrefixExpansions ?? {})) {
       if (term.startsWith(prefix)) expanded.push(...expansions);
     }
   }
   return expanded;
+}
+
+function negatedRoleTermGroups(query) {
+  const policy = contextSearchRanking.negatedRolePenalty ?? {};
+  const markers = (policy.markers ?? ['not', 'не']).map((marker) => String(marker).toLowerCase());
+  const roleTerms = new Set((policy.roleTerms ?? []).map((term) => String(term).toLowerCase()));
+  if (markers.length === 0 || roleTerms.size === 0) return [];
+  const markerPattern = markers.map((marker) => marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  const expression = new RegExp(`(?:^|\\s)(?:${markerPattern})\\s+(.+?)(?=(?:\\s+(?:и\\s+)?(?:${markerPattern})\\s+)|[,;:—–]|\\s+(?:а|but)\\s+|$)`, 'giu');
+  return [...expandSearchText(query).toLowerCase().matchAll(expression)]
+    .map((match) => [...new Set(searchTerms(match[1]).filter((term) => roleTerms.has(term)))])
+    .filter((terms) => terms.length > 0);
 }
 
 function englishMorphologicalVariants(term) {
@@ -920,6 +933,8 @@ function searchContext(database, query, limit, filters = {}) {
   const terms = searchTerms(query);
   const directTerms = directSearchTerms(query);
   const boostTerms = rankingTerms(query);
+  const explicitlyRequestsTest = boostTerms.includes('test');
+  const negativeRoleGroups = negatedRoleTermGroups(query);
   const fingerprint = database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value ?? null;
   const indexedDocuments = database.prepare('SELECT COUNT(*) count FROM context_search').get().count;
   if (terms.length === 0 || !fingerprint || indexedDocuments === 0) {
@@ -976,6 +991,7 @@ function searchContext(database, query, limit, filters = {}) {
     const path = String(item.path ?? '').replaceAll('\\', '/');
     const normalizedPath = path.toLowerCase();
     const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(path);
+    const isExplicitTestCandidate = isTest || /^test[-_.]?/i.test(basename(path));
     const normalizedTitle = expandSearchText(item.title).toLowerCase();
     const reasons = ['SQLite FTS5 lexical match'];
     let score = candidateLimit - index;
@@ -1005,11 +1021,25 @@ function searchContext(database, query, limit, filters = {}) {
       score += identityScore;
       reasons.push(`path/title affinity ${identityMatches.join(', ')}`);
     }
+    if (changeType === 'tests' && isExplicitTestCandidate && explicitlyRequestsTest) {
+      const explicitTestAffinity = contextSearchRanking.explicitTestAffinity ?? {};
+      const explicitTestScore = Math.min(
+        identityMatches.length * Number(explicitTestAffinity.scorePerMatch ?? 0),
+        Number(explicitTestAffinity.maximumScore ?? 0));
+      score += explicitTestScore;
+      if (explicitTestScore > 0) reasons.push(`explicit test behavior affinity ${identityMatches.length} terms`);
+    }
+    if (changeType === 'tests' && !isExplicitTestCandidate && explicitlyRequestsTest) {
+      score -= Number(contextSearchRanking.explicitTestAffinity?.nonTestPenalty ?? 0);
+      reasons.push('production candidate penalty for explicit test intent');
+    }
     for (const boost of contextSearchRanking.identityBoosts ?? []) {
       const matchesChangeType = !(boost.changeTypes?.length)
         || boost.changeTypes.some((candidate) => String(candidate).toLowerCase() === changeType);
       if (!matchesChangeType) continue;
       const eligibleQueryTerms = boost.directOnly ? directTerms : boostTerms;
+      if (changeType === 'tests' && isTest && !String(boost.id ?? '').toLowerCase().includes('test')) continue;
+      if ((boost.excludedQueryTerms ?? []).some((term) => eligibleQueryTerms.includes(String(term).toLowerCase()))) continue;
       const eligibleIdentity = boost.identityScope === 'file' ? searchableFileIdentity : searchablePath;
       const queryMatches = (boost.queryTerms ?? []).filter((term) => eligibleQueryTerms.includes(String(term).toLowerCase()));
       const identityMatchesBoost = (boost.identityTerms ?? []).filter((term) =>
@@ -1058,6 +1088,7 @@ function searchContext(database, query, limit, filters = {}) {
     }
     for (const boost of contextSearchRanking.pathBoosts ?? []) {
       const eligibleQueryTerms = boost.directOnly ? directTerms : boostTerms;
+      if ((boost.excludedQueryTerms ?? []).some((term) => eligibleQueryTerms.includes(String(term).toLowerCase()))) continue;
       const matchedTerms = (boost.queryTerms ?? []).filter((term) => eligibleQueryTerms.includes(String(term).toLowerCase()));
       const matchesIntent = matchedTerms.length >= Number(boost.minimumMatches ?? 1);
       const matchesPath = (boost.pathPrefixes ?? []).some((pathPrefix) =>
@@ -1080,6 +1111,17 @@ function searchContext(database, query, limit, filters = {}) {
         reasons.push(`matched-role file-name affinity ${fileNameMatches.join(', ')}`);
       }
     }
+    const negatedRolePolicy = contextSearchRanking.negatedRolePenalty ?? {};
+    for (const negativeRoleGroup of negativeRoleGroups) {
+      const matchedNegativeRoles = negativeRoleGroup.filter((term) => searchableFileIdentity.includes(term));
+      const requiredMatches = Math.min(2, negativeRoleGroup.length);
+      if (matchedNegativeRoles.length < requiredMatches) continue;
+      const penalty = Math.min(
+        matchedNegativeRoles.length * Number(negatedRolePolicy.scorePerMatch ?? 0),
+        Number(negatedRolePolicy.maximumScorePerPhrase ?? Number.MAX_SAFE_INTEGER));
+      score -= penalty;
+      reasons.push(`negated role penalty ${matchedNegativeRoles.join(', ')}`);
+    }
     if (isTest && changeType !== 'tests') score -= Number(contextSearchRanking.nonTestPenalty ?? 25);
     const isFrontendPath = normalizedPath.startsWith('fooddiary.web.client/');
     const isCode = item.recordType === 'code';
@@ -1097,7 +1139,7 @@ function searchContext(database, query, limit, filters = {}) {
     if (!requestsAbstraction && /\/I[A-Z][^/]*\.cs$/.test(path)) {
       score -= Number(contextSearchRanking.interfacePathPenalty ?? 0);
     }
-    if (/\.[^./]+\.cs$/i.test(path)) {
+    if (changeType !== 'tests' && /\.[^./]+\.cs$/i.test(path)) {
       score -= Number(contextSearchRanking.companionFilePenalty ?? 0);
       reasons.push('companion file ranked after primary declaration');
     }

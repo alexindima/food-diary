@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1057,
+    "contracts": 1058,
     "ambiguousContracts": 3,
-    "consumerEdges": 7446,
-    "productionConsumerEdges": 4494,
-    "testConsumerEdges": 2952,
-    "consumedContracts": 1057,
+    "consumerEdges": 7452,
+    "productionConsumerEdges": 4499,
+    "testConsumerEdges": 2953,
+    "consumedContracts": 1058,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -7351,6 +7351,22 @@
       ],
       "definitionPaths": [
         "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportReadModelRepository.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "IContentReportTargetReadService",
+      "roles": [
+        "Service"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportTargetReadService.cs"
       ],
       "ambiguous": false
     },
@@ -19969,7 +19985,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdminHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "AdoptMealPlanCommand",
@@ -23622,7 +23638,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/ContentReports/ContentReportsFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "CreateContentReportCommand",
@@ -29186,7 +29202,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "DismissContentReportCommand",
@@ -42355,7 +42371,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserAchievementStoreIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IAchievementReconciliationHandler",
@@ -51471,6 +51487,58 @@
       "referenceCount": 1
     },
     {
+      "contract": "IContentReportTargetReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportTargetReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.ContentReports/Commands/CreateContentReport/CreateContentReportCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IContentReportTargetReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportTargetReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Moderation.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IContentReportTargetReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportTargetReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/ContentReports/ContentReportRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IContentReportTargetReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportTargetReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/ContentReports/ContentReportsFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
       "contract": "IContentReportWriteRepository",
       "roles": [
         "WriteRepository"
@@ -51546,7 +51614,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/ContentReports/ContentReportsFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 7
     },
     {
       "contract": "IContentReportWriteRepository",
@@ -54055,7 +54123,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/ContentReports/ContentReportsFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 2
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -72917,7 +72985,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
       "isTest": false,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "IOutboxMessage",
@@ -81092,6 +81160,19 @@
         "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRefreshTokenSessionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Identity/Authentication/Services/AuthenticationTokenService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -81106,6 +81187,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRefreshTokenSessionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -81159,7 +81253,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Password.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 6
     },
     {
       "contract": "IRefreshTokenSessionWriteRepository",
@@ -81172,7 +81266,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 7
     },
     {
       "contract": "IRefreshTokenSessionWriteRepository",
@@ -107718,7 +107812,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdminHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "UpdateCurrentFastingCheckInCommand",

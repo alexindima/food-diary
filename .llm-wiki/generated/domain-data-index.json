@@ -4,7 +4,7 @@
     "domainTypes": 262,
     "entities": 78,
     "valueObjects": 115,
-    "invariants": 482,
+    "invariants": 484,
     "persistenceMappings": 86,
     "indexes": 152,
     "relationships": 100
@@ -3440,28 +3440,42 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "FoodDiary.Domain/Entities/Social/ContentReport.cs",
-      "line": 27
+      "line": 28
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"TargetId is required.\", nameof(targetId))",
       "path": "FoodDiary.Domain/Entities/Social/ContentReport.cs",
-      "line": 31
+      "line": 32
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"ReviewerUserId is required.\", nameof(reviewerUserId))",
+      "path": "FoodDiary.Domain/Entities/Social/ContentReport.cs",
+      "line": 75
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"Only pending content reports can be resolved.\")",
+      "path": "FoodDiary.Domain/Entities/Social/ContentReport.cs",
+      "line": 79
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Reason is required.\", nameof(reason))",
       "path": "FoodDiary.Domain/Entities/Social/ContentReport.cs",
-      "line": 70
+      "line": 85
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(reason), $\"Reason must be at most {ReasonMaxLength} characters.\")",
       "path": "FoodDiary.Domain/Entities/Social/ContentReport.cs",
-      "line": 75
+      "line": 90
     },
     {
       "area": "FoodDiary",
@@ -5238,7 +5252,7 @@
       "entity": "AchievementEvaluationOutboxMessage",
       "table": "AchievementEvaluationOutbox",
       "indexes": [
-        "message => message.UserId)",
+        "message => message.UserId).IsUnique()",
         "message => new { message.ProcessedOnUtc, message.DeadLetteredOnUtc, message.NextAttemptOnUtc, message.LockedUntilUtc })"
       ],
       "relationships": [],
@@ -5441,7 +5455,7 @@
       "table": null,
       "indexes": [
         "e => new { e.Status, e.CreatedOnUtc })",
-        "e => new { e.UserId, e.TargetType, e.TargetId })"
+        "e => new { e.UserId, e.TargetType, e.TargetId }).IsUnique()"
       ],
       "relationships": [
         {

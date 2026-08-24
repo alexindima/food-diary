@@ -54,6 +54,10 @@ foreach ($receiptContract in @('verify-progress.json', 'Write-VerifyProgress', "
 if ($verifyBody -notmatch "'affected smoke'" -or $verifyBody -notmatch 'Invoke-LlmWikiParallelSmoke\.ps1' -or $verifyBody -match "'adaptive verification' 'Invoke-LlmWikiAdaptiveVerification") {
     throw 'Ordinary product verify still replays the complete Wiki adaptive eval suite instead of affected tool regressions.'
 }
+if ($verifyBody -notmatch "verifyStageExpectedSeconds\['affected smoke'\]\s*=\s*240" -or
+    $verifyBody -notmatch 'Timeout\s*=\s*420') {
+    throw 'Affected smoke does not reserve enough time for the complete promoted context-search suite.'
+}
 if ($facadeText -notmatch "CI -ne 'true'" -or $facadeText -notmatch 'content-addressed stage resume') {
     throw 'Local verify does not enable resumable stages by default while keeping CI uncached.'
 }

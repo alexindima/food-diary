@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 151,
     "componentsWithoutDirectSpecs": 130,
     "criticalSymbolsWithoutTestReferences": 21,
-    "explicitDebtMarkers": 4
+    "explicitDebtMarkers": 5
   },
   "projectDependencyViolations": [],
   "unusedProjectAllowances": [],
@@ -5470,6 +5470,11 @@
     }
   ],
   "explicitDebtMarkers": [
+    {
+      "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
+      "line": 47,
+      "marker": "#pragma warning disable"
+    },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
       "line": 94,

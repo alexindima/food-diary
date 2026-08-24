@@ -57,7 +57,7 @@ native command length and unions the path results. Large generated or imported
 change sets therefore preserve semantic test ranking on Windows without exceeding
 the process command-line limit.
 
-Ordinary `wiki verify` is always affected and resumable. `wiki verify-full`, pre-push, and CI retain the explicit full-repository gate. Successful stage receipts survive a later timeout, so rerunning `verify` continues from unchanged green stages rather than replaying them.
+Ordinary `wiki verify` is always affected and resumable. `wiki verify-full`, pre-push, and CI retain the explicit full-repository gate. Successful stage receipts survive a later timeout, so rerunning `verify` continues from unchanged green stages rather than replaying them. The affected-smoke stage reserves a 240-second expected duration and a 420-second hard timeout so the promoted 450-case context-search suite can complete alongside graph prewarm and other selected smoke groups.
 
 When concurrent unfinished frontend work makes frontend indexes stale, use
 `wiki verify -Area Backend` to verify only backend generators and receive an
