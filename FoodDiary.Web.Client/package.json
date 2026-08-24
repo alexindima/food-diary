@@ -133,7 +133,7 @@
         "@eslint-community/eslint-plugin-eslint-comments": "^4.7.2",
         "@material-design-icons/font": "^0.14.15",
         "@playwright/test": "^1.62.1",
-        "@storybook/angular": "^10.5.8",
+        "@storybook/angular": "^10.5.10",
         "@types/express": "^5.0.6",
         "@types/node": "^26.2.0",
         "@typescript-eslint/eslint-plugin": "^8.67.0",
