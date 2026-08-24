@@ -25464,11 +25464,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/TelemetryActionFilter.cs",
-      "nonBlankLines": 205,
-      "decisionPoints": 23,
+      "nonBlankLines": 211,
+      "decisionPoints": 25,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 38.6
+      "structuralRiskScore": 41.72
     },
     {
       "path": "FoodDiary.Presentation.Api/Hubs/EmailVerificationHub.cs",
