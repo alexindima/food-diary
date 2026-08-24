@@ -459,7 +459,7 @@ public partial class AdminFeatureTests {
             ReportTargetType.Recipe,
             Guid.NewGuid(),
             "Incorrect content");
-        report.MarkDismissed("  resolved  ");
+        report.MarkDismissed(UserId.New(), "  resolved  ");
         var repository = new CountingContentReportRepository(0, [report]);
         GetAdminContentReportsQueryHandler handler = new(CreateAdminContentReadService(contentReportRepository: repository));
 

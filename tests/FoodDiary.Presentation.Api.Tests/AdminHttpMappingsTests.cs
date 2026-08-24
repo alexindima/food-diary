@@ -59,11 +59,26 @@ public sealed class AdminHttpMappingsTests {
     }
 
     [Fact]
-    public void AdminUserUpdateHttpRequest_ToCommand_WithNullRoles_MapsEmptyRoles() {
+    public void AdminUserUpdateHttpRequest_ToCommand_WithNullRoles_PreservesNull() {
         var request = new AdminUserUpdateHttpRequest(
             IsActive: null,
             IsEmailConfirmed: null,
             Roles: null,
+            Language: null,
+            AiInputTokenLimit: null,
+            AiOutputTokenLimit: null);
+
+        UpdateAdminUserCommand command = request.ToCommand(Guid.NewGuid(), Guid.NewGuid());
+
+        Assert.Null(command.Roles);
+    }
+
+    [Fact]
+    public void AdminUserUpdateHttpRequest_ToCommand_WithEmptyRoles_PreservesExplicitClear() {
+        var request = new AdminUserUpdateHttpRequest(
+            IsActive: null,
+            IsEmailConfirmed: null,
+            Roles: [],
             Language: null,
             AiInputTokenLimit: null,
             AiOutputTokenLimit: null);
@@ -158,15 +173,18 @@ public sealed class AdminHttpMappingsTests {
     [Fact]
     public void AdminReportActionHttpRequest_ToCommands_MapReportIdAndNote() {
         var reportId = Guid.NewGuid();
+        var reviewerUserId = Guid.NewGuid();
         var request = new AdminReportActionHttpRequest("Reviewed");
 
-        ReviewContentReportCommand review = request.ToReviewCommand(reportId);
-        DismissContentReportCommand dismiss = request.ToDismissCommand(reportId);
+        ReviewContentReportCommand review = request.ToReviewCommand(reportId, reviewerUserId);
+        DismissContentReportCommand dismiss = request.ToDismissCommand(reportId, reviewerUserId);
 
         Assert.Multiple(
             () => Assert.Equal(reportId, review.ReportId),
+            () => Assert.Equal(reviewerUserId, review.ReviewerUserId),
             () => Assert.Equal("Reviewed", review.AdminNote),
             () => Assert.Equal(reportId, dismiss.ReportId),
+            () => Assert.Equal(reviewerUserId, dismiss.ReviewerUserId),
             () => Assert.Equal("Reviewed", dismiss.AdminNote));
     }
 

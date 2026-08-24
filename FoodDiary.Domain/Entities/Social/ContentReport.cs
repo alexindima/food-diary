@@ -17,6 +17,7 @@ public sealed class ContentReport : AggregateRoot<ContentReportId> {
     public string Reason { get; private set; } = string.Empty;
     public ReportStatus Status { get; private set; }
     public string? AdminNote { get; private set; }
+    public UserId? ReviewedByUserId { get; private set; }
     public DateTime? ReviewedAtUtc { get; private set; }
 
     private ContentReport() {
@@ -47,22 +48,36 @@ public sealed class ContentReport : AggregateRoot<ContentReportId> {
         return report;
     }
 
-    public void MarkReviewed(string? adminNote) {
+    public void MarkReviewed(UserId reviewerUserId, string? adminNote) {
+        EnsurePending(reviewerUserId);
         string? normalizedAdminNote = DomainGuard.OptionalText(adminNote, AdminNoteMaxLength, nameof(adminNote));
 
         Status = ReportStatus.Reviewed;
         AdminNote = normalizedAdminNote;
+        ReviewedByUserId = reviewerUserId;
         ReviewedAtUtc = DomainTime.UtcNow;
         SetModified();
     }
 
-    public void MarkDismissed(string? adminNote) {
+    public void MarkDismissed(UserId reviewerUserId, string? adminNote) {
+        EnsurePending(reviewerUserId);
         string? normalizedAdminNote = DomainGuard.OptionalText(adminNote, AdminNoteMaxLength, nameof(adminNote));
 
         Status = ReportStatus.Dismissed;
         AdminNote = normalizedAdminNote;
+        ReviewedByUserId = reviewerUserId;
         ReviewedAtUtc = DomainTime.UtcNow;
         SetModified();
+    }
+
+    private void EnsurePending(UserId reviewerUserId) {
+        if (reviewerUserId == UserId.Empty) {
+            throw new ArgumentException("ReviewerUserId is required.", nameof(reviewerUserId));
+        }
+
+        if (Status != ReportStatus.Pending) {
+            throw new InvalidOperationException("Only pending content reports can be resolved.");
+        }
     }
 
     private static string NormalizeReason(string reason) {

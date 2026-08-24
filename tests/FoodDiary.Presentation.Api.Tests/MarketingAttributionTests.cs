@@ -460,16 +460,47 @@ public sealed class MarketingAttributionTests {
 
         public Task<MarketingAttributionSummaryRecord> GetSummaryAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) {
             List<MarketingAttributionEventRecord> events = [.. _events.Where(x => x.OccurredAtUtc >= sinceUtc)];
+            static bool IsAttributed(MarketingAttributionEventRecord x) =>
+                x.UtmSource is not null || x.UtmMedium is not null || x.UtmCampaign is not null ||
+                x.UtmContent is not null || x.UtmTerm is not null || x.ReferrerHost is not null;
             return Task.FromResult(new MarketingAttributionSummaryRecord(
-                events.Count, events.Count(x => x.EventType == "page_landing"), events.Count(x => x.EventType == "signup_completed"),
-                events.Count(x => x.EventType == "premium_started"), events.Select(x => x.AnonymousId).Distinct().Count(),
-                events.Select(x => x.SessionId).Distinct().Count(), events.Count(x => x.UtmSource is not null),
-                events.Count(x => x.EventType == "page_landing" && x.UtmSource is not null), events.MaxBy(x => x.OccurredAtUtc)?.OccurredAtUtc,
-                [], [], [.. events.OrderByDescending(x => x.OccurredAtUtc).Take(50)]));
+                events.Count, events.Count(x => string.Equals(x.EventType, "page_landing", StringComparison.Ordinal)),
+                events.Count(x => string.Equals(x.EventType, "signup_completed", StringComparison.Ordinal)),
+                events.Count(x => string.Equals(x.EventType, "premium_started", StringComparison.Ordinal)),
+                events.Select(x => x.AnonymousId).Distinct(StringComparer.Ordinal).Count(),
+                events.Select(x => x.SessionId).Distinct(StringComparer.Ordinal).Count(), events.Count(IsAttributed),
+                events.Count(x => string.Equals(x.EventType, "page_landing", StringComparison.Ordinal) && IsAttributed(x)),
+                events.MaxBy(x => x.OccurredAtUtc)?.OccurredAtUtc,
+                BuildBreakdown([.. events.Where(x => x.UtmCampaign is not null)], includeCampaign: true),
+                BuildBreakdown(events, includeCampaign: false),
+                [.. events.OrderByDescending(x => x.OccurredAtUtc).Take(50)]));
         }
 
+        private static IReadOnlyList<MarketingAttributionBreakdownRecord> BuildBreakdown(
+            IReadOnlyCollection<MarketingAttributionEventRecord> events,
+            bool includeCampaign) =>
+            [.. events.GroupBy(x => new {
+                    Source = x.UtmSource ?? x.ReferrerHost ?? "direct",
+                    Medium = x.UtmMedium ?? (x.ReferrerHost is null ? "none" : "referral"),
+                    Campaign = includeCampaign ? x.UtmCampaign ?? "none" : "all",
+                })
+                .Select(group => new MarketingAttributionBreakdownRecord(
+                    group.Key.Source, group.Key.Medium, group.Key.Campaign, group.Count(),
+                    group.Count(x => string.Equals(x.EventType, "page_landing", StringComparison.Ordinal)),
+                    group.Count(x => string.Equals(x.EventType, "signup_completed", StringComparison.Ordinal)),
+                    group.Count(x => string.Equals(x.EventType, "premium_started", StringComparison.Ordinal)),
+                    group.Select(x => x.AnonymousId).Distinct(StringComparer.Ordinal).Count(),
+                    group.Select(x => x.SessionId).Distinct(StringComparer.Ordinal).Count(),
+                    group.Max(x => (DateTime?)x.OccurredAtUtc)))
+                .OrderByDescending(x => x.Events)
+                .Take(10)];
+
         public Task<MarketingAttributionEventRecord?> GetLandingAsync(string anonymousId, string sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) =>
-            Task.FromResult(_events.Where(x => x.EventType == "page_landing" && x.AnonymousId == anonymousId && x.SessionId == sessionId && x.OccurredAtUtc >= sinceUtc).MaxBy(x => x.OccurredAtUtc));
+            Task.FromResult(_events.Where(x =>
+                string.Equals(x.EventType, "page_landing", StringComparison.Ordinal) &&
+                string.Equals(x.AnonymousId, anonymousId, StringComparison.Ordinal) &&
+                string.Equals(x.SessionId, sessionId, StringComparison.Ordinal) &&
+                x.OccurredAtUtc >= sinceUtc).MaxBy(x => x.OccurredAtUtc));
 
         public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) {
             return Task.FromResult(_events

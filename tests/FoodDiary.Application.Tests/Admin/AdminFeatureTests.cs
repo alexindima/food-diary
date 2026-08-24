@@ -416,7 +416,7 @@ public partial class AdminFeatureTests {
             new ContentReportAdministrationService(new CountingContentReportRepository(0)));
         var reportId = Guid.NewGuid();
 
-        Result result = await handler.Handle(new ReviewContentReportCommand(reportId, "handled"), CancellationToken.None);
+        Result result = await handler.Handle(new ReviewContentReportCommand(reportId, Guid.NewGuid(), "handled"), CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("ContentReport.NotFound", result.Error.Code);
@@ -432,11 +432,13 @@ public partial class AdminFeatureTests {
         var repository = new CountingContentReportRepository(0, [report]);
         var handler = new ReviewContentReportCommandHandler(new ContentReportAdministrationService(repository));
 
-        Result result = await handler.Handle(new ReviewContentReportCommand(report.Id.Value, "  verified  "), CancellationToken.None);
+        var reviewerUserId = UserId.New();
+        Result result = await handler.Handle(new ReviewContentReportCommand(report.Id.Value, reviewerUserId.Value, "  verified  "), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal(ReportStatus.Reviewed, report.Status);
         Assert.Equal("verified", report.AdminNote);
+        Assert.Equal(reviewerUserId, report.ReviewedByUserId);
         Assert.Equal(1, repository.UpdateCallCount);
     }
 
@@ -446,7 +448,7 @@ public partial class AdminFeatureTests {
             new ContentReportAdministrationService(new CountingContentReportRepository(0)));
         var reportId = Guid.NewGuid();
 
-        Result result = await handler.Handle(new DismissContentReportCommand(reportId, "duplicate"), CancellationToken.None);
+        Result result = await handler.Handle(new DismissContentReportCommand(reportId, Guid.NewGuid(), "duplicate"), CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("ContentReport.NotFound", result.Error.Code);
@@ -462,12 +464,32 @@ public partial class AdminFeatureTests {
         var repository = new CountingContentReportRepository(0, [report]);
         var handler = new DismissContentReportCommandHandler(new ContentReportAdministrationService(repository));
 
-        Result result = await handler.Handle(new DismissContentReportCommand(report.Id.Value, "  duplicate  "), CancellationToken.None);
+        var reviewerUserId = UserId.New();
+        Result result = await handler.Handle(new DismissContentReportCommand(report.Id.Value, reviewerUserId.Value, "  duplicate  "), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal(ReportStatus.Dismissed, report.Status);
         Assert.Equal("duplicate", report.AdminNote);
+        Assert.Equal(reviewerUserId, report.ReviewedByUserId);
         Assert.Equal(1, repository.UpdateCallCount);
+    }
+
+    [Fact]
+    public async Task DismissContentReportHandler_WhenReportAlreadyResolved_ReturnsConflictWithoutUpdate() {
+        var report = ContentReport.Create(UserId.New(), ReportTargetType.Recipe, Guid.NewGuid(), "Incorrect content");
+        report.MarkReviewed(UserId.New(), "verified");
+        var repository = new CountingContentReportRepository(0, [report]);
+        var handler = new DismissContentReportCommandHandler(new ContentReportAdministrationService(repository));
+
+        Result result = await handler.Handle(
+            new DismissContentReportCommand(report.Id.Value, Guid.NewGuid(), "overwrite"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("ContentReport.AlreadyResolved", result.Error.Code),
+            () => Assert.Equal(ReportStatus.Reviewed, report.Status),
+            () => Assert.Equal(0, repository.UpdateCallCount));
     }
 
     private static User CreateUserWithRoles(string email, IReadOnlyList<string> roleNames) {

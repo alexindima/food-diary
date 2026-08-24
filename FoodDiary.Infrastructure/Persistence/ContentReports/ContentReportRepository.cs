@@ -9,7 +9,24 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.ContentReports;
 
 internal sealed class ContentReportRepository(FoodDiaryDbContext context)
-    : IContentReportReadModelRepository, IContentReportWriteRepository {
+    : IContentReportReadModelRepository, IContentReportWriteRepository, IContentReportTargetReadService {
+
+    public Task<bool> IsReportableAsync(
+        UserId reporterUserId,
+        ReportTargetType targetType,
+        Guid targetId,
+        CancellationToken cancellationToken = default) =>
+        targetType switch {
+            ReportTargetType.Recipe => context.Recipes.AsNoTracking().AnyAsync(
+                recipe => recipe.Id == new RecipeId(targetId)
+                    && (recipe.Visibility == Visibility.Public || recipe.UserId == reporterUserId),
+                cancellationToken),
+            ReportTargetType.Comment => context.RecipeComments.AsNoTracking().AnyAsync(
+                comment => comment.Id == new RecipeCommentId(targetId)
+                    && (comment.Recipe.Visibility == Visibility.Public || comment.Recipe.UserId == reporterUserId),
+                cancellationToken),
+            _ => Task.FromResult(false),
+        };
     public async Task<ContentReport> AddAsync(ContentReport report, CancellationToken cancellationToken = default) {
         await context.ContentReports.AddAsync(report, cancellationToken).ConfigureAwait(false);
         return report;

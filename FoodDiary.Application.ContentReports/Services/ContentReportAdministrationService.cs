@@ -11,20 +11,23 @@ public sealed class ContentReportAdministrationService(IContentReportWriteReposi
     : IContentReportAdministrationService {
     public Task<Result> MarkReviewedAsync(
         ContentReportId reportId,
+        UserId reviewerUserId,
         string? adminNote,
         CancellationToken cancellationToken) =>
-        UpdateStatusAsync(reportId, adminNote, static (report, note) => report.MarkReviewed(note), cancellationToken);
+        UpdateStatusAsync(reportId, reviewerUserId, adminNote, static (report, reviewer, note) => report.MarkReviewed(reviewer, note), cancellationToken);
 
     public Task<Result> MarkDismissedAsync(
         ContentReportId reportId,
+        UserId reviewerUserId,
         string? adminNote,
         CancellationToken cancellationToken) =>
-        UpdateStatusAsync(reportId, adminNote, static (report, note) => report.MarkDismissed(note), cancellationToken);
+        UpdateStatusAsync(reportId, reviewerUserId, adminNote, static (report, reviewer, note) => report.MarkDismissed(reviewer, note), cancellationToken);
 
     private async Task<Result> UpdateStatusAsync(
         ContentReportId reportId,
+        UserId reviewerUserId,
         string? adminNote,
-        Action<ContentReport, string?> transition,
+        Action<ContentReport, UserId, string?> transition,
         CancellationToken cancellationToken) {
         ContentReport? report = await reportRepository
             .GetByIdAsync(reportId, asTracking: true, cancellationToken)
@@ -33,7 +36,11 @@ public sealed class ContentReportAdministrationService(IContentReportWriteReposi
             return Result.Failure(Errors.ContentReport.NotFound(reportId.Value));
         }
 
-        transition(report, adminNote);
+        if (report.Status != Domain.Enums.ReportStatus.Pending) {
+            return Result.Failure(Errors.ContentReport.AlreadyResolved);
+        }
+
+        transition(report, reviewerUserId, adminNote);
         await reportRepository.UpdateAsync(report, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }

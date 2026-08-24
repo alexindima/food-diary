@@ -13,6 +13,7 @@ namespace FoodDiary.Application.ContentReports.Commands.CreateContentReport;
 
 public sealed class CreateContentReportCommandHandler(
     IContentReportWriteRepository reportRepository,
+    IContentReportTargetReadService targetReadService,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<CreateContentReportCommand, Result<ContentReportModel>> {
     public async Task<Result<ContentReportModel>> Handle(
@@ -32,6 +33,13 @@ public sealed class CreateContentReportCommandHandler(
             "Target type must be 'Recipe' or 'Comment'.");
         if (targetTypeResult.IsFailure) {
             return Result.Failure<ContentReportModel>(targetTypeResult.Error);
+        }
+
+        bool targetExists = await targetReadService
+            .IsReportableAsync(userIdResult.Value, targetTypeResult.Value, command.TargetId, cancellationToken)
+            .ConfigureAwait(false);
+        if (!targetExists) {
+            return Result.Failure<ContentReportModel>(Errors.ContentReport.TargetNotFound);
         }
 
         bool alreadyReported = await reportRepository.HasUserReportedAsync(

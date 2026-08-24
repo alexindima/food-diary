@@ -24,12 +24,18 @@ public sealed class AdminModerationController(ISender mediator) : BaseApiControl
     [HttpPost("{id:guid}/review")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> Review(Guid id, [FromBody] AdminReportActionHttpRequest request) =>
-        HandleNoContent(request.ToReviewCommand(id));
+    public Task<IActionResult> Review(
+        Guid id,
+        [FromCurrentUser] Guid reviewerUserId,
+        [FromBody] AdminReportActionHttpRequest request) =>
+        HandleNoContent(request.ToReviewCommand(id, reviewerUserId));
 
     [HttpPost("{id:guid}/dismiss")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> Dismiss(Guid id, [FromBody] AdminReportActionHttpRequest request) =>
-        HandleNoContent(request.ToDismissCommand(id));
+    public Task<IActionResult> Dismiss(
+        Guid id,
+        [FromCurrentUser] Guid reviewerUserId,
+        [FromBody] AdminReportActionHttpRequest request) =>
+        HandleNoContent(request.ToDismissCommand(id, reviewerUserId));
 }

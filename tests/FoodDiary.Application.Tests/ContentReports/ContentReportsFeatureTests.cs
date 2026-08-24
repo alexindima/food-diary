@@ -14,7 +14,7 @@ public class ContentReportsFeatureTests {
     [Fact]
     public async Task CreateContentReport_WithValidData_Succeeds() {
         IContentReportWriteRepository repository = CreateContentReportRepository();
-        var handler = new CreateContentReportCommandHandler(repository, Substitute.For<ICurrentUserAccessService>());
+        CreateContentReportCommandHandler handler = CreateHandler(repository);
 
         Result<ContentReportModel> result = await handler.Handle(
             new CreateContentReportCommand(Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam content"),
@@ -32,7 +32,7 @@ public class ContentReportsFeatureTests {
         var targetId = Guid.NewGuid();
         IContentReportWriteRepository repository = CreateContentReportRepository((new UserId(userId), ReportTargetType.Recipe, targetId));
 
-        var handler = new CreateContentReportCommandHandler(repository, Substitute.For<ICurrentUserAccessService>());
+        CreateContentReportCommandHandler handler = CreateHandler(repository);
         Result<ContentReportModel> result = await handler.Handle(
             new CreateContentReportCommand(userId, "Recipe", targetId, "Spam"),
             CancellationToken.None);
@@ -43,7 +43,7 @@ public class ContentReportsFeatureTests {
 
     [Fact]
     public async Task CreateContentReport_WithNullUserId_ReturnsFailure() {
-        var handler = new CreateContentReportCommandHandler(CreateContentReportRepository(), Substitute.For<ICurrentUserAccessService>());
+        CreateContentReportCommandHandler handler = CreateHandler(CreateContentReportRepository());
 
         Result<ContentReportModel> result = await handler.Handle(
             new CreateContentReportCommand(UserId: null, "Recipe", Guid.NewGuid(), "Spam"),
@@ -54,7 +54,7 @@ public class ContentReportsFeatureTests {
 
     [Fact]
     public async Task CreateContentReport_WithInvalidTargetType_ReturnsValidationFailure() {
-        var handler = new CreateContentReportCommandHandler(CreateContentReportRepository(), Substitute.For<ICurrentUserAccessService>());
+        CreateContentReportCommandHandler handler = CreateHandler(CreateContentReportRepository());
 
         Result<ContentReportModel> result = await handler.Handle(
             new CreateContentReportCommand(Guid.NewGuid(), "Unknown", Guid.NewGuid(), "Spam"),
@@ -62,6 +62,32 @@ public class ContentReportsFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateContentReport_WhenTargetDoesNotExist_ReturnsNotFoundWithoutPersisting() {
+        IContentReportWriteRepository repository = CreateContentReportRepository();
+        IContentReportTargetReadService targetReadService = Substitute.For<IContentReportTargetReadService>();
+        CreateContentReportCommandHandler handler = new(
+            repository,
+            targetReadService,
+            Substitute.For<ICurrentUserAccessService>());
+
+        Result<ContentReportModel> result = await handler.Handle(
+            new CreateContentReportCommand(Guid.NewGuid(), "Comment", Guid.NewGuid(), "Spam"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("ContentReport.TargetNotFound", result.Error.Code);
+        await repository.DidNotReceive().AddAsync(Arg.Any<ContentReport>(), Arg.Any<CancellationToken>());
+    }
+
+    private static CreateContentReportCommandHandler CreateHandler(IContentReportWriteRepository repository) {
+        IContentReportTargetReadService targetReadService = Substitute.For<IContentReportTargetReadService>();
+        targetReadService
+            .IsReportableAsync(Arg.Any<UserId>(), Arg.Any<ReportTargetType>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(_ => true);
+        return new CreateContentReportCommandHandler(repository, targetReadService, Substitute.For<ICurrentUserAccessService>());
     }
 
     private static IContentReportWriteRepository CreateContentReportRepository(

@@ -132,7 +132,7 @@ public sealed class SecondPassDomainHardeningTests {
             UserId.New(), "diet@example.com", "hash", new DateTime(2026, 1, 1), DietologistPermissions.AllEnabled));
 
         var report = ContentReport.Create(UserId.New(), ReportTargetType.Recipe, Guid.NewGuid(), "Reason");
-        Assert.Throws<ArgumentOutOfRangeException>(() => report.MarkReviewed(new string('x', 2001)));
+        Assert.Throws<ArgumentOutOfRangeException>(() => report.MarkReviewed(UserId.New(), new string('x', 2001)));
         Assert.Equal(ReportStatus.Pending, report.Status);
     }
 

@@ -70,7 +70,7 @@ public class SocialInvariantTests {
         var report = ContentReport.Create(
             UserId.New(), ReportTargetType.Recipe, Guid.NewGuid(), "spam");
 
-        report.MarkReviewed("  Confirmed spam  ");
+        report.MarkReviewed(UserId.New(), "  Confirmed spam  ");
 
         Assert.Equal(ReportStatus.Reviewed, report.Status);
         Assert.Equal("Confirmed spam", report.AdminNote);
@@ -82,10 +82,24 @@ public class SocialInvariantTests {
         var report = ContentReport.Create(
             UserId.New(), ReportTargetType.Recipe, Guid.NewGuid(), "spam");
 
-        report.MarkDismissed(adminNote: null);
+        report.MarkDismissed(UserId.New(), adminNote: null);
 
         Assert.Equal(ReportStatus.Dismissed, report.Status);
         Assert.Null(report.AdminNote);
         Assert.NotNull(report.ReviewedAtUtc);
+    }
+
+    [Fact]
+    public void ContentReport_ResolveTwice_ThrowsAndPreservesFirstDecision() {
+        var report = ContentReport.Create(UserId.New(), ReportTargetType.Recipe, Guid.NewGuid(), "Spam");
+        var firstReviewer = UserId.New();
+        report.MarkReviewed(firstReviewer, "confirmed");
+
+        Assert.Throws<InvalidOperationException>(() => report.MarkDismissed(UserId.New(), "changed"));
+
+        Assert.Multiple(
+            () => Assert.Equal(ReportStatus.Reviewed, report.Status),
+            () => Assert.Equal(firstReviewer, report.ReviewedByUserId),
+            () => Assert.Equal("confirmed", report.AdminNote));
     }
 }

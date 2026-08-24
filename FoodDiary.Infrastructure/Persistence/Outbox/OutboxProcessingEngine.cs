@@ -19,7 +19,8 @@ internal static class OutboxProcessingEngine {
         Func<TMessage, object?> messageIdentity,
         ILogger logger,
         IQueryable<TMessage>? claimedQuery = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        Func<TMessage, DateTime, CancellationToken, Task<bool>>? tryMarkProcessedAsync = null)
         where TMessage : class, IOutboxMessage {
         if (batchSize <= 0) {
             return 0;
@@ -61,6 +62,7 @@ internal static class OutboxProcessingEngine {
                         dispatchAsync,
                         messageIdentity,
                         logger,
+                        tryMarkProcessedAsync,
                         cancellationToken).ConfigureAwait(false)) {
                     processed++;
                 }
@@ -89,6 +91,7 @@ internal static class OutboxProcessingEngine {
         Func<TMessage, CancellationToken, Task> dispatchAsync,
         Func<TMessage, object?> messageIdentity,
         ILogger logger,
+        Func<TMessage, DateTime, CancellationToken, Task<bool>>? tryMarkProcessedAsync,
         CancellationToken cancellationToken)
         where TMessage : class, IOutboxMessage {
         string outcome;
@@ -96,8 +99,11 @@ internal static class OutboxProcessingEngine {
             using var dispatchTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             dispatchTimeout.CancelAfter(options.DispatchTimeout);
             await dispatchAsync(message, dispatchTimeout.Token).ConfigureAwait(false);
-            message.MarkProcessed(timeProvider.GetUtcNow().UtcDateTime);
-            outcome = "processed";
+            DateTime processedOnUtc = timeProvider.GetUtcNow().UtcDateTime;
+            bool markedProcessed = tryMarkProcessedAsync is null
+                ? MarkProcessed(message, processedOnUtc)
+                : await tryMarkProcessedAsync(message, processedOnUtc, dispatchTimeout.Token).ConfigureAwait(false);
+            outcome = markedProcessed ? "processed" : "requeued";
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;
         } catch (OperationCanceledException ex) {
@@ -131,9 +137,18 @@ internal static class OutboxProcessingEngine {
             case "dead_lettered":
                 InfrastructureTelemetry.RecordOutboxMessages(outboxName, "dead_lettered", 1);
                 break;
+            case "requeued":
+                InfrastructureTelemetry.RecordOutboxMessages(outboxName, "requeued", 1);
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(outcome), outcome, "Unsupported outbox processing outcome.");
         }
+    }
+
+    private static bool MarkProcessed<TMessage>(TMessage message, DateTime processedOnUtc)
+        where TMessage : IOutboxMessage {
+        message.MarkProcessed(processedOnUtc);
+        return true;
     }
 
     private static string HandleFailure<TMessage>(

@@ -5,4 +5,5 @@ namespace FoodDiary.Application.Admin.Commands.ReviewContentReport;
 
 public sealed record ReviewContentReportCommand(
     Guid ReportId,
+    Guid ReviewerUserId,
     string? AdminNote) : ICommand<Result>;

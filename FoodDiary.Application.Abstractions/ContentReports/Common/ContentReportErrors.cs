@@ -12,4 +12,14 @@ public static class ContentReportErrors {
         "ContentReport.AlreadyReported",
         "You have already reported this content.",
         Kind: ErrorKind.Conflict);
+
+    public static Error TargetNotFound => new(
+        "ContentReport.TargetNotFound",
+        "The reported content does not exist.",
+        Kind: ErrorKind.NotFound);
+
+    public static Error AlreadyResolved => new(
+        "ContentReport.AlreadyResolved",
+        "The content report has already been resolved.",
+        Kind: ErrorKind.Conflict);
 }

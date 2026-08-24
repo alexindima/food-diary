@@ -87,7 +87,7 @@ public static class AdminHttpMappings {
                 UserId: userId,
                 IsActive: request.IsActive,
                 IsEmailConfirmed: request.IsEmailConfirmed,
-                Roles: request.Roles ?? [],
+                Roles: request.Roles,
                 Language: request.Language,
                 AiInputTokenLimit: request.AiInputTokenLimit,
                 AiOutputTokenLimit: request.AiOutputTokenLimit,
@@ -129,12 +129,12 @@ public static class AdminHttpMappings {
     }
 
     extension(AdminReportActionHttpRequest request) {
-        public ReviewContentReportCommand ToReviewCommand(Guid reportId) {
-            return new ReviewContentReportCommand(reportId, request.AdminNote);
+        public ReviewContentReportCommand ToReviewCommand(Guid reportId, Guid reviewerUserId) {
+            return new ReviewContentReportCommand(reportId, reviewerUserId, request.AdminNote);
         }
 
-        public DismissContentReportCommand ToDismissCommand(Guid reportId) {
-            return new DismissContentReportCommand(reportId, request.AdminNote);
+        public DismissContentReportCommand ToDismissCommand(Guid reportId, Guid reviewerUserId) {
+            return new DismissContentReportCommand(reportId, reviewerUserId, request.AdminNote);
         }
     }
 

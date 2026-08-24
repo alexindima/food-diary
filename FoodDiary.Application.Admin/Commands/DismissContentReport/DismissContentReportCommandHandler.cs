@@ -9,7 +9,7 @@ public sealed class DismissContentReportCommandHandler(IContentReportAdministrat
     : ICommandHandler<DismissContentReportCommand, Result> {
     public async Task<Result> Handle(DismissContentReportCommand command, CancellationToken cancellationToken) {
         return await administrationService
-            .MarkDismissedAsync((ContentReportId)command.ReportId, command.AdminNote, cancellationToken)
+            .MarkDismissedAsync((ContentReportId)command.ReportId, new UserId(command.ReviewerUserId), command.AdminNote, cancellationToken)
             .ConfigureAwait(false);
     }
 }

@@ -13,7 +13,7 @@ public partial class AdminFeatureTests {
         var userId = UserId.New();
         var targetId = Guid.NewGuid();
         var report = ContentReport.Create(userId, ReportTargetType.Recipe, targetId, " spam ");
-        report.MarkReviewed(" reviewed ");
+        report.MarkReviewed(UserId.New(), " reviewed ");
 
         AdminContentReportModel model = report.ToAdminModel();
 

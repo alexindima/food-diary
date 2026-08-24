@@ -15,6 +15,12 @@ internal sealed class ContentReportConfiguration : IEntityTypeConfiguration<Cont
             id => id.Value,
             value => new UserId(value));
 
+        builder.Property(e => e.ReviewedByUserId).HasConversion(
+            id => id.HasValue ? id.Value.Value : (Guid?)null,
+            value => value.HasValue ? new UserId(value.Value) : null);
+
+        builder.Property<uint>("xmin").IsRowVersion();
+
         builder.Property(e => e.Reason).HasMaxLength(1000).IsRequired();
         builder.Property(e => e.AdminNote).HasMaxLength(2000);
 
@@ -27,7 +33,7 @@ internal sealed class ContentReportConfiguration : IEntityTypeConfiguration<Cont
             .HasMaxLength(20);
 
         builder.HasIndex(e => new { e.Status, e.CreatedOnUtc });
-        builder.HasIndex(e => new { e.UserId, e.TargetType, e.TargetId });
+        builder.HasIndex(e => new { e.UserId, e.TargetType, e.TargetId }).IsUnique();
 
         builder.HasOne(e => e.User)
             .WithMany()

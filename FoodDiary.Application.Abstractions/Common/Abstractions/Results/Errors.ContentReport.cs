@@ -9,5 +9,9 @@ public static partial class Errors {
         public static Error NotFound(Guid id) => ContentReportErrors.NotFound(id);
 
         public static Error AlreadyReported => ContentReportErrors.AlreadyReported;
+
+        public static Error TargetNotFound => ContentReportErrors.TargetNotFound;
+
+        public static Error AlreadyResolved => ContentReportErrors.AlreadyResolved;
     }
 }

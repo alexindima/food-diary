@@ -89,6 +89,65 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
     }
 
     [RequiresDockerFact]
+    public async Task AchievementEvaluationOutbox_RepeatedRequests_CoalescePerUser() {
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        var user = User.Create($"achievement-coalesce-{Guid.NewGuid():N}@example.com", "hash");
+        var timeProvider = new StubTimeProvider();
+        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
+        await context.Database.MigrateAsync();
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        var outbox = new AchievementEvaluationOutbox(context, timeProvider);
+
+        await outbox.EnqueueAsync(user.Id);
+        await outbox.EnqueueAsync(user.Id);
+
+        AchievementEvaluationOutboxMessage message = await context.AchievementEvaluationOutbox.SingleAsync();
+        Assert.Multiple(
+            () => Assert.Equal(user.Id, message.UserId),
+            () => Assert.Equal(2, message.Revision),
+            () => Assert.Null(message.ProcessedOnUtc));
+    }
+
+    [RequiresDockerFact]
+    public async Task AchievementEvaluationOutbox_RequestDuringProcessing_RemainsPending() {
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        var user = User.Create($"achievement-race-{Guid.NewGuid():N}@example.com", "hash");
+        var timeProvider = new StubTimeProvider();
+        await using (FoodDiaryDbContext setupContext = databaseFixture.CreateDbContext(connectionString)) {
+            await setupContext.Database.MigrateAsync();
+            setupContext.Users.Add(user);
+            await setupContext.SaveChangesAsync();
+            await new AchievementEvaluationOutbox(setupContext, timeProvider).EnqueueAsync(user.Id);
+        }
+
+        IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
+        handler.ReconcileAsync(user.Id, Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(async _ => {
+                await using FoodDiaryDbContext concurrentContext = databaseFixture.CreateDbContext(connectionString);
+                await new AchievementEvaluationOutbox(concurrentContext, timeProvider).EnqueueAsync(user.Id);
+            });
+        await using FoodDiaryDbContext processContext = databaseFixture.CreateDbContext(connectionString);
+        var processor = new AchievementEvaluationOutboxProcessor(
+            processContext,
+            handler,
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            timeProvider,
+            NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
+
+        int processed = await processor.ProcessDueAsync(batchSize: 1);
+
+        AchievementEvaluationOutboxMessage message = await processContext.AchievementEvaluationOutbox
+            .AsNoTracking()
+            .SingleAsync();
+        Assert.Multiple(
+            () => Assert.Equal(0, processed),
+            () => Assert.Equal(2, message.Revision),
+            () => Assert.Null(message.ProcessedOnUtc),
+            () => Assert.Null(message.LockedUntilUtc));
+    }
+
+    [RequiresDockerFact]
     public async Task ManagedDefinitions_AreSeededAndActiveStoreReflectsUpdates() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var store = new AchievementDefinitionStore(context);

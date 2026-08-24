@@ -9,6 +9,7 @@ public static partial class DependencyInjection {
         services.AddScoped<ContentReportRepository>();
         services.AddScoped<IContentReportReadModelRepository>(static provider => provider.GetRequiredService<ContentReportRepository>());
         services.AddScoped<IContentReportWriteRepository>(static provider => provider.GetRequiredService<ContentReportRepository>());
+        services.AddScoped<IContentReportTargetReadService>(static provider => provider.GetRequiredService<ContentReportRepository>());
 
     }
 }

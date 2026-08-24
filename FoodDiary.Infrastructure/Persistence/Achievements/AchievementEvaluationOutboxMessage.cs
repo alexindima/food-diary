@@ -16,6 +16,7 @@ public sealed class AchievementEvaluationOutboxMessage : IOutboxMessage {
     public DateTime? LockedUntilUtc { get; private set; }
     public string? LockedBy { get; private set; }
     public string? LastError { get; private set; }
+    public long Revision { get; private set; }
 
     private AchievementEvaluationOutboxMessage() {
     }
@@ -31,7 +32,23 @@ public sealed class AchievementEvaluationOutboxMessage : IOutboxMessage {
             UserId = userId,
             CreatedOnUtc = normalizedCreatedOnUtc,
             NextAttemptOnUtc = normalizedCreatedOnUtc,
+            Revision = 1,
         };
+    }
+
+    public void RequestEvaluation(DateTime requestedOnUtc) {
+        CreatedOnUtc = NormalizeUtc(requestedOnUtc);
+        Revision = checked(Revision + 1);
+        NextAttemptOnUtc = CreatedOnUtc;
+        AttemptCount = 0;
+        ProcessedOnUtc = null;
+        DeadLetteredOnUtc = null;
+        LastError = null;
+    }
+
+    public void ReleaseForUpdatedRevision() {
+        LockedUntilUtc = null;
+        LockedBy = null;
     }
 
     public void MarkClaimed(DateTime lockedUntilUtc, string lockedBy) {

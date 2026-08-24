@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.ContentReports.Mappings;
 using FoodDiary.Presentation.Api.Features.ContentReports.Requests;
 using FoodDiary.Presentation.Api.Features.ContentReports.Responses;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ public sealed class ContentReportsController(ISender mediator) : AuthorizedContr
     [HttpPost]
     [EnableIdempotency]
     [ProducesResponseType<ContentReportHttpResponse>(StatusCodes.Status201Created)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> Create(
         [FromCurrentUser] Guid userId,
         [FromBody] CreateContentReportHttpRequest request) =>

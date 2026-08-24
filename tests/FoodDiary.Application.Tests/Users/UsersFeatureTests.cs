@@ -190,6 +190,7 @@ public partial class UsersFeatureTests {
         var handler = new DeleteUserCommandHandler(
             new SingleUserRepository(user),
             new FixedDateTimeProvider(DateTime.UtcNow),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
             new NullAuditLogger());
 
         Result result = await handler.Handle(new DeleteUserCommand(Guid.Empty), CancellationToken.None);
@@ -202,9 +203,11 @@ public partial class UsersFeatureTests {
     public async Task DeleteUserHandler_UsesDateTimeProvider() {
         var user = User.Create("user@example.com", "hash");
         var deletedAtUtc = new DateTime(2026, 2, 23, 10, 30, 0, DateTimeKind.Utc);
+        IRefreshTokenSessionWriteRepository refreshSessions = Substitute.For<IRefreshTokenSessionWriteRepository>();
         var handler = new DeleteUserCommandHandler(
             new SingleUserRepository(user),
             new FixedDateTimeProvider(deletedAtUtc),
+            refreshSessions,
             new NullAuditLogger());
 
         Result result = await handler.Handle(new DeleteUserCommand(user.Id.Value), CancellationToken.None);
@@ -212,6 +215,7 @@ public partial class UsersFeatureTests {
         ResultAssert.Success(result);
         Assert.Equal(deletedAtUtc, user.DeletedAt);
         Assert.False(user.IsActive);
+        await refreshSessions.Received(1).RevokeAllAsync(user.Id, deletedAtUtc, CancellationToken.None);
     }
 
     [Fact]
@@ -221,6 +225,7 @@ public partial class UsersFeatureTests {
         var handler = new DeleteUserCommandHandler(
             new SingleUserRepository(user),
             new FixedDateTimeProvider(DateTime.UtcNow),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
             new NullAuditLogger());
 
         Result result = await handler.Handle(new DeleteUserCommand(user.Id.Value), CancellationToken.None);
@@ -235,6 +240,7 @@ public partial class UsersFeatureTests {
         var handler = new DeleteUserCommandHandler(
             CreateAccessCheckedFailingUserContext(userId),
             new FixedDateTimeProvider(DateTime.UtcNow),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
             new NullAuditLogger());
 
         Result result = await handler.Handle(new DeleteUserCommand(userId.Value), CancellationToken.None);

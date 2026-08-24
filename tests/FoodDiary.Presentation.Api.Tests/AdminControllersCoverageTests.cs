@@ -395,12 +395,12 @@ public sealed class AdminControllersCoverageTests {
         var action = new AdminReportActionHttpRequest("done");
         CapturedSender reviewSender = SubstituteSender.Capture(Result.Success());
         AdminModerationController reviewController = CreateController(new AdminModerationController(reviewSender));
-        Assert.IsType<NoContentResult>(await reviewController.Review(reportId, action));
+        Assert.IsType<NoContentResult>(await reviewController.Review(reportId, Guid.NewGuid(), action));
         Assert.Equal(reportId, Assert.IsType<ReviewContentReportCommand>(reviewSender.Request).ReportId);
 
         CapturedSender dismissSender = SubstituteSender.Capture(Result.Success());
         AdminModerationController dismissController = CreateController(new AdminModerationController(dismissSender));
-        Assert.IsType<NoContentResult>(await dismissController.Dismiss(reportId, action));
+        Assert.IsType<NoContentResult>(await dismissController.Dismiss(reportId, Guid.NewGuid(), action));
         Assert.Equal(reportId, Assert.IsType<DismissContentReportCommand>(dismissSender.Request).ReportId);
     }
 

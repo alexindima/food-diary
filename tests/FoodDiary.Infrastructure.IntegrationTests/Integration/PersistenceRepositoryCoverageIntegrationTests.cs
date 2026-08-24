@@ -384,15 +384,25 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
+        var recipe = Recipe.Create(user.Id, "Reported recipe", servings: 1);
+        var otherUser = User.Create($"report-private-{Guid.NewGuid():N}@example.com", "hash");
+        var privateRecipe = Recipe.Create(otherUser.Id, "Private recipe", servings: 1, visibility: Visibility.Private);
+        context.Users.Add(otherUser);
+        context.Recipes.AddRange(recipe, privateRecipe);
+        await context.SaveChangesAsync();
+        var comment = RecipeComment.Create(user.Id, recipe.Id, "Reported comment");
+        context.RecipeComments.Add(comment);
+        await context.SaveChangesAsync();
+
         var repository = new ContentReportRepository(context);
-        var targetId = Guid.NewGuid();
+        Guid targetId = recipe.Id.Value;
         ContentReport report = await repository.AddAsync(ContentReport.Create(user.Id, ReportTargetType.Recipe, targetId, "Spam"));
-        ContentReport otherReport = await repository.AddAsync(ContentReport.Create(user.Id, ReportTargetType.Comment, Guid.NewGuid(), "Abuse"));
+        ContentReport otherReport = await repository.AddAsync(ContentReport.Create(user.Id, ReportTargetType.Comment, comment.Id.Value, "Abuse"));
         await context.SaveChangesAsync();
 
         ContentReport? tracked = await repository.GetByIdAsync(report.Id, asTracking: true);
         Assert.NotNull(tracked);
-        tracked.MarkDismissed("Not actionable");
+        tracked.MarkDismissed(UserId.New(), "Not actionable");
         await repository.UpdateAsync(tracked);
         await context.SaveChangesAsync();
 
@@ -402,6 +412,10 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         (IReadOnlyList<ContentReportAdminReadModel> allItems, int allTotal) =
             await repository.GetPagedAdminReadModelsAsync(status: null, page: 1, limit: 1);
         int dismissedCount = await repository.CountByStatusAsync(ReportStatus.Dismissed);
+        bool recipeExists = await repository.IsReportableAsync(user.Id, ReportTargetType.Recipe, recipe.Id.Value);
+        bool commentExists = await repository.IsReportableAsync(user.Id, ReportTargetType.Comment, comment.Id.Value);
+        bool missingTargetExists = await repository.IsReportableAsync(user.Id, ReportTargetType.Recipe, Guid.NewGuid());
+        bool privateTargetExists = await repository.IsReportableAsync(user.Id, ReportTargetType.Recipe, privateRecipe.Id.Value);
 
         Assert.True(hasReported);
         Assert.Equal(otherReport.Id.Value, Assert.Single(pendingReadModels).Id);
@@ -409,6 +423,13 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Single(allItems);
         Assert.Equal(2, allTotal);
         Assert.Equal(1, dismissedCount);
+        Assert.True(recipeExists);
+        Assert.True(commentExists);
+        Assert.False(missingTargetExists);
+        Assert.False(privateTargetExists);
+
+        await repository.AddAsync(ContentReport.Create(user.Id, ReportTargetType.Recipe, targetId, "Duplicate"));
+        await Assert.ThrowsAsync<DbUpdateException>(() => context.SaveChangesAsync());
     }
 
     [RequiresDockerFact]

@@ -263,9 +263,12 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var user = User.Create("deleted@example.com", "secret");
         user.DeleteAccount(DateTime.UtcNow.AddDays(-2));
         var tokenService = new StubAuthenticationTokenService();
+        IRefreshTokenSessionWriteRepository refreshSessions = Substitute.For<IRefreshTokenSessionWriteRepository>();
+        var dateTimeProvider = new StubDateTimeProvider();
         var handler = new RestoreAccountCommandHandler(
             CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
-            new StubDateTimeProvider(),
+            dateTimeProvider,
+            refreshSessions,
             tokenService);
         var clientContext = new AuthenticationClientContext("password", "203.0.113.11", "test-agent");
 
@@ -281,6 +284,10 @@ public sealed partial class AuthenticationCommandHandlerTests {
         Assert.Equal(user.Id, tokenService.LastPrincipal?.UserId);
         Assert.Same(clientContext, tokenService.LastClientContext);
         Assert.True(tokenService.LastRememberMe);
+        await refreshSessions.Received(1).RevokeAllAsync(
+            user.Id,
+            dateTimeProvider.GetUtcNow().UtcDateTime,
+            CancellationToken.None);
     }
 
     [Fact]
@@ -288,6 +295,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var handler = new RestoreAccountCommandHandler(
             CreateUserAuthenticationIdentityService(new StubUserRepository()),
             new StubDateTimeProvider(),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(
@@ -304,6 +312,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var handler = new RestoreAccountCommandHandler(
             CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             new StubDateTimeProvider(),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(),
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(

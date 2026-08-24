@@ -46,8 +46,8 @@ export class AdminModerationActionDialogComponent {
         this.data.action === 'review'
             ? {
                   title: 'Review Report',
-                  confirmVariant: 'danger',
-                  confirmLabel: 'Review & Remove',
+                  confirmVariant: 'secondary',
+                  confirmLabel: 'Mark Reviewed',
               }
             : {
                   title: 'Dismiss Report',

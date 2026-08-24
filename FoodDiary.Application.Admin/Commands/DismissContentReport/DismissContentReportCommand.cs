@@ -5,4 +5,5 @@ namespace FoodDiary.Application.Admin.Commands.DismissContentReport;
 
 public sealed record DismissContentReportCommand(
     Guid ReportId,
+    Guid ReviewerUserId,
     string? AdminNote) : ICommand<Result>;
