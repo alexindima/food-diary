@@ -1,5 +1,5 @@
 . FoodDiary.Web.Client/.husky/progress.sh
-hook_progress_init "pre-push" 11
+hook_progress_init "pre-push" 2
 
 HOOK_POWERSHELL=$(command -v pwsh || command -v powershell.exe || true)
 if [ -z "$HOOK_POWERSHELL" ]; then
@@ -8,24 +8,57 @@ if [ -z "$HOOK_POWERSHELL" ]; then
 fi
 hook_run "Root and nested .NET artifact cleanup" "$HOOK_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -IncludeRoot || exit 1
 
-cd FoodDiary.Web.Client
-hook_run "Frontend formatting" npm run check:format:ci || exit 1
-hook_run "Frontend ESLint" npm run lint || exit 1
-hook_run "Frontend dependency graph lint" npm run lint:deps:strict || exit 1
-hook_run "Dependency graph baseline" npm run check:depcruise-baseline || exit 1
-hook_run "Frontend Stylelint" npm run stylelint || exit 1
-hook_run "Design token reference audit" npm run audit:design-tokens || exit 1
-hook_run "Frontend application tests" npm run test:ci:app || exit 1
-hook_run "Frontend i18n consistency" npm run check:i18n || exit 1
-cd ..
-
 PRE_PUSH_ARTIFACTS_PATH=.artifacts/pre-push
-dotnet() {
-  command dotnet "$@" --artifacts-path "$PRE_PUSH_ARTIFACTS_PATH"
+
+run_frontend_checks() {
+  cd FoodDiary.Web.Client || return 1
+  npm run check:format:ci || return 1
+  npm run lint || return 1
+  npm run lint:deps:strict || return 1
+  npm run check:depcruise-baseline || return 1
+  npm run stylelint || return 1
+  npm run audit:design-tokens || return 1
+  npm run test:ci:app || return 1
+  npm run check:i18n || return 1
 }
 
-hook_run "Backend solution build" dotnet build FoodDiary.slnx || exit 1
-hook_run "Backend solution tests" dotnet test FoodDiary.slnx --no-restore --no-build --maxcpucount:1 || exit 1
+run_backend_checks() {
+  command dotnet build FoodDiary.slnx --artifacts-path "$PRE_PUSH_ARTIFACTS_PATH" || return 1
+  command dotnet test FoodDiary.slnx --no-restore --no-build --maxcpucount:1 --artifacts-path "$PRE_PUSH_ARTIFACTS_PATH"
+}
+
+hook_step_start "Frontend and backend checks (parallel)"
+FRONTEND_LOG="$HOOK_LOG_DIR/02-frontend-checks.log"
+BACKEND_LOG="$HOOK_LOG_DIR/02-backend-checks.log"
+
+run_frontend_checks >"$FRONTEND_LOG" 2>&1 &
+FRONTEND_PID=$!
+run_backend_checks >"$BACKEND_LOG" 2>&1 &
+BACKEND_PID=$!
+
+wait "$FRONTEND_PID"
+FRONTEND_STATUS=$?
+wait "$BACKEND_PID"
+BACKEND_STATUS=$?
+
+if [ "$FRONTEND_STATUS" -eq 0 ] && [ "$BACKEND_STATUS" -eq 0 ]; then
+  hook_step_done
+  printf '    frontend log: %s\n' "$FRONTEND_LOG"
+  printf '    backend log: %s\n' "$BACKEND_LOG"
+else
+  hook_step_fail
+  if [ "$FRONTEND_STATUS" -ne 0 ]; then
+    printf '    frontend checks failed with exit code %s\n    log: %s\n' "$FRONTEND_STATUS" "$FRONTEND_LOG" >&2
+    printf '%s\n' "--- last $HOOK_FAILURE_LOG_LINES frontend log lines ---" >&2
+    tail -n "$HOOK_FAILURE_LOG_LINES" "$FRONTEND_LOG" >&2 || true
+  fi
+  if [ "$BACKEND_STATUS" -ne 0 ]; then
+    printf '    backend checks failed with exit code %s\n    log: %s\n' "$BACKEND_STATUS" "$BACKEND_LOG" >&2
+    printf '%s\n' "--- last $HOOK_FAILURE_LOG_LINES backend log lines ---" >&2
+    tail -n "$HOOK_FAILURE_LOG_LINES" "$BACKEND_LOG" >&2 || true
+  fi
+  exit 1
+fi
 
 hook_progress_done
 
