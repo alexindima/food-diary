@@ -33,9 +33,11 @@ resolver. Repeated bundles with identical discovery arguments, HEAD, relevant
 scope content, and the SQLite graph dependency fingerprint reuse its content-addressed JSON
 result. Unrelated worktree edits do not evict scoped discovery; bundle-specific
 security, learning, provenance, and integrity checks still run normally.
-Diff-selected Wiki pages and C# symbols are resolved from the same refreshed
-SQLite compiled-index projection; missing or stale projections fail explicitly
-instead of widening the bundle through a hidden JSON fallback.
+Diff-selected Wiki pages plus changed C# and frontend symbols are resolved from
+the same refreshed SQLite compiled-index projection. Ranked frontend discovery
+uses the projection's bounded candidate set before the existing PowerShell
+scoring. Missing or stale projections fail explicitly instead of widening the
+bundle through a hidden JSON fallback.
 
 Create a task-specific bundle after its packet is current:
 

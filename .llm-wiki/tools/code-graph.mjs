@@ -9,8 +9,8 @@ const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
 const parserVersion = '11-javascript-context-v1';
 const contextSearchSchemaVersion = '1';
-const compiledIndexSchemaVersion = '3';
-const queryDocumentSchemaVersion = '3';
+const compiledIndexSchemaVersion = '4';
+const queryDocumentSchemaVersion = '4';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
 const roslynDll = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll');
 const typescriptExtractor = resolve(repositoryRoot, '.llm-wiki/tools/typescript-extractor.mjs');
@@ -211,6 +211,10 @@ function gitPaths() {
 
 function sha256(text) {
   return createHash('sha256').update(text).digest('hex');
+}
+
+function normalizedTextHash(text) {
+  return sha256(text.replaceAll('\r\n', '\n'));
 }
 
 function lineAt(text, offset) {
@@ -466,6 +470,7 @@ function refreshQueryLayer(database) {
   const sources = [
     ['modules', 'docs/architecture/backend-modules.json'],
     ['contracts', '.llm-wiki/generated/backend-contract-index.json'],
+    ['frontend-contracts', '.llm-wiki/generated/frontend-contract-index.json'],
     ['risks', '.llm-wiki/generated/quality-index.json'],
   ];
   const replaceCategory = database.prepare('DELETE FROM query_documents WHERE category = ?');
@@ -479,7 +484,7 @@ function refreshQueryLayer(database) {
     const absolutePath = resolve(repositoryRoot, sourcePath);
     if (!existsSync(absolutePath)) continue;
     const text = readFileSync(absolutePath, 'utf8');
-    const contentHash = sha256(text);
+    const contentHash = normalizedTextHash(text);
     const metadataKey = `query_source:${category}`;
     if (!schemaChanged && database.prepare('SELECT value FROM metadata WHERE key = ?').get(metadataKey)?.value === contentHash) continue;
     const document = JSON.parse(text);
@@ -490,6 +495,12 @@ function refreshQueryLayer(database) {
       let ordinal = 0;
       for (const value of document.contracts ?? []) records.push({ key: value.id ?? value.name ?? value.symbol ?? JSON.stringify(value), path: value.path ?? value.sourcePath ?? '', kind: 'contract', ordinal: ordinal++, value });
       for (const value of document.consumerEdges ?? []) records.push({ key: `consumer:${value.contract ?? ''}:${value.consumerPath ?? ''}`, path: value.consumerPath ?? '', kind: 'consumer', ordinal: ordinal++, value });
+    } else if (category === 'frontend-contracts') {
+      let ordinal = 0;
+      for (const value of document.components ?? []) records.push({ key: `component:${value.class ?? ''}:${value.path ?? ''}`, path: value.path ?? '', kind: 'component', ordinal: ordinal++, value });
+      for (const value of document.consumerEdges ?? []) records.push({ key: `consumer:${value.component ?? ''}:${value.consumerPath ?? ''}:${ordinal}`, path: value.consumerPath ?? '', kind: 'consumer', ordinal: ordinal++, value });
+      for (const value of document.apiCalls ?? []) records.push({ key: `api-call:${value.path ?? ''}:${value.method ?? ''}:${value.line ?? ordinal}`, path: value.path ?? '', kind: 'api-call', ordinal: ordinal++, value });
+      for (const value of document.translationUsage ?? []) records.push({ key: `translation:${value.path ?? value.templatePath ?? ''}:${ordinal}`, path: value.path ?? value.templatePath ?? '', kind: 'translation', ordinal: ordinal++, value });
     } else {
       let ordinal = 0;
       for (const [recordKind, values] of Object.entries({ hotspot: document.hotspots ?? [], file: document.files ?? [], criticalSymbol: document.criticalSymbols ?? [], debtMarker: document.debtMarkers ?? [] })) {
@@ -510,6 +521,7 @@ function refreshCompiledIndexes(database) {
   const sources = [
     ['repository-catalog', '.llm-wiki/generated/repository-catalog.json'],
     ['csharp-symbols', '.llm-wiki/generated/csharp-symbol-index.json'],
+    ['frontend', '.llm-wiki/generated/frontend-index.json'],
   ];
   const replaceIndex = database.prepare(`
     INSERT OR REPLACE INTO compiled_indexes(index_name, source_path, content_hash, payload_json)
@@ -547,6 +559,26 @@ function refreshCompiledIndexes(database) {
         const recordKey = `${ordinal}:${implementation.interface ?? ''}:${implementation.implementation ?? ''}:${implementation.path ?? ''}`;
         const searchText = `${implementation.interface ?? ''} ${implementation.implementation ?? ''} ${implementation.path ?? ''}`;
         insertRecord.run(indexName, 'interface-implementation', recordKey, implementation.path ?? '', ordinal, searchText, JSON.stringify(implementation));
+      }
+    } else if (indexName === 'frontend') {
+      for (const [ordinal, feature] of (document.features ?? []).entries()) {
+        const recordKey = `${ordinal}:${feature.area ?? ''}:${feature.name ?? ''}:${feature.root ?? ''}`;
+        const searchText = [feature.area, feature.name, feature.root, ...(feature.symbols ?? []), ...(feature.routes ?? []), ...(feature.tests ?? [])].filter(Boolean).join(' ');
+        insertRecord.run(indexName, 'feature', recordKey, feature.root ?? '', ordinal, searchText, JSON.stringify(feature));
+      }
+      for (const [ordinal, symbol] of (document.symbols ?? []).entries()) {
+        const recordKey = `${ordinal}:${symbol.name ?? ''}:${symbol.path ?? ''}:${symbol.line ?? ''}`;
+        const searchText = `${symbol.name ?? ''} ${symbol.role ?? ''} ${symbol.selector ?? ''} ${symbol.path ?? ''}`;
+        insertRecord.run(indexName, 'symbol', recordKey, symbol.path ?? '', ordinal, searchText, JSON.stringify(symbol));
+      }
+      for (const [ordinal, route] of (document.routes ?? []).entries()) {
+        const recordKey = `${ordinal}:${route.path ?? ''}:${route.source ?? ''}:${route.line ?? ''}`;
+        const searchText = `${route.path ?? ''} ${route.source ?? ''}`;
+        insertRecord.run(indexName, 'route', recordKey, route.source ?? '', ordinal, searchText, JSON.stringify(route));
+      }
+      for (const [ordinal, localization] of (document.localization ?? []).entries()) {
+        const recordKey = `${ordinal}:${localization.name ?? ''}`;
+        insertRecord.run(indexName, 'localization', recordKey, localization.name ?? '', ordinal, localization.name ?? '', JSON.stringify(localization));
       }
     }
     refreshed += 1;
@@ -602,22 +634,28 @@ function compiledContext(database, options) {
     SELECT source_path sourcePath, content_hash contentHash
     FROM compiled_indexes WHERE index_name = 'csharp-symbols'
   `).get();
-  if (!catalogRow || !symbolIndex) {
+  const frontendIndex = database.prepare(`
+    SELECT source_path sourcePath, content_hash contentHash
+    FROM compiled_indexes WHERE index_name = 'frontend'
+  `).get();
+  if (!catalogRow || !symbolIndex || !frontendIndex) {
     return {
       ready: false,
       unavailableReason: 'compiled-index-projection-missing',
       durationMs: Math.round((performance.now() - started) * 100) / 100,
     };
   }
-  const currentCatalogHash = sha256(readFileSync(resolve(repositoryRoot, catalogRow.sourcePath), 'utf8').replaceAll('\r\n', '\n'));
-  const currentSymbolHash = sha256(readFileSync(resolve(repositoryRoot, symbolIndex.sourcePath), 'utf8').replaceAll('\r\n', '\n'));
-  if (currentCatalogHash !== catalogRow.contentHash || currentSymbolHash !== symbolIndex.contentHash) {
+  const currentCatalogHash = normalizedTextHash(readFileSync(resolve(repositoryRoot, catalogRow.sourcePath), 'utf8'));
+  const currentSymbolHash = normalizedTextHash(readFileSync(resolve(repositoryRoot, symbolIndex.sourcePath), 'utf8'));
+  const currentFrontendHash = normalizedTextHash(readFileSync(resolve(repositoryRoot, frontendIndex.sourcePath), 'utf8'));
+  if (currentCatalogHash !== catalogRow.contentHash || currentSymbolHash !== symbolIndex.contentHash || currentFrontendHash !== frontendIndex.contentHash) {
     return {
       ready: false,
       unavailableReason: 'compiled-index-projection-stale',
       sourceHashes: {
         repositoryCatalog: { projected: catalogRow.contentHash, current: currentCatalogHash },
         csharpSymbols: { projected: symbolIndex.contentHash, current: currentSymbolHash },
+        frontend: { projected: frontendIndex.contentHash, current: currentFrontendHash },
       },
       durationMs: Math.round((performance.now() - started) * 100) / 100,
     };
@@ -644,14 +682,20 @@ function compiledContext(database, options) {
     : '';
   let rows;
   let selected;
+  let frontendRows;
+  let frontendSelected;
   let scannedRecords;
   if (selectionMode === 'changed-paths') {
     scannedRecords = database.prepare(`
       SELECT COUNT(*) count FROM compiled_index_records
       WHERE index_name = 'csharp-symbols' AND record_kind = 'symbol'
+    `).get().count + database.prepare(`
+      SELECT COUNT(*) count FROM compiled_index_records
+      WHERE index_name = 'frontend' AND record_kind = 'symbol'
     `).get().count;
     if (scopePaths.length === 0) {
       rows = [];
+      frontendRows = [];
     } else {
       const placeholders = scopePaths.map(() => '?').join(', ');
       rows = database.prepare(`
@@ -660,8 +704,15 @@ function compiledContext(database, options) {
         WHERE index_name = 'csharp-symbols' AND record_kind = 'symbol' AND path IN (${placeholders})
         ORDER BY source_ordinal
       `).all(...scopePaths);
+      frontendRows = database.prepare(`
+        SELECT record_kind recordKind, path, search_text searchText, payload_json payloadJson
+        FROM compiled_index_records
+        WHERE index_name = 'frontend' AND record_kind = 'symbol' AND path IN (${placeholders})
+        ORDER BY source_ordinal
+      `).all(...scopePaths);
     }
     selected = rows;
+    frontendSelected = frontendRows;
   } else {
     rows = database.prepare(`
       SELECT record_kind recordKind, path, search_text searchText, payload_json payloadJson
@@ -669,7 +720,13 @@ function compiledContext(database, options) {
       WHERE index_name = 'csharp-symbols' AND record_kind IN ('symbol', 'dependency-injection')
       ORDER BY record_kind, source_ordinal
     `).all();
-    scannedRecords = rows.length;
+    frontendRows = database.prepare(`
+      SELECT record_kind recordKind, path, search_text searchText, payload_json payloadJson
+      FROM compiled_index_records
+      WHERE index_name = 'frontend' AND record_kind IN ('feature', 'symbol', 'route', 'localization')
+      ORDER BY record_kind, source_ordinal
+    `).all();
+    scannedRecords = rows.length + frontendRows.length;
     selected = rows.filter((row) => {
       const searchable = row.searchText.toLocaleLowerCase('en-US');
       const textMatch = terms.some((term) => searchable.includes(term))
@@ -677,6 +734,15 @@ function compiledContext(database, options) {
       const scopeMatch = pathsHaveAffinity(row.path, scopePaths);
       const moduleMatch = moduleProjectDirectory && (row.path === moduleProjectDirectory || row.path.startsWith(`${moduleProjectDirectory}/`));
       return textMatch || scopeMatch || moduleMatch;
+    });
+    const localizationTerms = new Set(['i18n', 'locale', 'localization', 'translation']);
+    frontendSelected = frontendRows.filter((row) => {
+      const searchable = row.searchText.toLocaleLowerCase('en-US');
+      const textMatch = terms.some((term) => searchable.includes(term))
+        || phrases.some((phrase) => searchable.includes(phrase));
+      const scopeMatch = pathsHaveAffinity(row.path, scopePaths);
+      const localizationMatch = row.recordKind === 'localization' && terms.some((term) => localizationTerms.has(term));
+      return textMatch || scopeMatch || localizationMatch;
     });
   }
   const contextCatalog = {
@@ -730,12 +796,17 @@ function compiledContext(database, options) {
     dependencyInjectionRegistrations: selected
       .filter((row) => row.recordKind === 'dependency-injection')
       .map((row) => JSON.parse(row.payloadJson)),
+    frontendFeatures: frontendSelected.filter((row) => row.recordKind === 'feature').map((row) => JSON.parse(row.payloadJson)),
+    frontendSymbols: frontendSelected.filter((row) => row.recordKind === 'symbol').map((row) => JSON.parse(row.payloadJson)),
+    frontendRoutes: frontendSelected.filter((row) => row.recordKind === 'route').map((row) => JSON.parse(row.payloadJson)),
+    frontendLocalization: frontendSelected.filter((row) => row.recordKind === 'localization').map((row) => JSON.parse(row.payloadJson)),
     sourceHashes: {
       repositoryCatalog: catalogRow.contentHash,
       csharpSymbols: symbolIndex.contentHash,
+      frontend: frontendIndex.contentHash,
     },
     scannedRecords,
-    returnedRecords: selected.length,
+    returnedRecords: selected.length + frontendSelected.length,
     durationMs: Math.round((performance.now() - started) * 100) / 100,
   };
 }
@@ -1000,7 +1071,7 @@ function backendContractContext(database, view, query, limit) {
   if (!projectedHash) {
     return { ready: false, unavailableReason: 'backend-contract-projection-missing', durationMs: Math.round((performance.now() - started) * 100) / 100 };
   }
-  const currentHash = sha256(readFileSync(resolve(repositoryRoot, sourcePath), 'utf8'));
+  const currentHash = normalizedTextHash(readFileSync(resolve(repositoryRoot, sourcePath), 'utf8'));
   if (projectedHash !== currentHash) {
     return {
       ready: false,
@@ -1042,6 +1113,202 @@ function backendContractContext(database, view, query, limit) {
     sourceHash: projectedHash,
     scannedRecords: database.prepare("SELECT COUNT(*) count FROM query_documents WHERE category = 'contracts'").get().count,
     returnedRecords: Object.values(groups).reduce((count, records) => count + records.length, 0),
+    durationMs: Math.round((performance.now() - started) * 100) / 100,
+  };
+}
+
+function frontendContractContext(database, view, query, limit) {
+  const started = performance.now();
+  const sourcePath = '.llm-wiki/generated/frontend-contract-index.json';
+  const projectedHash = database.prepare("SELECT value FROM metadata WHERE key = 'query_source:frontend-contracts'").get()?.value;
+  if (!projectedHash) {
+    return { ready: false, unavailableReason: 'frontend-contract-projection-missing', durationMs: Math.round((performance.now() - started) * 100) / 100 };
+  }
+  const currentHash = normalizedTextHash(readFileSync(resolve(repositoryRoot, sourcePath), 'utf8'));
+  if (projectedHash !== currentHash) {
+    return {
+      ready: false,
+      unavailableReason: 'frontend-contract-projection-stale',
+      sourceHashes: { projected: projectedHash, current: currentHash },
+      durationMs: Math.round((performance.now() - started) * 100) / 100,
+    };
+  }
+  const supportedViews = new Set(['all', 'components', 'consumers', 'api', 'translations', 'spec-gaps']);
+  if (!supportedViews.has(view)) throw new Error(`Unsupported frontend-contract view: ${view}`);
+  const selectPayloads = (recordKind, predicate = '') => database.prepare(`
+    SELECT payload_json payloadJson
+    FROM query_documents
+    WHERE category = 'frontend-contracts' AND record_kind = ?
+      AND (? = '' OR instr(lower(payload_json), lower(?)) > 0)
+      ${predicate}
+    ORDER BY source_ordinal
+    LIMIT ?
+  `).all(recordKind, query, query, limit).map((row) => JSON.parse(row.payloadJson));
+  const groups = {};
+  if (view === 'all' || view === 'components') groups.components = selectPayloads('component');
+  if (view === 'spec-gaps') groups.specGaps = selectPayloads('component', "AND json_extract(payload_json, '$.specPath') IS NULL");
+  if (view === 'all' || view === 'consumers') groups.consumers = selectPayloads('consumer');
+  if (view === 'all' || view === 'api') groups.apiCalls = selectPayloads('api-call');
+  if (view === 'all' || view === 'translations') groups.translations = selectPayloads('translation');
+  return {
+    ready: true,
+    source: 'sqlite-query-documents',
+    view,
+    groups,
+    sourceHash: projectedHash,
+    scannedRecords: database.prepare("SELECT COUNT(*) count FROM query_documents WHERE category = 'frontend-contracts'").get().count,
+    returnedRecords: Object.values(groups).reduce((count, records) => count + records.length, 0),
+    durationMs: Math.round((performance.now() - started) * 100) / 100,
+  };
+}
+
+function frontendRuntimeOwnerContext(database, query, candidatePaths, limit) {
+  const started = performance.now();
+  const sourcePath = '.llm-wiki/generated/frontend-contract-index.json';
+  const projectedHash = database.prepare("SELECT value FROM metadata WHERE key = 'query_source:frontend-contracts'").get()?.value;
+  if (!projectedHash) {
+    return { ready: false, unavailableReason: 'frontend-contract-projection-missing', durationMs: Math.round((performance.now() - started) * 100) / 100 };
+  }
+  const currentHash = normalizedTextHash(readFileSync(resolve(repositoryRoot, sourcePath), 'utf8'));
+  if (projectedHash !== currentHash) {
+    return {
+      ready: false,
+      unavailableReason: 'frontend-contract-projection-stale',
+      sourceHashes: { projected: projectedHash, current: currentHash },
+      durationMs: Math.round((performance.now() - started) * 100) / 100,
+    };
+  }
+
+  const ignored = new Set(['change', 'component', 'frontend', 'improve', 'layout', 'result', 'style', 'template', 'visual', 'with']);
+  const normalizedQuery = String(query ?? '').toLowerCase();
+  const tokens = [...new Set([...normalizedQuery.matchAll(/[\p{L}\p{N}]{3,}/gu)].map((match) => match[0]).filter((token) => !ignored.has(token)))].sort();
+  if (/(^|[^\p{L}\p{N}])ai($|[^\p{L}\p{N}])/iu.test(String(query ?? '')) && !tokens.includes('ai')) tokens.push('ai');
+  tokens.sort();
+  const paths = [...new Set((candidatePaths ?? []).map((path) => String(path).replaceAll('\\', '/')).filter(Boolean))]
+    .sort((left, right) => left.toLowerCase().localeCompare(right.toLowerCase()) || left.localeCompare(right));
+
+  const predicates = [];
+  const parameters = [];
+  for (const token of tokens) {
+    predicates.push('instr(lower(payload_json), ?) > 0');
+    parameters.push(token.toLowerCase());
+  }
+  for (const path of paths) {
+    const directory = dirname(path).replaceAll('\\', '/');
+    predicates.push("(lower(json_extract(payload_json, '$.path')) = lower(?) OR lower(json_extract(payload_json, '$.templatePath')) = lower(?) OR lower(json_extract(payload_json, '$.path')) LIKE lower(?))");
+    parameters.push(path, path, `${directory}/%`);
+  }
+  const candidateRows = predicates.length === 0 ? [] : database.prepare(`
+    SELECT record_key recordKey, source_ordinal sourceOrdinal, payload_json payloadJson
+    FROM query_documents
+    WHERE category = 'frontend-contracts' AND record_kind = 'component'
+      AND (${predicates.join(' OR ')})
+    ORDER BY source_ordinal
+  `).all(...parameters);
+  const components = candidateRows.map((row) => ({ row, component: JSON.parse(row.payloadJson) }));
+  const ranked = components.map(({ row, component }) => {
+    const componentPath = String(component.path ?? '');
+    const componentDirectory = dirname(componentPath).replaceAll('\\', '/');
+    const explicit = paths.some((path) => path.toLowerCase() === componentPath.toLowerCase()
+      || path.toLowerCase() === String(component.templatePath ?? '').toLowerCase()
+      || dirname(path).replaceAll('\\', '/').toLowerCase() === componentDirectory.toLowerCase());
+    const inputNames = (component.inputs ?? []).map((item) => String(item?.name ?? '')).filter(Boolean);
+    const outputNames = (component.outputs ?? []).map((item) => String(item?.name ?? '')).filter(Boolean);
+    const search = `${component.class ?? ''} ${component.selector ?? ''} ${componentPath} ${component.templatePath ?? ''} ${inputNames.join(' ')} ${outputNames.join(' ')}`.toLowerCase();
+    const semanticScore = tokens.filter((token) => search.includes(token)).length;
+    return { row, component, score: semanticScore + (explicit ? 100 : 0), explicit };
+  }).filter((item) => item.explicit || item.score > 0);
+  const maximumScore = ranked.length === 0 ? null : Math.max(...ranked.map((item) => item.score));
+  const owners = ranked
+    .filter((item) => item.score === maximumScore)
+    .sort((left, right) => String(left.component.path ?? '').toLowerCase().localeCompare(String(right.component.path ?? '').toLowerCase())
+      || String(left.component.path ?? '').localeCompare(String(right.component.path ?? '')))
+    .slice(0, limit);
+
+  const usedRecords = new Set(owners.map((owner) => owner.row.recordKey));
+  const findFirstEdge = database.prepare(`
+    SELECT record_key recordKey, payload_json payloadJson
+    FROM query_documents
+    WHERE category = 'frontend-contracts' AND record_kind = 'consumer'
+      AND json_extract(payload_json, '$.componentPath') = ?
+    ORDER BY json_extract(payload_json, '$.consumerPath') COLLATE NOCASE, source_ordinal
+    LIMIT 1
+  `);
+  const findComponentByTemplate = database.prepare(`
+    SELECT record_key recordKey, payload_json payloadJson
+    FROM query_documents
+    WHERE category = 'frontend-contracts' AND record_kind = 'component'
+      AND json_extract(payload_json, '$.templatePath') = ? COLLATE NOCASE
+    ORDER BY source_ordinal
+    LIMIT 1
+  `);
+  const uniqueSorted = (values) => {
+    const unique = new Map();
+    for (const value of values.map((item) => String(item ?? '')).filter(Boolean)) {
+      if (!unique.has(value.toLowerCase())) unique.set(value.toLowerCase(), value);
+    }
+    return [...unique.values()].sort((left, right) => left.toLowerCase().localeCompare(right.toLowerCase()) || left.localeCompare(right));
+  };
+  const runtimeOwners = owners.map((match) => {
+    const component = match.component;
+    const chain = [];
+    const visited = new Set();
+    let current = component;
+    for (let depth = 0; depth <= 5; depth += 1) {
+      const currentPath = String(current?.path ?? '');
+      if (!current || visited.has(currentPath)) break;
+      visited.add(currentPath);
+      const edgeRow = findFirstEdge.get(currentPath);
+      if (!edgeRow) break;
+      usedRecords.add(edgeRow.recordKey);
+      const edge = JSON.parse(edgeRow.payloadJson);
+      const consumerRow = findComponentByTemplate.get(String(edge.consumerPath ?? ''));
+      if (consumerRow) usedRecords.add(consumerRow.recordKey);
+      const consumer = consumerRow ? JSON.parse(consumerRow.payloadJson) : null;
+      chain.push({
+        depth: depth + 1,
+        selector: String(edge.selector ?? ''),
+        renderedBy: String(edge.consumerPath ?? ''),
+        consumerComponent: String(consumer?.class ?? ''),
+        consumerPath: String(consumer?.path ?? ''),
+      });
+      current = consumer;
+    }
+    const componentPath = String(component.path ?? '');
+    const directory = dirname(componentPath).replaceAll('\\', '/');
+    const baseName = basename(componentPath, extname(componentPath));
+    const stylePath = `${directory}/${baseName}.scss`;
+    return {
+      class: String(component.class ?? ''),
+      selector: String(component.selector ?? ''),
+      componentPath,
+      templatePath: String(component.templatePath ?? ''),
+      stylePath,
+      specPath: String(component.specPath ?? ''),
+      score: match.score,
+      explicitPathMatch: match.explicit,
+      renderChain: chain,
+      recommendedScope: uniqueSorted([componentPath, component.templatePath, stylePath, component.specPath]),
+    };
+  });
+  const runtimeOwner = {
+    schemaVersion: 1,
+    query: String(query ?? ''),
+    candidatePaths: paths,
+    ownerCount: runtimeOwners.length,
+    confidence: runtimeOwners.length === 1 && (runtimeOwners[0].explicitPathMatch || runtimeOwners[0].score >= 2)
+      ? 'high' : runtimeOwners.length > 0 ? 'medium' : 'low',
+    owners: runtimeOwners,
+    note: 'Confirm the visible entry action and rendered consumer chain in current templates before editing the recommended scope.',
+  };
+  return {
+    ready: true,
+    source: 'sqlite-query-documents',
+    sourceHash: projectedHash,
+    scannedRecords: database.prepare("SELECT COUNT(*) count FROM query_documents WHERE category = 'frontend-contracts'").get().count,
+    candidateRecords: candidateRows.length,
+    returnedRecords: usedRecords.size,
+    runtimeOwner,
     durationMs: Math.round((performance.now() - started) * 100) / 100,
   };
 }
@@ -1632,6 +1899,8 @@ try {
   else if (action === 'fingerprint') result = fingerprint(database, (options.path ?? '').split(';').filter(Boolean));
   else if (action === 'query') result = queryDocuments(database, options.category ?? 'modules', options.query ?? '', Number(options.limit ?? 50));
   else if (action === 'backend-contract') result = backendContractContext(database, options.view ?? 'all', options.query ?? '', Number(options.limit ?? 30));
+  else if (action === 'frontend-contract') result = frontendContractContext(database, options.view ?? 'all', options.query ?? '', Number(options.limit ?? 30));
+  else if (action === 'frontend-runtime-owner') result = frontendRuntimeOwnerContext(database, options.query ?? '', (options.path ?? '').split(';').filter(Boolean), Number(options.limit ?? 5));
   else if (action === 'compiled-context') result = compiledContext(database, options);
   else result = {
     action: 'status',

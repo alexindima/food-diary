@@ -93,10 +93,12 @@ Reads parse the cached payload as JSON before reuse. A truncated or otherwise
 invalid entry is deleted and treated as a miss, preventing derived-command
 success with missing structured data after a crash or interrupted write.
 Before a read-only facade that composes context, diff, task brief, research,
-planning, rollout, or ownership creates its isolated Git snapshot, it
+planning, rollout, ownership, backend contracts, or frontend contracts creates
+its isolated Git snapshot, it
 incrementally refreshes the SQLite code graph. The snapshot copies that
-projection and its dependency fingerprint, so compiled catalog/symbol reads
-verify the same source state without mutating tracked files inside the snapshot.
+projection and its dependency fingerprint, so compiled catalog/symbol and
+contract-query reads verify the same normalized source state without mutating
+tracked files inside the snapshot.
 
 Adaptive routing asks the task brief to omit focused test-plan construction,
 because route selection consumes scope, risk, ownership, rollout, privacy, and
@@ -140,6 +142,16 @@ proves the corresponding boundary. Existing sensitive fields remain visible as
 review context without automatically escalating an unchanged data lifecycle.
 Database vocabulary in a query/read-model bug follows this discovery rule;
 explicit security incidents and data-lifecycle mutations do not.
+
+Frontend context and diff discovery now receive SQL-prefiltered frontend-index
+candidates through the same compiled-context call already used for C# evidence.
+The raw frontend index no longer participates separately in SQLite context-cache
+keys; the graph dependency fingerprint carries its normalized source lineage.
+Runtime-owner discovery also avoids parsing that index because its ranking uses
+the richer frontend-contract component and consumer records exclusively. Those
+records are now selected from SQLite as a bounded candidate set; render-chain
+edges are followed inside the same process, and the command reports source,
+candidate/returned counts, source hash, SQL time, and full round-trip time.
 
 The `maintenance` budget treats concrete CI diagnostics, manifest/lockfile
 compatibility errors, and Docker or deployment-build failures as primary

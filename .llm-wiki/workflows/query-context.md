@@ -23,15 +23,16 @@ controllers, C# symbols, dependency-injection registrations, tests, module
 dependencies, Angular features/routes/symbols/localization, ranked
 implementation files, and recommended verification commands.
 
-The resolver reads repository-catalog and C# symbol candidates from the local
-SQLite compiled-index projection by default. The graph is refreshed before the
+The resolver reads repository-catalog, C# symbol, and frontend feature/symbol/
+route/localization candidates from the local SQLite compiled-index projection
+by default. The graph is refreshed before the
 read-only facade snapshot is created, and the reader verifies normalized source
 hashes before returning data. A missing or stale projection fails explicitly;
 `-CompiledIndexSource Json` is reserved for parity tests and diagnostics rather
 than automatic fallback.
 
 Diff context uses the same projection in `changed-paths` mode. SQLite applies
-the exact changed-path predicate before transporting C# symbol payloads, while
+the exact changed-path predicate before transporting C# and frontend symbol payloads, while
 catalog-derived modules, projects, and guides retain their previous shape.
 Task-brief intent inference also uses SQLite candidates before applying its
 existing PowerShell scoring. Both commands keep `-CompiledIndexSource Json` as
@@ -49,8 +50,14 @@ Text output remains an uncached interactive view.
 Required smoke tests compare SQLite and JSON-baseline output for context, diff,
 and task-brief routes. They check exact functional parity, normalized source
 hashes, changed-path candidate reduction, and bounded SQL/transport overhead.
-This protects result quality while the remaining build-time and explicit
-baseline JSON consumers migrate incrementally.
+Context parity includes frontend results and test recommendations across
+frontend-specific queries. Task brief retains its direct frontend-index parse
+until candidate selection can share an existing process call; adding a separate
+SQL process was measured as more expensive than the roughly 15 ms JSON parse.
+Backend- and frontend-contract query tools apply the same freshness/no-fallback
+contract in specialized SQL views with their own exact parity groups. This
+protects result quality while the remaining build-time and explicit baseline
+JSON consumers migrate incrementally.
 
 ## Examples
 

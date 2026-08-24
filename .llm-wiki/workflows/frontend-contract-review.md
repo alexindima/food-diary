@@ -6,6 +6,7 @@ status: current
 sources:
   - .llm-wiki/generated/frontend-contract-index.json
   - .llm-wiki/tools/Find-LlmWikiFrontendContract.ps1
+  - .llm-wiki/tools/Get-LlmWikiFrontendRuntimeOwner.ps1
   - FoodDiary.Web.Client/AGENTS.md
 ---
 
@@ -18,6 +19,23 @@ For a changed component, query its selector, inputs, outputs, template, direct s
 ./.llm-wiki/wiki.ps1 ui -FrontendView consumers -Query fd-ui-autocomplete
 ./.llm-wiki/wiki.ps1 brief -ChangedPath FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete.ts
 ```
+
+`ui` reads the versioned SQLite `query_documents` projection by default. The
+projection preserves the original component, consumer, API-call, and translation
+payloads plus source order, verifies the committed frontend-contract source hash,
+and fails closed when it is missing or stale. Direct diagnostics can opt into
+`-CompiledIndexSource Json` only as an explicit parity baseline; there is no
+automatic JSON fallback. `Test-LlmWikiFrontendContractSqlParity.ps1` guards all
+six views with exact output parity, non-vacuous queries, payload reduction, source
+lineage, and a bounded SQL/JSON latency envelope.
+
+`ui-trace` uses a specialized SQLite runtime-owner query over the same projection.
+It selects component candidates before transport, performs the established
+semantic and explicit-path ranking, and follows only the selected consumer chains.
+`Test-LlmWikiFrontendRuntimeOwnerSqlParity.ps1` protects ten representative
+queries with exact functional parity, normalized source lineage, payload
+reduction, and a required average latency improvement. JSON remains an explicit
+`-CompiledIndexSource Json` baseline and is never an automatic fallback.
 
 Preserve or explicitly migrate public inputs and output payloads. Exercise loading, empty, error, disabled, and permission states where relevant. Verify accessible naming, semantics, keyboard navigation, focus transitions, and error announcements. Shared UI-kit changes need consumer-aware rendered evidence at representative viewport sizes.
 

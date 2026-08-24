@@ -43,6 +43,7 @@ if ($Format -eq 'Json' -and -not $SqlShadow -and -not $SkipQueryCache) {
         @(
             '.llm-wiki/generated/repository-catalog.json'
             '.llm-wiki/generated/csharp-symbol-index.json'
+            '.llm-wiki/generated/frontend-index.json'
         )
     } else {
         @('.artifacts/llm-wiki/code-graph/code-graph.fingerprint')
@@ -54,9 +55,7 @@ if ($Format -eq 'Json' -and -not $SqlShadow -and -not $SkipQueryCache) {
         ChangeType = $ChangeType
         CompiledIndexSource = $CompiledIndexSource
         Limit = $Limit
-    } -RelevantPath $cacheRelevantPaths -DependencyPath @(
-        @('.llm-wiki/generated/frontend-index.json') + $compiledIndexDependencies
-    )
+    } -RelevantPath $cacheRelevantPaths -DependencyPath $compiledIndexDependencies
     $cachedContext = Read-LlmWikiQueryCache -Entry $queryCacheEntry
     if ($null -ne $cachedContext) {
         Write-Output $cachedContext
@@ -195,6 +194,12 @@ if ($CompiledIndexSource -eq 'Sqlite') {
         symbols = @($compiledResult.symbols)
         dependencyInjectionRegistrations = @($compiledResult.dependencyInjectionRegistrations)
     }
+    $frontendIndex = [pscustomobject]@{
+        features = @($compiledResult.frontendFeatures)
+        symbols = @($compiledResult.frontendSymbols)
+        routes = @($compiledResult.frontendRoutes)
+        localization = @($compiledResult.frontendLocalization)
+    }
     $compiledIndexDiagnostics = [ordered]@{
         source = [string]$compiledResult.source
         sqlDurationMs = [double]$compiledResult.durationMs
@@ -209,22 +214,23 @@ if ($CompiledIndexSource -eq 'Sqlite') {
     } else {
         $null
     }
+    $frontendIndex = if (Test-Path -LiteralPath $frontendIndexPath) {
+        Get-Content -LiteralPath $frontendIndexPath -Raw | ConvertFrom-Json
+    } else {
+        $null
+    }
+    $jsonRecordCount = $(if ($null -eq $symbolIndex) { 0 } else { @($symbolIndex.symbols).Count + @($symbolIndex.dependencyInjectionRegistrations).Count }) +
+        $(if ($null -eq $frontendIndex) { 0 } else { @($frontendIndex.features).Count + @($frontendIndex.symbols).Count + @($frontendIndex.routes).Count + @($frontendIndex.localization).Count })
     $compiledIndexDiagnostics = [ordered]@{
         source = 'json-baseline'
         sqlDurationMs = $null
-        scannedRecords = $(if ($null -eq $symbolIndex) { 0 } else { @($symbolIndex.symbols).Count + @($symbolIndex.dependencyInjectionRegistrations).Count })
-        returnedRecords = $(if ($null -eq $symbolIndex) { 0 } else { @($symbolIndex.symbols).Count + @($symbolIndex.dependencyInjectionRegistrations).Count })
+        scannedRecords = $jsonRecordCount
+        returnedRecords = $jsonRecordCount
         sourceHashes = $null
     }
 }
 $compiledIndexStopwatch.Stop()
 $compiledIndexDiagnostics['roundTripDurationMs'] = [Math]::Round($compiledIndexStopwatch.Elapsed.TotalMilliseconds, 2)
-$frontendIndex = if (Test-Path -LiteralPath $frontendIndexPath) {
-    Get-Content -LiteralPath $frontendIndexPath -Raw | ConvertFrom-Json
-} else {
-    $null
-}
-
 $matchedModule = $null
 if (-not [string]::IsNullOrWhiteSpace($Module)) {
     $matchedModule = @(

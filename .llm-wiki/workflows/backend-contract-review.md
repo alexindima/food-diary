@@ -39,7 +39,9 @@ before payload transport. A missing or stale projection fails explicitly with
 the `graph-build` recovery command; `-CompiledIndexSource Json` is an explicit
 parity/diagnostic baseline and is never selected automatically. The required
 `backend-contract-query` smoke compares all seven views exactly, verifies the
-source hash and payload reduction, and enforces a latency envelope.
+source hash and payload reduction, and enforces a latency envelope. Source hash
+comparison normalizes CRLF/LF so the same committed index remains current in an
+isolated cross-platform snapshot.
 
 Credential-bearing account-link commands need an additional security pass:
 confirm current-user scoping, provider-identity uniqueness, email ownership,

@@ -187,6 +187,12 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiBackendContractSqlParity.ps1')
             if (-not $?) { exit 1 }
         }
+        'frontend-contract-query' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiFrontendContractSqlParity.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiFrontendRuntimeOwnerSqlParity.ps1')
+            if (-not $?) { exit 1 }
+        }
         'git-paths' {
             & (Join-Path $toolsRoot 'Test-LlmWikiGitPaths.ps1')
             if (-not $?) { exit 1 }

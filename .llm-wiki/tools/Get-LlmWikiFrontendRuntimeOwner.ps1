@@ -4,20 +4,41 @@ param(
     [string[]]$CandidatePath,
     [ValidateRange(1, 50)]
     [int]$Limit = 5,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'
 )
 
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
-$frontendIndexPath = Join-Path $wikiRoot 'generated/frontend-index.json'
 $contractIndexPath = Join-Path $wikiRoot 'generated/frontend-contract-index.json'
-foreach ($path in @($frontendIndexPath, $contractIndexPath)) {
-    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Frontend runtime index is absent: $path" }
-}
-$frontend = Get-Content -LiteralPath $frontendIndexPath -Raw | ConvertFrom-Json
-$contracts = Get-Content -LiteralPath $contractIndexPath -Raw | ConvertFrom-Json
 $paths = @($CandidatePath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | ForEach-Object { $_.Replace('\', '/') } | Sort-Object -Unique)
+$stopwatch = [Diagnostics.Stopwatch]::StartNew()
+$diagnostics = $null
+if ($CompiledIndexSource -eq 'Sqlite') {
+    $sqlResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
+        -Action frontend-runtime-owner `
+        -Query $Query `
+        -ChangedPath $paths `
+        -Limit $Limit `
+        -SkipRefresh `
+        -Format Json | ConvertFrom-Json
+    if (-not [bool]$sqlResult.ready) {
+        throw "SQLite frontend runtime-owner projection is unavailable ($($sqlResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
+    }
+    $result = $sqlResult.runtimeOwner
+    $diagnostics = [ordered]@{
+        source = [string]$sqlResult.source
+        sqlDurationMs = [double]$sqlResult.durationMs
+        scannedRecords = [int]$sqlResult.scannedRecords
+        candidateRecords = [int]$sqlResult.candidateRecords
+        returnedRecords = [int]$sqlResult.returnedRecords
+        sourceHash = [string]$sqlResult.sourceHash
+    }
+} else {
+if (-not (Test-Path -LiteralPath $contractIndexPath -PathType Leaf)) { throw "Frontend runtime index is absent: $contractIndexPath" }
+$contracts = Get-Content -LiteralPath $contractIndexPath -Raw | ConvertFrom-Json
 $ignored = @('change', 'component', 'frontend', 'improve', 'layout', 'result', 'style', 'template', 'visual', 'with')
 $tokens = @(
     [regex]::Matches(([string]$Query).ToLowerInvariant(), '[\p{L}\p{Nd}]{3,}') |
@@ -98,9 +119,21 @@ $result = [pscustomobject][ordered]@{
     owners = @($runtimeOwners)
     note = 'Confirm the visible entry action and rendered consumer chain in current templates before editing the recommended scope.'
 }
+$diagnostics = [ordered]@{
+    source = 'json-baseline'
+    sqlDurationMs = $null
+    scannedRecords = @($contracts.components).Count + @($contracts.consumerEdges).Count + @($contracts.apiCalls).Count + @($contracts.translationUsage).Count
+    candidateRecords = @($contracts.components).Count
+    returnedRecords = @($contracts.components).Count + @($contracts.consumerEdges).Count
+    sourceHash = $null
+}
+}
+$stopwatch.Stop()
+$diagnostics['roundTripDurationMs'] = [Math]::Round($stopwatch.Elapsed.TotalMilliseconds, 2)
+$result | Add-Member -NotePropertyName compiledIndex -NotePropertyValue ([pscustomobject]$diagnostics) -Force
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 12 } else {
     Write-Host "Frontend runtime owners: $($result.ownerCount) ($($result.confidence) confidence)"
-    foreach ($owner in @($runtimeOwners)) {
+    foreach ($owner in @($result.owners)) {
         Write-Host " - $($owner.class) [$($owner.selector)]: $($owner.templatePath)"
         foreach ($edge in @($owner.renderChain)) { Write-Host "   <- $($edge.renderedBy)" }
     }

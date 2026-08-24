@@ -142,18 +142,14 @@
       "pageSha256": "ce5b83013428f01f44e45ede31f85d01185773afed67acdd7d8ac18d5939ac99",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "b7369f64b1077805ad6f6f3a33af001347cb74540ade1b11278dc819e3b8d553"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "7a507901d7093d8d6740faec7478f90c1b1b3392c35fbb8fe5231d00e46db3c3"
+          "path": ".llm-wiki/tools/Get-LlmWikiFrontendRuntimeOwner.ps1",
+          "sha256": "d70a920e13bebe1b8b7bc53f4b634540831866eb93360414b8e68ec50a4e9e97"
         }
       ],
-      "reason": "The 5-case task-brief SQLite/JSON parity test preserves the complete brief result, inferred paths, risk, and provenance; this page describes unchanged routing, governance, and planning semantics rather than index transport.",
+      "reason": "Runtime-owner tracing, ranking, output shape, and visual-work routing are unchanged; Get-LlmWikiFrontendRuntimeOwner only stopped loading an unused frontend-index JSON document, and adaptive-routing smoke passed.",
       "baseRef": "HEAD",
-      "gitHead": "5a3d3a8ab6886d4f40dd93dc5bb0570da71797f5",
-      "reviewedAtUtc": "2026-08-24T11:57:05.4340317Z"
+      "gitHead": "ff97ff3ebdc1e435843003ed55663e163fc30dc2",
+      "reviewedAtUtc": "2026-08-24T13:20:43.1536923Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -188,17 +184,17 @@
     {
       "pageId": "workflow-backend-contract-review",
       "pagePath": ".llm-wiki/workflows/backend-contract-review.md",
-      "pageSha256": "e38ac8a4632c1ae729365477f68f5cde28f6eebaf7dd764685faffd319feed6d",
+      "pageSha256": "ab1e4ba6f832f69547b9b819096039b1837170c84a9a84ce5c47c7f28a485568",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "08a2d09e97b9a40c53d3e904cbf4a1ee0d5260707739cd65e88ddfd18a05baae"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "3330762ac88f938b79930bcc9f3917592689f24c95a889555daacd057e7f4223"
         }
       ],
-      "reason": "The generated contract delta only increases test references to IChangeSetSnapshotService and IWikiCommandExecutor for the retirement runner and recovery scenarios; no backend HTTP route, DTO, status code, or Swagger-visible contract changed.",
+      "reason": "The new code-graph action reads only frontend-contract query_documents and does not change backend contract views, ordering, or fallback behavior; frontend-contract parity and the full code-graph regression passed.",
       "baseRef": "HEAD",
-      "gitHead": "36d60d6501b3b078e3eac46d79242bf7f07ce024",
-      "reviewedAtUtc": "2026-08-24T09:29:51.9547674Z"
+      "gitHead": "ff97ff3ebdc1e435843003ed55663e163fc30dc2",
+      "reviewedAtUtc": "2026-08-24T17:14:17.5779573Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -610,17 +606,21 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "e3ced57c02bacfce6b76fbc8d3af6c09485e3888822e3145909ebdb247386368",
+      "pageSha256": "21f926fd3a61b7f4cf45c9a433e49b1d4bec77f36f79f57fc052239394384d9a",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiIndexCache.ps1",
-          "sha256": "ead15925c18422e67266c4903c9c51714bd941ff3bdbec3b4525ab09db4849e5"
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "ed273b28ae64bea9c2f788e1983a5561fa341854de9af9702174b11d0dbb6059"
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+          "sha256": "6cad27e6bc88bc5a91aa5a0e2ca1b37af485f19ae7eb9ce7a4dd7ec978b6c00a"
         }
       ],
-      "reason": "Reviewed regenerated indexes after access-token invalidation, SNS topic binding, migration, configuration, and tests.",
+      "reason": "The affected-smoke catalog only routes runtime-owner changes into the existing frontend-contract-query group and invokes its new parity test; affected-smoke planning regression confirms bounded routing without full-tools fallback.",
       "baseRef": "HEAD",
-      "gitHead": "63f0c2dcb8163dbf1336bd0469e834036f2b62af",
-      "reviewedAtUtc": "2026-08-23T20:20:53.9440113Z"
+      "gitHead": "ff97ff3ebdc1e435843003ed55663e163fc30dc2",
+      "reviewedAtUtc": "2026-08-24T17:14:20.0431920Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -988,13 +988,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "12a51fd1022ba4bd38fbfce6139b3e82bbdb1a7dbc1e6c80e256001c30a5d28e"
+          "sha256": "740842e6534d3646d9e9e089b5b539ccad6b1fd673ad482a489d423e3e80a797"
         }
       ],
-      "reason": "Adding the contracts facade to SQLite prewarm/read-only isolation changes only local query preparation; facade-contract and backend-contract-query smoke passed, while dispatch routing, proposed-path forwarding, and receipt schemas remain unchanged.",
+      "reason": "Reviewed dispatch routing after the shared facade classification changed; ui prewarming does not alter dispatch payloads, leases, receipt hashes, lifecycle, or metrics.",
       "baseRef": "HEAD",
-      "gitHead": "5a3d3a8ab6886d4f40dd93dc5bb0570da71797f5",
-      "reviewedAtUtc": "2026-08-24T12:30:37.5757288Z"
+      "gitHead": "ff97ff3ebdc1e435843003ed55663e163fc30dc2",
+      "reviewedAtUtc": "2026-08-24T12:50:07.6368947Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1132,13 +1132,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "c973eae8c4c582445a1f9e1d4d420946b61571a1c1691b7b10b75fb2ef70a67f"
+          "sha256": "343abd07f201b56956b5376a93aafe6e620f614d684be15388044392b6ff3816"
         }
       ],
-      "reason": "Diff-context parity is exact across five representative change sets and the retrieval evaluation remains 450/450 strict top-1 plus 230/230 probes, so eval inputs and promotion semantics are unchanged.",
+      "reason": "Diff classification and eval contracts are unchanged; the diff resolver now obtains the same exact changed frontend-symbol set from SQLite, with 6/6 SQL-to-JSON parity cases and affected smoke passing.",
       "baseRef": "HEAD",
-      "gitHead": "5a3d3a8ab6886d4f40dd93dc5bb0570da71797f5",
-      "reviewedAtUtc": "2026-08-24T11:56:57.8981217Z"
+      "gitHead": "ff97ff3ebdc1e435843003ed55663e163fc30dc2",
+      "reviewedAtUtc": "2026-08-24T13:20:46.4959421Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1173,32 +1173,32 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "8439af4b89bf50398667ec91e06804d1fb6925969f3cfb30925553589f14ce9c",
+      "pageSha256": "eedb432ceb5f9c703aee1f89aa2f774bfd7623d44fc43611e8a2bcb3a22c401f",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "d0beb745418d13f5345ef61781069a19b2f85095f0ff1943bcb627ce6dbdba04"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "3330762ac88f938b79930bcc9f3917592689f24c95a889555daacd057e7f4223"
         }
       ],
-      "reason": "The repository-catalog diff contains only updated source line numbers for two unchanged HTTP routes; query-context navigation semantics are unchanged.",
+      "reason": "The specialized frontend-runtime-owner action is separate from compiled-context selection; compiled-index SQL parity passed 8/8 cases with exact 13-section output and payload reduction in every case.",
       "baseRef": "HEAD",
-      "gitHead": "851b93397552a5e1911ff5616abb5e4ff43c84b4",
-      "reviewedAtUtc": "2026-08-24T01:43:11.7325902Z"
+      "gitHead": "ff97ff3ebdc1e435843003ed55663e163fc30dc2",
+      "reviewedAtUtc": "2026-08-24T17:14:22.6126958Z"
     },
     {
       "pageId": "workflow.review-diff",
       "pagePath": ".llm-wiki/workflows/review-diff.md",
-      "pageSha256": "2fef1c903c42193a33f6c3de3fc4c406a2a718ff38e942ad7944df0e74c713af",
+      "pageSha256": "05dbbecbbeb1603e3a85882cca51c11c47e9a2eda07b633127a800bc23487fc7",
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "599c1fe1a18eb30ebe6e56788181ba2fb007b01d5068186646513f864bab3c4b"
+          "sha256": "740842e6534d3646d9e9e089b5b539ccad6b1fd673ad482a489d423e3e80a797"
         }
       ],
-      "reason": "The facade change refreshes SQLite only for context and research before read-only snapshot creation; diff review routing and task-dispatch receipt lifecycle, schemas, persistence, and verification behavior are unchanged.",
+      "reason": "Reviewed the diff-context contract after adding ui to the read-only/prewarmed facade set; changed-path SQL selection, diagnostics, and no-fallback behavior remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5a3d3a8ab6886d4f40dd93dc5bb0570da71797f5",
-      "reviewedAtUtc": "2026-08-24T10:58:57.5541791Z"
+      "gitHead": "ff97ff3ebdc1e435843003ed55663e163fc30dc2",
+      "reviewedAtUtc": "2026-08-24T12:50:06.6214352Z"
     }
   ]
 }

@@ -137,6 +137,7 @@ if ($CompiledIndexSource -eq 'Sqlite') {
     }
     $catalog = $compiledResult.catalog
     $symbolIndex = [pscustomobject]@{ symbols = @($compiledResult.symbols) }
+    $frontendIndex = [pscustomobject]@{ symbols = @($compiledResult.frontendSymbols) }
     $compiledIndexDiagnostics = [ordered]@{
         source = [string]$compiledResult.source
         selectionMode = [string]$compiledResult.selectionMode
@@ -154,20 +155,23 @@ if ($CompiledIndexSource -eq 'Sqlite') {
     $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
     $symbolRead = Read-IndexWhenPathIsPresent $symbolIndexPath $changedPaths
     $symbolIndex = $symbolRead.index
+    $frontendRead = Read-IndexWhenPathIsPresent $frontendIndexPath $changedPaths
+    $frontendIndex = $frontendRead.index
+    $jsonCandidateCount = $(if ($null -eq $symbolIndex) { 0 } else { @($symbolIndex.symbols).Count }) +
+        $(if ($null -eq $frontendIndex) { 0 } else { @($frontendIndex.symbols).Count })
     $compiledIndexDiagnostics = [ordered]@{
         source = 'json-baseline'
         selectionMode = 'changed-paths'
         sqlDurationMs = $null
-        scannedRecords = $(if ($null -eq $symbolIndex) { 0 } else { @($symbolIndex.symbols).Count })
-        candidateRecords = $(if ($null -eq $symbolIndex) { 0 } else { @($symbolIndex.symbols).Count })
+        scannedRecords = $jsonCandidateCount
+        candidateRecords = $jsonCandidateCount
         returnedRecords = 0
-        sourceBytesRead = [int64]$symbolRead.bytesRead
+        sourceBytesRead = [int64]$symbolRead.bytesRead + [int64]$frontendRead.bytesRead
         sourceHashes = $null
     }
 }
 $compiledIndexStopwatch.Stop()
 $compiledIndexDiagnostics['roundTripDurationMs'] = [Math]::Round($compiledIndexStopwatch.Elapsed.TotalMilliseconds, 2)
-$frontendIndex = (Read-IndexWhenPathIsPresent $frontendIndexPath $changedPaths).index
 $scopes = [ordered]@{
     Backend = @($changedPaths | Where-Object {
         $_ -match '\.cs$|\.csproj$|Directory\.(Build|Packages)\.props$' -or
@@ -290,16 +294,16 @@ if ($null -ne $symbolIndex) {
             Select-Object -First ($Limit * 3)
     )
 }
-$compiledIndexDiagnostics['returnedRecords'] = $changedSymbols.Count
 $changedFrontendSymbols = @()
 if ($null -ne $frontendIndex) {
     $changedFrontendSymbols = @(
         $frontendIndex.symbols |
             Where-Object { $changedPathSet.Contains([string]$_.path) } |
             Sort-Object path, line |
-            Select-Object -First ($Limit * 3)
+        Select-Object -First ($Limit * 3)
     )
 }
+$compiledIndexDiagnostics['returnedRecords'] = $changedSymbols.Count + $changedFrontendSymbols.Count
 
 $guidePaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $null = $guidePaths.Add('AGENTS.md')

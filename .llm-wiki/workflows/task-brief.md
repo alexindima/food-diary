@@ -59,12 +59,16 @@ those repository-wide dependencies keeps the result fast and deterministic
 across shells and CI environments.
 
 C# intent candidates and the nested diff context use the refreshed SQLite
-compiled-index projection by default. Candidate filtering happens before the
-existing brief scoring, so risk, provenance, inferred paths, and downstream
-planning shapes remain unchanged. Missing or stale projections fail explicitly;
-`-CompiledIndexSource Json` exists for parity tests and diagnostics only. The
-query cache keys the selected source and uses the graph dependency fingerprint
-for the SQLite route, preventing SQL and JSON-baseline results from colliding.
+compiled-index projection by default; the nested diff selects exact changed C#
+and frontend symbol paths before transport. Candidate filtering happens before
+the existing brief scoring, so risk, provenance, inferred paths, and downstream
+planning shapes remain unchanged. Standalone frontend intent inference retains
+the generated frontend JSON source because its measured local parse cost is
+lower than an additional SQLite process round trip. Missing or stale required
+projections fail explicitly; `-CompiledIndexSource Json` exists for parity tests
+and diagnostics only. The query cache keys the selected source and uses the
+graph dependency fingerprint for the SQLite route, preventing SQL and
+JSON-baseline results from colliding.
 
 The brief combines changed scopes, directly affected and downstream modules,
 scoped instructions, relevant wiki pages, focused tests, mandatory checks,

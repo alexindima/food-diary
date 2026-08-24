@@ -4,7 +4,8 @@ param()
 $ErrorActionPreference = 'Stop'
 $manager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'
 $migrationTool = Join-Path $PSScriptRoot 'Get-LlmWikiCompiledIndexMigration.ps1'
-$repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$repositoryRoot = (& git -C $PSScriptRoot rev-parse --show-toplevel).Trim()
+if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($repositoryRoot)) { throw 'Unable to resolve the repository root for code-graph regression.' }
 $graphToolText = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'code-graph.mjs') -Raw
 foreach ($lockSafetyFragment in @('isProcessAlive(owner.pid)', 'process.kill(pid, 0)', 'owner.token === ownerToken')) {
     if (-not $graphToolText.Contains($lockSafetyFragment)) { throw "Code graph live-owner lock safety is missing: $lockSafetyFragment" }
@@ -14,6 +15,9 @@ foreach ($corruptionSafetyFragment in @('isDatabaseCorruption(error)', 'quaranti
 }
 foreach ($compiledIndexSafetyFragment in @('compiled-index-projection-stale', 'compiled_index_schema_version', 'source_ordinal')) {
     if (-not $graphToolText.Contains($compiledIndexSafetyFragment)) { throw "Compiled-index projection safety is missing: $compiledIndexSafetyFragment" }
+}
+foreach ($queryDocumentSafetyFragment in @('backend-contract-projection-stale', 'frontend-contract-projection-stale', 'query_document_schema_version')) {
+    if (-not $graphToolText.Contains($queryDocumentSafetyFragment)) { throw "Query-document projection safety is missing: $queryDocumentSafetyFragment" }
 }
 $recipesBoundary = if (Test-Path -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Application.Recipes') -PathType Container) { 'FoodDiary.Application.Recipes' } else { 'FoodDiary.Application/Recipes' }
 $recipesSourcePrefix = if ($recipesBoundary -eq 'FoodDiary.Application.Recipes') { 'FoodDiary.Application.Recipes/Recipes' } else { $recipesBoundary }
@@ -26,6 +30,7 @@ if ([string]::IsNullOrWhiteSpace([string]$build.graphDependencyFingerprint) -or
     throw 'Code graph build did not publish its cache dependency fingerprint sidecar.'
 }
 $compiledSource = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/generated/csharp-symbol-index.json') -Raw | ConvertFrom-Json
+$frontendSource = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/generated/frontend-index.json') -Raw | ConvertFrom-Json
 $migration = & $migrationTool -Format Json | ConvertFrom-Json
 foreach ($indexPath in @('.llm-wiki/generated/repository-catalog.json', '.llm-wiki/generated/csharp-symbol-index.json')) {
     $migrationIndex = @($migration.indexes | Where-Object path -eq $indexPath | Select-Object -First 1)
@@ -35,13 +40,31 @@ foreach ($indexPath in @('.llm-wiki/generated/repository-catalog.json', '.llm-wi
         throw "Compiled-index migration status is not SQLite-primary without fallback: $indexPath"
     }
 }
+foreach ($indexPath in @('.llm-wiki/generated/backend-contract-index.json', '.llm-wiki/generated/frontend-contract-index.json')) {
+    $migrationIndex = @($migration.indexes | Where-Object path -eq $indexPath | Select-Object -First 1)
+    if ($migrationIndex.Count -ne 1 -or [string]$migrationIndex[0].queryLayer -ne 'migrated' -or
+        [string]$migrationIndex[0].defaultRoute -ne 'sqlite-query-documents' -or
+        [bool]$migrationIndex[0].automaticJsonFallback) {
+        throw "Query-document migration status is not SQLite-primary without fallback: $indexPath"
+    }
+}
+$frontendMigration = @($migration.indexes | Where-Object path -eq '.llm-wiki/generated/frontend-index.json' | Select-Object -First 1)
+if ($frontendMigration.Count -ne 1 -or [string]$frontendMigration[0].queryLayer -ne 'partial' -or
+    [string]$frontendMigration[0].defaultRoute -ne 'sqlite-context-and-diff; json-task-brief' -or
+    [bool]$frontendMigration[0].automaticJsonFallback) {
+    throw 'Frontend-index migration status does not expose the measured partial SQL route without fallback.'
+}
 $compiledCounts = @{}
-foreach ($record in @($build.compiledIndexes.records)) { $compiledCounts[[string]$record.recordKind] = [int]$record.count }
-if (@($build.compiledIndexes.indexes).Count -ne 2 -or
-    [int]$compiledCounts['symbol'] -ne @($compiledSource.symbols).Count -or
-    [int]$compiledCounts['dependency-injection'] -ne @($compiledSource.dependencyInjectionRegistrations).Count -or
-    [int]$compiledCounts['interface-implementation'] -ne @($compiledSource.interfaceImplementations).Count) {
-    throw 'Code graph build did not publish the catalog and C# symbol compiled-index projection.'
+foreach ($record in @($build.compiledIndexes.records)) { $compiledCounts["$($record.indexName)/$($record.recordKind)"] = [int]$record.count }
+if (@($build.compiledIndexes.indexes).Count -ne 3 -or
+    [int]$compiledCounts['csharp-symbols/symbol'] -ne @($compiledSource.symbols).Count -or
+    [int]$compiledCounts['csharp-symbols/dependency-injection'] -ne @($compiledSource.dependencyInjectionRegistrations).Count -or
+    [int]$compiledCounts['csharp-symbols/interface-implementation'] -ne @($compiledSource.interfaceImplementations).Count -or
+    [int]$compiledCounts['frontend/feature'] -ne @($frontendSource.features).Count -or
+    [int]$compiledCounts['frontend/symbol'] -ne @($frontendSource.symbols).Count -or
+    [int]$compiledCounts['frontend/route'] -ne @($frontendSource.routes).Count -or
+    [int]$compiledCounts['frontend/localization'] -ne @($frontendSource.localization).Count) {
+    throw 'Code graph build did not publish the catalog, C# symbol, and frontend compiled-index projections.'
 }
 $warm = & $manager build -Format Json | ConvertFrom-Json
 if ([int]$warm.updated -ne 0 -or [int]$warm.scanned -ne 0) { throw 'Unchanged code graph build was not incremental.' }

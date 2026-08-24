@@ -113,7 +113,9 @@ owns query-context compiled-index SQLite/JSON parity, payload-reduction,
 source-hash, and transport-envelope checks. The graph-dependent `task-baseline`
 and query-cache groups separately guard exact diff-context and task-brief parity
 plus their latency envelopes. The serial `backend-contract-query` group checks
-all seven contract views, source lineage, payload reduction, and SQL latency.
+all seven backend views, while `frontend-contract-query` checks all six frontend
+views. Both guard exact JSON parity, source lineage, payload reduction, and SQL
+latency without automatic fallback.
 
 Parallel smoke gives every worker a run-local fixture sandbox and redirects
 `TEMP`/`TMP` plus task IDs into that owned run directory. Cleanup validates exact

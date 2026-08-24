@@ -3,26 +3,27 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $manager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'
-$queryTool = Join-Path $PSScriptRoot 'Find-LlmWikiBackendContract.ps1'
+$queryTool = Join-Path $PSScriptRoot 'Find-LlmWikiFrontendContract.ps1'
 $repositoryRoot = (& git -C $PSScriptRoot rev-parse --show-toplevel).Trim()
-if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($repositoryRoot)) { throw 'Unable to resolve the repository root for backend-contract parity.' }
+if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($repositoryRoot)) { throw 'Unable to resolve the repository root for frontend-contract parity.' }
 $null = & $manager -Action build -Format Json
 
 $cases = @(
-    [pscustomobject]@{ View = 'all'; Query = 'User'; Minimum = 60 }
-    [pscustomobject]@{ View = 'contracts'; Query = 'Invitation'; Minimum = 1 }
-    [pscustomobject]@{ View = 'consumers'; Query = 'User'; Minimum = 30 }
-    [pscustomobject]@{ View = 'production'; Query = 'User'; Minimum = 30 }
-    [pscustomobject]@{ View = 'tests'; Query = 'User'; Minimum = 30 }
-    [pscustomobject]@{ View = 'ambiguous'; Query = ''; Minimum = 1 }
-    [pscustomobject]@{ View = 'unconsumed'; Query = ''; Minimum = 0; Expected = 0 }
+    [pscustomobject]@{ View = 'all'; Query = ''; Limit = 30; Minimum = 120 }
+    [pscustomobject]@{ View = 'components'; Query = 'Autocomplete'; Limit = 30; Minimum = 1 }
+    [pscustomobject]@{ View = 'consumers'; Query = 'fd-ui-autocomplete'; Limit = 30; Minimum = 1 }
+    [pscustomobject]@{ View = 'api'; Query = 'linkGoogle'; Limit = 30; Minimum = 1 }
+    [pscustomobject]@{ View = 'translations'; Query = 'profile'; Limit = 30; Minimum = 1 }
+    [pscustomobject]@{ View = 'spec-gaps'; Query = ''; Limit = 30; Minimum = 30 }
+    [pscustomobject]@{ View = 'components'; Query = 'AiPhotoPreview'; Limit = 10; Minimum = 1 }
+    [pscustomobject]@{ View = 'api'; Query = 'google/link'; Limit = 10; Minimum = 1 }
 )
 $sqlDurations = [Collections.Generic.List[double]]::new()
 $jsonDurations = [Collections.Generic.List[double]]::new()
 $caseIndex = 0
 
 foreach ($case in $cases) {
-    $arguments = @{ View = $case.View; Query = $case.Query; Limit = 30; Format = 'Json' }
+    $arguments = @{ View = $case.View; Query = $case.Query; Limit = $case.Limit; Format = 'Json' }
     if (($caseIndex % 2) -eq 0) {
         $jsonStopwatch = [Diagnostics.Stopwatch]::StartNew()
         $json = & $queryTool @arguments -CompiledIndexSource Json | ConvertFrom-Json
@@ -40,32 +41,29 @@ foreach ($case in $cases) {
     }
 
     if (($sqlite | ConvertTo-Json -Depth 12 -Compress) -cne ($json | ConvertTo-Json -Depth 12 -Compress)) {
-        throw "$($case.View)/$($case.Query): SQLite/JSON backend-contract parity failed."
+        throw "$($case.View)/$($case.Query): SQLite/JSON frontend-contract parity failed."
     }
     $returnedCount = 0
     foreach ($property in $sqlite.PSObject.Properties) { $returnedCount += @($property.Value).Count }
     if ($returnedCount -lt [int]$case.Minimum) {
-        throw "$($case.View)/$($case.Query): backend-contract parity was vacuous; expected at least $($case.Minimum) record(s), got $returnedCount."
-    }
-    if ($case.PSObject.Properties['Expected'] -and $returnedCount -ne [int]$case.Expected) {
-        throw "$($case.View)/$($case.Query): expected exactly $($case.Expected) record(s), got $returnedCount."
+        throw "$($case.View)/$($case.Query): frontend-contract parity was vacuous; expected at least $($case.Minimum) record(s), got $returnedCount."
     }
     $sqlDurations.Add($sqlStopwatch.Elapsed.TotalMilliseconds)
     $jsonDurations.Add($jsonStopwatch.Elapsed.TotalMilliseconds)
     $caseIndex++
 }
 
-$probe = & $manager -Action backend-contract -BackendContractView all -Query User -Limit 30 -SkipRefresh -Format Json | ConvertFrom-Json
-$sourceText = [IO.File]::ReadAllText((Join-Path $repositoryRoot '.llm-wiki/generated/backend-contract-index.json')).Replace("`r`n", "`n")
+$probe = & $manager -Action frontend-contract -FrontendContractView all -Limit 30 -SkipRefresh -Format Json | ConvertFrom-Json
+$sourceText = [IO.File]::ReadAllText((Join-Path $repositoryRoot '.llm-wiki/generated/frontend-contract-index.json')).Replace("`r`n", "`n")
 $sourceHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($sourceText))).ToLowerInvariant()
 if (-not [bool]$probe.ready -or [string]$probe.source -ne 'sqlite-query-documents' -or
     [string]$probe.sourceHash -cne $sourceHash -or [int]$probe.returnedRecords -ge [int]$probe.scannedRecords) {
-    throw 'Backend-contract SQLite projection is not current or did not reduce the transported payload.'
+    throw 'Frontend-contract SQLite projection is not current or did not reduce the transported payload.'
 }
 
 $sqlAverage = [Math]::Round(($sqlDurations | Measure-Object -Average).Average, 2)
 $jsonAverage = [Math]::Round(($jsonDurations | Measure-Object -Average).Average, 2)
 if ($sqlAverage -gt ($jsonAverage + 250)) {
-    throw "SQLite backend-contract route regressed beyond the 250ms safety envelope: SQL=${sqlAverage}ms, JSON=${jsonAverage}ms."
+    throw "SQLite frontend-contract route regressed beyond the 250ms safety envelope: SQL=${sqlAverage}ms, JSON=${jsonAverage}ms."
 }
-Write-Host "LLM Wiki backend-contract SQL parity passed: $($cases.Count)/$($cases.Count) views; SQL=${sqlAverage}ms, JSON=${jsonAverage}ms average; returned=$($probe.returnedRecords)/$($probe.scannedRecords)."
+Write-Host "LLM Wiki frontend-contract SQL parity passed: $($cases.Count)/$($cases.Count) cases; SQL=${sqlAverage}ms, JSON=${jsonAverage}ms average; returned=$($probe.returnedRecords)/$($probe.scannedRecords)."

@@ -2,7 +2,8 @@
 param()
 
 $ErrorActionPreference = 'Stop'
-$repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$repositoryRoot = (& git -C $PSScriptRoot rev-parse --show-toplevel).Trim()
+if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($repositoryRoot)) { throw 'Unable to resolve the repository root for context-cache smoke.' }
 . (Join-Path $PSScriptRoot 'LlmWikiQueryCache.ps1')
 
 $query = "context-cache-smoke-$([guid]::NewGuid().ToString('N'))"
@@ -16,7 +17,6 @@ $arguments = @{
 }
 $entry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'context' -Arguments $arguments `
     -RelevantPath @('FoodDiary.Application/Users', 'FoodDiary.Application.Users') -DependencyPath @(
-    '.llm-wiki/generated/frontend-index.json'
     '.artifacts/llm-wiki/code-graph/code-graph.fingerprint'
 )
 if (Read-LlmWikiQueryCache -Entry $entry) { throw 'Unique context-cache smoke unexpectedly started with a cache hit.' }

@@ -301,7 +301,10 @@ inferred path or journey:
 ```
 
 The trace walks template consumers from the rendered component back toward the
-feature entry point. A bounded frontend-only layout change or local interaction
+feature entry point. Runtime-owner ranking and its bounded render-chain traversal
+use the current SQLite frontend-contract projection by default; a missing or
+stale projection fails explicitly, and JSON is available only as a direct parity
+baseline. A bounded frontend-only layout change or local interaction
 inside an existing component with no route, public component contract, API,
 provider, persistence, privacy, security, configuration, or architecture
 boundary uses the `visual-ui-change` profile: a compact constraint and ownership

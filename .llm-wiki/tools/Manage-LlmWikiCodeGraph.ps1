@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('build', 'build-plan', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search', 'compiled-context', 'backend-contract')]
+    [ValidateSet('build', 'build-plan', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search', 'compiled-context', 'backend-contract', 'frontend-contract', 'frontend-runtime-owner')]
     [string]$Action = 'status',
     [string]$Query,
     [ValidateSet('modules', 'contracts', 'risks', 'tests')]
@@ -13,6 +13,8 @@ param(
     [string]$CompiledMode = 'Context',
     [ValidateSet('all', 'contracts', 'consumers', 'production', 'tests', 'ambiguous', 'unconsumed')]
     [string]$BackendContractView = 'all',
+    [ValidateSet('all', 'components', 'consumers', 'api', 'translations', 'spec-gaps')]
+    [string]$FrontendContractView = 'all',
     [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Tests')]
     [string]$ChangeType = 'Any',
     [ValidateSet('Any', 'HostedService', 'Service', 'Handler', 'Controller', 'Repository', 'Component')]
@@ -39,6 +41,7 @@ if (-not [string]::IsNullOrWhiteSpace($Module)) { $arguments += "--module=$Modul
 if (-not [string]::IsNullOrWhiteSpace($PathPrefix)) { $arguments += "--path-prefix=$PathPrefix" }
 if ($Action -eq 'compiled-context') { $arguments += "--compiled-mode=$($CompiledMode.ToLowerInvariant() -replace 'changedpaths', 'changed-paths')" }
 if ($Action -eq 'backend-contract') { $arguments += "--view=$BackendContractView" }
+if ($Action -eq 'frontend-contract') { $arguments += "--view=$FrontendContractView" }
 if ($Action -eq 'search') { $arguments += "--change-type=$ChangeType" }
 if ($SymbolKind -ne 'Any') { $arguments += "--symbol-kind=$SymbolKind" }
 $normalizedChangedPaths = [string[]]@($ChangedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
@@ -106,5 +109,11 @@ switch ($Action) {
     }
     'backend-contract' {
         Write-Host "Code graph backend contracts: ready=$($result.ready), view=$($result.view), returned=$($result.returnedRecords)/$($result.scannedRecords), SQL=$($result.durationMs)ms."
+    }
+    'frontend-contract' {
+        Write-Host "Code graph frontend contracts: ready=$($result.ready), view=$($result.view), returned=$($result.returnedRecords)/$($result.scannedRecords), SQL=$($result.durationMs)ms."
+    }
+    'frontend-runtime-owner' {
+        Write-Host "Code graph frontend runtime owner: ready=$($result.ready), candidates=$($result.candidateRecords), returned=$($result.returnedRecords)/$($result.scannedRecords), SQL=$($result.durationMs)ms."
     }
 }

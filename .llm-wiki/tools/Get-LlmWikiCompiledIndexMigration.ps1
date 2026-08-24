@@ -9,7 +9,9 @@ $repositoryRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $indexes = @(
     '.llm-wiki/generated/repository-catalog.json',
     '.llm-wiki/generated/csharp-symbol-index.json',
+    '.llm-wiki/generated/frontend-index.json',
     '.llm-wiki/generated/backend-contract-index.json',
+    '.llm-wiki/generated/frontend-contract-index.json',
     '.llm-wiki/generated/quality-index.json'
 )
 $results = foreach ($indexPath in $indexes) {
@@ -18,6 +20,8 @@ $results = foreach ($indexPath in $indexes) {
         '.llm-wiki/generated/csharp-symbol-index.json'
     )
     $isBackendContract = $indexPath -eq '.llm-wiki/generated/backend-contract-index.json'
+    $isFrontendContract = $indexPath -eq '.llm-wiki/generated/frontend-contract-index.json'
+    $isFrontend = $indexPath -eq '.llm-wiki/generated/frontend-index.json'
     $fileName = Split-Path -Leaf $indexPath
     $matches = @(& rg -l --hidden --fixed-strings --glob '*.ps1' --glob '*.mjs' --glob '*.md' $fileName $repositoryRoot 2>$null)
     $consumers = @($matches | ForEach-Object {
@@ -27,8 +31,11 @@ $results = foreach ($indexPath in $indexes) {
     } | Sort-Object -Unique)
     [pscustomobject][ordered]@{
         path = $indexPath
-        queryLayer = if ($indexPath -in @(
+        queryLayer = if ($isFrontend) {
+            'partial'
+        } elseif ($indexPath -in @(
             '.llm-wiki/generated/backend-contract-index.json',
+            '.llm-wiki/generated/frontend-contract-index.json',
             '.llm-wiki/generated/quality-index.json',
             '.llm-wiki/generated/repository-catalog.json',
             '.llm-wiki/generated/csharp-symbol-index.json'
@@ -37,9 +44,9 @@ $results = foreach ($indexPath in $indexes) {
         } else {
             'pending'
         }
-        defaultRoute = if ($isCatalogOrSymbol) { 'sqlite-compiled-index' } elseif ($isBackendContract) { 'sqlite-query-documents' } else { 'index-specific' }
-        automaticJsonFallback = if ($isCatalogOrSymbol -or $isBackendContract) { $false } else { $null }
-        retainedAs = if ($isCatalogOrSymbol -or $isBackendContract) { 'projection-source-and-explicit-parity-baseline' } else { 'compiled-source' }
+        defaultRoute = if ($isCatalogOrSymbol) { 'sqlite-compiled-index' } elseif ($isFrontend) { 'sqlite-context-and-diff; json-task-brief' } elseif ($isBackendContract -or $isFrontendContract) { 'sqlite-query-documents' } else { 'index-specific' }
+        automaticJsonFallback = if ($isCatalogOrSymbol -or $isFrontend -or $isBackendContract -or $isFrontendContract) { $false } else { $null }
+        retainedAs = if ($isFrontend) { 'projection-source-explicit-parity-and-task-brief-source' } elseif ($isCatalogOrSymbol -or $isBackendContract -or $isFrontendContract) { 'projection-source-and-explicit-parity-baseline' } else { 'compiled-source' }
         consumerCount = $consumers.Count
         removable = $consumers.Count -eq 0
         consumers = [string[]]$consumers
@@ -47,8 +54,9 @@ $results = foreach ($indexPath in $indexes) {
 }
 
 $report = [pscustomobject][ordered]@{
-    schemaVersion = 2
+    schemaVersion = 3
     migratedQueryLayerCount = @($results | Where-Object queryLayer -eq 'migrated').Count
+    partialQueryLayerCount = @($results | Where-Object queryLayer -eq 'partial').Count
     removableCount = @($results | Where-Object removable).Count
     indexes = @($results)
 }

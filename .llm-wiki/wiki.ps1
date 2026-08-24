@@ -344,8 +344,8 @@ if ($Command -in @('verify', 'verify-full') -and $env:CI -ne 'true' -and -not $P
 
 $deltaAwareCommands = @('update', 'repair-verify', 'completion', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'review-affected', 'ownership', 'policy')
 $explicitScopePlanningCommands = @('research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision')
-$readOnlyFacadeCommands = @('research', 'research-next-question', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'contracts', 'diff', 'ownership', 'api-compat')
-$compiledIndexReadOnlyCommands = @('research', 'research-next-question', 'context', 'packet', 'brief', 'integration-scan', 'design', 'implementation-plan', 'plan', 'test-plan', 'decision', 'rollout', 'contracts', 'diff', 'ownership')
+$readOnlyFacadeCommands = @('research', 'research-next-question', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'ui', 'contracts', 'diff', 'ownership', 'api-compat')
+$compiledIndexReadOnlyCommands = @('research', 'research-next-question', 'context', 'packet', 'brief', 'integration-scan', 'design', 'implementation-plan', 'plan', 'test-plan', 'decision', 'rollout', 'ui', 'contracts', 'diff', 'ownership')
 $taskBaselineContext = $null
 if ($Command -in @('develop', 'start')) {
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId $TaskSessionId -Format Text

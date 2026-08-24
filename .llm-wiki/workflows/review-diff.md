@@ -42,10 +42,11 @@ Use `-Format Json` when another agent or automation will consume the packet.
 The output is advisory: actual requirements still come from scoped
 `AGENTS.md`, source code, tests, contracts, and the user's request.
 
-Repository-catalog metadata and changed C# symbols come from the refreshed
-SQLite compiled-index projection by default. The query selects exact changed
-paths before transporting symbol payloads and exposes source hashes, candidate
-counts, SQL duration, and end-to-end round-trip duration in `compiledIndex`.
+Repository-catalog metadata and changed C# and frontend symbols come from the
+refreshed SQLite compiled-index projection by default. The query selects exact
+changed paths before transporting symbol payloads and exposes source hashes,
+candidate counts, SQL duration, and end-to-end round-trip duration in
+`compiledIndex`.
 A missing or stale projection fails with the `graph-build` recovery command;
 `-CompiledIndexSource Json` is an explicit parity/diagnostic baseline, not an
 automatic fallback.

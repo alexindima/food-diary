@@ -68,7 +68,9 @@ deterministic path, module, task-type, and source-kind ranking.
 PowerShell tools are indexed as code with function symbols and raw source text,
 so operational Wiki commands participate in natural-language retrieval.
 The database also projects the generated repository catalog and C# symbol index
-into versioned `compiled_indexes` and `compiled_index_records` tables.
+into versioned `compiled_indexes` and `compiled_index_records` tables. The
+frontend index is projected into the same tables as ordered feature, symbol,
+route, and localization records.
 `Find-LlmWikiContext.ps1` reads that projection by default, verifies source
 hashes, and returns an error for a missing or stale projection instead of
 silently reading JSON. `-CompiledIndexSource Json` exists only as an explicit
@@ -84,11 +86,30 @@ reports SQLite query time separately from the PowerShell/Node round trip. The De
 fresh SQL result as its primary code-scope selection; policy, checks, reviewed
 knowledge, and source claims remain Git-backed.
 
+Context and diff queries retrieve a safe frontend candidate superset in their
+existing compiled-context round trip, then keep the established PowerShell
+scoring and output shape. Changed frontend paths use exact symbol-path selection.
+The task-brief intent prefilter still reads the 0.23 MiB JSON source: its measured
+parse cost is about 15 ms, less than a second Node process round trip, so that
+consumer remains explicitly reported as partial migration rather than being
+made slower for architectural uniformity.
+
 The `query_documents` projection also stores record kind and source ordinal.
 Backend-contract discovery uses specialized SQL views for contracts, consumers,
 production/test consumers, ambiguity, and unconsumed contracts. The latter
 builds one distinct consumed-name set instead of repeating a correlated scan.
-Its JSON source remains committed for generation and explicit parity only.
+Frontend-contract discovery uses the same projection for components, consumer
+edges, API calls, translations, and components without direct specs. Both query
+tools preserve exact group shape and source order, verify source hashes, and fail
+closed instead of silently parsing JSON. Their JSON sources remain committed for
+generation and explicit parity only. Projection freshness normalizes CRLF/LF
+before hashing so isolated snapshots and cross-platform checkouts keep identical
+lineage without weakening content validation. Runtime-owner discovery uses a
+specialized query over the same projection: SQL selects the bounded component candidate set, ranks the
+owners, and follows only the selected render chains instead of materializing the
+1.19 MiB source in PowerShell. Its parity smoke compares ten explicit-path,
+query-only, Unicode, and empty-result cases and requires both payload reduction
+and a measured end-to-end improvement over the explicit JSON baseline.
 
 The committed retrieval suite has a 60-case regression corpus in
 `.llm-wiki/evals/context-search.json` and a separately authored 40-case
