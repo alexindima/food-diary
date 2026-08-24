@@ -321,6 +321,28 @@ jobs:
             echo "FAILED_TARGET=Build and push Client"
           } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
 
+      - name: Build and push Technology Radar
+        id: build_tech_radar
+        uses: docker/build-push-action@v7
+        with:
+          context: FoodDiary.TechRadar
+          file: FoodDiary.TechRadar/Dockerfile
+          push: true
+          provenance: mode=max
+          sbom: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/tech-radar:latest
+            ${{ env.IMAGE_PREFIX }}/tech-radar:sha-${{ env.SOURCE_COMMIT_SHA }}
+
+      - name: Record failure step
+        if: always() && steps.build_tech_radar.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Build and push Technology Radar"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Sign and verify production images
         id: sign_images
         shell: bash
@@ -335,7 +357,8 @@ jobs:
             "mail-inbox=${{ steps.build_mail_inbox.outputs.digest }}" \
             "mailinbox-postgres-tls-init=${{ steps.build_mailinbox_postgres_tls_init.outputs.digest }}" \
             "mailinbox-initializer=${{ steps.build_mailinbox_initializer.outputs.digest }}" \
-            "client=${{ steps.build_client.outputs.digest }}"
+            "client=${{ steps.build_client.outputs.digest }}" \
+            "tech-radar=${{ steps.build_tech_radar.outputs.digest }}"
 
       - name: Record failure step
         if: always() && steps.sign_images.outcome == 'failure'
@@ -400,11 +423,12 @@ jobs:
           MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF="${{ env.IMAGE_PREFIX }}/mailinbox-postgres-tls-init@${{ steps.build_mailinbox_postgres_tls_init.outputs.digest }}"
           MAIL_INBOX_INITIALIZER_IMAGE_REF="${{ env.IMAGE_PREFIX }}/mailinbox-initializer@${{ steps.build_mailinbox_initializer.outputs.digest }}"
           CLIENT_IMAGE_REF="${{ env.IMAGE_PREFIX }}/client@${{ steps.build_client.outputs.digest }}"
+          TECH_RADAR_IMAGE_REF="${{ env.IMAGE_PREFIX }}/tech-radar@${{ steps.build_tech_radar.outputs.digest }}"
           SSH_CMD="ssh -T -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30 -o ServerAliveInterval=30 -o ServerAliveCountMax=6 root@${{ env.SERVER_IP }}"
           SCP_CMD="scp -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30"
 
           echo "${{ secrets.GITHUB_TOKEN }}" | $SSH_CMD "docker login ghcr.io -u ${{ github.actor }} --password-stdin"
-          $SSH_CMD "mkdir -p /opt/fooddiary/nginx/sites-enabled /opt/fooddiary/MailInbox/FoodDiary.MailInbox.WebApi /var/www/storybook.fooddiary.club /var/log/nginx"
+          $SSH_CMD "mkdir -p /opt/fooddiary/nginx/sites-enabled /opt/fooddiary/MailInbox/FoodDiary.MailInbox.WebApi /opt/fooddiary/scripts /var/www/storybook.fooddiary.club /var/log/nginx"
           $SCP_CMD docker-compose.yml root@${{ env.SERVER_IP }}:/opt/fooddiary/docker-compose.yml
           $SCP_CMD MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf root@${{ env.SERVER_IP }}:/opt/fooddiary/MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf
           $SCP_CMD nginx.conf root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx.conf
@@ -412,6 +436,8 @@ jobs:
           $SCP_CMD nginx/sites-enabled/grafana.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/grafana.fooddiary.club
           $SCP_CMD nginx/sites-enabled/mail.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/mail.fooddiary.club
           $SCP_CMD nginx/sites-enabled/storybook.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/storybook.fooddiary.club
+          $SCP_CMD nginx/sites-enabled/techradar.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/techradar.fooddiary.club
+          $SCP_CMD scripts/bootstrap-tech-radar-tls.sh root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/bootstrap-tech-radar-tls.sh
           $SCP_CMD scripts/restart-mail-inbox-after-certificate-renewal.sh root@${{ env.SERVER_IP }}:/etc/letsencrypt/renewal-hooks/deploy/restart-fooddiary-mail-inbox.sh
 
           DEPLOY_COMMIT_SHA="${{ env.SOURCE_COMMIT_SHA }}"
@@ -429,9 +455,10 @@ jobs:
           cd /opt/fooddiary
 
           chmod 0755 /etc/letsencrypt/renewal-hooks/deploy/restart-fooddiary-mail-inbox.sh
+          chmod 0755 /opt/fooddiary/scripts/bootstrap-tech-radar-tls.sh
 
           cp /etc/fooddiary/fooddiary.env .env
-          printf '\nAPI_IMAGE_REF=%s\nINITIALIZER_IMAGE_REF=%s\nTELEGRAM_BOT_IMAGE_REF=%s\nJOB_MANAGER_IMAGE_REF=%s\nMAIL_RELAY_IMAGE_REF=%s\nMAIL_RELAY_INITIALIZER_IMAGE_REF=%s\nMAIL_INBOX_IMAGE_REF=%s\nMAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF=%s\nMAIL_INBOX_INITIALIZER_IMAGE_REF=%s\nCLIENT_IMAGE_REF=%s\nAPI_IMAGE_TAG=%s\nDEPLOY_COMMIT_SHA=%s\n' \
+          printf '\nAPI_IMAGE_REF=%s\nINITIALIZER_IMAGE_REF=%s\nTELEGRAM_BOT_IMAGE_REF=%s\nJOB_MANAGER_IMAGE_REF=%s\nMAIL_RELAY_IMAGE_REF=%s\nMAIL_RELAY_INITIALIZER_IMAGE_REF=%s\nMAIL_INBOX_IMAGE_REF=%s\nMAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF=%s\nMAIL_INBOX_INITIALIZER_IMAGE_REF=%s\nCLIENT_IMAGE_REF=%s\nTECH_RADAR_IMAGE_REF=%s\nAPI_IMAGE_TAG=%s\nDEPLOY_COMMIT_SHA=%s\n' \
             "$API_IMAGE_REF" \
             "$INITIALIZER_IMAGE_REF" \
             "$TELEGRAM_BOT_IMAGE_REF" \
@@ -442,6 +469,7 @@ jobs:
             "$MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF" \
             "$MAIL_INBOX_INITIALIZER_IMAGE_REF" \
             "$CLIENT_IMAGE_REF" \
+            "$TECH_RADAR_IMAGE_REF" \
             "$DEPLOY_IMAGE_TAG" \
             "$DEPLOY_COMMIT_SHA" >> .env
 
@@ -462,6 +490,7 @@ jobs:
           docker compose --profile backend up -d --force-recreate --no-deps api
           docker compose --profile full up -d --force-recreate --no-deps telegram-bot
           docker compose --profile full up -d --force-recreate --no-deps job-manager
+          docker compose --profile full up -d --force-recreate --no-deps tech-radar
 
           echo "Waiting for deployed API readiness..."
           echo "Expected commit SHA: $DEPLOY_COMMIT_SHA"
@@ -487,6 +516,20 @@ jobs:
           echo "$version_json" | grep -F "\"commitSha\":\"$DEPLOY_COMMIT_SHA\""
           echo "$version_json" | grep -F "\"imageTag\":\"${DEPLOY_IMAGE_TAG}\""
 
+          echo "Waiting for Technology Radar readiness..."
+          for _ in $(seq 1 20); do
+            if curl -fsS "http://127.0.0.1:${TECH_RADAR_PORT:-4210}/" >/dev/null; then
+              tech_radar_ready=true
+              break
+            fi
+            sleep 2
+          done
+          if [ "${tech_radar_ready:-false}" != "true" ]; then
+            docker compose ps tech-radar
+            docker compose logs --tail=100 --timestamps tech-radar
+            exit 1
+          fi
+
           id=$(docker create "$CLIENT_IMAGE_REF")
           rm -rf /var/www/fooddiary.club/*
           docker cp $id:/usr/share/nginx/html/. /var/www/fooddiary.club/
@@ -505,7 +548,7 @@ jobs:
           SCRIPT_EOF
 
           $SCP_CMD "${RUNNER_TEMP}/deploy.sh" root@${{ env.SERVER_IP }}:/tmp/deploy.sh
-          $SSH_CMD "API_IMAGE_REF='${API_IMAGE_REF}' INITIALIZER_IMAGE_REF='${INITIALIZER_IMAGE_REF}' TELEGRAM_BOT_IMAGE_REF='${TELEGRAM_BOT_IMAGE_REF}' JOB_MANAGER_IMAGE_REF='${JOB_MANAGER_IMAGE_REF}' MAIL_RELAY_IMAGE_REF='${MAIL_RELAY_IMAGE_REF}' MAIL_RELAY_INITIALIZER_IMAGE_REF='${MAIL_RELAY_INITIALIZER_IMAGE_REF}' MAIL_INBOX_IMAGE_REF='${MAIL_INBOX_IMAGE_REF}' MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF='${MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF}' MAIL_INBOX_INITIALIZER_IMAGE_REF='${MAIL_INBOX_INITIALIZER_IMAGE_REF}' CLIENT_IMAGE_REF='${CLIENT_IMAGE_REF}' DEPLOY_IMAGE_TAG='${DEPLOY_IMAGE_TAG}' DEPLOY_COMMIT_SHA='${DEPLOY_COMMIT_SHA}' bash /tmp/deploy.sh"
+          $SSH_CMD "API_IMAGE_REF='${API_IMAGE_REF}' INITIALIZER_IMAGE_REF='${INITIALIZER_IMAGE_REF}' TELEGRAM_BOT_IMAGE_REF='${TELEGRAM_BOT_IMAGE_REF}' JOB_MANAGER_IMAGE_REF='${JOB_MANAGER_IMAGE_REF}' MAIL_RELAY_IMAGE_REF='${MAIL_RELAY_IMAGE_REF}' MAIL_RELAY_INITIALIZER_IMAGE_REF='${MAIL_RELAY_INITIALIZER_IMAGE_REF}' MAIL_INBOX_IMAGE_REF='${MAIL_INBOX_IMAGE_REF}' MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF='${MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF}' MAIL_INBOX_INITIALIZER_IMAGE_REF='${MAIL_INBOX_INITIALIZER_IMAGE_REF}' CLIENT_IMAGE_REF='${CLIENT_IMAGE_REF}' TECH_RADAR_IMAGE_REF='${TECH_RADAR_IMAGE_REF}' DEPLOY_IMAGE_TAG='${DEPLOY_IMAGE_TAG}' DEPLOY_COMMIT_SHA='${DEPLOY_COMMIT_SHA}' bash /tmp/deploy.sh"
 
       - name: Record failure step
         if: always() && steps.deploy_server.outcome == 'failure'

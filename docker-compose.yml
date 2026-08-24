@@ -368,6 +368,36 @@ services:
     profiles:
       - full
 
+  tech-radar:
+    image: ${TECH_RADAR_IMAGE_REF:-ghcr.io/alexindima/food-diary/tech-radar:local}
+    build:
+      context: FoodDiary.TechRadar
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    read_only: true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - NET_BIND_SERVICE
+      - SETGID
+      - SETUID
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "${TECH_RADAR_HOST_BIND:-127.0.0.1}:${TECH_RADAR_PORT:-4210}:80"
+    tmpfs:
+      - /var/cache/nginx:size=8m,mode=0755,nosuid,nodev
+      - /var/run:size=1m,mode=0755,nosuid,nodev
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ >/dev/null || exit 1"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    profiles:
+      - full
+
   nginx:
     image: nginx:alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752
     restart: unless-stopped

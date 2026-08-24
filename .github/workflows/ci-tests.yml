@@ -69,6 +69,40 @@ jobs:
             -OutputPath $reviewReport
           Get-Content -LiteralPath $reviewReport | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
+  tech-radar:
+    name: Technology Radar build and evidence validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: FoodDiary.TechRadar/package-lock.json
+
+      - name: Install dependencies
+        working-directory: FoodDiary.TechRadar
+        run: npm ci
+
+      - name: Build and validate repository evidence
+        working-directory: FoodDiary.TechRadar
+        run: npm run build
+
+      - name: Verify generated inventory is current
+        shell: bash
+        run: git diff --exit-code -- FoodDiary.TechRadar/generated/inventory.json
+
+      - name: Build production image
+        uses: docker/build-push-action@v7
+        with:
+          context: FoodDiary.TechRadar
+          file: FoodDiary.TechRadar/Dockerfile
+          push: false
+
   dotnet-tests:
     name: Backend .NET tests and formatting
     runs-on: ubuntu-latest
