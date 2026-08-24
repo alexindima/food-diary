@@ -34,7 +34,7 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
                     executedContext.HttpContext.Response.StatusCode,
                     exception),
                 exception);
-        } catch (OperationCanceledException) when (context.HttpContext.RequestAborted.IsCancellationRequested) {
+        } catch (OperationCanceledException exception) when (IsClientCancellation(context.HttpContext, exception)) {
             CompleteObservation(observation, StatusCodes.Status499ClientClosedRequest, exception: null, isCancelled: true);
             throw;
         } catch (Exception exception) {
@@ -68,7 +68,7 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
                     executedContext.HttpContext.Response.StatusCode,
                     exception),
                 exception);
-        } catch (OperationCanceledException) when (context.HttpContext.RequestAborted.IsCancellationRequested) {
+        } catch (OperationCanceledException exception) when (IsClientCancellation(context.HttpContext, exception)) {
             CompleteObservation(observation, StatusCodes.Status499ClientClosedRequest, exception: null, isCancelled: true);
             throw;
         } catch (Exception exception) {
@@ -163,8 +163,15 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
             ? StatusCodes.Status500InternalServerError
             : responseStatusCode;
 
-    private static bool IsClientCancellation(HttpContext context, Exception? exception) =>
-        exception is OperationCanceledException && context.RequestAborted.IsCancellationRequested;
+    private static bool IsClientCancellation(HttpContext context, Exception? exception) {
+        if (exception is not OperationCanceledException cancellationException) {
+            return false;
+        }
+
+        CancellationToken requestCancellation = context.RequestAborted;
+        return requestCancellation.IsCancellationRequested ||
+               (requestCancellation.CanBeCanceled && cancellationException.CancellationToken == requestCancellation);
+    }
 
     private static string ResolveOutcome(bool isSuccess, bool isCancelled) {
         if (isCancelled) {
