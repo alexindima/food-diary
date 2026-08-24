@@ -11,6 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodDiary.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodDiaryDbContext))]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
