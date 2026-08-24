@@ -152,6 +152,10 @@ the richer frontend-contract component and consumer records exclusively. Those
 records are now selected from SQLite as a bounded candidate set; render-chain
 edges are followed inside the same process, and the command reports source,
 candidate/returned counts, source hash, SQL time, and full round-trip time.
+The broader frontend trace now uses the same process boundary for frontend symbols,
+routes, component contracts, selector consumers, API calls, and source traversal.
+JSON remains a committed generation and parity source, but normal `trace` calls no
+longer materialize both indexes in PowerShell.
 
 The `maintenance` budget treats concrete CI diagnostics, manifest/lockfile
 compatibility errors, and Docker or deployment-build failures as primary

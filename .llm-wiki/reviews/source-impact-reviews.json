@@ -188,13 +188,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "3330762ac88f938b79930bcc9f3917592689f24c95a889555daacd057e7f4223"
+          "sha256": "ef493ba7ec8e1cdb127112e0f3f1d69e7519c891360938856920656ae54e5f8d"
         }
       ],
-      "reason": "The new code-graph action reads only frontend-contract query_documents and does not change backend contract views, ordering, or fallback behavior; frontend-contract parity and the full code-graph regression passed.",
+      "reason": "The new frontend-trace action reads only frontend compiled and frontend-contract records; backend-contract views, ordering, source validation, and fallback policy are unchanged, and the code-graph regression passed.",
       "baseRef": "HEAD",
-      "gitHead": "ff97ff3ebdc1e435843003ed55663e163fc30dc2",
-      "reviewedAtUtc": "2026-08-24T17:14:17.5779573Z"
+      "gitHead": "b5a287795942a82e097a7714703b76aab5f6f8ef",
+      "reviewedAtUtc": "2026-08-24T17:32:25.2175867Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -610,17 +610,17 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "ed273b28ae64bea9c2f788e1983a5561fa341854de9af9702174b11d0dbb6059"
+          "sha256": "9f6ae94ae149b4c4a1efe59221c337d298fb80718c852d484138cf05a8b46754"
         },
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "6cad27e6bc88bc5a91aa5a0e2ca1b37af485f19ae7eb9ce7a4dd7ec978b6c00a"
+          "sha256": "bfe5e553b4c4b0c0897c61d2005956bf97a9bd6a71b7a85a07dcf746d9695096"
         }
       ],
-      "reason": "The affected-smoke catalog only routes runtime-owner changes into the existing frontend-contract-query group and invokes its new parity test; affected-smoke planning regression confirms bounded routing without full-tools fallback.",
+      "reason": "The trace-output smoke now includes the frontend trace parity test in both standalone and code-graph routes; affected-smoke planning regression confirms bounded selection and no full-tools fallback.",
       "baseRef": "HEAD",
-      "gitHead": "ff97ff3ebdc1e435843003ed55663e163fc30dc2",
-      "reviewedAtUtc": "2026-08-24T17:14:20.0431920Z"
+      "gitHead": "b5a287795942a82e097a7714703b76aab5f6f8ef",
+      "reviewedAtUtc": "2026-08-24T17:32:28.0711711Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1177,13 +1177,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "3330762ac88f938b79930bcc9f3917592689f24c95a889555daacd057e7f4223"
+          "sha256": "ef493ba7ec8e1cdb127112e0f3f1d69e7519c891360938856920656ae54e5f8d"
         }
       ],
-      "reason": "The specialized frontend-runtime-owner action is separate from compiled-context selection; compiled-index SQL parity passed 8/8 cases with exact 13-section output and payload reduction in every case.",
+      "reason": "The frontend-trace action is isolated from compiled-context; compiled-index parity still passes 8/8 cases across all 13 functional sections with payload reduction in every case.",
       "baseRef": "HEAD",
-      "gitHead": "ff97ff3ebdc1e435843003ed55663e163fc30dc2",
-      "reviewedAtUtc": "2026-08-24T17:14:22.6126958Z"
+      "gitHead": "b5a287795942a82e097a7714703b76aab5f6f8ef",
+      "reviewedAtUtc": "2026-08-24T17:32:30.6972044Z"
     },
     {
       "pageId": "workflow.review-diff",

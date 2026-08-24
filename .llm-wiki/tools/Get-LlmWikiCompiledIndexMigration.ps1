@@ -44,7 +44,7 @@ $results = foreach ($indexPath in $indexes) {
         } else {
             'pending'
         }
-        defaultRoute = if ($isCatalogOrSymbol) { 'sqlite-compiled-index' } elseif ($isFrontend) { 'sqlite-context-and-diff; json-task-brief' } elseif ($isBackendContract -or $isFrontendContract) { 'sqlite-query-documents' } else { 'index-specific' }
+        defaultRoute = if ($isCatalogOrSymbol) { 'sqlite-compiled-index' } elseif ($isFrontend) { 'sqlite-context-diff-and-trace; json-task-brief' } elseif ($isBackendContract -or $isFrontendContract) { 'sqlite-query-documents' } else { 'index-specific' }
         automaticJsonFallback = if ($isCatalogOrSymbol -or $isFrontend -or $isBackendContract -or $isFrontendContract) { $false } else { $null }
         retainedAs = if ($isFrontend) { 'projection-source-explicit-parity-and-task-brief-source' } elseif ($isCatalogOrSymbol -or $isBackendContract -or $isFrontendContract) { 'projection-source-and-explicit-parity-baseline' } else { 'compiled-source' }
         consumerCount = $consumers.Count

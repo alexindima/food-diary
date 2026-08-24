@@ -12,6 +12,7 @@ tags:
 sources:
   - .llm-wiki/tools/Find-LlmWikiTrace.ps1
   - .llm-wiki/tools/Find-LlmWikiFrontendTrace.ps1
+  - .llm-wiki/tools/Test-LlmWikiFrontendTraceSqlParity.ps1
   - .llm-wiki/tools/Test-LlmWikiTraceOutput.ps1
   - .llm-wiki/generated/frontend-index.json
   - .llm-wiki/generated/frontend-contract-index.json
@@ -59,3 +60,12 @@ Frontend trace starts from an indexed symbol or selector and walks component
 consumers plus AI-related facade/service dependencies. It reports consuming
 routes, selector bindings, HTTP calls, and nearby tests. Treat route-to-feature
 matching as navigational evidence and confirm the selected runtime path in source.
+
+The frontend route reads the refreshed SQLite frontend and frontend-contract
+projections by default. Matching, source traversal, contract joins, and route/test
+selection run in one bounded graph process; the functional trace shape remains
+unchanged. Missing or stale projections fail explicitly. Direct diagnostics may
+select `-CompiledIndexSource Json`, and custom `-IndexRoot` fixtures require that
+explicit source; neither path is an automatic fallback. The eight-case parity
+smoke checks exact functional JSON, both normalized source hashes, payload
+reduction, and a required end-to-end improvement.

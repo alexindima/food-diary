@@ -1313,6 +1313,230 @@ function frontendRuntimeOwnerContext(database, query, candidatePaths, limit) {
   };
 }
 
+function frontendTraceContext(database, query, limit) {
+  const started = performance.now();
+  const frontendPath = '.llm-wiki/generated/frontend-index.json';
+  const contractPath = '.llm-wiki/generated/frontend-contract-index.json';
+  const projectedFrontendHash = database.prepare("SELECT content_hash contentHash FROM compiled_indexes WHERE index_name = 'frontend'").get()?.contentHash;
+  const projectedContractHash = database.prepare("SELECT value FROM metadata WHERE key = 'query_source:frontend-contracts'").get()?.value;
+  if (!projectedFrontendHash || !projectedContractHash) {
+    return { ready: false, unavailableReason: 'frontend-trace-projection-missing', durationMs: Math.round((performance.now() - started) * 100) / 100 };
+  }
+  const currentFrontendHash = normalizedTextHash(readFileSync(resolve(repositoryRoot, frontendPath), 'utf8'));
+  const currentContractHash = normalizedTextHash(readFileSync(resolve(repositoryRoot, contractPath), 'utf8'));
+  if (projectedFrontendHash !== currentFrontendHash || projectedContractHash !== currentContractHash) {
+    return {
+      ready: false,
+      unavailableReason: 'frontend-trace-projection-stale',
+      sourceHashes: {
+        frontend: { projected: projectedFrontendHash, current: currentFrontendHash },
+        frontendContract: { projected: projectedContractHash, current: currentContractHash },
+      },
+      durationMs: Math.round((performance.now() - started) * 100) / 100,
+    };
+  }
+
+  const queryText = String(query ?? '').toLowerCase();
+  const queryTerms = [...new Set(queryText.match(/[a-z0-9]+/g) ?? [])].filter((term) => term.length >= 3).sort();
+  const symbolRows = database.prepare(`
+    SELECT record_key recordKey, source_ordinal sourceOrdinal, payload_json payloadJson
+    FROM compiled_index_records
+    WHERE index_name = 'frontend' AND record_kind = 'symbol'
+    ORDER BY source_ordinal
+  `).all();
+  const symbols = symbolRows.map((row) => ({ row, value: JSON.parse(row.payloadJson) }));
+  const matches = symbols.map(({ row, value: symbol }) => {
+    const selector = String(symbol.selector ?? '');
+    const searchable = `${symbol.name ?? ''} ${selector} ${symbol.path ?? ''}`.toLowerCase();
+    const matchedTerms = queryTerms.filter((term) => searchable.includes(term));
+    let score = matchedTerms.length * 10;
+    if (String(symbol.name ?? '').toLowerCase() === queryText || selector.toLowerCase() === queryText) score += 100;
+    return { row, symbol, score, matchedTerms };
+  }).filter((match) => match.score > 0)
+    .sort((left, right) => right.score - left.score
+      || String(left.symbol.name ?? '').toLowerCase().localeCompare(String(right.symbol.name ?? '').toLowerCase())
+      || left.row.sourceOrdinal - right.row.sourceOrdinal)
+    .slice(0, limit);
+  const scannedRecords = symbolRows.length + database.prepare("SELECT COUNT(*) count FROM compiled_index_records WHERE index_name = 'frontend' AND record_kind = 'route'").get().count
+    + database.prepare("SELECT COUNT(*) count FROM query_documents WHERE category = 'frontend-contracts'").get().count;
+  if (matches.length === 0) {
+    return {
+      ready: true,
+      source: 'sqlite-compiled-trace',
+      sourceHashes: { frontend: projectedFrontendHash, frontendContract: projectedContractHash },
+      scannedRecords,
+      candidateRecords: 0,
+      returnedRecords: 0,
+      trace: { matched: false, query: String(query ?? ''), traces: [] },
+      durationMs: Math.round((performance.now() - started) * 100) / 100,
+    };
+  }
+
+  const routeRows = database.prepare(`
+    SELECT record_key recordKey, source_ordinal sourceOrdinal, payload_json payloadJson
+    FROM compiled_index_records
+    WHERE index_name = 'frontend' AND record_kind = 'route'
+    ORDER BY source_ordinal
+  `).all();
+  const routes = routeRows.map((row) => ({ row, value: JSON.parse(row.payloadJson) }));
+  const documentCache = new Map();
+  const getDocument = (path) => {
+    if (!documentCache.has(path)) {
+      const absolutePath = resolve(repositoryRoot, path);
+      documentCache.set(path, existsSync(absolutePath) ? readFileSync(absolutePath, 'utf8') : null);
+    }
+    return documentCache.get(path);
+  };
+  const compareText = (left, right) => String(left ?? '').toLowerCase().localeCompare(String(right ?? '').toLowerCase())
+    || String(left ?? '').localeCompare(String(right ?? ''));
+  const uniqueSorted = (items, compare, key) => {
+    const sorted = [...items].sort(compare);
+    const seen = new Set();
+    return sorted.filter((item) => {
+      const identity = key(item).toLowerCase();
+      if (seen.has(identity)) return false;
+      seen.add(identity);
+      return true;
+    });
+  };
+  const escapeRegex = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const findConsumers = (symbolName, excludePath) => {
+    const pattern = new RegExp(`\\b${escapeRegex(symbolName)}\\b`, 'iu');
+    const found = [];
+    for (const { value: candidate } of symbols) {
+      if (String(candidate.path ?? '').toLowerCase() === String(excludePath ?? '').toLowerCase()) continue;
+      const source = getDocument(String(candidate.path ?? ''));
+      if (source !== null && pattern.test(source)) {
+        found.push({ name: candidate.name, role: candidate.role, path: candidate.path, line: candidate.line });
+      }
+    }
+    return uniqueSorted(found,
+      (left, right) => compareText(left.path, right.path) || compareText(left.name, right.name),
+      (item) => `${item.path}\0${item.name}`);
+  };
+  const componentByClass = database.prepare(`
+    SELECT record_key recordKey, payload_json payloadJson
+    FROM query_documents
+    WHERE category = 'frontend-contracts' AND record_kind = 'component'
+      AND json_extract(payload_json, '$.class') = ? COLLATE NOCASE
+    ORDER BY source_ordinal LIMIT 1
+  `);
+  const consumersByComponent = database.prepare(`
+    SELECT record_key recordKey, payload_json payloadJson
+    FROM query_documents
+    WHERE category = 'frontend-contracts' AND record_kind = 'consumer'
+      AND json_extract(payload_json, '$.component') = ? COLLATE NOCASE
+    ORDER BY source_ordinal
+  `);
+  const usedRecords = new Set();
+  const traces = [];
+  for (const match of matches) {
+    usedRecords.add(`frontend:${match.row.recordKey}`);
+    const target = match.symbol;
+    const related = [];
+    const queue = [{ symbol: target, depth: 0, relation: 'target' }];
+    const visited = new Set();
+    while (queue.length > 0 && related.length < 40) {
+      const current = queue.shift();
+      if (visited.has(String(current.symbol.name ?? ''))) continue;
+      visited.add(String(current.symbol.name ?? ''));
+      if (current.depth > 0) {
+        related.push({
+          name: current.symbol.name,
+          role: current.symbol.role,
+          path: current.symbol.path,
+          line: current.symbol.line,
+          relation: current.relation,
+          depth: current.depth,
+        });
+      }
+      if (current.depth >= 6) continue;
+      for (const consumer of findConsumers(String(current.symbol.name ?? ''), String(current.symbol.path ?? ''))) {
+        queue.push({ symbol: consumer, depth: current.depth + 1, relation: 'consumer' });
+      }
+      const source = getDocument(String(current.symbol.path ?? ''));
+      if (source !== null) {
+        for (const { value: dependency } of symbols) {
+          if (String(dependency.name ?? '').toLowerCase() === String(current.symbol.name ?? '').toLowerCase()
+            || !['Component', 'Facade', 'Service', 'ApiClient'].includes(String(dependency.role ?? ''))
+            || !/^Ai/i.test(String(dependency.name ?? ''))) continue;
+          if (new RegExp(`\\b${escapeRegex(dependency.name)}\\b`, 'iu').test(source)) {
+            queue.push({ symbol: dependency, depth: current.depth + 1, relation: 'dependency' });
+          }
+        }
+      }
+    }
+    const upstream = related.filter((item) => item.relation === 'consumer');
+    const componentRow = componentByClass.get(String(target.name ?? ''));
+    if (componentRow) usedRecords.add(`contract:${componentRow.recordKey}`);
+    const componentContract = componentRow ? JSON.parse(componentRow.payloadJson) : null;
+    const selectorRows = componentContract ? consumersByComponent.all(String(target.name ?? '')) : [];
+    for (const row of selectorRows) usedRecords.add(`contract:${row.recordKey}`);
+    const selectorValues = selectorRows.map((row) => JSON.parse(row.payloadJson));
+    const selectorConsumers = selectorValues.length === 0 ? null : selectorValues.length === 1 ? selectorValues[0] : selectorValues;
+    const relatedPaths = uniqueSorted([
+      String(target.path ?? ''),
+      ...related.map((item) => String(item.path ?? '')),
+      ...selectorValues.map((item) => String(item.consumerPath ?? '')),
+    ].filter(Boolean), compareText, (item) => item);
+    let apiRows = [];
+    if (relatedPaths.length > 0) {
+      const placeholders = relatedPaths.map(() => '?').join(',');
+      apiRows = database.prepare(`
+        SELECT record_key recordKey, payload_json payloadJson
+        FROM query_documents
+        WHERE category = 'frontend-contracts' AND record_kind = 'api-call'
+          AND lower(path) IN (${placeholders})
+      `).all(...relatedPaths.map((path) => path.toLowerCase()));
+    }
+    for (const row of apiRows) usedRecords.add(`contract:${row.recordKey}`);
+    const apiCalls = uniqueSorted(apiRows.map((row) => JSON.parse(row.payloadJson)),
+      (left, right) => compareText(left.path, right.path) || Number(left.line ?? 0) - Number(right.line ?? 0),
+      (item) => `${item.path}\0${item.line}`);
+    const relatedFeatures = uniqueSorted(related.map((item) => {
+      const featureMatch = String(item.path ?? '').match(/\/features\/(?<feature>[^/]+)\//i);
+      return featureMatch?.groups?.feature ?? '';
+    }).filter(Boolean), compareText, (item) => item);
+    const selectedRoutes = uniqueSorted(routes.filter(({ value: route }) => relatedFeatures.some((feature) =>
+      String(route.path ?? '').toLowerCase() === feature.toLowerCase()
+      || new RegExp(`/features/${escapeRegex(feature)}/`, 'iu').test(String(route.source ?? '')))).map(({ row, value }) => {
+        usedRecords.add(`frontend:${row.recordKey}`);
+        return value;
+      }),
+    (left, right) => compareText(left.source, right.source) || Number(left.line ?? 0) - Number(right.line ?? 0),
+    (item) => `${item.source}\0${item.line}`);
+    const sortedRelated = uniqueSorted(related,
+      (left, right) => left.depth - right.depth || compareText(left.relation, right.relation) || compareText(left.path, right.path) || compareText(left.name, right.name),
+      (item) => `${item.depth}\0${item.relation}\0${item.path}\0${item.name}`);
+    const sortedUpstream = uniqueSorted(upstream,
+      (left, right) => left.depth - right.depth || compareText(left.path, right.path) || compareText(left.name, right.name),
+      (item) => `${item.depth}\0${item.path}\0${item.name}`);
+    const testPaths = uniqueSorted([String(target.path ?? ''), ...related.map((item) => String(item.path ?? ''))]
+      .map((path) => path.replace(/\.ts$/i, '.spec.ts')).filter((path) => path && existsSync(resolve(repositoryRoot, path))), compareText, (item) => item);
+    traces.push({
+      symbol: target,
+      match: { score: match.score, queryTerms, matchedTerms: match.matchedTerms },
+      routes: selectedRoutes,
+      relatedSymbols: sortedRelated,
+      upstreamConsumers: sortedUpstream,
+      selectorConsumers,
+      contract: componentContract,
+      apiCalls,
+      tests: testPaths,
+    });
+  }
+  return {
+    ready: true,
+    source: 'sqlite-compiled-trace',
+    sourceHashes: { frontend: projectedFrontendHash, frontendContract: projectedContractHash },
+    scannedRecords,
+    candidateRecords: matches.length,
+    returnedRecords: usedRecords.size,
+    trace: { matched: true, query: String(query ?? ''), traces },
+    durationMs: Math.round((performance.now() - started) * 100) / 100,
+  };
+}
+
 function findSymbols(database, query, limit) {
   const exactCount = database.prepare('SELECT COUNT(*) count FROM symbols WHERE name = ? COLLATE NOCASE').get(query).count;
   return database.prepare(`
@@ -1901,6 +2125,7 @@ try {
   else if (action === 'backend-contract') result = backendContractContext(database, options.view ?? 'all', options.query ?? '', Number(options.limit ?? 30));
   else if (action === 'frontend-contract') result = frontendContractContext(database, options.view ?? 'all', options.query ?? '', Number(options.limit ?? 30));
   else if (action === 'frontend-runtime-owner') result = frontendRuntimeOwnerContext(database, options.query ?? '', (options.path ?? '').split(';').filter(Boolean), Number(options.limit ?? 5));
+  else if (action === 'frontend-trace') result = frontendTraceContext(database, options.query ?? '', Number(options.limit ?? 10));
   else if (action === 'compiled-context') result = compiledContext(database, options);
   else result = {
     action: 'status',

@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('build', 'build-plan', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search', 'compiled-context', 'backend-contract', 'frontend-contract', 'frontend-runtime-owner')]
+    [ValidateSet('build', 'build-plan', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search', 'compiled-context', 'backend-contract', 'frontend-contract', 'frontend-runtime-owner', 'frontend-trace')]
     [string]$Action = 'status',
     [string]$Query,
     [ValidateSet('modules', 'contracts', 'risks', 'tests')]
@@ -115,5 +115,8 @@ switch ($Action) {
     }
     'frontend-runtime-owner' {
         Write-Host "Code graph frontend runtime owner: ready=$($result.ready), candidates=$($result.candidateRecords), returned=$($result.returnedRecords)/$($result.scannedRecords), SQL=$($result.durationMs)ms."
+    }
+    'frontend-trace' {
+        Write-Host "Code graph frontend trace: ready=$($result.ready), candidates=$($result.candidateRecords), returned=$($result.returnedRecords)/$($result.scannedRecords), SQL=$($result.durationMs)ms."
     }
 }

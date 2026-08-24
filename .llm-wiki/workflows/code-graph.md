@@ -111,6 +111,14 @@ owners, and follows only the selected render chains instead of materializing the
 query-only, Unicode, and empty-result cases and requires both payload reduction
 and a measured end-to-end improvement over the explicit JSON baseline.
 
+General frontend trace also joins the compiled frontend symbol/route records with
+frontend-contract documents in one SQLite process. It preserves the established
+consumer and AI-dependency traversal over current source files while avoiding two
+large PowerShell JSON parses and repeated interpreted scans. The default route
+reports both source hashes, scanned/candidate/returned counts, SQL duration, and
+full round-trip duration; its eight-case smoke requires exact output parity and a
+measurable average improvement.
+
 The committed retrieval suite has a 60-case regression corpus in
 `.llm-wiki/evals/context-search.json` and a separately authored 40-case
 challenge corpus in `.llm-wiki/evals/context-search-holdout.json`. The challenge

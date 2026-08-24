@@ -160,6 +160,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         'trace-output' {
             & (Join-Path $toolsRoot 'Test-LlmWikiTraceOutput.ps1')
             if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiFrontendTraceSqlParity.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiQualityRisk.ps1')
             if (-not $?) { exit 1 }
         }
@@ -177,6 +179,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiCodeGraph.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiTraceOutput.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiFrontendTraceSqlParity.ps1')
             if (-not $?) { exit 1 }
         }
         'api-compatibility' {

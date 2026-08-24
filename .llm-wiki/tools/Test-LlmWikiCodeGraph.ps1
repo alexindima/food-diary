@@ -50,7 +50,7 @@ foreach ($indexPath in @('.llm-wiki/generated/backend-contract-index.json', '.ll
 }
 $frontendMigration = @($migration.indexes | Where-Object path -eq '.llm-wiki/generated/frontend-index.json' | Select-Object -First 1)
 if ($frontendMigration.Count -ne 1 -or [string]$frontendMigration[0].queryLayer -ne 'partial' -or
-    [string]$frontendMigration[0].defaultRoute -ne 'sqlite-context-and-diff; json-task-brief' -or
+    [string]$frontendMigration[0].defaultRoute -ne 'sqlite-context-diff-and-trace; json-task-brief' -or
     [bool]$frontendMigration[0].automaticJsonFallback) {
     throw 'Frontend-index migration status does not expose the measured partial SQL route without fallback.'
 }
