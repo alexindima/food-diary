@@ -11,6 +11,8 @@ tags:
 sources:
   - .llm-wiki/generated/backend-contract-index.json
   - .llm-wiki/tools/Find-LlmWikiBackendContract.ps1
+  - .llm-wiki/tools/code-graph.mjs
+  - .llm-wiki/tools/Test-LlmWikiBackendContractSqlParity.ps1
   - FoodDiary.Application.Abstractions/AGENTS.md
 ---
 
@@ -29,6 +31,15 @@ For HTTP, message, or client-package boundaries, also review serialized names an
 ./.llm-wiki/wiki.ps1 contracts -BackendContractView tests -Query <type>
 ./.llm-wiki/wiki.ps1 brief -ChangedPath <contract-path>
 ```
+
+The query command reads the refreshed SQLite `query_documents` projection by
+default. Contract and consumer records preserve their source ordinal, while
+`production`, `tests`, `ambiguous`, and `unconsumed` filters execute in SQL
+before payload transport. A missing or stale projection fails explicitly with
+the `graph-build` recovery command; `-CompiledIndexSource Json` is an explicit
+parity/diagnostic baseline and is never selected automatically. The required
+`backend-contract-query` smoke compares all seven views exactly, verifies the
+source hash and payload reduction, and enforces a latency envelope.
 
 Credential-bearing account-link commands need an additional security pass:
 confirm current-user scoping, provider-identity uniqueness, email ownership,

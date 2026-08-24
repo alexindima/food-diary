@@ -344,7 +344,8 @@ if ($Command -in @('verify', 'verify-full') -and $env:CI -ne 'true' -and -not $P
 
 $deltaAwareCommands = @('update', 'repair-verify', 'completion', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'review-affected', 'ownership', 'policy')
 $explicitScopePlanningCommands = @('research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision')
-$readOnlyFacadeCommands = @('research', 'research-next-question', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'diff', 'ownership', 'api-compat')
+$readOnlyFacadeCommands = @('research', 'research-next-question', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'contracts', 'diff', 'ownership', 'api-compat')
+$compiledIndexReadOnlyCommands = @('research', 'research-next-question', 'context', 'packet', 'brief', 'integration-scan', 'design', 'implementation-plan', 'plan', 'test-plan', 'decision', 'rollout', 'contracts', 'diff', 'ownership')
 $taskBaselineContext = $null
 if ($Command -in @('develop', 'start')) {
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId $TaskSessionId -Format Text
@@ -385,6 +386,13 @@ function Invoke-WikiTool {
     $toolPath = Join-Path $toolsRoot $Name
     $global:LASTEXITCODE = 0
     if ($Command -in $readOnlyFacadeCommands) {
+        if ($Command -in $compiledIndexReadOnlyCommands -and
+            [string]::IsNullOrWhiteSpace([string]$env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT)) {
+            $null = & (Join-Path $toolsRoot 'Manage-LlmWikiCodeGraph.ps1') -Action build -Format Json
+            if (-not $? -or ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0)) {
+                throw 'Unable to refresh the SQLite compiled-index projection before read-only Wiki research.'
+            }
+        }
         & (Join-Path $toolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $toolPath -ToolArguments $ToolArguments
     } else {
         & $toolPath @ToolArguments

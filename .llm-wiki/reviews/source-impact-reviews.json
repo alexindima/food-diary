@@ -142,18 +142,18 @@
       "pageSha256": "ce5b83013428f01f44e45ede31f85d01185773afed67acdd7d8ac18d5939ac99",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "1fc79453a5cb73c9e04515cf8a25af078a3cc36247727742b41fcaf05caac689"
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "b7369f64b1077805ad6f6f3a33af001347cb74540ade1b11278dc819e3b8d553"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
-          "sha256": "123e0f84f6fce6a2b13a570b66b9e557671bccc54b0a20954c367b1c10ae11b5"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "7a507901d7093d8d6740faec7478f90c1b1b3392c35fbb8fe5231d00e46db3c3"
         }
       ],
-      "reason": "The scoped query-cache contract is unchanged; stale-entry retention now uses idempotent file deletion, and the cache regression verifies repeated removal while preserving scoped invalidation.",
+      "reason": "The 5-case task-brief SQLite/JSON parity test preserves the complete brief result, inferred paths, risk, and provenance; this page describes unchanged routing, governance, and planning semantics rather than index transport.",
       "baseRef": "HEAD",
-      "gitHead": "268c9b8b8d1cea90a22c7f927dcacf9e2ff14cbf",
-      "reviewedAtUtc": "2026-08-23T23:52:05.6051726Z"
+      "gitHead": "5a3d3a8ab6886d4f40dd93dc5bb0570da71797f5",
+      "reviewedAtUtc": "2026-08-24T11:57:05.4340317Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -207,13 +207,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fa95f5656d4a6f3ec16614fd09caee6f4f51f76b145a59ed4bf4e43a2327fbbf"
+          "sha256": "7a507901d7093d8d6740faec7478f90c1b1b3392c35fbb8fe5231d00e46db3c3"
         }
       ],
-      "reason": "Reviewed dependent context, brief, manifest, integration, and developer-experience pages; public workflow contracts remain unchanged because JSON stays authoritative and SQL is opt-in shadow diagnostics.",
+      "reason": "The 5-case task-brief SQLite/JSON parity test preserves the complete brief result, inferred paths, risk, and provenance; this page describes unchanged routing, governance, and planning semantics rather than index transport.",
       "baseRef": "HEAD",
-      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
-      "reviewedAtUtc": "2026-08-21T03:26:12.9191066Z"
+      "gitHead": "5a3d3a8ab6886d4f40dd93dc5bb0570da71797f5",
+      "reviewedAtUtc": "2026-08-24T11:57:06.0611460Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -222,13 +222,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fa95f5656d4a6f3ec16614fd09caee6f4f51f76b145a59ed4bf4e43a2327fbbf"
+          "sha256": "7a507901d7093d8d6740faec7478f90c1b1b3392c35fbb8fe5231d00e46db3c3"
         }
       ],
-      "reason": "Reviewed dependent context, brief, manifest, integration, and developer-experience pages; public workflow contracts remain unchanged because JSON stays authoritative and SQL is opt-in shadow diagnostics.",
+      "reason": "The 5-case task-brief SQLite/JSON parity test preserves the complete brief result, inferred paths, risk, and provenance; this page describes unchanged routing, governance, and planning semantics rather than index transport.",
       "baseRef": "HEAD",
-      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
-      "reviewedAtUtc": "2026-08-21T03:26:13.6531438Z"
+      "gitHead": "5a3d3a8ab6886d4f40dd93dc5bb0570da71797f5",
+      "reviewedAtUtc": "2026-08-24T11:57:06.5843920Z"
     },
     {
       "pageId": "workflow-code-graph",
@@ -564,18 +564,14 @@
       "pageSha256": "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "58641ecd9d6ca0000c015d5b05564203dc4e15ea531ffed3d28f51a4a555a18c"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "c2b2432314b4f87c2f62f7f1139bf9c7752ad58d82081ce8cb5ac2f863cfa96d"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "7a507901d7093d8d6740faec7478f90c1b1b3392c35fbb8fe5231d00e46db3c3"
         }
       ],
-      "reason": "Same null-safety fix touched task-audit/task-handoff/task-dispatch source files referenced by these workflow docs; no behavioral or documented-contract change, only null-vs-empty-array output fidelity under strict mode.",
+      "reason": "The 5-case task-brief SQLite/JSON parity test preserves the complete brief result, inferred paths, risk, and provenance; this page describes unchanged routing, governance, and planning semantics rather than index transport.",
       "baseRef": "HEAD",
-      "gitHead": "c64344a3fb0b66ef944c6be0ce616a02e05cc369",
-      "reviewedAtUtc": "2026-08-23T13:53:16.2578279Z"
+      "gitHead": "5a3d3a8ab6886d4f40dd93dc5bb0570da71797f5",
+      "reviewedAtUtc": "2026-08-24T11:57:07.1486281Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -584,13 +580,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fa95f5656d4a6f3ec16614fd09caee6f4f51f76b145a59ed4bf4e43a2327fbbf"
+          "sha256": "7a507901d7093d8d6740faec7478f90c1b1b3392c35fbb8fe5231d00e46db3c3"
         }
       ],
-      "reason": "Reviewed dependent quality and workflow pages against the new FTS shadow smoke and graph fingerprint invalidation; their governed behavior remains accurate and the code-graph workflow documents the new lane.",
+      "reason": "The 5-case task-brief SQLite/JSON parity test preserves the complete brief result, inferred paths, risk, and provenance; this page describes unchanged routing, governance, and planning semantics rather than index transport.",
       "baseRef": "HEAD",
-      "gitHead": "85771947b5e67aaadce22c194ef601d85ba0613c",
-      "reviewedAtUtc": "2026-08-21T03:26:17.3523407Z"
+      "gitHead": "5a3d3a8ab6886d4f40dd93dc5bb0570da71797f5",
+      "reviewedAtUtc": "2026-08-24T11:57:07.7436394Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -648,13 +644,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "572c2bda16ab36a3ea0814640b5bd872d5b3b49e18efa2dffb70c32b01129c4b"
+          "sha256": "b7369f64b1077805ad6f6f3a33af001347cb74540ade1b11278dc819e3b8d553"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "7a507901d7093d8d6740faec7478f90c1b1b3392c35fbb8fe5231d00e46db3c3"
         }
       ],
-      "reason": "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve 'zero output objects' as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+      "reason": "The 5-case task-brief SQLite/JSON parity test preserves the complete brief result, inferred paths, risk, and provenance; this page describes unchanged routing, governance, and planning semantics rather than index transport.",
       "baseRef": "HEAD",
-      "gitHead": "c192eb68195dbbf020efcff1e647b8926267506d",
-      "reviewedAtUtc": "2026-08-23T13:04:40.1938843Z"
+      "gitHead": "5a3d3a8ab6886d4f40dd93dc5bb0570da71797f5",
+      "reviewedAtUtc": "2026-08-24T11:57:08.3668775Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -988,13 +988,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1aa0de5446c4a403d0fcb0b0372e2303f6af4846eae05e2e4dca91257ba69b96"
+          "sha256": "12a51fd1022ba4bd38fbfce6139b3e82bbdb1a7dbc1e6c80e256001c30a5d28e"
         }
       ],
-      "reason": "The facade timeout adjustment is confined to affected Wiki smoke execution and does not enter dispatch payloads, leases, receipt hashes, or lifecycle commands.",
+      "reason": "Adding the contracts facade to SQLite prewarm/read-only isolation changes only local query preparation; facade-contract and backend-contract-query smoke passed, while dispatch routing, proposed-path forwarding, and receipt schemas remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "268c9b8b8d1cea90a22c7f927dcacf9e2ff14cbf",
-      "reviewedAtUtc": "2026-08-23T23:52:06.9828563Z"
+      "gitHead": "5a3d3a8ab6886d4f40dd93dc5bb0570da71797f5",
+      "reviewedAtUtc": "2026-08-24T12:30:37.5757288Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1131,14 +1131,14 @@
       "pageSha256": "6ada105b75a86980fdb517297eb70f3dd62690bf8920afad9ff3d08740f2e241",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "9eb74c08f415f8e0e829be2912de2c97c58f89b93157c1682fda56308ede6cec"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "c973eae8c4c582445a1f9e1d4d420946b61571a1c1691b7b10b75fb2ef70a67f"
         }
       ],
-      "reason": "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve 'zero output objects' as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+      "reason": "Diff-context parity is exact across five representative change sets and the retrieval evaluation remains 450/450 strict top-1 plus 230/230 probes, so eval inputs and promotion semantics are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c192eb68195dbbf020efcff1e647b8926267506d",
-      "reviewedAtUtc": "2026-08-23T13:04:36.1810804Z"
+      "gitHead": "5a3d3a8ab6886d4f40dd93dc5bb0570da71797f5",
+      "reviewedAtUtc": "2026-08-24T11:56:57.8981217Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1192,13 +1192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1aa0de5446c4a403d0fcb0b0372e2303f6af4846eae05e2e4dca91257ba69b96"
+          "sha256": "599c1fe1a18eb30ebe6e56788181ba2fb007b01d5068186646513f864bab3c4b"
         }
       ],
-      "reason": "The facade change only raises the affected-smoke expected and hard time budgets for the expanded eval suite; review-diff routing, inputs, and output contracts are unchanged.",
+      "reason": "The facade change refreshes SQLite only for context and research before read-only snapshot creation; diff review routing and task-dispatch receipt lifecycle, schemas, persistence, and verification behavior are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "268c9b8b8d1cea90a22c7f927dcacf9e2ff14cbf",
-      "reviewedAtUtc": "2026-08-23T23:52:06.4369423Z"
+      "gitHead": "5a3d3a8ab6886d4f40dd93dc5bb0570da71797f5",
+      "reviewedAtUtc": "2026-08-24T10:58:57.5541791Z"
     }
   ]
 }

@@ -11,6 +11,9 @@ param(
     [object]$TestPlanInput,
     [object]$RolloutInput,
     [object]$DecisionInput,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
+    [switch]$SkipQueryCache,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [switch]$Compact,
@@ -26,6 +29,7 @@ $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $toolsRoot 'LlmWikiQueryCache.ps1')
 
 $cacheEligible = $Format -eq 'Json' -and
+    -not $SkipQueryCache -and
     $null -eq $DiffInput -and $null -eq $PolicyInput -and $null -eq $OwnershipInput -and
     $null -eq $TestPlanInput -and $null -eq $RolloutInput -and $null -eq $DecisionInput
 $queryCacheEntry = $null
@@ -40,16 +44,23 @@ if ($cacheEligible) {
         SkipTestPlan = [bool]$SkipTestPlan
         Limit = $Limit
     }
+    $cacheArguments.CompiledIndexSource = $CompiledIndexSource
+    $compiledIndexDependencies = if ($CompiledIndexSource -eq 'Json') {
+        @(
+            '.llm-wiki/generated/repository-catalog.json'
+            '.llm-wiki/generated/csharp-symbol-index.json'
+        )
+    } else {
+        @('.artifacts/llm-wiki/code-graph/code-graph.fingerprint')
+    }
     $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'task-brief' -Arguments $cacheArguments `
         -RelevantPath @($(if (@($ProposedPath).Count -gt 0) { $ProposedPath } else { $ChangedPath })) `
         -DependencyPath @(
             '.llm-wiki/policies/change-policy.json'
             '.llm-wiki/policies/query-indexes.json'
-            '.llm-wiki/generated/repository-catalog.json'
-            '.llm-wiki/generated/csharp-symbol-index.json'
             '.llm-wiki/generated/frontend-index.json'
             '.llm-wiki/generated/quality-index.json'
-            '.artifacts/llm-wiki/code-graph/code-graph.fingerprint'
+            $compiledIndexDependencies
         )
     $cachedBrief = Read-LlmWikiQueryCache -Entry $queryCacheEntry
     if ($null -ne $cachedBrief) {
@@ -83,11 +94,27 @@ if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent))
     $frontendIntent = $normalizedIntent -match '\b(frontend|component|template|html|css|scss|svg|style|styling|visual|layout|responsive|viewport|icon|colour|color|animation|button|disabled|corner|radius|border)\b'
     $backendIntent = $normalizedIntent -match '\b(backend|handler|command|query|controller|endpoint|database|migration|repository|service|domain|api)\b'
     $candidates = [System.Collections.Generic.List[object]]::new()
-    $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
-    if (Test-Path -LiteralPath $symbolIndexPath) {
-        $symbolIndex = Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json
+    $symbolIndex = $null
+    if (-not ($frontendIntent -and -not $backendIntent)) {
+        if ($CompiledIndexSource -eq 'Sqlite') {
+            $compiledResult = & (Join-Path $toolsRoot 'Manage-LlmWikiCodeGraph.ps1') `
+                -Action compiled-context `
+                -Query $Intent `
+                -SkipRefresh `
+                -Format Json | ConvertFrom-Json
+            if (-not [bool]$compiledResult.ready) {
+                throw "SQLite compiled-index projection is unavailable ($($compiledResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
+            }
+            $symbolIndex = [pscustomobject]@{ symbols = @($compiledResult.symbols) }
+        } else {
+            $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
+            if (Test-Path -LiteralPath $symbolIndexPath) {
+                $symbolIndex = Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json
+            }
+        }
+    }
+    if ($null -ne $symbolIndex) {
         foreach ($symbol in @($symbolIndex.symbols)) {
-            if ($frontendIntent -and -not $backendIntent) { continue }
             $symbolName = if ($symbol.PSObject.Properties['name']) { [string]$symbol.name } else { '' }
             $symbolPath = if ($symbol.PSObject.Properties['path']) { [string]$symbol.path } else { '' }
             $searchText = "$symbolName $symbolPath".ToLowerInvariant()
@@ -136,6 +163,7 @@ if ($effectivePaths.Count -gt 0) {
 
 $diffArguments = @{} + $common
 $diffArguments.Limit = $Limit
+$diffArguments.CompiledIndexSource = $CompiledIndexSource
 $diff = if ($null -ne $DiffInput) { $DiffInput } else {
     & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') @diffArguments | ConvertFrom-Json
 }

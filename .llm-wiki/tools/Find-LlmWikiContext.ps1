@@ -7,6 +7,9 @@ param(
     [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Tests')]
     [string]$ChangeType = 'Any',
     [switch]$SqlShadow,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
+    [switch]$SkipQueryCache,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 50)]
@@ -25,27 +28,34 @@ $frontendIndexPath = Join-Path $wikiRoot 'generated/frontend-index.json'
 if ([string]::IsNullOrWhiteSpace($Module) -and [string]::IsNullOrWhiteSpace($Query)) {
     throw 'Provide -Module, -Query, or both.'
 }
-if (-not (Test-Path -LiteralPath $catalogPath)) {
+if ($CompiledIndexSource -eq 'Json' -and -not (Test-Path -LiteralPath $catalogPath)) {
     throw 'Repository catalog is missing. Run Build-LlmWikiCatalog.ps1 first.'
 }
 
 $queryCacheEntry = $null
-if ($Format -eq 'Json' -and -not $SqlShadow) {
+if ($Format -eq 'Json' -and -not $SqlShadow -and -not $SkipQueryCache) {
     $cacheRelevantPaths = @(
         @($ScopePath) + $(if (-not [string]::IsNullOrWhiteSpace($Module)) {
             @("FoodDiary.Application/$Module", "FoodDiary.Application.$Module")
         }) | Where-Object { $_ } | Sort-Object -Unique
     )
+    $compiledIndexDependencies = if ($CompiledIndexSource -eq 'Json') {
+        @(
+            '.llm-wiki/generated/repository-catalog.json'
+            '.llm-wiki/generated/csharp-symbol-index.json'
+        )
+    } else {
+        @('.artifacts/llm-wiki/code-graph/code-graph.fingerprint')
+    }
     $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'context' -Arguments @{
         Module = $Module
         Query = $Query
         ScopePath = @($ScopePath)
         ChangeType = $ChangeType
+        CompiledIndexSource = $CompiledIndexSource
         Limit = $Limit
     } -RelevantPath $cacheRelevantPaths -DependencyPath @(
-        '.llm-wiki/generated/repository-catalog.json'
-        '.llm-wiki/generated/csharp-symbol-index.json'
-        '.llm-wiki/generated/frontend-index.json'
+        @('.llm-wiki/generated/frontend-index.json') + $compiledIndexDependencies
     )
     $cachedContext = Read-LlmWikiQueryCache -Entry $queryCacheEntry
     if ($null -ne $cachedContext) {
@@ -167,12 +177,48 @@ $searchNeedsCamelCaseExpansion = @($tokens | Where-Object { $_.Length -lt 4 }).C
     @($searchPhrases | Where-Object { $_ -match '\s' }).Count -gt 0
 $frontendOnlyScope = $ChangeType -eq 'Frontend' -and
     ($scopePaths.Count -eq 0 -or @($scopePaths | Where-Object { $_ -notmatch '^FoodDiary\.Web\.Client/' }).Count -eq 0)
-$catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
-$symbolIndex = if (Test-Path -LiteralPath $symbolIndexPath) {
-    Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json
+$compiledIndexStopwatch = [Diagnostics.Stopwatch]::StartNew()
+$compiledIndexDiagnostics = $null
+if ($CompiledIndexSource -eq 'Sqlite') {
+    $compiledResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
+        -Action compiled-context `
+        -Query $Query `
+        -Module $Module `
+        -ChangedPath $scopePaths `
+        -SkipRefresh `
+        -Format Json | ConvertFrom-Json
+    if (-not [bool]$compiledResult.ready) {
+        throw "SQLite compiled-index projection is unavailable ($($compiledResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
+    }
+    $catalog = $compiledResult.catalog
+    $symbolIndex = [pscustomobject]@{
+        symbols = @($compiledResult.symbols)
+        dependencyInjectionRegistrations = @($compiledResult.dependencyInjectionRegistrations)
+    }
+    $compiledIndexDiagnostics = [ordered]@{
+        source = [string]$compiledResult.source
+        sqlDurationMs = [double]$compiledResult.durationMs
+        scannedRecords = [int]$compiledResult.scannedRecords
+        returnedRecords = [int]$compiledResult.returnedRecords
+        sourceHashes = $compiledResult.sourceHashes
+    }
 } else {
-    $null
+    $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
+    $symbolIndex = if (Test-Path -LiteralPath $symbolIndexPath) {
+        Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json
+    } else {
+        $null
+    }
+    $compiledIndexDiagnostics = [ordered]@{
+        source = 'json-baseline'
+        sqlDurationMs = $null
+        scannedRecords = $(if ($null -eq $symbolIndex) { 0 } else { @($symbolIndex.symbols).Count + @($symbolIndex.dependencyInjectionRegistrations).Count })
+        returnedRecords = $(if ($null -eq $symbolIndex) { 0 } else { @($symbolIndex.symbols).Count + @($symbolIndex.dependencyInjectionRegistrations).Count })
+        sourceHashes = $null
+    }
 }
+$compiledIndexStopwatch.Stop()
+$compiledIndexDiagnostics['roundTripDurationMs'] = [Math]::Round($compiledIndexStopwatch.Elapsed.TotalMilliseconds, 2)
 $frontendIndex = if (Test-Path -LiteralPath $frontendIndexPath) {
     Get-Content -LiteralPath $frontendIndexPath -Raw | ConvertFrom-Json
 } else {
@@ -648,7 +694,7 @@ if ($SqlShadow) {
         $legacyDenominator = [Math]::Max(1, [Math]::Min($Limit, $rankedLegacyPaths.Count))
         $sqlDenominator = [Math]::Max(1, [Math]::Min($Limit, $sqlPaths.Count))
         $sqlShadowDiagnostics = [ordered]@{
-            authoritative = 'json'
+            authoritative = [string]$compiledIndexDiagnostics.source
             ready = [bool]$sqlResult.ready
             indexedDocuments = [int]$sqlResult.indexedDocuments
             fingerprint = $sqlResult.fingerprint
@@ -765,6 +811,7 @@ $context = [ordered]@{
     })
     tests = @($testResults | ForEach-Object { [ordered]@{ path = $_.path; score = $_.score } })
     recommendedChecks = $recommendedChecks
+    compiledIndex = $compiledIndexDiagnostics
 }
 if ($null -ne $sqlShadowDiagnostics) { $context['sqlShadow'] = $sqlShadowDiagnostics }
 
@@ -777,8 +824,9 @@ if ($Format -eq 'Json') {
 
 Write-Host "LLM Wiki context: '$searchText' [$ChangeType]"
 if ($null -ne $sqlShadowDiagnostics) {
-    Write-Host "SQL shadow: ready=$($sqlShadowDiagnostics.ready), overlap=$($sqlShadowDiagnostics.overlapCount)/$($sqlShadowDiagnostics.legacyCandidateCount), SQL=$($sqlShadowDiagnostics.sqlQueryDurationMs)ms, round-trip=$($sqlShadowDiagnostics.roundTripDurationMs)ms; JSON remains authoritative."
+    Write-Host "SQL shadow: ready=$($sqlShadowDiagnostics.ready), overlap=$($sqlShadowDiagnostics.overlapCount)/$($sqlShadowDiagnostics.legacyCandidateCount), SQL=$($sqlShadowDiagnostics.sqlQueryDurationMs)ms, round-trip=$($sqlShadowDiagnostics.roundTripDurationMs)ms; authority=$($sqlShadowDiagnostics.authoritative)."
 }
+Write-Host "Compiled indexes: source=$($compiledIndexDiagnostics.source), records=$($compiledIndexDiagnostics.returnedRecords)/$($compiledIndexDiagnostics.scannedRecords), SQL=$($compiledIndexDiagnostics.sqlDurationMs)ms, round-trip=$($compiledIndexDiagnostics.roundTripDurationMs)ms."
 if ($null -ne $moduleContext) {
     Write-Host "Module: $($moduleContext.name)"
     Write-Host "  depends on: $(if ($moduleContext.dependencies.Count) { $moduleContext.dependencies -join ', ' } else { 'none' })"

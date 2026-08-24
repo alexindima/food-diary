@@ -4,6 +4,12 @@ kind: workflow
 status: current
 sources:
   - .llm-wiki/tools/Find-LlmWikiContext.ps1
+  - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
+  - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
+  - .llm-wiki/tools/code-graph.mjs
+  - .llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1
+  - .llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1
+  - .llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1
   - .llm-wiki/tools/Build-LlmWikiCatalog.ps1
   - .llm-wiki/generated/repository-catalog.json
   - AGENTS.md
@@ -17,13 +23,34 @@ controllers, C# symbols, dependency-injection registrations, tests, module
 dependencies, Angular features/routes/symbols/localization, ranked
 implementation files, and recommended verification commands.
 
-JSON callers reuse an exact content-addressed result keyed by the query
-arguments, HEAD, relevant worktree paths, and the catalog/symbol/frontend index
-hashes. `-ScopePath` supplies the explicit cache boundary; `-Module` derives the
+The resolver reads repository-catalog and C# symbol candidates from the local
+SQLite compiled-index projection by default. The graph is refreshed before the
+read-only facade snapshot is created, and the reader verifies normalized source
+hashes before returning data. A missing or stale projection fails explicitly;
+`-CompiledIndexSource Json` is reserved for parity tests and diagnostics rather
+than automatic fallback.
+
+Diff context uses the same projection in `changed-paths` mode. SQLite applies
+the exact changed-path predicate before transporting C# symbol payloads, while
+catalog-derived modules, projects, and guides retain their previous shape.
+Task-brief intent inference also uses SQLite candidates before applying its
+existing PowerShell scoring. Both commands keep `-CompiledIndexSource Json` as
+an explicit test/diagnostic baseline and never select it automatically.
+
+JSON result callers reuse an exact content-addressed result keyed by the query
+arguments, HEAD, relevant worktree paths, the graph dependency fingerprint, and
+the frontend index hash. `-ScopePath` supplies the explicit cache boundary; `-Module` derives the
 corresponding application project paths. An unrelated edit no longer invalidates
 the query, while an edit inside the scope or a dependent-index change does.
-Unchanged orchestration calls avoid reparsing the catalog and symbol indexes.
+Unchanged orchestration calls avoid querying and transporting catalog/symbol
+records again.
 Text output remains an uncached interactive view.
+
+Required smoke tests compare SQLite and JSON-baseline output for context, diff,
+and task-brief routes. They check exact functional parity, normalized source
+hashes, changed-path candidate reduction, and bounded SQL/transport overhead.
+This protects result quality while the remaining build-time and explicit
+baseline JSON consumers migrate incrementally.
 
 ## Examples
 

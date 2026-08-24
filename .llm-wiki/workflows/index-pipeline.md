@@ -108,7 +108,12 @@ every non-fallback group has an execution handler.
 Groups marked `ParallelSafe` run concurrently in priority order; the remaining
 groups run serially after that batch. Mutation fixtures and performance-sensitive
 SLA fixtures stay serial, so the context-cache cold-start budget is measured
-without contention from other smoke workers.
+without contention from other smoke workers. The serial `context-bundle` group
+owns query-context compiled-index SQLite/JSON parity, payload-reduction,
+source-hash, and transport-envelope checks. The graph-dependent `task-baseline`
+and query-cache groups separately guard exact diff-context and task-brief parity
+plus their latency envelopes. The serial `backend-contract-query` group checks
+all seven contract views, source lineage, payload reduction, and SQL latency.
 
 Parallel smoke gives every worker a run-local fixture sandbox and redirects
 `TEMP`/`TMP` plus task IDs into that owned run directory. Cleanup validates exact

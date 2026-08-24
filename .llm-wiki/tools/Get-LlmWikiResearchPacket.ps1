@@ -43,7 +43,6 @@ $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -N
 } -RelevantPath @($(if (@($ProposedPath).Count -gt 0) { $ProposedPath } else { $ChangedPath })) -DependencyPath @(
     '.llm-wiki/policies/query-indexes.json'
     '.llm-wiki/policies/workspace-policies.json'
-    '.llm-wiki/generated/csharp-symbol-index.json'
     '.llm-wiki/generated/frontend-index.json'
     '.llm-wiki/generated/quality-index.json'
     '.artifacts/llm-wiki/code-graph/code-graph.fingerprint'

@@ -4,6 +4,8 @@ param(
     [string]$HeadRef,
     [string[]]$ChangedPath,
     [string[]]$BaselineExcludedPath,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 20)]
@@ -109,19 +111,63 @@ if ($changedPaths.Count -eq 0) {
     return
 }
 
-$catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
 function Read-IndexWhenPathIsPresent([string]$Path, [string[]]$CandidatePath) {
-    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { return $null }
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        return [pscustomobject]@{ index = $null; bytesRead = 0 }
+    }
     $raw = [System.IO.File]::ReadAllText($Path)
     foreach ($candidate in $CandidatePath) {
         if ($raw.IndexOf($candidate, [System.StringComparison]::Ordinal) -ge 0) {
-            return $raw | ConvertFrom-Json
+            return [pscustomobject]@{ index = ($raw | ConvertFrom-Json); bytesRead = $raw.Length }
         }
     }
-    return $null
+    return [pscustomobject]@{ index = $null; bytesRead = $raw.Length }
 }
-$symbolIndex = Read-IndexWhenPathIsPresent $symbolIndexPath $changedPaths
-$frontendIndex = Read-IndexWhenPathIsPresent $frontendIndexPath $changedPaths
+$compiledIndexStopwatch = [Diagnostics.Stopwatch]::StartNew()
+$compiledIndexDiagnostics = $null
+if ($CompiledIndexSource -eq 'Sqlite') {
+    $compiledResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
+        -Action compiled-context `
+        -CompiledMode ChangedPaths `
+        -ChangedPath $changedPaths `
+        -SkipRefresh `
+        -Format Json | ConvertFrom-Json
+    if (-not [bool]$compiledResult.ready) {
+        throw "SQLite compiled-index projection is unavailable ($($compiledResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
+    }
+    $catalog = $compiledResult.catalog
+    $symbolIndex = [pscustomobject]@{ symbols = @($compiledResult.symbols) }
+    $compiledIndexDiagnostics = [ordered]@{
+        source = [string]$compiledResult.source
+        selectionMode = [string]$compiledResult.selectionMode
+        sqlDurationMs = [double]$compiledResult.durationMs
+        scannedRecords = [int]$compiledResult.scannedRecords
+        candidateRecords = [int]$compiledResult.returnedRecords
+        returnedRecords = 0
+        sourceBytesRead = $null
+        sourceHashes = $compiledResult.sourceHashes
+    }
+} else {
+    if (-not (Test-Path -LiteralPath $catalogPath -PathType Leaf)) {
+        throw 'Repository catalog is missing. Run Build-LlmWikiCatalog.ps1 first.'
+    }
+    $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
+    $symbolRead = Read-IndexWhenPathIsPresent $symbolIndexPath $changedPaths
+    $symbolIndex = $symbolRead.index
+    $compiledIndexDiagnostics = [ordered]@{
+        source = 'json-baseline'
+        selectionMode = 'changed-paths'
+        sqlDurationMs = $null
+        scannedRecords = $(if ($null -eq $symbolIndex) { 0 } else { @($symbolIndex.symbols).Count })
+        candidateRecords = $(if ($null -eq $symbolIndex) { 0 } else { @($symbolIndex.symbols).Count })
+        returnedRecords = 0
+        sourceBytesRead = [int64]$symbolRead.bytesRead
+        sourceHashes = $null
+    }
+}
+$compiledIndexStopwatch.Stop()
+$compiledIndexDiagnostics['roundTripDurationMs'] = [Math]::Round($compiledIndexStopwatch.Elapsed.TotalMilliseconds, 2)
+$frontendIndex = (Read-IndexWhenPathIsPresent $frontendIndexPath $changedPaths).index
 $scopes = [ordered]@{
     Backend = @($changedPaths | Where-Object {
         $_ -match '\.cs$|\.csproj$|Directory\.(Build|Packages)\.props$' -or
@@ -230,25 +276,26 @@ $matchedProjects = @(
         Select-Object -First $Limit
 )
 
-$changedPathSet = @{}
+$changedPathSet = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
 foreach ($changedPath in $changedPaths) {
-    $changedPathSet[$changedPath] = $true
+    $null = $changedPathSet.Add($changedPath)
 }
 
 $changedSymbols = @()
 if ($null -ne $symbolIndex) {
     $changedSymbols = @(
         $symbolIndex.symbols |
-            Where-Object { $changedPathSet.ContainsKey([string]$_.path) } |
+            Where-Object { $changedPathSet.Contains([string]$_.path) } |
             Sort-Object path, line |
             Select-Object -First ($Limit * 3)
     )
 }
+$compiledIndexDiagnostics['returnedRecords'] = $changedSymbols.Count
 $changedFrontendSymbols = @()
 if ($null -ne $frontendIndex) {
     $changedFrontendSymbols = @(
         $frontendIndex.symbols |
-            Where-Object { $changedPathSet.ContainsKey([string]$_.path) } |
+            Where-Object { $changedPathSet.Contains([string]$_.path) } |
             Sort-Object path, line |
             Select-Object -First ($Limit * 3)
     )
@@ -296,7 +343,7 @@ foreach ($page in $wikiPages) {
             break
         }
     }
-    $changedSources = @($sources | Where-Object { $changedPathSet.ContainsKey($_) })
+    $changedSources = @($sources | Where-Object { $changedPathSet.Contains($_) })
     if ($changedSources.Count -gt 0) {
         $absolutePagePath = $page.FullName
         $repositoryUri = [System.Uri]::new(($repositoryRoot.TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar))
@@ -376,7 +423,7 @@ if (@($changedPaths | Where-Object {
     $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiSensitiveDataIndex.ps1')
 }
 if ($matchedModules.Count -gt 0 -or
-    $changedPathSet.ContainsKey('docs/architecture/module-dependencies.json') -or
+    $changedPathSet.Contains('docs/architecture/module-dependencies.json') -or
     @($changedPaths | Where-Object { $_ -match 'Controller\.cs$' }).Count -gt 0) {
     $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiModulePages.ps1')
 }
@@ -465,6 +512,7 @@ $result = [ordered]@{
     generatedActions = @($generatedActions)
     warnings = @($warnings)
     recommendedChecks = $uniqueChecks
+    compiledIndex = $compiledIndexDiagnostics
 }
 
 if ($Format -eq 'Json') {
@@ -474,6 +522,7 @@ if ($Format -eq 'Json') {
 
 Write-Host "LLM Wiki diff context: $($changedPaths.Count) changed path(s)"
 Write-Host "Scopes: $(if ($activeScopes.Count) { $activeScopes -join ', ' } else { 'none detected' })"
+Write-Host "Compiled indexes: source=$($compiledIndexDiagnostics.source), candidates=$($compiledIndexDiagnostics.returnedRecords)/$($compiledIndexDiagnostics.scannedRecords), round-trip=$($compiledIndexDiagnostics.roundTripDurationMs)ms."
 if ($baselineExcludedPaths.Count -gt 0) {
     Write-Host "Workspace context excluded by task baseline: $($baselineExcludedPaths.Count) path(s); scopes=$(if ($workspaceContextScopes.Count) { @($workspaceContextScopes | Sort-Object -Unique) -join ', ' } else { 'none detected' })."
     Write-Host 'Use -ChangedPath explicitly to include any of those paths in the current task; they are shown but not silently claimed from another session.'

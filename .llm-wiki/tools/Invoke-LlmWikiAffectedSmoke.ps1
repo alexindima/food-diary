@@ -164,6 +164,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'task-baseline' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiDiffContextSqlParity.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiTaskBaseline.ps1')
             if (-not $?) { exit 1 }
         }
@@ -179,6 +181,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'api-compatibility' {
             & (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibilityRegression.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'backend-contract-query' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiBackendContractSqlParity.ps1')
             if (-not $?) { exit 1 }
         }
         'git-paths' {
@@ -244,6 +250,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'query-cache' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiTaskBriefSqlParity.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiQueryCache.ps1')
             if (-not $?) { exit 1 }
         }
@@ -270,6 +278,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'context-bundle' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiCompiledIndexSqlParity.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiSqlContextShadow.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiSqlContextEvaluation.ps1')

@@ -9,6 +9,8 @@ const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
 const parserVersion = '11-javascript-context-v1';
 const contextSearchSchemaVersion = '1';
+const compiledIndexSchemaVersion = '3';
+const queryDocumentSchemaVersion = '3';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
 const roslynDll = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll');
 const typescriptExtractor = resolve(repositoryRoot, '.llm-wiki/tools/typescript-extractor.mjs');
@@ -26,6 +28,7 @@ function publishGraphDependencyFingerprint(databasePath, result) {
     tokens: result.tokens,
     typedEdges: result.typedEdges,
     contextSearchFingerprint: result.contextSearch?.fingerprint ?? null,
+    compiledIndexFingerprint: result.compiledIndexes?.fingerprint ?? null,
     contextSearchRankingFingerprint: sha256(contextSearchRankingText),
     changeSetFingerprint: result.changeSetFingerprint ?? null,
   }));
@@ -349,14 +352,33 @@ function openDatabase(databasePath) {
       record_key TEXT NOT NULL,
       path TEXT NOT NULL,
       source_path TEXT NOT NULL,
+      record_kind TEXT NOT NULL DEFAULT '',
+      source_ordinal INTEGER NOT NULL DEFAULT 0,
       payload_json TEXT NOT NULL,
       PRIMARY KEY(category, record_key, path)
+    ) WITHOUT ROWID;
+    CREATE TABLE IF NOT EXISTS compiled_indexes(
+      index_name TEXT PRIMARY KEY,
+      source_path TEXT NOT NULL,
+      content_hash TEXT NOT NULL,
+      payload_json TEXT NOT NULL
+    ) WITHOUT ROWID;
+    CREATE TABLE IF NOT EXISTS compiled_index_records(
+      index_name TEXT NOT NULL,
+      record_kind TEXT NOT NULL,
+      record_key TEXT NOT NULL,
+      path TEXT NOT NULL,
+      source_ordinal INTEGER NOT NULL,
+      search_text TEXT NOT NULL,
+      payload_json TEXT NOT NULL,
+      PRIMARY KEY(index_name, record_kind, record_key, path)
     ) WITHOUT ROWID;
     CREATE INDEX IF NOT EXISTS ix_symbols_name ON symbols(name COLLATE NOCASE);
     CREATE INDEX IF NOT EXISTS ix_symbols_file ON symbols(file_id);
     CREATE INDEX IF NOT EXISTS ix_tokens_token ON file_tokens(token COLLATE NOCASE);
     CREATE INDEX IF NOT EXISTS ix_edges_kind_target ON typed_edges(kind, target COLLATE NOCASE);
     CREATE INDEX IF NOT EXISTS ix_query_documents_category_path ON query_documents(category, path COLLATE NOCASE);
+    CREATE INDEX IF NOT EXISTS ix_compiled_index_records_kind_path ON compiled_index_records(index_name, record_kind, path COLLATE NOCASE);
   `);
     const storedSearchSchemaVersion = database.prepare("SELECT value FROM metadata WHERE key='context_search_schema_version'").get()?.value;
     if (storedSearchSchemaVersion !== contextSearchSchemaVersion) {
@@ -383,6 +405,9 @@ function openDatabase(databasePath) {
     };
     ensureColumn('symbols', 'symbol_id', 'TEXT');
     ensureColumn('typed_edges', 'target_id', 'TEXT');
+    ensureColumn('query_documents', 'record_kind', "TEXT NOT NULL DEFAULT ''");
+    ensureColumn('query_documents', 'source_ordinal', 'INTEGER NOT NULL DEFAULT 0');
+    ensureColumn('compiled_index_records', 'source_ordinal', 'INTEGER NOT NULL DEFAULT 0');
     database.exec('CREATE INDEX IF NOT EXISTS ix_symbols_symbol_id ON symbols(symbol_id); CREATE INDEX IF NOT EXISTS ix_edges_target_id ON typed_edges(target_id);');
     return database;
   } catch (error) {
@@ -444,7 +469,11 @@ function refreshQueryLayer(database) {
     ['risks', '.llm-wiki/generated/quality-index.json'],
   ];
   const replaceCategory = database.prepare('DELETE FROM query_documents WHERE category = ?');
-  const insert = database.prepare('INSERT OR REPLACE INTO query_documents(category, record_key, path, source_path, payload_json) VALUES (?, ?, ?, ?, ?)');
+  const insert = database.prepare(`
+    INSERT OR REPLACE INTO query_documents(category, record_key, path, source_path, record_kind, source_ordinal, payload_json)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+  const schemaChanged = database.prepare("SELECT value FROM metadata WHERE key = 'query_document_schema_version'").get()?.value !== queryDocumentSchemaVersion;
   let refreshed = 0;
   for (const [category, sourcePath] of sources) {
     const absolutePath = resolve(repositoryRoot, sourcePath);
@@ -452,25 +481,263 @@ function refreshQueryLayer(database) {
     const text = readFileSync(absolutePath, 'utf8');
     const contentHash = sha256(text);
     const metadataKey = `query_source:${category}`;
-    if (database.prepare('SELECT value FROM metadata WHERE key = ?').get(metadataKey)?.value === contentHash) continue;
+    if (!schemaChanged && database.prepare('SELECT value FROM metadata WHERE key = ?').get(metadataKey)?.value === contentHash) continue;
     const document = JSON.parse(text);
     const records = [];
     if (category === 'modules') {
-      for (const [name, value] of Object.entries(document.modules ?? {})) records.push({ key: name, path: value?.sourceMappings?.applicationProjects?.[0] ?? '', value: { name, ...value } });
+      for (const [ordinal, [name, value]] of Object.entries(document.modules ?? {}).entries()) records.push({ key: name, path: value?.sourceMappings?.applicationProjects?.[0] ?? '', kind: 'module', ordinal, value: { name, ...value } });
     } else if (category === 'contracts') {
-      for (const value of document.contracts ?? []) records.push({ key: value.id ?? value.name ?? value.symbol ?? JSON.stringify(value), path: value.path ?? value.sourcePath ?? '', value });
-      for (const value of document.consumerEdges ?? []) records.push({ key: `consumer:${value.contract ?? ''}:${value.consumerPath ?? ''}`, path: value.consumerPath ?? '', value: { recordKind: 'consumer', ...value } });
+      let ordinal = 0;
+      for (const value of document.contracts ?? []) records.push({ key: value.id ?? value.name ?? value.symbol ?? JSON.stringify(value), path: value.path ?? value.sourcePath ?? '', kind: 'contract', ordinal: ordinal++, value });
+      for (const value of document.consumerEdges ?? []) records.push({ key: `consumer:${value.contract ?? ''}:${value.consumerPath ?? ''}`, path: value.consumerPath ?? '', kind: 'consumer', ordinal: ordinal++, value });
     } else {
+      let ordinal = 0;
       for (const [recordKind, values] of Object.entries({ hotspot: document.hotspots ?? [], file: document.files ?? [], criticalSymbol: document.criticalSymbols ?? [], debtMarker: document.debtMarkers ?? [] })) {
-        for (const value of values) records.push({ key: `${recordKind}:${value.path ?? ''}:${value.name ?? value.symbol ?? value.line ?? ''}`, path: value.path ?? value.sourcePath ?? '', value: { recordKind, ...value } });
+        for (const value of values) records.push({ key: `${recordKind}:${value.path ?? ''}:${value.name ?? value.symbol ?? value.line ?? ''}`, path: value.path ?? value.sourcePath ?? '', kind: recordKind, ordinal: ordinal++, value: { recordKind, ...value } });
       }
     }
     replaceCategory.run(category);
-    for (const record of records) insert.run(category, String(record.key), String(record.path), sourcePath, JSON.stringify(record.value));
+    for (const record of records) insert.run(category, String(record.key), String(record.path), sourcePath, String(record.kind), Number(record.ordinal), JSON.stringify(record.value));
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run(metadataKey, contentHash);
     refreshed += 1;
   }
+  database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)')
+    .run('query_document_schema_version', queryDocumentSchemaVersion);
   return refreshed;
+}
+
+function refreshCompiledIndexes(database) {
+  const sources = [
+    ['repository-catalog', '.llm-wiki/generated/repository-catalog.json'],
+    ['csharp-symbols', '.llm-wiki/generated/csharp-symbol-index.json'],
+  ];
+  const replaceIndex = database.prepare(`
+    INSERT OR REPLACE INTO compiled_indexes(index_name, source_path, content_hash, payload_json)
+    VALUES (?, ?, ?, ?)
+  `);
+  const deleteRecords = database.prepare('DELETE FROM compiled_index_records WHERE index_name = ?');
+  const insertRecord = database.prepare(`
+    INSERT OR REPLACE INTO compiled_index_records(index_name, record_kind, record_key, path, source_ordinal, search_text, payload_json)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+  let refreshed = 0;
+  const schemaChanged = database.prepare("SELECT value FROM metadata WHERE key = 'compiled_index_schema_version'").get()?.value !== compiledIndexSchemaVersion;
+  for (const [indexName, sourcePath] of sources) {
+    const absolutePath = resolve(repositoryRoot, sourcePath);
+    if (!existsSync(absolutePath)) continue;
+    const text = readFileSync(absolutePath, 'utf8');
+    const contentHash = sha256(text.replaceAll('\r\n', '\n'));
+    const existingHash = database.prepare('SELECT content_hash contentHash FROM compiled_indexes WHERE index_name = ?').get(indexName)?.contentHash;
+    if (!schemaChanged && existingHash === contentHash) continue;
+    const document = JSON.parse(text);
+    replaceIndex.run(indexName, sourcePath, contentHash, text);
+    deleteRecords.run(indexName);
+    if (indexName === 'csharp-symbols') {
+      for (const [ordinal, symbol] of (document.symbols ?? []).entries()) {
+        const recordKey = `${ordinal}:${symbol.name ?? ''}:${symbol.path ?? ''}:${symbol.line ?? ''}`;
+        const searchText = `${symbol.name ?? ''} ${symbol.role ?? ''} ${symbol.path ?? ''}`;
+        insertRecord.run(indexName, 'symbol', recordKey, symbol.path ?? '', ordinal, searchText, JSON.stringify(symbol));
+      }
+      for (const [ordinal, registration] of (document.dependencyInjectionRegistrations ?? []).entries()) {
+        const recordKey = `${ordinal}:${registration.service ?? ''}:${registration.implementation ?? ''}:${registration.path ?? ''}:${registration.line ?? ''}`;
+        const searchText = `${registration.service ?? ''} ${registration.implementation ?? ''} ${registration.path ?? ''}`;
+        insertRecord.run(indexName, 'dependency-injection', recordKey, registration.path ?? '', ordinal, searchText, JSON.stringify(registration));
+      }
+      for (const [ordinal, implementation] of (document.interfaceImplementations ?? []).entries()) {
+        const recordKey = `${ordinal}:${implementation.interface ?? ''}:${implementation.implementation ?? ''}:${implementation.path ?? ''}`;
+        const searchText = `${implementation.interface ?? ''} ${implementation.implementation ?? ''} ${implementation.path ?? ''}`;
+        insertRecord.run(indexName, 'interface-implementation', recordKey, implementation.path ?? '', ordinal, searchText, JSON.stringify(implementation));
+      }
+    }
+    refreshed += 1;
+  }
+  database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)')
+    .run('compiled_index_schema_version', compiledIndexSchemaVersion);
+  const indexes = database.prepare(`
+    SELECT index_name indexName, source_path sourcePath, content_hash contentHash
+    FROM compiled_indexes ORDER BY index_name
+  `).all();
+  const records = database.prepare(`
+    SELECT index_name indexName, record_kind recordKind, COUNT(*) count
+    FROM compiled_index_records GROUP BY index_name, record_kind ORDER BY index_name, record_kind
+  `).all();
+  return {
+    refreshed,
+    indexes,
+    records,
+    fingerprint: sha256(JSON.stringify(indexes.map((item) => [item.indexName, item.contentHash]))),
+  };
+}
+
+function normalizedSearchTerms(...values) {
+  return [...new Set(values
+    .filter(Boolean)
+    .flatMap((value) => String(value).toLocaleLowerCase('en-US').match(/[\p{L}\p{N}]+/gu) ?? [])
+    .filter((term) => term.length >= 2))];
+}
+
+function pathsHaveAffinity(path, scopePaths) {
+  const normalizedPath = String(path ?? '').replaceAll('\\', '/');
+  for (const scopePath of scopePaths) {
+    const normalizedScope = scopePath.replaceAll('\\', '/').replace(/\/$/, '');
+    const scopeDirectory = /\.[^/]+$/.test(normalizedScope)
+      ? normalizedScope.slice(0, normalizedScope.lastIndexOf('/'))
+      : normalizedScope;
+    if (normalizedPath === normalizedScope
+      || normalizedPath.startsWith(`${scopeDirectory}/`)
+      || normalizedScope.startsWith(`${normalizedPath.replace(/\/$/, '')}/`)) return true;
+    const feature = normalizedScope.match(/\/features\/([^/]+)\//i)?.[1];
+    if (feature && normalizedPath.toLocaleLowerCase('en-US').includes(`/features/${feature.toLocaleLowerCase('en-US')}/`)) return true;
+  }
+  return false;
+}
+
+function compiledContext(database, options) {
+  const started = performance.now();
+  const catalogRow = database.prepare(`
+    SELECT source_path sourcePath, content_hash contentHash, payload_json payloadJson
+    FROM compiled_indexes WHERE index_name = 'repository-catalog'
+  `).get();
+  const symbolIndex = database.prepare(`
+    SELECT source_path sourcePath, content_hash contentHash
+    FROM compiled_indexes WHERE index_name = 'csharp-symbols'
+  `).get();
+  if (!catalogRow || !symbolIndex) {
+    return {
+      ready: false,
+      unavailableReason: 'compiled-index-projection-missing',
+      durationMs: Math.round((performance.now() - started) * 100) / 100,
+    };
+  }
+  const currentCatalogHash = sha256(readFileSync(resolve(repositoryRoot, catalogRow.sourcePath), 'utf8').replaceAll('\r\n', '\n'));
+  const currentSymbolHash = sha256(readFileSync(resolve(repositoryRoot, symbolIndex.sourcePath), 'utf8').replaceAll('\r\n', '\n'));
+  if (currentCatalogHash !== catalogRow.contentHash || currentSymbolHash !== symbolIndex.contentHash) {
+    return {
+      ready: false,
+      unavailableReason: 'compiled-index-projection-stale',
+      sourceHashes: {
+        repositoryCatalog: { projected: catalogRow.contentHash, current: currentCatalogHash },
+        csharpSymbols: { projected: symbolIndex.contentHash, current: currentSymbolHash },
+      },
+      durationMs: Math.round((performance.now() - started) * 100) / 100,
+    };
+  }
+  const query = options.query ?? '';
+  const module = options.module ?? '';
+  const scopePaths = (options.path ?? '').split(';').filter(Boolean);
+  const selectionMode = options['compiled-mode'] ?? 'context';
+  if (!['context', 'changed-paths'].includes(selectionMode)) {
+    throw new Error(`Unsupported compiled-context selection mode: ${selectionMode}`);
+  }
+  const terms = normalizedSearchTerms(module, query);
+  const phrases = [module, query].filter(Boolean).map((value) => value.toLocaleLowerCase('en-US'));
+  const catalog = JSON.parse(catalogRow.payloadJson);
+  const matchedModule = (() => {
+    if (!module) return undefined;
+    return [...(catalog.applicationModules ?? []), ...(catalog.extractedApplicationModules ?? [])]
+      .find((item) => String(item.name ?? '').toLocaleLowerCase('en-US') === module.toLocaleLowerCase('en-US'))
+      ?? [...(catalog.applicationModules ?? []), ...(catalog.extractedApplicationModules ?? [])]
+        .find((item) => String(item.name ?? '').toLocaleLowerCase('en-US').includes(module.toLocaleLowerCase('en-US')));
+  })();
+  const moduleProjectDirectory = matchedModule?.project
+    ? String(matchedModule.project).replaceAll('\\', '/').replace(/\/[^/]+$/, '')
+    : '';
+  let rows;
+  let selected;
+  let scannedRecords;
+  if (selectionMode === 'changed-paths') {
+    scannedRecords = database.prepare(`
+      SELECT COUNT(*) count FROM compiled_index_records
+      WHERE index_name = 'csharp-symbols' AND record_kind = 'symbol'
+    `).get().count;
+    if (scopePaths.length === 0) {
+      rows = [];
+    } else {
+      const placeholders = scopePaths.map(() => '?').join(', ');
+      rows = database.prepare(`
+        SELECT record_kind recordKind, path, search_text searchText, payload_json payloadJson
+        FROM compiled_index_records
+        WHERE index_name = 'csharp-symbols' AND record_kind = 'symbol' AND path IN (${placeholders})
+        ORDER BY source_ordinal
+      `).all(...scopePaths);
+    }
+    selected = rows;
+  } else {
+    rows = database.prepare(`
+      SELECT record_kind recordKind, path, search_text searchText, payload_json payloadJson
+      FROM compiled_index_records
+      WHERE index_name = 'csharp-symbols' AND record_kind IN ('symbol', 'dependency-injection')
+      ORDER BY record_kind, source_ordinal
+    `).all();
+    scannedRecords = rows.length;
+    selected = rows.filter((row) => {
+      const searchable = row.searchText.toLocaleLowerCase('en-US');
+      const textMatch = terms.some((term) => searchable.includes(term))
+        || phrases.some((phrase) => searchable.includes(phrase));
+      const scopeMatch = pathsHaveAffinity(row.path, scopePaths);
+      const moduleMatch = moduleProjectDirectory && (row.path === moduleProjectDirectory || row.path.startsWith(`${moduleProjectDirectory}/`));
+      return textMatch || scopeMatch || moduleMatch;
+    });
+  }
+  const contextCatalog = {
+    applicationModules: (catalog.applicationModules ?? []).map((item) => ({
+      name: item.name,
+      dependencies: item.dependencies ?? [],
+      origin: item.origin,
+      project: item.project,
+    })),
+    extractedApplicationModules: (catalog.extractedApplicationModules ?? []).map((item) => ({
+      name: item.name,
+      project: item.project,
+    })),
+    dotnet: {
+      projects: (catalog.dotnet?.projects ?? []).map((item) => ({
+        name: item.name,
+        path: item.path,
+        isTestProject: item.isTestProject,
+      })),
+    },
+    frontend: {
+      projects: (catalog.frontend?.projects ?? []).map((item) => ({
+        name: item.name,
+        projectType: item.projectType,
+        root: item.root,
+        sourceRoot: item.sourceRoot,
+      })),
+    },
+    http: {
+      controllers: (catalog.http?.controllers ?? []).map((item) => ({
+        name: item.name,
+        path: item.path,
+        routePrefix: item.routePrefix,
+        endpoints: (item.endpoints ?? []).map((endpoint) => ({
+          verb: endpoint.verb,
+          route: endpoint.route,
+          line: endpoint.line,
+        })),
+      })),
+    },
+    knowledgeSources: {
+      agentGuides: catalog.knowledgeSources?.agentGuides ?? [],
+    },
+  };
+  return {
+    ready: true,
+    source: 'sqlite-compiled-index',
+    selectionMode,
+    catalog: contextCatalog,
+    symbols: selected.filter((row) => row.recordKind === 'symbol').map((row) => JSON.parse(row.payloadJson)),
+    dependencyInjectionRegistrations: selected
+      .filter((row) => row.recordKind === 'dependency-injection')
+      .map((row) => JSON.parse(row.payloadJson)),
+    sourceHashes: {
+      repositoryCatalog: catalogRow.contentHash,
+      csharpSymbols: symbolIndex.contentHash,
+    },
+    scannedRecords,
+    returnedRecords: selected.length,
+    durationMs: Math.round((performance.now() - started) * 100) / 100,
+  };
 }
 
 function expandSearchText(value) {
@@ -491,7 +758,7 @@ function contextDocumentPaths() {
 function refreshContextSearch(database) {
   const files = database.prepare('SELECT path, language, content_hash contentHash FROM files ORDER BY path').all();
   const queryDocuments = database.prepare(`
-    SELECT category, record_key recordKey, path, source_path sourcePath, payload_json payloadJson
+    SELECT category, record_key recordKey, path, source_path sourcePath, record_kind recordKind, payload_json payloadJson
     FROM query_documents ORDER BY category, record_key, path
   `).all();
   const documentation = contextDocumentPaths().map((path) => {
@@ -585,6 +852,7 @@ function build(database, force = false) {
   let unchanged = 0;
   let removed = 0;
   let queryCategoriesRefreshed = 0;
+  let compiledIndexes;
   let contextSearch;
   const candidates = [];
 
@@ -635,6 +903,7 @@ function build(database, force = false) {
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('parser_version', parserVersion);
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('updated_at_utc', new Date().toISOString());
     queryCategoriesRefreshed = refreshQueryLayer(database);
+    compiledIndexes = refreshCompiledIndexes(database);
     contextSearch = refreshContextSearch(database);
     const completedChangeSet = changeSetSnapshot();
     if (completedChangeSet.fingerprint !== startingChangeSet.fingerprint) {
@@ -661,6 +930,7 @@ function build(database, force = false) {
     tokens: database.prepare('SELECT COUNT(*) count FROM file_tokens').get().count,
     typedEdges: database.prepare('SELECT COUNT(*) count FROM typed_edges').get().count,
     queryCategoriesRefreshed,
+    compiledIndexes,
     contextSearch,
     changeSetFingerprint: startingChangeSet.fingerprint,
     changeSetGitHead: startingChangeSet.head,
@@ -721,6 +991,59 @@ function queryDocuments(database, category, query, limit) {
   `).all(category, query, term, term, term, limit).map((row) => ({ ...row, payload: JSON.parse(row.payloadJson) }));
   for (const row of rows) delete row.payloadJson;
   return { category, query, records: rows };
+}
+
+function backendContractContext(database, view, query, limit) {
+  const started = performance.now();
+  const sourcePath = '.llm-wiki/generated/backend-contract-index.json';
+  const projectedHash = database.prepare("SELECT value FROM metadata WHERE key = 'query_source:contracts'").get()?.value;
+  if (!projectedHash) {
+    return { ready: false, unavailableReason: 'backend-contract-projection-missing', durationMs: Math.round((performance.now() - started) * 100) / 100 };
+  }
+  const currentHash = sha256(readFileSync(resolve(repositoryRoot, sourcePath), 'utf8'));
+  if (projectedHash !== currentHash) {
+    return {
+      ready: false,
+      unavailableReason: 'backend-contract-projection-stale',
+      sourceHashes: { projected: projectedHash, current: currentHash },
+      durationMs: Math.round((performance.now() - started) * 100) / 100,
+    };
+  }
+  const supportedViews = new Set(['all', 'contracts', 'consumers', 'production', 'tests', 'ambiguous', 'unconsumed']);
+  if (!supportedViews.has(view)) throw new Error(`Unsupported backend-contract view: ${view}`);
+  const selectPayloads = (recordKind, predicate = '') => database.prepare(`
+    SELECT payload_json payloadJson
+    FROM query_documents q
+    WHERE category = 'contracts' AND record_kind = ?
+      AND (? = '' OR instr(lower(payload_json), lower(?)) > 0)
+      ${predicate}
+    ORDER BY source_ordinal
+    LIMIT ?
+  `).all(recordKind, query, query, limit).map((row) => JSON.parse(row.payloadJson));
+  const groups = {};
+  if (view === 'all' || view === 'contracts') groups.contracts = selectPayloads('contract');
+  if (view === 'all' || view === 'consumers') groups.consumers = selectPayloads('consumer');
+  if (view === 'production') groups.productionConsumers = selectPayloads('consumer', "AND COALESCE(json_extract(payload_json, '$.isTest'), 0) = 0");
+  if (view === 'tests') groups.testConsumers = selectPayloads('consumer', "AND COALESCE(json_extract(payload_json, '$.isTest'), 0) = 1");
+  if (view === 'ambiguous') groups.ambiguousContracts = selectPayloads('contract', "AND COALESCE(json_extract(payload_json, '$.ambiguous'), 0) = 1");
+  if (view === 'unconsumed') groups.unconsumedContracts = selectPayloads('contract', `
+    AND json_extract(q.payload_json, '$.name') COLLATE NOCASE NOT IN (
+      SELECT DISTINCT json_extract(consumer.payload_json, '$.contract') COLLATE NOCASE
+      FROM query_documents consumer
+      WHERE consumer.category = 'contracts' AND consumer.record_kind = 'consumer'
+        AND json_extract(consumer.payload_json, '$.contract') IS NOT NULL
+    )
+  `);
+  return {
+    ready: true,
+    source: 'sqlite-query-documents',
+    view,
+    groups,
+    sourceHash: projectedHash,
+    scannedRecords: database.prepare("SELECT COUNT(*) count FROM query_documents WHERE category = 'contracts'").get().count,
+    returnedRecords: Object.values(groups).reduce((count, records) => count + records.length, 0),
+    durationMs: Math.round((performance.now() - started) * 100) / 100,
+  };
 }
 
 function findSymbols(database, query, limit) {
@@ -1308,6 +1631,8 @@ try {
   else if (action === 'coverage') result = coverage(database);
   else if (action === 'fingerprint') result = fingerprint(database, (options.path ?? '').split(';').filter(Boolean));
   else if (action === 'query') result = queryDocuments(database, options.category ?? 'modules', options.query ?? '', Number(options.limit ?? 50));
+  else if (action === 'backend-contract') result = backendContractContext(database, options.view ?? 'all', options.query ?? '', Number(options.limit ?? 30));
+  else if (action === 'compiled-context') result = compiledContext(database, options);
   else result = {
     action: 'status',
     databasePath,
@@ -1318,6 +1643,7 @@ try {
     typedEdges: database.prepare('SELECT COUNT(*) count FROM typed_edges').get().count,
     searchDocuments: database.prepare('SELECT COUNT(*) count FROM context_search').get().count,
     searchFingerprint: database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value ?? null,
+    compiledIndexes: database.prepare('SELECT index_name indexName, source_path sourcePath, content_hash contentHash FROM compiled_indexes ORDER BY index_name').all(),
   };
   process.stdout.write(`${JSON.stringify(result)}\n`);
 } finally {

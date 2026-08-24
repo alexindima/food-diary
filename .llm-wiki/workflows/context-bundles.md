@@ -12,6 +12,7 @@ tags:
 sources:
   - .llm-wiki/tools/Manage-LlmWikiContextBundle.ps1
   - .llm-wiki/tools/Find-LlmWikiContext.ps1
+  - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1
   - .llm-wiki/tools/Manage-LlmWikiTaskDecomposition.ps1
   - .llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1
@@ -29,9 +30,12 @@ prompt-injection assessment before excerpts are persisted.
 
 Bundle creation delegates ranked repository discovery to the shared context
 resolver. Repeated bundles with identical discovery arguments, HEAD, relevant
-scope content, and dependent context indexes reuse its content-addressed JSON
+scope content, and the SQLite graph dependency fingerprint reuse its content-addressed JSON
 result. Unrelated worktree edits do not evict scoped discovery; bundle-specific
 security, learning, provenance, and integrity checks still run normally.
+Diff-selected Wiki pages and C# symbols are resolved from the same refreshed
+SQLite compiled-index projection; missing or stale projections fail explicitly
+instead of widening the bundle through a hidden JSON fallback.
 
 Create a task-specific bundle after its packet is current:
 

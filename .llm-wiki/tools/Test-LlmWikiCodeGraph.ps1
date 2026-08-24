@@ -3,6 +3,7 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $manager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'
+$migrationTool = Join-Path $PSScriptRoot 'Get-LlmWikiCompiledIndexMigration.ps1'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $graphToolText = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'code-graph.mjs') -Raw
 foreach ($lockSafetyFragment in @('isProcessAlive(owner.pid)', 'process.kill(pid, 0)', 'owner.token === ownerToken')) {
@@ -10,6 +11,9 @@ foreach ($lockSafetyFragment in @('isProcessAlive(owner.pid)', 'process.kill(pid
 }
 foreach ($corruptionSafetyFragment in @('isDatabaseCorruption(error)', 'quarantineCorruptDatabase(databasePath)', 'recoveredFromCorruption: true')) {
     if (-not $graphToolText.Contains($corruptionSafetyFragment)) { throw "Code graph corruption recovery is missing: $corruptionSafetyFragment" }
+}
+foreach ($compiledIndexSafetyFragment in @('compiled-index-projection-stale', 'compiled_index_schema_version', 'source_ordinal')) {
+    if (-not $graphToolText.Contains($compiledIndexSafetyFragment)) { throw "Compiled-index projection safety is missing: $compiledIndexSafetyFragment" }
 }
 $recipesBoundary = if (Test-Path -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Application.Recipes') -PathType Container) { 'FoodDiary.Application.Recipes' } else { 'FoodDiary.Application/Recipes' }
 $recipesSourcePrefix = if ($recipesBoundary -eq 'FoodDiary.Application.Recipes') { 'FoodDiary.Application.Recipes/Recipes' } else { $recipesBoundary }
@@ -21,8 +25,27 @@ if ([string]::IsNullOrWhiteSpace([string]$build.graphDependencyFingerprint) -or
     -not (Test-Path -LiteralPath (Join-Path $repositoryRoot '.artifacts/llm-wiki/code-graph/code-graph.fingerprint') -PathType Leaf)) {
     throw 'Code graph build did not publish its cache dependency fingerprint sidecar.'
 }
+$compiledSource = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/generated/csharp-symbol-index.json') -Raw | ConvertFrom-Json
+$migration = & $migrationTool -Format Json | ConvertFrom-Json
+foreach ($indexPath in @('.llm-wiki/generated/repository-catalog.json', '.llm-wiki/generated/csharp-symbol-index.json')) {
+    $migrationIndex = @($migration.indexes | Where-Object path -eq $indexPath | Select-Object -First 1)
+    if ($migrationIndex.Count -ne 1 -or [string]$migrationIndex[0].queryLayer -ne 'migrated' -or
+        [string]$migrationIndex[0].defaultRoute -ne 'sqlite-compiled-index' -or
+        [bool]$migrationIndex[0].automaticJsonFallback) {
+        throw "Compiled-index migration status is not SQLite-primary without fallback: $indexPath"
+    }
+}
+$compiledCounts = @{}
+foreach ($record in @($build.compiledIndexes.records)) { $compiledCounts[[string]$record.recordKind] = [int]$record.count }
+if (@($build.compiledIndexes.indexes).Count -ne 2 -or
+    [int]$compiledCounts['symbol'] -ne @($compiledSource.symbols).Count -or
+    [int]$compiledCounts['dependency-injection'] -ne @($compiledSource.dependencyInjectionRegistrations).Count -or
+    [int]$compiledCounts['interface-implementation'] -ne @($compiledSource.interfaceImplementations).Count) {
+    throw 'Code graph build did not publish the catalog and C# symbol compiled-index projection.'
+}
 $warm = & $manager build -Format Json | ConvertFrom-Json
 if ([int]$warm.updated -ne 0 -or [int]$warm.scanned -ne 0) { throw 'Unchanged code graph build was not incremental.' }
+if ([int]$warm.compiledIndexes.refreshed -ne 0) { throw 'Unchanged compiled-index projection was not incremental.' }
 if ([int]$warm.contextSearch.documents -lt 1000) { throw 'Code graph FTS projection contains too few repository documents.' }
 $fts = & $manager search -Query 'Recipe nutrition updater' -Limit 20 -SkipRefresh -Format Json | ConvertFrom-Json
 if (-not $fts.ready -or
@@ -32,6 +55,13 @@ if (-not $fts.ready -or
 $prototypeTermSearch = & $manager search -Query 'primary constructor backing field' -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
 if (-not $prototypeTermSearch.ready) {
     throw 'SQLite FTS context search did not safely handle a query term inherited by Object.prototype.'
+}
+$compiledContext = & $manager compiled-context -Query 'Recipe nutrition updater' -Module Recipes -ChangedPath $recipesBoundary -SkipRefresh -Format Json | ConvertFrom-Json
+if (-not $compiledContext.ready -or
+    [string]$compiledContext.source -ne 'sqlite-compiled-index' -or
+    @($compiledContext.symbols).Count -eq 0 -or
+    [int]$compiledContext.returnedRecords -ge [int]$compiledContext.scannedRecords) {
+    throw 'SQLite compiled-index context query is not ready or did not reduce its candidate payload.'
 }
 foreach ($searchCase in @(
     @{ Query = 'MCP PowerShell command stage telemetry'; ExpectedPath = 'FoodDiary.Development.Mcp/Wiki/PowerShellWikiCommandExecutor.cs' }

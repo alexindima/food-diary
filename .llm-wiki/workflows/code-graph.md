@@ -10,6 +10,14 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiGraphResearch.ps1
   - .llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1
   - .llm-wiki/tools/Test-LlmWikiCodeGraph.ps1
+  - .llm-wiki/tools/Find-LlmWikiContext.ps1
+  - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
+  - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
+  - .llm-wiki/tools/Find-LlmWikiBackendContract.ps1
+  - .llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1
+  - .llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1
+  - .llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1
+  - .llm-wiki/tools/Test-LlmWikiBackendContractSqlParity.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextShadow.ps1
   - .llm-wiki/policies/context-search-ranking.json
   - .llm-wiki/evals/context-search.json
@@ -59,11 +67,28 @@ files. `Manage-LlmWikiCodeGraph.ps1 search` queries this projection with
 deterministic path, module, task-type, and source-kind ranking.
 PowerShell tools are indexed as code with function symbols and raw source text,
 so operational Wiki commands participate in natural-language retrieval.
-`Find-LlmWikiContext.ps1 -SqlShadow` remains a diagnostic comparison with the
-JSON retrieval and reports SQLite query time separately from the
-PowerShell/Node round trip. The Development MCP aggregate route now uses a
+The database also projects the generated repository catalog and C# symbol index
+into versioned `compiled_indexes` and `compiled_index_records` tables.
+`Find-LlmWikiContext.ps1` reads that projection by default, verifies source
+hashes, and returns an error for a missing or stale projection instead of
+silently reading JSON. `-CompiledIndexSource Json` exists only as an explicit
+parity baseline. `Test-LlmWikiCompiledIndexSqlParity.ps1` compares seven
+catalog/symbol-dependent result sections across representative queries, records
+transport timing and candidate reduction, and is part of the `context-bundle`
+smoke group. Diff context selects exact changed-path symbol rows in SQL and its
+task-baseline parity test guards the complete legacy result shape. Task-brief
+intent discovery consumes the same projection and has a separate end-to-end
+parity and latency envelope. `Find-LlmWikiContext.ps1 -SqlShadow` remains a diagnostic
+comparison between the compiled-index result and the broader FTS route and
+reports SQLite query time separately from the PowerShell/Node round trip. The Development MCP aggregate route now uses a
 fresh SQL result as its primary code-scope selection; policy, checks, reviewed
 knowledge, and source claims remain Git-backed.
+
+The `query_documents` projection also stores record kind and source ordinal.
+Backend-contract discovery uses specialized SQL views for contracts, consumers,
+production/test consumers, ambiguity, and unconsumed contracts. The latter
+builds one distinct consumed-name set instead of repeating a correlated scan.
+Its JSON source remains committed for generation and explicit parity only.
 
 The committed retrieval suite has a 60-case regression corpus in
 `.llm-wiki/evals/context-search.json` and a separately authored 40-case
@@ -120,8 +145,8 @@ top-10, and 0.5812 MRR. General negated-role handling, explicit test-behavior
 affinity, bilingual term normalization, and structural source roles raised it
 to 40/40 top-1, with every cohort at 8/8. The same work made configured term
 lookup safe for JavaScript prototype keys such as `constructor`.
-Run either corpus without changing the JSON-authoritative path, or run the
-combined gate:
+Run either corpus without changing the committed JSON evaluation sources, or
+run the combined gate:
 
 ```powershell
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1

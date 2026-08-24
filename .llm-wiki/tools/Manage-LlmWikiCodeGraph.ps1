@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('build', 'build-plan', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search')]
+    [ValidateSet('build', 'build-plan', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search', 'compiled-context', 'backend-contract')]
     [string]$Action = 'status',
     [string]$Query,
     [ValidateSet('modules', 'contracts', 'risks', 'tests')]
@@ -9,6 +9,10 @@ param(
     [string[]]$RelationKind,
     [string]$Module,
     [string]$PathPrefix,
+    [ValidateSet('Context', 'ChangedPaths')]
+    [string]$CompiledMode = 'Context',
+    [ValidateSet('all', 'contracts', 'consumers', 'production', 'tests', 'ambiguous', 'unconsumed')]
+    [string]$BackendContractView = 'all',
     [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Tests')]
     [string]$ChangeType = 'Any',
     [ValidateSet('Any', 'HostedService', 'Service', 'Handler', 'Controller', 'Repository', 'Component')]
@@ -33,6 +37,8 @@ if (-not [string]::IsNullOrWhiteSpace($Query)) { $arguments += "--query=$Query" 
 if ($Action -eq 'query') { $arguments += "--category=$Category" }
 if (-not [string]::IsNullOrWhiteSpace($Module)) { $arguments += "--module=$Module" }
 if (-not [string]::IsNullOrWhiteSpace($PathPrefix)) { $arguments += "--path-prefix=$PathPrefix" }
+if ($Action -eq 'compiled-context') { $arguments += "--compiled-mode=$($CompiledMode.ToLowerInvariant() -replace 'changedpaths', 'changed-paths')" }
+if ($Action -eq 'backend-contract') { $arguments += "--view=$BackendContractView" }
 if ($Action -eq 'search') { $arguments += "--change-type=$ChangeType" }
 if ($SymbolKind -ne 'Any') { $arguments += "--symbol-kind=$SymbolKind" }
 $normalizedChangedPaths = [string[]]@($ChangedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
@@ -94,5 +100,11 @@ switch ($Action) {
     'search' {
         Write-Host "Code graph FTS search '$Query': $(@($result.records).Count) record(s), ready=$($result.ready), indexed=$($result.indexedDocuments)."
         foreach ($item in @($result.records)) { Write-Host " - #$($item.rank) score=$($item.score): $($item.path) [$($item.recordType)]" }
+    }
+    'compiled-context' {
+        Write-Host "Code graph compiled context: ready=$($result.ready), scanned=$($result.scannedRecords), returned=$($result.returnedRecords), SQL=$($result.durationMs)ms."
+    }
+    'backend-contract' {
+        Write-Host "Code graph backend contracts: ready=$($result.ready), view=$($result.view), returned=$($result.returnedRecords)/$($result.scannedRecords), SQL=$($result.durationMs)ms."
     }
 }

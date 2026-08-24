@@ -13,8 +13,8 @@ $shadow = & $contextTool `
     -SqlShadow `
     -Format Json | ConvertFrom-Json
 
-if ($shadow.sqlShadow.authoritative -ne 'json' -or -not $shadow.sqlShadow.ready) {
-    throw 'SQL context shadow did not preserve JSON authority or report a ready FTS projection.'
+if ($shadow.sqlShadow.authoritative -ne 'sqlite-compiled-index' -or -not $shadow.sqlShadow.ready) {
+    throw 'SQL context shadow did not preserve SQLite compiled-index authority or report a ready FTS projection.'
 }
 $topCandidate = @($shadow.sqlShadow.topCandidates | Select-Object -First 1)
 if ($topCandidate.Count -ne 1 -or $topCandidate[0].path -notmatch 'RecipeNutritionUpdater\.cs$') {
