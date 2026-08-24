@@ -213,6 +213,54 @@ public sealed class TelemetryActionFilterTests {
     }
 
     [Fact]
+    public async Task OnResourceExecutionAsync_WithMatchingRequestTokenBeforeAbortSignal_RecordsCancelledOutcome() {
+        using var metrics = new PresentationMetricListener();
+        using var activities = new PresentationActivityListener();
+        var logger = new RecordingLogger<TelemetryActionFilter>();
+        var filter = new TelemetryActionFilter(logger);
+        ResourceExecutingContext context = CreateResourceExecutingContext("Get");
+        using var requestCancellation = new CancellationTokenSource();
+        context.HttpContext.RequestAborted = requestCancellation.Token;
+
+        await filter.OnResourceExecutionAsync(context, () => Task.FromResult(
+            new ResourceExecutedContext(context, []) {
+                Exception = new OperationCanceledException(requestCancellation.Token),
+            }));
+
+        MetricMeasurement operation = Assert.Single(metrics.Operations);
+        Activity activity = Assert.Single(activities.Completed);
+        Assert.Multiple(
+            () => Assert.Equal("cancelled", operation.Tags["fooddiary.presentation.outcome"]),
+            () => Assert.Empty(metrics.Failures),
+            () => Assert.Empty(logger.Entries),
+            () => Assert.Equal(ActivityStatusCode.Unset, activity.Status),
+            () => Assert.Equal(StatusCodes.Status499ClientClosedRequest, activity.GetTagItem("http.response.status_code")));
+    }
+
+    [Fact]
+    public async Task OnResourceExecutionAsync_WithUnrelatedCancellationToken_RecordsUnhandledFailure() {
+        using var metrics = new PresentationMetricListener();
+        using var activities = new PresentationActivityListener();
+        var logger = new RecordingLogger<TelemetryActionFilter>();
+        var filter = new TelemetryActionFilter(logger);
+        ResourceExecutingContext context = CreateResourceExecutingContext("Get");
+        using var requestCancellation = new CancellationTokenSource();
+        using var unrelatedCancellation = new CancellationTokenSource();
+        context.HttpContext.RequestAborted = requestCancellation.Token;
+
+        await filter.OnResourceExecutionAsync(context, () => Task.FromResult(
+            new ResourceExecutedContext(context, []) {
+                Exception = new OperationCanceledException(unrelatedCancellation.Token),
+            }));
+
+        Assert.Multiple(
+            () => Assert.Equal("failure", Assert.Single(metrics.Operations).Tags["fooddiary.presentation.outcome"]),
+            () => Assert.Equal("UnhandledException", Assert.Single(metrics.Failures).Tags["error.code"]),
+            () => Assert.Single(logger.Entries),
+            () => Assert.Equal(ActivityStatusCode.Error, Assert.Single(activities.Completed).Status));
+    }
+
+    [Fact]
     public async Task OnResourceExecutionAsync_WhenClientCancellationIsThrown_RecordsCancelledOutcomeAndRethrows() {
         using var metrics = new PresentationMetricListener();
         using var activities = new PresentationActivityListener();
