@@ -13,6 +13,60 @@ namespace FoodDiary.Application.Tests.Ai;
 public sealed class OpenAiFoodServiceTests {
     private const string RequestId = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
+    [Theory]
+    [InlineData("vision")]
+    [InlineData("text-parse")]
+    [InlineData("nutrition")]
+    public async Task AiOperations_WhenConsentIsRevoked_DoNotContactProviderOrReserveQuota(string operation) {
+        var user = User.Create("revoked-ai-consent@example.com", "hash");
+        user.AcceptAiConsent();
+        user.RevokeAiConsent();
+        var client = new RecordingOpenAiFoodClient();
+        var quotaRepository = new RecordingAiQuotaRepository();
+        OpenAiFoodService service = CreateService(client, quotaRepository, user);
+
+        Result result = operation switch {
+            "vision" => await service.AnalyzeFoodImageAsync(
+                imageUrl: "https://cdn.example.com/meal.webp",
+                userLanguage: "en",
+                userId: user.Id,
+                description: null,
+                requestId: RequestId,
+                cancellationToken: CancellationToken.None),
+            "text-parse" => await service.ParseFoodTextAsync(
+                "apple 100g", "en", user.Id, RequestId, CancellationToken.None),
+            _ => await service.CalculateNutritionAsync(CreateItems(), user.Id, RequestId, CancellationToken.None),
+        };
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Ai.ConsentRequired", result.Error.Code),
+            () => Assert.Equal(0, client.BudgetCalls),
+            () => Assert.Equal(0, client.ProviderCalls),
+            () => Assert.Empty(quotaRepository.Reservations));
+    }
+
+    [Fact]
+    public async Task CalculateNutritionAsync_WhenConsentWasNeverAccepted_DoesNotContactProviderOrReserveQuota() {
+        var user = User.Create("missing-ai-consent@example.com", "hash");
+        var client = new RecordingOpenAiFoodClient();
+        var quotaRepository = new RecordingAiQuotaRepository();
+        OpenAiFoodService service = CreateService(client, quotaRepository, user);
+
+        Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
+            CreateItems(),
+            user.Id,
+            RequestId,
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Ai.ConsentRequired", result.Error.Code),
+            () => Assert.Equal(0, client.BudgetCalls),
+            () => Assert.Equal(0, client.ProviderCalls),
+            () => Assert.Empty(quotaRepository.Reservations));
+    }
+
     [Fact]
     public async Task CalculateNutritionAsync_WhenQuotaExceeded_ReturnsQuotaErrorWithoutCallingProvider() {
         var client = new RecordingOpenAiFoodClient();
@@ -346,6 +400,8 @@ public sealed class OpenAiFoodServiceTests {
 
         public int CalculateNutritionBudgetCalls { get; private set; }
         public int CalculateNutritionCalls { get; private set; }
+        public int BudgetCalls { get; private set; }
+        public int ProviderCalls { get; private set; }
 
         public async Task<Result<AiProviderTokenBudget>> GetAnalyzeFoodImageTokenBudgetAsync(
             string imageUrl,
@@ -353,6 +409,7 @@ public sealed class OpenAiFoodServiceTests {
             string? description,
             string promptTemplate,
             CancellationToken cancellationToken) {
+            BudgetCalls++;
             if (BeforeVisionBudgetAsync is not null) {
                 await BeforeVisionBudgetAsync(cancellationToken);
             }
@@ -365,18 +422,21 @@ public sealed class OpenAiFoodServiceTests {
             string? userLanguage,
             string? description,
             string promptTemplate,
-            CancellationToken cancellationToken) =>
-            Task.FromResult(AnalyzeFoodImageResult ?? Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
+            CancellationToken cancellationToken) {
+            ProviderCalls++;
+            return Task.FromResult(AnalyzeFoodImageResult ?? Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
                 CreateVisionModel(),
                 "vision",
                 "test-model",
                 new AiUsageTokens(11, 7, 18))));
+        }
 
         public async Task<Result<AiProviderTokenBudget>> GetParseFoodTextTokenBudgetAsync(
             string text,
             string? userLanguage,
             string promptTemplate,
             CancellationToken cancellationToken) {
+            BudgetCalls++;
             if (BeforeVisionBudgetAsync is not null) {
                 await BeforeVisionBudgetAsync(cancellationToken);
             }
@@ -388,18 +448,21 @@ public sealed class OpenAiFoodServiceTests {
             string text,
             string? userLanguage,
             string promptTemplate,
-            CancellationToken cancellationToken) =>
-            Task.FromResult(ParseFoodTextResult ?? Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
+            CancellationToken cancellationToken) {
+            ProviderCalls++;
+            return Task.FromResult(ParseFoodTextResult ?? Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
                 CreateVisionModel(),
                 "text-parse",
                 "test-model",
                 new AiUsageTokens(11, 7, 18))));
+        }
 
         public async Task<Result<AiProviderTokenBudget>> GetCalculateNutritionTokenBudgetAsync(
             IReadOnlyList<FoodVisionItemModel> items,
             string promptTemplate,
             CancellationToken cancellationToken) {
             CalculateNutritionBudgetCalls++;
+            BudgetCalls++;
             if (BeforeCalculateNutritionBudgetAsync is not null) {
                 await BeforeCalculateNutritionBudgetAsync(cancellationToken);
             }
@@ -412,6 +475,7 @@ public sealed class OpenAiFoodServiceTests {
             string promptTemplate,
             CancellationToken cancellationToken) {
             CalculateNutritionCalls++;
+            ProviderCalls++;
             BeforeCalculateNutrition?.Invoke();
             return Task.FromResult(CalculateNutritionResult ?? Result.Success(new OpenAiFoodClientResponse<FoodNutritionModel>(
                 new FoodNutritionModel(52m, 0.3m, 0.2m, 14m, 2.4m, 0m, []),
@@ -453,6 +517,7 @@ public sealed class OpenAiFoodServiceTests {
 
     private static IAiUserContextService CreateAiUserContextService(User? user = null, bool returnNull = false) {
         User resolvedUser = user ?? User.Create("ai-tests@example.com", "hash");
+        bool hasAcceptedAiConsent = user is null || resolvedUser.AiConsentAcceptedAt is not null;
         IAiUserContextService service = Substitute.For<IAiUserContextService>();
         service
             .GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
@@ -469,7 +534,8 @@ public sealed class OpenAiFoodServiceTests {
                     resolvedUser.Id,
                     resolvedUser.Language,
                     resolvedUser.AiInputTokenLimit,
-                    resolvedUser.AiOutputTokenLimit)));
+                    resolvedUser.AiOutputTokenLimit,
+                    hasAcceptedAiConsent)));
             });
 
         return service;

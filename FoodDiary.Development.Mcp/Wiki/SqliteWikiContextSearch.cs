@@ -636,7 +636,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 AddExpansions(expansions, terms, seen);
             }
             foreach ((string prefix, string[] prefixExpansions) in policy.QueryPrefixExpansions) {
-                if (term.StartsWith(prefix, StringComparison.Ordinal)) {
+                if (prefix.Split('|', StringSplitOptions.RemoveEmptyEntries).Any(candidate =>
+                    term.StartsWith(candidate, StringComparison.Ordinal))) {
                     AddExpansions(prefixExpansions, terms, seen);
                 }
             }

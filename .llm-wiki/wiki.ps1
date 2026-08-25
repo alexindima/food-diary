@@ -530,6 +530,7 @@ function Invoke-ObservedWikiStage {
                 -Status $stageTelemetryStatus `
                 -DurationSeconds $stopwatch.Elapsed.TotalSeconds `
                 -Command $StandaloneCommand `
+                -InputFingerprint $fingerprint `
                 -Format Json | Out-Null
         } catch {
             Write-Warning "Unable to record verification stage telemetry for '$Name': $($_.Exception.Message)"

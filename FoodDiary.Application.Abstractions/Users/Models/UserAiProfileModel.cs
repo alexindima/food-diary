@@ -6,4 +6,5 @@ public sealed record UserAiProfileModel(
     UserId UserId,
     string? Language,
     long InputTokenLimit,
-    long OutputTokenLimit);
+    long OutputTokenLimit,
+    bool HasAcceptedAiConsent);

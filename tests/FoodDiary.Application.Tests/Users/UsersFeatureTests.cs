@@ -1060,6 +1060,7 @@ public partial class UsersFeatureTests {
     [Fact]
     public async Task UserContextService_FeatureProfiles_ProjectOnlyRequiredValues() {
         var user = User.Create("feature-profiles@example.com", "hash");
+        user.AcceptAiConsent();
         user.UpdateGoals(new UserGoalUpdate(
             DailyCalorieTarget: 2050,
             ProteinTarget: null,
@@ -1090,6 +1091,7 @@ public partial class UsersFeatureTests {
             () => Assert.Equal(user.Language, ai.Language),
             () => Assert.Equal(user.AiInputTokenLimit, ai.InputTokenLimit),
             () => Assert.Equal(user.AiOutputTokenLimit, ai.OutputTokenLimit),
+            () => Assert.True(ai.HasAcceptedAiConsent),
             () => Assert.Equal(user.HydrationGoal ?? user.WaterGoal, hydration.EffectiveWaterGoal),
             () => Assert.Equal(user.CalculateBmr(), tdee.Bmr),
             () => Assert.Equal(user.CalculateEstimatedTdee(), tdee.EstimatedTdee),

@@ -18,8 +18,10 @@ sources:
 Every real task-check execution appends its outcome and elapsed time to the
 worktree-local `.git/llm-wiki/verification-telemetry.json` registry. Observable
 `wiki verify` stages record repository-level `@wiki` events, while governed task
-checks bind the task packet. Events also bind check id, command, workspace policy,
-and previous event hash. Concurrent writers serialize through a registry lock.
+checks bind the task packet. Repository-level events bind the exact stage-input
+fingerprint already used by resumable verification. Events also bind check id,
+command, workspace policy, and previous event hash. Concurrent writers serialize
+through a registry lock.
 Dry runs never create telemetry. The registry is operational state:
 it is initialized on demand and never appears in the repository diff. Tests may
 isolate it with `LLM_WIKI_VERIFICATION_TELEMETRY_PATH`.
@@ -30,12 +32,14 @@ isolate it with `LLM_WIKI_VERIFICATION_TELEMETRY_PATH`.
 ./.llm-wiki/wiki.ps1 verification-telemetry-verify -FailOnInvalid
 ```
 
-A check is reported as flaky only after the configured minimum sample count, when
-both passing and failing outcomes exist and the transition rate crosses the policy
-threshold. `action-required` records an expected workflow pause, such as a stale
-index or missing source-review receipt; it is counted separately and excluded from
-failure and transition calculations. Flakiness is surfaced for investigation; it
-does not excuse or suppress a required check.
+A check is reported as flaky only when the same input, command, and policy cohort
+has the configured minimum sample count, both passing and failing outcomes, and a
+transition rate above the policy threshold. Legacy events without an input
+fingerprint remain visible in totals but are not comparable flakiness evidence.
+`action-required` records an expected workflow pause, such as a stale index or
+missing source-review receipt; it is counted separately and excluded from success,
+failure, and transition rates. Flakiness is surfaced for investigation; it does
+not excuse or suppress a required check.
 
 An empty registry reports `health=insufficient-data`; it is never presented as a
 healthy history. Workflow metrics likewise retain failed, timed-out, and

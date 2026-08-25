@@ -187,14 +187,14 @@
       "pageSha256": "ab1e4ba6f832f69547b9b819096039b1837170c84a9a84ce5c47c7f28a485568",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "3c8f73786deb55148984d90941380a6b877ae0caac730b28ea43a731edb6a95b"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "298b66d2fc0f13505a0061609f31740e1a3d9c397a3cc48a8a786f511491f693"
         }
       ],
-      "reason": "Search indexing changes do not alter backend contracts or consumers.",
+      "reason": "Generated backend contract index changed with neighboring application work; contract generation and affected smoke passed without policy violations.",
       "baseRef": "HEAD",
-      "gitHead": "b12ababd529cdb8ce3f0042a03dae8b36b754b75",
-      "reviewedAtUtc": "2026-08-25T15:38:20.8067485Z"
+      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
+      "reviewedAtUtc": "2026-08-25T18:10:35.9259524Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -233,21 +233,25 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "52caa985effc97bf6b62746c4e62e1165ef037c07b24b175c8065629d9ede596"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "3c8f73786deb55148984d90941380a6b877ae0caac730b28ea43a731edb6a95b"
+          "sha256": "17156ff79c12d6a500e5f00fa9621dad69fd8a6fa1448cf3f73f10e234b1bc9b"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
-          "sha256": "302d6ae59a87816b3d480911e57b01623b76ea37cd64c958e483fab640305e28"
+          "sha256": "9031aa4ef9426c4eb916351ab460f861c36320f8b529c8b1c3594cdaec9e1bb5"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "eb09555c05092968e0e728250c44a15617ec3b84ba6303a8a3cfc9c0bd7eca64"
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+          "sha256": "cc8ca7e0322b2e046d4bf773dfed1abef0e3a1e0e4fdfdde9ccaa22cf1c6a871"
         }
       ],
-      "reason": "Ranking policy and regression corpus improve retrieval while preserving the 600-rule budget and all promoted top-10 gates.",
+      "reason": "Context ranking adds grouped-prefix parity and frozen business queries; all 480 promoted results remain top-10 and focused Node/C# regressions pass.",
       "baseRef": "HEAD",
-      "gitHead": "b12ababd529cdb8ce3f0042a03dae8b36b754b75",
-      "reviewedAtUtc": "2026-08-25T15:38:21.2242762Z"
+      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
+      "reviewedAtUtc": "2026-08-25T18:10:36.4392737Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -460,21 +464,17 @@
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "9d77e6711ad8b427410e0defe502214c9ff2aaa61dd4adcfc7a36a51f2a99d00",
+      "pageSha256": "50b1572ee2e7ac55db95acbdf6c55c89fb593369feed38551300b44b06518395",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiWorkflowMetrics.ps1",
-          "sha256": "a33d90927f1e6fc6d55bdaec304a04c8824a4a8017c757e20053a047fbb91311"
-        },
-        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1bdfaa730084b4793e0f4f596e67278e52a37d08145064f2c2d7be69f6565e9b"
+          "sha256": "eb09555c05092968e0e728250c44a15617ec3b84ba6303a8a3cfc9c0bd7eca64"
         }
       ],
-      "reason": "The 917-second Full lifecycle audit and 16-group affected smoke passed after validating StrictMode shapes, workspace migration, decomposition, scheduler lineage, completion seals, and read-only cache cleanup; workflow guidance remains accurate.",
+      "reason": "Reviewed snapshot-aware verification telemetry and removed the remaining release-readiness query-time JSON dependency; focused regressions and SQLite readiness smoke pass.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:45.5176929Z"
+      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
+      "reviewedAtUtc": "2026-08-25T16:57:21.7019890Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -603,14 +603,14 @@
       "pageSha256": "2d14755cf1714049bfdbd8ce1c1ed6e3fb250c1e2f8a34d27863f86e278e86d7",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
+          "path": ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
+          "sha256": "932572cdea4f0cd992e35c5eb69b84e301c8c4636ea8779752776cbb21775e32"
         }
       ],
-      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
+      "reason": "Reviewed snapshot-aware verification telemetry and removed the remaining release-readiness query-time JSON dependency; focused regressions and SQLite readiness smoke pass.",
       "baseRef": "HEAD",
-      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
-      "reviewedAtUtc": "2026-08-25T08:53:03.8029332Z"
+      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
+      "reviewedAtUtc": "2026-08-25T16:57:21.8538674Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -637,14 +637,18 @@
       "pageSha256": "7d34ee7e5a7913239f7ce9ac5c342680b6d0c0d86d333a51576fddad2cc4c4c4",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+          "sha256": "537cd42d18f47ad970d15081ef0888da8e65fcc2fb013213618c9fdbbed01500"
+        },
+        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "e7372cbc0884bd27ad5d50e2d3d35ed15ef9692898b18869bbb749355cecd09b"
+          "sha256": "eb09555c05092968e0e728250c44a15617ec3b84ba6303a8a3cfc9c0bd7eca64"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Reviewed snapshot-aware verification telemetry and removed the remaining release-readiness query-time JSON dependency; focused regressions and SQLite readiness smoke pass.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:01.9270229Z"
+      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
+      "reviewedAtUtc": "2026-08-25T16:57:22.0243007Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -834,13 +838,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fd1fa489c2efa82982e90d4c6661b5841b1ba58c644e540c15b396a2bd42cf20"
+          "sha256": "c9412a8ef13d12689c244ab3fc654efe634a13485de8bbe2b23feec7ad4dfc7c"
         }
       ],
-      "reason": "Ranking policy and regression corpus improve retrieval while preserving the 600-rule budget and all promoted top-10 gates.",
+      "reason": "Context ranking adds grouped-prefix parity and frozen business queries; all 480 promoted results remain top-10 and focused Node/C# regressions pass.",
       "baseRef": "HEAD",
-      "gitHead": "b12ababd529cdb8ce3f0042a03dae8b36b754b75",
-      "reviewedAtUtc": "2026-08-25T15:38:22.7480830Z"
+      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
+      "reviewedAtUtc": "2026-08-25T18:10:37.1276988Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -882,14 +886,14 @@
       "pageSha256": "5e6a677aea63de29735a1273138f3aaab35e410cb1f930a49d44d9270d162480",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "ad3a1afdd5552f722dc4fb6ad77b3f7224dfd3ae058177359bb9958a860b5fe0"
+          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+          "sha256": "4eff4c48ba89da9dd21e88efff00ca497bf02834c6738fedd5986124a15624d7"
         }
       ],
-      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
+      "reason": "Reviewed snapshot-aware verification telemetry and removed the remaining release-readiness query-time JSON dependency; focused regressions and SQLite readiness smoke pass.",
       "baseRef": "HEAD",
-      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
-      "reviewedAtUtc": "2026-08-25T08:53:04.9443269Z"
+      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
+      "reviewedAtUtc": "2026-08-25T16:57:22.3490294Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -992,13 +996,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "e7372cbc0884bd27ad5d50e2d3d35ed15ef9692898b18869bbb749355cecd09b"
+          "sha256": "eb09555c05092968e0e728250c44a15617ec3b84ba6303a8a3cfc9c0bd7eca64"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Reviewed snapshot-aware verification telemetry and removed the remaining release-readiness query-time JSON dependency; focused regressions and SQLite readiness smoke pass.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:06.7586687Z"
+      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
+      "reviewedAtUtc": "2026-08-25T16:57:22.4948731Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1021,18 +1025,14 @@
       "pageSha256": "19d360f7ae44b67345aa130aad1b1ab9d343d76912b945a5c75f9ce0627c3818",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
+          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+          "sha256": "4eff4c48ba89da9dd21e88efff00ca497bf02834c6738fedd5986124a15624d7"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Reviewed snapshot-aware verification telemetry and removed the remaining release-readiness query-time JSON dependency; focused regressions and SQLite readiness smoke pass.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:07.1964055Z"
+      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
+      "reviewedAtUtc": "2026-08-25T16:57:22.6633263Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1176,13 +1176,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "e7372cbc0884bd27ad5d50e2d3d35ed15ef9692898b18869bbb749355cecd09b"
+          "sha256": "eb09555c05092968e0e728250c44a15617ec3b84ba6303a8a3cfc9c0bd7eca64"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Reviewed snapshot-aware verification telemetry and removed the remaining release-readiness query-time JSON dependency; focused regressions and SQLite readiness smoke pass.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:05.689155Z"
+      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
+      "reviewedAtUtc": "2026-08-25T16:57:22.1650157Z"
     }
   ]
 }

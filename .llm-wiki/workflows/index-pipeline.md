@@ -198,6 +198,9 @@ one atomic affected update, discovers source-impact obligations, optionally
 records one supplied rationale across all pending page IDs, and then runs the
 resumable affected verify. Without `-Reason`, it stops before the expensive
 verify and prints the exact grouped review obligation instead of failing late.
+Focused groups that compile task briefs or change packets declare their code-graph
+dependency in the smoke catalog, so the parallel runner refreshes SQL projections
+after generated indexes change and before those groups start.
 
 `verify-fast -VisualUiCompletion` is an iteration gate rather than a publication
 gate: it prints the affected index plan without regenerating or requiring current

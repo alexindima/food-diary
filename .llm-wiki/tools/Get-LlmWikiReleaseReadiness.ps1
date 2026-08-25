@@ -67,9 +67,20 @@ if ((Get-ItemCount $policyIssues) -gt 0) {
     Add-Dimension 'policy' 20 'pass' "$(Get-ItemCount $packet.policy.matchedRules) policy rule(s) evaluated without structural violations."
 }
 
-$health = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/architecture-health-index.json') -Raw | ConvertFrom-Json
+$health = if ($null -ne $packet.brief -and $packet.brief.PSObject.Properties['architectureHealthImpact']) {
+    $packet.brief.architectureHealthImpact
+} else {
+    $dependencyHealth = & (Join-Path $PSScriptRoot 'Find-LlmWikiArchitectureHealth.ps1') -View drift -Limit 100 -Format Json | ConvertFrom-Json
+    $untrackedHealth = & (Join-Path $PSScriptRoot 'Find-LlmWikiArchitectureHealth.ps1') -View untracked -Limit 100 -Format Json | ConvertFrom-Json
+    $cycleHealth = & (Join-Path $PSScriptRoot 'Find-LlmWikiArchitectureHealth.ps1') -View cycles -Limit 100 -Format Json | ConvertFrom-Json
+    [pscustomobject]@{
+        dependencyViolations = @($dependencyHealth.dependencyViolations)
+        untrackedProductionProjects = @($untrackedHealth.untrackedProjects)
+        moduleCycleNodes = @($cycleHealth.moduleCycleNodes)
+    }
+}
 $architectureIssues = @(
-    @($health.projectDependencyViolations | ForEach-Object { "$($_.source) -> $($_.target)" }) +
+    @($health.dependencyViolations | ForEach-Object { "$($_.source) -> $($_.target)" }) +
     @($health.untrackedProductionProjects | ForEach-Object { "Ungoverned project: $($_.name)" }) +
     @($health.moduleCycleNodes | ForEach-Object { "Module cycle node: $_" })
 )

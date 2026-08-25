@@ -13,6 +13,11 @@ public static class AiErrors {
         "Image asset does not belong to the current user.",
         Kind: ErrorKind.Forbidden);
 
+    public static Error ConsentRequired() => new(
+        "Ai.ConsentRequired",
+        "AI consent must be accepted before using AI features.",
+        Kind: ErrorKind.Forbidden);
+
     public static Error EmptyItems() => new(
         "Ai.EmptyItems",
         "No food items were provided.",

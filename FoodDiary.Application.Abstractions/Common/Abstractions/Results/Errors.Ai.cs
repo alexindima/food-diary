@@ -10,6 +10,8 @@ public static partial class Errors {
 
         public static Error Forbidden() => AiErrors.Forbidden();
 
+        public static Error ConsentRequired() => AiErrors.ConsentRequired();
+
         public static Error EmptyItems() => AiErrors.EmptyItems();
 
         public static Error OpenAiFailed(string reason) => AiErrors.OpenAiFailed(reason);

@@ -417,6 +417,24 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     }
 
     [Fact]
+    public async Task SearchAsync_ExpandsEveryAlternativeInGroupedRussianPrefixes() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "избранный продукт и еженедельный результат",
+            limit: 10,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Multiple(
+            () => Assert.Contains("favorite", result.QueryTerms, StringComparer.Ordinal),
+            () => Assert.Contains("weekly", result.QueryTerms, StringComparer.Ordinal));
+    }
+
+    [Fact]
     public async Task SearchAsync_ExpandsQualityAndInvariantVocabulary() {
         SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
 

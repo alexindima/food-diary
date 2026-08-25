@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "diagnosticLimit": 50,
+  "thresholds": { "minimumTop1Rate": 1.0, "minimumTop10Rate": 1.0, "minimumMeanReciprocalRank": 1.0 },
+  "switchCriteria": { "minimumCaseCount": 20, "minimumTop1Rate": 1.0, "minimumTop10Rate": 1.0, "minimumMeanReciprocalRank": 1.0 },
+  "cases": [
+    { "id": "fresh2-favorites-01", "cohort": "recent-favorites", "query": "handler удаления продукта из избранного вызывает write repository", "changeType": "Backend", "expectedPaths": ["FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs"] },
+    { "id": "fresh2-favorites-02", "cohort": "recent-favorites", "query": "реализация удаления favorite product без предварительного чтения сущности", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs"] },
+    { "id": "fresh2-favorites-03", "cohort": "recent-favorites", "query": "handler remove favorite recipe через специализированный write контракт", "changeType": "Backend", "expectedPaths": ["FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs"] },
+    { "id": "fresh2-favorites-04", "cohort": "recent-favorites", "query": "repository физически удаляет favorite recipe по user и recipe id", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs"] },
+    { "id": "fresh2-business-01", "cohort": "unseen-business", "query": "калькулятор результата еженедельного check in", "changeType": "Backend", "expectedPaths": ["FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs"] },
+    { "id": "fresh2-business-02", "cohort": "unseen-business", "query": "сервис выдачи пользователю достижения gamification", "changeType": "Backend", "expectedPaths": ["FoodDiary.Application.Gamification/Services/AchievementAwardService.cs"] },
+    { "id": "fresh2-business-03", "cohort": "unseen-business", "query": "persistence репозиторий жалоб на контент", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/ContentReports/ContentReportRepository.cs"] },
+    { "id": "fresh2-business-04", "cohort": "unseen-business", "query": "репозиторий ежедневных советов пользователю", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Tracking/DailyAdviceRepository.cs"] },
+    { "id": "fresh2-integration-01", "cohort": "runtime-integrations", "query": "поиск продуктов USDA через внешний API provider", "changeType": "Backend", "expectedPaths": ["FoodDiary.Integrations/Services/UsdaFoodSearchService.cs"] },
+    { "id": "fresh2-integration-02", "cohort": "runtime-integrations", "query": "локальный persistence repository данных USDA food", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Usda/UsdaFoodRepository.cs"] },
+    { "id": "fresh2-integration-03", "cohort": "runtime-integrations", "query": "валидация времени telegram auth предотвращает устаревший login", "changeType": "Backend", "expectedPaths": ["FoodDiary.Integrations/Authentication/TelegramAuthTimestampValidator.cs"] },
+    { "id": "fresh2-runtime-01", "cohort": "runtime-integrations", "query": "job обрабатывает billing webhook inbox", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/BillingWebhookInboxJob.cs"] },
+    { "id": "fresh2-runtime-02", "cohort": "runtime-integrations", "query": "фоновая job отправки notification web push outbox", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/NotificationWebPushOutboxJob.cs"] },
+    { "id": "fresh2-runtime-03", "cohort": "runtime-integrations", "query": "processor отправляет сообщения email outbox", "changeType": "Backend", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Email/EmailOutboxProcessor.cs"] },
+    { "id": "fresh2-runtime-04", "cohort": "runtime-integrations", "query": "удаление персональных данных из telemetry фоновых задач", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/TelemetryPrivacyProcessor.cs"] },
+    { "id": "fresh2-wiki-01", "cohort": "unseen-wiki", "query": "wiki tool строит rollout plan для deployment sensitive изменений", "changeType": "Any", "expectedPaths": [".llm-wiki/tools/Get-LlmWikiRolloutPlan.ps1"] },
+    { "id": "fresh2-wiki-02", "cohort": "unseen-wiki", "query": "wiki показывает изменения dependency manifests", "changeType": "Any", "expectedPaths": [".llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1"] },
+    { "id": "fresh2-wiki-03", "cohort": "unseen-wiki", "query": "найти пользовательский product journey по изменению поведения", "changeType": "Any", "expectedPaths": [".llm-wiki/tools/Find-LlmWikiProductJourney.ps1"] },
+    { "id": "fresh2-wiki-04", "cohort": "unseen-wiki", "query": "управление budget контекста governed задачи", "changeType": "Any", "expectedPaths": [".llm-wiki/tools/Manage-LlmWikiContextBudget.ps1"] },
+    { "id": "fresh2-wiki-05", "cohort": "unseen-wiki", "query": "экспорт task workspace с redaction sensitive данных", "changeType": "Any", "expectedPaths": [".llm-wiki/tools/Export-LlmWikiTaskWorkspace.ps1"] }
+  ]
+}

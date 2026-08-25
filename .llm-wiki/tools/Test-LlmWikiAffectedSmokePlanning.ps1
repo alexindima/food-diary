@@ -41,6 +41,10 @@ $parallelRunnerText = Get-Content -LiteralPath $parallelRunner -Raw
 $plannerText = Get-Content -LiteralPath $planner -Raw
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $catalog = Import-PowerShellDataFile -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/policies/affected-smoke-catalog.psd1')
+$implementationPlanGroup = @($catalog.Groups | Where-Object Id -eq 'implementation-plan')
+if ($implementationPlanGroup.Count -ne 1 -or -not [bool]$implementationPlanGroup[0].GraphDependent) {
+    throw 'Implementation-plan smoke must prewarm the code graph before compiling task briefs and change packets.'
+}
 if ($plannerText -match 'elseif \(\$path -match ''\^\\\.llm-wiki') {
     throw 'Affected-smoke routing regressed to an imperative regex chain instead of the declarative catalog.'
 }

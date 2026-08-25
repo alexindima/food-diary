@@ -288,6 +288,22 @@ public class AiValidatorsTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task AiUserContextService_MapsConsentEligibility(bool hasAcceptedAiConsent) {
+        var userId = UserId.New();
+        IUserAiProfileReadService userProfileReadService = Substitute.For<IUserAiProfileReadService>();
+        userProfileReadService
+            .GetAiProfileAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new UserAiProfileModel(userId, "en", 100, 50, hasAcceptedAiConsent)));
+        var service = new AiUserContextService(userProfileReadService);
+
+        AiUserContext result = ResultAssert.Success(await service.GetAsync(userId, CancellationToken.None));
+
+        Assert.Equal(hasAcceptedAiConsent, result.HasAcceptedAiConsent);
+    }
+
     [Fact]
     public async Task CalculateFoodNutritionHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var handler = new CalculateFoodNutritionCommandHandler(
@@ -464,7 +480,8 @@ public class AiValidatorsTests {
                     user.Id,
                     user.Language,
                     user.AiInputTokenLimit,
-                    user.AiOutputTokenLimit)));
+                    user.AiOutputTokenLimit,
+                    user.AiConsentAcceptedAt is not null)));
             });
         return service;
     }

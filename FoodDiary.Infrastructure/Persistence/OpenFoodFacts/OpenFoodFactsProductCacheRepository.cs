@@ -51,26 +51,36 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
         CancellationToken cancellationToken = default) {
         var candidates = products
             .Where(product => !string.IsNullOrWhiteSpace(product.Barcode) && !string.IsNullOrWhiteSpace(product.Name))
-            .DistinctBy(product => product.Barcode.Trim(), StringComparer.Ordinal)
             .ToList();
         if (candidates.Count == 0) {
             return;
         }
 
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
+        var acceptedBarcodes = new HashSet<string>(StringComparer.Ordinal);
         foreach (OpenFoodFactsProductModel product in candidates) {
-            var candidate = OpenFoodFactsProduct.Create(
-                product.Barcode,
-                product.Name,
-                product.Brand,
-                product.Category,
-                product.ImageUrl,
-                product.CaloriesPer100G,
-                product.ProteinsPer100G,
-                product.FatsPer100G,
-                product.CarbsPer100G,
-                product.FiberPer100G,
-                now);
+            OpenFoodFactsProduct candidate;
+            try {
+                candidate = OpenFoodFactsProduct.Create(
+                    product.Barcode,
+                    product.Name,
+                    product.Brand,
+                    product.Category,
+                    product.ImageUrl,
+                    product.CaloriesPer100G,
+                    product.ProteinsPer100G,
+                    product.FatsPer100G,
+                    product.CarbsPer100G,
+                    product.FiberPer100G,
+                    now);
+            } catch (ArgumentException) {
+                continue;
+            }
+
+            if (!acceptedBarcodes.Add(candidate.Barcode)) {
+                continue;
+            }
+
             await UpsertProductAsync(candidate, cancellationToken).ConfigureAwait(false);
         }
     }

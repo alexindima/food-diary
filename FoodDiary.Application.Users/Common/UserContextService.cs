@@ -50,7 +50,8 @@ internal sealed class UserContextService(
             user.Id,
             user.Language,
             user.AiInputTokenLimit,
-            user.AiOutputTokenLimit));
+            user.AiOutputTokenLimit,
+            user.AiConsentAcceptedAt is not null));
     }
 
     public async Task<Result<UserDashboardProfileModel>> GetDashboardProfileAsync(

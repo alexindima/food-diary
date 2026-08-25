@@ -2,6 +2,10 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+$readinessSource = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'Get-LlmWikiReleaseReadiness.ps1') -Raw
+if ($readinessSource.Contains('generated/architecture-health-index.json')) {
+    throw 'Release readiness regressed to a query-time architecture-health JSON read instead of the packet/SQLite projection.'
+}
 $brief = & (Join-Path $PSScriptRoot 'Get-LlmWikiTaskBrief.ps1') `
     -ChangedPath 'FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs' `
     -Intent 'Move Authentication identity mutations behind Users capabilities' `

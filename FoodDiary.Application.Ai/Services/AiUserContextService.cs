@@ -20,6 +20,7 @@ public sealed class AiUserContextService(IUserAiProfileReadService userProfileRe
             profile.UserId,
             profile.Language,
             profile.InputTokenLimit,
-            profile.OutputTokenLimit));
+            profile.OutputTokenLimit,
+            profile.HasAcceptedAiConsent));
     }
 }

@@ -212,6 +212,35 @@ public sealed class UsdaFoodSearchServiceTests {
             service.GetFoodDetailAsync(539789, cancellationTokenSource.Token));
     }
 
+    [Fact]
+    public async Task GetFoodDetailAsync_WhenCacheFillCreatorCancels_OtherWaitersStillComplete() {
+        const string json = """
+            {
+              "fdcId": 539789,
+              "description": "Shared detail",
+              "foodNutrients": [],
+              "foodPortions": []
+            }
+            """;
+        var handler = new GatedHttpMessageHandler(json);
+        UsdaFoodSearchService service = CreateService(handler);
+        using var creatorCancellation = new CancellationTokenSource();
+
+        Task<UsdaFoodDetailModel?> creator = service.GetFoodDetailAsync(539789, creatorCancellation.Token);
+        await handler.RequestStarted.Task.WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System);
+        Task<UsdaFoodDetailModel?> waiter = service.GetFoodDetailAsync(539789);
+
+        await creatorCancellation.CancelAsync();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => creator);
+        handler.Release.TrySetResult();
+        UsdaFoodDetailModel? result = await waiter.WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System);
+
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.Equal("Shared detail", result!.Description),
+            () => Assert.Equal(1, handler.RequestCount));
+    }
+
     private static UsdaFoodSearchService CreateService(
         HttpMessageHandler handler,
         string apiKey = "test-key",
@@ -251,6 +280,23 @@ public sealed class UsdaFoodSearchServiceTests {
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken) =>
             Task.FromCanceled<HttpResponseMessage>(cancellationToken);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class GatedHttpMessageHandler(string json) : HttpMessageHandler {
+        public TaskCompletionSource RequestStarted { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public TaskCompletionSource Release { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public int RequestCount { get; private set; }
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken) {
+            RequestCount++;
+            RequestStarted.TrySetResult();
+            await Release.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
+            };
+        }
     }
 
     [ExcludeFromCodeCoverage]

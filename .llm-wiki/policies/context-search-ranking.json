@@ -40,7 +40,7 @@
     "roleScorePerMatch": 80,
     "maximumRoleScore": 240,
     "roleScoreOverrides": {"consumers": 120, "factory": 240},
-    "roleTerms": ["attribute", "binder", "configuration", "consumer", "consumers", "controller", "dialog", "entity", "exception", "facade", "factory", "gateway", "handler", "interceptor", "mapping", "middleware", "options", "provider", "renderer", "repository", "result", "sender", "service", "store", "tracker", "validator", "worker"],
+    "roleTerms": ["attribute", "binder", "configuration", "consumer", "consumers", "controller", "dialog", "entity", "exception", "facade", "factory", "gateway", "handler", "interceptor", "mapping", "middleware", "options", "provider", "remove", "renderer", "repository", "result", "sender", "service", "store", "tracker", "validator", "worker"],
     "domainIntentTerms": ["domain", "entity"],
     "domainPathPrefixes": ["FoodDiary.Domain/", "MailInbox/FoodDiary.MailInbox.Domain/", "MailRelay/FoodDiary.MailRelay.Domain/"],
     "domainScore": 220,
@@ -94,13 +94,9 @@
     "translation": ["i18n", "localization", "translate"],
     "consistent": ["check", "validate"],
     "replay": ["recovery", "recover"],
-    "reminders": ["reminder"],
-    "webhooks": ["webhook"],
     "receives": ["receive"],
     "revise": ["revision", "update", "recalculate"],
-    "predictions": ["prediction"],
     "predicts": ["predict", "prediction"],
-    "failures": ["failure"],
     "bounded": ["controlled"],
     "retries": ["retry", "repair"],
     "failed": ["failure", "repair"],
@@ -129,7 +125,6 @@
     "accepts": ["enqueue"],
     "suppressed": ["suppress"],
     "saves": ["save"],
-    "themes": ["theme"],
     "builder": ["build"],
     "еды": ["food"],
     "настройки": ["options", "settings"],
@@ -148,7 +143,6 @@
     "checks": ["check"],
     "passwords": ["password"],
     "roles": ["role"],
-    "urls": ["url", "uri"],
     "scheduled": ["schedule"],
     "signed": ["auth", "logged"],
     "tests": ["test"],
@@ -189,7 +183,10 @@
     "сущност": ["entity", "domain"],
     "отправ": ["send", "dispatch"],
     "напоминан": ["reminder"],
-    "недельн": ["weekly"],
+    "недельн|еженедел": ["weekly"],
+    "калькулятор": ["calculator", "calculate"],
+    "времен": ["timestamp", "time"],
+    "выда": ["award", "earned"],
     "цел": ["goal"],
     "отста": ["behind", "progress"],
     "контроллер": ["controller", "http", "endpoint"],
@@ -221,7 +218,7 @@
     "фронтенд": ["frontend"],
     "фонов": ["background", "job"],
     "задач": ["task", "job"],
-    "удаля": ["delete", "cleanup"],
+    "удал": ["delete", "remove"],
     "неактив": ["inactive", "cleanup"],
     "собира": ["assemble", "snapshot", "telemetry"],
     "данн": ["data"],
@@ -289,7 +286,7 @@
     "диетолог": ["dietologist"],
     "маршрут": ["route"],
     "заверш": ["complete", "outcome"],
-    "управля": ["governed", "controlled"],
+    "управл": ["manage", "governed", "controlled"],
     "регрес": ["regression"],
     "оцен": ["eval", "evaluation"],
     "длительност": ["duration"],
@@ -404,7 +401,7 @@
     ,"входа": ["auth", "login"]
     ,"lease": ["lease"]
     ,"receipts": ["receipt"]
-    ,"любим": ["favorite"]
+    ,"любим|избран": ["favorite"]
     ,"подтвержд": ["verification", "confirm"]
     ,"статус": ["status"]
     ,"контракт": ["contract", "interface"]
@@ -593,7 +590,8 @@
       "minimumMatches": 1,
       "identityTerms": ["job"],
       "score": 60,
-      "identityScope": "file"
+      "identityScope": "file",
+      "excludedQueryTerms": ["budget", "governed", "context"]
     },
     {
       "id": "recovery-job-intent",
@@ -682,7 +680,7 @@
     {
       "id": "administration-service-intent",
       "queryTerms": ["administer", "gamification", "achievement", "definitions"],
-      "minimumMatches": 2,
+      "minimumMatches": 3,
       "identityTerms": ["administration", "service"],
       "minimumIdentityMatches": 2,
       "score": 120
@@ -767,7 +765,8 @@
       "minimumMatches": 1,
       "identityTerms": ["job", "worker", "hostedservice"],
       "score": 120,
-      "identityScope": "file"
+      "identityScope": "file",
+      "excludedQueryTerms": ["budget", "governed", "context"]
     },
     {
       "id": "explicit-script-role",
@@ -979,7 +978,8 @@
       "queryTerms": ["compute", "calculator"],
       "minimumMatches": 1,
       "identityTerms": ["calculator"],
-      "score": 110
+      "score": 110,
+      "identityScope": "file"
     },
     {
       "id": "explicit-parser-role",
@@ -2108,7 +2108,8 @@
       "identityScope": "file",
       "changeTypes": ["Backend"],
       "excludeTests": true,
-      "pathPrefixes": ["FoodDiary.JobManager/"]
+      "pathPrefixes": ["FoodDiary.JobManager/"],
+      "excludedQueryTerms": ["budget", "governed", "context"]
     },
     {
       "id": "backend-read-service-role",
@@ -3301,6 +3302,59 @@
       "recordTypes": ["code"],
       "pathPrefixes": ["tests/FoodDiary.Infrastructure.Tests/"],
       "pathSuffixes": ["Tests.cs"]
+    },
+    {
+      "id": "user-object-cleanup-service-role",
+      "queryTerms": ["delete", "remove", "user", "object", "s3", "cleanup"],
+      "minimumMatches": 5,
+      "candidateTerms": ["user", "cleanup", "service"],
+      "minimumCandidateMatches": 3,
+      "minimumQueryIdentityMatches": 2,
+      "score": 820,
+      "scorePerQueryIdentityMatch": 100,
+      "maximumQueryIdentityScore": 400,
+      "identityScope": "identity",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Backend"],
+      "recordTypes": ["code"],
+      "pathPrefixes": ["FoodDiary.Infrastructure/Persistence/Users/"],
+      "pathSuffixes": ["Service.cs"],
+      "excludeTests": true
+    },
+    {
+      "id": "favorite-product-delete-repository-role",
+      "queryTerms": ["favorite", "product", "delete", "remove", "persistence"],
+      "minimumMatches": 3,
+      "candidateTerms": ["favorite", "product", "repository"],
+      "minimumCandidateMatches": 3,
+      "minimumQueryIdentityMatches": 2,
+      "score": 720,
+      "scorePerQueryIdentityMatch": 100,
+      "maximumQueryIdentityScore": 400,
+      "identityScope": "identity",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Database"],
+      "recordTypes": ["code"],
+      "pathPrefixes": ["FoodDiary.Infrastructure/Persistence/FavoriteProducts/"],
+      "pathSuffixes": ["Repository.cs"],
+      "excludedQueryTerms": ["recipe", "meal"],
+      "excludeTests": true
+    },
+    {
+      "id": "wiki-context-budget-tool-role",
+      "queryTerms": ["manage", "budget", "context", "governed", "workspace", "task"],
+      "minimumMatches": 3,
+      "candidateTerms": ["manage", "context", "budget"],
+      "minimumCandidateMatches": 3,
+      "minimumQueryIdentityMatches": 2,
+      "score": 900,
+      "scorePerQueryIdentityMatch": 110,
+      "maximumQueryIdentityScore": 440,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "recordTypes": ["code"],
+      "pathPrefixes": [".llm-wiki/tools/"],
+      "pathSuffixes": [".ps1"]
     },
     {
       "id": "domain-asset-entity-role",

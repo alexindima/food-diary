@@ -8,7 +8,7 @@ internal sealed class UsdaFoodDetailCache(TimeProvider timeProvider) {
     private static readonly TimeSpan PositiveDuration = TimeSpan.FromMinutes(30);
     private static readonly TimeSpan NegativeDuration = TimeSpan.FromMinutes(5);
     private readonly ConcurrentDictionary<CacheKey, CacheEntry> _entries = new();
-    private readonly ConcurrentDictionary<CacheKey, Lazy<Task<UsdaFoodDetailLookupResult>>> _inFlight = new();
+    private readonly ConcurrentDictionary<CacheKey, Lazy<Task<UsdaFoodDetailModel?>>> _inFlight = new();
 
     public async Task<UsdaFoodDetailModel?> GetOrCreateAsync(
         string baseUrl,
@@ -23,25 +23,42 @@ internal sealed class UsdaFoodDetailCache(TimeProvider timeProvider) {
         }
 
         _entries.TryRemove(key, out _);
-        Lazy<Task<UsdaFoodDetailLookupResult>> pending = _inFlight.GetOrAdd(
+        Lazy<Task<UsdaFoodDetailModel?>> pending = _inFlight.GetOrAdd(
             key,
-            static (_, factoryArgument) => new Lazy<Task<UsdaFoodDetailLookupResult>>(
-                factoryArgument,
+            static (cacheKey, state) => new Lazy<Task<UsdaFoodDetailModel?>>(
+                () => state.Cache.CreateAndCacheAsync(cacheKey, state.Factory, CancellationToken.None),
                 LazyThreadSafetyMode.ExecutionAndPublication),
-            factory);
+            (Cache: this, Factory: factory));
+        Task<UsdaFoodDetailModel?> pendingTask = pending.Value;
+        _ = pendingTask.ContinueWith(
+            static (completedTask, state) => {
+                _ = completedTask.Exception;
+                (UsdaFoodDetailCache cache, CacheKey cacheKey, Lazy<Task<UsdaFoodDetailModel?>> expected) =
+                    ((UsdaFoodDetailCache, CacheKey, Lazy<Task<UsdaFoodDetailModel?>>))state!;
+                cache._inFlight.TryRemove(
+                    new KeyValuePair<CacheKey, Lazy<Task<UsdaFoodDetailModel?>>>(cacheKey, expected));
+            },
+            (this, key, pending),
+            CancellationToken.None,
+            TaskContinuationOptions.ExecuteSynchronously,
+            TaskScheduler.Default);
 
-        try {
-            UsdaFoodDetailLookupResult result = await pending.Value.ConfigureAwait(false);
-            if (result.Cacheable) {
-                TimeSpan duration = result.Value is null ? NegativeDuration : PositiveDuration;
-                _entries[key] = new CacheEntry(result.Value, timeProvider.GetUtcNow().Add(duration));
-                TrimIfNeeded();
-            }
+        return await pendingTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+    }
 
-            return result.Value;
-        } finally {
-            _inFlight.TryRemove(new KeyValuePair<CacheKey, Lazy<Task<UsdaFoodDetailLookupResult>>>(key, pending));
+    private async Task<UsdaFoodDetailModel?> CreateAndCacheAsync(
+        CacheKey key,
+        Func<Task<UsdaFoodDetailLookupResult>> factory,
+        CancellationToken cancellationToken) {
+        cancellationToken.ThrowIfCancellationRequested();
+        UsdaFoodDetailLookupResult result = await factory().ConfigureAwait(false);
+        if (result.Cacheable) {
+            TimeSpan duration = result.Value is null ? NegativeDuration : PositiveDuration;
+            _entries[key] = new CacheEntry(result.Value, timeProvider.GetUtcNow().Add(duration));
+            TrimIfNeeded();
         }
+
+        return result.Value;
     }
 
     private void TrimIfNeeded() {

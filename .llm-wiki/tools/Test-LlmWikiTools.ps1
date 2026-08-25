@@ -2173,6 +2173,7 @@ try {
         [pscustomobject]@{ status = 'failed'; duration = 10; at = [DateTime]'2026-01-01T00:10:00Z' }
         [pscustomobject]@{ status = 'passed'; duration = 20; at = [DateTime]'2026-01-01T00:11:00Z' }
         [pscustomobject]@{ status = 'failed'; duration = 30; at = [DateTime]'2026-01-01T00:12:00Z' }
+        [pscustomobject]@{ status = 'action-required'; duration = 40; at = [DateTime]'2026-01-01T00:13:00Z' }
     )) {
         & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationTelemetry.ps1') record `
             -WorkspacePath $taskWorkspacePath `
@@ -2187,11 +2188,17 @@ try {
         -Format Json | ConvertFrom-Json
     Assert-Wiki (
         $verificationTelemetryMetrics.valid -and
-        $verificationTelemetryMetrics.totalCount -eq 3 -and
+        $verificationTelemetryMetrics.totalCount -eq 4 -and
+        $verificationTelemetryMetrics.passedCount -eq 1 -and
+        $verificationTelemetryMetrics.failedCount -eq 2 -and
+        $verificationTelemetryMetrics.actionRequiredCount -eq 1 -and
+        $verificationTelemetryMetrics.successRatePercent -eq 33.33 -and
         $verificationTelemetryMetrics.flakyCount -eq 1 -and
-        $verificationTelemetryMetrics.metrics[0].medianDurationSeconds -eq 20 -and
+        $verificationTelemetryMetrics.metrics[0].failurePercent -eq 66.67 -and
+        $verificationTelemetryMetrics.metrics[0].medianDurationSeconds -eq 25 -and
         $verificationTelemetryMetrics.metrics[0].transitionPercent -eq 100
-    ) 'Verification telemetry did not detect alternating flaky outcomes or median duration.'
+    ) 'Verification telemetry did not isolate action-required outcomes from resolved success and failure metrics.'
+
     $telemetryRecordedRaw = Get-Content -LiteralPath $verificationTelemetryPath -Raw
     $tamperedTelemetry = $telemetryRecordedRaw | ConvertFrom-Json
     $tamperedTelemetry.events[1].durationSeconds = 999

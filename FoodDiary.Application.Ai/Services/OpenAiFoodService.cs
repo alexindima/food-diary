@@ -167,7 +167,22 @@ public sealed class OpenAiFoodService(
     }
 
     private Task<Result<AiUserContext>> GetUserContextAsync(UserId userId, CancellationToken cancellationToken) =>
-        aiUserContextService.GetAsync(userId, cancellationToken);
+        GetEligibleUserContextAsync(userId, cancellationToken);
+
+    private async Task<Result<AiUserContext>> GetEligibleUserContextAsync(
+        UserId userId,
+        CancellationToken cancellationToken) {
+        Result<AiUserContext> contextResult = await aiUserContextService
+            .GetAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        if (contextResult.IsFailure) {
+            return contextResult;
+        }
+
+        return contextResult.Value.HasAcceptedAiConsent
+            ? contextResult
+            : Result.Failure<AiUserContext>(Errors.Ai.ConsentRequired());
+    }
 
     private async Task<Result> ReserveAsync(
         string requestId,

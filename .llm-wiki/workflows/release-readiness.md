@@ -41,6 +41,10 @@ The scorecard evaluates:
 - privacy-sensitive impact;
 - specialized rollout readiness.
 
+Architecture health is reused from the change packet's SQL projection. Legacy
+or synthetic packets that predate that field query the exact SQLite health views;
+release readiness never reparses the compiled JSON projection at query time.
+
 Verdicts are:
 
 - `ready`: every applicable dimension passed and nothing is unassessed;

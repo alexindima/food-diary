@@ -9,6 +9,8 @@ param(
     [string]$Status,
     [double]$DurationSeconds,
     [string]$Command,
+    [ValidatePattern('^[a-fA-F0-9]{64}$')]
+    [string]$InputFingerprint,
     [string]$RegistryPath,
     [DateTime]$AsOfUtc = [DateTime]::UtcNow,
     [switch]$FailOnInvalid,
@@ -123,20 +125,46 @@ function Get-Metrics([object[]]$Events) {
     @($Events | Group-Object checkId | ForEach-Object {
         $items = @($_.Group | Sort-Object sequence)
         $outcomeItems = @($items | Where-Object status -in @('passed', 'failed'))
-        $transitions = 0
-        for ($index = 1; $index -lt $outcomeItems.Count; $index++) {
-            if ([string]$outcomeItems[$index].status -cne [string]$outcomeItems[$index - 1].status) { $transitions++ }
-        }
-        $transitionPercent = if ($outcomeItems.Count -lt 2) { 0 } else { [Math]::Round($transitions * 100.0 / ($outcomeItems.Count - 1), 2) }
-        $failures = @($items | Where-Object status -eq 'failed').Count
+        $fingerprintedItems = @($outcomeItems | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_.packetFingerprint) })
+        $cohorts = @($fingerprintedItems | Group-Object {
+            "$($_.packetFingerprint)|$($_.commandHash)|$($_.policyFingerprint)"
+        } | ForEach-Object {
+            $cohortItems = @($_.Group | Sort-Object sequence)
+            $cohortTransitions = 0
+            for ($index = 1; $index -lt $cohortItems.Count; $index++) {
+                if ([string]$cohortItems[$index].status -cne [string]$cohortItems[$index - 1].status) { $cohortTransitions++ }
+            }
+            $cohortTransitionPercent = if ($cohortItems.Count -lt 2) { 0 } else {
+                [Math]::Round($cohortTransitions * 100.0 / ($cohortItems.Count - 1), 2)
+            }
+            $cohortFailures = @($cohortItems | Where-Object status -eq 'failed').Count
+            [pscustomobject]@{
+                sampleCount = $cohortItems.Count
+                transitionCount = $cohortTransitions
+                transitionPercent = $cohortTransitionPercent
+                flaky = $cohortItems.Count -ge [int]$telemetryPolicy.minimumSamples -and
+                    $cohortFailures -gt 0 -and $cohortFailures -lt $cohortItems.Count -and
+                    $cohortTransitionPercent -ge [double]$telemetryPolicy.flakyTransitionPercent
+            }
+        })
+        $flakyCohorts = @($cohorts | Where-Object flaky)
+        $representativeCohort = @($cohorts | Sort-Object @{ Expression = 'flaky'; Descending = $true }, @{ Expression = 'transitionPercent'; Descending = $true }, @{ Expression = 'sampleCount'; Descending = $true } | Select-Object -First 1)
+        $transitions = if ($representativeCohort.Count -eq 0) { 0 } else { [int]$representativeCohort[0].transitionCount }
+        $transitionPercent = if ($representativeCohort.Count -eq 0) { 0 } else { [double]$representativeCohort[0].transitionPercent }
+        $passed = @($outcomeItems | Where-Object status -eq 'passed').Count
+        $failures = @($outcomeItems | Where-Object status -eq 'failed').Count
         $actionRequired = @($items | Where-Object status -eq 'action-required').Count
         [pscustomobject][ordered]@{
-            checkId = $_.Name; sampleCount = $items.Count; passedCount = $items.Count - $failures
-            failedCount = $failures; actionRequiredCount = $actionRequired; failurePercent = [Math]::Round($failures * 100.0 / $items.Count, 2)
+            checkId = $_.Name; sampleCount = $items.Count; passedCount = $passed
+            failedCount = $failures; actionRequiredCount = $actionRequired
+            failurePercent = $(if ($outcomeItems.Count -eq 0) { $null } else { [Math]::Round($failures * 100.0 / $outcomeItems.Count, 2) })
             medianDurationSeconds = Get-Median @($items.durationSeconds)
             transitionCount = $transitions; transitionPercent = $transitionPercent
-            flaky = $outcomeItems.Count -ge [int]$telemetryPolicy.minimumSamples -and $failures -gt 0 -and
-                $failures -lt $outcomeItems.Count -and $transitionPercent -ge [double]$telemetryPolicy.flakyTransitionPercent
+            fingerprintCohortCount = $cohorts.Count
+            comparableSampleCount = $fingerprintedItems.Count
+            legacyUnfingerprintedSampleCount = $outcomeItems.Count - $fingerprintedItems.Count
+            flakyCohortCount = $flakyCohorts.Count
+            flaky = $flakyCohorts.Count -gt 0
             latestStatus = [string]$items[-1].status; latestAtUtc = [string]$items[-1].recordedAtUtc
         }
     } | Sort-Object checkId)
@@ -158,8 +186,8 @@ if ($Action -eq 'verify') {
     }
     $workspace = if ([string]::IsNullOrWhiteSpace($WorkspacePath) -or $WorkspacePath -eq '@wiki') { '@wiki' } else { $WorkspacePath.Replace('\', '/').TrimEnd('/') }
     if ($workspace -ne '@wiki' -and ([IO.Path]::IsPathRooted($WorkspacePath) -or $workspace -notmatch '^\.artifacts/llm-wiki/tasks/[^/]+$')) { throw 'WorkspacePath must identify one task workspace or use @wiki for a repository-level check.' }
-    $packetFingerprint = ''
-    if ($workspace -ne '@wiki') {
+    $packetFingerprint = if ([string]::IsNullOrWhiteSpace($InputFingerprint)) { '' } else { $InputFingerprint.ToLowerInvariant() }
+    if ([string]::IsNullOrWhiteSpace($packetFingerprint) -and $workspace -ne '@wiki') {
         $packetPath = Join-Path (Join-Path $repositoryRoot $workspace) 'change-packet.json'
         if (-not (Test-Path -LiteralPath $packetPath -PathType Leaf)) { throw "Change packet is absent: $workspace/change-packet.json" }
         $packetFingerprint = [string](Get-Content -LiteralPath $packetPath -Raw | ConvertFrom-Json).fingerprint
@@ -182,12 +210,14 @@ if ($Action -eq 'verify') {
     $events = @($registry.events | Where-Object { [string]::IsNullOrWhiteSpace($CheckId) -or $_.checkId -eq $CheckId })
     if ($Action -eq 'metrics') {
         $metrics = @(Get-Metrics $events)
+        $passedCount = @($events | Where-Object status -eq 'passed').Count
         $failureCount = @($events | Where-Object status -eq 'failed').Count
         $actionRequiredCount = @($events | Where-Object status -eq 'action-required').Count
+        $resolvedCount = $passedCount + $failureCount
         $result = [pscustomobject][ordered]@{
             action = 'metrics'; valid = $true; totalCount = $events.Count; flakyCount = @($metrics | Where-Object flaky).Count
-            passedCount = @($events | Where-Object status -eq 'passed').Count; failedCount = $failureCount; actionRequiredCount = $actionRequiredCount
-            successRatePercent = $(if ($events.Count -eq 0) { $null } else { [Math]::Round(100.0 * ($events.Count - $failureCount) / $events.Count, 2) })
+            passedCount = $passedCount; failedCount = $failureCount; actionRequiredCount = $actionRequiredCount
+            successRatePercent = $(if ($resolvedCount -eq 0) { $null } else { [Math]::Round(100.0 * $passedCount / $resolvedCount, 2) })
             health = $(if ($events.Count -eq 0) { 'insufficient-data' } elseif ($failureCount -gt 0) { 'attention' } else { 'healthy' })
             registryHash = $registry.registryHash; metrics = $metrics; issues = @()
         }

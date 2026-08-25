@@ -79,7 +79,7 @@ internal sealed class UsdaFoodSearchService(
         return await detailCache.GetOrCreateAsync(
             config.BaseUrl,
             fdcId,
-            () => GetFoodDetailCoreAsync(config, fdcId, cancellationToken),
+            () => GetFoodDetailCoreAsync(config, fdcId, CancellationToken.None),
             cancellationToken).ConfigureAwait(false);
     }
 

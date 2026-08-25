@@ -133,6 +133,9 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             product,
             product with { Name = "Duplicate ignored" },
             product with { Barcode = " ", Name = "No barcode" },
+            product with { Barcode = " valid-sibling ", Name = new string('x', 513) },
+            product with { Barcode = "invalid-nutrient", CaloriesPer100G = -1 },
+            product with { Barcode = "valid-sibling", Name = "Valid sibling" },
         ]);
         await context.SaveChangesAsync();
         await repository.UpsertAsync([]);
@@ -143,8 +146,15 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         IReadOnlyList<OpenFoodFactsProductModel> blankMatches = await repository.SearchAsync("   ", limit: 5);
 
         OpenFoodFactsProductModel match = Assert.Single(matches);
-        Assert.Equal("100% Cocoa Updated", match.Name);
-        Assert.Empty(blankMatches);
+        List<string> storedBarcodes = await context.OpenFoodFactsProducts
+            .AsNoTracking()
+            .OrderBy(item => item.Barcode)
+            .Select(item => item.Barcode)
+            .ToListAsync();
+        Assert.Multiple(
+            () => Assert.Equal("100% Cocoa Updated", match.Name),
+            () => Assert.Empty(blankMatches),
+            () => Assert.Equal(["123", "valid-sibling"], storedBarcodes));
     }
 
     [RequiresDockerFact]

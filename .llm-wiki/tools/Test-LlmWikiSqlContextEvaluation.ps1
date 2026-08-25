@@ -12,6 +12,8 @@ $validationCorpus = Join-Path $PSScriptRoot '../evals/context-search-validation.
 $validationEvaluation = & $measure -CorpusPath $validationCorpus -SkipBuild -Format Json | ConvertFrom-Json
 $imageWikiRegressionCorpus = Join-Path $PSScriptRoot '../evals/context-search-image-wiki-regression.json'
 $imageWikiRegressionEvaluation = & $measure -CorpusPath $imageWikiRegressionCorpus -SkipBuild -Format Json | ConvertFrom-Json
+$businessWikiRegressionCorpus = Join-Path $PSScriptRoot '../evals/context-search-business-wiki-regression.json'
+$businessWikiRegressionEvaluation = & $measure -CorpusPath $businessWikiRegressionCorpus -SkipBuild -Format Json | ConvertFrom-Json
 $probeCorpus = Join-Path $PSScriptRoot '../evals/context-search-probe.json'
 $probeEvaluation = & $measure -CorpusPath $probeCorpus -SkipBuild -Format Json | ConvertFrom-Json
 $probe2Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-2.json'
@@ -75,6 +77,9 @@ foreach ($evaluation in $allEvaluations) {
         throw "SQL context evaluation missed its thresholds for '$($evaluation.corpusPath)': top1=$($evaluation.metrics.top1Rate), top10=$($evaluation.metrics.top10Rate), MRR=$($evaluation.metrics.meanReciprocalRank); misses=$($missIds -join ', ')."
     }
 }
+if (-not $businessWikiRegressionEvaluation.passed) {
+    throw "Business and Wiki regression corpus missed its thresholds: top1=$($businessWikiRegressionEvaluation.metrics.top1Rate), top10=$($businessWikiRegressionEvaluation.metrics.top10Rate), MRR=$($businessWikiRegressionEvaluation.metrics.meanReciprocalRank)."
+}
 foreach ($evaluation in @($primaryEvaluation, $challengeEvaluation)) {
     if (-not $evaluation.switchReady) {
         throw "SQL context evaluation did not meet switch criteria for '$($evaluation.corpusPath)': $($evaluation.switchGaps -join '; ')."
@@ -86,6 +91,7 @@ if ([int]$challengeEvaluation.caseCount -lt 40) { throw 'Challenge SQL context e
 if ([int]$generalizationEvaluation.caseCount -lt 70) { throw 'Generalization SQL context evaluation must contain at least 70 frozen cases.' }
 if ([int]$validationEvaluation.caseCount -lt 50) { throw 'Validation SQL context evaluation must contain at least 50 frozen cases.' }
 if ([int]$imageWikiRegressionEvaluation.caseCount -lt 30) { throw 'Image and Wiki regression evaluation must contain at least 30 frozen cases.' }
+if ([int]$businessWikiRegressionEvaluation.caseCount -lt 20) { throw 'Business and Wiki regression evaluation must contain at least 20 frozen cases.' }
 if ([int]$probeEvaluation.caseCount -lt 30) { throw 'Promoted probe SQL context evaluation must contain at least 30 frozen cases.' }
 if ([int]$probe2Evaluation.caseCount -lt 30) { throw 'Second promoted probe SQL context evaluation must contain at least 30 frozen cases.' }
 if ([int]$probe3Evaluation.caseCount -lt 30) { throw 'Third promoted probe SQL context evaluation must contain at least 30 frozen cases.' }
