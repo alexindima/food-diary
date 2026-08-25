@@ -25,7 +25,7 @@ $potentialLogging = [System.Collections.Generic.List[object]]::new()
 $boundaryFiles = [System.Collections.Generic.List[object]]::new()
 $externalTransfers = [System.Collections.Generic.List[object]]::new()
 $sourceFiles = @(
-    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
+    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Force -Filter '*.cs' |
         Where-Object {
             $_.FullName -notmatch '[\\/](tests|obj|bin|\.artifacts|TestResults|Migrations)[\\/]' -and
             $_.Name -notmatch '\.(Designer|g)\.cs$'

@@ -629,6 +629,10 @@ Assert-Wiki ($sensitiveData.summary.identity -gt 0) 'Sensitive data index did no
 Assert-Wiki ($sensitiveData.summary.health -gt 0) 'Sensitive data index did not extract health candidates.'
 Assert-Wiki ($sensitiveData.summary.boundaryFiles -gt 0) 'Sensitive data index did not identify boundary files.'
 Assert-Wiki ($sensitiveData.summary.externalTransferLeads -gt 0) 'Sensitive data index did not identify external-provider transfer leads.'
+Assert-Wiki (@($sensitiveData.fields | Where-Object {
+    $_.path -eq '.llm-wiki/tools/LlmWiki.SqliteReader/CompiledIndexReader.cs' -and
+    $_.name -eq 'SqliteConnectionStringBuilder'
+}).Count -gt 0) 'Sensitive data index did not scan C# sources under the cross-platform hidden .llm-wiki directory.'
 Assert-Wiki (@($sensitiveData.externalTransfers | Where-Object {
     $_.providerHost -eq 'api.openai.com' -and
     @($_.dataNames) -contains 'imageUrl'
