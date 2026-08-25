@@ -229,29 +229,17 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "3961a534e2b05beddc4b15e96bff12a6a073c6194d289e2780ad5839869a67cc",
+      "pageSha256": "09a37af45fe8b4901fc2ef94c789650225eb345581ea996591487035d48a503c",
       "sources": [
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "17156ff79c12d6a500e5f00fa9621dad69fd8a6fa1448cf3f73f10e234b1bc9b"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
-          "sha256": "9031aa4ef9426c4eb916351ab460f861c36320f8b529c8b1c3594cdaec9e1bb5"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "eb09555c05092968e0e728250c44a15617ec3b84ba6303a8a3cfc9c0bd7eca64"
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-          "sha256": "cc8ca7e0322b2e046d4bf773dfed1abef0e3a1e0e4fdfdde9ccaa22cf1c6a871"
+          "path": ".llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1",
+          "sha256": "87fb1a009d33ed7f51b34211c704f6fdeb9e4e9bfdee12a0e6d25086183a3ec6"
         }
       ],
-      "reason": "Context ranking adds grouped-prefix parity and frozen business queries; all 480 promoted results remain top-10 and focused Node/C# regressions pass.",
+      "reason": "Impact-simulation parity now uses a load-relative outer-process envelope while preserving semantic parity, compiled-index reuse, payload reduction, and the strict 25ms incremental SQLite round-trip guard; the documented code-graph behavior remains current.",
       "baseRef": "HEAD",
-      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
-      "reviewedAtUtc": "2026-08-25T18:10:36.4392737Z"
+      "gitHead": "d825282540643213d5b066dd9e01c7d9294c6619",
+      "reviewedAtUtc": "2026-08-25T23:29:39.9563427Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -588,14 +576,14 @@
       "pageSha256": "995df7b3f6ad527c4094a25bf33831f1c30fae3ebff5aa469fa92f71f02bab43",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "28910e5d9585929a99ce740870dc33f0b2cff31a71643831eba6c8bd92959f55"
+          "path": ".llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1",
+          "sha256": "87fb1a009d33ed7f51b34211c704f6fdeb9e4e9bfdee12a0e6d25086183a3ec6"
         }
       ],
-      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
+      "reason": "Impact-simulation parity now uses a load-relative outer-process envelope while preserving semantic parity, compiled-index reuse, payload reduction, and the strict 25ms incremental SQLite round-trip guard; the documented simulation behavior remains current.",
       "baseRef": "HEAD",
-      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
-      "reviewedAtUtc": "2026-08-25T20:20:26.6646344Z"
+      "gitHead": "d825282540643213d5b066dd9e01c7d9294c6619",
+      "reviewedAtUtc": "2026-08-25T23:29:41.8306358Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -637,14 +625,14 @@
       "pageSha256": "7cf34e384c94c0427431d4d5b600c1aa2b1cad26fa2eb72f02b0942e6e2240ca",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "12ef9ff7d77cfbfacc031496933391397edfd2c17c351042cd7f07c16efb38eb"
+          "path": ".llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1",
+          "sha256": "87fb1a009d33ed7f51b34211c704f6fdeb9e4e9bfdee12a0e6d25086183a3ec6"
         }
       ],
-      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
+      "reason": "Impact-simulation parity now uses a load-relative outer-process envelope while preserving semantic parity, compiled-index reuse, payload reduction, and the strict 25ms incremental SQLite round-trip guard; the documented index pipeline remains current.",
       "baseRef": "HEAD",
-      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
-      "reviewedAtUtc": "2026-08-25T20:20:26.9809588Z"
+      "gitHead": "d825282540643213d5b066dd9e01c7d9294c6619",
+      "reviewedAtUtc": "2026-08-25T23:29:43.9669073Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
