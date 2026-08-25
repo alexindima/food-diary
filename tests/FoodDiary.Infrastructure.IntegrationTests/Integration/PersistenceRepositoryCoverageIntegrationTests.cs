@@ -106,6 +106,60 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     [RequiresDockerFact]
+    public async Task FavoriteRepositories_WhenPublicSourcesBecomePrivate_RevokeReaderAccessButAllowRemoval() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var owner = User.Create($"favorite-owner-{Guid.NewGuid():N}@example.com", "hash");
+        var reader = User.Create($"favorite-reader-{Guid.NewGuid():N}@example.com", "hash");
+        var product = Product.Create(
+            owner.Id,
+            "Public favorite product",
+            MeasurementUnit.G,
+            100,
+            100,
+            100,
+            10,
+            5,
+            10,
+            1,
+            0,
+            visibility: Visibility.Public);
+        var recipe = Recipe.Create(owner.Id, "Public favorite recipe", servings: 1, visibility: Visibility.Public);
+        var favoriteProduct = FavoriteProduct.Create(reader.Id, product.Id);
+        var favoriteRecipe = FavoriteRecipe.Create(reader.Id, recipe.Id);
+        var ownerFavoriteProduct = FavoriteProduct.Create(owner.Id, product.Id);
+        var ownerFavoriteRecipe = FavoriteRecipe.Create(owner.Id, recipe.Id);
+        context.Users.AddRange(owner, reader);
+        context.Products.Add(product);
+        context.Recipes.Add(recipe);
+        context.FavoriteProducts.AddRange(favoriteProduct, ownerFavoriteProduct);
+        context.FavoriteRecipes.AddRange(favoriteRecipe, ownerFavoriteRecipe);
+        await context.SaveChangesAsync();
+        var productRepository = new FavoriteProductRepository(context);
+        var recipeRepository = new FavoriteRecipeRepository(context);
+
+        Assert.Single(await productRepository.GetAllReadModelsAsync(reader.Id));
+        Assert.True(await productRepository.ExistsByProductIdAsync(product.Id, reader.Id));
+        Assert.Single(await recipeRepository.GetAllReadModelsAsync(reader.Id));
+        Assert.True(await recipeRepository.ExistsByRecipeIdAsync(recipe.Id, reader.Id));
+
+        product.ChangeVisibility(Visibility.Private);
+        recipe.ChangeVisibility(Visibility.Private);
+        await context.SaveChangesAsync();
+
+        Assert.Empty(await productRepository.GetAllReadModelsAsync(reader.Id));
+        Assert.False(await productRepository.ExistsByProductIdAsync(product.Id, reader.Id));
+        Assert.Null(await productRepository.GetByIdAsync(favoriteProduct.Id, reader.Id));
+        Assert.NotNull(await productRepository.GetOwnedByIdAsync(favoriteProduct.Id, reader.Id));
+        Assert.Empty(await recipeRepository.GetAllReadModelsAsync(reader.Id));
+        Assert.False(await recipeRepository.ExistsByRecipeIdAsync(recipe.Id, reader.Id));
+        Assert.Null(await recipeRepository.GetByIdAsync(favoriteRecipe.Id, reader.Id));
+        Assert.NotNull(await recipeRepository.GetOwnedByIdAsync(favoriteRecipe.Id, reader.Id));
+
+        Assert.Single(await productRepository.GetAllReadModelsAsync(owner.Id));
+        Assert.Single(await recipeRepository.GetAllReadModelsAsync(owner.Id));
+    }
+
+    [RequiresDockerFact]
     public async Task OutboxDeadLetterReplayService_ReplaysImageAndWebPushInsideTransactions() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"replay-{Guid.NewGuid():N}@example.com", "hash");

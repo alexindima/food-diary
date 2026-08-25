@@ -4954,11 +4954,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs",
-      "nonBlankLines": 17,
+      "nonBlankLines": 23,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.46
     },
     {
       "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
@@ -5018,11 +5018,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.44
     },
     {
       "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
@@ -21346,19 +21346,19 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
-      "nonBlankLines": 108,
-      "decisionPoints": 6,
+      "nonBlankLines": 129,
+      "decisionPoints": 20,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.16
+      "structuralRiskScore": 32.58
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
-      "nonBlankLines": 103,
-      "decisionPoints": 7,
+      "nonBlankLines": 127,
+      "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.56
+      "structuralRiskScore": 34.04
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Achievements.cs",

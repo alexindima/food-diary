@@ -10,6 +10,13 @@ public interface IFavoriteRecipeWriteRepository {
         bool asTracking = false,
         CancellationToken cancellationToken = default);
 
+    Task<FavoriteRecipe?> GetOwnedByIdAsync(
+        FavoriteRecipeId id,
+        UserId userId,
+        bool asTracking = false,
+        CancellationToken cancellationToken = default) =>
+        GetByIdAsync(id, userId, asTracking, cancellationToken);
+
     Task<FavoriteRecipe?> GetByRecipeIdAsync(
         RecipeId recipeId,
         UserId userId,

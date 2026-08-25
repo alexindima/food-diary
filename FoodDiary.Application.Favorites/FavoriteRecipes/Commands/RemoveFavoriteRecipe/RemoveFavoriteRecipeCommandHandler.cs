@@ -34,7 +34,7 @@ public sealed class RemoveFavoriteRecipeCommandHandler(
         }
 
         FavoriteRecipeId favoriteRecipeId = favoriteRecipeIdResult.Value;
-        FavoriteRecipe? favorite = await favoriteRecipeRepository.GetByIdAsync(
+        FavoriteRecipe? favorite = await favoriteRecipeRepository.GetOwnedByIdAsync(
             favoriteRecipeId, userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (favorite is null) {

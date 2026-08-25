@@ -10,6 +10,13 @@ public interface IFavoriteProductWriteRepository {
         bool asTracking = false,
         CancellationToken cancellationToken = default);
 
+    Task<FavoriteProduct?> GetOwnedByIdAsync(
+        FavoriteProductId id,
+        UserId userId,
+        bool asTracking = false,
+        CancellationToken cancellationToken = default) =>
+        GetByIdAsync(id, userId, asTracking, cancellationToken);
+
     Task<FavoriteProduct?> GetByProductIdAsync(
         ProductId productId,
         UserId userId,

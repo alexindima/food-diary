@@ -34,7 +34,7 @@ public sealed class RemoveFavoriteProductCommandHandler(
         }
 
         FavoriteProductId favoriteProductId = favoriteProductIdResult.Value;
-        FavoriteProduct? favorite = await favoriteProductRepository.GetByIdAsync(
+        FavoriteProduct? favorite = await favoriteProductRepository.GetOwnedByIdAsync(
             favoriteProductId, userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (favorite is null) {

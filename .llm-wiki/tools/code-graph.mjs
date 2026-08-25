@@ -7,8 +7,8 @@ import { DatabaseSync } from 'node:sqlite';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
-const parserVersion = '11-javascript-context-v1';
-const contextSearchSchemaVersion = '1';
+const parserVersion = '12-wiki-policy-context-v1';
+const contextSearchSchemaVersion = '2';
 const compiledIndexSchemaVersion = '4';
 const queryDocumentSchemaVersion = '8';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
@@ -204,6 +204,7 @@ function gitPaths() {
   return repositoryPaths()
     .filter((path) => /\.(?:cs|csproj|props|targets|ts|js|mjs|cjs|html|ps1)$/.test(path)
       || /(^|\/)(?:appsettings(?:\.[^.\/]+)?|package|angular|backend-modules|module-dependencies)\.json$/.test(path)
+      || /^\.llm-wiki\/policies\/[^/]+\.json$/.test(path)
       || /^\.github\/workflows\/[^/]+\.ya?ml$/.test(path))
     .filter((path) => !/(^|\/)(?:bin|obj|node_modules|\.artifacts|TestResults)(\/|$)/.test(path))
     .filter((path) => !/\.(?:Designer|g)\.cs$/.test(path) && !/ModelSnapshot\.cs$/.test(path));
@@ -922,7 +923,7 @@ function refreshContextSearch(database) {
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
   for (const file of files) {
-    const sourceBody = file.language === 'powershell'
+    const sourceBody = file.language === 'powershell' || file.language === 'json'
       ? readFileSync(resolve(repositoryRoot, file.path), 'utf8')
       : (tokensByPath.get(file.path) ?? []).join(' ');
     insert.run(

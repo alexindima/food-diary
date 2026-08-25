@@ -10,6 +10,8 @@ $generalizationCorpus = Join-Path $PSScriptRoot '../evals/context-search-general
 $generalizationEvaluation = & $measure -CorpusPath $generalizationCorpus -SkipBuild -Format Json | ConvertFrom-Json
 $validationCorpus = Join-Path $PSScriptRoot '../evals/context-search-validation.json'
 $validationEvaluation = & $measure -CorpusPath $validationCorpus -SkipBuild -Format Json | ConvertFrom-Json
+$imageWikiRegressionCorpus = Join-Path $PSScriptRoot '../evals/context-search-image-wiki-regression.json'
+$imageWikiRegressionEvaluation = & $measure -CorpusPath $imageWikiRegressionCorpus -SkipBuild -Format Json | ConvertFrom-Json
 $probeCorpus = Join-Path $PSScriptRoot '../evals/context-search-probe.json'
 $probeEvaluation = & $measure -CorpusPath $probeCorpus -SkipBuild -Format Json | ConvertFrom-Json
 $probe2Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-2.json'
@@ -64,7 +66,7 @@ $rankingRuleCount = @($rankingPolicy.queryTermExpansions.PSObject.Properties).Co
 if ($rankingRuleCount -gt 600 -or $null -eq $rankingPolicy.genericAffinities) {
     throw "Context ranking policy exceeded its 600-rule complexity budget or lost generic affinities: rules=$rankingRuleCount."
 }
-$allEvaluations = @($primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation, $probe6Evaluation, $probe7Evaluation)
+$allEvaluations = @($primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $imageWikiRegressionEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation, $probe6Evaluation, $probe7Evaluation)
 foreach ($evaluation in $allEvaluations) {
     if (-not $evaluation.passed) {
         $missIds = @($evaluation.misses | ForEach-Object {
@@ -83,6 +85,7 @@ if ([int]$primaryEvaluation.caseCount -lt 60) { throw 'Primary SQL context evalu
 if ([int]$challengeEvaluation.caseCount -lt 40) { throw 'Challenge SQL context evaluation must contain at least 40 independently authored cases.' }
 if ([int]$generalizationEvaluation.caseCount -lt 70) { throw 'Generalization SQL context evaluation must contain at least 70 frozen cases.' }
 if ([int]$validationEvaluation.caseCount -lt 50) { throw 'Validation SQL context evaluation must contain at least 50 frozen cases.' }
+if ([int]$imageWikiRegressionEvaluation.caseCount -lt 30) { throw 'Image and Wiki regression evaluation must contain at least 30 frozen cases.' }
 if ([int]$probeEvaluation.caseCount -lt 30) { throw 'Promoted probe SQL context evaluation must contain at least 30 frozen cases.' }
 if ([int]$probe2Evaluation.caseCount -lt 30) { throw 'Second promoted probe SQL context evaluation must contain at least 30 frozen cases.' }
 if ([int]$probe3Evaluation.caseCount -lt 30) { throw 'Third promoted probe SQL context evaluation must contain at least 30 frozen cases.' }

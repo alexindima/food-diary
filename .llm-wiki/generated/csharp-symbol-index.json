@@ -16789,14 +16789,14 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "FavoriteRecipeRepository",
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "FoodDiaryDbContext",

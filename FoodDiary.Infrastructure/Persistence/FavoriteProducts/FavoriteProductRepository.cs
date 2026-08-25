@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.FavoriteProducts;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,7 +35,24 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
         }
 
         return await query.FirstOrDefaultAsync(
-            f => f.Id == id && f.UserId == userId,
+            f => f.Id == id && f.UserId == userId &&
+                (f.Product.UserId == userId || f.Product.Visibility == Visibility.Public),
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<FavoriteProduct?> GetOwnedByIdAsync(
+        FavoriteProductId id,
+        UserId userId,
+        bool asTracking = false,
+        CancellationToken cancellationToken = default) {
+        IQueryable<FavoriteProduct> query = context.FavoriteProducts
+            .Include(favorite => favorite.Product);
+        if (!asTracking) {
+            query = query.AsNoTracking();
+        }
+
+        return await query.FirstOrDefaultAsync(
+            favorite => favorite.Id == id && favorite.UserId == userId,
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -45,7 +63,8 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
         return await context.FavoriteProducts
             .AsNoTracking()
             .FirstOrDefaultAsync(
-                f => f.ProductId == productId && f.UserId == userId,
+                f => f.ProductId == productId && f.UserId == userId &&
+                    (f.Product.UserId == userId || f.Product.Visibility == Visibility.Public),
                 cancellationToken).ConfigureAwait(false);
     }
 
@@ -56,7 +75,8 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
         return await context.FavoriteProducts
             .AsNoTracking()
             .AnyAsync(
-                f => f.ProductId == productId && f.UserId == userId,
+                f => f.ProductId == productId && f.UserId == userId &&
+                    (f.Product.UserId == userId || f.Product.Visibility == Visibility.Public),
                 cancellationToken).ConfigureAwait(false);
     }
 
@@ -66,7 +86,8 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
         return await context.FavoriteProducts
             .AsNoTracking()
             .Include(f => f.Product)
-            .Where(f => f.UserId == userId)
+            .Where(f => f.UserId == userId &&
+                (f.Product.UserId == userId || f.Product.Visibility == Visibility.Public))
             .OrderByDescending(f => f.CreatedAtUtc)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
@@ -76,7 +97,8 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
         CancellationToken cancellationToken = default) {
         return await context.FavoriteProducts
             .AsNoTracking()
-            .Where(f => f.UserId == userId)
+            .Where(f => f.UserId == userId &&
+                (f.Product.UserId == userId || f.Product.Visibility == Visibility.Public))
             .OrderByDescending(f => f.CreatedAtUtc)
             .Take(PaginationPolicy.MaxCollectionSize)
             .Select(f => new FavoriteProductReadModel(
@@ -114,7 +136,8 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
 
         List<FavoriteProduct> favorites = await context.FavoriteProducts
             .AsNoTracking()
-            .Where(f => f.UserId == userId && productIds.Contains(f.ProductId))
+            .Where(f => f.UserId == userId && productIds.Contains(f.ProductId) &&
+                (f.Product.UserId == userId || f.Product.Visibility == Visibility.Public))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return favorites.ToDictionary(f => f.ProductId);

@@ -188,13 +188,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "6bf6cf024560eae023b2054703a93fa0c31c4d3dcfa9a142fca8ec480f6d00ee"
+          "sha256": "3c8f73786deb55148984d90941380a6b877ae0caac730b28ea43a731edb6a95b"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Search indexing changes do not alter backend contracts or consumers.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:41:58.7895381Z"
+      "gitHead": "b12ababd529cdb8ce3f0042a03dae8b36b754b75",
+      "reviewedAtUtc": "2026-08-25T15:38:20.8067485Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -233,25 +233,21 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "df46e8926bbeea019f868451d274e280b17009652bab868fcae5cdbaaef819f2"
+          "sha256": "52caa985effc97bf6b62746c4e62e1165ef037c07b24b175c8065629d9ede596"
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "6bf6cf024560eae023b2054703a93fa0c31c4d3dcfa9a142fca8ec480f6d00ee"
+          "sha256": "3c8f73786deb55148984d90941380a6b877ae0caac730b28ea43a731edb6a95b"
         },
         {
-          "path": ".llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1",
-          "sha256": "8cdf4a78ac4fda78bf29826b71df2361e686e9271d222bc208c3c0b35da7b60d"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "e7372cbc0884bd27ad5d50e2d3d35ed15ef9692898b18869bbb749355cecd09b"
+          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
+          "sha256": "302d6ae59a87816b3d480911e57b01623b76ea37cd64c958e483fab640305e28"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Ranking policy and regression corpus improve retrieval while preserving the 600-rule budget and all promoted top-10 gates.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:41:59.273843Z"
+      "gitHead": "b12ababd529cdb8ce3f0042a03dae8b36b754b75",
+      "reviewedAtUtc": "2026-08-25T15:38:21.2242762Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -593,21 +589,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "6bf6cf024560eae023b2054703a93fa0c31c4d3dcfa9a142fca8ec480f6d00ee"
-        },
-        {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
+          "sha256": "3c8f73786deb55148984d90941380a6b877ae0caac730b28ea43a731edb6a95b"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Code graph and query-context behavior remains compatible while policy JSON gains searchable coverage.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:01.2812188Z"
+      "gitHead": "b12ababd529cdb8ce3f0042a03dae8b36b754b75",
+      "reviewedAtUtc": "2026-08-25T15:38:21.6469460Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -797,13 +785,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "6bf6cf024560eae023b2054703a93fa0c31c4d3dcfa9a142fca8ec480f6d00ee"
+          "sha256": "3c8f73786deb55148984d90941380a6b877ae0caac730b28ea43a731edb6a95b"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Only tracked Wiki policy JSON is added to search; secrets and runtime configuration remain excluded.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:03.6356475Z"
+      "gitHead": "b12ababd529cdb8ce3f0042a03dae8b36b754b75",
+      "reviewedAtUtc": "2026-08-25T15:38:22.1716722Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -846,13 +834,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8ed48417bf520fe69c078ca11d34043765cce951e7474c192e6a406ff0a9ec89"
+          "sha256": "fd1fa489c2efa82982e90d4c6661b5841b1ba58c644e540c15b396a2bd42cf20"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Ranking policy and regression corpus improve retrieval while preserving the 600-rule budget and all promoted top-10 gates.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:04.6916547Z"
+      "gitHead": "b12ababd529cdb8ce3f0042a03dae8b36b754b75",
+      "reviewedAtUtc": "2026-08-25T15:38:22.7480830Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1173,13 +1161,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "6bf6cf024560eae023b2054703a93fa0c31c4d3dcfa9a142fca8ec480f6d00ee"
+          "sha256": "3c8f73786deb55148984d90941380a6b877ae0caac730b28ea43a731edb6a95b"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Code graph and query-context behavior remains compatible while policy JSON gains searchable coverage.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:05.0496355Z"
+      "gitHead": "b12ababd529cdb8ce3f0042a03dae8b36b754b75",
+      "reviewedAtUtc": "2026-08-25T15:38:23.2424006Z"
     },
     {
       "pageId": "workflow.review-diff",
