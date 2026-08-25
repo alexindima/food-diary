@@ -173,13 +173,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "08c2314c9c90c0b6284054e0894e8615a241ae33d7c2a7e2cce6de8e682ee553"
+          "sha256": "16cd4bfd82bc44f8d15ed3d6315f7416b4dae9595e0df7ee84270e571a95a5b8"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:41:58.4814422Z"
+      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
+      "reviewedAtUtc": "2026-08-25T20:20:25.6789660Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -188,13 +188,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "298b66d2fc0f13505a0061609f31740e1a3d9c397a3cc48a8a786f511491f693"
+          "sha256": "a1018a0e837be7b18f62a5ae095bb8f808b38b96fcea2ba57e8c9139b62b0a1b"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "28910e5d9585929a99ce740870dc33f0b2cff31a71643831eba6c8bd92959f55"
         }
       ],
-      "reason": "Generated backend contract index changed with neighboring application work; contract generation and affected smoke passed without policy violations.",
+      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
-      "reviewedAtUtc": "2026-08-25T18:10:35.9259524Z"
+      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
+      "reviewedAtUtc": "2026-08-25T20:20:26.1451547Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -468,13 +472,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "eb09555c05092968e0e728250c44a15617ec3b84ba6303a8a3cfc9c0bd7eca64"
+          "sha256": "12ef9ff7d77cfbfacc031496933391397edfd2c17c351042cd7f07c16efb38eb"
         }
       ],
-      "reason": "Reviewed snapshot-aware verification telemetry and removed the remaining release-readiness query-time JSON dependency; focused regressions and SQLite readiness smoke pass.",
+      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
-      "reviewedAtUtc": "2026-08-25T16:57:21.7019890Z"
+      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
+      "reviewedAtUtc": "2026-08-25T20:20:26.3910225Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -589,13 +593,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "3c8f73786deb55148984d90941380a6b877ae0caac730b28ea43a731edb6a95b"
+          "sha256": "28910e5d9585929a99ce740870dc33f0b2cff31a71643831eba6c8bd92959f55"
         }
       ],
-      "reason": "Code graph and query-context behavior remains compatible while policy JSON gains searchable coverage.",
+      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "b12ababd529cdb8ce3f0042a03dae8b36b754b75",
-      "reviewedAtUtc": "2026-08-25T15:38:21.6469460Z"
+      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
+      "reviewedAtUtc": "2026-08-25T20:20:26.6646344Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -634,21 +638,17 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "7d34ee7e5a7913239f7ce9ac5c342680b6d0c0d86d333a51576fddad2cc4c4c4",
+      "pageSha256": "7cf34e384c94c0427431d4d5b600c1aa2b1cad26fa2eb72f02b0942e6e2240ca",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-          "sha256": "537cd42d18f47ad970d15081ef0888da8e65fcc2fb013213618c9fdbbed01500"
-        },
-        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "eb09555c05092968e0e728250c44a15617ec3b84ba6303a8a3cfc9c0bd7eca64"
+          "sha256": "12ef9ff7d77cfbfacc031496933391397edfd2c17c351042cd7f07c16efb38eb"
         }
       ],
-      "reason": "Reviewed snapshot-aware verification telemetry and removed the remaining release-readiness query-time JSON dependency; focused regressions and SQLite readiness smoke pass.",
+      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
-      "reviewedAtUtc": "2026-08-25T16:57:22.0243007Z"
+      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
+      "reviewedAtUtc": "2026-08-25T20:20:26.9809588Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -789,13 +789,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "3c8f73786deb55148984d90941380a6b877ae0caac730b28ea43a731edb6a95b"
+          "sha256": "28910e5d9585929a99ce740870dc33f0b2cff31a71643831eba6c8bd92959f55"
         }
       ],
-      "reason": "Only tracked Wiki policy JSON is added to search; secrets and runtime configuration remain excluded.",
+      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "b12ababd529cdb8ce3f0042a03dae8b36b754b75",
-      "reviewedAtUtc": "2026-08-25T15:38:22.1716722Z"
+      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
+      "reviewedAtUtc": "2026-08-25T20:20:27.3747975Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -838,13 +838,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c9412a8ef13d12689c244ab3fc654efe634a13485de8bbe2b23feec7ad4dfc7c"
+          "sha256": "fc0f7de49b1ca78952e0e3b612a94c090288c5d939acbcb30e1da5fdc4981247"
         }
       ],
-      "reason": "Context ranking adds grouped-prefix parity and frozen business queries; all 480 promoted results remain top-10 and focused Node/C# regressions pass.",
+      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
-      "reviewedAtUtc": "2026-08-25T18:10:37.1276988Z"
+      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
+      "reviewedAtUtc": "2026-08-25T20:20:27.8115471Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -996,13 +996,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "eb09555c05092968e0e728250c44a15617ec3b84ba6303a8a3cfc9c0bd7eca64"
+          "sha256": "12ef9ff7d77cfbfacc031496933391397edfd2c17c351042cd7f07c16efb38eb"
         }
       ],
-      "reason": "Reviewed snapshot-aware verification telemetry and removed the remaining release-readiness query-time JSON dependency; focused regressions and SQLite readiness smoke pass.",
+      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
-      "reviewedAtUtc": "2026-08-25T16:57:22.4948731Z"
+      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
+      "reviewedAtUtc": "2026-08-25T20:20:28.8728800Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1160,14 +1160,18 @@
       "pageSha256": "930668a8337c26264220ec069d062d4d90d8c52910cb7e00b79576180fe92478",
       "sources": [
         {
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "74c72ad769604d609bfa9fe0141224dd8bbf67de52e475c42f2a71ae15a5ef03"
+        },
+        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "3c8f73786deb55148984d90941380a6b877ae0caac730b28ea43a731edb6a95b"
+          "sha256": "28910e5d9585929a99ce740870dc33f0b2cff31a71643831eba6c8bd92959f55"
         }
       ],
-      "reason": "Code graph and query-context behavior remains compatible while policy JSON gains searchable coverage.",
+      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "b12ababd529cdb8ce3f0042a03dae8b36b754b75",
-      "reviewedAtUtc": "2026-08-25T15:38:23.2424006Z"
+      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
+      "reviewedAtUtc": "2026-08-25T20:20:28.1924320Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1176,13 +1180,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "eb09555c05092968e0e728250c44a15617ec3b84ba6303a8a3cfc9c0bd7eca64"
+          "sha256": "12ef9ff7d77cfbfacc031496933391397edfd2c17c351042cd7f07c16efb38eb"
         }
       ],
-      "reason": "Reviewed snapshot-aware verification telemetry and removed the remaining release-readiness query-time JSON dependency; focused regressions and SQLite readiness smoke pass.",
+      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
-      "reviewedAtUtc": "2026-08-25T16:57:22.1650157Z"
+      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
+      "reviewedAtUtc": "2026-08-25T20:20:28.5415396Z"
     }
   ]
 }

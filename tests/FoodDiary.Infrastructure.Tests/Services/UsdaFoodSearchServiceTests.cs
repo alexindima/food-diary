@@ -241,17 +241,70 @@ public sealed class UsdaFoodSearchServiceTests {
             () => Assert.Equal(1, handler.RequestCount));
     }
 
+    [Fact]
+    public async Task GetFoodDetailAsync_WhenDistinctWorkIsAtCapacity_WaitsWithoutStartingAnotherRequest() {
+        const string json = """
+            {
+              "fdcId": 539789,
+              "description": "Shared detail",
+              "foodNutrients": [],
+              "foodPortions": []
+            }
+            """;
+        var handler = new GatedHttpMessageHandler(json);
+        var cache = new UsdaFoodDetailCache(
+            TimeProvider.System,
+            maximumInFlightEntries: 1,
+            sharedOperationTimeout: TimeSpan.FromSeconds(5));
+        UsdaFoodSearchService service = CreateService(handler, detailCache: cache);
+
+        Task<UsdaFoodDetailModel?> first = service.GetFoodDetailAsync(539789);
+        await handler.RequestStarted.Task.WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System);
+        using var waitingCancellation = new CancellationTokenSource();
+        Task<UsdaFoodDetailModel?> waiting = service.GetFoodDetailAsync(539790, waitingCancellation.Token);
+
+        await waitingCancellation.CancelAsync();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => waiting);
+        Assert.Equal(1, handler.RequestCount);
+
+        handler.Release.TrySetResult();
+        Assert.NotNull(await first.WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System));
+        Assert.NotNull(await service.GetFoodDetailAsync(539790).WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System));
+        Assert.Equal(2, handler.RequestCount);
+    }
+
+    [Fact]
+    public async Task GetFoodDetailAsync_WhenSharedOperationDeadlineExpires_ReleasesCapacity() {
+        var handler = new FirstRequestNeverCompletesHttpMessageHandler();
+        var cache = new UsdaFoodDetailCache(
+            TimeProvider.System,
+            maximumInFlightEntries: 1,
+            sharedOperationTimeout: TimeSpan.FromMilliseconds(50));
+        UsdaFoodSearchService service = CreateService(handler, detailCache: cache);
+
+        UsdaFoodDetailModel? timedOut = await service.GetFoodDetailAsync(539789)
+            .WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System);
+        UsdaFoodDetailModel? next = await service.GetFoodDetailAsync(539790)
+            .WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System);
+
+        Assert.Multiple(
+            () => Assert.Null(timedOut),
+            () => Assert.NotNull(next),
+            () => Assert.Equal(2, handler.RequestCount));
+    }
+
     private static UsdaFoodSearchService CreateService(
         HttpMessageHandler handler,
         string apiKey = "test-key",
-        ILogger<UsdaFoodSearchService>? logger = null) {
+        ILogger<UsdaFoodSearchService>? logger = null,
+        UsdaFoodDetailCache? detailCache = null) {
         var httpClient = new HttpClient(handler);
         return new UsdaFoodSearchService(
             httpClient,
             Microsoft.Extensions.Options.Options.Create(new UsdaApiOptions {
                 ApiKey = apiKey,
             }),
-            new UsdaFoodDetailCache(TimeProvider.System),
+            detailCache ?? new UsdaFoodDetailCache(TimeProvider.System),
             logger ?? NullLogger<UsdaFoodSearchService>.Instance);
     }
 
@@ -295,6 +348,27 @@ public sealed class UsdaFoodSearchServiceTests {
             await Release.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
             return new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
+            };
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FirstRequestNeverCompletesHttpMessageHandler : HttpMessageHandler {
+        public int RequestCount { get; private set; }
+
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken) {
+            RequestCount++;
+            if (RequestCount == 1) {
+                await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken).ConfigureAwait(false);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = new StringContent(
+                    """{"fdcId":539790,"description":"Next detail","foodNutrients":[],"foodPortions":[]}""",
+                    System.Text.Encoding.UTF8,
+                    "application/json"),
             };
         }
     }

@@ -6,6 +6,7 @@ using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 
@@ -48,6 +49,26 @@ public sealed class LogsControllerTests {
         var request = new ClientTelemetryLogHttpRequest(
             Category: "http_request",
             Name: "api.request",
+            Level: "info",
+            Timestamp: DateTime.UtcNow.ToString("O"));
+
+        IActionResult result = await controller.Create(request);
+
+        Assert.Multiple(
+            () => Assert.IsType<NoContentResult>(result),
+            () => Assert.Equal(0, sentRequests),
+            () => Assert.Equal(LogLevel.Information, logger.LogLevel));
+    }
+
+    [Fact]
+    public async Task Create_WithAnonymousFastingTelemetry_LogsWithoutDispatchingMediatorCommand() {
+        var logger = new RecordingLogger();
+        int sentRequests = 0;
+        ISender sender = SubstituteSender.Create(Result.Success(), _ => sentRequests++);
+        LogsController controller = CreateController(logger, sender, isAuthenticated: false);
+        var request = new ClientTelemetryLogHttpRequest(
+            Category: "user_action",
+            Name: "fasting.session.started",
             Level: "info",
             Timestamp: DateTime.UtcNow.ToString("O"));
 
@@ -174,13 +195,20 @@ public sealed class LogsControllerTests {
         await cts.CancelAsync();
 
         await Assert.ThrowsAsync<OperationCanceledException>(() =>
-            processor.ProcessAsync(request, cts.Token));
+            processor.ProcessAsync(request, hasAuthenticatedUser: false, cts.Token));
     }
 
-    private static LogsController CreateController(RecordingLogger logger, ISender sender) =>
+    private static LogsController CreateController(
+        RecordingLogger logger,
+        ISender sender,
+        bool isAuthenticated = true) =>
         new(sender, new ClientTelemetryHttpProcessor(sender, logger)) {
             ControllerContext = new ControllerContext {
-                HttpContext = new DefaultHttpContext(),
+                HttpContext = new DefaultHttpContext {
+                    User = isAuthenticated
+                        ? new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())], "Test"))
+                        : new ClaimsPrincipal(new ClaimsIdentity()),
+                },
             },
         };
 

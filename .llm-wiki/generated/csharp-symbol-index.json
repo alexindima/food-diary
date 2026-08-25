@@ -11770,7 +11770,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQueryHandler.cs",
-      "line": 11
+      "line": 14
     },
     {
       "name": "RecipeCommentReadService",
@@ -20408,7 +20408,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Logs/LogsController.cs",
-      "line": 21
+      "line": 22
     },
     {
       "name": "LogsHttpMappings",

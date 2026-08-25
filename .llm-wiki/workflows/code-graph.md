@@ -77,6 +77,11 @@ files. `Manage-LlmWikiCodeGraph.ps1 search` queries this projection with
 deterministic path, module, task-type, and source-kind ranking.
 PowerShell tools are indexed as code with function symbols and raw source text,
 so operational Wiki commands participate in natural-language retrieval.
+The companion `context_search_features` table stores indexed layer, module,
+role, test, and extension attributes keyed by the FTS row id. These attributes
+are computed once during projection refresh and exposed by explain diagnostics;
+they remain available for measured SQL prefilter experiments without weakening
+the broad FTS recall path.
 The database also projects the generated repository catalog and C# symbol index
 into versioned `compiled_indexes` and `compiled_index_records` tables. The
 frontend index is projected into the same tables as ordered feature, symbol,
@@ -225,6 +230,13 @@ Run either corpus without changing the committed JSON evaluation sources, or
 run the combined gate:
 
 ```powershell
+./.llm-wiki/wiki.ps1 context-explain -Query 'validator admin email template' -ChangeType Backend
+./.llm-wiki/wiki.ps1 context-latency -CorpusPath .llm-wiki/evals/context-search-holdout-100.json -Limit 3
+./.llm-wiki/wiki.ps1 context-concurrency -CorpusPath .llm-wiki/evals/context-search-holdout-100.json -Limit 10
+./.llm-wiki/wiki.ps1 context-policy -FailOnInvalid
+./.llm-wiki/wiki.ps1 context-drift
+./.llm-wiki/wiki.ps1 context-unseen-draft
+./.llm-wiki/wiki.ps1 context-unseen-freeze
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
   -CorpusPath .llm-wiki/evals/context-search-holdout.json
@@ -258,6 +270,9 @@ run the combined gate:
 
 Each evaluation reports top-1 accuracy, top-10 recall, mean reciprocal rank,
 SQL timing, per-query misses, and metrics grouped by the optional case `cohort`.
+The regression gate budgets query normalization and candidate ranking
+separately (400 entries each). This keeps bilingual vocabulary growth visible
+without conflating it with path, identity, and structural ranking complexity.
 Cases without a cohort remain compatible and are reported as `unclassified`.
 Each corpus keeps lower regression thresholds
 separate from stricter `switchCriteria`. The combined gate requires at least
@@ -277,10 +292,21 @@ targets were frozen before the first search run. The blind Node result was
 the same ranks and top-five candidates for all 100 cases. After fixing
 limit-dependent candidate pools, positive expansion of negated roles,
 Russian/English technical normalization, and structural role affinity, both
-readers reached 57/100 top-1, 100/100 top-10, and 0.719 MRR with zero exact-rank
-or top-five differences. The original blind result remains immutable; the
-post-fix result is regression evidence, not a new blind baseline. Use a new
-unseen holdout for any later generalization claim.
+readers first reached 57/100 top-1, 100/100 top-10, and 0.719 MRR with zero
+exact-rank or top-five differences. A later role-generalization pass raised the
+same frozen diagnostic corpus to 96/100 top-1, 100/100 top-10, and 0.9783 MRR
+while preserving the promoted and control gates. The original blind result
+remains immutable; later results are regression evidence, not new blind
+baselines. Use a new unseen holdout for any later generalization claim.
+
+Runtime search data belongs in SQLite: FTS5 owns lexical candidate retrieval,
+compiled records and reconstructable indexes are projected into relational
+tables, and specialized queries filter large generated sources before crossing
+the process boundary. Committed JSON remains appropriate for reviewed policy,
+evaluation corpora, governance state, and explicit parity baselines. The MCP
+loads the ranking policy once per process; moving that policy into SQLite would
+not improve steady-state query latency and would make policy review and Git
+diffs less transparent.
 
 A separate post-fix control froze 30 additional unique targets before its first
 run and reused none of the earlier 550 targets. Without further tuning it

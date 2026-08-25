@@ -1,8 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Common;
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -11,6 +14,7 @@ namespace FoodDiary.Application.RecipeCommunity.RecipeComments.Queries.GetRecipe
 
 public sealed class GetRecipeCommentsQueryHandler(
     IRecipeCommentReadService commentReadService,
+    IRecipeAccessService recipeAccessService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipeCommentsQuery, Result<PagedResponse<RecipeCommentModel>>> {
     public async Task<Result<PagedResponse<RecipeCommentModel>>> Handle(
@@ -27,6 +31,14 @@ public sealed class GetRecipeCommentsQueryHandler(
         int pageSize = PaginationPolicy.NormalizePageSize(query.Limit, defaultPageSize: 1);
         int pageNumber = PaginationPolicy.NormalizePage(query.Page);
         var recipeId = (RecipeId)query.RecipeId;
+        RecipeOverviewReadItem? recipe = await recipeAccessService.GetAccessibleByIdAsync(
+            recipeId,
+            userIdResult.Value,
+            includePublic: true,
+            cancellationToken).ConfigureAwait(false);
+        if (recipe is null) {
+            return Result.Failure<PagedResponse<RecipeCommentModel>>(Errors.Recipe.NotFound(query.RecipeId));
+        }
 
         PagedResponse<RecipeCommentModel> comments = await commentReadService
             .GetPagedByRecipeAsync(recipeId, userIdResult.Value, pageNumber, pageSize, cancellationToken)

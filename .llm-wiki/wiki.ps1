@@ -2,7 +2,7 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-status', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'research-next-question', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'delivery-finalize', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'coverage-plan', 'decision',
+        'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-status', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'research-next-question', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'delivery-finalize', 'context', 'context-explain', 'context-latency', 'context-concurrency', 'context-policy', 'context-drift', 'context-unseen-draft', 'context-unseen-freeze', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'coverage-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'contract-consumers', 'extraction', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'graph-build', 'graph-status', 'graph-symbol', 'graph-consumers', 'graph-trace', 'graph-impact', 'graph-relations', 'graph-coverage',
         'diff', 'impact', 'review', 'review-affected', 'ownership', 'api-compat', 'policy', 'verification-record', 'verification-list',
@@ -85,6 +85,7 @@ param(
     [string[]]$ChangedPath,
     [string]$ChangedPathList,
     [string]$RequestFile,
+    [string]$CorpusPath,
     [string[]]$RelationKind,
     [Alias('PlannedPath')]
     [string[]]$ProposedPath,
@@ -929,6 +930,51 @@ switch ($Command) {
         }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $contextArguments.ScopePath = $ProposedPath }
         Invoke-WikiTool 'Find-LlmWikiContext.ps1' $contextArguments
+    }
+    'context-explain' {
+        $explainArguments = @{
+            Query = $Query; ChangeType = $ChangeType; Module = $Module
+            ScopePath = $ProposedPath; Limit = [Math]::Min($Limit, 20); Format = $Format
+        }
+        Invoke-WikiTool 'Get-LlmWikiContextExplanation.ps1' $explainArguments
+    }
+    'context-latency' {
+        Invoke-WikiTool 'Measure-LlmWikiContextLatency.ps1' @{
+            CorpusPath = $(if ([string]::IsNullOrWhiteSpace($CorpusPath)) { '.llm-wiki/evals/context-search-holdout-100.json' } else { $CorpusPath })
+            Iterations = $(if ($PSBoundParameters.ContainsKey('Limit')) { [Math]::Min([Math]::Max($Limit, 1), 20) } else { 3 })
+            Format = $Format
+        }
+    }
+    'context-concurrency' {
+        Invoke-WikiTool 'Measure-LlmWikiContextConcurrency.ps1' @{
+            CorpusPath = $(if ([string]::IsNullOrWhiteSpace($CorpusPath)) { '.llm-wiki/evals/context-search-holdout-100.json' } else { $CorpusPath })
+            Workers = 4
+            QueriesPerWorker = $(if ($PSBoundParameters.ContainsKey('Limit')) { [Math]::Min([Math]::Max($Limit, 1), 100) } else { 10 })
+            Format = $Format
+        }
+    }
+    'context-policy' {
+        Invoke-WikiTool 'Test-LlmWikiContextRankingPolicy.ps1' @{
+            FailOnInvalid = $FailOnInvalid; Format = $Format
+        }
+    }
+    'context-drift' {
+        Invoke-WikiTool 'Get-LlmWikiConcurrentDrift.ps1' @{
+            SessionId = $TaskSessionId; Format = $Format
+        }
+    }
+    'context-unseen-draft' {
+        Invoke-WikiTool 'New-LlmWikiUnseenContextCorpus.ps1' @{
+            Count = $(if ($PSBoundParameters.ContainsKey('Limit')) { [Math]::Max(20, $Limit) } else { 100 })
+            OutputPath = $(if ([string]::IsNullOrWhiteSpace($CorpusPath)) { '.artifacts/llm-wiki/evals/context-search-unseen-draft.json' } else { $CorpusPath })
+            Force = $Apply; Format = $Format
+        }
+    }
+    'context-unseen-freeze' {
+        Invoke-WikiTool 'Complete-LlmWikiUnseenContextCorpus.ps1' @{
+            DraftPath = $(if ([string]::IsNullOrWhiteSpace($CorpusPath)) { '.artifacts/llm-wiki/evals/context-search-unseen-draft.json' } else { $CorpusPath })
+            Force = $Apply
+        }
     }
     'trace' {
         $backendIntent = $Query -match '(?i)\b(smtp|persistence|repository|readiness|telemetry|outbox|hosted service|background service|worker|database|infrastructure)\b'

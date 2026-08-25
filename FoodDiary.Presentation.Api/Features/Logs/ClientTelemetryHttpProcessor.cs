@@ -10,9 +10,10 @@ namespace FoodDiary.Presentation.Api.Features.Logs;
 public sealed class ClientTelemetryHttpProcessor(ISender sender, ILogger<LogsController> logger) {
     public async Task<Result> ProcessAsync(
         ClientTelemetryLogHttpRequest request,
+        bool hasAuthenticatedUser,
         CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
-        Result result = IsFastingTelemetry(request)
+        Result result = hasAuthenticatedUser && IsFastingTelemetry(request)
             ? await sender.Send(request.ToFastingTelemetryCommand(), cancellationToken).ConfigureAwait(false)
             : Result.Success();
         LogLevel logLevel = request.Level.ToLowerInvariant() switch {

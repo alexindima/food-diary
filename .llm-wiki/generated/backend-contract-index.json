@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1063,
     "ambiguousContracts": 3,
-    "consumerEdges": 7488,
-    "productionConsumerEdges": 4525,
+    "consumerEdges": 7489,
+    "productionConsumerEdges": 4526,
     "testConsumerEdges": 2963,
     "consumedContracts": 1063,
     "unconsumedContracts": 0
@@ -22652,7 +22652,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/LogsControllerTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 9
     },
     {
       "contract": "ClientTelemetryLogHttpRequest",
@@ -38837,7 +38837,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/RecipeComments/RecipeCommentsFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 6
     },
     {
       "contract": "GetRecipeCommentsQuery",
@@ -78744,6 +78744,19 @@
         "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.RecipeCommunity/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.RecipeCommunity/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -78798,7 +78811,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/RecipeComments/RecipeCommentsFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "IRecipeAccessService",
@@ -85246,7 +85259,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/LogsControllerTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "ISender",
@@ -100976,7 +100989,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.RecipeCommunity/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQueryHandler.cs",
       "isTest": false,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "PagedResponse",
@@ -101327,7 +101340,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/RecipeComments/RecipeCommentsFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 6
     },
     {
       "contract": "PagedResponse",

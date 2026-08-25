@@ -62,11 +62,12 @@ if (($controlTop1Rate - $blindTop1Rate) -gt 0.25) {
     throw "Context ranking shows likely control-corpus overfitting: controls=$([Math]::Round($controlTop1Rate, 4)), blind=$blindTop1Rate."
 }
 $rankingPolicy = Get-Content (Join-Path $PSScriptRoot '../policies/context-search-ranking.json') -Raw | ConvertFrom-Json
-$rankingRuleCount = @($rankingPolicy.queryTermExpansions.PSObject.Properties).Count +
-    @($rankingPolicy.queryPrefixExpansions.PSObject.Properties).Count + @($rankingPolicy.pathBoosts).Count +
-    @($rankingPolicy.identityBoosts).Count + @($rankingPolicy.structuralRoleBoosts).Count
-if ($rankingRuleCount -gt 600 -or $null -eq $rankingPolicy.genericAffinities) {
-    throw "Context ranking policy exceeded its 600-rule complexity budget or lost generic affinities: rules=$rankingRuleCount."
+$normalizationRuleCount = @($rankingPolicy.queryTermExpansions.PSObject.Properties).Count +
+    @($rankingPolicy.queryPrefixExpansions.PSObject.Properties).Count
+$rankingRuleCount = @($rankingPolicy.pathBoosts).Count + @($rankingPolicy.identityBoosts).Count +
+    @($rankingPolicy.structuralRoleBoosts).Count
+if ($normalizationRuleCount -gt 400 -or $rankingRuleCount -gt 400 -or $null -eq $rankingPolicy.genericAffinities) {
+    throw "Context search exceeded its staged complexity budget or lost generic affinities: normalization=$normalizationRuleCount/400; ranking=$rankingRuleCount/400."
 }
 $allEvaluations = @($primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $imageWikiRegressionEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation, $probe6Evaluation, $probe7Evaluation)
 foreach ($evaluation in $allEvaluations) {

@@ -11,6 +11,7 @@ using FoodDiary.Application.RecipeCommunity.RecipeComments.Queries.GetRecipeComm
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Services;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Enums;
 
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
@@ -315,9 +316,69 @@ public class RecipeCommentsFeatureTests {
             () => Assert.Empty(result.Value.Data));
     }
 
+    [Fact]
+    public async Task GetRecipeComments_ForPrivateRecipeOwner_ReturnsComments() {
+        var ownerId = UserId.New();
+        var recipe = Recipe.Create(ownerId, "Private recipe", 1, visibility: Visibility.Private);
+        var repo = new InMemoryRecipeCommentRepository();
+        repo.Seed(RecipeComment.Create(ownerId, recipe.Id, "Private comment"));
+        GetRecipeCommentsQueryHandler handler = CreateRecipeCommentsHandler(
+            repo,
+            CreateRecipeAccessService(recipe));
+
+        Result<PagedResponse<RecipeCommentModel>> result = await handler.Handle(
+            new GetRecipeCommentsQuery(ownerId.Value, recipe.Id.Value, 1, 10),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal("Private comment", Assert.Single(result.Value.Data).Text);
+    }
+
+    [Fact]
+    public async Task GetRecipeComments_ForPrivateRecipeNonOwner_ReturnsRecipeNotFoundWithoutReadingComments() {
+        var currentUserId = UserId.New();
+        var recipeId = RecipeId.New();
+        var repo = new InMemoryRecipeCommentRepository();
+        GetRecipeCommentsQueryHandler handler = CreateRecipeCommentsHandler(
+            repo,
+            CreateRecipeAccessService(recipe: null));
+
+        Result<PagedResponse<RecipeCommentModel>> result = await handler.Handle(
+            new GetRecipeCommentsQuery(currentUserId.Value, recipeId.Value, 1, 10),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Recipe.NotFound", result.Error.Code),
+            () => Assert.Equal(0, repo.ReadModelRequestCount));
+    }
+
+    [Fact]
+    public async Task GetRecipeComments_ForPublicRecipeNonOwner_ReturnsComments() {
+        var ownerId = UserId.New();
+        var currentUserId = UserId.New();
+        var recipe = Recipe.Create(ownerId, "Public recipe", 1, visibility: Visibility.Public);
+        var repo = new InMemoryRecipeCommentRepository();
+        repo.Seed(RecipeComment.Create(ownerId, recipe.Id, "Public comment"));
+        GetRecipeCommentsQueryHandler handler = CreateRecipeCommentsHandler(
+            repo,
+            CreateRecipeAccessService(recipe));
+
+        Result<PagedResponse<RecipeCommentModel>> result = await handler.Handle(
+            new GetRecipeCommentsQuery(currentUserId.Value, recipe.Id.Value, 1, 10),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        RecipeCommentModel comment = Assert.Single(result.Value.Data);
+        Assert.Multiple(
+            () => Assert.Equal("Public comment", comment.Text),
+            () => Assert.False(comment.IsOwnedByCurrentUser));
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryRecipeCommentRepository : IRecipeCommentRepository {
         private readonly List<RecipeComment> _comments = [];
+        public int ReadModelRequestCount { get; private set; }
 
         public void Seed(RecipeComment comment) => _comments.Add(comment);
 
@@ -348,6 +409,7 @@ public class RecipeCommentsFeatureTests {
             int page,
             int limit,
             CancellationToken ct = default) {
+            ReadModelRequestCount++;
             var matching = _comments.Where(c => c.RecipeId == recipeId).ToList();
             var items = matching
                 .Skip((page - 1) * limit)
@@ -393,8 +455,12 @@ public class RecipeCommentsFeatureTests {
     }
 
     private static GetRecipeCommentsQueryHandler CreateRecipeCommentsHandler(
-        IRecipeCommentReadModelRepository commentRepository) =>
-        new(CreateRecipeCommentReadService(commentRepository), CreateCurrentUserAccessService());
+        IRecipeCommentReadModelRepository commentRepository,
+        IRecipeAccessService? recipeAccessService = null) =>
+        new(
+            CreateRecipeCommentReadService(commentRepository),
+            recipeAccessService ?? CreateRecipeAccessService(Recipe.Create(UserId.New(), "Accessible recipe", 1)),
+            CreateCurrentUserAccessService());
 
     private static IRecipeCommentReadService CreateRecipeCommentReadService(
         IRecipeCommentReadModelRepository commentRepository) =>

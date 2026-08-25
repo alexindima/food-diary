@@ -4,6 +4,7 @@ using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Telemetry;
+using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -29,5 +30,8 @@ public sealed class LogsController(ISender sender, ClientTelemetryHttpProcessor 
     [ProducesResponseType(typeof(ApiErrorHttpResponse), StatusCodes.Status413PayloadTooLarge)]
     [ProducesResponseType(typeof(ApiErrorHttpResponse), StatusCodes.Status429TooManyRequests)]
     public Task<IActionResult> Create([FromBody] ClientTelemetryLogHttpRequest request) =>
-        HandleNoContent(processor.ProcessAsync(request, HttpContext.RequestAborted));
+        HandleNoContent(processor.ProcessAsync(
+            request,
+            User.GetUserGuid().HasValue,
+            HttpContext.RequestAborted));
 }

@@ -8,7 +8,7 @@ import { DatabaseSync } from 'node:sqlite';
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
 const parserVersion = '12-wiki-policy-context-v1';
-const contextSearchSchemaVersion = '2';
+const contextSearchSchemaVersion = '3';
 const compiledIndexSchemaVersion = '4';
 const queryDocumentSchemaVersion = '8';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
@@ -388,6 +388,7 @@ function openDatabase(databasePath) {
     const storedSearchSchemaVersion = database.prepare("SELECT value FROM metadata WHERE key='context_search_schema_version'").get()?.value;
     if (storedSearchSchemaVersion !== contextSearchSchemaVersion) {
       database.exec('DROP TABLE IF EXISTS context_search');
+      database.exec('DROP TABLE IF EXISTS context_search_features');
     }
     database.exec(`
     CREATE VIRTUAL TABLE IF NOT EXISTS context_search USING fts5(
@@ -400,6 +401,22 @@ function openDatabase(databasePath) {
       body,
       tokenize = 'unicode61 remove_diacritics 2'
     );
+    CREATE TABLE IF NOT EXISTS context_search_features(
+      context_rowid INTEGER PRIMARY KEY,
+      record_type TEXT NOT NULL,
+      path TEXT NOT NULL,
+      layer TEXT NOT NULL,
+      module TEXT NOT NULL,
+      role TEXT NOT NULL,
+      is_test INTEGER NOT NULL,
+      extension TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS ix_context_search_features_layer_role
+      ON context_search_features(layer, role, is_test);
+    CREATE INDEX IF NOT EXISTS ix_context_search_features_module
+      ON context_search_features(module, is_test);
+    CREATE INDEX IF NOT EXISTS ix_context_search_features_extension
+      ON context_search_features(extension, role);
   `);
     if (storedSearchSchemaVersion !== contextSearchSchemaVersion) {
       database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)')
@@ -884,6 +901,35 @@ function contextDocumentPaths() {
     || /^docs\/.+\.md$/i.test(path));
 }
 
+function contextSearchFeatures(path, recordType) {
+  const normalized = String(path ?? '').replaceAll('\\', '/');
+  const lower = normalized.toLowerCase();
+  const fileName = basename(lower);
+  const extension = extname(lower);
+  const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(normalized);
+  const layer = lower.startsWith('.llm-wiki/') ? 'wiki'
+    : lower.startsWith('docs/') ? 'documentation'
+      : isTest ? 'tests'
+        : lower.includes('presentation') || lower.includes('web.api') ? 'api'
+          : lower.includes('infrastructure') || lower.includes('integrations') || lower.includes('jobmanager') ? 'infrastructure'
+            : lower.includes('application') ? 'application'
+              : lower.includes('domain') ? 'domain'
+                : lower.includes('web.client') ? 'frontend' : 'other';
+  const module = normalized.split('/')[0] || recordType || 'other';
+  const rolePatterns = [
+    ['handler', /handler\.[^.]+$/], ['validator', /validator(?:tests?)?\.[^.]+$/],
+    ['repository', /repository(?:tests?)?\.[^.]+$/], ['controller', /controller(?:tests?)?\.[^.]+$/],
+    ['service', /service(?:tests?)?\.[^.]+$/], ['processor', /processor(?:tests?)?\.[^.]+$/],
+    ['provider', /provider(?:tests?)?\.[^.]+$/], ['mapper', /mapper(?:tests?)?\.[^.]+$/],
+    ['component', /component(?:\.spec)?\.[^.]+$/], ['facade', /facade(?:\.spec)?\.[^.]+$/],
+    ['interceptor', /interceptor(?:\.spec)?\.[^.]+$/], ['guard', /guard(?:\.spec)?\.[^.]+$/],
+    ['test', /tests?\.[^.]+$|\.spec\.[^.]+$/], ['tool', /^.*\.(?:ps1|mjs)$/],
+  ];
+  const role = rolePatterns.find(([, pattern]) => pattern.test(fileName))?.[0]
+    ?? (recordType === 'wiki-page' ? 'workflow' : recordType === 'agent-guide' ? 'guidance' : 'other');
+  return { layer, module, role, isTest: isTest ? 1 : 0, extension };
+}
+
 function refreshContextSearch(database) {
   const files = database.prepare('SELECT path, language, content_hash contentHash FROM files ORDER BY path').all();
   const queryDocuments = database.prepare(`
@@ -917,16 +963,26 @@ function refreshContextSearch(database) {
     tokensByPath.get(row.path).push(row.token);
   }
 
-  database.exec('DELETE FROM context_search');
+  database.exec('DELETE FROM context_search_features; DELETE FROM context_search');
   const insert = database.prepare(`
     INSERT INTO context_search(record_type, record_key, path, source_path, category, title, body)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
+  const insertFeatures = database.prepare(`
+    INSERT INTO context_search_features(context_rowid, record_type, path, layer, module, role, is_test, extension)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+  const insertContextRecord = (recordType, recordKey, path, sourcePath, category, title, body) => {
+    const result = insert.run(recordType, recordKey, path, sourcePath, category, title, body);
+    const features = contextSearchFeatures(path, recordType);
+    insertFeatures.run(result.lastInsertRowid, recordType, path, features.layer, features.module,
+      features.role, features.isTest, features.extension);
+  };
   for (const file of files) {
     const sourceBody = file.language === 'powershell' || file.language === 'json'
       ? readFileSync(resolve(repositoryRoot, file.path), 'utf8')
       : (tokensByPath.get(file.path) ?? []).join(' ');
-    insert.run(
+    insertContextRecord(
       'code',
       file.path,
       file.path,
@@ -936,7 +992,7 @@ function refreshContextSearch(database) {
       expandSearchText(sourceBody));
   }
   for (const item of queryDocuments) {
-    insert.run(
+    insertContextRecord(
       'query-document',
       item.recordKey,
       item.path || item.sourcePath,
@@ -950,7 +1006,7 @@ function refreshContextSearch(database) {
       ? 'agent-guide'
       : item.path.startsWith('.llm-wiki/') ? 'wiki-page' : 'documentation';
     const title = item.text.match(/^#{1,3}\s+(.+)$/m)?.[1] ?? item.path;
-    insert.run(recordType, item.path, item.path, item.path, recordType, expandSearchText(title), expandSearchText(item.text));
+    insertContextRecord(recordType, item.path, item.path, item.path, recordType, expandSearchText(title), expandSearchText(item.text));
   }
   database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)')
     .run('context_search_fingerprint', fingerprint);
@@ -2088,11 +2144,13 @@ function searchContext(database, query, limit, filters = {}) {
   const match = terms.map((term) => `"${term.replaceAll('"', '""')}"*`).join(' OR ');
   const candidateLimit = Number(contextSearchRanking.candidatePoolLimit ?? 500);
   const candidates = database.prepare(`
-    SELECT record_type recordType, record_key recordKey, path, source_path sourcePath,
-      category, title, bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexicalRank
+    SELECT context_search.record_type recordType, record_key recordKey, context_search.path, source_path sourcePath,
+      category, title, features.layer, features.module, features.role, features.is_test isTest,
+      features.extension, bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexicalRank
     FROM context_search
+    JOIN context_search_features features ON features.context_rowid = context_search.rowid
     WHERE context_search MATCH ?
-    ORDER BY lexicalRank, path
+    ORDER BY lexicalRank, context_search.path
     LIMIT ?
   `).all(match, candidateLimit);
   const identityMatch = terms.flatMap((term) => {
@@ -2101,11 +2159,13 @@ function searchContext(database, query, limit, filters = {}) {
   }).join(' OR ');
   const identityLimit = Number(contextSearchRanking.identityCandidatePoolLimit ?? 100);
   const identityCandidates = database.prepare(`
-    SELECT record_type recordType, record_key recordKey, path, source_path sourcePath,
-      category, title, bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexicalRank
+    SELECT context_search.record_type recordType, record_key recordKey, context_search.path, source_path sourcePath,
+      category, title, features.layer, features.module, features.role, features.is_test isTest,
+      features.extension, bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexicalRank
     FROM context_search
+    JOIN context_search_features features ON features.context_rowid = context_search.rowid
     WHERE context_search MATCH ?
-    ORDER BY lexicalRank, path
+    ORDER BY lexicalRank, context_search.path
     LIMIT ?
   `).all(identityMatch, identityLimit);
   const candidateIndexes = new Map(candidates.map((item, index) => [
@@ -2127,11 +2187,13 @@ function searchContext(database, query, limit, filters = {}) {
   const runtimeCandidatesToPrepend = [];
   for (const suffix of runtimeSuffixes) {
     const runtimeCandidates = database.prepare(`
-      SELECT record_type recordType, record_key recordKey, path, source_path sourcePath,
-        category, title, 0.0 lexicalRank
+      SELECT context_search.record_type recordType, record_key recordKey, context_search.path, source_path sourcePath,
+        category, title, features.layer, features.module, features.role, features.is_test isTest,
+        features.extension, 0.0 lexicalRank
       FROM context_search
-      WHERE path LIKE ?
-      ORDER BY path
+      JOIN context_search_features features ON features.context_rowid = context_search.rowid
+      WHERE context_search.path LIKE ?
+      ORDER BY context_search.path
     `).all(suffix);
     for (const runtimeCandidate of runtimeCandidates) {
       const key = `${runtimeCandidate.recordType}\0${runtimeCandidate.recordKey}\0${runtimeCandidate.path}`;
@@ -2145,6 +2207,8 @@ function searchContext(database, query, limit, filters = {}) {
   const moduleTerm = String(filters.module ?? '').toLowerCase();
   const scopePaths = String(filters.path ?? '').split(';').filter(Boolean).map((path) => path.replaceAll('\\', '/').toLowerCase());
   const changeType = String(filters.changeType ?? 'Any').toLowerCase();
+  const stronglyRequestsTest = explicitlyRequestsTest &&
+    (changeType === 'tests' || (changeType === 'frontend' && directTerms.includes('tests')));
   const eligibleTermsForBoost = (boost) => boost.directOnly ? directTerms : boostTerms;
   const boostMatchesQuery = (boost, defaultMinimum = 1) => {
     const eligibleTerms = eligibleTermsForBoost(boost);
@@ -2226,6 +2290,8 @@ function searchContext(database, query, limit, filters = {}) {
     }
     applyGenericPathAffinity('api-layer', genericAffinity.apiIntentTerms,
       genericAffinity.apiPathFragments, genericAffinity.apiScore);
+    applyGenericPathAffinity('database-layer', genericAffinity.databaseIntentTerms,
+      genericAffinity.databasePathFragments, genericAffinity.databaseScore);
     const applyChangeTypePathAffinity = (id, expectedType, pathValues, value) => {
       if (changeType !== expectedType || !(pathValues ?? []).some((candidate) =>
         normalizedPath.includes(String(candidate).replaceAll('\\', '/').toLowerCase()))) return;
@@ -2248,7 +2314,7 @@ function searchContext(database, query, limit, filters = {}) {
       applyGenericPathAffinity('wiki-tooling', genericAffinity.wikiToolIntentTerms,
         genericAffinity.wikiToolPathPrefixes, genericAffinity.wikiToolScore);
     }
-    if (changeType === 'tests' && isExplicitTestCandidate && explicitlyRequestsTest) {
+    if (isExplicitTestCandidate && stronglyRequestsTest) {
       const explicitTestAffinity = contextSearchRanking.explicitTestAffinity ?? {};
       const explicitTestScore = Math.min(
         identityMatches.length * Number(explicitTestAffinity.scorePerMatch ?? 0),
@@ -2256,7 +2322,7 @@ function searchContext(database, query, limit, filters = {}) {
       score += explicitTestScore;
       if (explicitTestScore > 0) reasons.push(`explicit test behavior affinity ${identityMatches.length} terms`);
     }
-    if (changeType === 'tests' && !isExplicitTestCandidate && explicitlyRequestsTest) {
+    if (!isExplicitTestCandidate && stronglyRequestsTest) {
       score -= Number(contextSearchRanking.explicitTestAffinity?.nonTestPenalty ?? 0);
       reasons.push('production candidate penalty for explicit test intent');
     }
@@ -2340,7 +2406,7 @@ function searchContext(database, query, limit, filters = {}) {
       score -= penalty;
       reasons.push(`negated role penalty ${matchedNegativeRoles.join(', ')}`);
     }
-    if (isExplicitTestCandidate && changeType !== 'tests') {
+    if (isExplicitTestCandidate && changeType !== 'tests' && !stronglyRequestsTest) {
       score -= Number(contextSearchRanking.nonTestPenalty ?? 25);
       reasons.push('test candidate ranked after production');
     }

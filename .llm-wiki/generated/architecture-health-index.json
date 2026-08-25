@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 151,
     "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 21,
+    "criticalSymbolsWithoutTestReferences": 26,
     "explicitDebtMarkers": 9
   },
   "projectDependencyViolations": [],
@@ -5465,6 +5465,46 @@
       "role": "Validator",
       "path": "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
       "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
+      "name": "Complete-LlmWikiUnseenContextCorpus",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Complete-LlmWikiUnseenContextCorpus.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
+      "name": "Get-LlmWikiConcurrentDrift",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Get-LlmWikiConcurrentDrift.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
+      "name": "Measure-LlmWikiContextConcurrency",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Measure-LlmWikiContextConcurrency.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
+      "name": "Measure-LlmWikiContextLatency",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Measure-LlmWikiContextLatency.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
+      "name": "Write-LlmWikiContextQueryObservation",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Write-LlmWikiContextQueryObservation.ps1",
+      "line": 1,
       "testReferenceCount": 0,
       "testReferences": []
     }

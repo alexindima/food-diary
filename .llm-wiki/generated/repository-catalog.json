@@ -4779,7 +4779,7 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/logs",
-            "line": 24
+            "line": 25
           }
         ]
       },
