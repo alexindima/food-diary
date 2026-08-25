@@ -373,7 +373,8 @@ Commands:
   show-dead-letter <outbox>:<message-id>
                           Inspect one dead-lettered message before replay
   replay-outbox <outbox>:<message-id> --requested-by <operator> --reason <reason> --expected-attempt-count <count> [--dry-run | --force]
-                          Preview or replay one dead-lettered message with race protection and audit
+                          Preview or replay one non-email dead letter with race protection and audit
+                          Email payloads are scrubbed and must be regenerated from the originating workflow
   list-outbox-replays [outbox[:message-id]] [--limit <1-200>]
                           List immutable replay audit history
 

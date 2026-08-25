@@ -148,6 +148,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         'facade-contract' {
             & (Join-Path $toolsRoot 'Test-LlmWikiFacadeCommandCatalog.ps1')
             if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiCriticalToolContracts.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiStrictAffected.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiAffectedSmokePlanning.ps1')

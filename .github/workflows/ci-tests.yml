@@ -35,8 +35,6 @@ jobs:
         env:
           EVENT_BEFORE: ${{ github.event.before }}
         run: |
-          ./.llm-wiki/wiki.ps1 verify-full
-
           if ("${{ github.event_name }}" -eq "pull_request") {
             $baseRef = "origin/${{ github.base_ref }}"
           } elseif ($env:EVENT_BEFORE -and $env:EVENT_BEFORE -notmatch '^0+$') {
@@ -45,15 +43,9 @@ jobs:
             $baseRef = "HEAD^"
           }
 
-          ./.llm-wiki/tools/Get-LlmWikiImpact.ps1 `
-            -BaseRef $baseRef `
-            -HeadRef HEAD `
-            -FailOnUnreviewed
-
-          ./.llm-wiki/tools/Test-LlmWikiChangePolicy.ps1 `
-            -BaseRef $baseRef `
-            -HeadRef HEAD `
-            -FailOnViolation
+          # Full verification already owns range-aware impact and change-policy
+          # gates. Pass the CI base explicitly instead of running both twice.
+          ./.llm-wiki/wiki.ps1 verify-full -BaseRef $baseRef
 
           ./.llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1 `
             -BaseRef $baseRef `

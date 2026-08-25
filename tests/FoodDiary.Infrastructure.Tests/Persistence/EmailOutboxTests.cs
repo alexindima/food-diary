@@ -250,7 +250,6 @@ public sealed class EmailOutboxTests {
         int processed = await processor.ProcessDueAsync(batchSize: 10, CancellationToken.None);
 
         EmailOutboxMessage stored = Assert.Single(context.EmailOutbox);
-        var replayableMessage = stored.ToEmailMessage();
         Assert.Multiple(
             () => Assert.Equal(0, processed),
             () => Assert.Equal(OutboxProcessingPolicy.MaxAttemptCount, stored.AttemptCount),
@@ -258,14 +257,14 @@ public sealed class EmailOutboxTests {
             () => Assert.Null(stored.LockedUntilUtc),
             () => Assert.Null(stored.LockedBy),
             () => Assert.Equal("Outbox dispatch failed (InvalidOperationException).", stored.LastError),
-            () => Assert.Equal(["recipient@example.com"], replayableMessage.ToAddresses),
-            () => Assert.Equal("Hello", replayableMessage.Subject),
-            () => Assert.Equal("<p>Hello</p>", replayableMessage.HtmlBody),
-            () => Assert.Equal("Hello", replayableMessage.TextBody));
+            () => Assert.Equal("[]", stored.ToAddressesJson),
+            () => Assert.Empty(stored.Subject),
+            () => Assert.Empty(stored.HtmlBody),
+            () => Assert.Null(stored.TextBody));
     }
 
     [Fact]
-    public async Task ReplayAsync_WhenMessageIsDeadLettered_RequeuesAndAuditsOperatorIntent() {
+    public async Task ReplayAsync_WhenEmailIsDeadLettered_RejectsReplayBecausePayloadWasRemoved() {
         await using FoodDiaryDbContext context = CreateContext();
         var message = EmailOutboxMessage.Create(CreateEmailMessage(), Now.AddMinutes(-1));
         message.MarkDeadLettered("provider rejected request", Now.AddSeconds(-1));
@@ -273,22 +272,23 @@ public sealed class EmailOutboxTests {
         await context.SaveChangesAsync();
         var replayService = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
 
-        await replayService.ReplayAsync(
-            "email",
-            message.Id,
-            "ops@example.com",
-            "Provider incident resolved",
-            expectedAttemptCount: 1,
-            CancellationToken.None);
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            replayService.ReplayAsync(
+                "email",
+                message.Id,
+                "ops@example.com",
+                "Provider incident resolved",
+                expectedAttemptCount: 1,
+                CancellationToken.None));
 
-        OutboxReplayAudit audit = Assert.Single(context.OutboxReplayAudits);
         Assert.Multiple(
-            () => Assert.Null(message.DeadLetteredOnUtc),
-            () => Assert.Equal(Now, message.NextAttemptOnUtc),
-            () => Assert.Null(message.LastError),
-            () => Assert.Equal("ops@example.com", audit.RequestedBy),
-            () => Assert.Equal("Provider incident resolved", audit.Reason),
-            () => Assert.Equal("provider rejected request", audit.PreviousError));
+            () => Assert.Contains("cannot be replayed", exception.Message, StringComparison.Ordinal),
+            () => Assert.NotNull(message.DeadLetteredOnUtc),
+            () => Assert.Equal("[]", message.ToAddressesJson),
+            () => Assert.Empty(message.Subject),
+            () => Assert.Empty(message.HtmlBody),
+            () => Assert.Null(message.TextBody),
+            () => Assert.Empty(context.OutboxReplayAudits));
     }
 
     [Fact]
@@ -308,13 +308,6 @@ public sealed class EmailOutboxTests {
             "email",
             message.Id,
             CancellationToken.None);
-        OutboxReplayAuditModel audit = await replayService.ReplayAsync(
-            "email",
-            message.Id,
-            "operator@example.com",
-            "Transient provider outage resolved",
-            expectedAttemptCount: 1,
-            CancellationToken.None);
         IReadOnlyList<OutboxReplayAuditModel> history = await replayService.ListReplayHistoryAsync(
             "email",
             message.Id,
@@ -322,27 +315,25 @@ public sealed class EmailOutboxTests {
             CancellationToken.None);
 
         OutboxDeadLetterMessageModel listedMessage = Assert.Single(listed);
-        OutboxReplayAuditModel storedAudit = Assert.Single(history);
         Assert.NotNull(preview);
         Assert.Multiple(
-            () => Assert.Equal("Dead letter preview", listedMessage.Summary),
+            () => Assert.Empty(listedMessage.Summary),
             () => Assert.Equal("provider unavailable", preview.LastError),
-            () => Assert.Equal(audit.Id, storedAudit.Id),
-            () => Assert.Equal("operator@example.com", storedAudit.RequestedBy));
+            () => Assert.Empty(history));
     }
 
     [Fact]
     public async Task ReplayAsync_WhenAttemptCountChangedAfterInspection_RejectsStaleOperatorAction() {
         await using FoodDiaryDbContext context = CreateContext();
-        var message = EmailOutboxMessage.Create(CreateEmailMessage(), Now.AddMinutes(-1));
+        var message = ImageObjectDeletionOutboxMessage.Create("users/test/stale.webp", Now.AddMinutes(-1));
         message.MarkDeadLettered("provider unavailable", Now);
-        context.EmailOutbox.Add(message);
+        context.ImageObjectDeletionOutbox.Add(message);
         await context.SaveChangesAsync();
         var replayService = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             replayService.ReplayAsync(
-                "email",
+                "image_object_deletion",
                 message.Id,
                 "operator@example.com",
                 "Retry",

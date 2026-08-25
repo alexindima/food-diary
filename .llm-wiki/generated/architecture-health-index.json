@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 151,
     "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 34,
+    "criticalSymbolsWithoutTestReferences": 21,
     "explicitDebtMarkers": 9
   },
   "projectDependencyViolations": [],
@@ -5465,110 +5465,6 @@
       "role": "Validator",
       "path": "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "Add-LlmWikiSourceReview",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/Add-LlmWikiSourceReview.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "Clear-LlmWikiReadOnlySnapshotCache",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/Clear-LlmWikiReadOnlySnapshotCache.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "Get-LlmWikiOwnershipImpact",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/Get-LlmWikiOwnershipImpact.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "Get-LlmWikiPhaseStatus",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/Get-LlmWikiPhaseStatus.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "Get-LlmWikiVerificationStageFingerprint",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "Invoke-LlmWikiDeliveryFinalization",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/Invoke-LlmWikiDeliveryFinalization.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "LlmWikiChangeSetSnapshot",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/LlmWikiChangeSetSnapshot.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "LlmWikiGitRenames",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/LlmWikiGitRenames.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "LlmWikiImplementationBrief",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/LlmWikiImplementationBrief.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "LlmWikiInProcessSqlite",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/LlmWikiInProcessSqlite.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "Measure-LlmWikiCodeGraph",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/Measure-LlmWikiCodeGraph.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "Start-LlmWikiVerifyWorker",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/Start-LlmWikiVerifyWorker.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "Update-LlmWikiTaskEvidence",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/Update-LlmWikiTaskEvidence.ps1",
-      "line": 1,
       "testReferenceCount": 0,
       "testReferences": []
     }

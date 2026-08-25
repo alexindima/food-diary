@@ -83,6 +83,14 @@ scenarios, and `workflow-metrics` during retrospectives. The longer command
 catalog below is the diagnostic and governance interface; agents should not
 manually orchestrate it when `next` already provides a sufficient action.
 
+Commands have three stability tiers declared in
+[`policies/command-registry.json`](policies/command-registry.json): `core` for
+the stable daily path, `governed` for durable task and evidence state, and
+`experimental` for advanced orchestration, learning, routing, and context
+optimization. Default help is generated from the core tier. Experimental
+commands preserve compatibility, but should not expand or graduate without
+observed use and outcome evidence.
+
 Task identity is owned by the Wiki, not by a Codex-specific environment
 variable. `develop` creates an internal UUID under the repository Git directory;
 known Codex task/thread variables are treated only as optional external hints.

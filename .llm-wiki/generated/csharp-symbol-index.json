@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3451,
-    "symbols": 3458,
+    "sourceFiles": 3452,
+    "symbols": 3459,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 240,
     "kinds": {
-      "class": 1798,
+      "class": 1799,
       "enum": 62,
       "interface": 421,
       "record": 1057,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 62,
-      "Other": 1331,
+      "Other": 1332,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -15900,7 +15900,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Billing/PostgresBillingCheckoutLock.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "AchievementDefinitionConfiguration",
@@ -16911,6 +16911,13 @@
       "line": 6
     },
     {
+      "name": "PostgresAdvisoryLockLease",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Locking/PostgresAdvisoryLockLease.cs",
+      "line": 4
+    },
+    {
       "name": "MealPlanRepository",
       "kind": "class",
       "role": "Repository",
@@ -17496,7 +17503,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 392
+      "line": 393
     },
     {
       "name": "UsdaCsvReader",

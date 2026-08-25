@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1059,
     "ambiguousContracts": 3,
-    "consumerEdges": 7462,
+    "consumerEdges": 7463,
     "productionConsumerEdges": 4504,
-    "testConsumerEdges": 2958,
+    "testConsumerEdges": 2959,
     "consumedContracts": 1059,
     "unconsumedContracts": 0
   },
@@ -45481,6 +45481,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/Billing/PostgresBillingCheckoutLock.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingCheckoutLock",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Billing/Common/IBillingCheckoutLock.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Billing/NoopBillingCheckoutLock.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {

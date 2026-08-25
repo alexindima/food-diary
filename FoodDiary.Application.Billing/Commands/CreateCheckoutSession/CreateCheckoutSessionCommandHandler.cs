@@ -20,7 +20,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
     IBillingPaymentWriteRepository billingPaymentRepository,
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor,
     TimeProvider dateTimeProvider,
-    IBillingCheckoutLock? billingCheckoutLock = null,
+    IBillingCheckoutLock billingCheckoutLock,
     IUnitOfWork? unitOfWork = null)
     : IRequestHandler<CreateCheckoutSessionCommand, Result<BillingCheckoutSessionModel>> {
     public async Task<Result<BillingCheckoutSessionModel>> Handle(
@@ -32,9 +32,9 @@ public sealed class CreateCheckoutSessionCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        IAsyncDisposable lockHandle = billingCheckoutLock is null
-            ? NoopAsyncDisposable.Instance
-            : await billingCheckoutLock.AcquireAsync(userId.Value, cancellationToken).ConfigureAwait(false);
+        IAsyncDisposable lockHandle = await billingCheckoutLock
+            .AcquireAsync(userId.Value, cancellationToken)
+            .ConfigureAwait(false);
         await using ConfiguredAsyncDisposable checkoutLock = lockHandle.ConfigureAwait(false);
         Result<UserBillingProfileModel> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
@@ -166,11 +166,5 @@ public sealed class CreateCheckoutSessionCommandHandler(
             webhookEventId: null,
             providerMetadataJson: null);
         await billingPaymentRepository.AddAsync(payment, cancellationToken).ConfigureAwait(false);
-    }
-
-    private sealed class NoopAsyncDisposable : IAsyncDisposable {
-        public static readonly NoopAsyncDisposable Instance = new();
-
-        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 }

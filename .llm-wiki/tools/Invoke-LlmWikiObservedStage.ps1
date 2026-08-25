@@ -40,7 +40,7 @@ function Write-StageResult([string]$Status, [int]$ExitCode, [string]$Detail) {
     }
     $temporary = "$ResultPath.$PID.tmp"
     [IO.File]::WriteAllText($temporary, (($payload | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
-    Move-Item -LiteralPath $temporary -Destination $ResultPath -Force
+    [IO.File]::Move($temporary, $ResultPath)
 }
 
 if ($LogPath) {

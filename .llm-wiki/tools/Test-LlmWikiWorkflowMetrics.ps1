@@ -35,10 +35,12 @@ try {
     $metrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkflowMetrics.ps1') -Format Json | ConvertFrom-Json
     $research = @($metrics.adaptive.byOperation | Where-Object operation -eq 'research')[0]
     $verify = @($metrics.adaptive.byOperation | Where-Object operation -eq 'verify')[0]
-    if ([int]$metrics.schemaVersion -ne 3 -or [int]$metrics.adaptive.runCount -ne 4 -or
+    if ([int]$metrics.schemaVersion -ne 4 -or [int]$metrics.adaptive.runCount -ne 4 -or
         [int]$metrics.adaptive.passedCount -ne 1 -or [int]$metrics.adaptive.failedCount -ne 3 -or
         [string]$metrics.adaptive.health -ne 'attention' -or [double]$metrics.adaptive.successRatePercent -ne 25 -or
+        [string]$metrics.ceremony.adoptionStatus -ne 'insufficient-data' -or $null -ne $metrics.ceremony.manifestAdoptionPercent -or
         [int]$research.failedCount -ne 1 -or [double]$research.successRatePercent -ne 50 -or
+        [double]$research.medianDurationSeconds -ne 1 -or [double]$research.p95DurationSeconds -ne 2 -or
         [int]$verify.timedOutCount -ne 1) {
         throw 'Workflow metrics did not retain failed, timed-out, and interrupted outcomes honestly.'
     }

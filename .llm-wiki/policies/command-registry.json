@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "defaultTier": "experimental",
+  "tiers": [
+    {
+      "id": "core",
+      "description": "Stable daily workflow for discovery, implementation, verification, and handoff.",
+      "commands": [
+        "develop", "start", "next", "status", "research", "research-next-question",
+        "brief", "trace", "test-plan", "qa", "diff", "completion", "update",
+        "verify-fast", "verify", "verify-full", "handoff", "failures"
+      ],
+      "helpEntries": [
+        "develop -Intent '<task>' [-PlannedPath <path[]>]",
+        "start -Intent '<large task>' [-PlannedPath <path[]>]",
+        "next|status [-WorkspacePath <task>]",
+        "research -Intent '<task>' [-PlannedPath <path[]>]",
+        "research-next-question -Intent '<task>' [-PlannedPath <path[]>]",
+        "brief|trace|test-plan|qa",
+        "delivery-status|delivery-finalize -WorkspacePath <task>",
+        "completion|update [-ChangedPath <path[]>]",
+        "verify-fast|verify|verify-full",
+        "failures [-Query <text>]"
+      ]
+    },
+    {
+      "id": "governed",
+      "description": "Durable task state, acceptance evidence, phase control, and delivery validation.",
+      "commands": [
+        "phase-status", "phase-next", "phase-complete", "pause", "resume",
+        "delivery-status", "delivery-replan", "delivery-validate", "delivery-critique", "delivery-finalize",
+        "task-start", "task-status", "task-refresh", "task-run", "task-handoff", "task-finish", "task-verify",
+        "manifest-init", "manifest-show", "manifest-validate",
+        "acceptance-init", "acceptance-show", "acceptance-map", "acceptance-resolve", "acceptance-validate",
+        "evidence-init", "evidence-run", "evidence-check", "evidence-review", "evidence-artifact", "evidence-validate"
+      ],
+      "prefixes": ["task-proof-", "task-conformance-", "task-requirements-", "task-impact-"]
+    },
+    {
+      "id": "experimental",
+      "description": "Advanced orchestration, learning, routing, and context optimization; compatibility is preserved but adoption must be measured.",
+      "prefixes": [
+        "task-agent-", "task-dispatch-", "task-lease-", "task-circuit-", "task-decompose-",
+        "task-context-", "task-model-route-", "model-route-", "instruction-", "learning-",
+        "context-outcome-", "eval-", "memory-", "repair-learning-", "verification-telemetry-"
+      ]
+    }
+  ]
+}

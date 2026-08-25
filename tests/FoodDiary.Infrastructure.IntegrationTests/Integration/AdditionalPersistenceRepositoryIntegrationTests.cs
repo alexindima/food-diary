@@ -473,6 +473,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         var checkoutLock = new PostgresBillingCheckoutLock(context);
 
         IAsyncDisposable releaser = await checkoutLock.AcquireAsync(Guid.NewGuid());
+        Assert.Equal(System.Data.ConnectionState.Closed, context.Database.GetDbConnection().State);
         await releaser.DisposeAsync();
         await releaser.DisposeAsync();
 
@@ -509,7 +510,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
     }
 
     [RequiresDockerFact]
-    public async Task PostgresBillingCheckoutLock_WhenLockCommandFails_ReleasesItsConnectionReference() {
+    public async Task PostgresBillingCheckoutLock_WhenContextConnectionIsAborted_UsesIndependentConnection() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         await context.Database.OpenConnectionAsync();
         var connection = (Npgsql.NpgsqlConnection)context.Database.GetDbConnection();
@@ -518,7 +519,8 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         }
         var checkoutLock = new PostgresBillingCheckoutLock(context);
 
-        await Assert.ThrowsAsync<Npgsql.PostgresException>(() => checkoutLock.AcquireAsync(Guid.NewGuid()));
+        IAsyncDisposable releaser = await checkoutLock.AcquireAsync(Guid.NewGuid());
+        await releaser.DisposeAsync();
 
         Assert.Equal(System.Data.ConnectionState.Open, context.Database.GetDbConnection().State);
         await context.Database.CloseConnectionAsync();
@@ -532,10 +534,10 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await using var context = new FoodDiaryDbContext(options);
         var checkoutLock = new PostgresBillingCheckoutLock(context);
 
-        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        Npgsql.NpgsqlException exception = await Assert.ThrowsAsync<Npgsql.NpgsqlException>(() =>
             checkoutLock.AcquireAsync(Guid.NewGuid()));
 
-        Assert.IsType<Npgsql.NpgsqlException>(exception.InnerException);
+        Assert.NotNull(exception.InnerException);
         Assert.NotEqual(System.Data.ConnectionState.Open, context.Database.GetDbConnection().State);
     }
 

@@ -100,6 +100,10 @@ internal sealed class OutboxDeadLetterReplayService(
         }
 
         string normalizedName = NormalizeOutboxName(outboxName);
+        if (string.Equals(normalizedName, "email", StringComparison.Ordinal)) {
+            throw new InvalidOperationException(
+                "Dead-lettered emails cannot be replayed because their sensitive payloads are removed. Regenerate the email through its originating workflow.");
+        }
         IDbContextTransaction? transaction = context.Database.IsRelational()
             ? await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false)
             : null;

@@ -186,6 +186,33 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         Assert.Equal(["users/deleted/fallback.webp"], imageObjectDeletionOutbox.ObjectKeys);
     }
 
+    [RequiresDockerFact]
+    public async Task CleanupUserAsync_WhenCandidateWasRestored_DoesNotDeleteUser() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("restored-before-cleanup@example.com", "hash");
+        user.MarkDeleted(DateTime.UtcNow.AddDays(-10));
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        user.Restore();
+        await context.SaveChangesAsync();
+
+        var service = new UserCleanupService(
+            context,
+            new RecordingImageObjectDeletionOutbox(),
+            NullLogger<UserCleanupService>.Instance);
+
+        bool removed = await service.CleanupUserAsync(
+            user.Id,
+            reassignTarget: null,
+            DateTime.UtcNow.AddDays(-1),
+            CancellationToken.None);
+
+        await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
+        Assert.False(removed);
+        Assert.True(await verificationContext.Users.AnyAsync(candidate => candidate.Id == user.Id));
+    }
+
     private static FoodDiaryDbContext CreateVerificationContext(FoodDiaryDbContext sourceContext) {
         string connectionString = sourceContext.Database.GetConnectionString()
             ?? throw new InvalidOperationException("Source context does not have a connection string.");

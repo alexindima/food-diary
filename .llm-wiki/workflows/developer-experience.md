@@ -76,8 +76,11 @@ included, while accessibility, localization, and mobile cases are added only for
 frontend scope. Generated output is disposable unless a reviewed scenario is
 promoted into the journey catalog.
 
-`workflow-metrics` summarizes local workspace adoption and outcomes. Metrics are
-signals for retrospective improvement, not proof that the Wiki caused quality.
+`workflow-metrics` summarizes local workspace adoption and outcomes. With no
+governed workspaces it reports `insufficient-data` instead of a misleading zero
+adoption rate. Per-operation median and p95 durations expose workflow cost, but
+all metrics remain local signals for retrospective improvement, not proof that
+the Wiki caused quality.
 Ceremony budgets keep tiny and bug work short and reserve governed workspaces and
 independent critique for evidence that requires them.
 

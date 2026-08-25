@@ -453,7 +453,9 @@ function Invoke-ObservedWikiStage {
         }
     }
     $fingerprint = & (Join-Path $toolsRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') -Stage $Name -Arguments $ToolArguments
-    $resultRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/verify-stage-results'
+    # Stage results belong to a verify run. A global fingerprint-keyed path made
+    # two legitimate concurrent runs race while publishing the same file.
+    $resultRoot = Join-Path $requestedVerifyRunRoot 'results'
     $null = New-Item -ItemType Directory -Path $resultRoot -Force
     $resultPath = Join-Path $resultRoot "$safeStageName-$fingerprint.json"
     $receiptPath = $null
@@ -2720,22 +2722,7 @@ switch ($Command) {
     }
     default {
         if (-not $Detailed) {
-            Write-Host 'FoodDiary LLM Wiki'
-            Write-Host ''
-            Write-Host 'Primary workflow:'
-            Write-Host "  ./.llm-wiki/wiki.ps1 develop -Intent '<task>' [-PlannedPath <path[]>]"
-            Write-Host "  ./.llm-wiki/wiki.ps1 start -Intent '<large task>' [-PlannedPath <path[]>]"
-            Write-Host '  ./.llm-wiki/wiki.ps1 next|status [-WorkspacePath <task>]'
-        Write-Host "  ./.llm-wiki/wiki.ps1 research -Intent '<task>' [-PlannedPath <path[]>]"
-        Write-Host "  ./.llm-wiki/wiki.ps1 research-next-question -Intent '<task>' [-PlannedPath <path[]>]"
-            Write-Host '  ./.llm-wiki/wiki.ps1 brief|trace|test-plan|qa'
-            Write-Host '  ./.llm-wiki/wiki.ps1 delivery-status|delivery-finalize -WorkspacePath <task>'
-            Write-Host '  ./.llm-wiki/wiki.ps1 completion|update [-ChangedPath <path[]>]'
-            Write-Host '  ./.llm-wiki/wiki.ps1 verify-fast|verify|verify-full'
-            Write-Host '  ./.llm-wiki/wiki.ps1 failures [-Query <text>]'
-            Write-Host ''
-            Write-Host 'Administrative and compatibility commands:'
-            Write-Host '  ./.llm-wiki/wiki.ps1 help -Detailed'
+            & (Join-Path $toolsRoot 'Show-LlmWikiHelp.ps1') -Tier core
             break
         }
 

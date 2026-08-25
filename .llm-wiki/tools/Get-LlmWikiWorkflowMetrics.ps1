@@ -59,14 +59,17 @@ $adaptiveDurationSum = if ($null -ne $adaptiveDuration -and $adaptiveDuration.PS
 } else { 0 }
 $passedAdaptiveCount = @($adaptiveItems | Where-Object outcome -eq 'passed').Count
 $failedAdaptiveCount = @($adaptiveItems | Where-Object outcome -in @('failed', 'timed-out', 'interrupted')).Count
+$workspaceAdoptionStatus = if ($items.Count -eq 0) { 'insufficient-data' } else { 'observed' }
 $result = [pscustomobject][ordered]@{
-    schemaVersion = 3
+    schemaVersion = 4
     workspaceCount = $items.Count
     readyOrSealedCount = @($items | Where-Object state -in @('ready', 'sealed', 'complete')).Count
     failedCheckCount = $failedCheckSum
     ceremony = [pscustomobject][ordered]@{
-        manifestAdoptionPercent = $(if ($items.Count -eq 0) { 0 } else { [Math]::Round(100 * @($items | Where-Object hasManifest).Count / $items.Count, 1) })
-        acceptanceAdoptionPercent = $(if ($items.Count -eq 0) { 0 } else { [Math]::Round(100 * @($items | Where-Object hasAcceptance).Count / $items.Count, 1) })
+        adoptionStatus = $workspaceAdoptionStatus
+        sampleCount = $items.Count
+        manifestAdoptionPercent = $(if ($items.Count -eq 0) { $null } else { [Math]::Round(100 * @($items | Where-Object hasManifest).Count / $items.Count, 1) })
+        acceptanceAdoptionPercent = $(if ($items.Count -eq 0) { $null } else { [Math]::Round(100 * @($items | Where-Object hasAcceptance).Count / $items.Count, 1) })
     }
     adaptive = [pscustomobject][ordered]@{
         runCount = $adaptiveItems.Count
@@ -78,6 +81,9 @@ $result = [pscustomobject][ordered]@{
         byOperation = @($adaptiveItems | Group-Object operation | ForEach-Object {
             $passedCount = @($_.Group | Where-Object outcome -eq 'passed').Count
             $failedCount = @($_.Group | Where-Object outcome -in @('failed', 'timed-out', 'interrupted')).Count
+            $durations = @($_.Group | ForEach-Object { [double]$_.durationSeconds } | Sort-Object)
+            $medianIndex = if ($durations.Count -eq 0) { 0 } else { [Math]::Floor(($durations.Count - 1) * 0.5) }
+            $p95Index = if ($durations.Count -eq 0) { 0 } else { [Math]::Ceiling(($durations.Count - 1) * 0.95) }
             [pscustomobject]@{
                 operation = $_.Name
                 runCount = $_.Count
@@ -86,6 +92,8 @@ $result = [pscustomobject][ordered]@{
                 timedOutCount = @($_.Group | Where-Object outcome -eq 'timed-out').Count
                 interruptedCount = @($_.Group | Where-Object outcome -eq 'interrupted').Count
                 successRatePercent = [Math]::Round(100.0 * $passedCount / $_.Count, 2)
+                medianDurationSeconds = $(if ($durations.Count -eq 0) { $null } else { [Math]::Round($durations[$medianIndex], 2) })
+                p95DurationSeconds = $(if ($durations.Count -eq 0) { $null } else { [Math]::Round($durations[$p95Index], 2) })
             }
         })
         recent = @($adaptiveItems | Select-Object -First 20)
@@ -95,6 +103,10 @@ $result = [pscustomobject][ordered]@{
 }
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 8; exit 0 }
 Write-Host "Wiki workflow metrics: $($result.workspaceCount) workspace(s), $($result.readyOrSealedCount) ready/sealed, $($result.failedCheckCount) failed check(s)"
-Write-Host "Ceremony adoption: manifest=$($result.ceremony.manifestAdoptionPercent)%, acceptance=$($result.ceremony.acceptanceAdoptionPercent)%"
+if ($result.ceremony.adoptionStatus -eq 'insufficient-data') {
+    Write-Host 'Ceremony adoption: insufficient-data (no governed workspaces were observed).'
+} else {
+    Write-Host "Ceremony adoption: manifest=$($result.ceremony.manifestAdoptionPercent)%, acceptance=$($result.ceremony.acceptanceAdoptionPercent)%"
+}
 Write-Host "Adaptive runs: $($result.adaptive.runCount) total, $($result.adaptive.passedCount) passed, $($result.adaptive.failedCount) failed"
 Write-Host $result.note

@@ -85,6 +85,14 @@ $effectivePaths = @(
 $inferredPaths = @()
 $intentCompiledResult = $null
 $intentIndexDiagnostics = $null
+$normalizedIntent = ([string]$Intent).ToLowerInvariant()
+$wikiInternalIntent = $normalizedIntent -match '\b(llm[- ]?wiki|wiki\.ps1|wiki tooling|development mcp)\b'
+if ($effectivePaths.Count -eq 0 -and $wikiInternalIntent) {
+    # Tooling objectives must not be grounded through coincidental product-symbol
+    # matches (for example "registry" or "metrics" matching business features).
+    $inferredPaths = @('.llm-wiki/wiki.ps1', '.llm-wiki/README.md')
+    $effectivePaths = $inferredPaths
+}
 if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent)) {
     $ignoredIntentTerms = @(
         'add', 'change', 'changing', 'create', 'feature', 'implement', 'improve', 'make', 'routing', 'support', 'update', 'visual', 'without'
@@ -98,7 +106,6 @@ if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent))
             Where-Object { $_ -notin $ignoredIntentTerms } |
             Sort-Object -Unique
     )
-    $normalizedIntent = $Intent.ToLowerInvariant()
     $frontendIntent = $normalizedIntent -match '\b(frontend|component|template|html|css|scss|svg|style|styling|visual|layout|responsive|viewport|icon|colour|color|animation|button|disabled|corner|radius|border)\b'
     $backendIntent = $normalizedIntent -match '\b(backend|handler|command|query|controller|endpoint|database|migration|repository|service|domain|api)\b'
     $candidates = [System.Collections.Generic.List[object]]::new()

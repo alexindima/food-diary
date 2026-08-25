@@ -250,6 +250,14 @@ Assert-Wiki ($unscopedBrief.analysis.mode -eq 'unscoped') 'Empty brief did not e
 Assert-Wiki (@($unscopedBrief.nextSteps).Count -eq 1) 'Empty brief did not return an actionable scoping step.'
 Assert-Wiki ($unscopedBrief.nextSteps[0].recommendedCommand -match 'Intent.*PlannedPath') 'Empty brief did not show the complete pre-diff command shape.'
 
+$wikiInternalBrief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
+    -Intent 'Simplify the LLM Wiki command registry, metrics, and CI workflow.' `
+    -Compact `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($wikiInternalBrief.change.paths).Count -gt 0) 'Wiki-internal intent did not ground the tooling scope.'
+Assert-Wiki (@($wikiInternalBrief.change.paths | Where-Object { $_ -notmatch '^\.llm-wiki/' }).Count -eq 0) 'Wiki-internal intent leaked into product paths.'
+Assert-Wiki (@($wikiInternalBrief.change.directModules).Count -eq 0) 'Wiki-internal intent inferred product modules.'
+
 $interactiveUiBrief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
     -ProposedPath @(
         'FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts'

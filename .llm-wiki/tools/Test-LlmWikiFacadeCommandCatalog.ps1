@@ -95,17 +95,28 @@ Invalid index mappings: $($invalidIndexMappings -join ', ')
 
 $compactHelp = @(& $wikiPath help 6>&1 | ForEach-Object { [string]$_ })
 $detailedHelp = @(& $wikiPath help -Detailed 6>&1 | ForEach-Object { [string]$_ })
+$registryPath = Join-Path (Split-Path -Parent $PSScriptRoot) 'policies/command-registry.json'
+$registry = Get-Content -LiteralPath $registryPath -Raw | ConvertFrom-Json
+$registeredCommands = @($registry.tiers | ForEach-Object {
+    if ($_.PSObject.Properties['commands']) { @($_.commands) }
+} | Where-Object { $_ } | Sort-Object -Unique)
+$unregisteredStableCommands = @($registeredCommands | Where-Object { $_ -notin $declaredCommands })
+$tierIds = @($registry.tiers.id)
 $compactCommandLines = @($compactHelp | Where-Object { $_ -match '^\s+\.\/\.llm-wiki\/wiki\.ps1 ' })
 $detailedCommandLines = @($detailedHelp | Where-Object { $_ -match '^\s+\.\/\.llm-wiki\/wiki\.ps1 ' })
 if ($compactCommandLines.Count -lt 8 -or $compactCommandLines.Count -gt 15 -or
     $compactHelp -notcontains 'Administrative and compatibility commands:' -or
     $compactHelp -notcontains '  ./.llm-wiki/wiki.ps1 help -Detailed' -or
     $detailedHelp -notcontains 'Detailed command catalog:' -or
+    $compactHelp -notcontains 'Command stability tiers: core, governed, experimental.' -or
+    @($tierIds | Sort-Object -Unique).Count -ne 3 -or
+    $unregisteredStableCommands.Count -gt 0 -or
     $detailedCommandLines.Count -le $compactCommandLines.Count) {
     throw @"
 Wiki facade help tiers are inconsistent.
 Compact command lines: $($compactCommandLines.Count)
 Detailed command lines: $($detailedCommandLines.Count)
+Unregistered stable commands: $($unregisteredStableCommands -join ', ')
 "@
 }
 

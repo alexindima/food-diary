@@ -142,22 +142,18 @@
       "pageSha256": "6f8228462ed3f2c01895eccb72a9539e8fe90e102e32bb3e8b2b3927a5937f40",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
         },
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "dda6938a204aeb0dab30f5bf9b8f1d3de9c4db89cde71bc991c3f9ad5241d62b"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-          "sha256": "bd68b22613ffa0b348e8167932552f8275f4e28bd3c32acb8327f88b90c3c313"
+          "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
+          "sha256": "84576fcf2bb31bc8f4faaf0824348c5d5499d83b9f77607fc9a87e20c4fa319a"
         }
       ],
-      "reason": "The 917-second Full lifecycle audit and 16-group affected smoke passed after validating StrictMode shapes, workspace migration, decomposition, scheduler lineage, completion seals, and read-only cache cleanup; workflow guidance remains accurate.",
+      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:40.6195330Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T08:53:03.0046668Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -177,17 +173,17 @@
     {
       "pageId": "workflow-architecture-health-review",
       "pagePath": ".llm-wiki/workflows/architecture-health-review.md",
-      "pageSha256": "f74e1b06fd3864499e0a28e359f979e552cb8fa51fa0da582148e417a7dfd065",
+      "pageSha256": "f83da814d1fce3b0dcacba64e84e6a642d7475c3f8e22256df3958647aea0832",
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "633d023ea9627637a9846e2398c464f59580f6b7b92b794761b709fffa59364b"
+          "sha256": "08c2314c9c90c0b6284054e0894e8615a241ae33d7c2a7e2cce6de8e682ee553"
         }
       ],
-      "reason": "Regenerated architecture-health output preserves its schema and accurately records the current worktree debt-marker delta; generator check mode passed, so the review workflow needs no prose change.",
+      "reason": "Reviewed full dependency-aware regeneration after the quality self-coverage change; architecture-health and generated projections reflect the updated Wiki tooling graph.",
       "baseRef": "HEAD",
-      "gitHead": "851b93397552a5e1911ff5616abb5e4ff43c84b4",
-      "reviewedAtUtc": "2026-08-24T01:43:08.8090011Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T08:55:38.7748518Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -196,17 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "e5002547fb95cb7f535d3db790c0ffc6aacce695381118969318b8a47a137ee1"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d1f40e38e46a959bfaedbd771a64c23c11c19f455266113c632191b497dc9786"
+          "sha256": "1deb12ab356b22d57196a82a56af333cd37afb3185c40f78424f070f40c0c5ff"
         }
       ],
-      "reason": "Regenerated backend contract indexes and the complete Full tool audit passed; contract lookup and compatibility guidance remain aligned with the current SQL-backed implementation.",
+      "reason": "Reviewed the complete Wiki, billing, persistence, migration, initializer, and test change-set; regenerated all compiled indexes and resolved the resulting source-impact obligations before commit.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:41.2888039Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T10:24:51.1414715Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -215,43 +207,47 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b2466a38435f0353d581ca0b7ad5abd9358ab07492345fdacf3345cbf6d47d46"
+          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
         }
       ],
-      "reason": "Reviewed manifest, change-packet, impact-simulation, and integration-scan composition claims: task-brief semantics and output remain unchanged under 13-case parity while seven impact indexes now use exact SQLite selection; no page contract requires revision.",
+      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
       "baseRef": "HEAD",
-      "gitHead": "c9e2f667ef95a5ecbe4eab25eb0d77a36dbaa6d8",
-      "reviewedAtUtc": "2026-08-24T20:30:06.1564974Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T08:53:03.1308897Z"
     },
     {
       "pageId": "workflow-change-packet",
       "pagePath": ".llm-wiki/workflows/change-packet.md",
-      "pageSha256": "49eab42e51f76e49c1ba23bb8ab93f7358270e92bed0b0e4547ba7b713fa4642",
+      "pageSha256": "ade9cba84ee4d80106e27801da37606734ef5646dcd2f5615df367eae91ad881",
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b2466a38435f0353d581ca0b7ad5abd9358ab07492345fdacf3345cbf6d47d46"
+          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
         }
       ],
-      "reason": "Reviewed manifest, change-packet, impact-simulation, and integration-scan composition claims: task-brief semantics and output remain unchanged under 13-case parity while seven impact indexes now use exact SQLite selection; no page contract requires revision.",
+      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
       "baseRef": "HEAD",
-      "gitHead": "c9e2f667ef95a5ecbe4eab25eb0d77a36dbaa6d8",
-      "reviewedAtUtc": "2026-08-24T20:30:06.7291854Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T08:53:03.2785101Z"
     },
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "0cbd27947c34238449fe901bd71bf167388d652267b868fc6944dcde9994c5a3",
+      "pageSha256": "3961a534e2b05beddc4b15e96bff12a6a073c6194d289e2780ad5839869a67cc",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
+        },
+        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3e0c909f3dd700ce1926a18b203c2b01cdf2bc3e16516e27c21d9f378af0f333"
+          "sha256": "aba1777019070e75bb0c9de6e548ca7534437d82f8e9449af35cf3a1829fe273"
         }
       ],
-      "reason": "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve 'zero output objects' as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
       "baseRef": "HEAD",
-      "gitHead": "c192eb68195dbbf020efcff1e647b8926267506d",
-      "reviewedAtUtc": "2026-08-23T13:04:30.6352235Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T08:53:03.4460177Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -620,26 +616,14 @@
       "pageSha256": "995df7b3f6ad527c4094a25bf33831f1c30fae3ebff5aa469fa92f71f02bab43",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d1f40e38e46a959bfaedbd771a64c23c11c19f455266113c632191b497dc9786"
-        },
-        {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "5ee444bba7b6fe5c743b66f2d8fb6af98183f081d5570a0ac4e625ec1a1b04b6"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:47.7092217Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T08:53:03.6220474Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -648,13 +632,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b2466a38435f0353d581ca0b7ad5abd9358ab07492345fdacf3345cbf6d47d46"
+          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
         }
       ],
-      "reason": "Reviewed adaptive and implementation workflow claims against the new fail-closed task-brief impact route: risk and planning output remain functionally identical in 13 compact/full parity cases; only additive diagnostics and bounded loading changed.",
+      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
       "baseRef": "HEAD",
-      "gitHead": "c9e2f667ef95a5ecbe4eab25eb0d77a36dbaa6d8",
-      "reviewedAtUtc": "2026-08-24T20:30:08.1970458Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T08:53:03.8029332Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -682,21 +666,37 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "21f926fd3a61b7f4cf45c9a433e49b1d4bec77f36f79f57fc052239394384d9a",
+      "pageSha256": "cb28b90fa4da52089458cf20ef944f2db7e8a7de37df88ac14ab2ef80c743de2",
       "sources": [
         {
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "ad3a1afdd5552f722dc4fb6ad77b3f7224dfd3ae058177359bb9958a860b5fe0"
+        },
+        {
           "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "9f6ae94ae149b4c4a1efe59221c337d298fb80718c852d484138cf05a8b46754"
+          "sha256": "3139a218795d7f3c467b529a007db6d5a73eab0e9c8f3cbbe4c1c8dcaec20809"
         },
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "bfe5e553b4c4b0c0897c61d2005956bf97a9bd6a71b7a85a07dcf746d9695096"
+          "sha256": "e74003cd4fab679986a687e80dd2e1c42f7c725de29373d18fa1af2bccd65299"
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
+          "sha256": "55dfce8e513a94f510282d528b7db82214bb0a456dccedc588093e751bb3477b"
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1",
+          "sha256": "13a1ba2dabc5424dc09012ec5e87c6e315a3acc800a175168ee4e5d7b764d42c"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "aba1777019070e75bb0c9de6e548ca7534437d82f8e9449af35cf3a1829fe273"
         }
       ],
-      "reason": "The trace-output smoke now includes the frontend trace parity test in both standalone and code-graph routes; affected-smoke planning regression confirms bounded selection and no full-tools fallback.",
+      "reason": "Reviewed the measured Full-audit timeout budget after a successful 1197.6-second standalone run; the explicit audit now has safe execution headroom while focused verification remains unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "b5a287795942a82e097a7714703b76aab5f6f8ef",
-      "reviewedAtUtc": "2026-08-24T17:32:28.0711711Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T09:41:58.6681631Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -719,18 +719,14 @@
       "pageSha256": "a952661d5073668178342e7b7131b00a3ea21d502dae2ea219a05a41d7094cdb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "b7c20a9c2c98f8c0618453d592b6257d6d0e7f543f8e20ccbb9a25a3b41b646d"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b2466a38435f0353d581ca0b7ad5abd9358ab07492345fdacf3345cbf6d47d46"
+          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
         }
       ],
-      "reason": "Task-brief and research packet public integration evidence remains equivalent; task-brief SQL parity, research-confidence, and query-cache regressions passed.",
+      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
       "baseRef": "HEAD",
-      "gitHead": "c9e2f667ef95a5ecbe4eab25eb0d77a36dbaa6d8",
-      "reviewedAtUtc": "2026-08-24T21:03:43.3412193Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T08:53:04.1290670Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -906,17 +902,17 @@
     {
       "pageId": "workflow-quality-risk",
       "pagePath": ".llm-wiki/workflows/quality-risk.md",
-      "pageSha256": "fd5d48c14eed37dc3c8eabfec1c859fb688e2b25af49c007d69f4a38e32416ca",
+      "pageSha256": "db2595254186c4b61794ead83e80b59fc93447f2f6cf3c7d21afb10868afb165",
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6ce257b33bb7a0321593202fb325f470a9544edae28d91e48df96c9ae4cd19ac"
+          "sha256": "1fe588f0b4ff062dc59716c0493149db9a7f17b346579c7cf8688e895c3ae0a2"
         }
       ],
-      "reason": "The merged API cancellation classification adds focused TelemetryActionFilter coverage and only updates generated structural counts; the combined Wiki adaptive evaluations and context bundle passed on the merge HEAD.",
+      "reason": "Reviewed the complete Wiki, billing, persistence, migration, initializer, and test change-set; regenerated all compiled indexes and resolved the resulting source-impact obligations before commit.",
       "baseRef": "HEAD",
-      "gitHead": "fdbb2d31317e9583625ae951aba8c9843d07bb2d",
-      "reviewedAtUtc": "2026-08-24T09:43:48.7457565Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T10:24:51.4870228Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -966,14 +962,14 @@
       "pageSha256": "5e6a677aea63de29735a1273138f3aaab35e410cb1f930a49d44d9270d162480",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "cf3d085fab54363fa911f6e12bc2c0b232ae9c4b8277952014fff6c2688a3cd3"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "ad3a1afdd5552f722dc4fb6ad77b3f7224dfd3ae058177359bb9958a860b5fe0"
         }
       ],
-      "reason": "Review-report inputs and rendered contract remain unchanged; change-packet metadata, implementation-plan, and governed-delivery regressions passed.",
+      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
       "baseRef": "HEAD",
-      "gitHead": "c9e2f667ef95a5ecbe4eab25eb0d77a36dbaa6d8",
-      "reviewedAtUtc": "2026-08-24T21:03:45.1343350Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T08:53:04.9443269Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1035,17 +1031,17 @@
     {
       "pageId": "workflow-task-brief",
       "pagePath": ".llm-wiki/workflows/task-brief.md",
-      "pageSha256": "5b0035be778c175914d29999e36b30dae6b04e0683647ace85fe88ffdb4509fb",
+      "pageSha256": "d8c95ab1f9596a905d26c19d1f95d2356bfdb5e96ab739c217eb446219a8ea37",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "9eb74c08f415f8e0e829be2912de2c97c58f89b93157c1682fda56308ede6cec"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
         }
       ],
-      "reason": "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve 'zero output objects' as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
+      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
       "baseRef": "HEAD",
-      "gitHead": "c192eb68195dbbf020efcff1e647b8926267506d",
-      "reviewedAtUtc": "2026-08-23T13:04:48.6048527Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T08:53:05.1442304Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -1095,30 +1091,14 @@
       "pageSha256": "d0a2b7fd2b51f7c02d228efb6e23130eff42e68885eb5349dc126e22e6d4f98d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiDispatchMetricsSnapshot.ps1",
-          "sha256": "830df51ea22e6edb9cd3dffcce6ec2b45df2a7b569f81863c81b8b973b62e3e7"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiDispatchWatchdog.ps1",
-          "sha256": "972e70c37a811705593d35d5aa268cf6552ad903739f0049df917dbfe294b1bc"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
-          "sha256": "83408f8abebedcd0eb2635f1f93ed2a7194eef2ac9b0b34deda3804789697fe2"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskLease.ps1",
-          "sha256": "9080cce1fe27ca05102f881ed2d28fa05b00d792c606ec882fd15b2943343afd"
-        },
-        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1bdfaa730084b4793e0f4f596e67278e52a37d08145064f2c2d7be69f6565e9b"
+          "sha256": "aba1777019070e75bb0c9de6e548ca7534437d82f8e9449af35cf3a1829fe273"
         }
       ],
-      "reason": "The 917-second Full lifecycle audit and 16-group affected smoke passed after validating StrictMode shapes, workspace migration, decomposition, scheduler lineage, completion seals, and read-only cache cleanup; workflow guidance remains accurate.",
+      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:54.2024980Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T08:53:05.3035278Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1360,18 +1340,14 @@
       "pageSha256": "930668a8337c26264220ec069d062d4d90d8c52910cb7e00b79576180fe92478",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "172817044754d9e96437eac8e733dedb595864b04a05230929b9561047d35384"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d1f40e38e46a959bfaedbd771a64c23c11c19f455266113c632191b497dc9786"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:51.6144160Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T08:53:04.5861084Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1380,13 +1356,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1bdfaa730084b4793e0f4f596e67278e52a37d08145064f2c2d7be69f6565e9b"
+          "sha256": "aba1777019070e75bb0c9de6e548ca7534437d82f8e9449af35cf3a1829fe273"
         }
       ],
-      "reason": "The 917-second Full lifecycle audit and 16-group affected smoke passed after validating StrictMode shapes, workspace migration, decomposition, scheduler lineage, completion seals, and read-only cache cleanup; workflow guidance remains accurate.",
+      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:52.4508656Z"
+      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
+      "reviewedAtUtc": "2026-08-25T08:53:04.7625649Z"
     }
   ]
 }

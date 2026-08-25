@@ -85,6 +85,10 @@ public sealed class EmailOutboxMessage : IOutboxMessage {
     public void MarkDeadLettered(string error, DateTime deadLetteredOnUtc) {
         AttemptCount++;
         DeadLetteredOnUtc = NormalizeUtc(deadLetteredOnUtc);
+        ToAddressesJson = "[]";
+        Subject = string.Empty;
+        HtmlBody = string.Empty;
+        TextBody = null;
         LockedUntilUtc = null;
         LockedBy = null;
         LastError = TruncateOptional(error, ErrorMaxLength);

@@ -27,8 +27,9 @@ public sealed class UserCleanupService(
 
         foreach (UserId userId in userIds) {
             try {
-                await CleanupUserAsync(userId, reassignTarget, cancellationToken).ConfigureAwait(false);
-                removed++;
+                if (await CleanupUserAsync(userId, reassignTarget, thresholdUtc, cancellationToken).ConfigureAwait(false)) {
+                    removed++;
+                }
             } catch (Exception ex) {
                 logger.LogError(ex, "Failed to clean up deleted user {UserId}. Continuing with the next deleted user.", userId.Value);
             }
@@ -74,11 +75,33 @@ public sealed class UserCleanupService(
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    private async Task CleanupUserAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
+    internal async Task<bool> CleanupUserAsync(
+        UserId userId,
+        UserId? reassignTarget,
+        DateTime thresholdUtc,
+        CancellationToken cancellationToken) {
         IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
-        await strategy.ExecuteAsync(async () => {
+        return await strategy.ExecuteAsync(async () => {
             IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             await using (transaction.ConfigureAwait(false)) {
+                FormattableString eligibilitySql = $"""
+                    SELECT 1 AS "Value"
+                    FROM "Users"
+                    WHERE "Id" = {userId.Value}
+                      AND "DeletedAt" IS NOT NULL
+                      AND "DeletedAt" <= {thresholdUtc}
+                      AND "IsActive" = FALSE
+                    FOR UPDATE
+                    """;
+                int? eligible = await dbContext.Database
+                    .SqlQuery<int>(eligibilitySql)
+                    .SingleOrDefaultAsync(cancellationToken)
+                    .ConfigureAwait(false);
+                if (eligible != 1) {
+                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                    return false;
+                }
+
                 if (reassignTarget is not null) {
                     await ReassignOwnedContentAsync(userId, reassignTarget.Value, cancellationToken).ConfigureAwait(false);
                 } else {
@@ -90,6 +113,7 @@ public sealed class UserCleanupService(
                 await DeleteUserRowsAsync(userId, cancellationToken).ConfigureAwait(false);
                 await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                return true;
             }
         }).ConfigureAwait(false);
     }

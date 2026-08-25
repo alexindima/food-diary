@@ -369,7 +369,7 @@ Assert-Adaptive ($experience.ceremonyBudget.label -eq 'visual-focused') 'Compact
 $metrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkflowMetrics.ps1') `
     -TasksPath "$smokeSandboxRelative/no-such-task-root" `
     -Format Json | ConvertFrom-Json
-Assert-Adaptive ($metrics.schemaVersion -eq 2 -and $metrics.workspaceCount -eq 0 -and $null -ne $metrics.adaptive) 'Workflow metrics did not handle an empty task history or expose adaptive runs.'
+Assert-Adaptive ($metrics.schemaVersion -eq 4 -and $metrics.workspaceCount -eq 0 -and $metrics.ceremony.adoptionStatus -eq 'insufficient-data' -and $null -ne $metrics.adaptive) 'Workflow metrics did not handle an empty task history or expose adaptive runs.'
 
 $workspaceName = "adaptive-smoke-$([Guid]::NewGuid().ToString('N'))"
 $workspace = ".artifacts/llm-wiki/tasks/$workspaceName"

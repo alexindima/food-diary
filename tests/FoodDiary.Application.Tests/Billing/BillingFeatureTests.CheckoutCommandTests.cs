@@ -54,7 +54,8 @@ public partial class BillingFeatureTests {
             subscriptionRepository,
             paymentRepository,
             accessor,
-            new FixedDateTimeProvider(Now));
+            new FixedDateTimeProvider(Now),
+            new NoopBillingCheckoutLock());
 
         Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(
@@ -107,7 +108,8 @@ public partial class BillingFeatureTests {
             subscriptionRepository,
             paymentRepository,
             new FakeBillingProviderGatewayAccessor(gateway),
-            new FixedDateTimeProvider(Now));
+            new FixedDateTimeProvider(Now),
+            new NoopBillingCheckoutLock());
 
         Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(user.Id.Value, " Yearly ", Provider: null),
@@ -136,7 +138,8 @@ public partial class BillingFeatureTests {
             new InMemoryBillingSubscriptionRepository(),
             new RecordingBillingPaymentRepository(),
             new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)),
-            new FixedDateTimeProvider(Now));
+            new FixedDateTimeProvider(Now),
+            new NoopBillingCheckoutLock());
         Guid? userId = userIdValue is null ? null : Guid.Parse(userIdValue);
 
         Result<BillingCheckoutSessionModel> result = await handler.Handle(
@@ -154,7 +157,8 @@ public partial class BillingFeatureTests {
             new InMemoryBillingSubscriptionRepository(),
             new RecordingBillingPaymentRepository(),
             new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)),
-            new FixedDateTimeProvider(Now));
+            new FixedDateTimeProvider(Now),
+            new NoopBillingCheckoutLock());
 
         Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(Guid.NewGuid(), "monthly", BillingProviderNames.Paddle),
@@ -179,7 +183,8 @@ public partial class BillingFeatureTests {
             new InMemoryBillingSubscriptionRepository(),
             new RecordingBillingPaymentRepository(),
             new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)),
-            new FixedDateTimeProvider(Now));
+            new FixedDateTimeProvider(Now),
+            new NoopBillingCheckoutLock());
 
         Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(userId.Value, "monthly", BillingProviderNames.Paddle),
@@ -212,7 +217,8 @@ public partial class BillingFeatureTests {
             new InMemoryBillingSubscriptionRepository(subscription),
             paymentRepository,
             new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)),
-            new FixedDateTimeProvider(Now));
+            new FixedDateTimeProvider(Now),
+            new NoopBillingCheckoutLock());
 
         Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(user.Id.Value, "monthly", BillingProviderNames.Paddle),
@@ -231,7 +237,8 @@ public partial class BillingFeatureTests {
             new InMemoryBillingSubscriptionRepository(),
             new RecordingBillingPaymentRepository(),
             new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)),
-            new FixedDateTimeProvider(Now));
+            new FixedDateTimeProvider(Now),
+            new NoopBillingCheckoutLock());
 
         Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(user.Id.Value, "monthly", "missing"),
@@ -253,7 +260,8 @@ public partial class BillingFeatureTests {
                 new FakeBillingProviderGateway(
                     BillingProviderNames.Paddle,
                     checkoutError: Errors.Billing.ProviderOperationFailed(BillingProviderNames.Paddle, "declined"))),
-            new FixedDateTimeProvider(Now));
+            new FixedDateTimeProvider(Now),
+            new NoopBillingCheckoutLock());
 
         Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(user.Id.Value, "monthly", BillingProviderNames.Paddle),
@@ -287,7 +295,8 @@ public partial class BillingFeatureTests {
             new InMemoryBillingSubscriptionRepository(subscription),
             new RecordingBillingPaymentRepository(),
             new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)),
-            TimeProvider.System);
+            TimeProvider.System,
+            new NoopBillingCheckoutLock());
 
         Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(user.Id.Value, "monthly", BillingProviderNames.Paddle),
@@ -316,6 +325,7 @@ public partial class BillingFeatureTests {
             new RecordingBillingPaymentRepository(),
             new FakeBillingProviderGatewayAccessor(gateway),
             new FixedDateTimeProvider(Now),
+            new NoopBillingCheckoutLock(),
             unitOfWork: unitOfWork);
 
         Result<BillingCheckoutSessionModel> result = await handler.Handle(
