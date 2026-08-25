@@ -42,9 +42,9 @@ public sealed class ProductRepository(FoodDiaryDbContext context) : IProductRepo
 
         IQueryable<Product> lockedProducts = includePublic
             ? context.Products.FromSqlInterpolated(
-                $"""SELECT * FROM "Products" WHERE "Id" = {id.Value} AND ("UserId" = {userId.Value} OR "Visibility" = {(int)Visibility.Public}) FOR UPDATE""")
+                $"""SELECT *, xmin FROM "Products" WHERE "Id" = {id.Value} AND ("UserId" = {userId.Value} OR "Visibility" = {(int)Visibility.Public}) FOR UPDATE""")
             : context.Products.FromSqlInterpolated(
-                $"""SELECT * FROM "Products" WHERE "Id" = {id.Value} AND "UserId" = {userId.Value} FOR UPDATE""");
+                $"""SELECT *, xmin FROM "Products" WHERE "Id" = {id.Value} AND "UserId" = {userId.Value} FOR UPDATE""");
         return await lockedProducts.SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 

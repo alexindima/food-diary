@@ -195,7 +195,7 @@ public sealed class UserCleanupService(
             .Select(asset => new { asset.ObjectKey, asset.IsConfirmed })
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        foreach (var image in deletedImages) {
+        foreach (var image in deletedImages.DistinctBy(static image => new { image.ObjectKey, image.IsConfirmed })) {
             await imageObjectDeletionOutbox.EnqueueAsync(image.ObjectKey, image.IsConfirmed, cancellationToken).ConfigureAwait(false);
             if (!image.IsConfirmed) {
                 await imageObjectDeletionOutbox.EnqueueAsync(image.ObjectKey, isConfirmed: true, cancellationToken).ConfigureAwait(false);

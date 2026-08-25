@@ -21722,11 +21722,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 2,
+      "nonBlankLines": 37,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.58
+      "structuralRiskScore": 8.24
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
@@ -21769,14 +21769,6 @@
       "structuralRiskScore": 1.38
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/RecipeCompositionTransactionLock.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/RecipeLikes/RecipeLikeRepository.cs",
       "nonBlankLines": 34,
       "decisionPoints": 2,
@@ -21786,11 +21778,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/EfRecipeMutationTransactionRunner.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 2,
+      "nonBlankLines": 37,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.58
+      "structuralRiskScore": 8.24
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
@@ -21847,6 +21839,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 8.76
+    },
+    {
+      "path": "FoodDiary.Infrastructure/Persistence/Shared/RecipeCompositionTransactionLock.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs",
@@ -22247,6 +22247,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 4.86
+    },
+    {
+      "path": "FoodDiary.Infrastructure/Services/WearableTokenProtector.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
     },
     {
       "path": "FoodDiary.Initializer/InitialAdminBootstrapOptions.cs",
@@ -27490,11 +27498,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 131,
+      "nonBlankLines": 132,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.62
+      "structuralRiskScore": 5.64
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -27703,14 +27711,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 24.22
-    },
-    {
-      "path": "FoodDiary.Web.Api/Services/WearableTokenProtector.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
     },
     {
       "path": "FoodDiary.Web.Api/Swagger/PresentationContractOperationFilter.cs",

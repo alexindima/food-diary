@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence;
+namespace FoodDiary.Infrastructure.Persistence.Shared;
 
 internal static class RecipeCompositionTransactionLock {
     private const long LockKey = 0x524543495045;

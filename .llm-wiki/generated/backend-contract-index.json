@@ -95085,7 +95085,7 @@
         "FoodDiary.Application.Abstractions/Wearables/Common/IWearableTokenProtector.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
+      "consumerPath": "FoodDiary.Infrastructure/Services/WearableTokenProtector.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -95098,7 +95098,7 @@
         "FoodDiary.Application.Abstractions/Wearables/Common/IWearableTokenProtector.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Web.Api/Services/WearableTokenProtector.cs",
+      "consumerPath": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
       "isTest": false,
       "referenceCount": 1
     },

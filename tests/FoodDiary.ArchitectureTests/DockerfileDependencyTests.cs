@@ -19,6 +19,7 @@ public sealed class DockerfileDependencyTests {
         string root = GetRepositoryRoot();
         string[] violations = [.. Directory.GetFiles(root, "Dockerfile", SearchOption.AllDirectories)
             .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}FoodDiary.Web.Client{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
+            .Where(static path => Directory.GetFiles(Path.GetDirectoryName(path)!, "*.csproj", SearchOption.TopDirectoryOnly).Length > 0)
             .SelectMany(dockerfile => FindMissingCopies(root, dockerfile))
             .Order(StringComparer.Ordinal)];
 

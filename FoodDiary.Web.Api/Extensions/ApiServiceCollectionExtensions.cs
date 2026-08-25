@@ -38,6 +38,7 @@ using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Infrastructure;
+using FoodDiary.Infrastructure.Services;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Resources.Notifications;

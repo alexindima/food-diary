@@ -1,4 +1,4 @@
-using FoodDiary.Web.Api.Services;
+using FoodDiary.Infrastructure.Services;
 using Microsoft.AspNetCore.DataProtection;
 using FoodDiary.Domain.ValueObjects;
 

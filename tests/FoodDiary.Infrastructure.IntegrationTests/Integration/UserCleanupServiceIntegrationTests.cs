@@ -310,10 +310,14 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingImageObjectDeletionOutbox : IImageObjectDeletionOutbox {
-        public List<string> ObjectKeys { get; } = [];
+        private readonly List<(string ObjectKey, bool IsConfirmed)> _requests = [];
+
+        public IReadOnlyList<string> ObjectKeys => [.. _requests
+            .Select(static request => request.ObjectKey)
+            .Distinct(StringComparer.Ordinal)];
 
         public Task EnqueueAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken = default) {
-            ObjectKeys.Add(objectKey);
+            _requests.Add((objectKey, isConfirmed));
             return Task.CompletedTask;
         }
     }

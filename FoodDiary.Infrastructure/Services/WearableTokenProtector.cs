@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Wearables.Common;
-using Microsoft.AspNetCore.DataProtection;
 using FoodDiary.Domain.ValueObjects;
+using Microsoft.AspNetCore.DataProtection;
 
-namespace FoodDiary.Web.Api.Services;
+namespace FoodDiary.Infrastructure.Services;
 
 public sealed class WearableTokenProtector(IDataProtectionProvider dataProtectionProvider) : IWearableTokenProtector {
-    private const string Purpose = "FoodDiary.Wearables.OAuthTokens.v1";
+    private const string Purpose = "FoodDiary.WearableTokens.v1";
     private const string ProtectedPrefix = "fdp1:";
     private readonly IDataProtector _protector = dataProtectionProvider.CreateProtector(Purpose);
 

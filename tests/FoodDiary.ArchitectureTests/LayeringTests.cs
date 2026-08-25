@@ -234,6 +234,9 @@ public class LayeringTests {
         string[] allowedPackages = [
             "BCrypt.Net-Next",
             "Microsoft.AspNetCore.DataProtection",
+            "Microsoft.CodeAnalysis.CSharp.Workspaces",
+            "Microsoft.CodeAnalysis.Common",
+            "Microsoft.CodeAnalysis.Workspaces.MSBuild",
             "Microsoft.EntityFrameworkCore",
             "Microsoft.EntityFrameworkCore.Design",
             "Microsoft.Extensions.Configuration",

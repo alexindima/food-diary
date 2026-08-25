@@ -17069,7 +17069,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ProductOverviewReadService",
@@ -17107,13 +17107,6 @@
       "line": 9
     },
     {
-      "name": "RecipeCompositionTransactionLock",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/RecipeCompositionTransactionLock.cs",
-      "line": 4
-    },
-    {
       "name": "RecipeLikeRepository",
       "kind": "class",
       "role": "Repository",
@@ -17125,7 +17118,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/EfRecipeMutationTransactionRunner.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RecipeOverviewReadService",
@@ -17175,6 +17168,13 @@
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Recommendations/RecommendationTemplateRepository.cs",
       "line": 8
+    },
+    {
+      "name": "RecipeCompositionTransactionLock",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Shared/RecipeCompositionTransactionLock.cs",
+      "line": 4
     },
     {
       "name": "ShoppingListRepository",
@@ -17517,6 +17517,13 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Services/StructuredAuditLogger.cs",
+      "line": 6
+    },
+    {
+      "name": "WearableTokenProtector",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Services/WearableTokenProtector.cs",
       "line": 6
     },
     {
@@ -22088,7 +22095,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 52
+      "line": 53
     },
     {
       "name": "ApiTelemetry",
@@ -22291,13 +22298,6 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Services/RedisIdempotencyStore.cs",
-      "line": 6
-    },
-    {
-      "name": "WearableTokenProtector",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Web.Api/Services/WearableTokenProtector.cs",
       "line": 6
     },
     {
@@ -25883,7 +25883,7 @@
       "interface": "IWearableTokenProtector",
       "interfacePath": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableTokenProtector.cs",
       "implementation": "WearableTokenProtector",
-      "implementationPath": "FoodDiary.Web.Api/Services/WearableTokenProtector.cs",
+      "implementationPath": "FoodDiary.Infrastructure/Services/WearableTokenProtector.cs",
       "confidence": "naming-convention"
     },
     {
@@ -27566,35 +27566,35 @@
       "implementation": "WearableTokenProtector",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 62
+      "line": 63
     },
     {
       "service": "INotificationTextRenderer",
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 105
+      "line": 106
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 106
+      "line": 107
     },
     {
       "service": "INotificationTestScheduler",
       "implementation": "NotificationTestScheduler",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 107
+      "line": 108
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 130
+      "line": 131
     },
     {
       "service": "IMailInboxReadinessChecker",

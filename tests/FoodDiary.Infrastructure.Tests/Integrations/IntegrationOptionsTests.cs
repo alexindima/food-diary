@@ -93,6 +93,7 @@ public sealed class IntegrationOptionsTests {
             AccessKeyId = accessKeyId,
             SecretAccessKey = secretAccessKey,
             Bucket = bucket,
+            StagingBucket = string.IsNullOrWhiteSpace(bucket) ? string.Empty : $"{bucket}-staging",
             Region = region,
             ServiceUrl = serviceUrl,
         };
@@ -169,12 +170,14 @@ public sealed class IntegrationOptionsTests {
             SecretAccessKey = "secret",
             Region = "eu-central-1",
             Bucket = "food-diary-test",
+            StagingBucket = "food-diary-test-staging",
         };
         var configuredWithOptIn = new S3Options {
             AccessKeyId = "access",
             SecretAccessKey = "secret",
             Region = "eu-central-1",
             Bucket = "food-diary-test",
+            StagingBucket = "food-diary-test-staging",
             AllowPublicImageAccess = true,
         };
 

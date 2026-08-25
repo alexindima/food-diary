@@ -36,6 +36,7 @@ public sealed class ContainerSupplyChainGuardrailTests {
         "build_mailinbox_postgres_tls_init",
         "build_mailinbox_initializer",
         "build_client",
+        "build_tech_radar",
     ];
 
     [Fact]
@@ -152,6 +153,7 @@ public sealed class ContainerSupplyChainGuardrailTests {
             .Concat([
                 "LlmWiki.ContractReferenceExtractor",
                 "LlmWiki.RoslynExtractor",
+                "LlmWiki.SqliteReader",
             ])
             .Order(StringComparer.Ordinal)];
 
@@ -239,7 +241,7 @@ public sealed class ContainerSupplyChainGuardrailTests {
             "FoodDiary.MailInbox.WebApi",
             "Dockerfile.postgres-tls-init"));
 
-        Assert.Matches(@"(?m)^FROM postgres:17-alpine@sha256:[0-9a-f]{64}\r?$", tlsInitializerDockerfile);
+        Assert.Matches(@"(?m)^FROM postgres:18-alpine@sha256:[0-9a-f]{64}\r?$", tlsInitializerDockerfile);
         Assert.Contains("MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF=\"${{ env.IMAGE_PREFIX }}/mailinbox-postgres-tls-init@${{ steps.build_mailinbox_postgres_tls_init.outputs.digest }}\"", workflow, StringComparison.Ordinal);
         Assert.Contains("$SCP_CMD MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf", workflow, StringComparison.Ordinal);
 

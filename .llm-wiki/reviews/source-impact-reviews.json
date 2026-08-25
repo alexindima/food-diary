@@ -188,17 +188,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "a1018a0e837be7b18f62a5ae095bb8f808b38b96fcea2ba57e8c9139b62b0a1b"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "28910e5d9585929a99ce740870dc33f0b2cff31a71643831eba6c8bd92959f55"
+          "sha256": "1d7744b001dd7633b7c5ab18a442765ee18b5043d2ea0f672ac7b6ca9dc8a2cd"
         }
       ],
-      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
+      "reason": "Reviewed the mutation transaction, PostgreSQL xmin row-lock, S3 staging, cleanup outbox, wearable token protection, and supply-chain guardrail corrections. Architecture 712/712, integration options 105/105, cleanup 4/4, focused Postgres 6/6, and full Web API integration 180/180 passed; API contracts and migrations are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
-      "reviewedAtUtc": "2026-08-25T20:20:26.1451547Z"
+      "gitHead": "40cf68f587382ebc31d5c770354c9a8d0f318fba",
+      "reviewedAtUtc": "2026-08-25T21:50:49.6062581Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -838,13 +834,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fc0f7de49b1ca78952e0e3b612a94c090288c5d939acbcb30e1da5fdc4981247"
+          "sha256": "3e463a8eb46761a461c431e71e95758df00b41a5daba489dc58872dd9a624303"
         }
       ],
-      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
+      "reason": "Reviewed the mutation transaction, PostgreSQL xmin row-lock, S3 staging, cleanup outbox, wearable token protection, and supply-chain guardrail corrections. Architecture 712/712, integration options 105/105, cleanup 4/4, focused Postgres 6/6, and full Web API integration 180/180 passed; API contracts and migrations are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
-      "reviewedAtUtc": "2026-08-25T20:20:27.8115471Z"
+      "gitHead": "40cf68f587382ebc31d5c770354c9a8d0f318fba",
+      "reviewedAtUtc": "2026-08-25T21:50:50.0693604Z"
     },
     {
       "pageId": "workflow-release-readiness",

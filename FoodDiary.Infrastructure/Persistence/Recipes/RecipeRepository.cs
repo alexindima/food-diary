@@ -63,7 +63,7 @@ public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeReposi
         }
 
         IQueryable<Recipe> query = context.Recipes.FromSqlInterpolated(
-            $"SELECT * FROM \"Recipes\" WHERE \"Id\" = {id.Value} FOR UPDATE");
+            $"SELECT *, xmin FROM \"Recipes\" WHERE \"Id\" = {id.Value} FOR UPDATE");
         if (includeSteps) {
             query = IncludeStepsAndIngredients(query);
         }

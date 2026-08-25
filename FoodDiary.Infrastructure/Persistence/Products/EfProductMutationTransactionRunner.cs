@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Products.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using FoodDiary.Infrastructure.Persistence.Shared;
 
 namespace FoodDiary.Infrastructure.Persistence.Products;
 
@@ -12,6 +13,15 @@ internal sealed class EfProductMutationTransactionRunner(
         Func<CancellationToken, Task<T>> operation,
         CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(operation);
+        if (!context.Database.IsRelational()) {
+            T inMemoryResult = await operation(cancellationToken).ConfigureAwait(false);
+            if (inMemoryResult is not FoodDiary.Results.Result { IsFailure: true } && unitOfWork.HasPendingChanges) {
+                await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            return inMemoryResult;
+        }
+
         IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
         return await strategy.ExecuteAsync(async () => {
             IDbContextTransaction transaction = await context.Database
