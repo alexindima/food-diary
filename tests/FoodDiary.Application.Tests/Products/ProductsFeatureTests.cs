@@ -26,6 +26,9 @@ namespace FoodDiary.Application.Tests.Products;
 [ExcludeFromCodeCoverage]
 public partial class ProductsFeatureTests {
 
+    private static IProductMutationTransactionRunner ProductTransactionRunner { get; } =
+        new ImmediateProductMutationTransactionRunner();
+
     private static GetProductsOverviewQueryHandler CreateProductsOverviewHandler(
         IProductOverviewReadService overviewReadService,
         StubRecentItemRepository recentRepository,
@@ -41,6 +44,14 @@ public partial class ProductsFeatureTests {
         StubRecentItemRepository recentRepository,
         IProductOverviewReadService overviewReadService) =>
         new(new RecentProductReadService(recentRepository, overviewReadService), Substitute.For<ICurrentUserAccessService>());
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ImmediateProductMutationTransactionRunner : IProductMutationTransactionRunner {
+        public Task<T> ExecuteAsync<T>(
+            Func<CancellationToken, Task<T>> operation,
+            CancellationToken cancellationToken = default) =>
+            operation(cancellationToken);
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class NoopProductRepository : IProductRepository {

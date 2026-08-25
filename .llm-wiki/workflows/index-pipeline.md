@@ -69,7 +69,7 @@ native command length and unions the path results. Large generated or imported
 change sets therefore preserve semantic test ranking on Windows without exceeding
 the process command-line limit.
 
-Ordinary `wiki verify` is always affected and resumable. `wiki verify-full`, pre-push, and CI retain the explicit full-repository gate; `verify-full` defaults to the actual monolithic `Full` audit profile, while `-VerificationProfile Focused|Core` is an explicit diagnostic override. Successful stage receipts survive a later timeout, so rerunning `verify` continues from unchanged green stages rather than replaying them. Every verify run owns `.artifacts/llm-wiki/verify-runs/<run-id>/progress.json` and its own stage logs; the legacy `verify-progress.json` is only the latest-run pointer. Inspect an exact run with `wiki.ps1 verify-status -VerifyRunId <run-id>`; tests and automation may also reserve a unique ID through the same parameter. The affected-smoke stage reserves a 240-second expected duration and a 420-second hard timeout so the promoted 450-case context-search suite can complete alongside graph prewarm and other selected smoke groups.
+Ordinary `wiki verify` is always affected and resumable. `wiki verify-full` keeps the explicit full-repository gate but defaults to independently maintained `Focused` regressions; `-VerificationProfile Core|Full` opts into legacy monolithic audits. Pull requests use `Focused`, while pushes, weekly scheduled CI, and manual CI use `Full`. Successful stage receipts survive a later timeout, so rerunning `verify` continues from unchanged green stages rather than replaying them. Every verify run owns `.artifacts/llm-wiki/verify-runs/<run-id>/progress.json` and its own stage logs; the legacy `verify-progress.json` is only the latest-run pointer. Inspect an exact run with `wiki.ps1 verify-status -VerifyRunId <run-id>`; tests and automation may also reserve a unique ID through the same parameter. The affected-smoke stage reserves a 240-second expected duration and a 420-second hard timeout so the promoted 450-case context-search suite can complete alongside graph prewarm and other selected smoke groups.
 
 When concurrent unfinished frontend work makes frontend indexes stale, use
 `wiki verify -Area Backend` to verify only backend generators and receive an
@@ -364,7 +364,9 @@ session.
 Frontend and C# test-source-only changes select the quality index without
 forcing catalog, symbol, contract, sensitive-data, module-page, or architecture
 rebuilds. Architecture health remains tied to project/catalog and public-contract
-inputs; stylesheet-only changes select no compiled index.
+inputs. Wiki tool and tool-test changes select quality plus downstream
+architecture health, so tooling regressions cannot bypass those compiled views;
+stylesheet-only changes select no compiled index.
 
 Use `wiki smoke -SmokeGroup tools -AffectedOnly` during iteration. Its dispatcher
 maps adaptive routing, solution/design planning, integration scanning,
@@ -372,11 +374,11 @@ dependency analysis, and facade changes to existing focused regression suites
 and prints per-group duration. Unknown shared-tool changes run the bounded syntax
 and invocation contract; the monolithic `Test-LlmWikiTools.ps1` suite is never an
 automatic fallback. The unscoped tools smoke executes the full focused group
-catalog with dependency-aware concurrency. `verify-full` additionally executes
-the monolithic `Full` audit by default, making its exhaustive name literal. Long
+catalog with dependency-aware concurrency. `verify-full` uses that catalog by
+default; the monolithic `Core` and `Full` audits are explicit profiles. Long
 focused groups start first, successful child output stays in per-group logs, and
 failures preserve the log tail and artifacts. Explicit `-VerificationProfile
-Focused|Core` facade options and `-FullTools`/`-CoreTools` script options remain
+Core|Full` facade options and `-FullTools`/`-CoreTools` script options remain
 available for targeted diagnostics and profiling.
 
 Use `-BaseRef <ref>` for a committed range or `-ChangedPath <path[]>` for an

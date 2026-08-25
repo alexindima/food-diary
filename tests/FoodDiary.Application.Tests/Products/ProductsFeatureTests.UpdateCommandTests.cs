@@ -33,7 +33,7 @@ public partial class ProductsFeatureTests {
 
         var repository = new SingleProductRepository(product);
         var cleanup = new RecordingCleanupService("storage_error");
-        var handler = new UpdateProductCommandHandler(repository, repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+        var handler = new UpdateProductCommandHandler(repository, repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance, ProductTransactionRunner);
 
         var command = new UpdateProductCommand(
             userId.Value,
@@ -108,7 +108,8 @@ public partial class ProductsFeatureTests {
             cleanup,
             new StubUserRepository(user),
             new FoodDiary.Application.Tests.Support.RecordingImageAssetAccessService()
-                .WithAsset(newAssetId, "https://cdn.example/new.jpg"));
+                .WithAsset(newAssetId, "https://cdn.example/new.jpg"),
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             CreateFullProductUpdateCommand(user.Id.Value, product.Id.Value, newAssetId.Value),
@@ -154,7 +155,8 @@ public partial class ProductsFeatureTests {
             repository,
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             new UpdateProductCommand(
@@ -200,7 +202,8 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             new UpdateProductCommand(
@@ -261,7 +264,8 @@ public partial class ProductsFeatureTests {
             repository,
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             new UpdateProductCommand(
@@ -307,7 +311,8 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(userId: null, ProductId.New().Value),
@@ -326,7 +331,8 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(user.Id.Value, ProductId.New().Value, name: "Updated"),
@@ -344,7 +350,8 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(user.Id.Value, ProductId.New().Value, baseUnit: "Cup"),
@@ -363,7 +370,8 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(user.Id.Value, ProductId.New().Value, visibility: "Hidden"),
@@ -396,7 +404,8 @@ public partial class ProductsFeatureTests {
             repository,
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(user.Id.Value, product.Id.Value, baseUnit: "g") with {
@@ -432,7 +441,8 @@ public partial class ProductsFeatureTests {
             repository,
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(user.Id.Value, product.Id.Value, baseUnit: "g") with {
@@ -475,7 +485,8 @@ public partial class ProductsFeatureTests {
             repository,
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(user.Id.Value, product.Id.Value) with { BaseAmount = 50 },
@@ -509,7 +520,8 @@ public partial class ProductsFeatureTests {
             repository,
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(user.Id.Value, product.Id.Value) with {
@@ -532,7 +544,8 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(user.Id.Value, productId.Value, name: "Updated"),
@@ -566,7 +579,8 @@ public partial class ProductsFeatureTests {
             repository,
             cleanup,
             new StubUserRepository(user),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(user.Id.Value, product.Id.Value, name: "Updated"),
@@ -588,7 +602,8 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            access);
+            access,
+            ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(user.Id.Value, ProductId.New().Value, imageAssetId: Guid.NewGuid()),
@@ -617,7 +632,7 @@ public partial class ProductsFeatureTests {
 
         var repository = new SingleProductRepository(product);
         var cleanup = new RecordingCleanupService();
-        var handler = new UpdateProductCommandHandler(repository, repository, cleanup, new StubUserRepository(user), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+        var handler = new UpdateProductCommandHandler(repository, repository, cleanup, new StubUserRepository(user), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance, ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             new UpdateProductCommand(

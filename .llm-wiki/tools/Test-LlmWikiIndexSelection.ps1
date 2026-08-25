@@ -20,7 +20,8 @@ foreach ($path in @(
     '.llm-wiki/tools/Test-LlmWikiTools.ps1'
 )) {
     $plan = Get-IndexPlan $path
-    Assert-Plan ($plan -match 'Affected index tools:\s*$' -and $plan -notmatch 'Build-LlmWiki') "Routing/test-only path selected indexes: $path"
+    Assert-Plan ($plan -match 'Build-LlmWikiQualityIndex.ps1' -and $plan -match 'Build-LlmWikiArchitectureHealthIndex.ps1') "Wiki tool/test path omitted self-quality closure: $path"
+    Assert-Plan ($plan -notmatch 'Build-LlmWikiCatalog.ps1|Build-LlmWikiSymbolIndex.ps1|Build-LlmWikiBackendContractIndex.ps1') "Wiki tool/test path selected unrelated source indexes: $path"
 }
 
 $frontendPlan = Get-IndexPlan '.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1'

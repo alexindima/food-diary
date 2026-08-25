@@ -48,7 +48,7 @@ if ($gitDirectoryResult.ExitCode -eq 0 -or -not [string]::IsNullOrWhiteSpace([st
         $adaptiveItems = @(Get-ChildItem -LiteralPath $adaptiveRoot -Filter '*.json' -File | ForEach-Object {
             try {
                 $metric = Get-Content -LiteralPath $_.FullName -Raw | ConvertFrom-Json
-                if ([int]$metric.schemaVersion -in @(1, 2)) { $metric }
+                if ([int]$metric.schemaVersion -in @(1, 2, 3)) { $metric }
             } catch { }
         } | Sort-Object recordedAtUtc -Descending)
     }

@@ -48,6 +48,7 @@ if ($receiptRoot) { $null = New-Item -ItemType Directory -Path $receiptRoot -For
 
 if ($FullTools -and $CoreTools) { throw 'FullTools and CoreTools cannot be used together.' }
 $toolsProfile = if ($FullTools) { 'Full' } elseif ($CoreTools) { 'Core' } else { 'Focused' }
+$verificationRunId = "full-$PID-$([guid]::NewGuid().ToString('N'))"
 Write-Host "LLM Wiki tool verification profile: $toolsProfile. Monolithic Core/Full profiles are explicit audit-only modes; focused regressions are the default full gate."
 
 $checks = @(
@@ -99,6 +100,8 @@ foreach ($check in $checks) {
         throw "Unable to start LLM Wiki verification group '$($check.name)'."
     }
 
+    $groupOutcome = 'passed'
+    $failureCategory = $null
     try {
         $nextProgressAt = 30
         while (-not $process.WaitForExit(1000)) {
@@ -108,17 +111,43 @@ foreach ($check in $checks) {
             }
             if ($groupStopwatch.Elapsed.TotalSeconds -ge $GroupTimeoutSeconds) {
                 Stop-LlmWikiProcessTree -Process $process
+                $groupOutcome = 'timed-out'
+                $failureCategory = 'group-timeout'
                 throw "LLM Wiki full verification group timed out: $($check.name) after ${GroupTimeoutSeconds}s. Run separately: pwsh -NoProfile -File `"$($check.script)`" $($check.arguments)"
             }
         }
         if ($process.ExitCode -ne 0) {
+            $groupOutcome = 'failed'
+            $failureCategory = 'nonzero-exit'
             throw "LLM Wiki full verification failed: $($check.name) (exit=$($process.ExitCode))"
         }
+    } catch {
+        if ($groupOutcome -eq 'passed') {
+            $groupOutcome = 'failed'
+            $failureCategory = 'runner-error'
+        }
+        $groupStopwatch.Stop()
+        & (Join-Path $toolsRoot 'Write-LlmWikiWorkflowMetric.ps1') `
+            -Operation 'verify-full-group' `
+            -Outcome $groupOutcome `
+            -DurationSeconds $groupStopwatch.Elapsed.TotalSeconds `
+            -Phase $check.name `
+            -Profile $toolsProfile `
+            -RunId $verificationRunId `
+            -FailureCategory $failureCategory
+        throw
     } finally {
         $process.Dispose()
     }
 
     $groupStopwatch.Stop()
+    & (Join-Path $toolsRoot 'Write-LlmWikiWorkflowMetric.ps1') `
+        -Operation 'verify-full-group' `
+        -Outcome passed `
+        -DurationSeconds $groupStopwatch.Elapsed.TotalSeconds `
+        -Phase $check.name `
+        -Profile $toolsProfile `
+        -RunId $verificationRunId
     if ($receiptPath) {
         [IO.File]::WriteAllText($receiptPath, ([DateTime]::UtcNow.ToString('o') + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
     }

@@ -29,14 +29,24 @@ public sealed class ProductRepository(FoodDiaryDbContext context) : IProductRepo
         ProductId id,
         UserId userId,
         bool includePublic = true,
-        CancellationToken cancellationToken = default) =>
-        await context.Products
-            .AsTracking()
-            .FirstOrDefaultAsync(
-                p => p.Id == id && (includePublic
-                    ? p.UserId == userId || p.Visibility == Visibility.Public
-                    : p.UserId == userId),
-                cancellationToken).ConfigureAwait(false);
+        CancellationToken cancellationToken = default) {
+        if (context.Database.CurrentTransaction is null || !context.Database.IsRelational()) {
+            return await context.Products
+                .AsTracking()
+                .FirstOrDefaultAsync(
+                    p => p.Id == id && (includePublic
+                        ? p.UserId == userId || p.Visibility == Visibility.Public
+                        : p.UserId == userId),
+                    cancellationToken).ConfigureAwait(false);
+        }
+
+        IQueryable<Product> lockedProducts = includePublic
+            ? context.Products.FromSqlInterpolated(
+                $"""SELECT * FROM "Products" WHERE "Id" = {id.Value} AND ("UserId" = {userId.Value} OR "Visibility" = {(int)Visibility.Public}) FOR UPDATE""")
+            : context.Products.FromSqlInterpolated(
+                $"""SELECT * FROM "Products" WHERE "Id" = {id.Value} AND "UserId" = {userId.Value} FOR UPDATE""");
+        return await lockedProducts.SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+    }
 
     public async Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(
         IEnumerable<ProductId> ids,

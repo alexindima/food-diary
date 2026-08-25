@@ -12,6 +12,20 @@ public interface IRecipeReadRepository {
         bool asTracking = false,
         CancellationToken cancellationToken = default);
 
+    Task<Recipe?> GetByIdForUpdateAsync(
+        RecipeId id,
+        UserId userId,
+        bool includePublic = false,
+        bool includeSteps = false,
+        CancellationToken cancellationToken = default) =>
+        GetByIdAsync(
+            id,
+            userId,
+            includePublic,
+            includeSteps,
+            asTracking: true,
+            cancellationToken);
+
     Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
         IEnumerable<RecipeId> ids,
         UserId userId,

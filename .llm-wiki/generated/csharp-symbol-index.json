@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3452,
-    "symbols": 3459,
+    "sourceFiles": 3457,
+    "symbols": 3464,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 240,
+    "dependencyInjectionRegistrations": 242,
     "kinds": {
-      "class": 1799,
+      "class": 1802,
       "enum": 62,
-      "interface": 421,
+      "interface": 423,
       "record": 1057,
       "record struct": 120
     },
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 62,
-      "Other": 1332,
+      "Other": 1337,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -3401,6 +3401,13 @@
       "line": 5
     },
     {
+      "name": "IProductMutationTransactionRunner",
+      "kind": "interface",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductMutationTransactionRunner.cs",
+      "line": 2
+    },
+    {
       "name": "IProductOverviewReadService",
       "kind": "interface",
       "role": "Service",
@@ -3581,6 +3588,13 @@
       "role": "Service",
       "path": "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeLookupService.cs",
       "line": 5
+    },
+    {
+      "name": "IRecipeMutationTransactionRunner",
+      "kind": "interface",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeMutationTransactionRunner.cs",
+      "line": 2
     },
     {
       "name": "IRecipeNutritionWriter",
@@ -11875,7 +11889,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "DuplicateRecipeCommandValidator",
@@ -17030,6 +17044,13 @@
       "line": 8
     },
     {
+      "name": "EfProductMutationTransactionRunner",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs",
+      "line": 7
+    },
+    {
       "name": "ProductOverviewReadService",
       "kind": "class",
       "role": "Service",
@@ -17065,10 +17086,24 @@
       "line": 9
     },
     {
+      "name": "RecipeCompositionTransactionLock",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/RecipeCompositionTransactionLock.cs",
+      "line": 4
+    },
+    {
       "name": "RecipeLikeRepository",
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/RecipeLikes/RecipeLikeRepository.cs",
+      "line": 7
+    },
+    {
+      "name": "EfRecipeMutationTransactionRunner",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Recipes/EfRecipeMutationTransactionRunner.cs",
       "line": 7
     },
     {
@@ -27107,11 +27142,18 @@
       "line": 12
     },
     {
+      "service": "IProductMutationTransactionRunner",
+      "implementation": "EfProductMutationTransactionRunner",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Products.cs",
+      "line": 15
+    },
+    {
       "service": "IProductLookupService",
       "implementation": "ProductLookupService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Products.cs",
-      "line": 15
+      "line": 16
     },
     {
       "service": "IOpenFoodFactsProductCacheRepository",
@@ -27163,18 +27205,25 @@
       "line": 11
     },
     {
+      "service": "IRecipeMutationTransactionRunner",
+      "implementation": "EfRecipeMutationTransactionRunner",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Recipes.cs",
+      "line": 15
+    },
+    {
       "service": "IRecipeLookupService",
       "implementation": "RecipeLookupService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Recipes.cs",
-      "line": 15
+      "line": 16
     },
     {
       "service": "IRecipeAccessService",
       "implementation": "RecipeAccessService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Recipes.cs",
-      "line": 16
+      "line": 17
     },
     {
       "service": "IShoppingListRepository",

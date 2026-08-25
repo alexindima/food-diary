@@ -9,6 +9,7 @@ using FoodDiary.Application.Recipes.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Recipes.Models;
 using FoodDiary.Application.Recipes.Recipes.Services;
 using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Recipes.Commands.DuplicateRecipe;
@@ -17,9 +18,15 @@ public sealed class DuplicateRecipeCommandHandler(
     IRecipeReadRepository recipeReadRepository,
     IRecipeWriteRepository recipeWriteRepository,
     IRecipeNutritionWriter recipeNutritionWriter,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IRecipeMutationTransactionRunner transactionRunner)
     : ICommandHandler<DuplicateRecipeCommand, Result<RecipeModel>> {
-    public async Task<Result<RecipeModel>> Handle(DuplicateRecipeCommand command, CancellationToken cancellationToken) {
+    public Task<Result<RecipeModel>> Handle(DuplicateRecipeCommand command, CancellationToken cancellationToken) =>
+        transactionRunner.ExecuteAsync(
+            token => HandleCoreAsync(command, token),
+            cancellationToken);
+
+    private async Task<Result<RecipeModel>> HandleCoreAsync(DuplicateRecipeCommand command, CancellationToken cancellationToken) {
         Result<RecipeId> recipeIdResult = RecipeRequiredIdParser.Parse(
             command.RecipeId,
             nameof(command.RecipeId),
@@ -59,12 +66,13 @@ public sealed class DuplicateRecipeCommandHandler(
     }
 
     private static Recipe CreateDuplicate(UserId userId, Recipe original) {
+        bool isOwnerDuplicate = original.UserId == userId;
         var duplicate = Recipe.Create(
             userId,
             original.Name,
             original.Servings,
             original.Description,
-            original.Comment,
+            isOwnerDuplicate ? original.Comment : null,
             original.Category,
             original.ImageUrl,
             imageAssetId: null,
@@ -72,7 +80,7 @@ public sealed class DuplicateRecipeCommandHandler(
             original.CookTime,
             original.Visibility);
 
-        AddStepsFromOriginal(duplicate, original);
+        AddStepsFromOriginal(duplicate, original, isOwnerDuplicate);
         ApplyNutritionSettings(duplicate, original);
         return duplicate;
     }
@@ -99,18 +107,25 @@ public sealed class DuplicateRecipeCommandHandler(
             original.ManualAlcohol ?? original.TotalAlcohol);
     }
 
-    private static void AddStepsFromOriginal(Recipe target, Recipe source) {
+    private static void AddStepsFromOriginal(Recipe target, Recipe source, bool preserveManagedAssets) {
         var orderedSteps = source.Steps
             .OrderBy(step => step.StepNumber)
             .ToList();
 
         foreach (RecipeStep step in orderedSteps) {
-            RecipeStep newStep = target.AddStep(step.StepNumber, step.Instruction, step.Title, step.ImageUrl, step.ImageAssetId);
+            RecipeStep newStep = target.AddStep(
+                step.StepNumber,
+                step.Instruction,
+                step.Title,
+                step.ImageUrl,
+                preserveManagedAssets ? step.ImageAssetId : null);
 
             foreach (RecipeIngredient ingredient in step.Ingredients) {
-                if (ingredient.ProductId.HasValue) {
+                if (ingredient.ProductId.HasValue &&
+                    (preserveManagedAssets || ingredient.Product?.Visibility == Visibility.Public)) {
                     newStep.AddProductIngredient(ingredient.ProductId.Value, ingredient.Amount);
-                } else if (ingredient.NestedRecipeId.HasValue) {
+                } else if (ingredient.NestedRecipeId.HasValue &&
+                    (preserveManagedAssets || ingredient.NestedRecipe?.Visibility == Visibility.Public)) {
                     newStep.AddNestedRecipeIngredient(ingredient.NestedRecipeId.Value, ingredient.Amount);
                 }
             }

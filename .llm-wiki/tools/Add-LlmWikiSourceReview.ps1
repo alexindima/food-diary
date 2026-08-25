@@ -87,6 +87,16 @@ $review = [pscustomobject][ordered]@{
 }
 
 $ledger = Get-Content -LiteralPath $ledgerPath -Raw | ConvertFrom-Json
+$existingReview = @($ledger.reviews | Where-Object pageId -eq $Id | Select-Object -First 1)
+if ($existingReview.Count -eq 1) {
+    $signatureProperties = @('pageId', 'pagePath', 'pageSha256', 'sources', 'reason', 'baseRef', 'gitHead')
+    $existingSignature = $existingReview[0] | Select-Object $signatureProperties | ConvertTo-Json -Depth 8 -Compress
+    $newSignature = $review | Select-Object $signatureProperties | ConvertTo-Json -Depth 8 -Compress
+    if ($existingSignature -eq $newSignature) {
+        Write-Host "Source-impact review for '$Id' is already current; ledger unchanged."
+        exit 0
+    }
+}
 $reviews = @($ledger.reviews | Where-Object pageId -ne $Id) + $review
 [pscustomobject][ordered]@{
     schemaVersion = 1

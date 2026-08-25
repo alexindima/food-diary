@@ -21,4 +21,6 @@ public sealed record RecipeOverviewIngredientReadItem(
     double? NestedRecipeTotalFats,
     double? NestedRecipeTotalCarbs,
     double? NestedRecipeTotalFiber,
-    double? NestedRecipeTotalAlcohol);
+    double? NestedRecipeTotalAlcohol,
+    bool ProductIsAccessible = true,
+    bool NestedRecipeIsAccessible = true);

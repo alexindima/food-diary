@@ -12,6 +12,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IProductRepository, CachedProductRepository>();
         services.AddScoped<IProductReadRepository>(static provider => provider.GetRequiredService<IProductRepository>());
         services.AddScoped<IProductWriteRepository>(static provider => provider.GetRequiredService<IProductRepository>());
+        services.AddScoped<IProductMutationTransactionRunner, EfProductMutationTransactionRunner>();
         services.AddScoped<IProductLookupService, ProductLookupService>();
 
     }

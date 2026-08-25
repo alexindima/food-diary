@@ -6049,28 +6049,28 @@
       "name": "TotalCalories",
       "type": "double?",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 330
+      "line": 361
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 336
+      "line": 367
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 337
+      "line": 368
     },
     {
       "category": "health",
       "name": "TotalCalories",
       "type": "double?",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 349
+      "line": 380
     },
     {
       "category": "health",
@@ -9934,21 +9934,21 @@
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 323
+      "line": 354
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 325
+      "line": 356
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "line": 326
+      "line": 357
     },
     {
       "category": "privateContent",

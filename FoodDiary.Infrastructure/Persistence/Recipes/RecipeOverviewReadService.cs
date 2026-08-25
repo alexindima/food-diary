@@ -28,7 +28,7 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
         List<RecipeOverviewReadRow> rows = await ProjectRows(query
                 .OrderByDescending(r => r.CreatedOnUtc)
                 .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize))
+                .Take(pageSize), userId)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (rows.ConvertAll(row => ToReadItem(row, userId)), totalItems);
@@ -45,7 +45,7 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
         }
 
         List<RecipeOverviewReadRow> rows = await ProjectRows(CreateBaseQuery(userId, includePublic)
-                .Where(r => recipeIds.Contains(r.Id)))
+                .Where(r => recipeIds.Contains(r.Id)), userId)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return rows.ToDictionary(row => row.Id, row => ToReadItem(row, userId));
@@ -79,7 +79,7 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
 
         List<RecipeOverviewReadRow> rows = await ProjectRows(orderedQuery
                 .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize))
+                .Take(pageSize), currentUserId)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (rows.ConvertAll(row => ToReadItem(row, currentUserId)), totalItems);
@@ -153,7 +153,7 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
         return query;
     }
 
-    private static IQueryable<RecipeOverviewReadRow> ProjectRows(IQueryable<Recipe> query) =>
+    private static IQueryable<RecipeOverviewReadRow> ProjectRows(IQueryable<Recipe> query, UserId currentUserId) =>
         query.Select(recipe => new RecipeOverviewReadRow(
             recipe.Id, recipe.UserId, recipe.Name, recipe.Description, recipe.Comment,
             recipe.Category, recipe.ImageUrl, recipe.ImageAssetId, recipe.PrepTime, recipe.CookTime,
@@ -192,7 +192,9 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
                         ingredient.NestedRecipe != null ? ingredient.NestedRecipe.TotalFats : null,
                         ingredient.NestedRecipe != null ? ingredient.NestedRecipe.TotalCarbs : null,
                         ingredient.NestedRecipe != null ? ingredient.NestedRecipe.TotalFiber : null,
-                        ingredient.NestedRecipe != null ? ingredient.NestedRecipe.TotalAlcohol : null))
+                        ingredient.NestedRecipe != null ? ingredient.NestedRecipe.TotalAlcohol : null,
+                        ingredient.Product == null || ingredient.Product.UserId == currentUserId || ingredient.Product.Visibility == Visibility.Public,
+                        ingredient.NestedRecipe == null || ingredient.NestedRecipe.UserId == currentUserId || ingredient.NestedRecipe.Visibility == Visibility.Public))
                         .ToList()))
                 .ToList()));
 
@@ -238,8 +240,37 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
             isOwnedByCurrentUser,
             quality.Score,
             quality.Grade.ToString().ToLowerInvariant(),
-            row.Steps);
+            SanitizeSteps(row.Steps));
     }
+
+    private static IReadOnlyList<RecipeOverviewStepReadItem> SanitizeSteps(
+        IReadOnlyList<RecipeOverviewStepReadItem> steps) =>
+        [.. steps.Select(step => step with {
+            Ingredients = [.. step.Ingredients.Select(SanitizeIngredient)],
+        })];
+
+    private static RecipeOverviewIngredientReadItem SanitizeIngredient(RecipeOverviewIngredientReadItem ingredient) =>
+        ingredient with {
+            ProductId = ingredient.ProductIsAccessible ? ingredient.ProductId : null,
+            ProductName = ingredient.ProductIsAccessible ? ingredient.ProductName : null,
+            ProductBaseUnit = ingredient.ProductIsAccessible ? ingredient.ProductBaseUnit : null,
+            ProductBaseAmount = ingredient.ProductIsAccessible ? ingredient.ProductBaseAmount : null,
+            ProductCaloriesPerBase = ingredient.ProductIsAccessible ? ingredient.ProductCaloriesPerBase : null,
+            ProductProteinsPerBase = ingredient.ProductIsAccessible ? ingredient.ProductProteinsPerBase : null,
+            ProductFatsPerBase = ingredient.ProductIsAccessible ? ingredient.ProductFatsPerBase : null,
+            ProductCarbsPerBase = ingredient.ProductIsAccessible ? ingredient.ProductCarbsPerBase : null,
+            ProductFiberPerBase = ingredient.ProductIsAccessible ? ingredient.ProductFiberPerBase : null,
+            ProductAlcoholPerBase = ingredient.ProductIsAccessible ? ingredient.ProductAlcoholPerBase : null,
+            NestedRecipeId = ingredient.NestedRecipeIsAccessible ? ingredient.NestedRecipeId : null,
+            NestedRecipeName = ingredient.NestedRecipeIsAccessible ? ingredient.NestedRecipeName : null,
+            NestedRecipeServings = ingredient.NestedRecipeIsAccessible ? ingredient.NestedRecipeServings : null,
+            NestedRecipeTotalCalories = ingredient.NestedRecipeIsAccessible ? ingredient.NestedRecipeTotalCalories : null,
+            NestedRecipeTotalProteins = ingredient.NestedRecipeIsAccessible ? ingredient.NestedRecipeTotalProteins : null,
+            NestedRecipeTotalFats = ingredient.NestedRecipeIsAccessible ? ingredient.NestedRecipeTotalFats : null,
+            NestedRecipeTotalCarbs = ingredient.NestedRecipeIsAccessible ? ingredient.NestedRecipeTotalCarbs : null,
+            NestedRecipeTotalFiber = ingredient.NestedRecipeIsAccessible ? ingredient.NestedRecipeTotalFiber : null,
+            NestedRecipeTotalAlcohol = ingredient.NestedRecipeIsAccessible ? ingredient.NestedRecipeTotalAlcohol : null,
+        };
 
     private static NutritionSummary GetEffectiveNutrition(RecipeOverviewReadRow row) {
         if (!row.IsNutritionAutoCalculated) {

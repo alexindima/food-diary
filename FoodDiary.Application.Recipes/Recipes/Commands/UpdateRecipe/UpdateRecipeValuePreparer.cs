@@ -104,12 +104,11 @@ internal static class UpdateRecipeValuePreparer {
         UserId userId,
         IRecipeReadRepository recipeRepository,
         CancellationToken cancellationToken) {
-        Recipe? recipe = await recipeRepository.GetByIdAsync(
+        Recipe? recipe = await recipeRepository.GetByIdForUpdateAsync(
             recipeId,
             userId,
             includePublic: false,
             includeSteps: true,
-            asTracking: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (recipe is null) {
             return Result.Failure<Recipe>(Errors.Recipe.NotAccessible(command.RecipeId));

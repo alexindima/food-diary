@@ -17,7 +17,8 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new NoopProductRepository(),
             new RecordingCleanupService(),
-            new StubUserRepository(User.Create("delete-product-invalid-token@example.com", "hash")));
+            new StubUserRepository(User.Create("delete-product-invalid-token@example.com", "hash")),
+            ProductTransactionRunner);
 
         Result result = await handler.Handle(
             new DeleteProductCommand(UserId: null, ProductId.New().Value),
@@ -36,7 +37,8 @@ public partial class ProductsFeatureTests {
             repository,
             repository,
             new RecordingCleanupService(),
-            new StubUserRepository(user));
+            new StubUserRepository(user),
+            ProductTransactionRunner);
 
         Result result = await handler.Handle(
             new DeleteProductCommand(user.Id.Value, ProductId.New().Value),
@@ -54,7 +56,8 @@ public partial class ProductsFeatureTests {
             repository,
             repository,
             new RecordingCleanupService(),
-            new StubUserRepository(user));
+            new StubUserRepository(user),
+            ProductTransactionRunner);
 
         Result result = await handler.Handle(
             new DeleteProductCommand(user.Id.Value, ProductId.New().Value),
@@ -83,7 +86,7 @@ public partial class ProductsFeatureTests {
         SetProductUsageCollections(product, mealItemsCount: 1, recipeIngredientsCount: 0);
         var repository = new SingleProductRepository(product);
         var cleanup = new RecordingCleanupService();
-        var handler = new DeleteProductCommandHandler(repository, repository, cleanup, new StubUserRepository(user));
+        var handler = new DeleteProductCommandHandler(repository, repository, cleanup, new StubUserRepository(user), ProductTransactionRunner);
 
         Result result = await handler.Handle(new DeleteProductCommand(user.Id.Value, product.Id.Value), CancellationToken.None);
 
@@ -114,7 +117,7 @@ public partial class ProductsFeatureTests {
 
         var repository = new SingleProductRepository(product);
         var cleanup = new RecordingCleanupService("storage_error");
-        var handler = new DeleteProductCommandHandler(repository, repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new DeleteProductCommandHandler(repository, repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")), ProductTransactionRunner);
 
         Result result = await handler.Handle(new DeleteProductCommand(userId.Value, product.Id.Value), CancellationToken.None);
 
@@ -130,7 +133,8 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new NoopProductRepository(),
             new RecordingCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            new StubUserRepository(User.Create("user@example.com", "hash")),
+            ProductTransactionRunner);
 
         Result result = await handler.Handle(
             new DeleteProductCommand(Guid.NewGuid(), Guid.Empty),

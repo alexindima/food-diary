@@ -258,6 +258,12 @@ Assert-Wiki (@($wikiInternalBrief.change.paths).Count -gt 0) 'Wiki-internal inte
 Assert-Wiki (@($wikiInternalBrief.change.paths | Where-Object { $_ -notmatch '^\.llm-wiki/' }).Count -eq 0) 'Wiki-internal intent leaked into product paths.'
 Assert-Wiki (@($wikiInternalBrief.change.directModules).Count -eq 0) 'Wiki-internal intent inferred product modules.'
 
+$wikiMetricsContext = & (Join-Path $toolsRoot 'Get-LlmWikiToolingContext.ps1') `
+    -Query 'Improve LLM Wiki workflow metrics and outcome telemetry.' `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($wikiMetricsContext.groundedPaths | Where-Object { $_ -match 'WorkflowMetric' }).Count -gt 0) 'Wiki tooling context did not rank the workflow-metrics implementation.'
+Assert-Wiki (@($wikiMetricsContext.groundedPaths | Where-Object { $_ -notmatch '^\.llm-wiki/' }).Count -eq 0) 'Wiki tooling context leaked product paths.'
+
 $interactiveUiBrief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
     -ProposedPath @(
         'FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts'

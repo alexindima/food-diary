@@ -87,7 +87,10 @@ Commands have three stability tiers declared in
 [`policies/command-registry.json`](policies/command-registry.json): `core` for
 the stable daily path, `governed` for durable task and evidence state, and
 `experimental` for advanced orchestration, learning, routing, and context
-optimization. Default help is generated from the core tier. Experimental
+optimization. Every facade command is classified exactly once, and the catalog
+regression rejects missing, duplicate, or unknown registrations. Compact and
+detailed help are generated from this registry instead of a second inline
+catalog. Experimental
 commands preserve compatibility, but should not expand or graduate without
 observed use and outcome evidence.
 
@@ -304,11 +307,13 @@ lifecycle.
 `verify` is the fast interactive and handoff gate. It starts with lint and its
 regression fixtures, then checks page structure, generated indexes, freshness,
 eval regressions, failure records, change policy, and impact review.
-`verify-full` adds the portable and complete stateful smoke suites, including the
-actual monolithic `Full` audit profile by default. `-VerificationProfile
-Focused|Core` is an explicit diagnostic override. In CI the
-full Wiki gate is a separate job, so it no longer blocks backend restore,
-build, and tests.
+`verify-full` adds the portable and complete stateful smoke suites. Its default
+`Focused` profile runs the independently maintained regression groups; `Core`
+and the exhaustive monolithic `Full` profile are explicit audit modes. Pull
+requests use `Focused`, while pushes, the weekly schedule, and manual CI runs use
+`Full`. The Wiki gate is a separate job, so it does not block backend restore,
+build, and tests. Each verification group records its phase, profile, duration,
+run id, and failure category in local workflow telemetry.
 
 Verify the wiki from the repository root:
 

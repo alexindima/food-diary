@@ -12,6 +12,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IRecipeReadRepository>(static provider => provider.GetRequiredService<IRecipeRepository>());
         services.AddScoped<IRecipeWriteRepository>(static provider => provider.GetRequiredService<IRecipeRepository>());
         services.AddScoped<IRecipeNutritionWriter>(static provider => provider.GetRequiredService<IRecipeRepository>());
+        services.AddScoped<IRecipeMutationTransactionRunner, EfRecipeMutationTransactionRunner>();
         services.AddScoped<IRecipeLookupService, RecipeLookupService>();
         services.AddScoped<IRecipeAccessService, RecipeAccessService>();
 

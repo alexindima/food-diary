@@ -46,6 +46,33 @@ public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeReposi
             cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<Recipe?> GetByIdForUpdateAsync(
+        RecipeId id,
+        UserId userId,
+        bool includePublic = false,
+        bool includeSteps = false,
+        CancellationToken cancellationToken = default) {
+        if (!context.Database.IsRelational() || context.Database.CurrentTransaction is null) {
+            return await GetByIdAsync(
+                id,
+                userId,
+                includePublic,
+                includeSteps,
+                asTracking: true,
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        IQueryable<Recipe> query = context.Recipes.FromSqlInterpolated(
+            $"SELECT * FROM \"Recipes\" WHERE \"Id\" = {id.Value} FOR UPDATE");
+        if (includeSteps) {
+            query = IncludeStepsAndIngredients(query);
+        }
+
+        return await query.FirstOrDefaultAsync(
+            recipe => recipe.UserId == userId || (includePublic && recipe.Visibility == Visibility.Public),
+            cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         context.Recipes.Update(recipe);
         await Task.CompletedTask.ConfigureAwait(false);

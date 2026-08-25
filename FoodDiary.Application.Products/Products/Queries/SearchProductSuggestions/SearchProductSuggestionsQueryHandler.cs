@@ -13,10 +13,17 @@ public sealed class SearchProductSuggestionsQueryHandler(IEnumerable<IProductSea
         var suggestions = new List<ProductSearchSuggestionModel>();
 
         foreach (IProductSearchSuggestionProvider provider in providers) {
-            IReadOnlyList<ProductSearchSuggestionModel> providerSuggestions = await provider.SearchAsync(query.Search, query.Limit, cancellationToken).ConfigureAwait(false);
+            int remaining = query.Limit - suggestions.Count;
+            if (remaining <= 0) {
+                break;
+            }
+
+            IReadOnlyList<ProductSearchSuggestionModel> providerSuggestions = await provider
+                .SearchAsync(query.Search, remaining, cancellationToken)
+                .ConfigureAwait(false);
             suggestions.AddRange(providerSuggestions);
         }
 
-        return Result.Success<IReadOnlyList<ProductSearchSuggestionModel>>(suggestions);
+        return Result.Success<IReadOnlyList<ProductSearchSuggestionModel>>([.. suggestions.Take(query.Limit)]);
     }
 }

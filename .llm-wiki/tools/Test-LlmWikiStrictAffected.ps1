@@ -159,11 +159,11 @@ if ($fullVerificationText -notmatch 'still running' -or $fullVerificationText -n
 if ($fullVerificationText -notmatch 'LLM Wiki tool verification profile' -or $fullVerificationText -notmatch '\$FullTools' -or $fullVerificationText -notmatch '\$CoreTools') {
     throw 'Full verification does not expose its adaptive tool profile and explicit override.'
 }
-if ($facadeText -notmatch "\[string\]\`$VerificationProfile = 'Full'" -or
+if ($facadeText -notmatch "\[string\]\`$VerificationProfile = 'Focused'" -or
     $facadeText -notmatch "fullVerificationArguments\.FullTools = \`$true" -or
     $facadeText -notmatch 'verify-runs/\$runId' -or
     $facadeText -notmatch 'runProgressPath') {
-    throw 'verify-full is not exhaustive by default or concurrent verify runs do not retain isolated state.'
+    throw 'verify-full does not default to focused coverage, retain an explicit Full audit, or isolate concurrent verify state.'
 }
 if ($fullVerificationText -notmatch 'Invoke-LlmWikiParallelSmoke\.ps1' -or $fullVerificationText -notmatch 'AllGroups') {
     throw 'Full verification omitted the complete focused regression suite.'

@@ -78,13 +78,25 @@ try {
     ) -Wait -PassThru -WindowStyle Hidden
     Assert-CriticalTool ($process.ExitCode -eq 0) 'Verify worker did not propagate a successful invocation.'
     Assert-CriticalTool ((Get-Content -LiteralPath $logPath -Raw) -match 'worker-probe-ok') 'Verify worker transcript omitted child output.'
+
+    [IO.File]::WriteAllText($fakeWikiPath, "param([string]`$Command, [string]`$Probe)`nthrow 'worker-probe-failed'`n", [Text.UTF8Encoding]::new($false))
+    $failureLogPath = Join-Path $fixtureRoot 'worker-failure.log'
+    $failedProcess = Start-Process -FilePath $shellPath -ArgumentList @(
+        '-NoLogo', '-NoProfile', '-File', (Join-Path $PSScriptRoot 'Start-LlmWikiVerifyWorker.ps1'),
+        '-WikiPath', $fakeWikiPath, '-ArgumentsPath', $argumentsPath, '-LogPath', $failureLogPath
+    ) -Wait -PassThru -WindowStyle Hidden
+    Assert-CriticalTool ($failedProcess.ExitCode -ne 0) 'Verify worker swallowed a child failure.'
+    Assert-CriticalTool ((Get-Content -LiteralPath $failureLogPath -Raw) -match 'worker-probe-failed') 'Verify worker failure transcript omitted the child error.'
 } finally {
     if (Test-Path -LiteralPath $fixtureRoot) { Remove-Item -LiteralPath $fixtureRoot -Recurse -Force }
 }
 
 # LlmWikiInProcessSqlite is referenced explicitly here; its full build/load and
 # SQL parity contract remains exercised by Test-LlmWikiDomainDataSqlParity.ps1.
-$sqliteSource = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'LlmWikiInProcessSqlite.ps1') -Raw
-Assert-CriticalTool ($sqliteSource -match 'Initialize-LlmWikiInProcessSqlite' -and $sqliteSource -match 'AppDomain.*SetData') 'In-process SQLite cache contract is missing.'
+. (Join-Path $PSScriptRoot 'LlmWikiInProcessSqlite.ps1')
+$sqliteFirst = Initialize-LlmWikiInProcessSqlite
+$sqliteSecond = Initialize-LlmWikiInProcessSqlite
+Assert-CriticalTool ([bool]$sqliteFirst.ready -and [bool]$sqliteSecond.ready) 'In-process SQLite reader did not initialize.'
+Assert-CriticalTool ($sqliteFirst.fingerprint -eq $sqliteSecond.fingerprint -and $sqliteFirst.outputPath -eq $sqliteSecond.outputPath) 'In-process SQLite cache did not reuse the loaded runtime.'
 
-Write-Host 'LLM Wiki critical tool contracts passed: ownership, fingerprints, finalization boundaries, worker propagation, and SQLite cache declaration.'
+Write-Host 'LLM Wiki critical tool contracts passed: ownership, fingerprints, finalization boundaries, worker propagation, and SQLite cache reuse.'

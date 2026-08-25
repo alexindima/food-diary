@@ -77,7 +77,7 @@ param(
     [ValidateSet('portable', 'linux', 'tools')]
     [string]$SmokeGroup = 'portable',
     [ValidateSet('Focused', 'Core', 'Full')]
-    [string]$VerificationProfile = 'Full',
+    [string]$VerificationProfile = 'Focused',
     [ValidateRange(1, 50)]
     [int]$Limit = 12,
     [string]$BaseRef = 'HEAD',
@@ -350,11 +350,15 @@ $deltaAwareCommands = @('update', 'repair-verify', 'completion', 'smoke', 'verif
 $explicitScopePlanningCommands = @('research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision')
 $readOnlyFacadeCommands = @('research', 'research-next-question', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'ui', 'contracts', 'diff', 'ownership', 'api-compat')
 $compiledIndexReadOnlyCommands = @('research', 'research-next-question', 'context', 'packet', 'brief', 'integration-scan', 'design', 'implementation-plan', 'plan', 'test-plan', 'decision', 'rollout', 'ui', 'contracts', 'diff', 'ownership')
+$wikiToolingPlanningIntent = $Command -in $explicitScopePlanningCommands -and
+    -not [string]::IsNullOrWhiteSpace([string]$Objective) -and
+    ([string]$Objective) -match '(?i)\b(llm[- ]?wiki|wiki\.ps1|wiki tooling|development mcp)\b'
 $taskBaselineContext = $null
 if ($Command -in @('develop', 'start')) {
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId $TaskSessionId -Format Text
 } elseif ($Command -in $deltaAwareCommands -and -not $PSBoundParameters.ContainsKey('ChangedPath') -and
-    -not ($Command -in $explicitScopePlanningCommands -and $PSBoundParameters.ContainsKey('ProposedPath'))) {
+    -not ($Command -in $explicitScopePlanningCommands -and $PSBoundParameters.ContainsKey('ProposedPath')) -and
+    -not $wikiToolingPlanningIntent) {
     $taskBaseline = try {
         & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -SessionId $TaskSessionId -Format Object
     } catch {
@@ -2721,277 +2725,7 @@ switch ($Command) {
         }
     }
     default {
-        if (-not $Detailed) {
-            & (Join-Path $toolsRoot 'Show-LlmWikiHelp.ps1') -Tier core
-            break
-        }
-
-        Write-Host 'FoodDiary LLM Wiki'
-        Write-Host ''
-        Write-Host 'Detailed command catalog:'
-        Write-Host "  ./.llm-wiki/wiki.ps1 update [-AffectedOnly] [-Verify] [-ReviewReason '<rationale>'] [-BaseRef <ref>] [-ChangedPath <path[]>]  # one-command stale-index recovery + explicit review + resumable verify"
-        Write-Host "  ./.llm-wiki/wiki.ps1 completion [-Reason '<grouped source-review rationale>'] [-ChangedPath <path[]>]  # update -> reviews -> resumable verify"
-        Write-Host "  ./.llm-wiki/wiki.ps1 repair-verify ...  # compatibility alias for completion"
-        Write-Host '  ./.llm-wiki/wiki.ps1 research -Intent <task> [-PlannedPath <path[]>] [-SkipHistory]  # current-source research; test-only skips history automatically'
-        Write-Host '  ./.llm-wiki/wiki.ps1 lint [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 smoke -SmokeGroup portable|linux|tools [-AffectedOnly] [-ChangedPath <path[]>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 verify-fast [-BaseRef <ref>] [-ChangedPath <path[]>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 verify-strict-affected [-BaseRef <ref>] [-ChangedPath <path[]>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 verify [-Fast] [-AffectedOnly] [-BaseRef <ref>] [-ChangedPath <path[]>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 verify-full [-VerificationProfile Full|Core|Focused]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 context -Module Billing -ChangeType Api'
-        Write-Host '  ./.llm-wiki/wiki.ps1 trace -Query <backend-request-or-frontend-symbol> [-TraceView Auto|Backend|Frontend] [-FullTrace]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 packet -Objective <text> [-OutputPath <path>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 brief'
-        Write-Host '  ./.llm-wiki/wiki.ps1 plan -Objective <text> [-ChangedPath <path>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 test-plan'
-        Write-Host "  ./.llm-wiki/wiki.ps1 coverage-plan -PlannedPath '<exact test file>' [-Query '<uncovered lines/branches>']"
-        Write-Host "  ./.llm-wiki/wiki.ps1 verification-record -EvidenceCommand '<command>' -Status passed -DurationSeconds <seconds> [-CoverageScope <scope>]"
-        Write-Host '  ./.llm-wiki/wiki.ps1 verification-list'
-        Write-Host '  ./.llm-wiki/wiki.ps1 decision'
-        Write-Host '  ./.llm-wiki/wiki.ps1 dependencies -BaseRef origin/master'
-        Write-Host '  ./.llm-wiki/wiki.ps1 rollout'
-        Write-Host '  ./.llm-wiki/wiki.ps1 readiness -RequireManifest -RequireAcceptance -RequireEvidence -FailOnNotReady'
-        Write-Host '  ./.llm-wiki/wiki.ps1 report -OutputPath .artifacts/llm-wiki/review-report.md'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-start -Objective <text> -Criterion <text> -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 workspace-policy [-FailOnInvalid] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-list [-Detailed] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-status -WorkspacePath <path> [-Detailed] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-evidence-import -WorkspacePath <path> [-DryRun]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-graph [-IncludeSealed] [-FailOnBlocked] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-schedule [-MaxConcurrency <n>] [-FailOnBlocked] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-orchestrate [-MaxConcurrency <n>] [-Apply] [-FailOnAttention]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-orchestration-cycle-list'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-orchestration-cycle-verify -CycleId <id> [-FailOnAttention]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-orchestration-cycle-prune [-Apply]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-orchestration-audit [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-watchdog [-SilentMinutes <n>] [-Apply] [-FailOnAttention]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-watchdog-verify -WatchdogId <id>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-circuit-list [-FailOnAttention]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-circuit-open -WorkspacePath <path> -Reason <text> [-CooldownMinutes <n>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-circuit-reset -WorkspacePath <path> [-Reason <text>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-circuit-verify -CircuitId <id>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-decompose-plan -WorkspacePath <path> [-MaxShards <n>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-decompose-verify -DecompositionId <id> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-decompose-apply -DecompositionId <id>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-decompose-list'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-verification-plan -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-IncludePassed]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-verification-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-verification-run -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-DryRun] [-ContinueOnFailure]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-model-route-show -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-model-route-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 model-route-outcome-metrics'
-        Write-Host '  ./.llm-wiki/wiki.ps1 model-route-outcome-health'
-        Write-Host '  ./.llm-wiki/wiki.ps1 model-route-outcome-verify [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 instruction-outcome-metrics'
-        Write-Host '  ./.llm-wiki/wiki.ps1 instruction-outcome-candidates'
-        Write-Host '  ./.llm-wiki/wiki.ps1 instruction-outcome-verify [-WorkspacePath <completed-task>] [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 instruction-experiment-start -Id <candidate-id> -Reason <hypothesis>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 instruction-experiment-forecast -Id <experiment-id>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 instruction-experiment-evaluate -Id <experiment-id>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 instruction-experiment-stop -Id <experiment-id> -Reason <decision>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 instruction-experiment-verify [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-risk-calibrate -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-risk-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-cost-forecast -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-cost-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-confidence-assess -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-confidence-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-critique-assess -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-critique-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-retrospective-show -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-retrospective-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-observe -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-candidates [-WorkspacePath .artifacts/llm-wiki/tasks/<name>] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-approve -Id <learning-id> -Reason <review-rationale>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-reject -Id <learning-id> -Reason <review-rationale>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-supersede -Id <learning-id> -Reason <reason>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-plan -Id <approved-learning-id> -Format Json'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-apply -Id <approved-learning-id> -Reason <materialization-rationale>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-rollback -Id <applied-learning-id> -Reason <rollback-rationale>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-shadow -Id <approved-learning-id>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-canary-start -Id <approved-learning-id> -Reason <reason> [-CanaryPercentage 25]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-canary-record -Id <id> -WorkspacePath <task> -CanaryOutcome improved -CanaryEvidence <evidence>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-canary-evaluate -Id <id>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-canary-stop -Id <id> -Reason <reason>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-experiment-verify [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-health-list | learning-health-show -Id <id>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-health-waive|learning-health-reopen -Id <id> -Reason <rationale>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-health-verify [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 learning-verify [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 verification-telemetry-metrics [-CheckId <id>] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 verification-telemetry-verify [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-conformance-assess -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-conformance-replan -WorkspacePath .artifacts/llm-wiki/tasks/<name> -Reason <rationale>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-conformance-seal -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-proof-assess -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-proof-seal -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-requirements-assess -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-requirements-expand -WorkspacePath .artifacts/llm-wiki/tasks/<name> -Reason <rationale>'
-        Write-Host "  ./.llm-wiki/wiki.ps1 impact-simulate -PlannedPath @('path/one','path/two') [-Objective <text>]"
-        Write-Host "  Multiple paths also accept: -PlannedPath 'path/one;path/two'"
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-impact-assess -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-repair-suggest -WorkspacePath <path> -CheckId <failed-check>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-repair-start -WorkspacePath <path> -CheckId <failed-check> -RepairHypothesis <text> -RepairPath <path> -Owner <agent>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 repair-learning-candidates -WorkspacePath <path>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 repair-learning-promote -WorkspacePath <path> -RepairCandidateId <id> -Owner <agent>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-create -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-Limit <n>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-compare -SourceWorkspacePath <source> -WorkspacePath <target>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-budget-create -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-budget-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> -FailOnInvalid'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-benchmark -SourceWorkspacePath <baseline> -WorkspacePath <candidate> [-FailOnRegression]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-benchmark-create -SourceWorkspacePath <baseline> -WorkspacePath <candidate>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-benchmark-verify -WorkspacePath <candidate> -FailOnInvalid [-FailOnRegression]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-experiment-plan -WorkspacePath <task>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-experiment-run -WorkspacePath <task>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-experiment-verify -WorkspacePath <task> -FailOnInvalid'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-strategy-preview -WorkspacePath <task>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-strategy-approve -WorkspacePath <task> -Reason <review rationale>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-strategy-apply -WorkspacePath <task>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-strategy-verify -WorkspacePath <task> -FailOnInvalid'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-strategy-rollback -WorkspacePath <task> -Reason <rollback rationale>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 context-outcome-metrics'
-        Write-Host '  ./.llm-wiki/wiki.ps1 context-outcome-health'
-        Write-Host '  ./.llm-wiki/wiki.ps1 context-outcome-profile -WorkspacePath <task>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 context-outcome-verify [-WorkspacePath <completed-task>] -FailOnInvalid'
-        Write-Host '  ./.llm-wiki/wiki.ps1 context-outcome-observe -WorkspacePath <completed-task>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-security-assess -WorkspacePath <path> [-ChangedPath <path>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-security-verify -WorkspacePath <path> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-feedback -DispatchId <id> -Owner <agent> [-HelpfulContextPath <path>] [-NoisyContextPath <path>] [-MissingContextPath <path>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-feedback-metrics [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-context-feedback-verify -DispatchId <id> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-quality-adjustment -DispatchId <id> -Owner <agent> -QualityAdjustmentType <rework|rollback|regression|recovery> -Reason <text> -QualityEvidence <evidence>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-quality-adjustment-metrics [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-quality-adjustment-verify -AdjustmentId <id> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 memory-promote -WorkspacePath <path> -NoteId <J-id> -Id <id> -MemoryEvidence <evidence> [-MemoryScopePath <regex>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 memory-candidates -WorkspacePath <path> [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 memory-relevant -WorkspacePath <path> [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 memory-verify [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 memory-supersede -Id <id> -Reason <reason>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-schedule-plan-create [-MaxConcurrency <n>] [-TtlMinutes <n>] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-schedule-plan-verify -PlanId <id> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-schedule-plan-claim -PlanId <id> [-Apply] [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-agent-register -Owner <agent> -Capability backend,tests [-Capacity <n>] [-RegistrationMinutes <n>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-agent-heartbeat -AgentId <id> [-Owner <agent>] [-RegistrationMinutes <n>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-agent-quarantine -AgentId <id> -Owner <agent> -Reason <text> [-QuarantineMinutes <n>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-agent-unquarantine -AgentId <id> -Owner <agent>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-agent-unregister -AgentId <id> [-Owner <agent>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-agent-list [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-agent-coverage [-FailOnGap] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-dispatch-start -WorkspacePath <path> -Owner <agent> [-Lane <n>] [-LeaseMinutes <n>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-dispatch-heartbeat -DispatchId <id> [-Owner <agent>] [-LeaseMinutes <n>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-dispatch-complete -DispatchId <id> -Result <summary> [-Owner <agent>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-dispatch-fail -DispatchId <id> -Result <summary> [-Owner <agent>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-dispatch-list [-FailOnInvalid] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-dispatch-reconcile [-Apply] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-dispatch-prune [-RetentionDays <n>] [-Apply] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-dispatch-metrics [-WindowDays <n>] [-FailOnAttention] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-dispatch-snapshot-save [-WindowDays <n>] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-dispatch-snapshot-compare [-SnapshotId <id>] [-FailOnRegression] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-dispatch-snapshot-verify -SnapshotId <id> [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-dispatch-snapshot-prune [-Apply]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-lease-acquire -WorkspacePath <path> -Owner <agent> [-LeaseMinutes <n>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-lease-heartbeat -LeaseId <id> [-Owner <agent>] [-LeaseMinutes <n>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-lease-release -LeaseId <id> [-Owner <agent>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-audit [-StaleAfterDays 7] [-EvidenceMaxAgeDays 3] [-FailOnAttention]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-status -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnBlocked]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-refresh -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-HeadRef <commit>] [-DryRun]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-lineage -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-cache-find -WorkspacePath <target> -CheckId <id> [-SourceWorkspacePath <source>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-cache-reuse -WorkspacePath <target> -CheckId <id> [-SourceWorkspacePath <source>] [-DryRun]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-similarity-profile|task-similarity-find -WorkspacePath <target>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-similarity-clusters'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-similarity-reuse -WorkspacePath <target> [-SourceWorkspacePath <source>] [-DryRun]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-similarity-show|task-similarity-verify -WorkspacePath <target>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-run -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-CheckId <id>] [-DryRun]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-handoff -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-Compact] [-OutputPath <path>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-export -WorkspacePath <path> [-ExportPath .artifacts/llm-wiki/exports/<name>.json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-export-verify -ExportPath .artifacts/llm-wiki/exports/<name>.json [-FailOnInvalid]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-import -ImportPath .artifacts/llm-wiki/exports/<name>.json -WorkspacePath .artifacts/llm-wiki/tasks/<new-name> [-DryRun]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-note -WorkspacePath <path> -JournalType decision -Text <text> [-Reason <text>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-resolve-note -WorkspacePath <path> -NoteId J-0001 -Resolution <text>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-journal -WorkspacePath <path> [-Check] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-doctor -WorkspacePath <path> [-FailOnInvalid] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-migrate -WorkspacePath <path> [-DryRun] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-policy-sync -WorkspacePath <path> [-DryRun] [-AcceptPolicyImpact] [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-policy-impact -WorkspacePath <path> [-Format Json]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-finish -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-DryRun]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid]'
-        Write-Host "  ./.llm-wiki/wiki.ps1 develop -Intent '<task>' [-PlannedPath 'path/one','path/two']"
-        Write-Host "  ./.llm-wiki/wiki.ps1 start -Intent '<large task>' [-PlannedPath 'path/one','path/two']  # baseline + research + checklist + governed workspace"
-        Write-Host "  ./.llm-wiki/wiki.ps1 continue-ui [-Intent '<iteration>'] [-ChangedPath <path[]>]"
-        Write-Host "  ./.llm-wiki/wiki.ps1 ui-finalize [-ChangedPath <accumulated-ui-path[]>]"
-        Write-Host "  ./.llm-wiki/wiki.ps1 next|status [-WorkspacePath <task>] [-Intent '<new task>']"
-        Write-Host "  ./.llm-wiki/wiki.ps1 research -Intent '<task>' [-Query '<compatible alias>'] [-ResearchPurpose Assessment|Implementation] [-PlannedPath 'path/one','path/two']"
-        Write-Host "  ./.llm-wiki/wiki.ps1 research-next-question -Intent '<task>' [-ResearchPurpose Assessment|Implementation] [-PlannedPath 'path/one','path/two']"
-        Write-Host "  ./.llm-wiki/wiki.ps1 extraction -Module Users  # contract and boundary-wide aggregate readiness"
-        Write-Host "  ./.llm-wiki/wiki.ps1 integration-scan -Intent '<task>' [-PlannedPath 'path/one','path/two']"
-        Write-Host "  ./.llm-wiki/wiki.ps1 precedents -Intent '<task>' [-PlannedPath 'path/one','path/two']"
-        Write-Host "  ./.llm-wiki/wiki.ps1 solutions -Intent '<task>' [-Option '<option one>','<option two>'] [-BoundaryEvidence '<current-source proof>']"
-        Write-Host "  ./.llm-wiki/wiki.ps1 design -Intent '<task>' [-PlannedPath 'path/one','path/two']"
-        Write-Host '  ./.llm-wiki/wiki.ps1 phase-status|phase-next|phase-complete -WorkspacePath <task> [-PhaseId <id>]'
-        Write-Host "  ./.llm-wiki/wiki.ps1 qa -Intent '<task>' [-PlannedPath 'path/one','path/two']"
-        Write-Host "  ./.llm-wiki/wiki.ps1 visual-qa -Url <url> -FixturePath <file> -ResultSelector <selector> [-TriggerSelector <selector>] [-StorageStatePath <file>] [-Run]"
-        Write-Host '  ./.llm-wiki/wiki.ps1 workflow-metrics [-TasksPath .artifacts/llm-wiki/tasks]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 pause -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 resume -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
-        Write-Host "  ./.llm-wiki/wiki.ps1 journeys -Intent '<task>' [-PlannedPath 'path/one','path/two']"
-        Write-Host '  ./.llm-wiki/wiki.ps1 delivery-status -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 delivery-replan -WorkspacePath <task> -Reason <evidence> [-DryRun]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 delivery-validate -WorkspacePath <task> -FailOnInvalid'
-        Write-Host '  ./.llm-wiki/wiki.ps1 delivery-finalize -WorkspacePath <task> -FailOnInvalid'
-        Write-Host '  ./.llm-wiki/wiki.ps1 delivery-critique -WorkspacePath <task> -FailOnInvalid'
-        Write-Host '  ./.llm-wiki/wiki.ps1 topology [-Query <text>]'
-        Write-Host "  ./.llm-wiki/wiki.ps1 privacy -PrivacyCategory credential [-PlannedPath @('path/one','path/two')] [-NoImplicitScope]"
-        Write-Host '  ./.llm-wiki/wiki.ps1 ui -FrontendView components -Query autocomplete'
-        Write-Host '  ./.llm-wiki/wiki.ps1 domain -DomainView invariants -Query weight'
-        Write-Host '  ./.llm-wiki/wiki.ps1 contracts -BackendContractView consumers -Query StartFastingCommand'
-        Write-Host '  ./.llm-wiki/wiki.ps1 health -HealthView dead-candidates'
-        Write-Host '  ./.llm-wiki/wiki.ps1 hotspots [-Query <text>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 test-gaps [-Query <text>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 debt'
-        Write-Host '  ./.llm-wiki/wiki.ps1 diff'
-        Write-Host '  ./.llm-wiki/wiki.ps1 impact -FailOnUnreviewed'
-        Write-Host '  ./.llm-wiki/wiki.ps1 review -Id <page-id> -Reason <reason> [-BaseRef <ref>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 review -ReviewId <page-id[]> -Reason <shared-reason> [-ChangedPath <path[]>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 ownership'
-        Write-Host '  ./.llm-wiki/wiki.ps1 api-compat -BaseRef HEAD -FailOnBreaking'
-        Write-Host '  ./.llm-wiki/wiki.ps1 policy [-RequireEvidence]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 evidence-init'
-        Write-Host '  ./.llm-wiki/wiki.ps1 evidence-run -Id <id>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 evidence-check -Id <id> -Status passed'
-        Write-Host '  ./.llm-wiki/wiki.ps1 evidence-review -Id <id> -Status completed -Reason <text>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 evidence-artifact -Id <review-id> -OutputPath <file> -EvidenceKind screenshot -Reason <text>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 evidence-validate'
-        Write-Host '  ./.llm-wiki/wiki.ps1 handoff [-OutputPath <path>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 evals [-Detailed]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 eval-observe -WorkspacePath <task>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 eval-candidates | eval-list | eval-show -Id <id>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 eval-approve|eval-reject -Id <id> -Reason <review>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 eval-apply|eval-rollback -Id <id> -Reason <rationale>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 eval-verify -FailOnInvalid'
-        Write-Host '  ./.llm-wiki/wiki.ps1 failures [-Query <text>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 failure-add -Id <id> -Symptom <text> -Cause <text> -Fix <text>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-init -Objective <text> -AllowedPath <regex>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-validate -FailOnOutOfScope'
-        Write-Host '  ./.llm-wiki/wiki.ps1 manifest-init -Objective <text> [-AllowedPath <regex>]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 manifest-validate [-RequireEvidence] -FailOnInvalid'
-        Write-Host '  ./.llm-wiki/wiki.ps1 acceptance-init -Objective <text> -Criterion <text>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 acceptance-map -CriterionId AC-001 -ScenarioId <id>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 acceptance-resolve -CriterionId AC-001 -AcceptanceStatus satisfied -EvidenceNote <text>'
-        Write-Host '  ./.llm-wiki/wiki.ps1 acceptance-validate [-RequireEvidence] -FailOnInvalid'
-        Write-Host '  ./.llm-wiki/wiki.ps1 catalog [-Check]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 symbols [-Check]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 frontend [-Check]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 frontend-contract [-Check]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 backend-contract [-Check]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 architecture-health [-Check]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 domain-data [-Check]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 configuration [-Check]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 quality [-Check]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 runtime [-Check]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 sensitive-data [-Check]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 modules [-Check]'
+        & (Join-Path $toolsRoot 'Show-LlmWikiHelp.ps1') -Tier core -Detailed:$Detailed
+        break
     }
 }

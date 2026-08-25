@@ -5,22 +5,22 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4646,
-    "wikiToolFiles": 178,
+    "productionFiles": 4652,
+    "wikiToolFiles": 179,
     "wikiToolsWithoutTestReferences": 0,
-    "criticalSymbols": 752,
-    "criticalSymbolsWithTestReferences": 731,
+    "criticalSymbols": 753,
+    "criticalSymbolsWithTestReferences": 732,
     "criticalSymbolsWithoutTestReferences": 21,
     "debtMarkers": 9
   },
   "hotspots": [
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 2983,
-      "decisionPoints": 347,
+      "nonBlankLines": 2718,
+      "decisionPoints": 345,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 582.16
+      "structuralRiskScore": 573.86
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
@@ -48,19 +48,19 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-      "nonBlankLines": 589,
-      "decisionPoints": 130,
+      "nonBlankLines": 598,
+      "decisionPoints": 131,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 208.78
+      "structuralRiskScore": 210.46
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-      "nonBlankLines": 790,
+      "nonBlankLines": 793,
       "decisionPoints": 122,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 200.8
+      "structuralRiskScore": 200.86
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
@@ -383,6 +383,14 @@
       "structuralRiskScore": 108.34
     },
     {
+      "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
+      "nonBlankLines": 361,
+      "decisionPoints": 67,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 107.72
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
       "nonBlankLines": 329,
       "decisionPoints": 65,
@@ -437,14 +445,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 102.28
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "nonBlankLines": 332,
-      "decisionPoints": 63,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 101.14
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
@@ -818,11 +818,11 @@
   "files": [
     {
       "path": ".llm-wiki/tools/Add-LlmWikiSourceReview.ps1",
-      "nonBlankLines": 88,
-      "decisionPoints": 17,
+      "nonBlankLines": 98,
+      "decisionPoints": 20,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 29.26
+      "structuralRiskScore": 33.96
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1",
@@ -1322,11 +1322,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-      "nonBlankLines": 790,
+      "nonBlankLines": 793,
       "decisionPoints": 122,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 200.8
+      "structuralRiskScore": 200.86
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskGraph.ps1",
@@ -1367,6 +1367,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 229.52
+    },
+    {
+      "path": ".llm-wiki/tools/Get-LlmWikiToolingContext.ps1",
+      "nonBlankLines": 52,
+      "decisionPoints": 5,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.54
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiUiContinuation.ps1",
@@ -1474,19 +1482,19 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
-      "nonBlankLines": 119,
-      "decisionPoints": 26,
+      "nonBlankLines": 148,
+      "decisionPoints": 28,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 43.38
+      "structuralRiskScore": 46.96
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-      "nonBlankLines": 589,
-      "decisionPoints": 130,
+      "nonBlankLines": 598,
+      "decisionPoints": 131,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 208.78
+      "structuralRiskScore": 210.46
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1",
@@ -2170,11 +2178,11 @@
     },
     {
       "path": ".llm-wiki/tools/Show-LlmWikiHelp.ps1",
-      "nonBlankLines": 22,
-      "decisionPoints": 2,
+      "nonBlankLines": 34,
+      "decisionPoints": 6,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.44
+      "structuralRiskScore": 11.68
     },
     {
       "path": ".llm-wiki/tools/Start-LlmWikiDevelopment.ps1",
@@ -2226,19 +2234,19 @@
     },
     {
       "path": ".llm-wiki/tools/Write-LlmWikiWorkflowMetric.ps1",
-      "nonBlankLines": 28,
+      "nonBlankLines": 38,
       "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.56
+      "structuralRiskScore": 5.76
     },
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 2983,
-      "decisionPoints": 347,
+      "nonBlankLines": 2718,
+      "decisionPoints": 345,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 582.16
+      "structuralRiskScore": 573.86
     },
     {
       "path": "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
@@ -5841,6 +5849,14 @@
       "structuralRiskScore": 0.18
     },
     {
+      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductMutationTransactionRunner.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
       "path": "FoodDiary.Application.Abstractions/Products/Common/IProductOverviewReadService.cs",
       "nonBlankLines": 17,
       "decisionPoints": 0,
@@ -6049,6 +6065,14 @@
       "structuralRiskScore": 0.18
     },
     {
+      "path": "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeMutationTransactionRunner.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
       "path": "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeNutritionWriter.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
@@ -6066,11 +6090,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeReadRepository.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
+      "structuralRiskScore": 0.7
     },
     {
       "path": "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeRepository.cs",
@@ -6098,11 +6122,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/Recipes/Models/RecipeOverviewIngredientReadItem.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
+      "structuralRiskScore": 0.5
     },
     {
       "path": "FoodDiary.Application.Abstractions/Recipes/Models/RecipeOverviewReadItem.cs",
@@ -15098,11 +15122,11 @@
     },
     {
       "path": "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
-      "nonBlankLines": 61,
+      "nonBlankLines": 71,
       "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.72
+      "structuralRiskScore": 10.92
     },
     {
       "path": "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommandValidator.cs",
@@ -15178,11 +15202,11 @@
     },
     {
       "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
-      "nonBlankLines": 77,
+      "nonBlankLines": 85,
       "decisionPoints": 11,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.04
+      "structuralRiskScore": 20.2
     },
     {
       "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommandValidator.cs",
@@ -15410,11 +15434,11 @@
     },
     {
       "path": "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 1,
+      "nonBlankLines": 24,
+      "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.86
+      "structuralRiskScore": 5.48
     },
     {
       "path": "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryValidator.cs",
@@ -15650,11 +15674,11 @@
     },
     {
       "path": "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
-      "nonBlankLines": 79,
+      "nonBlankLines": 84,
       "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.58
+      "structuralRiskScore": 9.68
     },
     {
       "path": "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommandValidator.cs",
@@ -15698,11 +15722,11 @@
     },
     {
       "path": "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
-      "nonBlankLines": 73,
+      "nonBlankLines": 77,
       "decisionPoints": 6,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.46
+      "structuralRiskScore": 12.54
     },
     {
       "path": "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandValidator.cs",
@@ -15722,11 +15746,11 @@
     },
     {
       "path": "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
-      "nonBlankLines": 104,
-      "decisionPoints": 14,
+      "nonBlankLines": 118,
+      "decisionPoints": 18,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.08
+      "structuralRiskScore": 31.36
     },
     {
       "path": "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandValidator.cs",
@@ -15762,11 +15786,11 @@
     },
     {
       "path": "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
-      "nonBlankLines": 89,
+      "nonBlankLines": 94,
       "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.28
+      "structuralRiskScore": 11.38
     },
     {
       "path": "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandValidator.cs",
@@ -15778,11 +15802,11 @@
     },
     {
       "path": "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
-      "nonBlankLines": 125,
+      "nonBlankLines": 124,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16
+      "structuralRiskScore": 15.98
     },
     {
       "path": "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeValues.cs",
@@ -20058,11 +20082,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Products.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.32
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.ProviderCaches.cs",
@@ -20090,11 +20114,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Recipes.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.34
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Repositories.cs",
@@ -21593,6 +21617,14 @@
       "structuralRiskScore": 8.76
     },
     {
+      "path": "FoodDiary.Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.58
+    },
+    {
       "path": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
       "nonBlankLines": 171,
       "decisionPoints": 15,
@@ -21602,11 +21634,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Products/ProductRepository.cs",
-      "nonBlankLines": 74,
-      "decisionPoints": 10,
+      "nonBlankLines": 83,
+      "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.48
+      "structuralRiskScore": 19.66
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
@@ -21633,6 +21665,14 @@
       "structuralRiskScore": 1.38
     },
     {
+      "path": "FoodDiary.Infrastructure/Persistence/RecipeCompositionTransactionLock.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
       "path": "FoodDiary.Infrastructure/Persistence/RecipeLikes/RecipeLikeRepository.cs",
       "nonBlankLines": 34,
       "decisionPoints": 2,
@@ -21641,20 +21681,28 @@
       "structuralRiskScore": 3.68
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "nonBlankLines": 332,
-      "decisionPoints": 63,
+      "path": "FoodDiary.Infrastructure/Persistence/Recipes/EfRecipeMutationTransactionRunner.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 101.14
+      "structuralRiskScore": 3.58
+    },
+    {
+      "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
+      "nonBlankLines": 361,
+      "decisionPoints": 67,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 107.72
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeRepository.cs",
-      "nonBlankLines": 95,
-      "decisionPoints": 13,
+      "nonBlankLines": 119,
+      "decisionPoints": 18,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.4
+      "structuralRiskScore": 29.38
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs",
@@ -38662,7 +38710,7 @@
       "name": "DuplicateRecipeCommandHandler",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
-      "line": 15,
+      "line": 16,
       "testReferenceCount": 3,
       "testReferences": [
         "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DuplicateCommandTests.cs",
@@ -44773,6 +44821,16 @@
         ".llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1",
         ".llm-wiki/tools/Test-LlmWikiVerificationReceipts.ps1"
+      ]
+    },
+    {
+      "name": "Get-LlmWikiToolingContext",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Get-LlmWikiToolingContext.ps1",
+      "line": 1,
+      "testReferenceCount": 1,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ]
     },
     {

@@ -61,7 +61,29 @@ public sealed class ProductSearchSuggestionTests {
         Assert.Equal("openFoodFacts", result.Value[0].Source);
         Assert.Equal("usda", result.Value[1].Source);
         Assert.Equal(("fanta", 5), getFirstLastCall());
-        Assert.Equal(("fanta", 5), getSecondLastCall());
+        Assert.Equal(("fanta", 4), getSecondLastCall());
+    }
+
+    [Fact]
+    public async Task SearchProductSuggestionsQueryHandler_WhenProviderFillsBudget_SkipsRemainingProviders() {
+        IProductSearchSuggestionProvider firstProvider = CreateProductSearchSuggestionProvider([
+            CreateSuggestion("first"),
+            CreateSuggestion("second"),
+            CreateSuggestion("overflow"),
+        ], out _);
+        IProductSearchSuggestionProvider secondProvider = CreateProductSearchSuggestionProvider(
+            [CreateSuggestion("unused")],
+            out Func<(string Search, int Limit)?> getSecondLastCall);
+        var handler = new SearchProductSuggestionsQueryHandler([firstProvider, secondProvider]);
+
+        Result<IReadOnlyList<ProductSearchSuggestionModel>> result = await handler.Handle(
+            new SearchProductSuggestionsQuery("fanta", 2),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(2, result.Value.Count),
+            () => Assert.Null(getSecondLastCall()));
     }
 
     [Fact]
@@ -222,6 +244,21 @@ public sealed class ProductSearchSuggestionTests {
         unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.FromResult(1));
         return unitOfWork;
     }
+
+    private static ProductSearchSuggestionModel CreateSuggestion(string name) =>
+        new(
+            "test",
+            name,
+            Brand: null,
+            Category: null,
+            Barcode: null,
+            UsdaFdcId: null,
+            ImageUrl: null,
+            CaloriesPer100G: null,
+            ProteinsPer100G: null,
+            FatsPer100G: null,
+            CarbsPer100G: null,
+            FiberPer100G: null);
 
     private static IOpenFoodFactsCachedProductSearch CreateCachedProductSearch(
         IOpenFoodFactsService service,

@@ -15,9 +15,15 @@ public sealed class DeleteRecipeCommandHandler(
     IRecipeReadRepository recipeReadRepository,
     IRecipeWriteRepository recipeWriteRepository,
     IImageAssetCleanupService imageAssetCleanupService,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IRecipeMutationTransactionRunner transactionRunner)
     : ICommandHandler<DeleteRecipeCommand, Result> {
-    public async Task<Result> Handle(DeleteRecipeCommand command, CancellationToken cancellationToken) {
+    public Task<Result> Handle(DeleteRecipeCommand command, CancellationToken cancellationToken) =>
+        transactionRunner.ExecuteAsync(
+            token => HandleCoreAsync(command, token),
+            cancellationToken);
+
+    private async Task<Result> HandleCoreAsync(DeleteRecipeCommand command, CancellationToken cancellationToken) {
         Result<RecipeId> recipeIdResult = RecipeRequiredIdParser.Parse(
             command.RecipeId,
             nameof(command.RecipeId),
@@ -38,12 +44,11 @@ public sealed class DeleteRecipeCommandHandler(
         UserId userId = userIdResult.Value;
         RecipeId recipeId = recipeIdResult.Value;
 
-        Recipe? recipe = await recipeReadRepository.GetByIdAsync(
+        Recipe? recipe = await recipeReadRepository.GetByIdForUpdateAsync(
             recipeId,
             userId,
             includePublic: false,
             includeSteps: true,
-            asTracking: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recipe is null) {

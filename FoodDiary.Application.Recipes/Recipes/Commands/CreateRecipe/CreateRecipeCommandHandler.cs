@@ -19,9 +19,15 @@ public sealed class CreateRecipeCommandHandler(
     ICurrentUserAccessService currentUserAccessService,
     IImageAssetAccessService imageAssetAccessService,
     IProductLookupService productLookupService,
-    IRecipeLookupService recipeLookupService)
+    IRecipeLookupService recipeLookupService,
+    IRecipeMutationTransactionRunner transactionRunner)
     : ICommandHandler<CreateRecipeCommand, Result<RecipeModel>> {
-    public async Task<Result<RecipeModel>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken) {
+    public Task<Result<RecipeModel>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken) =>
+        transactionRunner.ExecuteAsync(
+            token => HandleCoreAsync(command, token),
+            cancellationToken);
+
+    private async Task<Result<RecipeModel>> HandleCoreAsync(CreateRecipeCommand command, CancellationToken cancellationToken) {
         Result<CreateRecipeValues> valuesResult = await CreateRecipeValuePreparer.PrepareAsync(
             command,
             currentUserAccessService,

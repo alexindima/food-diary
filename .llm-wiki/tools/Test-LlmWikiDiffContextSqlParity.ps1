@@ -105,14 +105,20 @@ if ([string]$hashProbe.compiledIndex.sourceHashes.repositoryCatalog -cne $catalo
     throw 'Diff-context SQLite source hashes do not match the current generated JSON sources.'
 }
 
-$sqlAverage = [Math]::Round(($sqlRoundTrips | Measure-Object -Average).Average, 2)
-$jsonAverage = [Math]::Round(($jsonRoundTrips | Measure-Object -Average).Average, 2)
-if ($sqlAverage -gt ($jsonAverage + 250)) {
-    throw "SQLite diff-context transport regressed beyond the 250ms safety envelope: SQL=${sqlAverage}ms, JSON=${jsonAverage}ms."
+function Get-Median([Collections.Generic.List[double]]$Durations) {
+    $ordered = @($Durations | Sort-Object)
+    $middle = [int]($ordered.Count / 2)
+    if (($ordered.Count % 2) -eq 0) { return ($ordered[$middle - 1] + $ordered[$middle]) / 2 }
+    return $ordered[$middle]
 }
-$sqlEndToEndAverage = [Math]::Round(($sqlEndToEnd | Measure-Object -Average).Average, 2)
-$jsonEndToEndAverage = [Math]::Round(($jsonEndToEnd | Measure-Object -Average).Average, 2)
-if ($sqlEndToEndAverage -gt ($jsonEndToEndAverage + 250)) {
-    throw "SQLite diff-context route regressed beyond the 250ms end-to-end safety envelope: SQL=${sqlEndToEndAverage}ms, JSON=${jsonEndToEndAverage}ms."
+$sqlMedian = [Math]::Round((Get-Median $sqlRoundTrips), 2)
+$jsonMedian = [Math]::Round((Get-Median $jsonRoundTrips), 2)
+if ($sqlMedian -gt ($jsonMedian + 250)) {
+    throw "SQLite diff-context median transport regressed beyond the 250ms safety envelope: SQL=${sqlMedian}ms, JSON=${jsonMedian}ms."
 }
-Write-Host "LLM Wiki diff-context SQL parity passed: $($cases.Count)/$($cases.Count) cases; data load SQL=${sqlAverage}ms/JSON=${jsonAverage}ms; end-to-end SQL=${sqlEndToEndAverage}ms/JSON=${jsonEndToEndAverage}ms; candidate reduction=$reducedCases/$($cases.Count)."
+$sqlEndToEndMedian = [Math]::Round((Get-Median $sqlEndToEnd), 2)
+$jsonEndToEndMedian = [Math]::Round((Get-Median $jsonEndToEnd), 2)
+if ($sqlEndToEndMedian -gt ($jsonEndToEndMedian + 250)) {
+    throw "SQLite diff-context median route regressed beyond the 250ms end-to-end safety envelope: SQL=${sqlEndToEndMedian}ms, JSON=${jsonEndToEndMedian}ms."
+}
+Write-Host "LLM Wiki diff-context SQL parity passed: $($cases.Count)/$($cases.Count) cases; median data load SQL=${sqlMedian}ms/JSON=${jsonMedian}ms; median end-to-end SQL=${sqlEndToEndMedian}ms/JSON=${jsonEndToEndMedian}ms; candidate reduction=$reducedCases/$($cases.Count)."

@@ -16,7 +16,8 @@ public sealed class UpdateProductCommandHandler(
     IProductReadRepository productReadRepository,
     IImageAssetCleanupService imageAssetCleanupService,
     ICurrentUserAccessService currentUserAccessService,
-    IImageAssetAccessService imageAssetAccessService)
+    IImageAssetAccessService imageAssetAccessService,
+    IProductMutationTransactionRunner transactionRunner)
     : ICommandHandler<UpdateProductCommand, Result<ProductModel>> {
     public async Task<Result<ProductModel>>
         Handle(UpdateProductCommand command, CancellationToken cancellationToken) {
@@ -29,7 +30,15 @@ public sealed class UpdateProductCommandHandler(
             return Result.Failure<ProductModel>(valuesResult.Error);
         }
 
-        ProductUpdateValues values = valuesResult.Value;
+        return await transactionRunner.ExecuteAsync(
+            token => UpdateAsync(command, valuesResult.Value, token),
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<Result<ProductModel>> UpdateAsync(
+        UpdateProductCommand command,
+        ProductUpdateValues values,
+        CancellationToken cancellationToken) {
         Product? product = await productRepository.GetByIdForUpdateAsync(
             values.ProductId,
             values.UserId,

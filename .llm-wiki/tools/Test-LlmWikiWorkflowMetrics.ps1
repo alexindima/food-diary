@@ -26,22 +26,28 @@ try {
         [pscustomobject]@{ operation = 'research'; outcome = 'failed'; duration = 2.0 }
         [pscustomobject]@{ operation = 'verify'; outcome = 'timed-out'; duration = 3.0 }
         [pscustomobject]@{ operation = 'verify-full'; outcome = 'interrupted'; duration = 4.0 }
+        [pscustomobject]@{ operation = 'verify-full-group'; outcome = 'passed'; duration = 5.0; phase = 'indexes'; profile = 'Focused'; runId = 'run-1' }
     )) {
         & (Join-Path $PSScriptRoot 'Write-LlmWikiWorkflowMetric.ps1') `
             -Operation $sample.operation `
             -Outcome $sample.outcome `
-            -DurationSeconds $sample.duration
+            -DurationSeconds $sample.duration `
+            -Phase $sample.phase `
+            -Profile $sample.profile `
+            -RunId $sample.runId
     }
     $metrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkflowMetrics.ps1') -Format Json | ConvertFrom-Json
     $research = @($metrics.adaptive.byOperation | Where-Object operation -eq 'research')[0]
     $verify = @($metrics.adaptive.byOperation | Where-Object operation -eq 'verify')[0]
-    if ([int]$metrics.schemaVersion -ne 4 -or [int]$metrics.adaptive.runCount -ne 4 -or
-        [int]$metrics.adaptive.passedCount -ne 1 -or [int]$metrics.adaptive.failedCount -ne 3 -or
-        [string]$metrics.adaptive.health -ne 'attention' -or [double]$metrics.adaptive.successRatePercent -ne 25 -or
+    $fullGroup = @($metrics.adaptive.recent | Where-Object operation -eq 'verify-full-group')[0]
+    if ([int]$metrics.schemaVersion -ne 4 -or [int]$metrics.adaptive.runCount -ne 5 -or
+        [int]$metrics.adaptive.passedCount -ne 2 -or [int]$metrics.adaptive.failedCount -ne 3 -or
+        [string]$metrics.adaptive.health -ne 'attention' -or [double]$metrics.adaptive.successRatePercent -ne 40 -or
         [string]$metrics.ceremony.adoptionStatus -ne 'insufficient-data' -or $null -ne $metrics.ceremony.manifestAdoptionPercent -or
         [int]$research.failedCount -ne 1 -or [double]$research.successRatePercent -ne 50 -or
         [double]$research.medianDurationSeconds -ne 1 -or [double]$research.p95DurationSeconds -ne 2 -or
-        [int]$verify.timedOutCount -ne 1) {
+        [int]$verify.timedOutCount -ne 1 -or [string]$fullGroup.phase -ne 'indexes' -or
+        [string]$fullGroup.profile -ne 'Focused' -or [string]$fullGroup.runId -ne 'run-1') {
         throw 'Workflow metrics did not retain failed, timed-out, and interrupted outcomes honestly.'
     }
 

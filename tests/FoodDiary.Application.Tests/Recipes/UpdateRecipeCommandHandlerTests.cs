@@ -34,7 +34,16 @@ public partial class UpdateRecipeCommandHandlerTests {
             currentUserAccessService,
             imageAssetAccessService,
             productLookupService,
-            recipeLookupService);
+            recipeLookupService,
+            new ImmediateRecipeMutationTransactionRunner());
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ImmediateRecipeMutationTransactionRunner : IRecipeMutationTransactionRunner {
+        public Task<T> ExecuteAsync<T>(
+            Func<CancellationToken, Task<T>> operation,
+            CancellationToken cancellationToken = default) =>
+            operation(cancellationToken);
+    }
 
     private static RecipeStepInput CreateStep(int order, string description) {
         return new RecipeStepInput(
@@ -110,6 +119,18 @@ public partial class UpdateRecipeCommandHandlerTests {
                 Arg.Any<RecipeId>(),
                 Arg.Any<UserId>(),
                 Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => {
+                RecipeId id = call.ArgAt<RecipeId>(0);
+                UserId requestedUserId = call.ArgAt<UserId>(1);
+                return Task.FromResult(id == recipeId && requestedUserId == userId ? recipe : null);
+            });
+        repository
+            .GetByIdForUpdateAsync(
+                Arg.Any<RecipeId>(),
+                Arg.Any<UserId>(),
                 Arg.Any<bool>(),
                 Arg.Any<bool>(),
                 Arg.Any<CancellationToken>())

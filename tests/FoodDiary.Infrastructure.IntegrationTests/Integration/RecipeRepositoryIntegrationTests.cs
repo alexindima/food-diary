@@ -5,9 +5,12 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Recipes.Models;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.FavoriteRecipes;
 using FoodDiary.Infrastructure.Persistence.Recipes;
+using FoodDiary.Infrastructure.Persistence.Products;
+using FoodDiary.Results;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
@@ -135,6 +138,83 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         Assert.Equal([quickSoupNoImage.Id], mediumCalorieIds);
         Assert.Equal([quickSaladWithImage.Id], withImageIds);
         AssertIds([longSaladNoImage.Id, quickSoupNoImage.Id], withoutImageIds);
+    }
+
+    [RequiresDockerFact]
+    public async Task GetByIdsWithUsageAsync_ForAnotherUsersPublicRecipe_RedactsPrivateDependenciesWithoutChangingTotals() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var owner = User.Create($"recipe-private-owner-{Guid.NewGuid():N}@example.com", "hash");
+        var reader = User.Create($"recipe-private-reader-{Guid.NewGuid():N}@example.com", "hash");
+        var product = Product.Create(
+            owner.Id,
+            "Private ingredient",
+            MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 200,
+            proteinsPerBase: 10,
+            fatsPerBase: 5,
+            carbsPerBase: 30,
+            fiberPerBase: 2,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private);
+        var nested = Recipe.Create(owner.Id, "Private sauce", servings: 2, visibility: Visibility.Private);
+        nested.ApplyComputedNutrition(300, 12, 8, 40, 4, 0);
+        var outer = Recipe.Create(owner.Id, "Public meal", servings: 2, visibility: Visibility.Public);
+        RecipeStep step = outer.AddStep(1, "Combine");
+        step.AddProductIngredient(product.Id, 100);
+        step.AddNestedRecipeIngredient(nested.Id, 1);
+        outer.ApplyComputedNutrition(350, 16, 9, 50, 4, 0);
+        context.AddRange(owner, reader, product, nested, outer);
+        await context.SaveChangesAsync();
+        var readService = new RecipeOverviewReadService(context);
+
+        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> result = await readService.GetByIdsWithUsageAsync(
+            [outer.Id],
+            reader.Id,
+            includePublic: true);
+
+        RecipeOverviewReadItem item = Assert.Single(result).Value;
+        Assert.Equal(350, item.TotalCalories);
+        RecipeOverviewIngredientReadItem[] ingredients = [.. item.Steps.Single().Ingredients];
+        Assert.All(ingredients, ingredient => {
+            Assert.Null(ingredient.ProductId);
+            Assert.Null(ingredient.ProductName);
+            Assert.Null(ingredient.NestedRecipeId);
+            Assert.Null(ingredient.NestedRecipeName);
+        });
+    }
+
+    [RequiresDockerFact]
+    public async Task ProductAndRecipeMutationRunners_SerializeRecipeCompositionChanges() {
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseNpgsql(connectionString)
+            .Options;
+        await using var firstContext = new FoodDiaryDbContext(options);
+        await using var secondContext = new FoodDiaryDbContext(options);
+        await firstContext.Database.MigrateAsync();
+        var recipeRunner = new EfRecipeMutationTransactionRunner(firstContext, Substitute.For<IUnitOfWork>());
+        var productRunner = new EfProductMutationTransactionRunner(secondContext, Substitute.For<IUnitOfWork>());
+        var firstEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseFirst = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var secondEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        Task<Result> first = recipeRunner.ExecuteAsync(async _ => {
+            firstEntered.SetResult();
+            await releaseFirst.Task;
+            return Result.Success();
+        });
+        await firstEntered.Task;
+        Task<Result> second = productRunner.ExecuteAsync(_ => {
+            secondEntered.SetResult();
+            return Task.FromResult(Result.Success());
+        });
+
+        await Assert.ThrowsAsync<TimeoutException>(() => secondEntered.Task.WaitAsync(TimeSpan.FromMilliseconds(250)));
+        releaseFirst.SetResult();
+        await Task.WhenAll(first, second);
+        Assert.True(secondEntered.Task.IsCompletedSuccessfully);
     }
 
     [RequiresDockerFact]

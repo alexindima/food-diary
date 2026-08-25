@@ -15,7 +15,8 @@ public sealed class DeleteProductCommandHandler(
     IProductWriteRepository productRepository,
     IProductReadRepository productReadRepository,
     IImageAssetCleanupService imageAssetCleanupService,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IProductMutationTransactionRunner transactionRunner)
     : ICommandHandler<DeleteProductCommand, Result> {
     public async Task<Result> Handle(DeleteProductCommand command, CancellationToken cancellationToken) {
         Result<ProductId> productIdResult = ProductRequiredIdParser.Parse(
@@ -38,6 +39,16 @@ public sealed class DeleteProductCommandHandler(
         UserId userId = userIdResult.Value;
         ProductId productId = productIdResult.Value;
 
+        return await transactionRunner.ExecuteAsync(
+            token => DeleteAsync(command, productId, userId, token),
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<Result> DeleteAsync(
+        DeleteProductCommand command,
+        ProductId productId,
+        UserId userId,
+        CancellationToken cancellationToken) {
         Product? product = await productRepository.GetByIdForUpdateAsync(
             productId,
             userId,

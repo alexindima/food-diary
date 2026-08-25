@@ -38,7 +38,14 @@ public partial class RecipesFeatureTests {
         IImageAssetAccessService imageAssetAccessService,
         IProductLookupService productLookupService,
         IRecipeLookupService recipeLookupService) =>
-        new(repository, repository, currentUserAccessService, imageAssetAccessService, productLookupService, recipeLookupService);
+        new(
+            repository,
+            repository,
+            currentUserAccessService,
+            imageAssetAccessService,
+            productLookupService,
+            recipeLookupService,
+            new ImmediateRecipeMutationTransactionRunner());
 
     private static DeleteRecipeCommandHandler DeleteRecipeHandler(
         IRecipeRepository repository,
@@ -48,13 +55,19 @@ public partial class RecipesFeatureTests {
             repository,
             repository,
             imageAssetCleanupService,
-            currentUserAccessService ?? new StubUserRepository(User.Create("recipe-deleter@example.com", "hash")));
+            currentUserAccessService ?? new StubUserRepository(User.Create("recipe-deleter@example.com", "hash")),
+            new ImmediateRecipeMutationTransactionRunner());
 
     private static DuplicateRecipeCommandHandler DuplicateRecipeHandler(IRecipeRepository repository) =>
-        new(repository, repository, repository, new StubUserRepository(User.Create("recipe-duplicator@example.com", "hash")));
+        new(
+            repository,
+            repository,
+            repository,
+            new StubUserRepository(User.Create("recipe-duplicator@example.com", "hash")),
+            new ImmediateRecipeMutationTransactionRunner());
 
     private static DuplicateRecipeCommandHandler DuplicateRecipeHandler(IRecipeRepository repository, ICurrentUserAccessService currentUserAccessService) =>
-        new(repository, repository, repository, currentUserAccessService);
+        new(repository, repository, repository, currentUserAccessService, new ImmediateRecipeMutationTransactionRunner());
 
     private static UpdateRecipeCommandHandler UpdateRecipeHandler(
         IRecipeRepository repository,
@@ -71,7 +84,16 @@ public partial class RecipesFeatureTests {
             currentUserAccessService,
             imageAssetAccessService,
             productLookupService,
-            recipeLookupService);
+            recipeLookupService,
+            new ImmediateRecipeMutationTransactionRunner());
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ImmediateRecipeMutationTransactionRunner : IRecipeMutationTransactionRunner {
+        public Task<T> ExecuteAsync<T>(
+            Func<CancellationToken, Task<T>> operation,
+            CancellationToken cancellationToken = default) =>
+            operation(cancellationToken);
+    }
 
     private static GetRecipesOverviewQueryHandler CreateRecipesOverviewHandler(
         IRecipeOverviewReadService overviewReadService,
@@ -172,14 +194,16 @@ public partial class RecipesFeatureTests {
             bool includeSteps = false,
             bool asTracking = false,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult(FindById(id, userId));
+            Task.FromResult(FindById(id, userId, includePublic));
 
-        private Recipe? FindById(RecipeId id, UserId userId) {
+        private Recipe? FindById(RecipeId id, UserId userId, bool includePublic) {
             if (LastAddedRecipe is not null && LastAddedRecipe.Id == id && LastAddedRecipe.UserId == userId) {
                 return LastAddedRecipe;
             }
 
-            return id == recipe.Id && userId == recipe.UserId ? recipe : null;
+            return id == recipe.Id && (userId == recipe.UserId || (includePublic && recipe.Visibility == Visibility.Public))
+                ? recipe
+                : null;
         }
 
         public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(

@@ -256,6 +256,16 @@ if ($AffectedOnly) {
             }
         }
 
+        # Quality indexing measures Wiki tools and their direct regression-test
+        # references. Any non-builder PowerShell tool/test edit can therefore
+        # change quality and its architecture-health downstream projection.
+        if (@($normalizedChangedPaths | Where-Object {
+            $_ -match '^\.llm-wiki/tools/[^/]+\.ps1$' -and
+            $_ -notmatch '^\.llm-wiki/tools/Build-LlmWiki[^/]+\.ps1$'
+        }).Count -gt 0) {
+            Add-IndexToolWithDependents 'Build-LlmWikiQualityIndex.ps1'
+        }
+
         if (@($normalizedChangedPaths | Where-Object {
             $_ -match '^\.llm-wiki/tools/(?:Invoke-LlmWikiContractReferenceExtractor\.ps1|contract-reference-extractor/)'
         }).Count -gt 0) {

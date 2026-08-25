@@ -58,20 +58,21 @@ Source: `FoodDiary.Presentation.Api/Features/Products/ProductsController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Product
-- Public contract files: 9
+- Public contract files: 10
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 9
-- Interfaces: 6
+- Public contract types: 10
+- Interfaces: 7
 - DTO/read-model/projection types: 0
 - Enums: 0
 - Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 3
 - `class ProductErrors`
 - `interface IProductLookupService`
+- `interface IProductMutationTransactionRunner`
 - `interface IProductOverviewReadService`
 - `interface IProductReadRepository`
 - `interface IProductRepository`

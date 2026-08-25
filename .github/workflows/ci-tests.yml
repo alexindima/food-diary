@@ -7,6 +7,8 @@ on:
       - master
       - main
   workflow_dispatch:
+  schedule:
+    - cron: '17 3 * * 1'
 
 jobs:
   llm-wiki:
@@ -43,9 +45,11 @@ jobs:
             $baseRef = "HEAD^"
           }
 
-          # Full verification already owns range-aware impact and change-policy
-          # gates. Pass the CI base explicitly instead of running both twice.
-          ./.llm-wiki/wiki.ps1 verify-full -BaseRef $baseRef
+          # Pull requests use the complete focused catalog. Pushes, the weekly
+          # schedule, and manual audits additionally run the legacy monolithic
+          # Full profile outside the latency-sensitive PR path.
+          $verificationProfile = if ("${{ github.event_name }}" -eq "pull_request") { "Focused" } else { "Full" }
+          ./.llm-wiki/wiki.ps1 verify-full -BaseRef $baseRef -VerificationProfile $verificationProfile
 
           ./.llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1 `
             -BaseRef $baseRef `

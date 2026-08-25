@@ -97,10 +97,40 @@ public partial class RecipesFeatureTests {
         Assert.Equal(original.Name, repository.LastAddedRecipe.Name);
         Assert.Equal(original.ImageUrl, repository.LastAddedRecipe.ImageUrl);
         Assert.Null(repository.LastAddedRecipe.ImageAssetId);
+        Assert.Equal("Original note", repository.LastAddedRecipe.Comment);
+        Assert.NotNull(repository.LastAddedRecipe.Steps.Single().ImageAssetId);
         Assert.Equal(user.Id, repository.LastAddedRecipe.UserId);
         Assert.Single(repository.LastAddedRecipe.Steps);
         Assert.Equal(2, repository.LastAddedRecipe.Steps.Single().Ingredients.Count);
         Assert.True(result.Value.IsOwnedByCurrentUser);
+    }
+
+    [Fact]
+    public async Task DuplicateRecipeCommandHandler_WithAnotherUsersPublicRecipe_StripsPrivateMetadataAndManagedStepAssets() {
+        var owner = User.Create("recipe-owner@example.com", "hash");
+        var caller = User.Create("recipe-caller@example.com", "hash");
+        var original = Recipe.Create(
+            owner.Id,
+            "Shared soup",
+            servings: 2,
+            comment: "Owner-only note",
+            visibility: Visibility.Public);
+        RecipeStep step = original.AddStep(1, "Cook", imageAssetId: ImageAssetId.New());
+        step.AddProductIngredient(ProductId.New(), 100);
+        step.AddNestedRecipeIngredient(RecipeId.New(), 1);
+        var repository = new SingleRecipeRepository(original);
+        DuplicateRecipeCommandHandler handler = DuplicateRecipeHandler(repository, new StubUserRepository(caller));
+
+        Result<RecipeModel> result = await handler.Handle(
+            new DuplicateRecipeCommand(caller.Id.Value, original.Id.Value),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.NotNull(repository.LastAddedRecipe);
+        Assert.Null(repository.LastAddedRecipe.Comment);
+        Assert.Null(repository.LastAddedRecipe.Steps.Single().ImageAssetId);
+        Assert.Empty(repository.LastAddedRecipe.Steps.Single().Ingredients);
+        Assert.Equal(caller.Id, repository.LastAddedRecipe.UserId);
     }
 
     [Fact]

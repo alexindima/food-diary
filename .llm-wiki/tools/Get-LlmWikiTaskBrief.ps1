@@ -88,9 +88,12 @@ $intentIndexDiagnostics = $null
 $normalizedIntent = ([string]$Intent).ToLowerInvariant()
 $wikiInternalIntent = $normalizedIntent -match '\b(llm[- ]?wiki|wiki\.ps1|wiki tooling|development mcp)\b'
 if ($effectivePaths.Count -eq 0 -and $wikiInternalIntent) {
-    # Tooling objectives must not be grounded through coincidental product-symbol
-    # matches (for example "registry" or "metrics" matching business features).
-    $inferredPaths = @('.llm-wiki/wiki.ps1', '.llm-wiki/README.md')
+    # Tooling objectives use a dedicated Wiki code/workflow index instead of
+    # coincidental product-symbol matches such as "registry" or "metrics".
+    $toolingContext = & (Join-Path $toolsRoot 'Get-LlmWikiToolingContext.ps1') `
+        -Query $Intent -Limit 8 -Format Json | ConvertFrom-Json
+    $inferredPaths = @($toolingContext.groundedPaths)
+    if ($inferredPaths.Count -eq 0) { $inferredPaths = @('.llm-wiki/wiki.ps1', '.llm-wiki/README.md') }
     $effectivePaths = $inferredPaths
 }
 if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent)) {
