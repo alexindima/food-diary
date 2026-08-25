@@ -172,14 +172,14 @@
       "pageSha256": "f83da814d1fce3b0dcacba64e84e6a642d7475c3f8e22256df3958647aea0832",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "16cd4bfd82bc44f8d15ed3d6315f7416b4dae9595e0df7ee84270e571a95a5b8"
+          "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
+          "sha256": "d2824439e4b7783652d7c0a5e090908d03f7443030d29c4a3196809200bbbb24"
         }
       ],
-      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
+      "reason": "Git-based consumer enumeration preserves the compiled-index migration inventory without requiring ripgrep; architecture-health routing and review guidance remain current.",
       "baseRef": "HEAD",
-      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
-      "reviewedAtUtc": "2026-08-25T20:20:25.6789660Z"
+      "gitHead": "8602f0721c9bb578fb641d1485dee01703c28c39",
+      "reviewedAtUtc": "2026-08-25T23:51:05.9542709Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -232,14 +232,14 @@
       "pageSha256": "09a37af45fe8b4901fc2ef94c789650225eb345581ea996591487035d48a503c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1",
-          "sha256": "87fb1a009d33ed7f51b34211c704f6fdeb9e4e9bfdee12a0e6d25086183a3ec6"
+          "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
+          "sha256": "d2824439e4b7783652d7c0a5e090908d03f7443030d29c4a3196809200bbbb24"
         }
       ],
-      "reason": "Impact-simulation parity now uses a load-relative outer-process envelope while preserving semantic parity, compiled-index reuse, payload reduction, and the strict 25ms incremental SQLite round-trip guard; the documented code-graph behavior remains current.",
+      "reason": "Git-based consumer enumeration preserves the compiled-index migration inventory without requiring ripgrep; code-graph routing and migration reporting remain current.",
       "baseRef": "HEAD",
-      "gitHead": "d825282540643213d5b066dd9e01c7d9294c6619",
-      "reviewedAtUtc": "2026-08-25T23:29:39.9563427Z"
+      "gitHead": "8602f0721c9bb578fb641d1485dee01703c28c39",
+      "reviewedAtUtc": "2026-08-25T23:51:07.7239544Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -470,30 +470,14 @@
       "pageSha256": "740dd5bba75b488c88d30cb9fda34ae14a0f7441a6d375ba03994ceaf41bc86f",
       "sources": [
         {
-          "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "86276521129f6c84961bb96fac667db9763287ca6491de3085b1657eb99ea32f"
-        },
-        {
-          "path": ".llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1",
-          "sha256": "fa3675cc49e7d53da4d6dd778e0ff73a2a42694fad1af258c9a562d75ad62cd5"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
-          "sha256": "c7ce7a105448823247ea15d9548f07da01d4c96915769bc2fd5d3061509c544e"
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiInProcessSqlite.ps1",
-          "sha256": "f5acdfe44d712b3ab94aa3e82167e997aaa996667ef80b78eac9475d7853f8c6"
-        },
-        {
-          "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
-          "sha256": "57dff5d8a233553b6d225aac1250f793e366f39cc123ee27e98b70ce360fa79a"
+          "sha256": "d2824439e4b7783652d7c0a5e090908d03f7443030d29c4a3196809200bbbb24"
         }
       ],
-      "reason": "The 917-second Full lifecycle audit and 16-group affected smoke passed after validating StrictMode shapes, workspace migration, decomposition, scheduler lineage, completion seals, and read-only cache cleanup; workflow guidance remains accurate.",
+      "reason": "Git-based consumer enumeration preserves the compiled-index migration inventory without requiring ripgrep; domain-data routing and review guidance remain current.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:45.9714608Z"
+      "gitHead": "8602f0721c9bb578fb641d1485dee01703c28c39",
+      "reviewedAtUtc": "2026-08-25T23:51:09.3766062Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -625,14 +609,14 @@
       "pageSha256": "7cf34e384c94c0427431d4d5b600c1aa2b1cad26fa2eb72f02b0942e6e2240ca",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1",
-          "sha256": "87fb1a009d33ed7f51b34211c704f6fdeb9e4e9bfdee12a0e6d25086183a3ec6"
+          "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
+          "sha256": "d2824439e4b7783652d7c0a5e090908d03f7443030d29c4a3196809200bbbb24"
         }
       ],
-      "reason": "Impact-simulation parity now uses a load-relative outer-process envelope while preserving semantic parity, compiled-index reuse, payload reduction, and the strict 25ms incremental SQLite round-trip guard; the documented index pipeline remains current.",
+      "reason": "Git-based consumer enumeration preserves the compiled-index migration inventory without requiring ripgrep; index-pipeline behavior remains current.",
       "baseRef": "HEAD",
-      "gitHead": "d825282540643213d5b066dd9e01c7d9294c6619",
-      "reviewedAtUtc": "2026-08-25T23:29:43.9669073Z"
+      "gitHead": "8602f0721c9bb578fb641d1485dee01703c28c39",
+      "reviewedAtUtc": "2026-08-25T23:51:11.0705785Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -822,13 +806,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3e463a8eb46761a461c431e71e95758df00b41a5daba489dc58872dd9a624303"
+          "sha256": "ccb74eb210eefddf58ff3a9e9406f1c6f0faf09d8faca6a679c02596fe9c918a"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
+          "sha256": "d2824439e4b7783652d7c0a5e090908d03f7443030d29c4a3196809200bbbb24"
         }
       ],
-      "reason": "Reviewed the mutation transaction, PostgreSQL xmin row-lock, S3 staging, cleanup outbox, wearable token protection, and supply-chain guardrail corrections. Architecture 712/712, integration options 105/105, cleanup 4/4, focused Postgres 6/6, and full Web API integration 180/180 passed; API contracts and migrations are unchanged.",
+      "reason": "Git-based consumer enumeration preserves the compiled-index migration inventory without requiring ripgrep; quality-index routing and review guidance remain current.",
       "baseRef": "HEAD",
-      "gitHead": "40cf68f587382ebc31d5c770354c9a8d0f318fba",
-      "reviewedAtUtc": "2026-08-25T21:50:50.0693604Z"
+      "gitHead": "8602f0721c9bb578fb641d1485dee01703c28c39",
+      "reviewedAtUtc": "2026-08-25T23:51:12.8552809Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -897,17 +885,17 @@
     {
       "pageId": "workflow-runtime-impact",
       "pagePath": ".llm-wiki/workflows/runtime-impact.md",
-      "pageSha256": "f76e9e0aeb3642ca5dbda529bb9b4b9598b30d636df9df042d6a0d0edd2e9233",
+      "pageSha256": "6b362e1e892d8259af8d9c085e45a942632b1331bcdda099af53546e9bf215e4",
       "sources": [
         {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "253f53a575aa46e1f0be796a83a8c8c75741da291491f945ce6992c88e14ef88"
+          "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
+          "sha256": "d2824439e4b7783652d7c0a5e090908d03f7443030d29c4a3196809200bbbb24"
         }
       ],
-      "reason": "Reviewed generated catalog and runtime topology against the MailInbox compose, initializer, PostgreSQL TLS, runtime-role, SMTP quota, and admin DMARC changes; affected indexes were regenerated.",
+      "reason": "Git-based consumer enumeration preserves the compiled-index migration inventory without requiring ripgrep; runtime-topology routing and impact guidance remain current.",
       "baseRef": "HEAD",
-      "gitHead": "1fc89fcc75bb0a909955b6435ff1365e23830f7f",
-      "reviewedAtUtc": "2026-08-20T13:44:46.7261889Z"
+      "gitHead": "8602f0721c9bb578fb641d1485dee01703c28c39",
+      "reviewedAtUtc": "2026-08-25T23:51:14.5410753Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

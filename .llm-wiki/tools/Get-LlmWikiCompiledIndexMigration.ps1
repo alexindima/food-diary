@@ -18,6 +18,15 @@ $indexes = @(
     '.llm-wiki/generated/domain-data-index.json',
     '.llm-wiki/generated/architecture-health-index.json'
 )
+$candidatePaths = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard -- '*.ps1' '*.mjs' '*.md')
+if ($LASTEXITCODE -ne 0) {
+    throw 'Unable to enumerate compiled-index consumers from Git.'
+}
+$candidateFiles = @(
+    $candidatePaths |
+        ForEach-Object { Join-Path $repositoryRoot ([string]$_) } |
+        Where-Object { Test-Path -LiteralPath $_ -PathType Leaf }
+)
 $results = foreach ($indexPath in $indexes) {
     $isCatalogOrSymbol = $indexPath -in @(
         '.llm-wiki/generated/repository-catalog.json',
@@ -41,7 +50,10 @@ $results = foreach ($indexPath in $indexes) {
         '.llm-wiki/generated/architecture-health-index.json'
     )
     $fileName = Split-Path -Leaf $indexPath
-    $matches = @(& rg -l --hidden --fixed-strings --glob '*.ps1' --glob '*.mjs' --glob '*.md' $fileName $repositoryRoot 2>$null)
+    $matches = @(
+        $candidateFiles |
+            Where-Object { [IO.File]::ReadAllText($_).IndexOf($fileName, [StringComparison]::Ordinal) -ge 0 }
+    )
     $consumers = @($matches | ForEach-Object {
         [IO.Path]::GetRelativePath($repositoryRoot, [string]$_).Replace('\', '/')
     } | Where-Object {

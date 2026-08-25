@@ -1098,11 +1098,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
-      "nonBlankLines": 86,
-      "decisionPoints": 8,
+      "nonBlankLines": 98,
+      "decisionPoints": 9,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.72
+      "structuralRiskScore": 17.46
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiConcurrentDrift.ps1",
