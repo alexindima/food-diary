@@ -1,4 +1,23 @@
 . FoodDiary.Web.Client/.husky/progress.sh
+
+only_deletions=true
+saw_ref_update=false
+while read -r local_ref local_object_name remote_ref remote_object_name; do
+  if [ -z "$local_ref" ]; then
+    continue
+  fi
+
+  saw_ref_update=true
+  if [ "$local_ref" != "(delete)" ] && [ "$local_object_name" != "0000000000000000000000000000000000000000" ]; then
+    only_deletions=false
+  fi
+done
+
+if [ "$saw_ref_update" = true ] && [ "$only_deletions" = true ]; then
+  echo "Skipping pre-push verification for ref deletions only."
+  exit 0
+fi
+
 hook_progress_init "pre-push" 2
 
 HOOK_POWERSHELL=$(command -v pwsh || true)

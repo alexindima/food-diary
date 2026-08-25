@@ -49,6 +49,20 @@ public sealed class BuildWorkflowGuardrailTests {
     }
 
     [Fact]
+    public void PrePush_SkipsVerificationOnlyWhenEveryRefIsDeleted() {
+        string prePush = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-push"));
+        int deletionGuard = prePush.IndexOf("[ \"$saw_ref_update\" = true ] && [ \"$only_deletions\" = true ]", StringComparison.Ordinal);
+        int powerShellRequirement = prePush.IndexOf("command -v pwsh", StringComparison.Ordinal);
+
+        Assert.Multiple(
+            () => Assert.Contains("while read -r local_ref local_object_name remote_ref remote_object_name", prePush, StringComparison.Ordinal),
+            () => Assert.Contains("[ \"$local_ref\" != \"(delete)\" ] && [ \"$local_object_name\" != \"0000000000000000000000000000000000000000\" ]", prePush, StringComparison.Ordinal),
+            () => Assert.Contains("only_deletions=false", prePush, StringComparison.Ordinal),
+            () => Assert.True(deletionGuard >= 0, "The pure-deletion guard is missing."),
+            () => Assert.True(powerShellRequirement > deletionGuard, "Pure ref deletions must exit before PowerShell is required."));
+    }
+
+    [Fact]
     public void DevelopmentMcpLauncher_LocksActiveSessionsAndCollectsStaleOnes() {
         string launcher = File.ReadAllText(ArchitectureTestPaths.FromRoot("scripts", "Start-FoodDiaryDevelopmentMcp.ps1"));
 
