@@ -2,6 +2,7 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using System.Buffers;
 using System.Net;
+using System.Runtime.CompilerServices;
 
 namespace FoodDiary.Integrations.Services;
 
@@ -31,6 +32,24 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
         };
 
         return s3Client.DeleteObjectAsync(request, cancellationToken);
+    }
+
+    public async Task PutObjectBytesAsync(
+        string bucketName,
+        string key,
+        string contentType,
+        ReadOnlyMemory<byte> content,
+        CancellationToken cancellationToken) {
+        var stream = new MemoryStream(content.ToArray(), writable: false);
+        await using ConfiguredAsyncDisposable _ = stream.ConfigureAwait(false);
+        var request = new PutObjectRequest {
+            BucketName = bucketName,
+            Key = key,
+            ContentType = contentType,
+            InputStream = stream,
+        };
+
+        await s3Client.PutObjectAsync(request, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<StoredObjectInfo?> GetObjectInfoAsync(

@@ -10,6 +10,13 @@ public interface IObjectStorageClient {
 
     Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken);
 
+    Task PutObjectBytesAsync(
+        string bucketName,
+        string key,
+        string contentType,
+        ReadOnlyMemory<byte> content,
+        CancellationToken cancellationToken);
+
     Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken);
 
     Task<byte[]?> GetObjectBytesAsync(

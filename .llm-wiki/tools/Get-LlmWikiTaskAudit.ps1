@@ -11,6 +11,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiTaskAuditHelpers.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $workspacePolicy = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -Format Json | ConvertFrom-Json
@@ -32,30 +33,6 @@ if ($normalizedTasksPath -notmatch '^\.artifacts/llm-wiki/tasks(?:/.*)?$') {
 $absoluteTasksPath = Join-Path $repositoryRoot $normalizedTasksPath
 $auditTime = $AsOfUtc.ToUniversalTime()
 $items = [System.Collections.Generic.List[object]]::new()
-
-function Read-Json([string]$Path) {
-    try { return Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json } catch { return $null }
-}
-function Get-PropertyValue([object]$Object, [string]$Name) {
-    if ($null -eq $Object) { return $null }
-    $property = $Object.PSObject.Properties[$Name]
-    if ($null -eq $property) { return $null }
-    return $property.Value
-}
-function Get-AgeDays([DateTime]$Timestamp) {
-    return [Math]::Round([Math]::Max(0, ($auditTime - $Timestamp.ToUniversalTime()).TotalDays), 2)
-}
-function Convert-ToUtc([object]$Value, [DateTime]$Fallback) {
-    $parsed = [DateTime]::MinValue
-    if ($null -ne $Value -and [DateTime]::TryParse(
-        [string]$Value,
-        [System.Globalization.CultureInfo]::InvariantCulture,
-        [System.Globalization.DateTimeStyles]::AssumeUniversal,
-        [ref]$parsed)) {
-        return $parsed.ToUniversalTime()
-    }
-    return $Fallback.ToUniversalTime()
-}
 
 $currentHead = [string](Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve repository HEAD.').Lines[0]
 $taskGraph = if ($normalizedTasksPath -ceq '.artifacts/llm-wiki/tasks') {

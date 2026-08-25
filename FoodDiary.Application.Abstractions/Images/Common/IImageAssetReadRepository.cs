@@ -6,6 +6,8 @@ namespace FoodDiary.Application.Abstractions.Images.Common;
 public interface IImageAssetReadRepository {
     Task<ImageAsset?> GetByIdAsync(ImageAssetId id, CancellationToken cancellationToken = default);
 
+    Task<ImageAsset?> GetOwnedByIdAsync(ImageAssetId id, UserId userId, CancellationToken cancellationToken = default);
+
     Task<bool> IsAssetInUseAsync(ImageAssetId assetId, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<ImageAsset>> GetUnusedOlderThanAsync(

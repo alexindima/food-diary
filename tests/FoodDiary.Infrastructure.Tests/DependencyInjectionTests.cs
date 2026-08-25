@@ -865,6 +865,7 @@ public sealed class DependencyInjectionTests {
             ["S3:SecretAccessKey"] = "secret",
             ["S3:Region"] = "eu-central-1",
             ["S3:Bucket"] = "food-diary-test",
+            ["S3:StagingBucket"] = "food-diary-test-staging",
             ["S3:ServiceUrl"] = "https://s3.example.com",
             ["S3:PublicBaseUrl"] = "https://cdn.example.com",
             ["S3:AllowPublicImageAccess"] = "true",

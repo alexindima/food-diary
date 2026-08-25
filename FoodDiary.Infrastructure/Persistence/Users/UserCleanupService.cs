@@ -190,13 +190,16 @@ public sealed class UserCleanupService(
     }
 
     private async Task DeleteImageAssetsAsync(UserId userId, CancellationToken cancellationToken) {
-        List<string> deletedImageObjectKeys = await dbContext.ImageAssets
+        var deletedImages = await dbContext.ImageAssets
             .Where(asset => asset.UserId == userId)
-            .Select(asset => asset.ObjectKey)
+            .Select(asset => new { asset.ObjectKey, asset.IsConfirmed })
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        foreach (string objectKey in deletedImageObjectKeys) {
-            await imageObjectDeletionOutbox.EnqueueAsync(objectKey, cancellationToken).ConfigureAwait(false);
+        foreach (var image in deletedImages) {
+            await imageObjectDeletionOutbox.EnqueueAsync(image.ObjectKey, image.IsConfirmed, cancellationToken).ConfigureAwait(false);
+            if (!image.IsConfirmed) {
+                await imageObjectDeletionOutbox.EnqueueAsync(image.ObjectKey, isConfirmed: true, cancellationToken).ConfigureAwait(false);
+            }
         }
 
         await dbContext.ImageAssets

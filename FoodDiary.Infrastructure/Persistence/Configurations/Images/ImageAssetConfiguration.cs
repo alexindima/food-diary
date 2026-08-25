@@ -17,6 +17,7 @@ internal sealed class ImageAssetConfiguration : IEntityTypeConfiguration<ImageAs
 
         builder.Property(e => e.ObjectKey).IsRequired();
         builder.Property(e => e.Url).IsRequired();
+        builder.Property(e => e.IsConfirmed);
 
         builder.HasOne(e => e.User)
             .WithMany()

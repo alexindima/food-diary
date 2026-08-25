@@ -8726,6 +8726,62 @@
       ]
     },
     {
+      "Path": "/api/v{version}/images/{assetid}/confirm",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "404",
+            "409",
+            "429",
+            "500",
+            "502",
+            "503"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/ConfirmImageUploadHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/ConfirmImageUploadHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/ConfirmImageUploadHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "assetId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/lessons",
       "Operations": [
         {
@@ -12698,6 +12754,7 @@
           "ResponseCodes": [
             "200",
             "401",
+            "429",
             "500"
           ],
           "SuccessResponses": [
@@ -14382,6 +14439,7 @@
           "ResponseCodes": [
             "200",
             "401",
+            "429",
             "500"
           ],
           "SuccessResponses": [
@@ -18591,6 +18649,24 @@
         },
         {
           "Name": "title",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "ConfirmImageUploadHttpResponse",
+      "Properties": [
+        {
+          "Name": "assetId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "fileUrl",
           "Required": false,
           "Type": "string",
           "Nullable": true

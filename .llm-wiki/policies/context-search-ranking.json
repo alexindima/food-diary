@@ -182,13 +182,12 @@
     "цел": ["goal"],
     "отста": ["behind", "progress"],
     "контроллер": ["controller", "http", "endpoint"],
-    "принима": ["receive"],
+    "принима|принят": ["receive"],
     "уведомлен": ["notification", "webhook"],
-    "платеж": ["billing", "payment"],
-    "провайдер": ["provider"],
+    "платеж|оплат": ["billing", "payment"],
+    "провайдер|поставщик": ["provider"],
     "пересчит": ["recalculate", "calculate", "updater"],
-    "пищев": ["nutrition"],
-    "ценност": ["nutrition"],
+    "пищев|ценност|питан": ["nutrition"],
     "рецепт": ["recipe"],
     "измен": ["change", "update"],
     "ингредиент": ["ingredient"],
@@ -199,7 +198,6 @@
     "сохраня": ["store", "persist"],
     "входящ": ["inbound"],
     "письм": ["email", "message"],
-    "принят": ["receive"],
     "выбира": ["select", "selector", "audience"],
     "обработчик": ["handler"],
     "запрос": ["request", "command"],
@@ -216,8 +214,7 @@
     "неактив": ["inactive", "cleanup"],
     "собира": ["assemble", "snapshot", "telemetry"],
     "данн": ["data"],
-    "главн": ["dashboard"],
-    "экран": ["dashboard"],
+    "главн|экран": ["dashboard"],
     "текущ": ["current"],
     "день": ["day"],
     "период": ["periodic", "recurring", "job"],
@@ -235,7 +232,7 @@
     "политик": ["policy"],
     "экспорт": ["export"],
     "дневник": ["diary"],
-    "нормализ": ["normalize"],
+    "нормализ|привод": ["normalize"],
     "диапазон": ["range"],
     "дат": ["date"],
     "безопас": ["safe", "security"],
@@ -249,9 +246,9 @@
     "https": ["https"],
     "нестандарт": ["custom"],
     "порт": ["port"],
-    "разобр": ["parse", "parser"],
+    "разобр|парс": ["parse", "parser"],
     "тип": ["type"],
-    "жалоб": ["report"],
+    "жалоб|отчет|отчёт": ["report"],
     "учет": ["case"],
     "ошиб": ["error", "failure"],
     "валидац": ["validation", "validate"],
@@ -290,8 +287,7 @@
     "улучш": ["improve"],
     "проверяем": ["verify", "verifiable"],
     "чувствитель": ["sensitive", "privacy"],
-    "рабоч": ["workspace"],
-    "пространств": ["workspace"]
+    "рабоч|пространств": ["workspace"]
     ,"тест": ["test"]
     ,"команд": ["command", "tool"]
     ,"найт": ["find", "search"]
@@ -302,7 +298,6 @@
     ,"секунд": ["seconds", "duration"]
     ,"калибр": ["calibrate"]
     ,"фильтр": ["filter"]
-    ,"привод": ["normalize"]
     ,"кроп": ["crop"]
     ,"рамк": ["bounds"]
     ,"столб": ["bar"]
@@ -312,8 +307,7 @@
     ,"фасад": ["facade"]
     ,"методик": ["wiki", "workflow"]
     ,"критик": ["critique", "review"]
-    ,"сравн": ["compare", "comparison"]
-    ,"сравнив": ["compare", "comparison"]
+    ,"сравн|сравнив": ["compare", "comparison"]
     ,"вариант": ["strategy", "experiment"]
     ,"наход": ["find", "resolve"]
     ,"урок": ["lesson"]
@@ -324,7 +318,6 @@
     ,"контекст": ["context"]
     ,"вебхук": ["webhook"]
     ,"подпис": ["subscription"]
-    ,"оплат": ["billing", "payment"]
     ,"валидатор": ["validator", "validation"]
     ,"репозитор": ["repository", "store"]
     ,"идемпотент": ["idempotency", "replay"]
@@ -344,18 +337,15 @@
     ,"текст": ["text", "resource", "renderer"]
     ,"ресурс": ["resource", "renderer"]
     ,"пдф": ["pdf"]
-    ,"отчет": ["report"]
-    ,"отчёт": ["report"]
-    ,"поставщик": ["provider"]
     ,"настро": ["configured", "configuration"]
     ,"шлюз": ["gateway"]
-    ,"картинк": ["image"]
+    ,"картинк|изображ": ["image"]
     ,"биндинг": ["binder", "binding"]
     ,"модел": ["model"]
     ,"метрик": ["metric", "telemetry"]
     ,"сущност": ["entity"]
     ,"сервис": ["service"]
-    ,"исполн": ["execution"]
+    ,"исполн|выполн": ["execution"]
     ,"помет": ["mark"]
     ,"прочитан": ["read"]
     ,"конфигурац": ["configuration"]
@@ -364,7 +354,6 @@
     ,"правил": ["validation", "policy"]
     ,"миграц": ["migration"]
     ,"снимок": ["snapshot", "fingerprint"]
-    ,"парс": ["parse", "parser"]
     ,"загруз": ["load", "read"]
     ,"страниц": ["page"]
     ,"сесси": ["session"]
@@ -388,7 +377,6 @@
     ,"резерв": ["reservation"]
     ,"журнал": ["audit", "log"]
     ,"медиатор": ["mediator", "behavior"]
-    ,"выполн": ["execution"]
     ,"диалог": ["dialog"]
     ,"панел": ["panel"]
     ,"доста": ["get", "extract", "resolve"]
@@ -399,14 +387,12 @@
     ,"квот": ["quota"]
     ,"ежедневн": ["daily"]
     ,"совет": ["advice"]
-    ,"питан": ["nutrition"]
     ,"атрибут": ["attribute"]
     ,"просмотр": ["read", "overview"]
     ,"почт": ["mail", "inbox"]
     ,"входа": ["auth", "login"]
     ,"lease": ["lease"]
     ,"receipts": ["receipt"]
-    ,"изображ": ["image"]
     ,"любим": ["favorite"]
     ,"подтвержд": ["verification", "confirm"]
     ,"статус": ["status"]

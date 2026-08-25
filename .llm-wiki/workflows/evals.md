@@ -65,6 +65,12 @@ hashes plus a delta from the previous snapshot, with:
 ./.llm-wiki/tools/Write-LlmWikiContextEvaluationSnapshot.ps1 -SkipBuild -FailOnRegression
 ```
 
+Snapshots use one warm-up and three measured iterations by default. They record
+the Git HEAD, dirty-state and diff hashes, PowerShell/Node versions, code-graph
+parser version, median/p90/p95 timing summaries, and categorized non-Top-1
+results. Use `-Iterations 1 -WarmupIterations 0` only for focused diagnostics
+and regression tests, not for a performance baseline.
+
 The ranking policy has a 600-rule complexity budget and the tuned control
 corpora may not outperform the blind holdout by more than 25 percentage points.
 Prefer general role, layer, bounded-context, and runtime affinities over new
@@ -72,6 +78,8 @@ file-specific boosts. Promoted corpora require every expected result in Top-10;
 their corpus-specific Top-1 and MRR floors remain authoritative. Requiring every
 historical case at Top-1 would turn the promoted set into a tuning target and
 conflict with the independent holdout's overfitting guard.
+Prefix keys with identical expansions may be grouped with `|`; every segment
+remains an alternative prefix while the policy keeps one behavior definition.
 
 Strict adaptive verification partitions the suite into three stable shards and
 runs them beside the independent routing and experience regression groups. Case

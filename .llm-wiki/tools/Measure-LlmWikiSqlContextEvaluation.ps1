@@ -22,6 +22,22 @@ $diagnosticLimit = [Math]::Max(10, [Math]::Min(500, [int]$corpus.diagnosticLimit
 if (-not $SkipBuild) { & $manager build -Format Json | Out-Null }
 
 $results = [Collections.Generic.List[object]]::new()
+function Get-FailureCategory([string]$Query, [string]$ExpectedPath, [string]$TopPath, [string]$ChangeType) {
+    if ([string]::IsNullOrWhiteSpace($TopPath)) { return 'candidate-recall' }
+    $expectedTest = $ExpectedPath -match '(^|/)(tests?|[^/]+\.tests?)(/|$)|\.(spec|test)\.'
+    $topTest = $TopPath -match '(^|/)(tests?|[^/]+\.tests?)(/|$)|\.(spec|test)\.'
+    if ($expectedTest -ne $topTest) { return 'test-production-collision' }
+    $expectedExtension = [IO.Path]::GetExtension($ExpectedPath).ToLowerInvariant()
+    $topExtension = [IO.Path]::GetExtension($TopPath).ToLowerInvariant()
+    if ($expectedExtension -ne $topExtension -and @('.ps1', '.mjs', '.js', '.ts') -contains $expectedExtension) { return 'runtime-mismatch' }
+    $expectedRoot = ($ExpectedPath -split '/')[0]
+    $topRoot = ($TopPath -split '/')[0]
+    if ($expectedRoot -cne $topRoot) { return 'layer-or-module-confusion' }
+    if ($Query -match '[\p{IsCyrillic}]') { return 'multilingual-disambiguation' }
+    if ($ExpectedPath.StartsWith('.llm-wiki/', [StringComparison]::OrdinalIgnoreCase)) { return 'wiki-tool-intent' }
+    if ($ChangeType -ne 'Any') { return 'role-disambiguation' }
+    'identity-ranking'
+}
 $batchResults = @()
 $batchPath = $null
 if (-not $NoBatch) {
@@ -75,6 +91,7 @@ foreach ($case in $cases) {
     $records = @($search.records)
     $relevant = @($records | Where-Object { [string]$_.path -in $relevantPaths } | Sort-Object rank | Select-Object -First 1)
     $rank = if ($relevant.Count -eq 1) { [int]$relevant[0].rank } else { $null }
+    $topPath = if ($records.Count -eq 0) { '' } else { [string]$records[0].path }
     $results.Add([pscustomobject][ordered]@{
         id = [string]$case.id
         query = [string]$case.query
@@ -86,6 +103,7 @@ foreach ($case in $cases) {
         reciprocalRank = $(if ($null -eq $rank) { 0.0 } else { 1.0 / $rank })
         top1 = $rank -eq 1
         top10 = $null -ne $rank -and $rank -le 10
+        failureCategory = $(if ($rank -eq 1) { $null } else { Get-FailureCategory ([string]$case.query) $expectedPaths[0] $topPath $changeType })
         sqlDurationMs = [double]$search.durationMs
         topCandidates = @($records | Select-Object -First 5 rank, path, recordType, score)
     })
@@ -112,6 +130,9 @@ $cohortMetrics = @($results | Group-Object cohort | Sort-Object Name | ForEach-O
             top10Rate = [Math]::Round($cohortTop10Count / $cohortResults.Count, 4)
             meanReciprocalRank = [Math]::Round([double](($cohortResults.reciprocalRank | Measure-Object -Average).Average), 4)
         }
+    })
+$failureCategoryMetrics = @($results | Where-Object { -not $_.top1 } | Group-Object failureCategory | Sort-Object Count -Descending | ForEach-Object {
+        [pscustomobject][ordered]@{ category = $_.Name; count = $_.Count; top10Misses = @($_.Group | Where-Object { -not $_.top10 }).Count }
     })
 $liveGateProperty = $corpus.PSObject.Properties['liveRegressionGate']
 $liveGate = if ($null -eq $liveGateProperty) { $null } else { $liveGateProperty.Value }
@@ -176,6 +197,7 @@ $evaluation = [pscustomobject][ordered]@{
         p95SqlDurationMs = [Math]::Round($durations[$p95Index], 2)
     }
     cohortMetrics = $cohortMetrics
+    failureCategoryMetrics = $failureCategoryMetrics
     thresholds = $thresholds
     switchCriteria = $switchCriteria
     switchGaps = @($switchGaps)

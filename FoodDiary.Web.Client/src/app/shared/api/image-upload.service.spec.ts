@@ -67,6 +67,19 @@ describe('ImageUploadService', () => {
         req.flush('', { status: 200, statusText: 'OK' });
     });
 
+    it('should confirm an uploaded asset before use', () => {
+        const assetId = 'asset-to-confirm';
+
+        service.confirmUpload(assetId).subscribe(response => {
+            expect(response).toEqual({ assetId, fileUrl: 'https://cdn.example.com/photo.jpg' });
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/${assetId}/confirm`);
+        expect(req.request.method).toBe('POST');
+        expect(req.request.body).toEqual({});
+        req.flush({ assetId, fileUrl: 'https://cdn.example.com/photo.jpg' });
+    });
+
     it('should set SKIP_AUTH context on presigned upload', () => {
         const file = new File(['image-data'], 'photo.png', { type: 'image/png' });
         const presignedUrl = 'https://s3.example.com/upload?signed=xyz';

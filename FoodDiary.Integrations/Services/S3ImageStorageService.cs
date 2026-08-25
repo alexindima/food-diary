@@ -50,7 +50,7 @@ public sealed class S3ImageStorageService(
 
             DateTime expiresAt = dateTimeProvider.GetUtcNow().UtcDateTime.AddMinutes(15);
             string uploadUrl = storageClient.GetPreSignedUploadUrl(
-                _options.Bucket,
+                _options.StagingBucket,
                 key,
                 contentType,
                 fileSizeBytes,
@@ -76,14 +76,15 @@ public sealed class S3ImageStorageService(
         }
     }
 
-    public async Task DeleteAsync(string objectKey, CancellationToken cancellationToken) {
+    public async Task DeleteAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken) {
         try {
             cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrWhiteSpace(objectKey)) {
                 return;
             }
 
-            await storageClient.DeleteObjectAsync(_options.Bucket, objectKey, cancellationToken).ConfigureAwait(false);
+            string bucket = isConfirmed ? _options.Bucket : _options.StagingBucket;
+            await storageClient.DeleteObjectAsync(bucket, objectKey, cancellationToken).ConfigureAwait(false);
             IntegrationsTelemetry.RecordStorageOperation("delete", "success");
         } catch (Exception ex) {
             string outcome = ex is OperationCanceledException && cancellationToken.IsCancellationRequested
@@ -94,7 +95,10 @@ public sealed class S3ImageStorageService(
         }
     }
 
-    public async Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
+    public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) =>
+        DeleteAsync(objectKey, isConfirmed: true, cancellationToken);
+
+    public async Task<ImageObjectValidationResult> ConfirmUploadedObjectAsync(
         string objectKey,
         CancellationToken cancellationToken) {
         string outcome = "success";
@@ -105,7 +109,7 @@ public sealed class S3ImageStorageService(
                 return CreateInvalidValidationResult(ref outcome, "invalid_key", "Image object key is required.");
             }
 
-            StoredObjectInfo? info = await storageClient.GetObjectInfoAsync(_options.Bucket, objectKey, cancellationToken).ConfigureAwait(false);
+            StoredObjectInfo? info = await storageClient.GetObjectInfoAsync(_options.StagingBucket, objectKey, cancellationToken).ConfigureAwait(false);
             if (info is null) {
                 return CreateInvalidValidationResult(ref outcome, "not_found", "Image upload has not completed.");
             }
@@ -125,7 +129,7 @@ public sealed class S3ImageStorageService(
             }
 
             byte[]? content = await storageClient.GetObjectBytesAsync(
-                _options.Bucket,
+                _options.StagingBucket,
                 objectKey,
                 _options.MaxUploadSizeBytes,
                 cancellationToken).ConfigureAwait(false);
@@ -137,6 +141,8 @@ public sealed class S3ImageStorageService(
                 return CreateInvalidValidationResult(ref outcome, "invalid_content",
                     "Uploaded object content does not match a supported image format.");
             }
+
+            await PublishValidatedContentAsync(objectKey, info.ContentType, content, cancellationToken).ConfigureAwait(false);
 
             return new ImageObjectValidationResult(IsValid: true);
         } catch (InvalidDataException ex) {
@@ -153,6 +159,23 @@ public sealed class S3ImageStorageService(
             IntegrationsTelemetry.RecordStorageOperation("validate", outcome, errorType);
         }
     }
+
+    public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
+        string objectKey,
+        CancellationToken cancellationToken) =>
+        ConfirmUploadedObjectAsync(objectKey, cancellationToken);
+
+    private Task PublishValidatedContentAsync(
+        string objectKey,
+        string contentType,
+        byte[] content,
+        CancellationToken cancellationToken) =>
+        storageClient.PutObjectBytesAsync(
+            _options.Bucket,
+            objectKey,
+            contentType,
+            content,
+            cancellationToken);
 
     private static ImageObjectValidationResult CreateInvalidValidationResult(
         ref string outcome,

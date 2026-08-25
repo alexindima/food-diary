@@ -16,6 +16,7 @@ internal static class TestConfiguration {
             ["S3:SecretAccessKey"] = "test-secret-key",
             ["S3:Region"] = "us-east-1",
             ["S3:Bucket"] = "fooddiary-integration-tests",
+            ["S3:StagingBucket"] = "fooddiary-integration-tests-staging",
             ["S3:ServiceUrl"] = "https://s3.test.local",
             ["S3:PublicBaseUrl"] = "https://cdn.test.local",
             ["S3:AllowPublicImageAccess"] = "true",

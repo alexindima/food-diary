@@ -31,22 +31,34 @@ if ($hasWorkspace) {
     }
 } else {
     if ([string]::IsNullOrWhiteSpace($Objective)) {
-        throw "No governed workspace exists at '$WorkspacePath'. Supply -Intent to route a new task."
-    }
-    $arguments = @{ Objective = $Objective; Format = 'Json' }
-    if ($ProposedPath.Count -gt 0) { $arguments.ProposedPath = $ProposedPath }
-    $workflow = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') @arguments | ConvertFrom-Json
-    $result = [pscustomobject][ordered]@{
-        schemaVersion = 1
-        mode = 'adaptive-route'
-        objective = $Objective
-        state = 'not-started'
-        flow = @($workflow.stages.id)
-        profile = [string]$workflow.profile
-        ceremonyBudget = $workflow.ceremonyBudget
-        nextAction = [string]$workflow.nextAction.command
-        additionalActions = @($workflow.stages | Select-Object -Skip 1 -First 4 | ForEach-Object command)
-        sourceOfTruth = 'adaptive workflow derived from current repository evidence'
+        $result = [pscustomobject][ordered]@{
+            schemaVersion = 1
+            mode = 'no-active-workspace'
+            objective = ''
+            state = 'idle'
+            flow = @()
+            profile = $null
+            ceremonyBudget = $null
+            nextAction = 'Supply -Intent to route a new task.'
+            additionalActions = @()
+            sourceOfTruth = $WorkspacePath
+        }
+    } else {
+        $arguments = @{ Objective = $Objective; Format = 'Json' }
+        if ($ProposedPath.Count -gt 0) { $arguments.ProposedPath = $ProposedPath }
+        $workflow = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') @arguments | ConvertFrom-Json
+        $result = [pscustomobject][ordered]@{
+            schemaVersion = 1
+            mode = 'adaptive-route'
+            objective = $Objective
+            state = 'not-started'
+            flow = @($workflow.stages.id)
+            profile = [string]$workflow.profile
+            ceremonyBudget = $workflow.ceremonyBudget
+            nextAction = [string]$workflow.nextAction.command
+            additionalActions = @($workflow.stages | Select-Object -Skip 1 -First 4 | ForEach-Object command)
+            sourceOfTruth = 'adaptive workflow derived from current repository evidence'
+        }
     }
 }
 

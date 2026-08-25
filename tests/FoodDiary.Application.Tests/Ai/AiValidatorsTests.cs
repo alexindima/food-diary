@@ -67,7 +67,7 @@ public class AiValidatorsTests {
     public async Task AnalyzeFoodImageHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var user = User.Create("ai-handler@example.com", "hash");
         var handler = new AnalyzeFoodImageCommandHandler(
-            new ImageAssetAccessService(CreateImageAssetRepository(), CreateImageStorageService()),
+            new ImageAssetAccessService(CreateImageAssetRepository()),
             CreateAiUserContextService(user),
             CreateOpenAiFoodService());
 
@@ -83,7 +83,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var handler = new AnalyzeFoodImageCommandHandler(
-            new ImageAssetAccessService(CreateImageAssetRepository(), CreateImageStorageService()),
+            new ImageAssetAccessService(CreateImageAssetRepository()),
             CreateAiUserContextService(User.Create("ai-empty-image-user@example.com", "hash")),
             CreateOpenAiFoodService());
 
@@ -100,7 +100,7 @@ public class AiValidatorsTests {
     public async Task AnalyzeFoodImageHandler_WhenImageAssetMissing_ReturnsImageNotFound() {
         var user = User.Create("ai-missing-image@example.com", "hash");
         var handler = new AnalyzeFoodImageCommandHandler(
-            new ImageAssetAccessService(CreateImageAssetRepository(), CreateImageStorageService()),
+            new ImageAssetAccessService(CreateImageAssetRepository()),
             CreateAiUserContextService(user),
             CreateOpenAiFoodService());
 
@@ -113,12 +113,12 @@ public class AiValidatorsTests {
     }
 
     [Fact]
-    public async Task AnalyzeFoodImageHandler_WhenImageBelongsToAnotherUser_ReturnsForbidden() {
+    public async Task AnalyzeFoodImageHandler_WhenImageBelongsToAnotherUser_ReturnsImageNotFound() {
         var owner = User.Create("ai-image-owner@example.com", "hash");
         var requester = User.Create("ai-image-requester@example.com", "hash");
         var asset = ImageAsset.Create(owner.Id, "images/meal.jpg", "https://cdn.example.com/meal.jpg");
         var handler = new AnalyzeFoodImageCommandHandler(
-            new ImageAssetAccessService(CreateImageAssetRepository(asset), CreateImageStorageService()),
+            new ImageAssetAccessService(CreateImageAssetRepository(asset)),
             CreateAiUserContextService(requester),
             CreateOpenAiFoodService());
 
@@ -127,7 +127,7 @@ public class AiValidatorsTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("Ai.Forbidden", result.Error.Code);
+        Assert.Equal("Ai.ImageNotFound", result.Error.Code);
     }
 
     [Fact]
@@ -135,9 +135,7 @@ public class AiValidatorsTests {
         var user = User.Create("ai-invalid-image@example.com", "hash");
         var asset = ImageAsset.Create(user.Id, "images/invalid.jpg", "https://cdn.example.com/invalid.jpg");
         var handler = new AnalyzeFoodImageCommandHandler(
-            new ImageAssetAccessService(
-                CreateImageAssetRepository(asset),
-                CreateImageStorageService(isValid: false, message: "upload incomplete")),
+            new ImageAssetAccessService(CreateImageAssetRepository(asset)),
             CreateAiUserContextService(user),
             CreateOpenAiFoodService());
 
@@ -147,16 +145,17 @@ public class AiValidatorsTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Image.InvalidData", result.Error.Code);
-        Assert.Contains("upload incomplete", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("not been confirmed", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
     public async Task AnalyzeFoodImageHandler_WhenUserMissing_ReturnsInvalidToken() {
         var userId = UserId.New();
         var asset = ImageAsset.Create(userId, "images/orphan.jpg", "https://cdn.example.com/orphan.jpg");
+        asset.Confirm();
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
         var handler = new AnalyzeFoodImageCommandHandler(
-            new ImageAssetAccessService(CreateImageAssetRepository(asset), CreateImageStorageService()),
+            new ImageAssetAccessService(CreateImageAssetRepository(asset)),
             CreateAiUserContextService(user: null),
             openAiFoodService);
 
@@ -174,9 +173,10 @@ public class AiValidatorsTests {
         var user = User.Create("ai-valid-image@example.com", "hash");
         user.SetLanguage("ru");
         var asset = ImageAsset.Create(user.Id, "images/valid.jpg", "https://cdn.example.com/valid.jpg");
+        asset.Confirm();
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
         var handler = new AnalyzeFoodImageCommandHandler(
-            new ImageAssetAccessService(CreateImageAssetRepository(asset), CreateImageStorageService()),
+            new ImageAssetAccessService(CreateImageAssetRepository(asset)),
             CreateAiUserContextService(user),
             openAiFoodService);
 
@@ -492,10 +492,11 @@ public class AiValidatorsTests {
     private static IImageAssetRepository CreateImageAssetRepository(ImageAsset? asset = null) {
         IImageAssetRepository repository = Substitute.For<IImageAssetRepository>();
         ((IImageAssetReadRepository)repository)
-            .GetByIdAsync(Arg.Any<ImageAssetId>(), Arg.Any<CancellationToken>())
+            .GetOwnedByIdAsync(Arg.Any<ImageAssetId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 ImageAssetId id = call.Arg<ImageAssetId>();
-                return Task.FromResult(asset is not null && asset.Id == id ? asset : null);
+                UserId userId = call.Arg<UserId>();
+                return Task.FromResult(asset is not null && asset.Id == id && asset.UserId == userId ? asset : null);
             });
         return repository;
     }
@@ -558,14 +559,6 @@ public class AiValidatorsTests {
                     [new FoodNutritionItemModel("apple", 120, "g", 52, 0, 0, 14, 2, 0)])));
             });
 
-        return service;
-    }
-
-    private static IImageStorageService CreateImageStorageService(bool isValid = true, string? message = null) {
-        IImageStorageService service = Substitute.For<IImageStorageService>();
-        service
-            .ValidateUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(new ImageObjectValidationResult(isValid, Message: message)));
         return service;
     }
 

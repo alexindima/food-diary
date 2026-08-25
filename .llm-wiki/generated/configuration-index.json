@@ -3,7 +3,7 @@
   "summary": {
     "optionTypes": 56,
     "configurationFiles": 7,
-    "configurationKeys": 261,
+    "configurationKeys": 262,
     "environmentVariables": 187
   },
   "optionTypes": [
@@ -564,7 +564,8 @@
         "PublicBaseUrl",
         "Region",
         "SecretAccessKey",
-        "ServiceUrl"
+        "ServiceUrl",
+        "StagingBucket"
       ],
       "path": "FoodDiary.Integrations/Options/S3Options.cs"
     },
@@ -729,6 +730,7 @@
         "S3:Region",
         "S3:SecretAccessKey",
         "S3:ServiceUrl",
+        "S3:StagingBucket",
         "UserCleanup:BatchSize",
         "UserCleanup:Cron",
         "UserCleanup:ReassignUserId",
@@ -863,6 +865,7 @@
         "S3:Region",
         "S3:SecretAccessKey",
         "S3:ServiceUrl",
+        "S3:StagingBucket",
         "Stripe:CancelUrl",
         "Stripe:PortalReturnUrl",
         "Stripe:PremiumMonthlyPriceId",

@@ -312,7 +312,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
     private sealed class RecordingImageObjectDeletionOutbox : IImageObjectDeletionOutbox {
         public List<string> ObjectKeys { get; } = [];
 
-        public Task EnqueueAsync(string objectKey, CancellationToken cancellationToken = default) {
+        public Task EnqueueAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken = default) {
             ObjectKeys.Add(objectKey);
             return Task.CompletedTask;
         }

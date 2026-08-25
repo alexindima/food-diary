@@ -15,6 +15,18 @@ public sealed class ImageAssetRepository(FoodDiaryDbContext context) : IImageAss
         return await context.ImageAssets.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<ImageAsset?> GetOwnedByIdAsync(ImageAssetId id, UserId userId, CancellationToken cancellationToken = default) {
+        return await context.ImageAssets.AsNoTracking()
+            .FirstOrDefaultAsync(a => a.Id == id && a.UserId == userId, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<ImageAsset?> GetOwnedForUpdateAsync(ImageAssetId id, UserId userId, CancellationToken cancellationToken = default) {
+        return await context.ImageAssets
+            .FirstOrDefaultAsync(a => a.Id == id && a.UserId == userId, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     public Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
         context.ImageAssets.Attach(asset);
         context.ImageAssets.Remove(asset);

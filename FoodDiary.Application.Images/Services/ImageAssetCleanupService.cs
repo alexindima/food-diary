@@ -26,7 +26,7 @@ public sealed class ImageAssetCleanupService(
             return new DeleteImageAssetResult(Deleted: false, "in_use");
         }
 
-        await imageObjectDeletionOutbox.EnqueueAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
+        await EnqueueObjectDeletionAsync(asset, cancellationToken).ConfigureAwait(false);
         await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
         return new DeleteImageAssetResult(Deleted: true);
     }
@@ -46,7 +46,7 @@ public sealed class ImageAssetCleanupService(
 
         foreach (ImageAsset asset in candidates) {
             try {
-                await imageObjectDeletionOutbox.EnqueueAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
+                await EnqueueObjectDeletionAsync(asset, cancellationToken).ConfigureAwait(false);
                 await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
                 await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 removed++;
@@ -56,5 +56,12 @@ public sealed class ImageAssetCleanupService(
         }
 
         return removed;
+    }
+
+    private async Task EnqueueObjectDeletionAsync(ImageAsset asset, CancellationToken cancellationToken) {
+        await imageObjectDeletionOutbox.EnqueueAsync(asset.ObjectKey, asset.IsConfirmed, cancellationToken).ConfigureAwait(false);
+        if (!asset.IsConfirmed) {
+            await imageObjectDeletionOutbox.EnqueueAsync(asset.ObjectKey, isConfirmed: true, cancellationToken).ConfigureAwait(false);
+        }
     }
 }

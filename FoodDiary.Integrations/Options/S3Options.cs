@@ -25,6 +25,11 @@ public sealed class S3Options {
     public string Bucket { get; init; } = string.Empty;
 
     /// <summary>
+    /// Private bucket used for uploads until their bytes have been validated.
+    /// </summary>
+    public string StagingBucket { get; init; } = string.Empty;
+
+    /// <summary>
     /// Optional custom endpoint for S3-compatible storage (e.g. MinIO).
     /// </summary>
     public string? ServiceUrl { get; init; }
@@ -61,6 +66,8 @@ public sealed class S3Options {
         !string.IsNullOrWhiteSpace(options.AccessKeyId) &&
         !string.IsNullOrWhiteSpace(options.SecretAccessKey) &&
         !string.IsNullOrWhiteSpace(options.Bucket) &&
+        !string.IsNullOrWhiteSpace(options.StagingBucket) &&
+        !string.Equals(options.Bucket, options.StagingBucket, StringComparison.Ordinal) &&
         (!string.IsNullOrWhiteSpace(options.Region) || !string.IsNullOrWhiteSpace(options.ServiceUrl));
 
     public static bool HasValidPublicBaseUrl(S3Options options) {
@@ -83,6 +90,7 @@ public sealed class S3Options {
         !string.IsNullOrWhiteSpace(options.SecretAccessKey) ||
         !string.IsNullOrWhiteSpace(options.Region) ||
         !string.IsNullOrWhiteSpace(options.Bucket) ||
+        !string.IsNullOrWhiteSpace(options.StagingBucket) ||
         !string.IsNullOrWhiteSpace(options.ServiceUrl) ||
         !string.IsNullOrWhiteSpace(options.PublicBaseUrl) ||
         options.AllowInsecureHttp ||

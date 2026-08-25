@@ -6,12 +6,13 @@ import { ImageUploadService } from '../api/image-upload.service';
 import { ImageUploadFacade } from './image-upload.facade';
 
 describe('ImageUploadFacade', () => {
-    it('completes presign and binary upload as one operation', async () => {
+    it('completes presign, binary upload, and server confirmation as one operation', async () => {
         const imageUploadService = {
             requestUploadUrl: vi.fn(() =>
                 of({ uploadUrl: 'https://upload.example.com', fileUrl: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' }),
             ),
             uploadToPresignedUrl: vi.fn(() => of(void 0)),
+            confirmUpload: vi.fn(() => of({ fileUrl: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' })),
         };
         TestBed.configureTestingModule({
             providers: [ImageUploadFacade, { provide: ImageUploadService, useValue: imageUploadService }],
@@ -25,5 +26,6 @@ describe('ImageUploadFacade', () => {
         });
         expect(imageUploadService.requestUploadUrl).toHaveBeenCalledWith(file);
         expect(imageUploadService.uploadToPresignedUrl).toHaveBeenCalledWith('https://upload.example.com', file);
+        expect(imageUploadService.confirmUpload).toHaveBeenCalledWith('asset-1');
     });
 });

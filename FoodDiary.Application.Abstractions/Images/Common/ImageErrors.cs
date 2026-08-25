@@ -25,6 +25,6 @@ public static class ImageErrors {
 
     public static Error StorageError() => new(
         "Image.StorageError",
-        "Failed to remove image from storage.",
+        "Image storage operation failed.",
         Kind: ErrorKind.ExternalFailure);
 }

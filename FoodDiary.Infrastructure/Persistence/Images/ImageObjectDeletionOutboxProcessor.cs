@@ -21,7 +21,7 @@ internal sealed class ImageObjectDeletionOutboxProcessor(
             batchSize,
             options.Value,
             timeProvider,
-            (message, token) => imageStorageService.DeleteAsync(message.ObjectKey, token),
+            (message, token) => imageStorageService.DeleteAsync(message.ObjectKey, message.IsConfirmed, token),
             static message => message.ObjectKey,
             logger,
             cancellationToken: cancellationToken);

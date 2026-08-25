@@ -8,6 +8,7 @@ public sealed class ImageObjectDeletionOutboxMessage : IOutboxMessage {
 
     public Guid Id { get; private set; }
     public string ObjectKey { get; private set; } = string.Empty;
+    public bool IsConfirmed { get; private set; }
     public DateTime CreatedOnUtc { get; private set; }
     public DateTime NextAttemptOnUtc { get; private set; }
     public int AttemptCount { get; private set; }
@@ -20,7 +21,7 @@ public sealed class ImageObjectDeletionOutboxMessage : IOutboxMessage {
     private ImageObjectDeletionOutboxMessage() {
     }
 
-    public static ImageObjectDeletionOutboxMessage Create(string objectKey, DateTime createdOnUtc) {
+    public static ImageObjectDeletionOutboxMessage Create(string objectKey, bool isConfirmed, DateTime createdOnUtc) {
         if (string.IsNullOrWhiteSpace(objectKey)) {
             throw new ArgumentException("Object key is required.", nameof(objectKey));
         }
@@ -34,10 +35,14 @@ public sealed class ImageObjectDeletionOutboxMessage : IOutboxMessage {
         return new ImageObjectDeletionOutboxMessage {
             Id = Guid.NewGuid(),
             ObjectKey = normalizedObjectKey,
+            IsConfirmed = isConfirmed,
             CreatedOnUtc = normalizedCreatedOnUtc,
             NextAttemptOnUtc = normalizedCreatedOnUtc,
         };
     }
+
+    public static ImageObjectDeletionOutboxMessage Create(string objectKey, DateTime createdOnUtc) =>
+        Create(objectKey, isConfirmed: true, createdOnUtc);
 
     public void MarkClaimed(DateTime lockedUntilUtc, string lockedBy) {
         LockedUntilUtc = NormalizeUtc(lockedUntilUtc);

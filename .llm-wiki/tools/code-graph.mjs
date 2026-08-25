@@ -2010,8 +2010,8 @@ function configuredSearchTermExpansions(direct) {
   const configuredTerms = contextSearchRanking.queryTermExpansions ?? {};
   for (const term of direct) {
     if (Object.hasOwn(configuredTerms, term)) expanded.push(...configuredTerms[term]);
-    for (const [prefix, expansions] of Object.entries(contextSearchRanking.queryPrefixExpansions ?? {})) {
-      if (term.startsWith(prefix)) expanded.push(...expansions);
+    for (const [prefixGroup, expansions] of Object.entries(contextSearchRanking.queryPrefixExpansions ?? {})) {
+      if (prefixGroup.split('|').some((prefix) => term.startsWith(prefix))) expanded.push(...expansions);
     }
   }
   return expanded;

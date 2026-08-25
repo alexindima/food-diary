@@ -2110,14 +2110,14 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "FoodDiary.Domain/Entities/Assets/ImageAsset.cs",
-      "line": 36
+      "line": 40
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Value is required.\", paramName)",
       "path": "FoodDiary.Domain/Entities/Assets/ImageAsset.cs",
-      "line": 42
+      "line": 46
     },
     {
       "area": "FoodDiary",

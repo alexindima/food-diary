@@ -9,15 +9,14 @@ export class ImageUploadFacade {
     private readonly imageUploadService = inject(ImageUploadService);
 
     public upload(file: File): Observable<ImageSelection> {
-        return this.imageUploadService
-            .requestUploadUrl(file)
-            .pipe(
-                switchMap(presign =>
-                    this.imageUploadService
-                        .uploadToPresignedUrl(presign.uploadUrl, file)
-                        .pipe(map(() => ({ url: presign.fileUrl, assetId: presign.assetId }))),
+        return this.imageUploadService.requestUploadUrl(file).pipe(
+            switchMap(presign =>
+                this.imageUploadService.uploadToPresignedUrl(presign.uploadUrl, file).pipe(
+                    switchMap(() => this.imageUploadService.confirmUpload(presign.assetId)),
+                    map(confirmed => ({ url: confirmed.fileUrl, assetId: confirmed.assetId })),
                 ),
-            );
+            ),
+        );
     }
 
     public deleteAsset(assetId: string): Observable<void> {

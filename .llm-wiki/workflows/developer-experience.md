@@ -76,9 +76,13 @@ included, while accessibility, localization, and mobile cases are added only for
 frontend scope. Generated output is disposable unless a reviewed scenario is
 promoted into the journey catalog.
 
-`workflow-metrics` summarizes local workspace adoption and outcomes. With no
-governed workspaces it reports `insufficient-data` instead of a misleading zero
-adoption rate. Per-operation median and p95 durations expose workflow cost.
+`workflow-metrics` summarizes local workspace adoption and outcomes. Sealed tasks
+also append a compact outcome under `.git/llm-wiki/workspace-outcomes`, so adoption
+evidence survives cleanup of the working task directory. With neither active
+workspaces nor durable outcomes it reports `insufficient-data` instead of a
+misleading zero adoption rate. `status` without an active workspace returns an
+idle state and the next routing hint rather than throwing. Per-operation median
+and p95 durations expose workflow cost.
 Full verification also records each phase with its profile, run id, duration,
 and failure category, making standalone audits and their failure point visible.
 These signals measure operation and reliability rather than product value; all

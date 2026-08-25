@@ -468,6 +468,10 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         ImageUploadPayload? payload = await response.Content.ReadFromJsonAsync<ImageUploadPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         Assert.NotEqual(Guid.Empty, payload.AssetId);
+        HttpResponseMessage confirmResponse = await client.PostAsJsonAsync(
+            $"/api/v1/images/{payload.AssetId}/confirm",
+            new { }).ConfigureAwait(false);
+        confirmResponse.EnsureSuccessStatusCode();
         return payload;
     }
 

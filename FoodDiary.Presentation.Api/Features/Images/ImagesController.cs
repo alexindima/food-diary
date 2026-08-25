@@ -25,6 +25,17 @@ public sealed class ImagesController(ISender mediator) : AuthorizedController(me
     public Task<IActionResult> GetUploadUrl([FromCurrentUser] Guid userId, [FromBody] GetImageUploadUrlHttpRequest request) =>
         HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
+    [HttpPost("{assetId:guid}/confirm")]
+    [EnableIdempotency]
+    [ProducesResponseType<ConfirmImageUploadHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    public Task<IActionResult> Confirm(Guid assetId, [FromCurrentUser] Guid userId) =>
+        HandleOk(assetId.ToConfirmCommand(userId), static value => value.ToHttpResponse());
+
     [HttpDelete("{assetId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]

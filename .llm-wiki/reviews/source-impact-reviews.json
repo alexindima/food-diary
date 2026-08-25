@@ -89,7 +89,7 @@
       "reason": "Ported native git invocations across the tool suite from the PowerShell & call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2>$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1's default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
       "baseRef": "HEAD",
       "gitHead": "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-      "reviewedAtUtc": "2026-08-23T01:47:08.2344430Z"
+      "reviewedAtUtc": "2026-08-23T01:47:08.234443Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -142,18 +142,14 @@
       "pageSha256": "6f8228462ed3f2c01895eccb72a9539e8fe90e102e32bb3e8b2b3927a5937f40",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
-        },
-        {
           "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
-          "sha256": "84576fcf2bb31bc8f4faaf0824348c5d5499d83b9f77607fc9a87e20c4fa319a"
+          "sha256": "8c3f580a5db5467f0d0a1b960ce045bebcda60fefb95c7bdfd84604395ab45e2"
         }
       ],
-      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
-      "reviewedAtUtc": "2026-08-25T08:53:03.0046668Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:41:58.1855705Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -177,13 +173,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "10aaa82e3826df9a441581017ab0d27e68d3fe806519562c4f1710db6a8086e6"
+          "sha256": "08c2314c9c90c0b6284054e0894e8615a241ae33d7c2a7e2cce6de8e682ee553"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
-      "reviewedAtUtc": "2026-08-25T13:50:45.7983728Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:41:58.4814422Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -192,13 +188,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c9a5c54e737f8a04f6964b8d741a556689ad40b159f981c9d418fb335e6f1ecb"
+          "sha256": "6bf6cf024560eae023b2054703a93fa0c31c4d3dcfa9a142fca8ec480f6d00ee"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
-      "reviewedAtUtc": "2026-08-25T13:50:46.2256021Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:41:58.7895381Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -236,34 +232,26 @@
       "pageSha256": "3961a534e2b05beddc4b15e96bff12a6a073c6194d289e2780ad5839869a67cc",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "6027b15e4a2d9afe131877b256b2413a66a971355316e10cd0c53096e9f7394e"
-        },
-        {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "a9e435be2484971963c142748afd51c8cc73f4ba27777fb5362fbf653466bc6a"
+          "sha256": "df46e8926bbeea019f868451d274e280b17009652bab868fcae5cdbaaef819f2"
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c9a5c54e737f8a04f6964b8d741a556689ad40b159f981c9d418fb335e6f1ecb"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-          "sha256": "dcfd5ab6fd3ca238f8531903ff15ca016218db2bae83f61d8f52c2f66fa4f316"
+          "sha256": "6bf6cf024560eae023b2054703a93fa0c31c4d3dcfa9a142fca8ec480f6d00ee"
         },
         {
           "path": ".llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1",
-          "sha256": "6a42d48510c2dfbe4992440bf2c1c0422baae2044c7d71ce09b985a278fab66a"
+          "sha256": "8cdf4a78ac4fda78bf29826b71df2361e686e9271d222bc208c3c0b35da7b60d"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
-          "sha256": "f15740dbf6f2f6d6eef93033a7412a9f8bce89d72d2c997c9d39b3b354b8cd31"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "e7372cbc0884bd27ad5d50e2d3d35ed15ef9692898b18869bbb749355cecd09b"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
-      "reviewedAtUtc": "2026-08-25T13:50:46.7125232Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:41:59.273843Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -272,13 +260,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "5ee444bba7b6fe5c743b66f2d8fb6af98183f081d5570a0ac4e625ec1a1b04b6"
+          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:41.7876346Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:41:59.6172173Z"
     },
     {
       "pageId": "workflow-context-budget-optimization",
@@ -324,7 +312,7 @@
       "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
       "baseRef": "HEAD",
       "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:42.7823960Z"
+      "reviewedAtUtc": "2026-08-25T07:33:42.782396Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -354,7 +342,7 @@
       "reason": "Regenerated sensitive-data indexes and the complete Full audit validated redaction, trust-boundary, and context-integrity behavior; the documented security workflow remains accurate.",
       "baseRef": "HEAD",
       "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:43.2735250Z"
+      "reviewedAtUtc": "2026-08-25T07:33:43.273525Z"
     },
     {
       "pageId": "workflow-context-strategy-experiments",
@@ -378,17 +366,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "5ee444bba7b6fe5c743b66f2d8fb6af98183f081d5570a0ac4e625ec1a1b04b6"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextOutcome.ps1",
-          "sha256": "be3b3e135141559c33a976b5e57bc12ee06524d9d61f1cae2e3c87cec4ee3abb"
+          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:43.7453765Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:41:59.9477904Z"
     },
     {
       "pageId": "workflow-controlled-learning-promotion",
@@ -397,25 +381,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "5ee444bba7b6fe5c743b66f2d8fb6af98183f081d5570a0ac4e625ec1a1b04b6"
+          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "cac68af51a0fab9c502f11182723576981aa2a34678aac60588fa308e8d033c2"
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:44.1874039Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:00.2885606Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -424,21 +400,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "5ee444bba7b6fe5c743b66f2d8fb6af98183f081d5570a0ac4e625ec1a1b04b6"
+          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:44.6354404Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:00.6677098Z"
     },
     {
       "pageId": "workflow-cost-aware-verification",
@@ -546,25 +518,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "cac68af51a0fab9c502f11182723576981aa2a34678aac60588fa308e8d033c2"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
-          "sha256": "1b8e52b36ed3f524415c6307f85eb833abcdb1ac4872425c8b1b77b9da329c9a"
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:46.3881912Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:00.9889119Z"
     },
     {
       "pageId": "workflow-failure-knowledge",
@@ -633,13 +593,21 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c9a5c54e737f8a04f6964b8d741a556689ad40b159f981c9d418fb335e6f1ecb"
+          "sha256": "6bf6cf024560eae023b2054703a93fa0c31c4d3dcfa9a142fca8ec480f6d00ee"
+        },
+        {
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
-      "reviewedAtUtc": "2026-08-25T13:50:47.6881330Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:01.2812188Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -663,56 +631,32 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "5ee444bba7b6fe5c743b66f2d8fb6af98183f081d5570a0ac4e625ec1a1b04b6"
+          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:48.1214869Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:01.6359309Z"
     },
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "cb28b90fa4da52089458cf20ef944f2db7e8a7de37df88ac14ab2ef80c743de2",
+      "pageSha256": "7d34ee7e5a7913239f7ce9ac5c342680b6d0c0d86d333a51576fddad2cc4c4c4",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "ad3a1afdd5552f722dc4fb6ad77b3f7224dfd3ae058177359bb9958a860b5fe0"
-        },
-        {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "3139a218795d7f3c467b529a007db6d5a73eab0e9c8f3cbbe4c1c8dcaec20809"
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "e74003cd4fab679986a687e80dd2e1c42f7c725de29373d18fa1af2bccd65299"
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
-          "sha256": "55dfce8e513a94f510282d528b7db82214bb0a456dccedc588093e751bb3477b"
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1",
-          "sha256": "13a1ba2dabc5424dc09012ec5e87c6e315a3acc800a175168ee4e5d7b764d42c"
-        },
-        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "aba1777019070e75bb0c9de6e548ca7534437d82f8e9449af35cf3a1829fe273"
+          "sha256": "e7372cbc0884bd27ad5d50e2d3d35ed15ef9692898b18869bbb749355cecd09b"
         }
       ],
-      "reason": "Reviewed the measured Full-audit timeout budget after a successful 1197.6-second standalone run; the explicit audit now has safe execution headroom while focused verification remains unchanged.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
-      "reviewedAtUtc": "2026-08-25T09:41:58.6681631Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:01.9270229Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -742,7 +686,7 @@
       "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
       "baseRef": "HEAD",
       "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
-      "reviewedAtUtc": "2026-08-25T08:53:04.1290670Z"
+      "reviewedAtUtc": "2026-08-25T08:53:04.129067Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -750,14 +694,18 @@
       "pageSha256": "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
       "sources": [
         {
-          "path": ".llm-wiki/evals/cases.json",
-          "sha256": "3760f52055b92a994f68224a30d9ab7264801aafc8df8dc530f0867ed45518cc"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
-      "reviewedAtUtc": "2026-08-25T13:50:48.1985373Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:02.2398279Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -811,21 +759,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "5ee444bba7b6fe5c743b66f2d8fb6af98183f081d5570a0ac4e625ec1a1b04b6"
+          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:49.8820768Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:02.5629277Z"
     },
     {
       "pageId": "workflow-post-task-retrospective",
@@ -834,21 +778,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "5ee444bba7b6fe5c743b66f2d8fb6af98183f081d5570a0ac4e625ec1a1b04b6"
+          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "The 917-second Full lifecycle audit and 16-group affected smoke passed after validating StrictMode shapes, workspace migration, decomposition, scheduler lineage, completion seals, and read-only cache cleanup; workflow guidance remains accurate.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:50.3491704Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:03.0392468Z"
     },
     {
       "pageId": "workflow-privacy-review",
@@ -857,13 +797,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c9a5c54e737f8a04f6964b8d741a556689ad40b159f981c9d418fb335e6f1ecb"
+          "sha256": "6bf6cf024560eae023b2054703a93fa0c31c4d3dcfa9a142fca8ec480f6d00ee"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
-      "reviewedAtUtc": "2026-08-25T13:50:48.7593530Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:03.6356475Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -887,21 +827,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "5ee444bba7b6fe5c743b66f2d8fb6af98183f081d5570a0ac4e625ec1a1b04b6"
+          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:51.1990502Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:04.195485Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -910,17 +846,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "51ab59479cfd33bab34bbf0118122c88f821fc517e441a3b00101fccf3f63071"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-          "sha256": "dcfd5ab6fd3ca238f8531903ff15ca016218db2bae83f61d8f52c2f66fa4f316"
+          "sha256": "8ed48417bf520fe69c078ca11d34043765cce951e7474c192e6a406ff0a9ec89"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
-      "reviewedAtUtc": "2026-08-25T13:50:49.4166747Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:04.6916547Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -944,25 +876,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "5ee444bba7b6fe5c743b66f2d8fb6af98183f081d5570a0ac4e625ec1a1b04b6"
+          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
-          "sha256": "ff677a3d31ddb6206da5e1911f693906fc13ba7acefe399a11e72372805ee6ab"
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:52.0337748Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:05.3647922Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -986,17 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:52.8677080Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:05.9656819Z"
     },
     {
       "pageId": "workflow-runtime-impact",
@@ -1020,21 +940,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "5ee444bba7b6fe5c743b66f2d8fb6af98183f081d5570a0ac4e625ec1a1b04b6"
+          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "The 917-second Full lifecycle audit and 16-group affected smoke passed after validating StrictMode shapes, workspace migration, decomposition, scheduler lineage, completion seals, and read-only cache cleanup; workflow guidance remains accurate.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:53.2885558Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:06.2841837Z"
     },
     {
       "pageId": "workflow-task-brief",
@@ -1073,25 +989,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskGraph.ps1",
-          "sha256": "4e53e610b810eaf58f7916baef2420c02e4bb35727619618c6f9babdf3c29eb1"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskWorkspaces.ps1",
-          "sha256": "e472f6042161beb360289f9b262831a75de93dd06aeee8e58e85dbb64a0104e9"
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "The 917-second Full lifecycle audit and 16-group affected smoke passed after validating StrictMode shapes, workspace migration, decomposition, scheduler lineage, completion seals, and read-only cache cleanup; workflow guidance remains accurate.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:53.7257252Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:06.5229114Z"
     },
     {
       "pageId": "workflow-task-dispatch-receipts",
@@ -1100,13 +1004,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "aba1777019070e75bb0c9de6e548ca7534437d82f8e9449af35cf3a1829fe273"
+          "sha256": "e7372cbc0884bd27ad5d50e2d3d35ed15ef9692898b18869bbb749355cecd09b"
         }
       ],
-      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
-      "reviewedAtUtc": "2026-08-25T08:53:05.3035278Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:06.7586687Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1115,61 +1019,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskGraph.ps1",
-          "sha256": "4e53e610b810eaf58f7916baef2420c02e4bb35727619618c6f9babdf3c29eb1"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskWorkspaces.ps1",
-          "sha256": "e472f6042161beb360289f9b262831a75de93dd06aeee8e58e85dbb64a0104e9"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAgentRegistry.ps1",
-          "sha256": "55264ad5583c7e0d97eeba9a14ca960560706c53ebb92732a061a511f45fed93"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "cac68af51a0fab9c502f11182723576981aa2a34678aac60588fa308e8d033c2"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiDispatchWatchdog.ps1",
-          "sha256": "972e70c37a811705593d35d5aa268cf6552ad903739f0049df917dbfe294b1bc"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiOrchestrationCycle.ps1",
-          "sha256": "e39817e7088b72892361b47f7076ae83a27d8b48a4bb395fd16d76e12be528ef"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiSchedulePlan.ps1",
-          "sha256": "15468968a58b75607f599b61bf7266110a00724175979be947fb1aefaa124f2b"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskDecomposition.ps1",
-          "sha256": "fa027dc893f0354cc259697e1928b76a64976bb92c7431e56454b420c5cd218a"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
-          "sha256": "83408f8abebedcd0eb2635f1f93ed2a7194eef2ac9b0b34deda3804789697fe2"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskLease.ps1",
-          "sha256": "9080cce1fe27ca05102f881ed2d28fa05b00d792c606ec882fd15b2943343afd"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiWorkspaceCircuit.ps1",
-          "sha256": "fb68081a91c6b305831ef59aa1f3b6002dca9f5b89428b0181d02c183ec41b3d"
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "The 917-second Full lifecycle audit and 16-group affected smoke passed after validating StrictMode shapes, workspace migration, decomposition, scheduler lineage, completion seals, and read-only cache cleanup; workflow guidance remains accurate.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:54.6604542Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:06.9796316Z"
     },
     {
       "pageId": "workflow-task-workspace",
@@ -1178,49 +1034,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "5ee444bba7b6fe5c743b66f2d8fb6af98183f081d5570a0ac4e625ec1a1b04b6"
-        },
-        {
-          "path": ".llm-wiki/tools/Export-LlmWikiTaskWorkspace.ps1",
-          "sha256": "b7bc044660be22407e029bf821ea8e1e1a1ef9452bb47d34b155785c7656ad9a"
+          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskGraph.ps1",
-          "sha256": "4e53e610b810eaf58f7916baef2420c02e4bb35727619618c6f9babdf3c29eb1"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskWorkspaces.ps1",
-          "sha256": "e472f6042161beb360289f9b262831a75de93dd06aeee8e58e85dbb64a0104e9"
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
-          "sha256": "3a2a5290ea41fd8be8ea5acc68591d54d06af7ad32bfb7e1cfa3d8236284809f"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskLease.ps1",
-          "sha256": "9080cce1fe27ca05102f881ed2d28fa05b00d792c606ec882fd15b2943343afd"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiTaskWorkspace.ps1",
-          "sha256": "a72a8e96fa0ca6e8d1e8be4c5a4ecad28721107a742c25e26efe82259085db47"
-        },
-        {
-          "path": ".llm-wiki/tools/Update-LlmWikiTaskWorkspace.ps1",
-          "sha256": "bf13bb5c24c40a87eaabcad6db32b5b9346c98c3408c9485505449f7a1bedd69"
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "The 917-second Full lifecycle audit and 16-group affected smoke passed after validating StrictMode shapes, workspace migration, decomposition, scheduler lineage, completion seals, and read-only cache cleanup; workflow guidance remains accurate.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:55.1414348Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:07.1964055Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1310,7 +1134,7 @@
       "reason": "Diff classification defaults and eval inputs are unchanged; the optional frontend catalog is enabled only by change packets, while diff SQL parity passed 6 of 6 cases.",
       "baseRef": "HEAD",
       "gitHead": "c9e2f667ef95a5ecbe4eab25eb0d77a36dbaa6d8",
-      "reviewedAtUtc": "2026-08-24T21:03:42.7582240Z"
+      "reviewedAtUtc": "2026-08-24T21:03:42.758224Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1349,13 +1173,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c9a5c54e737f8a04f6964b8d741a556689ad40b159f981c9d418fb335e6f1ecb"
+          "sha256": "6bf6cf024560eae023b2054703a93fa0c31c4d3dcfa9a142fca8ec480f6d00ee"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
-      "reviewedAtUtc": "2026-08-25T13:50:49.9548479Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:05.0496355Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1364,13 +1188,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "aba1777019070e75bb0c9de6e548ca7534437d82f8e9449af35cf3a1829fe273"
+          "sha256": "e7372cbc0884bd27ad5d50e2d3d35ed15ef9692898b18869bbb749355cecd09b"
         }
       ],
-      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
-      "reviewedAtUtc": "2026-08-25T08:53:04.7625649Z"
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:05.689155Z"
     }
   ]
 }

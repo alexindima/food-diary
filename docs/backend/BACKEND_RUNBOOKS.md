@@ -335,7 +335,7 @@ Immediate actions:
 
 Diagnosis:
 
-- Check `S3:ServiceUrl`, bucket configuration, region/path-style settings, and credentials.
+- Check `S3:ServiceUrl`, the public `S3:Bucket`, the distinct private `S3:StagingBucket`, region/path-style settings, credentials, and copy/delete permissions between both buckets.
 - Verify current credential validity and whether a recent rotation occurred.
 - Distinguish between:
   - backend cannot sign requests

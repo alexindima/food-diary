@@ -12,5 +12,11 @@ public interface IImageStorageService {
 
     Task DeleteAsync(string objectKey, CancellationToken cancellationToken);
 
+    Task DeleteAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken) =>
+        DeleteAsync(objectKey, cancellationToken);
+
     Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(string objectKey, CancellationToken cancellationToken);
+
+    Task<ImageObjectValidationResult> ConfirmUploadedObjectAsync(string objectKey, CancellationToken cancellationToken) =>
+        ValidateUploadedObjectAsync(objectKey, cancellationToken);
 }

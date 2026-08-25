@@ -3,6 +3,11 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiTaskAuditHelpers.ps1')
+$script:auditTime = [DateTime]::UtcNow
+if ((Get-AgeDays $script:auditTime) -ne 0 -or $null -ne (Read-Json (Join-Path $repositoryRoot '.artifacts/llm-wiki/missing-audit-helper.json'))) {
+    throw 'LlmWikiTaskAuditHelpers did not preserve safe age and JSON behavior.'
+}
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 $workspaceName = "telemetry-regression-$([guid]::NewGuid().ToString('N'))"
 $workspacePath = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name $workspaceName
@@ -25,6 +30,7 @@ try {
     }
     foreach ($sample in @(
         [pscustomobject]@{ status = 'failed'; duration = 10 }
+        [pscustomobject]@{ status = 'action-required'; duration = 15 }
         [pscustomobject]@{ status = 'passed'; duration = 20 }
         [pscustomobject]@{ status = 'failed'; duration = 30 }
     )) {
@@ -37,8 +43,9 @@ try {
             -Format Json | Out-Null
     }
     $metrics = & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -CheckId 'telemetry-regression' -Format Json | ConvertFrom-Json
-    if (-not $metrics.valid -or $metrics.totalCount -ne 3 -or $metrics.health -ne 'attention' -or
-        $metrics.failedCount -ne 2 -or $metrics.metrics[0].medianDurationSeconds -ne 20) {
+    if (-not $metrics.valid -or $metrics.totalCount -ne 4 -or $metrics.health -ne 'attention' -or
+        $metrics.failedCount -ne 2 -or $metrics.actionRequiredCount -ne 1 -or
+        $metrics.metrics[0].actionRequiredCount -ne 1 -or $metrics.metrics[0].medianDurationSeconds -ne 17.5) {
         throw 'Operational telemetry did not preserve valid local metrics.'
     }
     $statusAfter = @(git -C $repositoryRoot status --short)

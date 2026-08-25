@@ -5,7 +5,7 @@ param(
     [string]$Action = 'metrics',
     [string]$WorkspacePath,
     [string]$CheckId,
-    [ValidateSet('passed', 'failed')]
+    [ValidateSet('passed', 'failed', 'action-required')]
     [string]$Status,
     [double]$DurationSeconds,
     [string]$Command,
@@ -102,7 +102,7 @@ function Test-Registry([object]$Registry) {
         if (-not $ids.Add([string]$event.id)) { $issues.Add("Duplicate telemetry id: $($event.id)") }
         if ([string]$event.previousHash -cne $previousHash) { $issues.Add("Telemetry hash chain is invalid at $($event.id).") }
         if ([string]$event.eventHash -cne (Get-Hash (Get-EventPayload $event))) { $issues.Add("Telemetry event hash is invalid at $($event.id).") }
-        if ([string]$event.status -notin @('passed', 'failed')) { $issues.Add("Telemetry status is invalid at $($event.id).") }
+        if ([string]$event.status -notin @('passed', 'failed', 'action-required')) { $issues.Add("Telemetry status is invalid at $($event.id).") }
         if ([double]$event.durationSeconds -lt 0 -or [double]$event.durationSeconds -gt 604800) { $issues.Add("Telemetry duration is invalid at $($event.id).") }
         if ([string]::IsNullOrWhiteSpace([string]$event.checkId)) { $issues.Add("Telemetry checkId is empty at $($event.id).") }
         $previousHash = [string]$event.eventHash
@@ -122,19 +122,21 @@ function Get-Median([double[]]$Values) {
 function Get-Metrics([object[]]$Events) {
     @($Events | Group-Object checkId | ForEach-Object {
         $items = @($_.Group | Sort-Object sequence)
+        $outcomeItems = @($items | Where-Object status -in @('passed', 'failed'))
         $transitions = 0
-        for ($index = 1; $index -lt $items.Count; $index++) {
-            if ([string]$items[$index].status -cne [string]$items[$index - 1].status) { $transitions++ }
+        for ($index = 1; $index -lt $outcomeItems.Count; $index++) {
+            if ([string]$outcomeItems[$index].status -cne [string]$outcomeItems[$index - 1].status) { $transitions++ }
         }
-        $transitionPercent = if ($items.Count -lt 2) { 0 } else { [Math]::Round($transitions * 100.0 / ($items.Count - 1), 2) }
+        $transitionPercent = if ($outcomeItems.Count -lt 2) { 0 } else { [Math]::Round($transitions * 100.0 / ($outcomeItems.Count - 1), 2) }
         $failures = @($items | Where-Object status -eq 'failed').Count
+        $actionRequired = @($items | Where-Object status -eq 'action-required').Count
         [pscustomobject][ordered]@{
             checkId = $_.Name; sampleCount = $items.Count; passedCount = $items.Count - $failures
-            failedCount = $failures; failurePercent = [Math]::Round($failures * 100.0 / $items.Count, 2)
+            failedCount = $failures; actionRequiredCount = $actionRequired; failurePercent = [Math]::Round($failures * 100.0 / $items.Count, 2)
             medianDurationSeconds = Get-Median @($items.durationSeconds)
             transitionCount = $transitions; transitionPercent = $transitionPercent
-            flaky = $items.Count -ge [int]$telemetryPolicy.minimumSamples -and $failures -gt 0 -and
-                $failures -lt $items.Count -and $transitionPercent -ge [double]$telemetryPolicy.flakyTransitionPercent
+            flaky = $outcomeItems.Count -ge [int]$telemetryPolicy.minimumSamples -and $failures -gt 0 -and
+                $failures -lt $outcomeItems.Count -and $transitionPercent -ge [double]$telemetryPolicy.flakyTransitionPercent
             latestStatus = [string]$items[-1].status; latestAtUtc = [string]$items[-1].recordedAtUtc
         }
     } | Sort-Object checkId)
@@ -181,9 +183,10 @@ if ($Action -eq 'verify') {
     if ($Action -eq 'metrics') {
         $metrics = @(Get-Metrics $events)
         $failureCount = @($events | Where-Object status -eq 'failed').Count
+        $actionRequiredCount = @($events | Where-Object status -eq 'action-required').Count
         $result = [pscustomobject][ordered]@{
             action = 'metrics'; valid = $true; totalCount = $events.Count; flakyCount = @($metrics | Where-Object flaky).Count
-            passedCount = $events.Count - $failureCount; failedCount = $failureCount
+            passedCount = @($events | Where-Object status -eq 'passed').Count; failedCount = $failureCount; actionRequiredCount = $actionRequiredCount
             successRatePercent = $(if ($events.Count -eq 0) { $null } else { [Math]::Round(100.0 * ($events.Count - $failureCount) / $events.Count, 2) })
             health = $(if ($events.Count -eq 0) { 'insufficient-data' } elseif ($failureCount -gt 0) { 'attention' } else { 'healthy' })
             registryHash = $registry.registryHash; metrics = $metrics; issues = @()

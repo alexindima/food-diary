@@ -519,6 +519,10 @@ function Invoke-ObservedWikiStage {
         if ($null -ne $process) { $process.Dispose() }
         $stopwatch.Stop()
         Remove-Item -LiteralPath $argumentsPath -Force -ErrorAction SilentlyContinue
+        if ($stageTelemetryStatus -eq 'failed' -and $Name -in @('indexes', 'source impact') -and (Test-Path -LiteralPath $resultPath -PathType Leaf)) {
+            $stageResult = Get-Content -LiteralPath $resultPath -Raw | ConvertFrom-Json
+            if ([string]$stageResult.detail -match 'stale|review|source impact|regenerate|update') { $stageTelemetryStatus = 'action-required' }
+        }
         try {
             & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationTelemetry.ps1') record `
                 -WorkspacePath '@wiki' `

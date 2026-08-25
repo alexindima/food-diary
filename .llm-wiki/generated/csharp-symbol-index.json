@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3457,
-    "symbols": 3464,
+    "sourceFiles": 3461,
+    "symbols": 3468,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 242,
     "kinds": {
-      "class": 1802,
+      "class": 1803,
       "enum": 62,
       "interface": 423,
-      "record": 1057,
+      "record": 1060,
       "record struct": 120
     },
     "roles": {
-      "Command": 159,
-      "CommandHandler": 155,
+      "Command": 160,
+      "CommandHandler": 156,
       "Configuration": 90,
       "Controller": 91,
       "Entity": 84,
@@ -32,14 +32,14 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 62,
-      "Other": 1337,
+      "Other": 1338,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
       "ReadRepository": 46,
       "Repository": 103,
       "Request": 133,
-      "Response": 179,
+      "Response": 180,
       "Service": 278,
       "Validator": 205,
       "ValueObject": 129,
@@ -9694,6 +9694,27 @@
       "line": 6
     },
     {
+      "name": "ConfirmImageUploadCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "ConfirmImageUploadCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "ConfirmImageUploadResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadResult.cs",
+      "line": 2
+    },
+    {
       "name": "DeleteImageAssetCommand",
       "kind": "record",
       "role": "Command",
@@ -17909,7 +17930,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Services/S3ObjectStorageClient.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "StoredObjectInfo",
@@ -20303,20 +20324,27 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Features/Images/Mappings/ImageHttpMappings.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ImageHttpResponseMappings",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Features/Images/Mappings/ImageHttpResponseMappings.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "GetImageUploadUrlHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Images/Requests/GetImageUploadUrlHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "ConfirmImageUploadHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "FoodDiary.Presentation.Api/Features/Images/Responses/ConfirmImageUploadHttpResponse.cs",
       "line": 2
     },
     {

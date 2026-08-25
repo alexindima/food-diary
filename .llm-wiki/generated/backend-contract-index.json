@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1061,
+    "contracts": 1063,
     "ambiguousContracts": 3,
-    "consumerEdges": 7479,
-    "productionConsumerEdges": 4516,
+    "consumerEdges": 7488,
+    "productionConsumerEdges": 4525,
     "testConsumerEdges": 2963,
-    "consumedContracts": 1061,
+    "consumedContracts": 1063,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -1479,6 +1479,38 @@
       ],
       "definitionPaths": [
         "FoodDiary.Presentation.Api/Features/Logs/Requests/ClientTelemetryLogHttpRequest.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "ConfirmImageUploadCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommand.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "ConfirmImageUploadHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Images/Responses/ConfirmImageUploadHttpResponse.cs"
       ],
       "ambiguous": false
     },
@@ -22634,6 +22666,71 @@
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/FrontendObservabilityIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "ConfirmImageUploadCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ConfirmImageUploadCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Images/Mappings/ImageHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ConfirmImageUploadCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Images/ImagesFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "ConfirmImageUploadHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Images/Responses/ConfirmImageUploadHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Images/ImagesController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ConfirmImageUploadHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Images/Responses/ConfirmImageUploadHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Images/Mappings/ImageHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "ConfirmPasswordResetCommand",
@@ -48891,6 +48988,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -50751,6 +50861,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -64907,6 +65030,19 @@
         "FoodDiary.Application.Abstractions/Images/Common/IImageAssetWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Images/Common/IImageAssetWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -64948,6 +65084,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageObjectDeletionOutbox",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Images/Common/IImageObjectDeletionOutbox.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
+      "isTest": false,
       "referenceCount": 1
     },
     {
@@ -65128,7 +65277,7 @@
         "FoodDiary.Application.Abstractions/Images/Common/IImageStorageService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
+      "consumerPath": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65141,7 +65290,7 @@
         "FoodDiary.Application.Abstractions/Images/Common/IImageStorageService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Images/Services/ImageAssetAccessService.cs",
+      "consumerPath": "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65206,22 +65355,9 @@
         "FoodDiary.Application.Abstractions/Images/Common/IImageStorageService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
-      "isTest": true,
-      "referenceCount": 3
-    },
-    {
-      "contract": "IImageStorageService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Images/Common/IImageStorageService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Images/ImagesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "IImageStorageService",
@@ -86772,6 +86908,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Images/Services/ImageAssetCleanupService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -87021,7 +87170,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Images/ImagesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 7
     },
     {
       "contract": "IUnitOfWork",

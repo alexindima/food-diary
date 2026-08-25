@@ -143,6 +143,7 @@ public sealed class DependencyInjectionTests {
             ["S3:SecretAccessKey"] = "test-secret-key",
             ["S3:Region"] = "us-east-1",
             ["S3:Bucket"] = "fooddiary-test",
+            ["S3:StagingBucket"] = "fooddiary-test-staging",
             ["S3:ServiceUrl"] = "http://localhost:9000",
             ["S3:AllowInsecureHttp"] = "true",
             ["S3:AllowPublicImageAccess"] = "true",

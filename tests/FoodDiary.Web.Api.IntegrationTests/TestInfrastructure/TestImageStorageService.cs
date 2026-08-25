@@ -40,7 +40,7 @@ public sealed class TestImageStorageService(IOptions<S3Options> options) : IImag
         string safeFileName = NormalizeFileName(fileName);
         string objectKey = $"users/{userId.Value:D}/images/{Guid.NewGuid():N}-{safeFileName}";
         DateTime expiresAt = DateTime.UtcNow.AddMinutes(15);
-        string uploadUrl = $"{_options.ServiceUrl!.TrimEnd('/')}/{_options.Bucket}/{objectKey}";
+        string uploadUrl = $"{_options.ServiceUrl!.TrimEnd('/')}/{_options.StagingBucket}/{objectKey}";
 
         return Task.FromResult(new PresignedUpload(
             uploadUrl,
@@ -49,12 +49,19 @@ public sealed class TestImageStorageService(IOptions<S3Options> options) : IImag
             expiresAt));
     }
 
+    public Task DeleteAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken) => Task.CompletedTask;
+
     public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public Task<ImageObjectValidationResult> ConfirmUploadedObjectAsync(
+        string objectKey,
+        CancellationToken cancellationToken) =>
+        Task.FromResult(new ImageObjectValidationResult(IsValid: true));
 
     public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
         string objectKey,
         CancellationToken cancellationToken) =>
-        Task.FromResult(new ImageObjectValidationResult(IsValid: true));
+        ConfirmUploadedObjectAsync(objectKey, cancellationToken);
 
     private static string NormalizeFileName(string fileName) {
         string nameOnly = Path.GetFileName(fileName);

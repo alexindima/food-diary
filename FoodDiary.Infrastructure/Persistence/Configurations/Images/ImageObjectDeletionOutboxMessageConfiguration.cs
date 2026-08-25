@@ -14,6 +14,8 @@ internal sealed class ImageObjectDeletionOutboxMessageConfiguration : IEntityTyp
             .IsRequired()
             .HasMaxLength(1024);
 
+        builder.Property(message => message.IsConfirmed);
+
         builder.Property(message => message.LastError)
             .HasMaxLength(2048);
 

@@ -8,17 +8,19 @@ public sealed class ImageAsset : Entity<ImageAssetId> {
     public UserId UserId { get; private set; }
     public string ObjectKey { get; private set; } = string.Empty;
     public string Url { get; private set; } = string.Empty;
+    public bool IsConfirmed { get; private set; }
 
     public User User { get; private set; } = null!;
 
     private ImageAsset() {
     }
 
-    private ImageAsset(ImageAssetId id, UserId userId, string objectKey, string url)
+    private ImageAsset(ImageAssetId id, UserId userId, string objectKey, string url, bool isConfirmed)
         : base(id) {
         UserId = userId;
         ObjectKey = objectKey;
         Url = url;
+        IsConfirmed = isConfirmed;
     }
 
     public static ImageAsset Create(UserId userId, string objectKey, string url) {
@@ -26,10 +28,12 @@ public sealed class ImageAsset : Entity<ImageAssetId> {
         string normalizedObjectKey = NormalizeRequiredValue(objectKey, nameof(objectKey));
         string normalizedUrl = NormalizeRequiredValue(url, nameof(url));
 
-        var asset = new ImageAsset(ImageAssetId.New(), userId, normalizedObjectKey, normalizedUrl);
+        var asset = new ImageAsset(ImageAssetId.New(), userId, normalizedObjectKey, normalizedUrl, isConfirmed: false);
         asset.SetCreated();
         return asset;
     }
+
+    public void Confirm() => IsConfirmed = true;
 
     private static void EnsureUserId(UserId userId) {
         if (userId == UserId.Empty) {

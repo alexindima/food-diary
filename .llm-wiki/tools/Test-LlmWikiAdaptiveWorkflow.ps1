@@ -365,11 +365,29 @@ $experience = & (Join-Path $PSScriptRoot 'Get-LlmWikiExperience.ps1') `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive (-not [string]::IsNullOrWhiteSpace([string]$experience.nextAction)) 'Compact experience did not return one next action.'
 Assert-Adaptive ($experience.ceremonyBudget.label -eq 'visual-focused') 'Compact experience omitted the routed ceremony budget.'
+$idleExperience = & (Join-Path $PSScriptRoot 'Get-LlmWikiExperience.ps1') `
+    -WorkspacePath "$smokeSandboxRelative/no-active-workspace-$([Guid]::NewGuid().ToString('N'))" `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($idleExperience.state -eq 'idle' -and $idleExperience.mode -eq 'no-active-workspace') 'Compact experience did not return a useful idle status without a governed workspace.'
 
 $metrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkflowMetrics.ps1') `
     -TasksPath "$smokeSandboxRelative/no-such-task-root" `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($metrics.schemaVersion -eq 4 -and $metrics.workspaceCount -eq 0 -and $metrics.ceremony.adoptionStatus -eq 'insufficient-data' -and $null -ne $metrics.adaptive) 'Workflow metrics did not handle an empty task history or expose adaptive runs.'
+$outcomeRoot = Join-Path (Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot) "workspace-outcomes-$([Guid]::NewGuid().ToString('N'))"
+$previousOutcomeRoot = $env:LLM_WIKI_WORKSPACE_OUTCOME_ROOT
+try {
+    $env:LLM_WIKI_WORKSPACE_OUTCOME_ROOT = $outcomeRoot
+    & (Join-Path $PSScriptRoot 'Write-LlmWikiWorkspaceOutcome.ps1') `
+        -WorkspacePath '.artifacts/llm-wiki/tasks/completed-example' `
+        -RegistryRoot $outcomeRoot `
+        -Completion ([pscustomobject]@{ objective = 'Completed example'; finishedAtUtc = [DateTime]::UtcNow.ToString('o'); git = [pscustomobject]@{ head = 'abc' }; readiness = [pscustomobject]@{ score = 100 }; completionFingerprint = ('b' * 64) }) | Out-Null
+    $durableMetrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkflowMetrics.ps1') -TasksPath "$smokeSandboxRelative/no-such-task-root" -Format Json | ConvertFrom-Json
+    Assert-Adaptive ($durableMetrics.ceremony.adoptionStatus -eq 'observed-from-outcome-ledger' -and $durableMetrics.ceremony.durableOutcomeCount -eq 1) 'Workflow metrics did not retain sealed workspace adoption evidence.'
+} finally {
+    if ([string]::IsNullOrWhiteSpace($previousOutcomeRoot)) { Remove-Item Env:LLM_WIKI_WORKSPACE_OUTCOME_ROOT -ErrorAction SilentlyContinue } else { $env:LLM_WIKI_WORKSPACE_OUTCOME_ROOT = $previousOutcomeRoot }
+    if (Test-Path -LiteralPath $outcomeRoot) { Remove-Item -LiteralPath $outcomeRoot -Recurse -Force }
+}
 
 $workspaceName = "adaptive-smoke-$([Guid]::NewGuid().ToString('N'))"
 $workspace = ".artifacts/llm-wiki/tasks/$workspaceName"

@@ -7,8 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Images.Services;
 
 public sealed class ImageAssetAccessService(
-    IImageAssetReadRepository imageAssetRepository,
-    IImageStorageService imageStorageService) : IImageAssetAccessService {
+    IImageAssetReadRepository imageAssetRepository) : IImageAssetAccessService {
     public async Task<Result<ImageAsset?>> ResolveOptionalAsync(
         ImageAssetId? assetId,
         UserId userId,
@@ -17,19 +16,14 @@ public sealed class ImageAssetAccessService(
             return Result.Success<ImageAsset?>(value: null);
         }
 
-        ImageAsset? asset = await imageAssetRepository.GetByIdAsync(assetId.Value, cancellationToken).ConfigureAwait(false);
+        ImageAsset? asset = await imageAssetRepository.GetOwnedByIdAsync(assetId.Value, userId, cancellationToken).ConfigureAwait(false);
         if (asset is null) {
             return Result.Failure<ImageAsset?>(Errors.Image.NotFound(assetId.Value.Value));
         }
 
-        if (asset.UserId != userId) {
-            return Result.Failure<ImageAsset?>(Errors.Image.Forbidden());
-        }
-
-        ImageObjectValidationResult validation = await imageStorageService.ValidateUploadedObjectAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
-        if (!validation.IsValid) {
+        if (!asset.IsConfirmed) {
             return Result.Failure<ImageAsset?>(Errors.Image.InvalidData(
-                validation.Message ?? "Image upload has not completed or is invalid."));
+                "Image upload has not been confirmed."));
         }
 
         return Result.Success<ImageAsset?>(asset);

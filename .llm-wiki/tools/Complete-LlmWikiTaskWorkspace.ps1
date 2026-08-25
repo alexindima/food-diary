@@ -418,6 +418,9 @@ $instructionOutcome = & (Join-Path $PSScriptRoot 'Manage-LlmWikiInstructionOutco
 if (-not $instructionOutcome.valid) {
     throw "Instruction outcome could not be recorded: $(@($instructionOutcome.issues) -join ' ')"
 }
+$workspaceOutcome = & (Join-Path $PSScriptRoot 'Write-LlmWikiWorkspaceOutcome.ps1') `
+    -WorkspacePath $normalizedWorkspacePath `
+    -Completion ([pscustomobject]$completion)
 
 Write-Result ([pscustomobject][ordered]@{
     schemaVersion = 1
@@ -441,5 +444,6 @@ Write-Result ([pscustomobject][ordered]@{
     modelRoutingOutcomeEventHash = [string]$modelRoutingOutcome.eventHash
     instructionOutcomeCount = [int]$instructionOutcome.addedCount
     instructionOutcomeEventHash = [string]$instructionOutcome.eventHash
+    workspaceOutcomeFingerprint = [string]$workspaceOutcome.completionFingerprint
     issues = @()
 })

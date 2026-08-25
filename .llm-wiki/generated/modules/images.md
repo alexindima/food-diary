@@ -38,6 +38,7 @@ sources:
 Source: `FoodDiary.Presentation.Api/Features/Images/ImagesController.cs`
 
 - `POST /api/v{version:apiVersion}/images/upload-url`
+- `POST /api/v{version:apiVersion}/images/{assetId:guid}/confirm`
 - `DELETE /api/v{version:apiVersion}/images/{assetId:guid}`
 
 ## Boundary Health

@@ -60,6 +60,17 @@ $adaptiveDurationSum = if ($null -ne $adaptiveDuration -and $adaptiveDuration.PS
 $passedAdaptiveCount = @($adaptiveItems | Where-Object outcome -eq 'passed').Count
 $failedAdaptiveCount = @($adaptiveItems | Where-Object outcome -in @('failed', 'timed-out', 'interrupted')).Count
 $workspaceAdoptionStatus = if ($items.Count -eq 0) { 'insufficient-data' } else { 'observed' }
+$outcomeRoot = if (-not [string]::IsNullOrWhiteSpace([string]$env:LLM_WIKI_WORKSPACE_OUTCOME_ROOT)) {
+    [IO.Path]::GetFullPath([string]$env:LLM_WIKI_WORKSPACE_OUTCOME_ROOT)
+} elseif (-not [string]::IsNullOrWhiteSpace($gitDirectory)) { Join-Path $gitDirectory 'llm-wiki/workspace-outcomes' } else { $null }
+$workspaceOutcomes = @(
+    if ($outcomeRoot -and (Test-Path -LiteralPath $outcomeRoot -PathType Container)) {
+        Get-ChildItem -LiteralPath $outcomeRoot -Filter '*.json' -File | ForEach-Object {
+            try { Get-Content -LiteralPath $_.FullName -Raw | ConvertFrom-Json } catch { }
+        }
+    }
+)
+if ($items.Count -eq 0 -and $workspaceOutcomes.Count -gt 0) { $workspaceAdoptionStatus = 'observed-from-outcome-ledger' }
 $result = [pscustomobject][ordered]@{
     schemaVersion = 4
     workspaceCount = $items.Count
@@ -67,7 +78,8 @@ $result = [pscustomobject][ordered]@{
     failedCheckCount = $failedCheckSum
     ceremony = [pscustomobject][ordered]@{
         adoptionStatus = $workspaceAdoptionStatus
-        sampleCount = $items.Count
+        sampleCount = $items.Count + $workspaceOutcomes.Count
+        durableOutcomeCount = $workspaceOutcomes.Count
         manifestAdoptionPercent = $(if ($items.Count -eq 0) { $null } else { [Math]::Round(100 * @($items | Where-Object hasManifest).Count / $items.Count, 1) })
         acceptanceAdoptionPercent = $(if ($items.Count -eq 0) { $null } else { [Math]::Round(100 * @($items | Where-Object hasAcceptance).Count / $items.Count, 1) })
     }

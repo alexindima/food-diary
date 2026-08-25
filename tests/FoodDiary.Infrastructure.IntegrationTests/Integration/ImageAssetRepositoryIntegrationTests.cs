@@ -11,6 +11,33 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class ImageAssetRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task OwnedLookup_HidesForeignAsset_AndPersistsConfirmation() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var owner = User.Create("image-owner@example.com", "hash");
+        var otherUser = User.Create("image-other@example.com", "hash");
+        var asset = ImageAsset.Create(owner.Id, "images/pending.webp", "https://cdn.example.com/pending.webp");
+        context.Users.AddRange(owner, otherUser);
+        context.ImageAssets.Add(asset);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new ImageAssetRepository(context);
+
+        ImageAsset? foreign = await repository.GetOwnedByIdAsync(asset.Id, otherUser.Id, CancellationToken.None);
+        ImageAsset? owned = await repository.GetOwnedForUpdateAsync(asset.Id, owner.Id, CancellationToken.None);
+        Assert.Null(foreign);
+        Assert.NotNull(owned);
+        Assert.False(owned.IsConfirmed);
+
+        owned.Confirm();
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        ImageAsset? confirmed = await repository.GetOwnedByIdAsync(asset.Id, owner.Id, CancellationToken.None);
+        Assert.NotNull(confirmed);
+        Assert.True(confirmed.IsConfirmed);
+    }
+
+    [RequiresDockerFact]
     public async Task MealAiSessionAsset_IsReportedInUse_AndExcludedFromUnusedCandidates() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create("image-ai@example.com", "hash");

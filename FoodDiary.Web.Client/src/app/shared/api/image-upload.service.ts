@@ -5,7 +5,7 @@ import { catchError, map, type Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { SKIP_AUTH } from '../../constants/http-context.tokens';
 import { rethrowApiError } from '../lib/api-error.utils';
-import type { ImageUploadUrlResponse } from '../models/image-upload.data';
+import type { ConfirmImageUploadResponse, ImageUploadUrlResponse } from '../models/image-upload.data';
 
 @Service()
 export class ImageUploadService {
@@ -35,6 +35,12 @@ export class ImageUploadService {
             map(() => void 0),
             catchError((error: unknown) => rethrowApiError('Failed to upload image to S3', error)),
         );
+    }
+
+    public confirmUpload(assetId: string): Observable<ConfirmImageUploadResponse> {
+        return this.http
+            .post<ConfirmImageUploadResponse>(`${this.baseUrl}/${assetId}/confirm`, {})
+            .pipe(catchError((error: unknown) => rethrowApiError('Failed to confirm image upload', error)));
     }
 
     public deleteAsset(assetId: string): Observable<void> {

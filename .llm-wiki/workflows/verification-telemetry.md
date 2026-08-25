@@ -32,8 +32,10 @@ isolate it with `LLM_WIKI_VERIFICATION_TELEMETRY_PATH`.
 
 A check is reported as flaky only after the configured minimum sample count, when
 both passing and failing outcomes exist and the transition rate crosses the policy
-threshold. Flakiness is surfaced for investigation; it does not excuse or suppress
-a required check.
+threshold. `action-required` records an expected workflow pause, such as a stale
+index or missing source-review receipt; it is counted separately and excluded from
+failure and transition calculations. Flakiness is surfaced for investigation; it
+does not excuse or suppress a required check.
 
 An empty registry reports `health=insufficient-data`; it is never presented as a
 healthy history. Workflow metrics likewise retain failed, timed-out, and

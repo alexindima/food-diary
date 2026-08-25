@@ -33,7 +33,8 @@ public sealed class S3ImageStorageServiceTests {
             outcome = GetTagValue(tags, "fooddiary.storage.outcome");
         });
 
-        S3ImageStorageService service = CreateService(new StubObjectStorageClient());
+        var storageClient = new StubObjectStorageClient();
+        S3ImageStorageService service = CreateService(storageClient);
 
         PresignedUpload result = await service.CreatePresignedUploadAsync(
             UserId.New(),
@@ -43,6 +44,7 @@ public sealed class S3ImageStorageServiceTests {
             CancellationToken.None);
 
         Assert.NotNull(result.UploadUrl);
+        Assert.Contains("fooddiary-assets-staging", result.UploadUrl, StringComparison.Ordinal);
         Assert.Equal(1, count);
         Assert.Equal("presign", operation);
         Assert.Equal("success", outcome);
@@ -77,7 +79,8 @@ public sealed class S3ImageStorageServiceTests {
             errorType = GetTagValue(tags, "error.type");
         });
 
-        S3ImageStorageService service = CreateService(new StubObjectStorageClient());
+        var storageClient = new StubObjectStorageClient();
+        S3ImageStorageService service = CreateService(storageClient);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             service.CreatePresignedUploadAsync(
@@ -270,7 +273,8 @@ public sealed class S3ImageStorageServiceTests {
             operation = GetTagValue(tags, "fooddiary.storage.operation");
             outcome = GetTagValue(tags, "fooddiary.storage.outcome");
         });
-        S3ImageStorageService service = CreateService(new StubObjectStorageClient());
+        var storageClient = new StubObjectStorageClient();
+        S3ImageStorageService service = CreateService(storageClient);
 
         ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
 
@@ -278,7 +282,9 @@ public sealed class S3ImageStorageServiceTests {
             () => Assert.True(result.IsValid),
             () => Assert.Equal(1, count),
             () => Assert.Equal("validate", operation),
-            () => Assert.Equal("success", outcome));
+            () => Assert.Equal("success", outcome),
+            () => Assert.Equal("fooddiary-assets", storageClient.PublishedBucket),
+            () => Assert.Equal(CreateImageBytes(SKEncodedImageFormat.Png), storageClient.PublishedContent));
     }
 
     [Fact]
@@ -468,6 +474,7 @@ public sealed class S3ImageStorageServiceTests {
             storageClient,
             Microsoft.Extensions.Options.Options.Create(new S3Options {
                 Bucket = "fooddiary-assets",
+                StagingBucket = "fooddiary-assets-staging",
                 Region = "eu-central-1",
                 MaxUploadSizeBytes = 5 * 1024 * 1024,
                 PublicBaseUrl = publicBaseUrl,
@@ -519,6 +526,8 @@ public sealed class S3ImageStorageServiceTests {
         StoredObjectInfo? objectInfo = null,
         byte[]? content = null) : IObjectStorageClient {
         private readonly byte[] _content = content ?? CreateImageBytes(SKEncodedImageFormat.Png);
+        public string? PublishedBucket { get; private set; }
+        public byte[]? PublishedContent { get; private set; }
 
         public string GetPreSignedUploadUrl(
             string bucketName,
@@ -530,6 +539,12 @@ public sealed class S3ImageStorageServiceTests {
 
         public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.CompletedTask;
+
+        public Task PutObjectBytesAsync(string bucketName, string key, string contentType, ReadOnlyMemory<byte> content, CancellationToken cancellationToken) {
+            PublishedBucket = bucketName;
+            PublishedContent = content.ToArray();
+            return Task.CompletedTask;
+        }
 
         public Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.FromResult<StoredObjectInfo?>(objectInfo ?? new StoredObjectInfo(_content.LongLength, "image/png"));
@@ -561,6 +576,9 @@ public sealed class S3ImageStorageServiceTests {
             return Task.CompletedTask;
         }
 
+        public Task PutObjectBytesAsync(string bucketName, string key, string contentType, ReadOnlyMemory<byte> content, CancellationToken cancellationToken) =>
+            Task.CompletedTask;
+
         public Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.FromResult<StoredObjectInfo?>(new StoredObjectInfo(1024, "image/webp"));
 
@@ -584,6 +602,9 @@ public sealed class S3ImageStorageServiceTests {
         public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.CompletedTask;
 
+        public Task PutObjectBytesAsync(string bucketName, string key, string contentType, ReadOnlyMemory<byte> content, CancellationToken cancellationToken) =>
+            Task.CompletedTask;
+
         public Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.FromResult<StoredObjectInfo?>(null);
 
@@ -604,6 +625,9 @@ public sealed class S3ImageStorageServiceTests {
             DateTime expiresAt) => throw new NotSupportedException();
 
         public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task PutObjectBytesAsync(string bucketName, string key, string contentType, ReadOnlyMemory<byte> content, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
 
         public Task<StoredObjectInfo?> GetObjectInfoAsync(
@@ -631,6 +655,9 @@ public sealed class S3ImageStorageServiceTests {
         public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.FromException(exception);
 
+        public Task PutObjectBytesAsync(string bucketName, string key, string contentType, ReadOnlyMemory<byte> content, CancellationToken cancellationToken) =>
+            Task.FromException(exception);
+
         public Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.FromException<StoredObjectInfo?>(exception);
 
@@ -651,6 +678,9 @@ public sealed class S3ImageStorageServiceTests {
             DateTime expiresAt) => throw new NotSupportedException();
 
         public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) =>
+            Task.FromCanceled(cancellationToken);
+
+        public Task PutObjectBytesAsync(string bucketName, string key, string contentType, ReadOnlyMemory<byte> content, CancellationToken cancellationToken) =>
             Task.FromCanceled(cancellationToken);
 
         public Task<StoredObjectInfo?> GetObjectInfoAsync(
