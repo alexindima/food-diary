@@ -50,21 +50,17 @@ public sealed class WebPushSubscription : AggregateRoot<WebPushSubscriptionId> {
     }
 
     public void Refresh(
-        UserId userId,
         string p256Dh,
         string auth,
         DateTime? expirationTimeUtc = null,
         string? locale = null,
         string? userAgent = null) {
-        EnsureUserId(userId);
-
         string normalizedP256Dh = NormalizeRequired(p256Dh, KeyMaxLength, nameof(p256Dh));
         string normalizedAuth = NormalizeRequired(auth, KeyMaxLength, nameof(auth));
         DateTime? normalizedExpirationTime = NormalizeUtc(expirationTimeUtc, nameof(expirationTimeUtc));
         string? normalizedLocale = NormalizeOptional(locale, LocaleMaxLength, nameof(locale));
         string? normalizedUserAgent = NormalizeOptional(userAgent, UserAgentMaxLength, nameof(userAgent));
 
-        UserId = userId;
         P256Dh = normalizedP256Dh;
         Auth = normalizedAuth;
         ExpirationTimeUtc = normalizedExpirationTime;

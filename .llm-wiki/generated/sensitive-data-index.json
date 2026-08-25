@@ -7855,7 +7855,7 @@
       "name": "UserAgentMaxLength",
       "type": "userAgent,",
       "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 65
+      "line": 62
     },
     {
       "category": "identity",

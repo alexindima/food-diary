@@ -14642,11 +14642,11 @@
     },
     {
       "path": "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandHandler.cs",
-      "nonBlankLines": 91,
-      "decisionPoints": 11,
+      "nonBlankLines": 95,
+      "decisionPoints": 12,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.32
+      "structuralRiskScore": 21.9
     },
     {
       "path": "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandValidator.cs",
@@ -18082,11 +18082,11 @@
     },
     {
       "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
-      "nonBlankLines": 95,
+      "nonBlankLines": 92,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.4
+      "structuralRiskScore": 9.34
     },
     {
       "path": "FoodDiary.Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
@@ -22322,11 +22322,11 @@
     },
     {
       "path": "FoodDiary.Integrations/DependencyInjection.Mail.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 43,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.34
+      "structuralRiskScore": 11.36
     },
     {
       "path": "FoodDiary.Integrations/DependencyInjection.Notifications.cs",
@@ -22434,11 +22434,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Options/S3Options.cs",
-      "nonBlankLines": 58,
-      "decisionPoints": 15,
+      "nonBlankLines": 65,
+      "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.66
+      "structuralRiskScore": 26.8
     },
     {
       "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
@@ -36946,11 +36946,11 @@
     },
     {
       "path": "MailRelay/FoodDiary.MailRelay.Client/Options/MailRelayClientOptions.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
+      "nonBlankLines": 20,
+      "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 10.9
     },
     {
       "path": "MailRelay/FoodDiary.MailRelay.Domain/AssemblyMarker.cs",

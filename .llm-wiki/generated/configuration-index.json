@@ -3,7 +3,7 @@
   "summary": {
     "optionTypes": 56,
     "configurationFiles": 7,
-    "configurationKeys": 259,
+    "configurationKeys": 260,
     "environmentVariables": 186
   },
   "optionTypes": [
@@ -373,6 +373,7 @@
       "type": "MailRelayClientOptions",
       "section": "MailRelayClient",
       "properties": [
+        "AllowInsecureHttp",
         "ApiKey",
         "BaseUrl",
         "Timeout"
@@ -556,6 +557,7 @@
       "section": "S3",
       "properties": [
         "AccessKeyId",
+        "AllowInsecureHttp",
         "Bucket",
         "MaxUploadSizeBytes",
         "PublicBaseUrl",
@@ -752,7 +754,8 @@
         "Cors:Origins",
         "Email:AllowedFrontendBaseUrls",
         "Email:FrontendBaseUrl",
-        "MailInboxClient:AllowInsecureLoopback"
+        "MailInboxClient:AllowInsecureLoopback",
+        "MailRelayClient:AllowInsecureHttp"
       ]
     },
     {

@@ -111715,7 +111715,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.WebPush.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 8
     },
     {
       "contract": "UpsertWebPushSubscriptionCommand",

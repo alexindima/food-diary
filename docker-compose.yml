@@ -29,6 +29,7 @@ services:
       InitialAdmin__Email: ${InitialAdmin__Email:-admin@fooddiary.club}
       InitialAdmin__Password: ${InitialAdmin__Password:-}
       MailRelayClient__BaseUrl: http://mail-relay:5088
+      MailRelayClient__AllowInsecureHttp: "true"
     depends_on:
       postgres:
         condition: service_healthy
@@ -196,6 +197,7 @@ services:
       BuildInfo__CommitSha: ${DEPLOY_COMMIT_SHA:-unknown}
       BuildInfo__ImageTag: ${API_IMAGE_TAG:-unknown}
       MailRelayClient__BaseUrl: http://mail-relay:5088
+      MailRelayClient__AllowInsecureHttp: "true"
       MailRelayClient__ApiKey: ${MailRelayClient__ApiKey:-}
       MailInboxClient__BaseUrl: https://mail.fooddiary.club:5098
       MailInboxClient__MetadataApiKey: ${MAIL_INBOX_METADATA_API_KEY:?Set MAIL_INBOX_METADATA_API_KEY}
@@ -344,6 +346,7 @@ services:
     environment:
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-change-me-local-password}
       MailRelayClient__BaseUrl: http://mail-relay:5088
+      MailRelayClient__AllowInsecureHttp: "true"
       MailRelayClient__ApiKey: ${MailRelayClient__ApiKey:-}
     env_file:
       - .env

@@ -166,7 +166,7 @@ public sealed class IntegrationOptionsTests {
     [InlineData(null, true)]
     [InlineData("", true)]
     [InlineData("https://s3.example.com", true)]
-    [InlineData("http://minio:9000", true)]
+    [InlineData("http://minio:9000", false)]
     [InlineData("ftp://s3.example.com", false)]
     [InlineData("/relative", false)]
     [InlineData("http://user:secret@minio:9000", false)]
@@ -175,6 +175,16 @@ public sealed class IntegrationOptionsTests {
         var options = new S3Options { ServiceUrl = serviceUrl };
 
         Assert.Equal(expected, S3Options.HasValidServiceUrl(options));
+    }
+
+    [Fact]
+    public void S3Options_HasValidServiceUrl_AllowsExplicitInsecureHttpForDevelopment() {
+        var options = new S3Options {
+            ServiceUrl = "http://minio:9000",
+            AllowInsecureHttp = true,
+        };
+
+        Assert.True(S3Options.HasValidServiceUrl(options));
     }
 
     [Fact]

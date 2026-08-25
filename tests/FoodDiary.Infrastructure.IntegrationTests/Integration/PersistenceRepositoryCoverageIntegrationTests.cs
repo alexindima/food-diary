@@ -1378,7 +1378,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
         WebPushSubscription? tracked = await repository.GetByEndpointAsync(subscription.Endpoint, asTracking: true);
         Assert.NotNull(tracked);
-        tracked.Refresh(userId, "p256-new", "auth-new", DateTime.UtcNow.AddDays(2), locale: "ru", userAgent: "tests/2");
+        tracked.Refresh("p256-new", "auth-new", DateTime.UtcNow.AddDays(2), locale: "ru", userAgent: "tests/2");
         await repository.UpdateAsync(tracked);
         await context.SaveChangesAsync();
 

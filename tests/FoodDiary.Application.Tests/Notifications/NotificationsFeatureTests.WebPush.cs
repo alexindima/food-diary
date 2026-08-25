@@ -213,7 +213,7 @@ public partial class NotificationsFeatureTests {
     public async Task UpsertWebPushSubscription_WithExistingEndpoint_RefreshesSubscriptionAndWritesAuditLog() {
         User user = CreateUser();
         var subscription = WebPushSubscription.Create(
-            UserId.New(),
+            user.Id,
             "https://push.example.com/existing",
             "old-p256",
             "old-auth",
@@ -245,6 +245,40 @@ public partial class NotificationsFeatureTests {
         Assert.Equal("notifications.push-subscription.refreshed", auditLogger.Action);
         Assert.Contains("endpointHost=push.example.com", auditLogger.Details, StringComparison.Ordinal);
         Assert.Contains("locale=en", auditLogger.Details, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task UpsertWebPushSubscription_WhenEndpointBelongsToAnotherUser_RejectsWithoutMutation() {
+        User user = CreateUser();
+        var ownerId = UserId.New();
+        var subscription = WebPushSubscription.Create(
+            ownerId,
+            "https://push.example.com/existing",
+            "old-p256",
+            "old-auth");
+        var repository = new InMemoryWebPushSubscriptionRepository([subscription]);
+        var auditLogger = new RecordingAuditLogger();
+        var handler = new UpsertWebPushSubscriptionCommandHandler(repository, CreateCurrentUserAccessService(user), auditLogger);
+
+        Result result = await handler.Handle(
+            new UpsertWebPushSubscriptionCommand(
+                user.Id.Value,
+                subscription.Endpoint,
+                "new-p256",
+                "new-auth",
+                DateTime.UtcNow.AddDays(1),
+                "en",
+                "Chrome"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Multiple(
+            () => Assert.Equal(ownerId, subscription.UserId),
+            () => Assert.Equal("old-p256", subscription.P256Dh),
+            () => Assert.Equal("old-auth", subscription.Auth),
+            () => Assert.Equal(0, repository.UpdateCallCount),
+            () => Assert.Empty(repository.DeletedEndpoints),
+            () => Assert.Empty(auditLogger.Action));
     }
 
     [Fact]

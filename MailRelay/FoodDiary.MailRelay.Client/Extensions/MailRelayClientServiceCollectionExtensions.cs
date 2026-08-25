@@ -11,7 +11,7 @@ public static class MailRelayClientServiceCollectionExtensions {
         services.AddOptions<MailRelayClientOptions>()
             .Configure(configureOptions)
             .Validate(MailRelayClientOptions.HasValidBaseUrl,
-                "Mail relay client base URL must be an absolute URL.")
+                "Mail relay client base URL must be an absolute HTTPS URL unless insecure HTTP is explicitly enabled.")
             .Validate(static options => options.Timeout > TimeSpan.Zero,
                 "Mail relay client timeout must be greater than zero.")
             .ValidateOnStart();

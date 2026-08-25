@@ -69,7 +69,6 @@ public sealed class SecondPassDomainHardeningTests {
             "Первая еда", "First meal", "Описание", "Description", "meal", 0);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => subscription.Refresh(
-            UserId.New(),
             "changed",
             new string('x', 513)));
         Assert.Throws<ArgumentOutOfRangeException>(() => template.Update("Changed", new string('x', 2001)));

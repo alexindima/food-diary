@@ -10,6 +10,26 @@ public sealed class MailRelayClientTests {
     private static readonly System.Text.Json.JsonSerializerOptions WebJsonOptions =
         new(System.Text.Json.JsonSerializerDefaults.Web);
 
+    [Theory]
+    [InlineData("https://relay.example.test", false, true)]
+    [InlineData("http://mail-relay:5088", false, false)]
+    [InlineData("http://mail-relay:5088", true, true)]
+    [InlineData("https://user:secret@relay.example.test", false, false)]
+    [InlineData("https://relay.example.test?token=secret", false, false)]
+    [InlineData("https://relay.example.test#fragment", false, false)]
+    [InlineData("ftp://relay.example.test", true, false)]
+    public void HasValidBaseUrl_RequiresSecureCleanUrlUnlessHttpIsExplicitlyEnabled(
+        string baseUrl,
+        bool allowInsecureHttp,
+        bool expected) {
+        var options = new MailRelayClientOptions {
+            BaseUrl = baseUrl,
+            AllowInsecureHttp = allowInsecureHttp,
+        };
+
+        Assert.Equal(expected, MailRelayClientOptions.HasValidBaseUrl(options));
+    }
+
     [Fact]
     public async Task EnqueueAsync_SendsExpectedRequestAndApiKeyHeader() {
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.Created) {

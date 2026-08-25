@@ -30,6 +30,11 @@ public sealed class S3Options {
     public string? ServiceUrl { get; init; }
 
     /// <summary>
+    /// Allows an unencrypted custom endpoint for explicitly trusted development environments.
+    /// </summary>
+    public bool AllowInsecureHttp { get; init; }
+
+    /// <summary>
     /// Optional CDN or CloudFront base URL used for public access if different from the bucket endpoint.
     /// </summary>
     public string? PublicBaseUrl { get; init; }
@@ -59,7 +64,9 @@ public sealed class S3Options {
 
     public static bool HasValidServiceUrl(S3Options options) {
         return string.IsNullOrWhiteSpace(options.ServiceUrl) ||
-               IntegrationUriValidator.IsAbsoluteHttpBaseUrl(options.ServiceUrl);
+               IntegrationUriValidator.IsAbsoluteHttpBaseUrl(
+                   options.ServiceUrl,
+                   requireHttps: !options.AllowInsecureHttp);
     }
 
     private static bool HasAnyConfiguration(S3Options options) =>
@@ -68,5 +75,6 @@ public sealed class S3Options {
         !string.IsNullOrWhiteSpace(options.Region) ||
         !string.IsNullOrWhiteSpace(options.Bucket) ||
         !string.IsNullOrWhiteSpace(options.ServiceUrl) ||
-        !string.IsNullOrWhiteSpace(options.PublicBaseUrl);
+        !string.IsNullOrWhiteSpace(options.PublicBaseUrl) ||
+        options.AllowInsecureHttp;
 }

@@ -26,6 +26,7 @@ public static partial class DependencyInjection {
             options.BaseUrl = section["BaseUrl"] ?? string.Empty;
             options.ApiKey = section["ApiKey"] ?? string.Empty;
             options.Timeout = TimeSpan.FromSeconds(15);
+            options.AllowInsecureHttp = section.GetValue<bool>("AllowInsecureHttp");
         });
 
         IConfigurationSection mailInboxSection = configuration.GetSection(MailInboxClientOptions.SectionName);

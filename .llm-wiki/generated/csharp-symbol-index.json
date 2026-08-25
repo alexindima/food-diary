@@ -27398,7 +27398,7 @@
       "implementation": "MailInboxClientAdminMailInboxReader",
       "lifetime": "Scoped",
       "path": "FoodDiary.Integrations/DependencyInjection.Mail.cs",
-      "line": 41
+      "line": 42
     },
     {
       "service": "IWebPushNotificationSender",

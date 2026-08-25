@@ -44,7 +44,13 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
             asTracking: true,
             cancellationToken).ConfigureAwait(false);
 
-        if (existing is null || existing.UserId != userId) {
+        if (existing is not null && existing.UserId != userId) {
+            return Result.Failure(Errors.Validation.Invalid(
+                nameof(command.Endpoint),
+                "Endpoint cannot be registered."));
+        }
+
+        if (existing is null) {
             await EvictOldestSubscriptionsAsync(userId, cancellationToken).ConfigureAwait(false);
         }
 
@@ -69,7 +75,6 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
         }
 
         existing.Refresh(
-            userId,
             command.P256Dh,
             command.Auth,
             command.ExpirationTimeUtc,

@@ -133,7 +133,6 @@ public class NotificationInvariantTests {
     [Fact]
     public void WebPushSubscription_Refresh_ReplacesMutableFieldsAndSetsModified() {
         var initialUserId = UserId.New();
-        var nextUserId = UserId.New();
         var subscription = WebPushSubscription.Create(
             initialUserId,
             "https://push.example.com/device",
@@ -142,7 +141,6 @@ public class NotificationInvariantTests {
         var expiresAtLocal = new DateTime(2026, 3, 28, 8, 0, 0, DateTimeKind.Local);
 
         subscription.Refresh(
-            nextUserId,
             p256Dh: "  new-p256  ",
             auth: "  new-auth  ",
             expiresAtLocal,
@@ -150,7 +148,7 @@ public class NotificationInvariantTests {
             userAgent: "  Mobile  ");
 
         Assert.Multiple(
-            () => Assert.Equal(nextUserId, subscription.UserId),
+            () => Assert.Equal(initialUserId, subscription.UserId),
             () => Assert.Equal("https://push.example.com/device", subscription.Endpoint),
             () => Assert.Equal("new-p256", subscription.P256Dh),
             () => Assert.Equal("new-auth", subscription.Auth),
@@ -208,11 +206,10 @@ public class NotificationInvariantTests {
     public void WebPushSubscription_Refresh_WithInvalidValues_Throws() {
         var subscription = WebPushSubscription.Create(UserId.New(), "endpoint", "p256", "auth");
 
-        Assert.Throws<ArgumentException>(() => subscription.Refresh(UserId.Empty, "p256", "auth"));
-        Assert.Throws<ArgumentException>(() => subscription.Refresh(UserId.New(), " ", "auth"));
-        Assert.Throws<ArgumentException>(() => subscription.Refresh(UserId.New(), "p256", " "));
-        Assert.Throws<ArgumentOutOfRangeException>(() => subscription.Refresh(UserId.New(), new string('p', 513), "auth"));
-        Assert.Throws<ArgumentOutOfRangeException>(() => subscription.Refresh(UserId.New(), "p256", new string('a', 513)));
-        Assert.Throws<ArgumentOutOfRangeException>(() => subscription.Refresh(UserId.New(), "p256", "auth", new DateTime(2026, 3, 27)));
+        Assert.Throws<ArgumentException>(() => subscription.Refresh(" ", "auth"));
+        Assert.Throws<ArgumentException>(() => subscription.Refresh("p256", " "));
+        Assert.Throws<ArgumentOutOfRangeException>(() => subscription.Refresh(new string('p', 513), "auth"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => subscription.Refresh("p256", new string('a', 513)));
+        Assert.Throws<ArgumentOutOfRangeException>(() => subscription.Refresh("p256", "auth", new DateTime(2026, 3, 27)));
     }
 }
