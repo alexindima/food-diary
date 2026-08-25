@@ -408,7 +408,7 @@ public partial class MealsFeatureTests {
     }
 
     [Fact]
-    public async Task CreateMealCommandHandler_WithAiTextItemOrigin_Succeeds() {
+    public async Task CreateMealCommandHandler_WithCallerProvidedAiProvenance_ReturnsValidationFailure() {
         var user = User.Create("create-ai-text-item-origin@example.com", "hash");
         var repository = new CreatingMealRepository();
         var handler = new CreateMealCommandHandler(
@@ -425,8 +425,9 @@ public partial class MealsFeatureTests {
             ]),
             CancellationToken.None);
 
-        ResultAssert.Success(result);
-        Assert.NotNull(repository.StoredMeal);
+        ResultAssert.Failure(result);
+        Assert.Contains("assigned by the server", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Null(repository.StoredMeal);
     }
 
     [Fact]

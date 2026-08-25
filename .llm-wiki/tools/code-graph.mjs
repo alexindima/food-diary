@@ -2070,6 +2070,7 @@ function searchContext(database, query, limit, filters = {}) {
     ...alternativeTerms,
   ])].slice(0, maximumQueryTerms);
   const explicitlyRequestsTest = boostTerms.includes('test');
+  const explicitlyRequestsMcp = /(^|\W)mcp(\W|$)/iu.test(String(query));
   const fingerprint = database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value ?? null;
   const indexedDocuments = database.prepare('SELECT COUNT(*) count FROM context_search').get().count;
   if (terms.length === 0 || !fingerprint || indexedDocuments === 0) {
@@ -2118,10 +2119,47 @@ function searchContext(database, query, limit, filters = {}) {
       candidates.push(identityCandidate);
     }
   }
+  const normalizedQueryForRuntime = expandSearchText(query).toLowerCase();
+  const runtimeSuffixes = /(^|\s)(?:node|javascript|mjs)(\s|$)/.test(normalizedQueryForRuntime)
+    ? ['%.mjs', '%.js', '%.cjs']
+    : !explicitlyRequestsMcp && /(^|\s)(?:powershell|pwsh|ps1)(\s|$)/.test(normalizedQueryForRuntime) ? ['%.ps1'] : [];
+  const runtimeCandidatesToPrepend = [];
+  for (const suffix of runtimeSuffixes) {
+    const runtimeCandidates = database.prepare(`
+      SELECT record_type recordType, record_key recordKey, path, source_path sourcePath,
+        category, title, 0.0 lexicalRank
+      FROM context_search
+      WHERE path LIKE ?
+      ORDER BY path
+    `).all(suffix);
+    for (const runtimeCandidate of runtimeCandidates) {
+      const key = `${runtimeCandidate.recordType}\0${runtimeCandidate.recordKey}\0${runtimeCandidate.path}`;
+      if (candidateIndexes.has(key)) continue;
+      candidateIndexes.set(key, candidates.length);
+      runtimeCandidatesToPrepend.push(runtimeCandidate);
+    }
+  }
+  candidates.unshift(...runtimeCandidatesToPrepend);
   const normalizedQuery = expandSearchText(query).toLowerCase();
   const moduleTerm = String(filters.module ?? '').toLowerCase();
   const scopePaths = String(filters.path ?? '').split(';').filter(Boolean).map((path) => path.replaceAll('\\', '/').toLowerCase());
   const changeType = String(filters.changeType ?? 'Any').toLowerCase();
+  const eligibleTermsForBoost = (boost) => boost.directOnly ? directTerms : boostTerms;
+  const boostMatchesQuery = (boost, defaultMinimum = 1) => {
+    const eligibleTerms = eligibleTermsForBoost(boost);
+    if ((boost.excludedQueryTerms ?? []).some((term) => eligibleTerms.includes(String(term).toLowerCase()))) return false;
+    return (boost.queryTerms ?? []).filter((term) => eligibleTerms.includes(String(term).toLowerCase())).length
+      >= Number(boost.minimumMatches ?? defaultMinimum);
+  };
+  const boostMatchesChangeType = (boost) => !(boost.changeTypes?.length)
+    || boost.changeTypes.some((candidate) => String(candidate).toLowerCase() === changeType);
+  const applicableIdentityBoosts = (contextSearchRanking.identityBoosts ?? [])
+    .filter((boost) => !(explicitlyRequestsMcp && boost.id === 'explicit-powershell-file-intent'))
+    .filter((boost) => boostMatchesChangeType(boost) && boostMatchesQuery(boost));
+  const applicableStructuralRoleBoosts = (contextSearchRanking.structuralRoleBoosts ?? [])
+    .filter((boost) => boostMatchesChangeType(boost) && boostMatchesQuery(boost, 0));
+  const applicablePathBoosts = (contextSearchRanking.pathBoosts ?? [])
+    .filter((boost) => boostMatchesQuery(boost));
   const ranked = candidates.map((item, index) => {
     const path = String(item.path ?? '').replaceAll('\\', '/');
     const normalizedPath = path.toLowerCase();
@@ -2158,6 +2196,57 @@ function searchContext(database, query, limit, filters = {}) {
       score += identityScore;
       reasons.push(`path/title affinity ${identityMatches.join(', ')}`);
     }
+    const genericAffinity = contextSearchRanking.genericAffinities ?? {};
+    const explicitRoleMatches = (genericAffinity.roleTerms ?? []).filter((term) => {
+      const normalizedTerm = String(term).toLowerCase();
+      if (['consumer', 'consumers'].includes(normalizedTerm) && !boostTerms.includes('powershell')) return false;
+      return boostTerms.includes(normalizedTerm) && searchableFileIdentity.includes(normalizedTerm);
+    });
+    const explicitRoleScore = Math.min(
+      explicitRoleMatches.reduce((total, term) => total + Number(
+        genericAffinity.roleScoreOverrides?.[term] ?? genericAffinity.roleScorePerMatch ?? 0), 0),
+      Number(genericAffinity.maximumRoleScore ?? Number.MAX_SAFE_INTEGER));
+    if (explicitRoleScore > 0) {
+      score += explicitRoleScore;
+      reasons.push(`generic file-role affinity ${explicitRoleMatches.join(', ')}`);
+    }
+    const applyGenericPathAffinity = (id, intentTerms, pathValues, value, suffix = false) => {
+      const intentMatched = (intentTerms ?? []).some((term) => boostTerms.includes(String(term).toLowerCase()));
+      const pathMatched = (pathValues ?? []).some((candidate) => suffix
+        ? normalizedPath.endsWith(String(candidate).toLowerCase())
+        : normalizedPath.includes(String(candidate).replaceAll('\\', '/').toLowerCase()));
+      if (!intentMatched || !pathMatched || Number(value ?? 0) === 0) return;
+      score += Number(value);
+      reasons.push(`generic ${id} affinity`);
+    };
+    if (changeType !== 'database') {
+      applyGenericPathAffinity('domain-layer', genericAffinity.domainIntentTerms,
+        genericAffinity.domainPathPrefixes, genericAffinity.domainScore);
+    }
+    applyGenericPathAffinity('api-layer', genericAffinity.apiIntentTerms,
+      genericAffinity.apiPathFragments, genericAffinity.apiScore);
+    const applyChangeTypePathAffinity = (id, expectedType, pathValues, value) => {
+      if (changeType !== expectedType || !(pathValues ?? []).some((candidate) =>
+        normalizedPath.includes(String(candidate).replaceAll('\\', '/').toLowerCase()))) return;
+      score += Number(value ?? 0);
+      reasons.push(`generic ${id} affinity`);
+    };
+    applyChangeTypePathAffinity('api-change-type', 'api', genericAffinity.apiPathFragments, genericAffinity.apiScore);
+    applyChangeTypePathAffinity('database-change-type', 'database', genericAffinity.databasePathFragments, genericAffinity.databaseScore);
+    applyGenericPathAffinity('admin-scope', genericAffinity.adminIntentTerms,
+      genericAffinity.adminPathFragments, genericAffinity.adminScore);
+    applyGenericPathAffinity('integration-layer', genericAffinity.integrationIntentTerms,
+      genericAffinity.integrationPathPrefixes, genericAffinity.integrationScore);
+    applyGenericPathAffinity('node-runtime', genericAffinity.nodeIntentTerms,
+      genericAffinity.nodePathSuffixes, genericAffinity.nodeScore, true);
+    if (!explicitlyRequestsMcp) {
+      applyGenericPathAffinity('powershell-runtime', genericAffinity.powershellIntentTerms,
+        genericAffinity.powershellPathSuffixes, genericAffinity.powershellScore, true);
+    }
+    if (!['frontend', 'tests'].includes(changeType) && !boostTerms.includes('how') && !explicitlyRequestsMcp) {
+      applyGenericPathAffinity('wiki-tooling', genericAffinity.wikiToolIntentTerms,
+        genericAffinity.wikiToolPathPrefixes, genericAffinity.wikiToolScore);
+    }
     if (changeType === 'tests' && isExplicitTestCandidate && explicitlyRequestsTest) {
       const explicitTestAffinity = contextSearchRanking.explicitTestAffinity ?? {};
       const explicitTestScore = Math.min(
@@ -2170,13 +2259,9 @@ function searchContext(database, query, limit, filters = {}) {
       score -= Number(contextSearchRanking.explicitTestAffinity?.nonTestPenalty ?? 0);
       reasons.push('production candidate penalty for explicit test intent');
     }
-    for (const boost of contextSearchRanking.identityBoosts ?? []) {
-      const matchesChangeType = !(boost.changeTypes?.length)
-        || boost.changeTypes.some((candidate) => String(candidate).toLowerCase() === changeType);
-      if (!matchesChangeType) continue;
+    for (const boost of applicableIdentityBoosts) {
       const eligibleQueryTerms = boost.directOnly ? directTerms : boostTerms;
       if (changeType === 'tests' && isTest && !String(boost.id ?? '').toLowerCase().includes('test')) continue;
-      if ((boost.excludedQueryTerms ?? []).some((term) => eligibleQueryTerms.includes(String(term).toLowerCase()))) continue;
       const eligibleIdentity = boost.identityScope === 'file' ? searchableFileIdentity : searchablePath;
       const queryMatches = (boost.queryTerms ?? []).filter((term) => eligibleQueryTerms.includes(String(term).toLowerCase()));
       const identityMatchesBoost = (boost.identityTerms ?? []).filter((term) =>
@@ -2188,10 +2273,7 @@ function searchContext(database, query, limit, filters = {}) {
         reasons.push(`ranking policy ${boost.id}`);
       }
     }
-    for (const boost of contextSearchRanking.structuralRoleBoosts ?? []) {
-      const matchesChangeType = !(boost.changeTypes?.length)
-        || boost.changeTypes.some((candidate) => String(candidate).toLowerCase() === changeType);
-      if (!matchesChangeType) continue;
+    for (const boost of applicableStructuralRoleBoosts) {
       if (boost.excludeTests === true && isTest) continue;
       if (boost.recordTypes?.length
         && !boost.recordTypes.some((candidate) => String(candidate).toLowerCase() === String(item.recordType ?? '').toLowerCase())) continue;
@@ -2202,7 +2284,6 @@ function searchContext(database, query, limit, filters = {}) {
       if (boost.pathSuffixes?.length
         && !boost.pathSuffixes.some((suffix) => normalizedPath.endsWith(String(suffix).toLowerCase()))) continue;
       const eligibleQueryTerms = boost.directOnly ? directTerms : boostTerms;
-      if ((boost.excludedQueryTerms ?? []).some((term) => eligibleQueryTerms.includes(String(term).toLowerCase()))) continue;
       const queryMatches = (boost.queryTerms ?? []).filter((term) => eligibleQueryTerms.includes(String(term).toLowerCase()));
       const eligibleIdentity = boost.identityScope === 'file'
         ? searchableFileIdentity
@@ -2223,9 +2304,8 @@ function searchContext(database, query, limit, filters = {}) {
       matchedRankingPolicy = true;
       reasons.push(`structural role ${boost.id} (${queryIdentityMatches.join(', ')})`);
     }
-    for (const boost of contextSearchRanking.pathBoosts ?? []) {
+    for (const boost of applicablePathBoosts) {
       const eligibleQueryTerms = boost.directOnly ? directTerms : boostTerms;
-      if ((boost.excludedQueryTerms ?? []).some((term) => eligibleQueryTerms.includes(String(term).toLowerCase()))) continue;
       const matchedTerms = (boost.queryTerms ?? []).filter((term) => eligibleQueryTerms.includes(String(term).toLowerCase()));
       const matchesIntent = matchedTerms.length >= Number(boost.minimumMatches ?? 1);
       const matchesPath = (boost.pathPrefixes ?? []).some((pathPrefix) =>
@@ -2284,7 +2364,12 @@ function searchContext(database, query, limit, filters = {}) {
       reasons.push('companion file ranked after primary declaration');
     }
     if (isCode) score += 20;
-    if (item.recordType === 'agent-guide') score += Number(contextSearchRanking.agentGuideBoost ?? 15);
+    if (item.recordType === 'agent-guide') {
+      const requestsGuidance = boostTerms.some((term) =>
+        ['agent', 'agents', 'guide', 'guidance', 'instruction', 'instructions', 'policy', 'rule', 'rules'].includes(term));
+      score += requestsGuidance ? Number(contextSearchRanking.agentGuideBoost ?? 15) : -Number(contextSearchRanking.agentGuideBoost ?? 15);
+      reasons.push(requestsGuidance ? 'agent guide affinity' : 'agent guide penalty for code intent');
+    }
     return { ...item, score, lexicalRank: Math.round(item.lexicalRank * 1_000_000) / 1_000_000, reasons };
   }).sort((left, right) => right.score - left.score || left.lexicalRank - right.lexicalRank || left.path.localeCompare(right.path));
   const records = [];
@@ -2419,6 +2504,16 @@ try {
   else if (action === 'search') result = searchContext(database, options.query ?? '', Number(options.limit ?? 20), {
     module: options.module, path: options.path, changeType: options['change-type'],
   });
+  else if (action === 'search-batch') {
+    const inputPath = resolve(repositoryRoot, options.input ?? '');
+    const requests = JSON.parse(readFileSync(inputPath, 'utf8'));
+    result = {
+      requestCount: requests.length,
+      results: requests.map((request) => searchContext(database, request.query ?? '', Number(request.limit ?? 20), {
+        module: request.module, path: request.path, changeType: request.changeType,
+      })),
+    };
+  }
   else if (action === 'relations') result = relations(database, (options.path ?? '').split(';').filter(Boolean), (options.kind ?? '').split(';').filter(Boolean), Number(options.limit ?? 100));
   else if (action === 'coverage') result = coverage(database);
   else if (action === 'fingerprint') result = fingerprint(database, (options.path ?? '').split(';').filter(Boolean));

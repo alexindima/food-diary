@@ -10,4 +10,9 @@ public interface IMealPlanWriteRepository {
         MealPlanId id,
         bool includeDays = false,
         CancellationToken cancellationToken = default);
+
+    Task<MealPlan?> GetCuratedByIdAsync(
+        MealPlanId id,
+        bool includeDays = false,
+        CancellationToken cancellationToken = default);
 }

@@ -40,6 +40,12 @@ public sealed class S3Options {
     public string? PublicBaseUrl { get; init; }
 
     /// <summary>
+    /// Explicitly acknowledges that stored image URLs must be reachable by users and external AI providers.
+    /// Keep disabled unless the bucket or CDN access policy is intentionally public.
+    /// </summary>
+    public bool AllowPublicImageAccess { get; init; }
+
+    /// <summary>
     /// Upload size limit in bytes.
     /// </summary>
     public long MaxUploadSizeBytes { get; init; } = 20 * 1024 * 1024; // 20 MB
@@ -62,6 +68,9 @@ public sealed class S3Options {
                IntegrationUriValidator.IsAbsoluteHttpBaseUrl(options.PublicBaseUrl);
     }
 
+    public static bool HasExplicitPublicImageAccessPolicy(S3Options options) =>
+        !HasCompleteConfiguration(options) || options.AllowPublicImageAccess;
+
     public static bool HasValidServiceUrl(S3Options options) {
         return string.IsNullOrWhiteSpace(options.ServiceUrl) ||
                IntegrationUriValidator.IsAbsoluteHttpBaseUrl(
@@ -76,5 +85,6 @@ public sealed class S3Options {
         !string.IsNullOrWhiteSpace(options.Bucket) ||
         !string.IsNullOrWhiteSpace(options.ServiceUrl) ||
         !string.IsNullOrWhiteSpace(options.PublicBaseUrl) ||
-        options.AllowInsecureHttp;
+        options.AllowInsecureHttp ||
+        options.AllowPublicImageAccess;
 }

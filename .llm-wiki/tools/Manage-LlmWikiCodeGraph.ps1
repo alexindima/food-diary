@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('build', 'build-plan', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search', 'compiled-context', 'backend-contract', 'frontend-contract', 'task-brief-impact', 'sensitive-data', 'frontend-runtime-owner', 'frontend-trace')]
+    [ValidateSet('build', 'build-plan', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search', 'search-batch', 'compiled-context', 'backend-contract', 'frontend-contract', 'task-brief-impact', 'sensitive-data', 'frontend-runtime-owner', 'frontend-trace')]
     [string]$Action = 'status',
     [string]$Query,
     [ValidateSet('modules', 'contracts', 'risks', 'tests')]
@@ -9,6 +9,7 @@ param(
     [string[]]$RelationKind,
     [string]$Module,
     [string]$PathPrefix,
+    [string]$InputPath,
     [ValidateSet('Context', 'ChangedPaths')]
     [string]$CompiledMode = 'Context',
     [switch]$IncludeFrontendFeatures,
@@ -50,6 +51,10 @@ if ($Action -eq 'frontend-contract') { $arguments += "--view=$FrontendContractVi
 if ($Action -eq 'sensitive-data') { $arguments += "--view=$SensitiveDataView" }
 if ($SensitiveDataFilter) { $arguments += '--filter=true' }
 if ($Action -eq 'search') { $arguments += "--change-type=$ChangeType" }
+if ($Action -eq 'search-batch') {
+    if ([string]::IsNullOrWhiteSpace($InputPath)) { throw 'search-batch requires -InputPath.' }
+    $arguments += "--input=$([IO.Path]::GetFullPath($InputPath))"
+}
 if ($SymbolKind -ne 'Any') { $arguments += "--symbol-kind=$SymbolKind" }
 $normalizedChangedPaths = [string[]]@($ChangedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
 if ($normalizedChangedPaths.Length -gt 0) { $arguments += "--path=$($normalizedChangedPaths -join ';')" }

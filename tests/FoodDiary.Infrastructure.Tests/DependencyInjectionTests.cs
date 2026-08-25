@@ -867,6 +867,7 @@ public sealed class DependencyInjectionTests {
             ["S3:Bucket"] = "food-diary-test",
             ["S3:ServiceUrl"] = "https://s3.example.com",
             ["S3:PublicBaseUrl"] = "https://cdn.example.com",
+            ["S3:AllowPublicImageAccess"] = "true",
             ["S3:MaxUploadSizeBytes"] = "1048576",
             ["OpenAi:ApiKey"] = "test-key",
             ["OpenAi:VisionModel"] = "vision-model",

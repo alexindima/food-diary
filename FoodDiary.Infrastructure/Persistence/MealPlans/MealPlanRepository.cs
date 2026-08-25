@@ -33,6 +33,23 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
         return await query.FirstOrDefaultAsync(p => p.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
+    public Task<MealPlan?> GetCuratedByIdAsync(
+        MealPlanId id,
+        bool includeDays = false,
+        CancellationToken cancellationToken = default) =>
+        GetFilteredByIdAsync(id, static plan => plan.IsCurated, includeDays, cancellationToken);
+
+    public Task<MealPlan?> GetAccessibleByIdAsync(
+        MealPlanId id,
+        UserId userId,
+        bool includeDays = false,
+        CancellationToken cancellationToken = default) =>
+        GetFilteredByIdAsync(
+            id,
+            plan => plan.IsCurated || plan.UserId == userId,
+            includeDays,
+            cancellationToken);
+
     public async Task<MealPlanReadModel?> GetReadModelByIdAsync(
         MealPlanId id,
         CancellationToken cancellationToken = default) {
@@ -146,4 +163,27 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
                 .Select(meal => meal.RecipeId)
                 .Distinct()
                 .Count()));
+
+    private async Task<MealPlan?> GetFilteredByIdAsync(
+        MealPlanId id,
+        System.Linq.Expressions.Expression<Func<MealPlan, bool>> accessPredicate,
+        bool includeDays,
+        CancellationToken cancellationToken) {
+        IQueryable<MealPlan> query = context.Set<MealPlan>()
+            .AsNoTracking()
+            .Where(accessPredicate);
+
+        if (includeDays) {
+            query = query
+                .Include(plan => plan.Days)
+                    .ThenInclude(day => day.Meals)
+                        .ThenInclude(meal => meal.Recipe)
+                            .ThenInclude(recipe => recipe.Steps)
+                                .ThenInclude(step => step.Ingredients)
+                                    .ThenInclude(ingredient => ingredient.Product)
+                .AsSplitQuery();
+        }
+
+        return await query.FirstOrDefaultAsync(plan => plan.Id == id, cancellationToken).ConfigureAwait(false);
+    }
 }

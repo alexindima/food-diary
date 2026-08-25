@@ -54,6 +54,25 @@ These evals measure routing and policy correctness, not the quality of generated
 application code. Real-task outcome evals can be added after several weeks of
 usage data.
 
+The independent 100-case context-search holdout is also a live regression gate,
+not only frozen retirement evidence. It enforces aggregate Top-1, Top-10, MRR,
+and per-cohort floors. The evaluator batches all requests through one Node/SQLite
+process by default; use `-NoBatch` only for transport parity diagnosis. Record a
+tamper-evident local benchmark snapshot, including corpus and ranking-policy
+hashes plus a delta from the previous snapshot, with:
+
+```powershell
+./.llm-wiki/tools/Write-LlmWikiContextEvaluationSnapshot.ps1 -SkipBuild -FailOnRegression
+```
+
+The ranking policy has a 600-rule complexity budget and the tuned control
+corpora may not outperform the blind holdout by more than 25 percentage points.
+Prefer general role, layer, bounded-context, and runtime affinities over new
+file-specific boosts. Promoted corpora require every expected result in Top-10;
+their corpus-specific Top-1 and MRR floors remain authoritative. Requiring every
+historical case at Top-1 would turn the promoted set into a tuning target and
+conflict with the independent holdout's overfitting guard.
+
 Strict adaptive verification partitions the suite into three stable shards and
 runs them beside the independent routing and experience regression groups. Case
 order determines shard membership, every static or promoted case is selected

@@ -10,6 +10,12 @@ public interface IMealPlanReadRepository {
         bool includeDays = false,
         CancellationToken cancellationToken = default);
 
+    Task<MealPlan?> GetAccessibleByIdAsync(
+        MealPlanId id,
+        UserId userId,
+        bool includeDays = false,
+        CancellationToken cancellationToken = default);
+
     Task<IReadOnlyList<MealPlan>> GetCuratedAsync(
         DietType? dietType = null,
         CancellationToken cancellationToken = default);

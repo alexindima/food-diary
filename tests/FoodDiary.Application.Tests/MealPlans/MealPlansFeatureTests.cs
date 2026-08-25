@@ -89,7 +89,7 @@ public class MealPlansFeatureTests {
             new AdoptMealPlanCommand(Guid.NewGuid(), plan.Id.Value), CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Contains("NotCurated", result.Error.Code, StringComparison.Ordinal);
+        Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -224,7 +224,7 @@ public class MealPlansFeatureTests {
     }
 
     [Fact]
-    public async Task GenerateShoppingList_WhenUserDoesNotOwnPrivatePlan_ReturnsNotAccessible() {
+    public async Task GenerateShoppingList_WhenUserDoesNotOwnPrivatePlan_ReturnsNotFound() {
         var ownerId = UserId.New();
         var plan = MealPlan.CreateForUser(ownerId, "Private plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         var shoppingLists = new RecordingShoppingListRepository();
@@ -236,7 +236,7 @@ public class MealPlansFeatureTests {
         Result<ShoppingListModel> result = await handler.Handle(new GenerateShoppingListCommand(Guid.NewGuid(), plan.Id.Value), CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("MealPlan.NotAccessible", result.Error.Code);
+        Assert.Equal("MealPlan.NotFound", result.Error.Code);
         Assert.Null(shoppingLists.Added);
     }
 
@@ -451,6 +451,20 @@ public class MealPlansFeatureTests {
 
         public Task<MealPlan?> GetByIdAsync(MealPlanId id, bool includeDays = false, CancellationToken ct = default) =>
             Task.FromResult(FindById(id));
+
+        public Task<MealPlan?> GetCuratedByIdAsync(MealPlanId id, bool includeDays = false, CancellationToken ct = default) {
+            MealPlan? found = FindById(id);
+            return Task.FromResult(found?.IsCurated == true ? found : null);
+        }
+
+        public Task<MealPlan?> GetAccessibleByIdAsync(
+            MealPlanId id,
+            UserId userId,
+            bool includeDays = false,
+            CancellationToken ct = default) {
+            MealPlan? found = FindById(id);
+            return Task.FromResult(found is not null && (found.IsCurated || found.UserId == userId) ? found : null);
+        }
 
         private MealPlan? FindById(MealPlanId id) {
             if (AddedPlan?.Id == id) {

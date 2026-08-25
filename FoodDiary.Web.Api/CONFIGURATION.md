@@ -53,6 +53,7 @@ At minimum, real deployments should provide these outside source control:
 - `TelegramBot:ApiSecret` when bot callbacks are enabled
 - `S3:AccessKeyId`
 - `S3:SecretAccessKey`
+- `S3:AllowPublicImageAccess` must be explicitly set to `true` when S3 is configured. The current image flow stores URLs that are reachable by users and may be shared with external AI providers; enable it only when the bucket or CDN policy intentionally permits that access.
 - `Email:SmtpUser`
 - `Email:SmtpPassword`
 

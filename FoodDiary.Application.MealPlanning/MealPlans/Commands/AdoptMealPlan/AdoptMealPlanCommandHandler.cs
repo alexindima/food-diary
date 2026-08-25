@@ -36,13 +36,12 @@ public sealed class AdoptMealPlanCommandHandler(
         }
 
         MealPlanId planId = planIdResult.Value;
-        MealPlan? sourcePlan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
+        MealPlan? sourcePlan = await mealPlanRepository.GetCuratedByIdAsync(
+            planId,
+            includeDays: true,
+            cancellationToken).ConfigureAwait(false);
         if (sourcePlan is null) {
             return Result.Failure<MealPlanModel>(Errors.MealPlan.NotFound(command.PlanId));
-        }
-
-        if (!sourcePlan.IsCurated) {
-            return Result.Failure<MealPlanModel>(Errors.MealPlan.NotCurated);
         }
 
         MealPlan adoptedPlan = sourcePlan.Adopt(userIdResult.Value);

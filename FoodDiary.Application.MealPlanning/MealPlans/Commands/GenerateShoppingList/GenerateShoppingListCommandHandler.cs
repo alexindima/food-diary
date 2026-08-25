@@ -38,13 +38,13 @@ public sealed class GenerateShoppingListCommandHandler(
         }
 
         MealPlanId planId = planIdResult.Value;
-        MealPlan? plan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
+        MealPlan? plan = await mealPlanRepository.GetAccessibleByIdAsync(
+            planId,
+            userIdResult.Value,
+            includeDays: true,
+            cancellationToken).ConfigureAwait(false);
         if (plan is null) {
             return Result.Failure<ShoppingListModel>(Errors.MealPlan.NotFound(command.PlanId));
-        }
-
-        if (!plan.IsCurated && plan.UserId != userIdResult.Value) {
-            return Result.Failure<ShoppingListModel>(Errors.MealPlan.NotAccessible(command.PlanId));
         }
 
         return await shoppingListCreationService.CreateAsync(

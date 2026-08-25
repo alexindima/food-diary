@@ -2,6 +2,7 @@
 param(
     [string]$CorpusPath,
     [switch]$SkipBuild,
+    [switch]$NoBatch,
     [switch]$FailOnRegression,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'
@@ -21,6 +22,29 @@ $diagnosticLimit = [Math]::Max(10, [Math]::Min(500, [int]$corpus.diagnosticLimit
 if (-not $SkipBuild) { & $manager build -Format Json | Out-Null }
 
 $results = [Collections.Generic.List[object]]::new()
+$batchResults = @()
+$batchPath = $null
+if (-not $NoBatch) {
+    $batchRoot = Join-Path (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path '.artifacts/llm-wiki/eval-batches'
+    $null = New-Item -ItemType Directory -Path $batchRoot -Force
+    $batchPath = Join-Path $batchRoot "$PID-$([guid]::NewGuid().ToString('N')).json"
+    $batchRequests = @($cases | ForEach-Object {
+        [pscustomobject][ordered]@{
+            query = [string]$_.query
+            changeType = $(if ([string]::IsNullOrWhiteSpace([string]$_.changeType)) { 'Any' } else { [string]$_.changeType })
+            limit = $diagnosticLimit
+        }
+    })
+    [IO.File]::WriteAllText($batchPath, (($batchRequests | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+    try {
+        $batch = & $manager search-batch -InputPath $batchPath -SkipRefresh -Format Json | ConvertFrom-Json
+        $batchResults = @($batch.results)
+        if ($batchResults.Count -ne $cases.Count) { throw "SQL context batch returned $($batchResults.Count)/$($cases.Count) result(s)." }
+    } finally {
+        Remove-Item -LiteralPath $batchPath -Force -ErrorAction SilentlyContinue
+    }
+}
+$caseIndex = 0
 foreach ($case in $cases) {
     $expectedPaths = [string[]]@($case.expectedPaths | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
     if ($expectedPaths.Count -eq 0) { throw "SQL context evaluation case '$($case.id)' has no expected path." }
@@ -40,12 +64,14 @@ foreach ($case in $cases) {
     } else {
         [string]$cohortProperty.Value
     }
-    $search = & $manager search `
-        -Query ([string]$case.query) `
-        -ChangeType $changeType `
-        -Limit $diagnosticLimit `
-        -SkipRefresh `
-        -Format Json | ConvertFrom-Json
+    $search = if ($NoBatch) {
+        & $manager search `
+            -Query ([string]$case.query) `
+            -ChangeType $changeType `
+            -Limit $diagnosticLimit `
+            -SkipRefresh `
+            -Format Json | ConvertFrom-Json
+    } else { $batchResults[$caseIndex] }
     $records = @($search.records)
     $relevant = @($records | Where-Object { [string]$_.path -in $relevantPaths } | Sort-Object rank | Select-Object -First 1)
     $rank = if ($relevant.Count -eq 1) { [int]$relevant[0].rank } else { $null }
@@ -63,6 +89,7 @@ foreach ($case in $cases) {
         sqlDurationMs = [double]$search.durationMs
         topCandidates = @($records | Select-Object -First 5 rank, path, recordType, score)
     })
+    $caseIndex++
 }
 
 $top1Count = @($results | Where-Object top1).Count
@@ -86,6 +113,22 @@ $cohortMetrics = @($results | Group-Object cohort | Sort-Object Name | ForEach-O
             meanReciprocalRank = [Math]::Round([double](($cohortResults.reciprocalRank | Measure-Object -Average).Average), 4)
         }
     })
+$liveGateProperty = $corpus.PSObject.Properties['liveRegressionGate']
+$liveGate = if ($null -eq $liveGateProperty) { $null } else { $liveGateProperty.Value }
+$liveGateGaps = [Collections.Generic.List[string]]::new()
+if ($null -ne $liveGate) {
+    if ($top1Count -lt [int]$liveGate.minimumTop1Count) { $liveGateGaps.Add("top1=$top1Count<$($liveGate.minimumTop1Count)") }
+    if ($top10Count -lt [int]$liveGate.minimumTop10Count) { $liveGateGaps.Add("top10=$top10Count<$($liveGate.minimumTop10Count)") }
+    if ($mrr -lt [double]$liveGate.minimumMeanReciprocalRank) { $liveGateGaps.Add("mrr=$([Math]::Round($mrr, 4))<$($liveGate.minimumMeanReciprocalRank)") }
+    $maximumP95 = [double]$liveGate.maximumP95SqlDurationMs
+    if ($maximumP95 -gt 0 -and $durations[$p95Index] -gt $maximumP95) { $liveGateGaps.Add("p95=$([Math]::Round($durations[$p95Index], 2))>${maximumP95}") }
+    foreach ($cohortMinimum in @($liveGate.minimumCohortTop1Counts.PSObject.Properties)) {
+        $observed = @($cohortMetrics | Where-Object cohort -eq $cohortMinimum.Name | Select-Object -First 1)
+        $observedCount = if ($observed.Count -eq 0) { 0 } else { [int]$observed[0].top1Count }
+        if ($observedCount -lt [int]$cohortMinimum.Value) { $liveGateGaps.Add("cohort:$($cohortMinimum.Name)=$observedCount<$($cohortMinimum.Value)") }
+    }
+}
+$liveGatePassed = $null -eq $liveGate -or $liveGateGaps.Count -eq 0
 $thresholds = [pscustomobject][ordered]@{
     minimumTop1Rate = [double]$corpus.thresholds.minimumTop1Rate
     minimumTop10Rate = [double]$corpus.thresholds.minimumTop10Rate
@@ -136,6 +179,9 @@ $evaluation = [pscustomobject][ordered]@{
     thresholds = $thresholds
     switchCriteria = $switchCriteria
     switchGaps = @($switchGaps)
+    liveRegressionGate = $liveGate
+    liveRegressionPassed = $liveGatePassed
+    liveRegressionGaps = @($liveGateGaps)
     misses = @($results | Where-Object { -not $_.top10 })
     results = @($results)
 }
@@ -155,6 +201,9 @@ if ($Format -eq 'Json') {
         Write-Host " - miss $($miss.id): rank=$observedRank; expected=$($miss.expectedPaths -join ', '); top=$(@($miss.topCandidates.path) -join ', ')"
     }
 }
-if ($FailOnRegression -and -not $passed) {
+if ($FailOnRegression -and -not $liveGatePassed) {
+    throw "SQL context evaluation regressed below its live gate: $($liveGateGaps -join '; ')."
+}
+if ($FailOnRegression -and $null -eq $liveGate -and -not $passed) {
     throw "SQL context evaluation regressed below its committed thresholds: top1=$([Math]::Round($top1Rate, 4)), top10=$([Math]::Round($top10Rate, 4)), MRR=$([Math]::Round($mrr, 4))."
 }

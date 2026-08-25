@@ -162,6 +162,27 @@ public sealed class IntegrationOptionsTests {
         Assert.Equal(expected, S3Options.HasValidPublicBaseUrl(options));
     }
 
+    [Fact]
+    public void S3Options_HasExplicitPublicImageAccessPolicy_RequiresOptInForConfiguredStorage() {
+        var configuredWithoutOptIn = new S3Options {
+            AccessKeyId = "access",
+            SecretAccessKey = "secret",
+            Region = "eu-central-1",
+            Bucket = "food-diary-test",
+        };
+        var configuredWithOptIn = new S3Options {
+            AccessKeyId = "access",
+            SecretAccessKey = "secret",
+            Region = "eu-central-1",
+            Bucket = "food-diary-test",
+            AllowPublicImageAccess = true,
+        };
+
+        Assert.False(S3Options.HasExplicitPublicImageAccessPolicy(configuredWithoutOptIn));
+        Assert.True(S3Options.HasExplicitPublicImageAccessPolicy(configuredWithOptIn));
+        Assert.True(S3Options.HasExplicitPublicImageAccessPolicy(new S3Options()));
+    }
+
     [Theory]
     [InlineData(null, true)]
     [InlineData("", true)]

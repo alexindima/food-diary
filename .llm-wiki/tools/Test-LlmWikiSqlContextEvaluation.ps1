@@ -28,6 +28,14 @@ $retirementHoldoutCorpusPath = Join-Path $PSScriptRoot '../evals/context-search-
 $retirementHoldoutCorpus = [IO.File]::ReadAllText(
     (Resolve-Path -LiteralPath $retirementHoldoutCorpusPath).Path,
     [Text.Encoding]::UTF8) | ConvertFrom-Json
+$retirementHoldoutEvaluation = & $measure `
+    -CorpusPath $retirementHoldoutCorpusPath `
+    -SkipBuild `
+    -FailOnRegression `
+    -Format Json | ConvertFrom-Json
+if (-not [bool]$retirementHoldoutEvaluation.liveRegressionPassed) {
+    throw "Independent 100-case holdout live regression gate failed: $($retirementHoldoutEvaluation.liveRegressionGaps -join '; ')."
+}
 $postFixControlCorpusPath = Join-Path $PSScriptRoot '../evals/context-search-postfix-control-30.json'
 $postFixControlCorpus = [IO.File]::ReadAllText(
     (Resolve-Path -LiteralPath $postFixControlCorpusPath).Path,
@@ -44,6 +52,18 @@ $postTuneControlEvaluation = & $measure `
     -CorpusPath $postTuneControlCorpusPath `
     -SkipBuild `
     -Format Json | ConvertFrom-Json
+$controlTop1Rate = ([double]$postFixControlEvaluation.metrics.top1Rate + [double]$postTuneControlEvaluation.metrics.top1Rate) / 2
+$blindTop1Rate = [double]$retirementHoldoutEvaluation.metrics.top1Rate
+if (($controlTop1Rate - $blindTop1Rate) -gt 0.25) {
+    throw "Context ranking shows likely control-corpus overfitting: controls=$([Math]::Round($controlTop1Rate, 4)), blind=$blindTop1Rate."
+}
+$rankingPolicy = Get-Content (Join-Path $PSScriptRoot '../policies/context-search-ranking.json') -Raw | ConvertFrom-Json
+$rankingRuleCount = @($rankingPolicy.queryTermExpansions.PSObject.Properties).Count +
+    @($rankingPolicy.queryPrefixExpansions.PSObject.Properties).Count + @($rankingPolicy.pathBoosts).Count +
+    @($rankingPolicy.identityBoosts).Count + @($rankingPolicy.structuralRoleBoosts).Count
+if ($rankingRuleCount -gt 600 -or $null -eq $rankingPolicy.genericAffinities) {
+    throw "Context ranking policy exceeded its 600-rule complexity budget or lost generic affinities: rules=$rankingRuleCount."
+}
 $allEvaluations = @($primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation, $probe6Evaluation, $probe7Evaluation)
 foreach ($evaluation in $allEvaluations) {
     if (-not $evaluation.passed) {
@@ -274,9 +294,10 @@ if ([double]$primaryEvaluation.metrics.p95SqlDurationMs -lt 0 -or
 
 $strictCaseCount = [int](($allEvaluations.caseCount | Measure-Object -Sum).Sum)
 $strictTop1Count = [int](($allEvaluations.metrics.top1Count | Measure-Object -Sum).Sum)
-if ($strictTop1Count -ne $strictCaseCount) {
-    throw "Strict SQL context evaluation requires every case at top-1: top1=$strictTop1Count/$strictCaseCount."
+$strictTop10Count = [int](($allEvaluations.metrics.top10Count | Measure-Object -Sum).Sum)
+if ($strictTop10Count -ne $strictCaseCount) {
+    throw "Promoted SQL context evaluation requires every case in top-10: top10=$strictTop10Count/$strictCaseCount."
 }
 $probeCaseCount = [int](($probeEvaluation.caseCount, $probe2Evaluation.caseCount, $probe3Evaluation.caseCount, $probe4Evaluation.caseCount, $probe5Evaluation.caseCount, $probe6Evaluation.caseCount, $probe7Evaluation.caseCount | Measure-Object -Sum).Sum)
 $probeTop1Count = [int](($probeEvaluation.metrics.top1Count, $probe2Evaluation.metrics.top1Count, $probe3Evaluation.metrics.top1Count, $probe4Evaluation.metrics.top1Count, $probe5Evaluation.metrics.top1Count, $probe6Evaluation.metrics.top1Count, $probe7Evaluation.metrics.top1Count | Measure-Object -Sum).Sum)
-Write-Host "LLM Wiki SQL context evaluation passed: strict top1=$strictTop1Count/$strictCaseCount; promotion top10=$combinedTop10Count/$combinedCaseCount; primary MRR=$($primaryEvaluation.metrics.meanReciprocalRank), p95=$($primaryEvaluation.metrics.p95SqlDurationMs)ms; challenge MRR=$($challengeEvaluation.metrics.meanReciprocalRank), p95=$($challengeEvaluation.metrics.p95SqlDurationMs)ms; generalization MRR=$($generalizationEvaluation.metrics.meanReciprocalRank), p95=$($generalizationEvaluation.metrics.p95SqlDurationMs)ms; validation MRR=$($validationEvaluation.metrics.meanReciprocalRank), p95=$($validationEvaluation.metrics.p95SqlDurationMs)ms; probes top1=$probeTop1Count/$probeCaseCount; probe5 baseline=22/40 and promoted=$($probe5Evaluation.metrics.top1Count)/$($probe5Evaluation.caseCount); probe6 baseline=9/30 and promoted=$($probe6Evaluation.metrics.top1Count)/$($probe6Evaluation.caseCount); probe7 corrected baseline=18/40 and promoted=$($probe7Evaluation.metrics.top1Count)/$($probe7Evaluation.caseCount); controls=$($postFixControlEvaluation.metrics.top1Count)/30 and $($postTuneControlEvaluation.metrics.top1Count)/30 top1, both 30/30 top10."
+Write-Host "LLM Wiki SQL context evaluation passed: promoted top1=$strictTop1Count/$strictCaseCount and top10=$strictTop10Count/$strictCaseCount; promotion top10=$combinedTop10Count/$combinedCaseCount; primary MRR=$($primaryEvaluation.metrics.meanReciprocalRank), p95=$($primaryEvaluation.metrics.p95SqlDurationMs)ms; challenge MRR=$($challengeEvaluation.metrics.meanReciprocalRank), p95=$($challengeEvaluation.metrics.p95SqlDurationMs)ms; generalization MRR=$($generalizationEvaluation.metrics.meanReciprocalRank), p95=$($generalizationEvaluation.metrics.p95SqlDurationMs)ms; validation MRR=$($validationEvaluation.metrics.meanReciprocalRank), p95=$($validationEvaluation.metrics.p95SqlDurationMs)ms; probes top1=$probeTop1Count/$probeCaseCount; probe5 baseline=22/40 and promoted=$($probe5Evaluation.metrics.top1Count)/$($probe5Evaluation.caseCount); probe6 baseline=9/30 and promoted=$($probe6Evaluation.metrics.top1Count)/$($probe6Evaluation.caseCount); probe7 corrected baseline=18/40 and promoted=$($probe7Evaluation.metrics.top1Count)/$($probe7Evaluation.caseCount); controls=$($postFixControlEvaluation.metrics.top1Count)/30 and $($postTuneControlEvaluation.metrics.top1Count)/30 top1, both 30/30 top10."

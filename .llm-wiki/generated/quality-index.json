@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4652,
-    "wikiToolFiles": 179,
-    "wikiToolsWithoutTestReferences": 0,
-    "criticalSymbols": 753,
+    "productionFiles": 4653,
+    "wikiToolFiles": 180,
+    "wikiToolsWithoutTestReferences": 1,
+    "criticalSymbols": 754,
     "criticalSymbolsWithTestReferences": 732,
-    "criticalSymbolsWithoutTestReferences": 21,
+    "criticalSymbolsWithoutTestReferences": 22,
     "debtMarkers": 9
   },
   "hotspots": [
@@ -631,6 +631,14 @@
       "structuralRiskScore": 81.14
     },
     {
+      "path": ".llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1",
+      "nonBlankLines": 205,
+      "decisionPoints": 50,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 81.1
+    },
+    {
       "path": "FoodDiary.Infrastructure/Persistence/Meals/MealRepository.cs",
       "nonBlankLines": 365,
       "decisionPoints": 49,
@@ -767,6 +775,14 @@
       "structuralRiskScore": 73.12
     },
     {
+      "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
+      "nonBlankLines": 142,
+      "decisionPoints": 45,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 72.34
+    },
+    {
       "path": "FoodDiary.Initializer/UsdaDataSeeder.cs",
       "nonBlankLines": 308,
       "decisionPoints": 44,
@@ -797,22 +813,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 71.5
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/waist-history/lib/waist-history.facade.ts",
-      "nonBlankLines": 393,
-      "decisionPoints": 42,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 70.86
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
-      "nonBlankLines": 528,
-      "decisionPoints": 40,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 70.56
     }
   ],
   "files": [
@@ -1730,11 +1730,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-      "nonBlankLines": 137,
-      "decisionPoints": 43,
+      "nonBlankLines": 142,
+      "decisionPoints": 45,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 69.24
+      "structuralRiskScore": 72.34
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
@@ -2138,11 +2138,11 @@
     },
     {
       "path": ".llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1",
-      "nonBlankLines": 156,
-      "decisionPoints": 35,
+      "nonBlankLines": 205,
+      "decisionPoints": 50,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 57.62
+      "structuralRiskScore": 81.1
     },
     {
       "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
@@ -2223,6 +2223,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 92.1
+    },
+    {
+      "path": ".llm-wiki/tools/Write-LlmWikiContextEvaluationSnapshot.ps1",
+      "nonBlankLines": 56,
+      "decisionPoints": 8,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 20.12
     },
     {
       "path": ".llm-wiki/tools/Write-LlmWikiIndexVerificationReceipt.ps1",
@@ -5290,11 +5298,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/MealPlans/Common/IMealPlanReadRepository.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 21,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.42
     },
     {
       "path": "FoodDiary.Application.Abstractions/MealPlans/Common/IMealPlanRepository.cs",
@@ -5306,11 +5314,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/MealPlans/Common/IMealPlanWriteRepository.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.28
     },
     {
       "path": "FoodDiary.Application.Abstractions/MealPlans/Common/MealPlanErrors.cs",
@@ -13611,10 +13619,10 @@
     {
       "path": "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
       "nonBlankLines": 46,
-      "decisionPoints": 4,
+      "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.92
+      "structuralRiskScore": 7.42
     },
     {
       "path": "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandValidator.cs",
@@ -13634,11 +13642,11 @@
     },
     {
       "path": "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-      "nonBlankLines": 136,
-      "decisionPoints": 13,
+      "nonBlankLines": 137,
+      "decisionPoints": 11,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.22
+      "structuralRiskScore": 21.24
     },
     {
       "path": "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandValidator.cs",
@@ -14466,11 +14474,11 @@
     },
     {
       "path": "FoodDiary.Application.Meals/Services/MealManualItemAppender.cs",
-      "nonBlankLines": 75,
-      "decisionPoints": 12,
+      "nonBlankLines": 81,
+      "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.5
+      "structuralRiskScore": 22.62
     },
     {
       "path": "FoodDiary.Application.Meals/Services/MealNutritionApplier.cs",
@@ -21490,11 +21498,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/MealPlans/MealPlanRepository.cs",
-      "nonBlankLines": 134,
-      "decisionPoints": 3,
+      "nonBlankLines": 169,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.18
+      "structuralRiskScore": 10.88
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Meals/MealRepository.cs",
@@ -22386,11 +22394,11 @@
     },
     {
       "path": "FoodDiary.Integrations/DependencyInjection.Options.cs",
-      "nonBlankLines": 122,
-      "decisionPoints": 9,
+      "nonBlankLines": 124,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.94
+      "structuralRiskScore": 17.48
     },
     {
       "path": "FoodDiary.Integrations/DependencyInjection.Storage.cs",
@@ -22482,11 +22490,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Options/S3Options.cs",
-      "nonBlankLines": 65,
-      "decisionPoints": 17,
+      "nonBlankLines": 73,
+      "decisionPoints": 19,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.8
+      "structuralRiskScore": 29.96
     },
     {
       "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
@@ -45988,6 +45996,14 @@
         ".llm-wiki/tools/Test-LlmWikiInstructionExperimentStrictMode.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ]
+    },
+    {
+      "name": "Write-LlmWikiContextEvaluationSnapshot",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Write-LlmWikiContextEvaluationSnapshot.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": []
     },
     {
       "name": "Write-LlmWikiIndexVerificationReceipt",

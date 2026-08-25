@@ -18,6 +18,7 @@ internal static class TestConfiguration {
             ["S3:Bucket"] = "fooddiary-integration-tests",
             ["S3:ServiceUrl"] = "https://s3.test.local",
             ["S3:PublicBaseUrl"] = "https://cdn.test.local",
+            ["S3:AllowPublicImageAccess"] = "true",
             ["Stripe:SecretKey"] = "sk_test_codex",
             ["Stripe:PublishableKey"] = "pk_test_codex",
             ["Stripe:WebhookSecret"] = "whsec_codex",

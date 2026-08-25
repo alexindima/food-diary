@@ -351,6 +351,36 @@
       "expectedTraceRequests": ["InviteDietologistCommand"],
       "privacyQuery": "DietologistInvitationMessage",
       "expectedPrivacyFields": ["credential:Token", "identity:ToEmail"]
+    },
+    {
+      "id": "wiki-ranking-policy-change",
+      "changedPaths": [
+        ".llm-wiki/tools/code-graph.mjs",
+        ".llm-wiki/policies/context-search-ranking.json"
+      ],
+      "expectedModules": [],
+      "expectedScopes": ["Documentation"],
+      "expectedRules": ["llm-wiki"],
+      "expectedChecks": ["wiki-verify"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "admin-user-creation-api-transport",
+      "changedPaths": ["FoodDiary.Presentation.Api/Features/Admin/AdminUserCreationController.cs"],
+      "expectedModules": ["Admin"],
+      "expectedScopes": ["Backend", "Api", "Contracts"],
+      "expectedRules": ["backend-boundaries", "api-contract", "quality-critical-path"],
+      "expectedChecks": ["architecture-tests", "api-compatibility", "presentation-api-tests", "api-integration-tests"],
+      "expectedViolationRules": []
+    },
+    {
+      "id": "notification-domain-invariant",
+      "changedPaths": ["FoodDiary.Domain/Entities/Notifications/Notification.cs"],
+      "expectedModules": ["Notifications"],
+      "expectedScopes": ["Backend"],
+      "expectedRules": ["backend-boundaries", "quality-critical-path", "domain-invariant"],
+      "expectedChecks": ["architecture-tests"],
+      "expectedViolationRules": []
     }
   ]
 }

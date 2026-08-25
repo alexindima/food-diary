@@ -144,6 +144,8 @@ public sealed class DependencyInjectionTests {
             ["S3:Region"] = "us-east-1",
             ["S3:Bucket"] = "fooddiary-test",
             ["S3:ServiceUrl"] = "http://localhost:9000",
+            ["S3:AllowInsecureHttp"] = "true",
+            ["S3:AllowPublicImageAccess"] = "true",
             ["S3:MaxUploadSizeBytes"] = "1048576",
             ["Billing:Provider"] = "Stripe",
             ["WebPush:Enabled"] = "false",

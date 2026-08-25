@@ -177,13 +177,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "08c2314c9c90c0b6284054e0894e8615a241ae33d7c2a7e2cce6de8e682ee553"
+          "sha256": "10aaa82e3826df9a441581017ab0d27e68d3fe806519562c4f1710db6a8086e6"
         }
       ],
-      "reason": "Reviewed full dependency-aware regeneration after the quality self-coverage change; architecture-health and generated projections reflect the updated Wiki tooling graph.",
+      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
-      "reviewedAtUtc": "2026-08-25T08:55:38.7748518Z"
+      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
+      "reviewedAtUtc": "2026-08-25T13:50:45.7983728Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -191,14 +191,14 @@
       "pageSha256": "ab1e4ba6f832f69547b9b819096039b1837170c84a9a84ce5c47c7f28a485568",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "1deb12ab356b22d57196a82a56af333cd37afb3185c40f78424f070f40c0c5ff"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "c9a5c54e737f8a04f6964b8d741a556689ad40b159f981c9d418fb335e6f1ecb"
         }
       ],
-      "reason": "Reviewed the complete Wiki, billing, persistence, migration, initializer, and test change-set; regenerated all compiled indexes and resolved the resulting source-impact obligations before commit.",
+      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
-      "reviewedAtUtc": "2026-08-25T10:24:51.1414715Z"
+      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
+      "reviewedAtUtc": "2026-08-25T13:50:46.2256021Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -236,18 +236,34 @@
       "pageSha256": "3961a534e2b05beddc4b15e96bff12a6a073c6194d289e2780ad5839869a67cc",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
+          "path": ".llm-wiki/evals/context-search-holdout-100.json",
+          "sha256": "6027b15e4a2d9afe131877b256b2413a66a971355316e10cd0c53096e9f7394e"
         },
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "aba1777019070e75bb0c9de6e548ca7534437d82f8e9449af35cf3a1829fe273"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "a9e435be2484971963c142748afd51c8cc73f4ba27777fb5362fbf653466bc6a"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "c9a5c54e737f8a04f6964b8d741a556689ad40b159f981c9d418fb335e6f1ecb"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
+          "sha256": "dcfd5ab6fd3ca238f8531903ff15ca016218db2bae83f61d8f52c2f66fa4f316"
+        },
+        {
+          "path": ".llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1",
+          "sha256": "6a42d48510c2dfbe4992440bf2c1c0422baae2044c7d71ce09b985a278fab66a"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
+          "sha256": "f15740dbf6f2f6d6eef93033a7412a9f8bce89d72d2c997c9d39b3b354b8cd31"
         }
       ],
-      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
+      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
-      "reviewedAtUtc": "2026-08-25T08:53:03.4460177Z"
+      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
+      "reviewedAtUtc": "2026-08-25T13:50:46.7125232Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -464,14 +480,14 @@
       "pageSha256": "285b7d0005f1b054eda23538c5f17b3dd44d318411cb12f6e7e4146e9db95db9",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1",
-          "sha256": "f64be308f5a7d2d5671d35cd60c2dfa03e54b6505653d6a22fd5babf1f07455d"
+          "path": ".llm-wiki/generated/configuration-index.json",
+          "sha256": "d779b508b2fe8fd9995fcd3a0534c950d80d1382fd7e170b133a180eec08463e"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:45.0771903Z"
+      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
+      "reviewedAtUtc": "2026-08-25T13:50:47.1914465Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -616,14 +632,14 @@
       "pageSha256": "995df7b3f6ad527c4094a25bf33831f1c30fae3ebff5aa469fa92f71f02bab43",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "c9a5c54e737f8a04f6964b8d741a556689ad40b159f981c9d418fb335e6f1ecb"
         }
       ],
-      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
+      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
-      "reviewedAtUtc": "2026-08-25T08:53:03.6220474Z"
+      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
+      "reviewedAtUtc": "2026-08-25T13:50:47.6881330Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -734,22 +750,14 @@
       "pageSha256": "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "5ee444bba7b6fe5c743b66f2d8fb6af98183f081d5570a0ac4e625ec1a1b04b6"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "e30427a93c702538ae8f2447dd30f8669e5819424409f2148436328c182bf528"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
+          "path": ".llm-wiki/evals/cases.json",
+          "sha256": "3760f52055b92a994f68224a30d9ab7264801aafc8df8dc530f0867ed45518cc"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:48.9916955Z"
+      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
+      "reviewedAtUtc": "2026-08-25T13:50:48.1985373Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -848,18 +856,14 @@
       "pageSha256": "0c99a578ac11c1f3db70d8e9470a8dcedb235a6f5d16147df9a123d0786f7095",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "2563f792c873e4ce7e4d716af042d9fd3ee4478cd6b6266b1cd1b1a3cdc5d14b"
-        },
-        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d1f40e38e46a959bfaedbd771a64c23c11c19f455266113c632191b497dc9786"
+          "sha256": "c9a5c54e737f8a04f6964b8d741a556689ad40b159f981c9d418fb335e6f1ecb"
         }
       ],
-      "reason": "Regenerated sensitive-data indexes and the complete Full audit validated redaction, trust-boundary, and context-integrity behavior; the documented security workflow remains accurate.",
+      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:50.7640638Z"
+      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
+      "reviewedAtUtc": "2026-08-25T13:50:48.7593530Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -906,13 +910,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1fe588f0b4ff062dc59716c0493149db9a7f17b346579c7cf8688e895c3ae0a2"
+          "sha256": "51ab59479cfd33bab34bbf0118122c88f821fc517e441a3b00101fccf3f63071"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
+          "sha256": "dcfd5ab6fd3ca238f8531903ff15ca016218db2bae83f61d8f52c2f66fa4f316"
         }
       ],
-      "reason": "Reviewed the complete Wiki, billing, persistence, migration, initializer, and test change-set; regenerated all compiled indexes and resolved the resulting source-impact obligations before commit.",
+      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
-      "reviewedAtUtc": "2026-08-25T10:24:51.4870228Z"
+      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
+      "reviewedAtUtc": "2026-08-25T13:50:49.4166747Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1340,14 +1348,14 @@
       "pageSha256": "930668a8337c26264220ec069d062d4d90d8c52910cb7e00b79576180fe92478",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "c9a5c54e737f8a04f6964b8d741a556689ad40b159f981c9d418fb335e6f1ecb"
         }
       ],
-      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
+      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
-      "reviewedAtUtc": "2026-08-25T08:53:04.5861084Z"
+      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
+      "reviewedAtUtc": "2026-08-25T13:50:49.9548479Z"
     },
     {
       "pageId": "workflow.review-diff",

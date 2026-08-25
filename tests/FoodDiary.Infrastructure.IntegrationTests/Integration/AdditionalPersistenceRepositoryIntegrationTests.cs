@@ -341,8 +341,9 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
     public async Task MealPlanRepository_AddsAndQueriesCuratedAndUserPlans() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"meal-plans-{Guid.NewGuid():N}@example.com", "hash");
+        var outsider = User.Create($"meal-plans-outsider-{Guid.NewGuid():N}@example.com", "hash");
         var recipe = Recipe.Create(user.Id, "Plan recipe", servings: 2, description: "Description");
-        context.Users.Add(user);
+        context.Users.AddRange(user, outsider);
         context.Recipes.Add(recipe);
         await context.SaveChangesAsync();
 
@@ -358,6 +359,11 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await context.SaveChangesAsync();
 
         MealPlan? withDays = await repository.GetByIdAsync(curated.Id, includeDays: true);
+        MealPlan? curatedForAdoption = await repository.GetCuratedByIdAsync(curated.Id, includeDays: true);
+        MealPlan? privateForAdoption = await repository.GetCuratedByIdAsync(userPlan.Id, includeDays: true);
+        MealPlan? curatedForOutsider = await repository.GetAccessibleByIdAsync(curated.Id, outsider.Id, includeDays: true);
+        MealPlan? privateForOwner = await repository.GetAccessibleByIdAsync(userPlan.Id, user.Id, includeDays: true);
+        MealPlan? privateForOutsider = await repository.GetAccessibleByIdAsync(userPlan.Id, outsider.Id, includeDays: true);
         IReadOnlyList<MealPlan> balancedCurated = await repository.GetCuratedAsync(DietType.Balanced);
         IReadOnlyList<MealPlan> allCurated = await repository.GetCuratedAsync();
         IReadOnlyList<MealPlan> userPlans = await repository.GetByUserAsync(user.Id);
@@ -367,6 +373,11 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
 
         Assert.NotNull(withDays);
         Assert.Single(withDays.Days);
+        Assert.NotNull(curatedForAdoption);
+        Assert.Null(privateForAdoption);
+        Assert.NotNull(curatedForOutsider);
+        Assert.NotNull(privateForOwner);
+        Assert.Null(privateForOutsider);
         Assert.Single(balancedCurated);
         Assert.Equal(2, allCurated.Count);
         Assert.Single(userPlans);

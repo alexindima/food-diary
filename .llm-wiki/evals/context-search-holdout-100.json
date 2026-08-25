@@ -74,6 +74,24 @@
     "minimumAdditionalSqlitePrimarySamplesRequired": 0,
     "retirementReady": true
   },
+  "liveRegressionGate": {
+    "minimumTop1Count": 66,
+    "minimumTop10Count": 100,
+    "minimumMeanReciprocalRank": 0.79,
+    "maximumP95SqlDurationMs": 0,
+    "minimumCohortTop1Counts": {
+      "adjacent-role-disambiguation": 9,
+      "api-transport": 9,
+      "behavior-to-test": 6,
+      "conversational-ru": 7,
+      "domain-invariants": 4,
+      "frontend": 7,
+      "integrations-jobs": 7,
+      "mixed-ru-en": 5,
+      "persistence": 9,
+      "wiki-tooling": 3
+    }
+  },
   "thresholds": {
     "minimumTop1Rate": 0.95,
     "minimumTop10Rate": 1.0,

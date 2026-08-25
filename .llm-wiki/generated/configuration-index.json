@@ -3,8 +3,8 @@
   "summary": {
     "optionTypes": 56,
     "configurationFiles": 7,
-    "configurationKeys": 260,
-    "environmentVariables": 186
+    "configurationKeys": 261,
+    "environmentVariables": 187
   },
   "optionTypes": [
     {
@@ -558,6 +558,7 @@
       "properties": [
         "AccessKeyId",
         "AllowInsecureHttp",
+        "AllowPublicImageAccess",
         "Bucket",
         "MaxUploadSizeBytes",
         "PublicBaseUrl",
@@ -721,6 +722,7 @@
         "OutboxProcessing:FinalizationTimeout",
         "OutboxProcessing:LeaseDuration",
         "S3:AccessKeyId",
+        "S3:AllowPublicImageAccess",
         "S3:Bucket",
         "S3:MaxUploadSizeBytes",
         "S3:PublicBaseUrl",
@@ -854,6 +856,7 @@
         "RateLimiting:YooKassaWebhook:QueueLimit",
         "RateLimiting:YooKassaWebhook:WindowSeconds",
         "S3:AccessKeyId",
+        "S3:AllowPublicImageAccess",
         "S3:Bucket",
         "S3:MaxUploadSizeBytes",
         "S3:PublicBaseUrl",
@@ -1204,6 +1207,7 @@
         "RelaySmtp__UseSsl",
         "RelaySmtp__User",
         "S3__AccessKeyId",
+        "S3__AllowPublicImageAccess",
         "S3__Bucket",
         "S3__PublicBaseUrl",
         "S3__Region",

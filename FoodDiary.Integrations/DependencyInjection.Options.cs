@@ -23,6 +23,8 @@ public static partial class DependencyInjection {
                 "S3:MaxUploadSizeBytes must be greater than zero and no greater than 50 MiB.")
             .Validate(S3Options.HasValidPublicBaseUrl,
                 "S3:PublicBaseUrl must be an absolute HTTP or HTTPS URL when provided.")
+            .Validate(S3Options.HasExplicitPublicImageAccessPolicy,
+                "S3:AllowPublicImageAccess must be true for configured storage because image URLs are shared with users and external AI providers.")
             .Validate(S3Options.HasValidServiceUrl,
                 "S3:ServiceUrl must be an absolute HTTP or HTTPS URL when provided.")
             .ValidateOnStart();
