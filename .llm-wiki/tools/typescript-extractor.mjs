@@ -3,7 +3,10 @@ import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
-const requireFromClient = createRequire(resolve(repositoryRoot, 'FoodDiary.Web.Client/package.json'));
+const dependencyRoot = process.env.LLM_WIKI_READ_ONLY_SOURCE_ROOT
+  ? resolve(process.env.LLM_WIKI_READ_ONLY_SOURCE_ROOT)
+  : repositoryRoot;
+const requireFromClient = createRequire(resolve(dependencyRoot, 'FoodDiary.Web.Client/package.json'));
 const ts = requireFromClient('typescript');
 const input = JSON.parse(readFileSync(0, 'utf8').replace(/^\uFEFF/, ''));
 const paths = Array.isArray(input) ? input : (input.paths ?? []);

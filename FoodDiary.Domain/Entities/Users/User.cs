@@ -25,7 +25,6 @@ public sealed partial class User : AggregateRoot<UserId> {
     public bool MustChangePassword { get; private set; }
     public string? GoogleIssuer { get; private set; }
     public string? GoogleSubject { get; private set; }
-    public string? RefreshToken { get; private set; }
     public bool IsEmailConfirmed { get; private set; }
     public string? EmailConfirmationTokenHash { get; private set; }
     public DateTime? EmailConfirmationTokenExpiresAtUtc { get; private set; }
@@ -380,7 +379,6 @@ public sealed partial class User : AggregateRoot<UserId> {
             Password,
             HasPassword,
             MustChangePassword,
-            RefreshToken,
             IsEmailConfirmed,
             EmailConfirmationTokenHash,
             EmailConfirmationTokenExpiresAtUtc,
@@ -395,7 +393,6 @@ public sealed partial class User : AggregateRoot<UserId> {
         Password = state.Password;
         HasPassword = state.HasPassword;
         MustChangePassword = state.MustChangePassword;
-        RefreshToken = state.RefreshToken;
         IsEmailConfirmed = state.IsEmailConfirmed;
         EmailConfirmationTokenHash = state.EmailConfirmationTokenHash;
         EmailConfirmationTokenExpiresAtUtc = state.EmailConfirmationTokenExpiresAtUtc;

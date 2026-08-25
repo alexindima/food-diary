@@ -13,6 +13,7 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
@@ -47,14 +48,17 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             user.Id,
             WearableProvider.Fitbit,
             "external-user",
-            "access-token",
-            "refresh-token",
+            ProtectedWearableToken.FromProtectedValue("fdp1:access-token"),
+            ProtectedWearableToken.FromProtectedValue("fdp1:refresh-token"),
             DateTime.UtcNow.AddHours(1));
         connection.RecordConnectRequest(new string('A', 64), new string('B', 64));
 
         await connectionRepository.AddAsync(connection);
         await context.SaveChangesAsync();
-        connection.UpdateTokens("access-token-2", "refresh-token-2", DateTime.UtcNow.AddHours(2));
+        connection.UpdateTokens(
+            ProtectedWearableToken.FromProtectedValue("fdp1:access-token-2"),
+            ProtectedWearableToken.FromProtectedValue("fdp1:refresh-token-2"),
+            DateTime.UtcNow.AddHours(2));
         await connectionRepository.UpdateAsync(connection);
         await context.SaveChangesAsync();
 
@@ -63,7 +67,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         IReadOnlyList<WearableConnectionModel> connectionModels = await connectionRepository.GetConnectionModelsAsync(user.Id);
 
         Assert.NotNull(savedConnection);
-        Assert.Equal("access-token-2", savedConnection.AccessToken);
+        Assert.Equal("fdp1:access-token-2", savedConnection.AccessToken.Value);
         Assert.Equal(new string('A', 64), savedConnection.LastConnectRequestId);
         Assert.Equal(new string('B', 64), savedConnection.LastConnectRequestHash);
         Assert.Single(allConnections);
@@ -74,8 +78,8 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await context.SaveChangesAsync();
         savedConnection.Reconnect(
             "external-user-reconnected",
-            "access-token-3",
-            "refresh-token-3",
+            ProtectedWearableToken.FromProtectedValue("fdp1:access-token-3"),
+            ProtectedWearableToken.FromProtectedValue("fdp1:refresh-token-3"),
             DateTime.UtcNow.AddHours(3));
         await connectionRepository.UpdateAsync(savedConnection);
         await context.SaveChangesAsync();
@@ -86,7 +90,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             () => Assert.Equal(connection.Id, reconnected.Id),
             () => Assert.True(reconnected.IsActive),
             () => Assert.Equal("external-user-reconnected", reconnected.ExternalUserId),
-            () => Assert.Equal("access-token-3", reconnected.AccessToken));
+            () => Assert.Equal("fdp1:access-token-3", reconnected.AccessToken.Value));
 
         var syncRepository = new WearableSyncRepository(context);
         DateTime date = DateTime.UtcNow.Date;

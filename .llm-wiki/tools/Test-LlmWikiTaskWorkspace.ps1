@@ -94,7 +94,8 @@ if ($null -ne $descriptor) {
     }
     foreach ($artifact in $expectedArtifacts.GetEnumerator()) {
         $expectedPath = "$normalizedWorkspacePath/$($artifact.Value)"
-        $actualPath = [string]$descriptor.artifacts.($artifact.Key)
+        $artifactProperty = if ($null -ne $descriptor.artifacts) { $descriptor.artifacts.PSObject.Properties[$artifact.Key] } else { $null }
+        $actualPath = if ($null -ne $artifactProperty) { [string]$artifactProperty.Value } else { '' }
         Add-Check "artifact-path-$($artifact.Key)" ($actualPath -ceq $expectedPath) "Descriptor path for '$($artifact.Key)' must be '$expectedPath'."
         if ($descriptor.schemaVersion -eq $latestWorkspaceSchemaVersion) {
             $expectedArtifactSchema = [int]$workspacePolicy.workspace.artifactSchemaVersions.($artifact.Key)
@@ -217,10 +218,11 @@ $result = [pscustomobject][ordered]@{
     latestWorkspaceSchemaVersion = $latestWorkspaceSchemaVersion
     migrationRequired = ($null -ne $descriptor -and [int]$descriptor.schemaVersion -lt $latestWorkspaceSchemaVersion) -or
         ($null -ne $taskContract -and [string]$taskContract.git.base -notmatch '^[a-f0-9]{40}$')
-    storedPolicyFingerprint = $(if ($null -ne $descriptor) { [string]$descriptor.policyFingerprint } else { '' })
+    storedPolicyFingerprint = $(if ($null -ne $descriptor -and $null -ne $descriptor.PSObject.Properties['policyFingerprint']) { [string]$descriptor.policyFingerprint } else { '' })
     currentPolicyFingerprint = [string]$workspacePolicySnapshot.fingerprint
     policyDrift = $null -ne $descriptor -and
         [int]$descriptor.schemaVersion -eq $latestWorkspaceSchemaVersion -and
+        $null -ne $descriptor.PSObject.Properties['policyFingerprint'] -and
         [string]$descriptor.policyFingerprint -cne [string]$workspacePolicySnapshot.fingerprint
     policyImpact = $policyImpact
     valid = $errors.Count -eq 0

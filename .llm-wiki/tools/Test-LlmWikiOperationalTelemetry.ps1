@@ -20,7 +20,7 @@ try {
     $env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH = $registryPath
 
     $empty = & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -Format Json | ConvertFrom-Json
-    if (-not $empty.valid -or $empty.totalCount -ne 0 -or -not (Test-Path -LiteralPath $registryPath -PathType Leaf)) {
+    if (-not $empty.valid -or $empty.totalCount -ne 0 -or $empty.health -ne 'insufficient-data' -or -not (Test-Path -LiteralPath $registryPath -PathType Leaf)) {
         throw 'Operational telemetry did not initialize an empty local registry.'
     }
     foreach ($sample in @(
@@ -37,7 +37,8 @@ try {
             -Format Json | Out-Null
     }
     $metrics = & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -CheckId 'telemetry-regression' -Format Json | ConvertFrom-Json
-    if (-not $metrics.valid -or $metrics.totalCount -ne 3 -or $metrics.metrics[0].medianDurationSeconds -ne 20) {
+    if (-not $metrics.valid -or $metrics.totalCount -ne 3 -or $metrics.health -ne 'attention' -or
+        $metrics.failedCount -ne 2 -or $metrics.metrics[0].medianDurationSeconds -ne 20) {
         throw 'Operational telemetry did not preserve valid local metrics.'
     }
     $statusAfter = @(git -C $repositoryRoot status --short)

@@ -38,13 +38,17 @@ $failedCheckSum = if ($null -ne $failedCheckMeasure -and $failedCheckMeasure.PSO
 $gitDirectoryResult = Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -AllowedExitCode @(0..128)
 $gitDirectory = if (@($gitDirectoryResult.Lines).Count -gt 0) { $gitDirectoryResult.Lines[0].Trim() } else { '' }
 $adaptiveItems = @()
-if ($gitDirectoryResult.ExitCode -eq 0) {
-    $adaptiveRoot = Join-Path $gitDirectory 'llm-wiki/workflow-metrics'
+if ($gitDirectoryResult.ExitCode -eq 0 -or -not [string]::IsNullOrWhiteSpace([string]$env:LLM_WIKI_WORKFLOW_METRICS_ROOT)) {
+    $adaptiveRoot = if (-not [string]::IsNullOrWhiteSpace([string]$env:LLM_WIKI_WORKFLOW_METRICS_ROOT)) {
+        [IO.Path]::GetFullPath([string]$env:LLM_WIKI_WORKFLOW_METRICS_ROOT)
+    } else {
+        Join-Path $gitDirectory 'llm-wiki/workflow-metrics'
+    }
     if (Test-Path -LiteralPath $adaptiveRoot -PathType Container) {
         $adaptiveItems = @(Get-ChildItem -LiteralPath $adaptiveRoot -Filter '*.json' -File | ForEach-Object {
             try {
                 $metric = Get-Content -LiteralPath $_.FullName -Raw | ConvertFrom-Json
-                if ([int]$metric.schemaVersion -eq 1) { $metric }
+                if ([int]$metric.schemaVersion -in @(1, 2)) { $metric }
             } catch { }
         } | Sort-Object recordedAtUtc -Descending)
     }
@@ -53,8 +57,10 @@ $adaptiveDuration = $adaptiveItems | Measure-Object durationSeconds -Sum
 $adaptiveDurationSum = if ($null -ne $adaptiveDuration -and $adaptiveDuration.PSObject.Properties['Sum'] -and $null -ne $adaptiveDuration.Sum) {
     [Math]::Round([double]$adaptiveDuration.Sum, 2)
 } else { 0 }
+$passedAdaptiveCount = @($adaptiveItems | Where-Object outcome -eq 'passed').Count
+$failedAdaptiveCount = @($adaptiveItems | Where-Object outcome -in @('failed', 'timed-out', 'interrupted')).Count
 $result = [pscustomobject][ordered]@{
-    schemaVersion = 2
+    schemaVersion = 3
     workspaceCount = $items.Count
     readyOrSealedCount = @($items | Where-Object state -in @('ready', 'sealed', 'complete')).Count
     failedCheckCount = $failedCheckSum
@@ -64,11 +70,23 @@ $result = [pscustomobject][ordered]@{
     }
     adaptive = [pscustomobject][ordered]@{
         runCount = $adaptiveItems.Count
-        passedCount = @($adaptiveItems | Where-Object outcome -eq 'passed').Count
-        failedCount = @($adaptiveItems | Where-Object outcome -eq 'failed').Count
+        passedCount = $passedAdaptiveCount
+        failedCount = $failedAdaptiveCount
+        successRatePercent = $(if ($adaptiveItems.Count -eq 0) { $null } else { [Math]::Round(100.0 * $passedAdaptiveCount / $adaptiveItems.Count, 2) })
+        health = $(if ($adaptiveItems.Count -eq 0) { 'insufficient-data' } elseif ($failedAdaptiveCount -gt 0) { 'attention' } else { 'healthy' })
         totalDurationSeconds = $adaptiveDurationSum
         byOperation = @($adaptiveItems | Group-Object operation | ForEach-Object {
-            [pscustomobject]@{ operation = $_.Name; runCount = $_.Count; passedCount = @($_.Group | Where-Object outcome -eq 'passed').Count }
+            $passedCount = @($_.Group | Where-Object outcome -eq 'passed').Count
+            $failedCount = @($_.Group | Where-Object outcome -in @('failed', 'timed-out', 'interrupted')).Count
+            [pscustomobject]@{
+                operation = $_.Name
+                runCount = $_.Count
+                passedCount = $passedCount
+                failedCount = $failedCount
+                timedOutCount = @($_.Group | Where-Object outcome -eq 'timed-out').Count
+                interruptedCount = @($_.Group | Where-Object outcome -eq 'interrupted').Count
+                successRatePercent = [Math]::Round(100.0 * $passedCount / $_.Count, 2)
+            }
         })
         recent = @($adaptiveItems | Select-Object -First 20)
     }

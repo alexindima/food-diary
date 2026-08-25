@@ -216,33 +216,6 @@ public class UserInvariantTests {
     }
 
     [Fact]
-    public void UpdateRefreshToken_WithNull_DoesNotSetLastLogin() {
-        var user = User.Create("test@example.com", "hash");
-
-        user.UpdateRefreshToken(refreshToken: null);
-
-        Assert.Null(user.LastLoginAtUtc);
-    }
-
-    [Fact]
-    public void UpdateRefreshToken_WithToken_SetsLastLogin() {
-        var user = User.Create("test@example.com", "hash");
-
-        user.UpdateRefreshToken("token");
-
-        Assert.NotNull(user.LastLoginAtUtc);
-    }
-
-    [Fact]
-    public void UpdateRefreshToken_WithTypedUpdate_SetsLastLogin() {
-        var user = User.Create("test@example.com", "hash");
-
-        user.UpdateRefreshToken(new UserRefreshTokenUpdate("token"));
-
-        Assert.NotNull(user.LastLoginAtUtc);
-    }
-
-    [Fact]
     public void RecordAuthenticationActivity_WithOlderTimestamp_DoesNotRegressLoginOrAuditTime() {
         var user = User.Create("test@example.com", "hash");
         DateTime latestLoginAtUtc = DateTime.UtcNow.AddMinutes(2);
@@ -254,20 +227,6 @@ public class UserInvariantTests {
         Assert.Multiple(
             () => Assert.Equal(latestLoginAtUtc, user.LastLoginAtUtc),
             () => Assert.Equal(modifiedOnUtc, user.ModifiedOnUtc));
-    }
-
-    [Fact]
-    public void UpdateRefreshToken_WithOlderTimestamp_UpdatesTokenWithoutRegressingLoginOrAuditTime() {
-        var user = User.Create("test@example.com", "hash");
-        DateTime latestLoginAtUtc = DateTime.UtcNow.AddMinutes(2);
-        user.UpdateRefreshToken(new UserRefreshTokenUpdate("first-token", latestLoginAtUtc));
-
-        user.UpdateRefreshToken(new UserRefreshTokenUpdate("second-token", latestLoginAtUtc.AddMinutes(-1)));
-
-        Assert.Multiple(
-            () => Assert.Equal("second-token", user.RefreshToken),
-            () => Assert.Equal(latestLoginAtUtc, user.LastLoginAtUtc),
-            () => Assert.Equal(latestLoginAtUtc, user.ModifiedOnUtc));
     }
 
     [Fact]
@@ -1511,9 +1470,8 @@ public class UserInvariantTests {
     }
 
     [Fact]
-    public void DeleteAccount_ClearsRefreshTokenAndMarksDeleted() {
+    public void DeleteAccount_ClearsTransientTokensAndMarksDeleted() {
         var user = User.Create("test@example.com", "hash");
-        user.UpdateRefreshToken("refresh-token", DateTime.UtcNow.AddMinutes(-5));
         user.SetEmailConfirmationToken("email-token", DateTime.UtcNow.AddMinutes(30));
         user.SetPasswordResetToken("reset-token", DateTime.UtcNow.AddMinutes(30));
         user.ClearDomainEvents();
@@ -1522,7 +1480,6 @@ public class UserInvariantTests {
         user.DeleteAccount(deletedAtUtc);
 
         Assert.Multiple(
-            () => Assert.Null(user.RefreshToken),
             () => Assert.Null(user.EmailConfirmationTokenHash),
             () => Assert.Null(user.EmailConfirmationTokenExpiresAtUtc),
             () => Assert.Null(user.EmailConfirmationSentAtUtc),
@@ -1538,14 +1495,12 @@ public class UserInvariantTests {
     [Fact]
     public void MarkDeleted_ClearsOutstandingTransientTokens() {
         var user = User.Create("test@example.com", "hash");
-        user.UpdateRefreshToken("refresh-token", DateTime.UtcNow.AddMinutes(-5));
         user.SetEmailConfirmationToken("email-token", DateTime.UtcNow.AddMinutes(30));
         user.SetPasswordResetToken("reset-token", DateTime.UtcNow.AddMinutes(30));
 
         user.MarkDeleted(DateTime.UtcNow);
 
         Assert.Multiple(
-            () => Assert.Null(user.RefreshToken),
             () => Assert.Null(user.EmailConfirmationTokenHash),
             () => Assert.Null(user.EmailConfirmationTokenExpiresAtUtc),
             () => Assert.Null(user.EmailConfirmationSentAtUtc),

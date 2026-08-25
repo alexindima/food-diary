@@ -34,6 +34,11 @@ function Add-ManifestChange {
     })
 }
 
+function Convert-ToComparableText([string]$Value) {
+    if ($null -eq $Value) { return $null }
+    return $Value.Replace("`r`n", "`n").Replace("`r", "`n").Trim()
+}
+
 $manifestPaths = @(
     @(
         git -C $repositoryRoot ls-files -- '*.csproj' 'Directory.Build.props' ':(glob)**/package.json'
@@ -47,7 +52,7 @@ foreach ($path in $manifestPaths) {
         $beforeText = if ($file.Extension -in @('.csproj', '.props')) { '<Project />' } else { '{}' }
     }
     $afterText = Get-Content -LiteralPath $file.FullName -Raw
-    if ($beforeText.Trim() -eq $afterText.Trim()) { continue }
+    if ((Convert-ToComparableText $beforeText) -ceq (Convert-ToComparableText $afterText)) { continue }
 
     $beforePackages = @{}
     $afterPackages = @{}
@@ -92,7 +97,7 @@ foreach ($path in $lockfilePaths) {
     $absolutePath = Join-Path $repositoryRoot $path
     if ($null -eq $beforeText -or -not (Test-Path -LiteralPath $absolutePath)) { continue }
     $afterText = Get-Content -LiteralPath $absolutePath -Raw
-    if ($beforeText.Trim() -ne $afterText.Trim()) {
+    if ((Convert-ToComparableText $beforeText) -cne (Convert-ToComparableText $afterText)) {
         Add-ManifestChange 'npm' $path '(lockfile graph)' $null $null 'lockfile-changed'
     }
 }

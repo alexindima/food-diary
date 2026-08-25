@@ -14,6 +14,8 @@ public sealed class GetWeeklyCheckInQueryHandler(
     IWeeklyCheckInUserProfileService weeklyCheckInUserProfileService,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetWeeklyCheckInQuery, Result<WeeklyCheckInModel>> {
+    private static readonly DateOnly EarliestSupportedWeekStart = DateOnly.MinValue.AddDays(7);
+
     public async Task<Result<WeeklyCheckInModel>> Handle(
         GetWeeklyCheckInQuery query,
         CancellationToken cancellationToken) {
@@ -34,6 +36,12 @@ public sealed class GetWeeklyCheckInQueryHandler(
         WeeklyCheckInUserProfile profile = profileResult.Value;
         DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
         DateTime currentWeekStart = StartOfWeek(today);
+        if (query.WeekStart is { } requestedWeek && requestedWeek < EarliestSupportedWeekStart) {
+            return Result.Failure<WeeklyCheckInModel>(Errors.Validation.Invalid(
+                nameof(query.WeekStart),
+                "The previous week is outside the supported date range."));
+        }
+
         DateTime thisWeekStart = query.WeekStart is { } requestedWeekStart
             ? DateTime.SpecifyKind(requestedWeekStart.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc)
             : currentWeekStart;

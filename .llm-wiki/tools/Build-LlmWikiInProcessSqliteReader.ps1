@@ -6,15 +6,74 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+
+function Get-CurrentRuntimeIdentifier {
+    $runtimeInformationType = [Runtime.InteropServices.RuntimeInformation]
+    $runtimeIdentifierProperty = $runtimeInformationType.GetProperty('RuntimeIdentifier')
+    if ($null -ne $runtimeIdentifierProperty) {
+        return [string]$runtimeIdentifierProperty.GetValue($null, $null)
+    }
+
+    $osPrefix = if ($runtimeInformationType::IsOSPlatform([Runtime.InteropServices.OSPlatform]::Windows)) {
+        'win'
+    } elseif ($runtimeInformationType::IsOSPlatform([Runtime.InteropServices.OSPlatform]::Linux)) {
+        'linux'
+    } elseif ($runtimeInformationType::IsOSPlatform([Runtime.InteropServices.OSPlatform]::OSX)) {
+        'osx'
+    } else {
+        throw 'Unable to derive a runtime identifier for the current operating system.'
+    }
+    $architecture = $runtimeInformationType::ProcessArchitecture.ToString().ToLowerInvariant()
+    return "$osPrefix-$architecture"
+}
+
+function Get-RelativePathPortable {
+    param(
+        [Parameter(Mandatory)][string]$BasePath,
+        [Parameter(Mandatory)][string]$Path
+    )
+
+    $relativePathMethod = [IO.Path].GetMethods() |
+        Where-Object { $_.Name -eq 'GetRelativePath' -and $_.GetParameters().Count -eq 2 } |
+        Select-Object -First 1
+    if ($null -ne $relativePathMethod) {
+        return [string]$relativePathMethod.Invoke($null, @($BasePath, $Path))
+    }
+
+    $baseFullPath = [IO.Path]::GetFullPath($BasePath).TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
+    $pathFullPath = [IO.Path]::GetFullPath($Path)
+    $baseUri = [Uri]$baseFullPath
+    $pathUri = [Uri]$pathFullPath
+    return [Uri]::UnescapeDataString($baseUri.MakeRelativeUri($pathUri).ToString()).Replace('/', [IO.Path]::DirectorySeparatorChar)
+}
+
+function Get-Sha256Hex {
+    param([Parameter(Mandatory)][byte[]]$Bytes)
+
+    $algorithm = [Security.Cryptography.SHA256]::Create()
+    try {
+        $hashBytes = $algorithm.ComputeHash($Bytes)
+    } finally {
+        $algorithm.Dispose()
+    }
+    return -join @($hashBytes | ForEach-Object { $_.ToString('x2') })
+}
+
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $projectPath = Join-Path $PSScriptRoot 'LlmWiki.SqliteReader/LlmWiki.SqliteReader.csproj'
-$artifactRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/in-process-sqlite-reader'
-$buildArtifactRoot = Join-Path $repositoryRoot '.artifacts/dotnet/llm-wiki-in-process-sqlite-reader'
-$runtimeIdentifier = [Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier
+$artifactRepositoryRoot = $repositoryRoot
+if (-not [string]::IsNullOrWhiteSpace($env:LLM_WIKI_READ_ONLY_SOURCE_ROOT) -and
+    (Test-Path -LiteralPath $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT -PathType Container)) {
+    $artifactRepositoryRoot = [IO.Path]::GetFullPath($env:LLM_WIKI_READ_ONLY_SOURCE_ROOT)
+}
+$artifactRoot = Join-Path $artifactRepositoryRoot '.artifacts/llm-wiki/in-process-sqlite-reader'
+$buildArtifactRoot = Join-Path $artifactRepositoryRoot '.artifacts/dotnet/llm-wiki-in-process-sqlite-reader'
+$runtimeIdentifier = Get-CurrentRuntimeIdentifier
 $runtimeFramework = [Runtime.InteropServices.RuntimeInformation]::FrameworkDescription
 $inputPaths = @(
     $projectPath
     (Join-Path $PSScriptRoot 'LlmWiki.SqliteReader/DomainDataReader.cs')
+    (Join-Path $PSScriptRoot 'LlmWiki.SqliteReader/CompiledIndexReader.cs')
     (Join-Path $repositoryRoot 'Directory.Build.props')
     (Join-Path $repositoryRoot 'Directory.Packages.props')
 )
@@ -23,11 +82,11 @@ $null = $fingerprintMaterial.AppendLine("framework=$runtimeFramework")
 $null = $fingerprintMaterial.AppendLine("rid=$runtimeIdentifier")
 foreach ($path in $inputPaths) {
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "SQLite reader input is missing: $path" }
-    $relativePath = [IO.Path]::GetRelativePath($repositoryRoot, $path).Replace('\', '/')
+    $relativePath = (Get-RelativePathPortable -BasePath $repositoryRoot -Path $path).Replace('\', '/')
     $hash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
     $null = $fingerprintMaterial.AppendLine("$relativePath=$hash")
 }
-$fingerprint = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($fingerprintMaterial.ToString()))).ToLowerInvariant()
+$fingerprint = Get-Sha256Hex -Bytes ([Text.Encoding]::UTF8.GetBytes($fingerprintMaterial.ToString()))
 $outputPath = Join-Path $artifactRoot $fingerprint
 $assemblyPath = Join-Path $outputPath 'LlmWiki.SqliteReader.dll'
 $manifestPath = Join-Path $outputPath 'build-manifest.json'

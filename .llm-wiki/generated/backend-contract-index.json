@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1059,
     "ambiguousContracts": 3,
-    "consumerEdges": 7459,
-    "productionConsumerEdges": 4503,
-    "testConsumerEdges": 2956,
+    "consumerEdges": 7462,
+    "productionConsumerEdges": 4504,
+    "testConsumerEdges": 2958,
     "consumedContracts": 1059,
     "unconsumedContracts": 0
   },
@@ -21379,7 +21379,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/SecondPassDomainHardeningTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "BillingWebhookEvent",
@@ -34340,7 +34340,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 9
     },
     {
       "contract": "GetDailyAdviceQuery",
@@ -37536,6 +37536,19 @@
         "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetMicronutrientsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Usda/Mappings/UsdaHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
@@ -37551,7 +37564,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
+    },
+    {
+      "contract": "GetMicronutrientsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Usda/UsdaValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "GetMicronutrientsQuery",
@@ -40853,7 +40879,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 12
     },
     {
       "contract": "GetWeeklyCheckInQuery",
@@ -55205,7 +55231,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "IDailyAdviceReadModelRepository",
@@ -55972,7 +55998,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 11
+      "referenceCount": 13
     },
     {
       "contract": "IDashboardStatisticsReadService",
@@ -68089,6 +68115,19 @@
       "consumerPath": "FoodDiary.Application.Usda/Services/UsdaDailyMicronutrientReadService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IMealProductNutritionReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Meals/Common/IMealProductNutritionReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IMealProjectionReadRepository",
@@ -87223,7 +87262,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 14
+      "referenceCount": 15
     },
     {
       "contract": "IUsdaFoodRepository",
@@ -87340,7 +87379,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "IUsdaFoodSearchService",

@@ -46,6 +46,7 @@ public sealed class UsdaController(ISender mediator) : AuthorizedController(medi
         HandleNoContent(UsdaHttpMappings.ToUnlinkCommand(userId, productId));
 
     [HttpGet("daily-micronutrients")]
+    [EnableRateLimiting(PresentationPolicyNames.FoodDataRateLimitPolicyName)]
     [ProducesResponseType<DailyMicronutrientSummaryHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetDailyMicronutrients(
         [FromCurrentUser] Guid userId,

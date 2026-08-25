@@ -20,7 +20,9 @@ $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $schedulerRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/scheduler'
 $circuitRoot = Join-Path $schedulerRoot 'circuits'
 $lockPath = Join-Path $schedulerRoot '.circuit-lock'
-$policy = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -Format Json | ConvertFrom-Json
+$policySnapshot = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -WithFingerprint -Format Json | ConvertFrom-Json
+$policy = $policySnapshot.policy
+$policyFingerprint = [string]$policySnapshot.fingerprint
 $circuitPolicy = $policy.scheduler.watchdog.circuitBreaker
 $now = $AsOfUtc.ToUniversalTime()
 $effectiveCooldown = if ($null -ne $CooldownMinutes) { [int]$CooldownMinutes } else { [int]$circuitPolicy.defaultCooldownMinutes }
@@ -106,12 +108,18 @@ function Get-View {
     $records = @(Get-Receipts)
     $states = [System.Collections.Generic.List[object]]::new()
     foreach ($group in @($records | Where-Object { $_.valid -and $null -ne $_.receipt } | Group-Object { [string]$_.receipt.workspace })) {
-        $latestRecord = @($group.Group | Sort-Object { [DateTime]::Parse([string]$_.receipt.occurredAtUtc).ToUniversalTime() }, { [string]$_.receipt.circuitId })[-1]
+        $latestRecord = @($group.Group | Sort-Object { ([DateTimeOffset]$_.receipt.occurredAtUtc).UtcDateTime }, { [string]$_.receipt.circuitId })[-1]
         $latest = $latestRecord.receipt
         $currentFingerprint = ''
         try { $currentFingerprint = Get-CurrentFingerprint ([string]$latest.workspace) } catch {}
         $fingerprintChanged = -not [string]::IsNullOrWhiteSpace($currentFingerprint) -and $currentFingerprint -cne [string]$latest.packetFingerprint
-        $cooldownExpired = $latest.event -eq 'opened' -and $now -ge [DateTime]::Parse([string]$latest.openUntilUtc).ToUniversalTime()
+        $occurredAtUtc = ([DateTimeOffset]$latest.occurredAtUtc).ToUniversalTime().ToString('o')
+        $openUntilUtc = if ([string]::IsNullOrWhiteSpace([string]$latest.openUntilUtc)) {
+            ''
+        } else {
+            ([DateTimeOffset]$latest.openUntilUtc).ToUniversalTime().ToString('o')
+        }
+        $cooldownExpired = $latest.event -eq 'opened' -and $now -ge ([DateTimeOffset]$latest.openUntilUtc).UtcDateTime
         $open = $latest.event -eq 'opened' -and -not $fingerprintChanged -and -not $cooldownExpired
         $states.Add([pscustomobject][ordered]@{
             workspace = [string]$latest.workspace
@@ -120,8 +128,8 @@ function Get-View {
             circuitId = [string]$latest.circuitId
             packetFingerprint = [string]$latest.packetFingerprint
             currentPacketFingerprint = $currentFingerprint
-            openedAtUtc = $(if ($latest.event -eq 'opened') { [string]$latest.occurredAtUtc } else { '' })
-            openUntilUtc = [string]$latest.openUntilUtc
+            openedAtUtc = $(if ($latest.event -eq 'opened') { $occurredAtUtc } else { '' })
+            openUntilUtc = $openUntilUtc
             reason = [string]$latest.reason
             sourceWatchdogId = [string]$latest.sourceWatchdogId
             eventCount = $group.Count
@@ -180,7 +188,7 @@ try {
                 occurredAtUtc = $now.ToString('o')
                 openUntilUtc = $(if ($Action -eq 'open') { $now.AddMinutes($effectiveCooldown).ToString('o') } else { '' })
                 reason = $effectiveReason
-                policyFingerprint = [string]$policy.fingerprint
+                policyFingerprint = $policyFingerprint
                 predecessorCircuitId = $(if ($null -ne $current) { [string]$current.circuitId } else { '' })
                 sourceWatchdogId = ''
                 circuitHash = ''

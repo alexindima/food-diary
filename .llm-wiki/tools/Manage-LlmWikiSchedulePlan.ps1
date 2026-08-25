@@ -23,7 +23,9 @@ $planRoot = Join-Path $schedulerRoot 'plans'
 $claimRoot = Join-Path $schedulerRoot 'claims'
 $lockPath = Join-Path $schedulerRoot '.schedule-plan-lock'
 $now = $AsOfUtc.ToUniversalTime()
-$policy = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -Format Json | ConvertFrom-Json
+$policySnapshot = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -WithFingerprint -Format Json | ConvertFrom-Json
+$policy = $policySnapshot.policy
+$policyFingerprint = [string]$policySnapshot.fingerprint
 $planPolicy = $policy.scheduler.agentRegistry.schedulePlans
 $effectiveTtlMinutes = if ($null -ne $TtlMinutes) { [int]$TtlMinutes } else { [int]$planPolicy.defaultTtlMinutes }
 if ($effectiveTtlMinutes -lt 1 -or $effectiveTtlMinutes -gt [int]$planPolicy.maximumTtlMinutes) { throw "TtlMinutes must be between 1 and $($planPolicy.maximumTtlMinutes)." }
@@ -102,9 +104,9 @@ function Test-PlanCurrent([object]$Plan) {
     $hashValidation = Test-PlanHash $Plan
     $issues = [System.Collections.Generic.List[string]]::new()
     foreach ($issue in @($hashValidation.issues)) { $issues.Add([string]$issue) }
-    $expired = [DateTime]::Parse([string]$Plan.expiresAtUtc).ToUniversalTime() -le $now
+    $expired = ([DateTimeOffset]$Plan.expiresAtUtc).UtcDateTime -le $now
     if ($expired) { $issues.Add('Schedule plan has expired.') }
-    if ([string]$Plan.policyFingerprint -cne [string]$policy.fingerprint) { $issues.Add('Workspace policy fingerprint changed after plan creation.') }
+    if ([string]$Plan.policyFingerprint -cne $policyFingerprint) { $issues.Add('Workspace policy fingerprint changed after plan creation.') }
     foreach ($claimFile in Get-ClaimFiles) {
         try {
             $existingClaim = Get-Content -LiteralPath $claimFile.FullName -Raw | ConvertFrom-Json
@@ -187,7 +189,7 @@ try {
             planId = $planIdValue
             createdAtUtc = $now.ToString('o')
             expiresAtUtc = $now.AddMinutes($effectiveTtlMinutes).ToString('o')
-            policyFingerprint = [string]$policy.fingerprint
+            policyFingerprint = $policyFingerprint
             tasksPath = $TasksPath
             maxConcurrency = $schedule.maxConcurrency
             routingMode = $schedule.routingMode

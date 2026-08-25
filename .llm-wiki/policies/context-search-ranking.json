@@ -706,7 +706,7 @@
       "id": "nutrition-updater-intent",
       "queryTerms": ["recalculate", "nutrition", "ingredient", "update"],
       "minimumMatches": 2,
-      "identityTerms": ["updater"],
+      "identityTerms": ["recipenutritionupdater"],
       "score": 70
     },
     {

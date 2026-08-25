@@ -389,6 +389,7 @@ public partial class MealsFeatureTests {
         public Task<IReadOnlyList<MealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
             UserId userId,
             DateTime date,
+            int limit,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
@@ -474,6 +475,7 @@ public partial class MealsFeatureTests {
         public Task<IReadOnlyList<MealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
             UserId userId,
             DateTime date,
+            int limit,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
@@ -559,6 +561,7 @@ public partial class MealsFeatureTests {
         public Task<IReadOnlyList<MealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
             UserId userId,
             DateTime date,
+            int limit,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
@@ -653,6 +656,7 @@ public partial class MealsFeatureTests {
         public Task<IReadOnlyList<MealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
             UserId userId,
             DateTime date,
+            int limit,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 

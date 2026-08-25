@@ -149,7 +149,7 @@ if ($Action -eq 'verify') {
             if ((Get-Fingerprint $sealedContent) -cne [string]$package.seal.sha256) {
                 $issues.Add('Export SHA-256 seal is invalid.')
             }
-            $sensitiveCategories = Find-SensitiveCategories ($sealedContent | ConvertTo-Json -Depth 20 -Compress)
+            $sensitiveCategories = @(Find-SensitiveCategories ($sealedContent | ConvertTo-Json -Depth 20 -Compress))
             if ($sensitiveCategories.Count -gt 0) {
                 $issues.Add("Export still contains sensitive patterns: $($sensitiveCategories -join ', ')")
             }

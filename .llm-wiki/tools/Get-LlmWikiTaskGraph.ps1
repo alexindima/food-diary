@@ -31,10 +31,20 @@ foreach ($directory in @(Get-ChildItem -LiteralPath $absoluteTasksPath -Director
     try {
         $packet = Get-Content -LiteralPath $packetPath -Raw | ConvertFrom-Json
         $descriptor = Get-Content -LiteralPath $descriptorPath -Raw | ConvertFrom-Json
-        if ($null -ne $descriptor.decomposition -and [string]$descriptor.decomposition.state -eq 'applied') { continue }
-        $contractRuleIds = @($packet.policy.matchedRules.id | Where-Object {
+        $decompositionProperty = $descriptor.PSObject.Properties['decomposition']
+        $decomposition = if ($null -ne $decompositionProperty) { $decompositionProperty.Value } else { $null }
+        $decompositionStateProperty = if ($null -ne $decomposition) { $decomposition.PSObject.Properties['state'] } else { $null }
+        if ($null -ne $decompositionStateProperty -and [string]$decompositionStateProperty.Value -eq 'applied') { continue }
+        $contractRuleIds = @($packet.policy.matchedRules | ForEach-Object {
+            $idProperty = $_.PSObject.Properties['id']
+            if ($null -ne $idProperty) { [string]$idProperty.Value }
+        } | Where-Object {
             $_ -in @('api-contract', 'backend-public-contract', 'shared-ui-consumer-contract', 'frontend-component-contract', 'configuration-contract', 'persistence-model-contract')
         })
+        $projectNames = @($packet.diff.projects | ForEach-Object {
+            $nameProperty = $_.PSObject.Properties['name']
+            if ($null -ne $nameProperty) { [string]$nameProperty.Value }
+        } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
         $nodes.Add([pscustomobject][ordered]@{
             name = $directory.Name
             path = "$normalizedTasksPath/$($directory.Name)"
@@ -45,11 +55,11 @@ foreach ($directory in @(Get-ChildItem -LiteralPath $absoluteTasksPath -Director
             modules = @($packet.ownership.directModules | Sort-Object -Unique)
             impactedModules = @($packet.ownership.transitivelyImpactedModules | Sort-Object -Unique)
             downstreamModules = @($packet.ownership.downstreamModules | Sort-Object -Unique)
-            projects = @($packet.diff.projects.name | Sort-Object -Unique)
+            projects = $projectNames
             scopes = @($packet.diff.scopes | Sort-Object -Unique)
             generatedActions = @($packet.diff.generatedActions | Sort-Object -Unique)
             contractRules = $contractRuleIds
-            decomposition = $(if ($null -ne $descriptor.decomposition) { $descriptor.decomposition } else { $null })
+            decomposition = $decomposition
         })
     } catch {
         $warnings.Add("Skipped unreadable workspace '$($directory.Name)': $($_.Exception.Message)")
@@ -101,36 +111,36 @@ for ($leftIndex = 0; $leftIndex -lt $nodes.Count; $leftIndex++) {
     for ($rightIndex = $leftIndex + 1; $rightIndex -lt $nodes.Count; $rightIndex++) {
         $left = $nodes[$leftIndex]
         $right = $nodes[$rightIndex]
-        $pathOverlap = Get-Intersection $left.changedPaths $right.changedPaths
-        if ($pathOverlap.Count -gt 0) {
+        $pathOverlap = @(Get-Intersection $left.changedPaths $right.changedPaths)
+        if (@($pathOverlap).Count -gt 0) {
             Add-Edge 'write-conflict' $left.name $right.name 'critical' $true 'undirected' '' '' $pathOverlap 'Do not merge in parallel; assign ownership or re-scope one task, then refresh both packets.'
         }
-        $moduleOverlap = Get-Intersection $left.modules $right.modules
-        $projectOverlap = Get-Intersection $left.projects $right.projects
-        if ($pathOverlap.Count -eq 0 -and $moduleOverlap.Count -gt 0 -and $projectOverlap.Count -gt 0) {
+        $moduleOverlap = @(Get-Intersection $left.modules $right.modules)
+        $projectOverlap = @(Get-Intersection $left.projects $right.projects)
+        if (@($pathOverlap).Count -eq 0 -and @($moduleOverlap).Count -gt 0 -and @($projectOverlap).Count -gt 0) {
             Add-Edge 'boundary-coordination' $left.name $right.name 'high' $false 'undirected' '' '' @($moduleOverlap + $projectOverlap) 'Coordinate invariants and rebase the later task before merge.'
         }
-        $generatedOverlap = Get-Intersection $left.generatedActions $right.generatedActions
-        if ($pathOverlap.Count -eq 0 -and $generatedOverlap.Count -gt 0) {
+        $generatedOverlap = @(Get-Intersection $left.generatedActions $right.generatedActions)
+        if (@($pathOverlap).Count -eq 0 -and @($generatedOverlap).Count -gt 0) {
             Add-Edge 'generated-artifact-coordination' $left.name $right.name 'medium' $false 'undirected' '' '' $generatedOverlap 'Regenerate shared derived artifacts only after both source changes are integrated.'
         }
-        $leftDependsOnRight = Get-Intersection $left.modules $right.downstreamModules
-        if ($leftDependsOnRight.Count -gt 0) {
+        $leftDependsOnRight = @(Get-Intersection $left.modules $right.downstreamModules)
+        if (@($leftDependsOnRight).Count -gt 0) {
             Add-Edge 'module-dependency' $left.name $right.name 'high' $false 'directed' $right.name $left.name $leftDependsOnRight "Merge '$($right.name)' first; refresh and rebase '$($left.name)' against it."
         }
-        $rightDependsOnLeft = Get-Intersection $right.modules $left.downstreamModules
-        if ($rightDependsOnLeft.Count -gt 0) {
+        $rightDependsOnLeft = @(Get-Intersection $right.modules $left.downstreamModules)
+        if (@($rightDependsOnLeft).Count -gt 0) {
             Add-Edge 'module-dependency' $left.name $right.name 'high' $false 'directed' $left.name $right.name $rightDependsOnLeft "Merge '$($left.name)' first; refresh and rebase '$($right.name)' against it."
         }
-        if ($left.contractRules.Count -gt 0) {
-            $contractImpact = Get-Intersection $left.impactedModules @($right.modules + $right.impactedModules)
-            if ($contractImpact.Count -gt 0) {
+        if (@($left.contractRules).Count -gt 0) {
+            $contractImpact = @(Get-Intersection $left.impactedModules @($right.modules + $right.impactedModules))
+            if (@($contractImpact).Count -gt 0) {
                 Add-Edge 'contract-before-consumer' $left.name $right.name 'high' $false 'directed' $left.name $right.name @($left.contractRules + $contractImpact) "Merge contract producer '$($left.name)' before '$($right.name)', then rerun consumer compatibility checks."
             }
         }
-        if ($right.contractRules.Count -gt 0) {
-            $contractImpact = Get-Intersection $right.impactedModules @($left.modules + $left.impactedModules)
-            if ($contractImpact.Count -gt 0) {
+        if (@($right.contractRules).Count -gt 0) {
+            $contractImpact = @(Get-Intersection $right.impactedModules @($left.modules + $left.impactedModules))
+            if (@($contractImpact).Count -gt 0) {
                 Add-Edge 'contract-before-consumer' $left.name $right.name 'high' $false 'directed' $right.name $left.name @($right.contractRules + $contractImpact) "Merge contract producer '$($right.name)' before '$($left.name)', then rerun consumer compatibility checks."
             }
         }

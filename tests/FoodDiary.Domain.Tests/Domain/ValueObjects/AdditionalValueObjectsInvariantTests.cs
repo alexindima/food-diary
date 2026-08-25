@@ -451,7 +451,6 @@ public class AdditionalValueObjectsInvariantTests {
 
         Assert.Multiple(
             () => Assert.Equal("hashed-password", state.Password),
-            () => Assert.Null(state.RefreshToken),
             () => Assert.False(state.IsEmailConfirmed),
             () => Assert.Null(state.EmailConfirmationTokenHash),
             () => Assert.Null(state.PasswordResetTokenHash),
@@ -463,27 +462,6 @@ public class AdditionalValueObjectsInvariantTests {
         UserSecurityState state = UserSecurityState.CreateInitial("old").WithPassword("new");
 
         Assert.Equal("new", state.Password);
-    }
-
-    [Fact]
-    public void UserSecurityState_WithRefreshToken_SetsTokenAndLastLogin() {
-        DateTime now = DateTime.UtcNow;
-        UserSecurityState state = UserSecurityState.CreateInitial("hash")
-            .WithRefreshToken("token", now);
-
-        Assert.Equal("token", state.RefreshToken);
-        Assert.Equal(now, state.LastLoginAtUtc);
-    }
-
-    [Fact]
-    public void UserSecurityState_WithRefreshToken_WithNull_DoesNotUpdateLastLogin() {
-        DateTime loginTime = DateTime.UtcNow;
-        UserSecurityState state = UserSecurityState.CreateInitial("hash")
-            .WithRefreshToken("token", loginTime)
-            .WithRefreshToken(refreshToken: null, DateTime.UtcNow.AddHours(1));
-
-        Assert.Null(state.RefreshToken);
-        Assert.Equal(loginTime, state.LastLoginAtUtc);
     }
 
     [Fact]
@@ -527,13 +505,11 @@ public class AdditionalValueObjectsInvariantTests {
     [Fact]
     public void UserSecurityState_WithoutTransientTokens_ClearsAllTransientState() {
         UserSecurityState state = UserSecurityState.CreateInitial("hash")
-            .WithRefreshToken("refresh", DateTime.UtcNow)
             .WithEmailConfirmationToken("confirm", DateTime.UtcNow.AddHours(1), DateTime.UtcNow)
             .WithPasswordResetToken("reset", DateTime.UtcNow.AddHours(1), DateTime.UtcNow)
             .WithoutTransientTokens();
 
         Assert.Multiple(
-            () => Assert.Null(state.RefreshToken),
             () => Assert.Null(state.EmailConfirmationTokenHash),
             () => Assert.Null(state.EmailConfirmationTokenExpiresAtUtc),
             () => Assert.Null(state.EmailConfirmationSentAtUtc),

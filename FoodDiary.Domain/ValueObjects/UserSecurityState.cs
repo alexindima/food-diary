@@ -4,7 +4,6 @@ public readonly record struct UserSecurityState(
     string Password,
     bool HasPassword,
     bool MustChangePassword,
-    string? RefreshToken,
     bool IsEmailConfirmed,
     string? EmailConfirmationTokenHash,
     DateTime? EmailConfirmationTokenExpiresAtUtc,
@@ -18,7 +17,6 @@ public readonly record struct UserSecurityState(
             Password: passwordHash,
             HasPassword: hasPassword,
             MustChangePassword: false,
-            RefreshToken: null,
             IsEmailConfirmed: false,
             EmailConfirmationTokenHash: null,
             EmailConfirmationTokenExpiresAtUtc: null,
@@ -44,13 +42,6 @@ public readonly record struct UserSecurityState(
 
         return this with {
             MustChangePassword = true,
-        };
-    }
-
-    public UserSecurityState WithRefreshToken(string? refreshToken, DateTime nowUtc) {
-        return this with {
-            RefreshToken = refreshToken,
-            LastLoginAtUtc = refreshToken is null ? LastLoginAtUtc : LatestLogin(nowUtc),
         };
     }
 
@@ -95,7 +86,6 @@ public readonly record struct UserSecurityState(
 
     public UserSecurityState WithoutTransientTokens() {
         return this with {
-            RefreshToken = null,
             EmailConfirmationTokenHash = null,
             EmailConfirmationTokenExpiresAtUtc = null,
             EmailConfirmationSentAtUtc = null,

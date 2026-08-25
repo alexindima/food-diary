@@ -19,8 +19,9 @@ $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $snapshotRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/scheduler/metrics'
 $now = $AsOfUtc.ToUniversalTime()
-$policyResult = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -Format Json | ConvertFrom-Json
-$policyFingerprint = [string]$policyResult.fingerprint
+$policySnapshot = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -WithFingerprint -Format Json | ConvertFrom-Json
+$policyResult = $policySnapshot.policy
+$policyFingerprint = [string]$policySnapshot.fingerprint
 
 function Get-Hash([object]$Value) {
     $json = $Value | ConvertTo-Json -Depth 20 -Compress

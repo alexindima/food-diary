@@ -240,6 +240,59 @@ public class WeeklyCheckInFeatureTests {
     }
 
     [Fact]
+    public async Task GetWeeklyCheckIn_WithMinimumMonday_ReturnsValidationFailureWithoutReadingSummaries() {
+        var userId = UserId.New();
+        var user = User.Create("weekly-minimum-date@example.com", "hashed");
+        typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
+        IDashboardStatisticsReadService statisticsReadService = CreateStatisticsReadService();
+        GetWeeklyCheckInQueryHandler handler = CreateHandler(
+            statisticsReadService: statisticsReadService,
+            profileService: CreateProfileService(user));
+
+        Result<WeeklyCheckInModel> result = await handler.Handle(
+            new GetWeeklyCheckInQuery(userId.Value, DateOnly.MinValue),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        await statisticsReadService.DidNotReceiveWithAnyArgs().GetStatisticsAsync(
+            default,
+            default,
+            default,
+            default,
+            default);
+    }
+
+    [Fact]
+    public async Task GetWeeklyCheckIn_WithEarliestSupportedMonday_LoadsBothWeeks() {
+        var userId = UserId.New();
+        var user = User.Create("weekly-earliest-date@example.com", "hashed");
+        typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
+        IDashboardStatisticsReadService statisticsReadService = CreateStatisticsReadService();
+        GetWeeklyCheckInQueryHandler handler = CreateHandler(
+            statisticsReadService: statisticsReadService,
+            profileService: CreateProfileService(user));
+        var earliestSupportedMonday = new DateOnly(1, 1, 8);
+
+        Result<WeeklyCheckInModel> result = await handler.Handle(
+            new GetWeeklyCheckInQuery(userId.Value, earliestSupportedMonday),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        await statisticsReadService.Received(1).GetStatisticsAsync(
+            userId,
+            new DateTime(1, 1, 8, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(1, 1, 14, 0, 0, 0, DateTimeKind.Utc),
+            1,
+            Arg.Any<CancellationToken>());
+        await statisticsReadService.Received(1).GetStatisticsAsync(
+            userId,
+            new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(1, 1, 7, 0, 0, 0, DateTimeKind.Utc),
+            1,
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task WeeklyCheckInUserProfileService_WithAccessibleUser_ReturnsDailyCalorieTarget() {
         var user = User.Create("weekly-profile@example.com", "hashed");
         user.UpdateGoals(dailyCalorieTarget: 2200);

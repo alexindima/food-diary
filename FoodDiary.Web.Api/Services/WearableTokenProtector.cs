@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using Microsoft.AspNetCore.DataProtection;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Web.Api.Services;
 
@@ -8,11 +9,10 @@ public sealed class WearableTokenProtector(IDataProtectionProvider dataProtectio
     private const string ProtectedPrefix = "fdp1:";
     private readonly IDataProtector _protector = dataProtectionProvider.CreateProtector(Purpose);
 
-    public bool IsProtected(string token) => token.StartsWith(ProtectedPrefix, StringComparison.Ordinal);
+    public ProtectedWearableToken Protect(string token) =>
+        ProtectedWearableToken.FromProtectedValue(ProtectedPrefix + _protector.Protect(token));
 
-    public string Protect(string token) => IsProtected(token) ? token : ProtectedPrefix + _protector.Protect(token);
-
-    public string Unprotect(string protectedToken) => IsProtected(protectedToken)
-        ? _protector.Unprotect(protectedToken[ProtectedPrefix.Length..])
-        : protectedToken;
+    public string Unprotect(ProtectedWearableToken protectedToken) => protectedToken.IsProtected
+        ? _protector.Unprotect(protectedToken.Value[ProtectedPrefix.Length..])
+        : protectedToken.Value;
 }

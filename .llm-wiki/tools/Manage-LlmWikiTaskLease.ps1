@@ -57,7 +57,7 @@ function Write-Registry([object]$Registry) {
     }
 }
 function Get-LeaseView([object]$Lease) {
-    $expires = [DateTime]::Parse([string]$Lease.expiresAtUtc).ToUniversalTime()
+    $expires = ([DateTimeOffset]$Lease.expiresAtUtc).UtcDateTime
     [pscustomobject][ordered]@{
         leaseId = [string]$Lease.leaseId
         workspace = [string]$Lease.workspace
@@ -87,8 +87,8 @@ if ($mutating) {
 try {
     $registry = Read-Registry
     $allLeases = @($registry.leases)
-    $activeLeases = @($allLeases | Where-Object { [DateTime]::Parse([string]$_.expiresAtUtc).ToUniversalTime() -gt $now })
-    $expiredLeases = @($allLeases | Where-Object { [DateTime]::Parse([string]$_.expiresAtUtc).ToUniversalTime() -le $now })
+    $activeLeases = @($allLeases | Where-Object { ([DateTimeOffset]$_.expiresAtUtc).UtcDateTime -gt $now })
+    $expiredLeases = @($allLeases | Where-Object { ([DateTimeOffset]$_.expiresAtUtc).UtcDateTime -le $now })
     $changed = $false
     $selectedLease = $null
     if ($Action -eq 'acquire') {

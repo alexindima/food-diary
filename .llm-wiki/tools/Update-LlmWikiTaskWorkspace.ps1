@@ -87,7 +87,8 @@ $artifactNames = [ordered]@{
 }
 $unsafeIssues = [System.Collections.Generic.List[string]]::new()
 foreach ($artifact in $artifactNames.GetEnumerator()) {
-    $actual = [string]$descriptor.artifacts.($artifact.Key)
+    $artifactProperty = if ($null -eq $descriptor.artifacts) { $null } else { $descriptor.artifacts.PSObject.Properties[[string]$artifact.Key] }
+    $actual = if ($null -eq $artifactProperty) { '' } else { [string]$artifactProperty.Value }
     $expected = "$normalizedWorkspacePath/$($artifact.Value)"
     if (-not [string]::IsNullOrWhiteSpace($actual) -and $actual -cne $expected) {
         $unsafeIssues.Add("Descriptor path for '$($artifact.Key)' is non-canonical: '$actual'.")
@@ -192,7 +193,11 @@ if ($sourceVersion -eq $latestVersion -and -not $needsBasePin -and -not $needsAc
             }
         }
 
-        $migrations = @($descriptor.migrations)
+        $migrationsProperty = $descriptor.PSObject.Properties['migrations']
+        $migrations = @()
+        if ($null -ne $migrationsProperty -and $null -ne $migrationsProperty.Value) {
+            $migrations = @($migrationsProperty.Value)
+        }
         $currentVersion = $sourceVersion
         if ($currentVersion -lt 2) {
             $migrations += [pscustomobject][ordered]@{

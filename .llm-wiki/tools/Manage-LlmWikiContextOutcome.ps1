@@ -14,7 +14,11 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
-$registryPath = Join-Path $wikiRoot 'knowledge/context-strategy-outcomes.json'
+$registryPath = if (-not [string]::IsNullOrWhiteSpace([string]$env:LLM_WIKI_CONTEXT_OUTCOME_REGISTRY_PATH)) {
+    [IO.Path]::GetFullPath([string]$env:LLM_WIKI_CONTEXT_OUTCOME_REGISTRY_PATH)
+} else {
+    Join-Path $wikiRoot 'knowledge/context-strategy-outcomes.json'
+}
 $policyPath = Join-Path $wikiRoot 'policies/workspace-policies.json'
 $policy = Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json
 $outcomePolicy = $policy.scheduler.contextBundles.strategyOutcomes
@@ -278,7 +282,8 @@ if ($Action -eq 'observe') {
         $completion = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'completion.json') -Raw | ConvertFrom-Json
         $retrospectiveValidation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRetrospective.ps1') verify -WorkspacePath $workspace -Format Json | ConvertFrom-Json
         if (-not $retrospectiveValidation.valid) { throw "Task retrospective is invalid: $(@($retrospectiveValidation.issues) -join ' ')" }
-        if ([string]$completion.completionFingerprint -in @($registry.events.completionFingerprint)) {
+        $observedCompletionFingerprints = @($registry.events | ForEach-Object { [string]$_.completionFingerprint })
+        if ([string]$completion.completionFingerprint -in $observedCompletionFingerprints) {
             $result = [pscustomobject][ordered]@{ action = 'observe'; valid = $true; addedCount = 0; eventHash = ''; reason = 'Completion outcome was already observed.' }
         } else {
             $strategy = $strategyValidation.strategy
@@ -340,10 +345,14 @@ if ($Action -eq 'observe') {
     $result = [pscustomobject][ordered]@{ action = 'metrics'; valid = $validation.valid; issues = @($validation.issues); metrics = Get-Metrics $registry $validation }
 } elseif ($Action -eq 'health') {
     $metrics = Get-Metrics $registry $validation
+    $eligibleProfileCount = @($metrics.profiles | Where-Object health -ne 'insufficient-data').Count
     $result = [pscustomobject][ordered]@{
         action = 'health'
         valid = $validation.valid
         issues = @($validation.issues)
+        health = $(if (-not $validation.valid) { 'invalid' } elseif ([int]$metrics.validEventCount -eq 0 -or $eligibleProfileCount -eq 0) { 'insufficient-data' } elseif (([int]$metrics.degradedProfileCount + [int]$metrics.degradedCohortProfileCount) -gt 0) { 'degraded' } else { 'healthy' })
+        sampleCount = [int]$metrics.validEventCount
+        minimumSamples = [int]$metrics.minimumSamples
         degradedProfileCount = [int]$metrics.degradedProfileCount
         degradedCohortProfileCount = [int]$metrics.degradedCohortProfileCount
         rollbackRecommended = ([int]$metrics.degradedProfileCount + [int]$metrics.degradedCohortProfileCount) -gt 0

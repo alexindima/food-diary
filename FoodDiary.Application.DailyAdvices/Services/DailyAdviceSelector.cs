@@ -32,7 +32,7 @@ internal static class DailyAdviceSelector {
         int todayIndex = GetWeightedIndex(ordered, targetDate, normalizedLocale);
         DailyAdvice selected = ordered[todayIndex];
 
-        if (ordered.Count <= 1) {
+        if (ordered.Count <= 1 || targetDate == DateTime.MinValue) {
             return selected;
         }
 
@@ -68,7 +68,7 @@ internal static class DailyAdviceSelector {
         int todayIndex = GetReadModelWeightedIndex(ordered, targetDate, normalizedLocale);
         DailyAdviceReadModel selected = ordered[todayIndex];
 
-        if (ordered.Count <= 1) {
+        if (ordered.Count <= 1 || targetDate == DateTime.MinValue) {
             return selected;
         }
 

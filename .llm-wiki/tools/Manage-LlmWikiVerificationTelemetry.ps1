@@ -77,6 +77,20 @@ function Write-Registry([object]$Registry) {
         if (Test-Path -LiteralPath $temporaryPath) { Remove-Item -LiteralPath $temporaryPath -Force }
     }
 }
+function Enter-RegistryLock {
+    $parent = Split-Path -Parent $registryPath
+    $null = New-Item -ItemType Directory -Path $parent -Force
+    $lockPath = "$registryPath.lock"
+    $deadline = [DateTime]::UtcNow.AddSeconds(15)
+    while ($true) {
+        try {
+            return [IO.File]::Open($lockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+        } catch [IO.IOException] {
+            if ([DateTime]::UtcNow -ge $deadline) { throw "Timed out waiting for verification telemetry registry lock: $lockPath" }
+            Start-Sleep -Milliseconds 25
+        }
+    }
+}
 function Test-Registry([object]$Registry) {
     $issues = [Collections.Generic.List[string]]::new()
     if ($Registry.schemaVersion -ne 1) { $issues.Add('schemaVersion must be 1.') }
@@ -126,6 +140,8 @@ function Get-Metrics([object[]]$Events) {
     } | Sort-Object checkId)
 }
 
+$registryLock = if ($Action -eq 'record') { Enter-RegistryLock } else { $null }
+try {
 $registry = Read-Registry
 $validation = Test-Registry $registry
 if ($Action -eq 'verify') {
@@ -133,21 +149,24 @@ if ($Action -eq 'verify') {
 } elseif (-not $validation.valid) {
     throw "Verification telemetry registry is invalid: $(@($validation.issues) -join ' ')"
 } elseif ($Action -eq 'record') {
-    if ([string]::IsNullOrWhiteSpace($WorkspacePath) -or [string]::IsNullOrWhiteSpace($CheckId) -or
-        [string]::IsNullOrWhiteSpace($Status) -or $DurationSeconds -lt 0) { throw 'record requires WorkspacePath, CheckId, Status, and non-negative DurationSeconds.' }
+    if ([string]::IsNullOrWhiteSpace($CheckId) -or
+        [string]::IsNullOrWhiteSpace($Status) -or $DurationSeconds -lt 0) { throw 'record requires CheckId, Status, and non-negative DurationSeconds; WorkspacePath defaults to @wiki.' }
     if (@($registry.events).Count -ge [int]$telemetryPolicy.retentionCount) {
         throw 'Verification telemetry retention limit is reached; archive history before recording more events.'
     }
-    $workspace = $WorkspacePath.Replace('\', '/').TrimEnd('/')
-    if ([IO.Path]::IsPathRooted($WorkspacePath) -or $workspace -notmatch '^\.artifacts/llm-wiki/tasks/[^/]+$') { throw 'WorkspacePath must identify one task workspace.' }
-    $packetPath = Join-Path (Join-Path $repositoryRoot $workspace) 'change-packet.json'
-    if (-not (Test-Path -LiteralPath $packetPath -PathType Leaf)) { throw "Change packet is absent: $workspace/change-packet.json" }
-    $packet = Get-Content -LiteralPath $packetPath -Raw | ConvertFrom-Json
+    $workspace = if ([string]::IsNullOrWhiteSpace($WorkspacePath) -or $WorkspacePath -eq '@wiki') { '@wiki' } else { $WorkspacePath.Replace('\', '/').TrimEnd('/') }
+    if ($workspace -ne '@wiki' -and ([IO.Path]::IsPathRooted($WorkspacePath) -or $workspace -notmatch '^\.artifacts/llm-wiki/tasks/[^/]+$')) { throw 'WorkspacePath must identify one task workspace or use @wiki for a repository-level check.' }
+    $packetFingerprint = ''
+    if ($workspace -ne '@wiki') {
+        $packetPath = Join-Path (Join-Path $repositoryRoot $workspace) 'change-packet.json'
+        if (-not (Test-Path -LiteralPath $packetPath -PathType Leaf)) { throw "Change packet is absent: $workspace/change-packet.json" }
+        $packetFingerprint = [string](Get-Content -LiteralPath $packetPath -Raw | ConvertFrom-Json).fingerprint
+    }
     $previousHash = if (@($registry.events).Count -eq 0) { '' } else { [string]$registry.events[-1].eventHash }
     $event = [pscustomobject][ordered]@{
         schemaVersion = 1; sequence = @($registry.events).Count + 1; id = [guid]::NewGuid().ToString('N')
         recordedAtUtc = $AsOfUtc.ToUniversalTime().ToString('o'); workspace = $workspace
-        packetFingerprint = [string]$packet.fingerprint; checkId = $CheckId; status = $Status
+        packetFingerprint = $packetFingerprint; checkId = $CheckId; status = $Status
         durationSeconds = [Math]::Round($DurationSeconds, 2)
         commandHash = $(if ([string]::IsNullOrWhiteSpace($Command)) { '' } else { Get-Hash $Command })
         policyFingerprint = (Get-FileHash -LiteralPath $policyPath -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -161,10 +180,20 @@ if ($Action -eq 'verify') {
     $events = @($registry.events | Where-Object { [string]::IsNullOrWhiteSpace($CheckId) -or $_.checkId -eq $CheckId })
     if ($Action -eq 'metrics') {
         $metrics = @(Get-Metrics $events)
-        $result = [pscustomobject][ordered]@{ action = 'metrics'; valid = $true; totalCount = $events.Count; flakyCount = @($metrics | Where-Object flaky).Count; registryHash = $registry.registryHash; metrics = $metrics; issues = @() }
+        $failureCount = @($events | Where-Object status -eq 'failed').Count
+        $result = [pscustomobject][ordered]@{
+            action = 'metrics'; valid = $true; totalCount = $events.Count; flakyCount = @($metrics | Where-Object flaky).Count
+            passedCount = $events.Count - $failureCount; failedCount = $failureCount
+            successRatePercent = $(if ($events.Count -eq 0) { $null } else { [Math]::Round(100.0 * ($events.Count - $failureCount) / $events.Count, 2) })
+            health = $(if ($events.Count -eq 0) { 'insufficient-data' } elseif ($failureCount -gt 0) { 'attention' } else { 'healthy' })
+            registryHash = $registry.registryHash; metrics = $metrics; issues = @()
+        }
     } else {
         $result = [pscustomobject][ordered]@{ action = 'list'; valid = $true; totalCount = $events.Count; registryHash = $registry.registryHash; events = $events; issues = @() }
     }
+}
+} finally {
+    if ($registryLock) { $registryLock.Dispose() }
 }
 
 $result | Add-Member -NotePropertyName registryPath -NotePropertyValue $registryPath

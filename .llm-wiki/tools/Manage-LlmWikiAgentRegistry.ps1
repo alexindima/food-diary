@@ -49,8 +49,8 @@ function Write-Registry([object]$Registry) {
     }
 }
 function Get-AgentView([object]$Agent, [object[]]$ActiveLeases) {
-    $expires = [DateTime]::Parse([string]$Agent.expiresAtUtc).ToUniversalTime()
-    $quarantineUntil = if ($null -ne $Agent.PSObject.Properties['quarantineUntilUtc'] -and -not [string]::IsNullOrWhiteSpace([string]$Agent.quarantineUntilUtc)) { [DateTime]::Parse([string]$Agent.quarantineUntilUtc).ToUniversalTime() } else { [DateTime]::MinValue }
+    $expires = ([DateTimeOffset]$Agent.expiresAtUtc).UtcDateTime
+    $quarantineUntil = if ($null -ne $Agent.PSObject.Properties['quarantineUntilUtc'] -and -not [string]::IsNullOrWhiteSpace([string]$Agent.quarantineUntilUtc)) { ([DateTimeOffset]$Agent.quarantineUntilUtc).UtcDateTime } else { [DateTime]::MinValue }
     $quarantined = $quarantineUntil -gt $now
     $registered = $expires -gt $now
     $activeLeaseCount = @($ActiveLeases | Where-Object owner -eq $Agent.owner).Count
@@ -89,8 +89,8 @@ if ($mutating) {
 try {
     $registry = Read-Registry
     $allAgents = @($registry.agents)
-    $activeAgents = @($allAgents | Where-Object { [DateTime]::Parse([string]$_.expiresAtUtc).ToUniversalTime() -gt $now })
-    $expiredAgents = @($allAgents | Where-Object { [DateTime]::Parse([string]$_.expiresAtUtc).ToUniversalTime() -le $now })
+    $activeAgents = @($allAgents | Where-Object { ([DateTimeOffset]$_.expiresAtUtc).UtcDateTime -gt $now })
+    $expiredAgents = @($allAgents | Where-Object { ([DateTimeOffset]$_.expiresAtUtc).UtcDateTime -le $now })
     $selectedAgent = $null
     $changed = $false
     if ($Action -eq 'register') {

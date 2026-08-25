@@ -20,7 +20,9 @@ $schedulerRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/scheduler'
 $dispatchRoot = Join-Path $schedulerRoot 'dispatches'
 $watchdogRoot = Join-Path $schedulerRoot 'watchdog'
 $lockPath = Join-Path $schedulerRoot '.watchdog-lock'
-$policy = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -Format Json | ConvertFrom-Json
+$policySnapshot = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -WithFingerprint -Format Json | ConvertFrom-Json
+$policy = $policySnapshot.policy
+$policyFingerprint = [string]$policySnapshot.fingerprint
 $watchdogPolicy = $policy.scheduler.watchdog
 $now = $AsOfUtc.ToUniversalTime()
 $effectiveSilentMinutes = if ($null -ne $SilentMinutes) { [int]$SilentMinutes } else { [int]$watchdogPolicy.silentDispatchMinutes }
@@ -78,7 +80,7 @@ function Write-Receipt([object]$Receipt) {
     ".artifacts/llm-wiki/scheduler/watchdog/$fileName"
 }
 function Convert-ToUtc([object]$Value) {
-    [DateTime]::Parse([string]$Value).ToUniversalTime()
+    ([DateTimeOffset]$Value).UtcDateTime
 }
 
 $mutating = $Action -in @('run', 'prune')
@@ -197,7 +199,7 @@ try {
             watchdogId = $watchdogIdValue
             inspectedAtUtc = $now.ToString('o')
             apply = [bool]$Apply
-            policyFingerprint = [string]$policy.fingerprint
+            policyFingerprint = $policyFingerprint
             thresholds = [pscustomobject][ordered]@{
                 silentDispatchMinutes = $effectiveSilentMinutes
                 retryWindowMinutes = [int]$watchdogPolicy.retryWindowMinutes

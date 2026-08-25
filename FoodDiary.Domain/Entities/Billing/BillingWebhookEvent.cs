@@ -46,8 +46,8 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
             ExternalObjectId = NormalizeOptional(externalObjectId, ExternalObjectIdMaxLength, nameof(externalObjectId)),
             Status = ReceivedStatus,
             ReceivedAtUtc = normalizedReceivedAtUtc,
-            PayloadJson = DomainGuard.OptionalJson(payloadJson, nameof(payloadJson)),
-            ParsedEventJson = DomainGuard.OptionalJson(parsedEventJson, nameof(parsedEventJson)),
+            PayloadJson = DomainGuard.OptionalJson(payloadJson, DomainConstants.JsonMaxLength, nameof(payloadJson)),
+            ParsedEventJson = DomainGuard.OptionalJson(parsedEventJson, DomainConstants.JsonMaxLength, nameof(parsedEventJson)),
         };
         webhookEvent.SetCreated(normalizedReceivedAtUtc);
         return webhookEvent;
@@ -69,7 +69,7 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
             Status = ProcessedStatus,
             ReceivedAtUtc = NormalizeRequiredUtc(processedAtUtc, nameof(processedAtUtc)),
             ProcessedAtUtc = NormalizeRequiredUtc(processedAtUtc, nameof(processedAtUtc)),
-            PayloadJson = DomainGuard.OptionalJson(payloadJson, nameof(payloadJson)),
+            PayloadJson = DomainGuard.OptionalJson(payloadJson, DomainConstants.JsonMaxLength, nameof(payloadJson)),
         };
         webhookEvent.SetCreated(webhookEvent.ReceivedAtUtc);
         return webhookEvent;

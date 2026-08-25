@@ -35,12 +35,16 @@ foreach ($canonicalCheck in @($policy.requiredChecks)) {
     $canonicalChecks[[string]$canonicalCheck.id] = [string]$canonicalCheck.command
 }
 
+$requestedCheckIds = @()
+if ($null -ne $CheckId) {
+    $requestedCheckIds = @($CheckId | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
+}
 $selectedChecks = @($evidence.checks | Where-Object {
-    ($CheckId.Count -eq 0 -or $_.id -in $CheckId) -and
+    ($requestedCheckIds.Count -eq 0 -or $_.id -in $requestedCheckIds) -and
     ($IncludePassed -or $_.status -notin @('passed', 'passed-with-known-baseline-failures', 'not-applicable'))
 })
-if ($CheckId.Count -gt 0) {
-    $unknownIds = @($CheckId | Where-Object { $_ -notin @($evidence.checks.id) })
+if ($requestedCheckIds.Count -gt 0) {
+    $unknownIds = @($requestedCheckIds | Where-Object { $_ -notin @($evidence.checks.id) })
     if ($unknownIds.Count -gt 0) { throw "Unknown evidence check(s): $($unknownIds -join ', ')" }
 }
 

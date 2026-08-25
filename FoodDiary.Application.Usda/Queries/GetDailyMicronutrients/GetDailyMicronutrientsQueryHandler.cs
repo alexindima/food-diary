@@ -22,11 +22,9 @@ public sealed class GetDailyMicronutrientsQueryHandler(
             return CurrentUserAccessResolver.ToFailure<DailyMicronutrientSummaryModel>(userIdResult);
         }
 
-        DailyMicronutrientSummaryModel summary = await dailyMicronutrientReadService.GetDailySummaryAsync(
+        return await dailyMicronutrientReadService.GetDailySummaryAsync(
             userIdResult.Value,
             query.Date,
             cancellationToken).ConfigureAwait(false);
-
-        return Result.Success(summary);
     }
 }

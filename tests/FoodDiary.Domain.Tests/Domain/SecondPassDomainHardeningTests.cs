@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Achievements;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Dietologist;
@@ -96,31 +97,31 @@ public sealed class SecondPassDomainHardeningTests {
     public void StorageBoundValues_AreValidatedAndUtcNormalized() {
         var localExpiry = DateTime.SpecifyKind(DateTime.Now.AddHours(1), DateTimeKind.Local);
         var wearable = WearableConnection.Create(
-            UserId.New(), WearableProvider.Fitbit, " external ", " access ", " refresh ", localExpiry);
+            UserId.New(), WearableProvider.Fitbit, " external ", ProtectedToken("access"), ProtectedToken("refresh"), localExpiry);
 
         Assert.Multiple(
             () => Assert.Equal("external", wearable.ExternalUserId),
-            () => Assert.Equal("access", wearable.AccessToken),
+            () => Assert.Equal("fdp1:access", wearable.AccessToken.Value),
             () => Assert.Equal(DateTimeKind.Utc, wearable.TokenExpiresAtUtc!.Value.Kind));
         Assert.Throws<ArgumentOutOfRangeException>(() => WearableConnection.Create(
             userId: UserId.New(),
             provider: WearableProvider.Fitbit,
             externalUserId: new string('x', 257),
-            accessToken: "access",
+            accessToken: ProtectedToken("access"),
             refreshToken: null,
             tokenExpiresAtUtc: null));
         Assert.Throws<ArgumentOutOfRangeException>(() => WearableConnection.Create(
             userId: UserId.New(),
             provider: WearableProvider.Fitbit,
             externalUserId: "external",
-            accessToken: new string('x', 8193),
+            accessToken: ProtectedWearableToken.FromProtectedValue("fdp1:" + new string('x', 8188)),
             refreshToken: null,
             tokenExpiresAtUtc: null));
         Assert.Throws<ArgumentOutOfRangeException>(() => WearableConnection.Create(
             userId: UserId.New(),
             provider: WearableProvider.Fitbit,
             externalUserId: "external",
-            accessToken: "access",
+            accessToken: ProtectedToken("access"),
             refreshToken: null,
             tokenExpiresAtUtc: new DateTime(year: 2026, month: 1, day: 1)));
 
@@ -136,6 +137,9 @@ public sealed class SecondPassDomainHardeningTests {
         Assert.Equal(ReportStatus.Pending, report.Status);
     }
 
+    private static ProtectedWearableToken ProtectedToken(string value) =>
+        ProtectedWearableToken.FromProtectedValue($"fdp1:{value}");
+
     [Fact]
     public void JsonBackedValues_RejectInvalidJson() {
         var user = User.Create("json@example.com", "hash");
@@ -150,6 +154,34 @@ public sealed class SecondPassDomainHardeningTests {
             "{invalid",
             "{}"));
         Assert.Throws<ArgumentException>(() => CreatePayment(providerMetadataJson: "{invalid"));
+    }
+
+    [Fact]
+    public void JsonBackedValues_RejectValidJsonAboveDomainLimit() {
+        string oversizedJson = $"\"{new string('x', DomainConstants.JsonMaxLength)}\"";
+        var user = User.Create("json-size@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: oversizedJson)));
+        Assert.Throws<ArgumentOutOfRangeException>(() => BillingWebhookEvent.CreateReceived(
+            BillingProviderNames.Stripe,
+            "event",
+            "payment",
+            externalObjectId: null,
+            DateTime.UtcNow,
+            oversizedJson,
+            "{}"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreatePayment(providerMetadataJson: oversizedJson));
+    }
+
+    [Fact]
+    public void JsonBackedValues_CountLeadingWhitespaceTowardDomainLimit() {
+        string oversizedJson = new string(' ', DomainConstants.JsonMaxLength) + "{}";
+        var user = User.Create("json-whitespace@example.com", "hash");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: oversizedJson)));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreatePayment(providerMetadataJson: oversizedJson));
     }
 
     [Fact]

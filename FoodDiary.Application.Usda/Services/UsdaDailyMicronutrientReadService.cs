@@ -5,20 +5,30 @@ using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Usda.Mappings;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Results;
 
 namespace FoodDiary.Application.Usda.Services;
 
 public sealed class UsdaDailyMicronutrientReadService(
     IMealProductNutritionReadService mealProductNutritionReadService,
     IUsdaFoodReadModelRepository usdaFoodRepository) : IUsdaDailyMicronutrientReadService {
-    public async Task<DailyMicronutrientSummaryModel> GetDailySummaryAsync(
+    public const int MaximumProductItemsPerDay = 1000;
+
+    public async Task<Result<DailyMicronutrientSummaryModel>> GetDailySummaryAsync(
         UserId userId,
         DateTime date,
         CancellationToken cancellationToken) {
         IReadOnlyList<MealProductNutritionReadModel> productItems = await mealProductNutritionReadService.GetForDateAsync(
             userId,
             date,
+            MaximumProductItemsPerDay + 1,
             cancellationToken).ConfigureAwait(false);
+
+        if (productItems.Count > MaximumProductItemsPerDay) {
+            return Result.Failure<DailyMicronutrientSummaryModel>(
+                Errors.Usda.DailyMicronutrientItemLimitExceeded(MaximumProductItemsPerDay));
+        }
 
         var linkedItems = productItems
             .Where(static item => item.UsdaFdcId.HasValue)
@@ -28,7 +38,7 @@ public sealed class UsdaDailyMicronutrientReadService(
         int linkedProductCount = linkedItems.Count;
 
         if (linkedItems.Count == 0) {
-            return new DailyMicronutrientSummaryModel(date, 0, totalProductCount, [], HealthScores: null);
+            return Result.Success(new DailyMicronutrientSummaryModel(date, 0, totalProductCount, [], HealthScores: null));
         }
 
         var fdcIds = linkedItems
@@ -49,12 +59,12 @@ public sealed class UsdaDailyMicronutrientReadService(
         var dvAmounts = dailyValues.ToDictionary(static kvp => kvp.Key, static kvp => kvp.Value.Value);
         var healthScores = HealthAreaScores.Calculate(nutrientAmounts, dvAmounts);
 
-        return new DailyMicronutrientSummaryModel(
+        return Result.Success(new DailyMicronutrientSummaryModel(
             date,
             linkedProductCount,
             totalProductCount,
             nutrientModels,
-            healthScores.ToModel());
+            healthScores.ToModel()));
     }
 
     private static Dictionary<int, AggregatedNutrient> AggregateNutrients(

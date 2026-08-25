@@ -272,7 +272,8 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
         IReadOnlyList<MealProductNutritionReadModel> items = await repository.GetProductNutritionReadModelsAsync(
             user.Id,
-            new DateTime(2026, 5, 2, 23, 30, 0, DateTimeKind.Utc));
+            new DateTime(2026, 5, 2, 23, 30, 0, DateTimeKind.Utc),
+            limit: 10);
 
         Assert.Collection(
             items.OrderBy(item => item.Amount),
@@ -286,6 +287,13 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
                 Assert.Equal(100, unlinkedItem.ProductBaseAmount);
                 Assert.Null(unlinkedItem.UsdaFdcId);
             });
+
+        IReadOnlyList<MealProductNutritionReadModel> limitedItems = await repository.GetProductNutritionReadModelsAsync(
+            user.Id,
+            new DateTime(2026, 5, 2, 23, 30, 0, DateTimeKind.Utc),
+            limit: 1);
+
+        Assert.Single(limitedItems);
     }
 
     [RequiresDockerFact]

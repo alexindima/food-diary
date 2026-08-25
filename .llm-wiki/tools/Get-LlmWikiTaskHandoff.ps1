@@ -23,6 +23,12 @@ function ConvertTo-MarkdownText([object]$Value) {
     if ($null -eq $Value) { return '' }
     return ([string]$Value).Replace("`r", ' ').Replace("`n", ' ').Replace('|', '\|')
 }
+function Get-PropertyValue([object]$Object, [string]$Name) {
+    if ($null -eq $Object) { return $null }
+    $property = $Object.PSObject.Properties[$Name]
+    if ($null -eq $property) { return $null }
+    return $property.Value
+}
 
 if ([System.IO.Path]::IsPathRooted($WorkspacePath)) { throw 'WorkspacePath must be repository-relative.' }
 $normalizedWorkspacePath = $WorkspacePath.Replace('\', '/').TrimEnd('/')
@@ -63,19 +69,19 @@ $changedPaths = @($packet.diff.changedPaths)
 $includedPaths = @($changedPaths | Select-Object -First $Limit)
 $checks = @($evidence.checks | ForEach-Object {
     [pscustomobject][ordered]@{
-        id = $_.id
-        status = $_.status
-        command = $_.command
-        logPath = $_.logPath
-        reason = $_.reason
+        id = Get-PropertyValue $_ 'id'
+        status = Get-PropertyValue $_ 'status'
+        command = Get-PropertyValue $_ 'command'
+        logPath = Get-PropertyValue $_ 'logPath'
+        reason = Get-PropertyValue $_ 'reason'
     }
 })
 $reviews = @($evidence.reviews | ForEach-Object {
     [pscustomobject][ordered]@{
-        id = $_.id
-        status = $_.status
-        description = $_.description
-        reason = $_.reason
+        id = Get-PropertyValue $_ 'id'
+        status = Get-PropertyValue $_ 'status'
+        description = Get-PropertyValue $_ 'description'
+        reason = Get-PropertyValue $_ 'reason'
     }
 })
 $criteria = @($acceptance.criteria | ForEach-Object {
@@ -87,7 +93,7 @@ $criteria = @($acceptance.criteria | ForEach-Object {
         checkIds = @($_.mapping.checkIds)
         reviewIds = @($_.mapping.reviewIds)
         testPaths = @($_.mapping.testPaths)
-        evidenceNote = $_.evidenceNote
+        evidenceNote = Get-PropertyValue $_ 'evidenceNote'
     }
 })
 $sealed = Test-Path -LiteralPath (Join-Path $absoluteWorkspacePath 'completion.json') -PathType Leaf
@@ -325,13 +331,14 @@ if ($sourceAnchors.Count -eq 0) {
         [pscustomobject][ordered]@{ path = [string]$_; line = $null; anchorStatus = 'path'; kind = 'changed-path'; reasons = @('Changed path in the current task packet.') }
     })
 }
+$descriptorDecomposition = Get-PropertyValue $descriptor 'decomposition'
 $handoff = [pscustomobject][ordered]@{
     schemaVersion = 1
     generatedAtUtc = [DateTime]::UtcNow.ToString('o')
     workspace = $normalizedWorkspacePath
-    objective = $descriptor.objective
-    state = $(if ($sealed) { 'sealed' } elseif ($null -ne $descriptor.decomposition -and [string]$descriptor.decomposition.state -eq 'applied') { 'decomposed' } else { 'in-progress' })
-    decomposition = $(if ($null -ne $descriptor.decomposition) { $descriptor.decomposition } else { $null })
+    objective = Get-PropertyValue $descriptor 'objective'
+    state = $(if ($sealed) { 'sealed' } elseif ($null -ne $descriptorDecomposition -and [string]$descriptorDecomposition.state -eq 'applied') { 'decomposed' } else { 'in-progress' })
+    decomposition = $descriptorDecomposition
     readiness = [pscustomobject][ordered]@{
         verdict = $status.verdict
         score = $status.score

@@ -20,7 +20,9 @@ $schedulerRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/scheduler'
 $planRoot = Join-Path $schedulerRoot 'decompositions'
 $applicationRoot = Join-Path $schedulerRoot 'decomposition-applications'
 $lockPath = Join-Path $schedulerRoot '.decomposition-lock'
-$policy = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -Format Json | ConvertFrom-Json
+$policySnapshot = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -WithFingerprint -Format Json | ConvertFrom-Json
+$policy = $policySnapshot.policy
+$policyFingerprint = [string]$policySnapshot.fingerprint
 $decompositionPolicy = $policy.scheduler.decomposition
 $now = $AsOfUtc.ToUniversalTime()
 $effectiveMaxShards = if ($null -ne $MaxShards) { [int]$MaxShards } else { [int]$decompositionPolicy.defaultMaximumShards }
@@ -150,8 +152,10 @@ function Test-Plan([object]$Plan, [switch]$Current) {
             $workspace = Normalize-Workspace ([string]$Plan.parentWorkspace)
             $descriptor = Get-Content -LiteralPath (Join-Path $repositoryRoot "$workspace/workspace.json") -Raw | ConvertFrom-Json
             if ([string]$descriptor.currentPacketFingerprint -cne [string]$Plan.parentPacketFingerprint) { $issues.Add('Parent packet fingerprint changed.') }
-            if ([string]$policy.fingerprint -cne [string]$Plan.policyFingerprint) { $issues.Add('Workspace policy fingerprint changed.') }
-            $applied = $null -ne $descriptor.decomposition -and [string]$descriptor.decomposition.state -eq 'applied' -and [string]$descriptor.decomposition.decompositionId -eq [string]$Plan.decompositionId
+            if ($policyFingerprint -cne [string]$Plan.policyFingerprint) { $issues.Add('Workspace policy fingerprint changed.') }
+            $descriptorDecompositionProperty = $descriptor.PSObject.Properties['decomposition']
+            $descriptorDecomposition = if ($null -ne $descriptorDecompositionProperty) { $descriptorDecompositionProperty.Value } else { $null }
+            $applied = $null -ne $descriptorDecomposition -and [string]$descriptorDecomposition.state -eq 'applied' -and [string]$descriptorDecomposition.decompositionId -eq [string]$Plan.decompositionId
             foreach ($shard in @($Plan.shards)) {
                 $childPath = Join-Path $repositoryRoot ([string]$shard.workspace)
                 if ($applied) {
@@ -236,7 +240,7 @@ try {
             schemaVersion = 1
             decompositionId = [guid]::NewGuid().ToString('N')
             createdAtUtc = $now.ToString('o')
-            policyFingerprint = [string]$policy.fingerprint
+            policyFingerprint = $policyFingerprint
             parentWorkspace = $workspace
             parentPacketFingerprint = [string]$descriptor.currentPacketFingerprint
             parentObjective = [string]$descriptor.objective
@@ -270,7 +274,8 @@ try {
         $validation = Test-Plan $plan -Current
         if (-not $validation.valid) { throw "Decomposition plan is not current: $(@($validation.issues) -join ' ')" }
         $parentBeforeApply = Get-Content -LiteralPath (Join-Path $repositoryRoot "$($plan.parentWorkspace)/workspace.json") -Raw | ConvertFrom-Json
-        if ($null -ne $parentBeforeApply.decomposition -and [string]$parentBeforeApply.decomposition.state -eq 'applied') { throw 'Decomposition plan is already applied.' }
+        $parentDecompositionProperty = $parentBeforeApply.PSObject.Properties['decomposition']
+        if ($null -ne $parentDecompositionProperty -and [string]$parentDecompositionProperty.Value.state -eq 'applied') { throw 'Decomposition plan is already applied.' }
         $parentAbsolute = Join-Path $repositoryRoot ([string]$plan.parentWorkspace)
         $parentDescriptorPath = Join-Path $parentAbsolute 'workspace.json'
         $parentDescriptorRaw = Get-Content -LiteralPath $parentDescriptorPath -Raw
@@ -345,7 +350,10 @@ try {
         foreach ($descriptorFile in @(Get-ChildItem -LiteralPath (Join-Path $repositoryRoot '.artifacts/llm-wiki/tasks') -Filter workspace.json -File -Recurse -ErrorAction SilentlyContinue)) {
             try {
                 $descriptor = Get-Content -LiteralPath $descriptorFile.FullName -Raw | ConvertFrom-Json
-                if ($null -ne $descriptor.decomposition -and -not [string]::IsNullOrWhiteSpace([string]$descriptor.decomposition.decompositionId)) { [void]$protected.Add([string]$descriptor.decomposition.decompositionId) }
+                $decompositionProperty = $descriptor.PSObject.Properties['decomposition']
+                if ($null -ne $decompositionProperty -and -not [string]::IsNullOrWhiteSpace([string]$decompositionProperty.Value.decompositionId)) {
+                    [void]$protected.Add([string]$decompositionProperty.Value.decompositionId)
+                }
             } catch {}
         }
         $candidates = @(Get-PlanFiles | Sort-Object Name -Descending | Select-Object -Skip ([int]$decompositionPolicy.retentionCount) | Where-Object {

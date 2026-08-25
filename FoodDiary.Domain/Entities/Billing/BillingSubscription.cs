@@ -107,7 +107,7 @@ public sealed class BillingSubscription : Entity<Guid> {
         DateTime? normalizedTrialStart = NormalizeOptionalUtc(trialStartUtc, nameof(trialStartUtc));
         DateTime? normalizedTrialEnd = NormalizeOptionalUtc(trialEndUtc, nameof(trialEndUtc));
         EnsureChronologicalRange(normalizedTrialStart, normalizedTrialEnd, nameof(trialStartUtc));
-        string? normalizedMetadata = DomainGuard.OptionalJson(providerMetadataJson, nameof(providerMetadataJson));
+        string? normalizedMetadata = DomainGuard.OptionalJson(providerMetadataJson, DomainConstants.JsonMaxLength, nameof(providerMetadataJson));
         string normalizedWebhookEventId = NormalizeRequired(webhookEventId, ExternalIdMaxLength, nameof(webhookEventId));
         DateTime? normalizedWebhookOccurredAt = NormalizeOptionalUtc(webhookOccurredAtUtc, nameof(webhookOccurredAtUtc));
         DateTime normalizedSyncedAt = NormalizeRequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
@@ -150,7 +150,7 @@ public sealed class BillingSubscription : Entity<Guid> {
         DateTime normalizedNextBillingAttempt = NormalizeRequiredUtc(nextBillingAttemptUtc, nameof(nextBillingAttemptUtc));
         string normalizedEventId = NormalizeRequired(eventId, ExternalIdMaxLength, nameof(eventId));
         DateTime normalizedSyncedAt = NormalizeRequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
-        string? normalizedMetadata = DomainGuard.OptionalJson(providerMetadataJson, nameof(providerMetadataJson));
+        string? normalizedMetadata = DomainGuard.OptionalJson(providerMetadataJson, DomainConstants.JsonMaxLength, nameof(providerMetadataJson));
 
         Status = "past_due";
         NextBillingAttemptUtc = normalizedNextBillingAttempt;
@@ -166,7 +166,7 @@ public sealed class BillingSubscription : Entity<Guid> {
         string? providerMetadataJson = null) {
         DateTime normalizedSyncedAt = NormalizeRequiredUtc(syncedAtUtc, nameof(syncedAtUtc));
         string normalizedEventId = NormalizeRequired(eventId, ExternalIdMaxLength, nameof(eventId));
-        string? normalizedMetadata = DomainGuard.OptionalJson(providerMetadataJson, nameof(providerMetadataJson));
+        string? normalizedMetadata = DomainGuard.OptionalJson(providerMetadataJson, DomainConstants.JsonMaxLength, nameof(providerMetadataJson));
 
         Status = "canceled";
         CancelAtPeriodEnd = false;

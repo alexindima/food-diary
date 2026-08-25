@@ -4,6 +4,7 @@ using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Http.Resilience;
 using Polly;
 
@@ -11,6 +12,8 @@ namespace FoodDiary.Integrations;
 
 public static partial class DependencyInjection {
     private static void AddFoodDataIntegrations(this IServiceCollection services, IConfiguration configuration) {
+        services.TryAddSingleton(TimeProvider.System);
+        services.AddSingleton<UsdaFoodDetailCache>();
         services.AddHttpClient<IUsdaFoodSearchService, UsdaFoodSearchService>(client => client.Timeout = TimeSpan.FromSeconds(15))
             .RemoveAllLoggers();
 

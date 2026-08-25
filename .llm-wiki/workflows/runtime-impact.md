@@ -28,9 +28,9 @@ For matched clients, workers, jobs, and webhooks, review cancellation, timeout,
 retry/backoff, idempotency/replay, duplicate delivery, ordering, partial failure,
 dead-letter/recovery, shutdown behavior, health/readiness, and telemetry.
 
-Task-brief impact selection uses the SQLite projection, but this small standalone
-query intentionally keeps the generated JSON route. The measured Node/SQLite
-process boundary costs more than parsing the 16 KiB source in the current
-PowerShell process. Re-run `Measure-LlmWikiStandaloneIndexRoutes.ps1` after an
-in-process or persistent SQLite reader exists; switch only after exact output
-parity and a non-regressing end-to-end measurement both pass.
+Task-brief impact selection and the standalone command use the exact SQLite
+projection. The generated JSON is only an explicit parity oracle and projection
+source, not an automatic fallback. Runtime accepts the measured fresh-process
+reader-load cost in exchange for one production query mechanism; the loaded
+reader is cached across tool-script scopes. Telemetry separates fresh-process
+p50/p95 from warmed p50/p95 so that tradeoff cannot be hidden by a single average.

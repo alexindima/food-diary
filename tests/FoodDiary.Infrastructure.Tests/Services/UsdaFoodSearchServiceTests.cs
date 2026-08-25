@@ -161,6 +161,19 @@ public sealed class UsdaFoodSearchServiceTests {
     }
 
     [Fact]
+    public async Task GetFoodDetailAsync_WhenNotFoundRepeatedly_UsesNegativeCache() {
+        var handler = new ErrorHttpMessageHandler(HttpStatusCode.NotFound);
+        UsdaFoodSearchService service = CreateService(handler);
+
+        UsdaFoodDetailModel? first = await service.GetFoodDetailAsync(539789);
+        UsdaFoodDetailModel? second = await service.GetFoodDetailAsync(539789);
+
+        Assert.Null(first);
+        Assert.Null(second);
+        Assert.Equal(1, handler.RequestCount);
+    }
+
+    [Fact]
     public async Task GetFoodDetailAsync_WhenApiKeyMissing_ReturnsNullWithoutRequest() {
         var handler = new CountingHttpMessageHandler("""{}""");
         UsdaFoodSearchService service = CreateService(handler, apiKey: "");
@@ -209,6 +222,7 @@ public sealed class UsdaFoodSearchServiceTests {
             Microsoft.Extensions.Options.Options.Create(new UsdaApiOptions {
                 ApiKey = apiKey,
             }),
+            new UsdaFoodDetailCache(TimeProvider.System),
             logger ?? NullLogger<UsdaFoodSearchService>.Instance);
     }
 
@@ -223,9 +237,13 @@ public sealed class UsdaFoodSearchServiceTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class ErrorHttpMessageHandler(HttpStatusCode statusCode) : HttpMessageHandler {
+        public int RequestCount { get; private set; }
+
         protected override Task<HttpResponseMessage> SendAsync(
-            HttpRequestMessage request, CancellationToken cancellationToken) =>
-            Task.FromResult(new HttpResponseMessage(statusCode));
+            HttpRequestMessage request, CancellationToken cancellationToken) {
+            RequestCount++;
+            return Task.FromResult(new HttpResponseMessage(statusCode));
+        }
     }
 
     [ExcludeFromCodeCoverage]

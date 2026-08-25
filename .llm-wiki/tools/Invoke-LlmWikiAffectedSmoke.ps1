@@ -118,6 +118,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         'adaptive-routing' {
             & (Join-Path $toolsRoot 'Test-LlmWikiAdaptiveWorkflow.ps1') -Group Routing
             if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiWorkflowMetrics.ps1')
+            if (-not $?) { exit 1 }
         }
         'adaptive-evals' {
             & (Join-Path $toolsRoot 'Invoke-LlmWikiAdaptiveVerification.ps1') -Scope Evals
@@ -151,6 +153,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiAffectedSmokePlanning.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiObservedStageReceipt.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiConcurrentVerify.ps1')
             if (-not $?) { exit 1 }
         }
         'read-only-guard' {
@@ -208,6 +212,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         'standalone-index-migration' {
             & (Join-Path $toolsRoot 'Test-LlmWikiStandaloneIndexRoutes.ps1')
             if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiRuntimeArchitectureSqlParity.ps1')
+            if (-not $?) { exit 1 }
         }
         'git-paths' {
             & (Join-Path $toolsRoot 'Test-LlmWikiGitPaths.ps1')
@@ -215,6 +221,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'task-scope' {
             & (Join-Path $toolsRoot 'Test-LlmWikiTaskScope.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiInstructionExperimentStrictMode.ps1')
             if (-not $?) { exit 1 }
         }
         'index-selection' {
@@ -235,6 +243,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiBackendModuleModel.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiArchitectureHealthToolExclusion.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiQualitySelfCoverage.ps1')
             if (-not $?) { exit 1 }
         }
         'ui-continuation' {
@@ -289,6 +299,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'knowledge-isolation' {
             & (Join-Path $toolsRoot 'Test-LlmWikiKnowledgeIsolation.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiInstructionExperimentStrictMode.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiLearningExperimentFormatting.ps1')
             if (-not $?) { exit 1 }

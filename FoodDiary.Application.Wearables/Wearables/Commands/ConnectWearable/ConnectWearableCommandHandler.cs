@@ -8,6 +8,7 @@ using FoodDiary.Application.Wearables.Wearables.Common;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Wearables.Wearables.Commands.ConnectWearable;
 
@@ -72,8 +73,8 @@ public sealed class ConnectWearableCommandHandler(
             return Result.Failure<WearableConnectionModel>(Errors.Wearable.AuthFailed(command.Provider));
         }
 
-        string protectedAccessToken = tokenProtector.Protect(tokenResult.AccessToken);
-        string? protectedRefreshToken = tokenResult.RefreshToken is null ? null : tokenProtector.Protect(tokenResult.RefreshToken);
+        ProtectedWearableToken protectedAccessToken = tokenProtector.Protect(tokenResult.AccessToken);
+        ProtectedWearableToken? protectedRefreshToken = tokenResult.RefreshToken is null ? null : tokenProtector.Protect(tokenResult.RefreshToken);
         if (existing is not null) {
             existing.Reconnect(
                 tokenResult.ExternalUserId,

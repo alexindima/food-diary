@@ -297,7 +297,7 @@ public sealed partial class User {
         state = ApplyStringPreference(
             state,
             dashboardLayoutJson,
-            value => DomainGuard.OptionalJson(value, nameof(dashboardLayoutJson)),
+            value => DomainGuard.OptionalJson(value, DomainConstants.JsonMaxLength, nameof(dashboardLayoutJson)),
             static (current, value) => current with { DashboardLayoutJson = value });
         state = ApplyStringPreference(state, language, value => NormalizeOptionalLanguage(value!, nameof(language)), static (current, value) => current with { Language = value });
         state = ApplyStringPreference(state, theme, value => NormalizeOptionalTheme(value!, nameof(theme)), static (current, value) => current with { Theme = value });

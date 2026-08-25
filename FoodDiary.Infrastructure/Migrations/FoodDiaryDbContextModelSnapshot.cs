@@ -3686,9 +3686,6 @@ namespace FoodDiary.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("text");
-
                     b.Property<double?>("SaturdayCalories")
                         .HasColumnType("double precision");
 

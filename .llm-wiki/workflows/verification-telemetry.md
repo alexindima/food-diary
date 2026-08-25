@@ -15,12 +15,12 @@ sources:
 
 # Learn from verification outcomes
 
-Every real task-check execution except `wiki-verify` appends its outcome and
-elapsed time to the worktree-local `.git/llm-wiki/verification-telemetry.json` registry. Events bind the task packet, check
-id, command, workspace policy, and previous event hash. Dry runs never create
-telemetry. The self-verification exception prevents the tracked registry from
-changing after it has just been verified; the task evidence and hashed log still
-record the complete `wiki-verify` execution. The registry is operational state:
+Every real task-check execution appends its outcome and elapsed time to the
+worktree-local `.git/llm-wiki/verification-telemetry.json` registry. Observable
+`wiki verify` stages record repository-level `@wiki` events, while governed task
+checks bind the task packet. Events also bind check id, command, workspace policy,
+and previous event hash. Concurrent writers serialize through a registry lock.
+Dry runs never create telemetry. The registry is operational state:
 it is initialized on demand and never appears in the repository diff. Tests may
 isolate it with `LLM_WIKI_VERIFICATION_TELEMETRY_PATH`.
 
@@ -34,6 +34,11 @@ A check is reported as flaky only after the configured minimum sample count, whe
 both passing and failing outcomes exist and the transition rate crosses the policy
 threshold. Flakiness is surfaced for investigation; it does not excuse or suppress
 a required check.
+
+An empty registry reports `health=insufficient-data`; it is never presented as a
+healthy history. Workflow metrics likewise retain failed, timed-out, and
+interrupted research/verify runs instead of deriving a success rate from passed
+runs only.
 
 Failure prediction uses historical failure rate as a bounded signal. Cost
 forecasting blends the policy duration with the historical median only after enough

@@ -32,6 +32,7 @@ using FoodDiary.Presentation.Api.Features.WaistEntries;
 using FoodDiary.Presentation.Api.Features.Wearables;
 using FoodDiary.Presentation.Api.Features.Wearables.Requests;
 using FoodDiary.Presentation.Api.Features.Usda;
+using FoodDiary.Presentation.Api.Features.WeeklyCheckIn;
 using FoodDiary.Presentation.Api.Features.Users;
 using FoodDiary.Presentation.Api.Features.Users.Requests;
 using FoodDiary.Presentation.Api.Policies;
@@ -43,6 +44,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -570,6 +572,23 @@ public sealed class ControllerSecurityContractTests {
             typeof(UsdaController),
             nameof(UsdaController.GetDetail),
             PresentationPolicyNames.FoodDataRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(UsdaController),
+            nameof(UsdaController.GetDailyMicronutrients),
+            PresentationPolicyNames.FoodDataRateLimitPolicyName);
+        AssertActionRateLimit(
+            typeof(WeeklyCheckInController),
+            nameof(WeeklyCheckInController.Get),
+            PresentationPolicyNames.FoodDataRateLimitPolicyName);
+    }
+
+    [Fact]
+    public void WeeklyCheckIn_UsesUserScopedOutputCache() {
+        MethodInfo action = GetAction(typeof(WeeklyCheckInController), nameof(WeeklyCheckInController.Get));
+
+        OutputCacheAttribute attribute = Assert.Single(action.GetCustomAttributes<OutputCacheAttribute>());
+
+        Assert.Equal(PresentationPolicyNames.UserScopedCachePolicyName, attribute.PolicyName);
     }
 
     [Fact]

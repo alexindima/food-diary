@@ -1,14 +1,17 @@
-if ($null -eq (Get-Variable -Name LlmWikiInProcessSqliteState -Scope Script -ErrorAction SilentlyContinue)) {
-    $script:LlmWikiInProcessSqliteState = $null
-}
+$llmWikiInProcessSqliteCacheKey = 'FoodDiary.LlmWiki.InProcessSqlite.State'
 
 function Initialize-LlmWikiInProcessSqlite {
     [CmdletBinding()]
     param()
 
-    if ($null -ne $script:LlmWikiInProcessSqliteState -and
+    if ($PSVersionTable.PSVersion.Major -lt 7) {
+        throw 'In-process SQLite Wiki queries require PowerShell 7 (pwsh).'
+    }
+
+    $cachedState = [AppDomain]::CurrentDomain.GetData($llmWikiInProcessSqliteCacheKey)
+    if ($null -ne $cachedState -and
         $null -ne ('LlmWiki.SqliteReader.DomainDataReader' -as [type])) {
-        return $script:LlmWikiInProcessSqliteState
+        return $cachedState
     }
     $stopwatch = [Diagnostics.Stopwatch]::StartNew()
     $build = & (Join-Path $PSScriptRoot 'Build-LlmWikiInProcessSqliteReader.ps1') -Format Json | ConvertFrom-Json
@@ -30,7 +33,7 @@ function Initialize-LlmWikiInProcessSqlite {
             Where-Object { $_.GetName().Name -eq $assemblySimpleName } |
             Select-Object -First 1
         if ($null -eq $loadedAssembly) {
-            Add-Type -LiteralPath $assemblyPath
+            Add-Type -LiteralPath $assemblyPath -ErrorAction Stop
         } else {
             $expectedVersion = [Reflection.AssemblyName]::GetAssemblyName($assemblyPath).Version
             if ($loadedAssembly.GetName().Version -ne $expectedVersion) {
@@ -39,7 +42,7 @@ function Initialize-LlmWikiInProcessSqlite {
         }
     }
     $stopwatch.Stop()
-    $script:LlmWikiInProcessSqliteState = [pscustomobject][ordered]@{
+    $state = [pscustomobject][ordered]@{
         ready = $true
         reusedBuild = [bool]$build.reused
         fingerprint = [string]$build.fingerprint
@@ -47,5 +50,6 @@ function Initialize-LlmWikiInProcessSqlite {
         outputPath = $outputPath
         loadDurationMs = [Math]::Round($stopwatch.Elapsed.TotalMilliseconds, 2)
     }
-    return $script:LlmWikiInProcessSqliteState
+    [AppDomain]::CurrentDomain.SetData($llmWikiInProcessSqliteCacheKey, $state)
+    return $state
 }

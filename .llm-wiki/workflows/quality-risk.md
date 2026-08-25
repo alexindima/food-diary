@@ -32,6 +32,12 @@ Integration, dynamic, reflection-based, or differently named tests may still
 cover the behavior; `test-gaps` is an investigation queue, never proof of
 missing execution coverage.
 
+The same index measures the Wiki's own non-test PowerShell tools. They participate
+in structural hotspots, explicit debt discovery, and conservative test-script
+name-reference coverage. This makes growth in the facade and tool suite visible;
+as with application symbols, a missing direct reference is an investigation lead
+rather than proof that no behavioral coverage exists.
+
 Standalone quality queries already use the SQLite `query_documents` projection;
 the generated JSON is retained as its projection source, not as an automatic
 runtime fallback. The compiled-index migration report classifies this route as

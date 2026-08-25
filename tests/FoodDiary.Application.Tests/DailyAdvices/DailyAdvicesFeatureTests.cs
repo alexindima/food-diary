@@ -38,6 +38,17 @@ public class DailyAdvicesFeatureTests {
     }
 
     [Fact]
+    public async Task GetDailyAdviceQueryValidator_WithFirstCalendarDay_PreservesSupportedInput() {
+        var validator = new GetDailyAdviceQueryValidator();
+        var date = new DateTime(1, 1, 1, 12, 0, 0, DateTimeKind.Utc);
+        var query = new GetDailyAdviceQuery(Guid.NewGuid(), date, "en");
+
+        ValidationResult result = await validator.ValidateAsync(query);
+
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
     public void DailyAdviceSelector_NormalizeLocale_UnsupportedLocaleFallsBackToEn() {
         string normalized = InvokeNormalizeLocale("de-DE");
 
@@ -128,6 +139,33 @@ public class DailyAdvicesFeatureTests {
     }
 
     [Fact]
+    public void DailyAdviceSelector_SelectForDate_WithMinimumDateAndMultipleAdvices_ReturnsSelection() {
+        var advices = new List<DailyAdvice> {
+            DailyAdvice.Create("Hydrate", "en", weight: 1),
+            DailyAdvice.Create("Walk", "en", weight: 1),
+        };
+
+        DailyAdvice? selected = InvokeSelectForDate(advices, DateTime.MinValue, "en");
+
+        Assert.NotNull(selected);
+        Assert.Contains(selected, advices);
+    }
+
+    [Fact]
+    public void DailyAdviceSelector_SelectReadModelForDate_WithMinimumCalendarDayAndMultipleAdvices_ReturnsSelection() {
+        IReadOnlyList<DailyAdviceReadModel> advices = [
+            new DailyAdviceReadModel(Guid.Parse("11111111-1111-1111-1111-111111111111"), "en", "Hydrate", "water", 1),
+            new DailyAdviceReadModel(Guid.Parse("22222222-2222-2222-2222-222222222222"), "en", "Walk", "movement", 1),
+        ];
+        var date = new DateTime(1, 1, 1, 12, 0, 0, DateTimeKind.Unspecified);
+
+        DailyAdviceReadModel? selected = InvokeSelectReadModelForDate(advices, date, "en");
+
+        Assert.NotNull(selected);
+        Assert.Contains(selected, advices);
+    }
+
+    [Fact]
     public async Task GetDailyAdvice_WithInvalidUserId_ReturnsInvalidToken() {
         GetDailyAdviceQueryHandler handler = CreateGetDailyAdviceHandler(CreateDailyAdviceRepository(), CreateCurrentUserAccessService(User.Create("advice@example.com", "hash")));
 
@@ -164,6 +202,27 @@ public class DailyAdvicesFeatureTests {
         ResultAssert.Success(result);
         Assert.Equal("en", result.Value.Locale);
         Assert.Equal(["en"], requestedLocales);
+    }
+
+    [Fact]
+    public async Task GetDailyAdvice_WithMinimumCalendarDayAndMultipleAdvices_ReturnsAdvice() {
+        var user = User.Create("minimum-date-advice@example.com", "hash");
+        IDailyAdviceReadModelRepository repository = CreateDailyAdviceRepository(
+            new Dictionary<string, IReadOnlyList<DailyAdvice>>(StringComparer.OrdinalIgnoreCase) {
+                ["en"] = [
+                    DailyAdvice.Create("Hydrate", "en", weight: 1),
+                    DailyAdvice.Create("Walk", "en", weight: 1),
+                ],
+            });
+        GetDailyAdviceQueryHandler handler = CreateGetDailyAdviceHandler(repository, CreateCurrentUserAccessService(user));
+        var date = new DateTime(1, 1, 1, 12, 0, 0, DateTimeKind.Unspecified);
+
+        Result<DailyAdviceModel> result = await handler.Handle(
+            new GetDailyAdviceQuery(user.Id.Value, date, "en"),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Contains(result.Value.Value, new[] { "Hydrate", "Walk" }, StringComparer.Ordinal);
     }
 
     [Fact]

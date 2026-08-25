@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,8 +21,17 @@ internal sealed class WearableConnectionConfiguration : IEntityTypeConfiguration
             .HasMaxLength(32);
 
         builder.Property(e => e.ExternalUserId).HasMaxLength(256).IsRequired();
-        builder.Property(e => e.AccessToken).HasMaxLength(8192).IsRequired();
-        builder.Property(e => e.RefreshToken).HasMaxLength(8192);
+        builder.Property(e => e.AccessToken)
+            .HasConversion(
+                token => token.Value,
+                value => ProtectedWearableToken.FromStoredValue(value))
+            .HasMaxLength(8192)
+            .IsRequired();
+        builder.Property(e => e.RefreshToken)
+            .HasConversion(
+                token => token.HasValue ? token.Value.Value : null,
+                value => value == null ? null : ProtectedWearableToken.FromStoredValue(value))
+            .HasMaxLength(8192);
         builder.Property(e => e.LastConnectRequestId).HasMaxLength(64);
         builder.Property(e => e.LastConnectRequestHash).HasMaxLength(64);
 

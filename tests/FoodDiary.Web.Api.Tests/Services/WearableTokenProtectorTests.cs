@@ -1,5 +1,6 @@
 using FoodDiary.Web.Api.Services;
 using Microsoft.AspNetCore.DataProtection;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Web.Api.Tests.Services;
 
@@ -9,30 +10,21 @@ public sealed class WearableTokenProtectorTests {
     public void ProtectAndUnprotect_RoundTripsPlainToken() {
         WearableTokenProtector protector = CreateProtector();
 
-        string protectedToken = protector.Protect("access-token");
+        ProtectedWearableToken protectedToken = protector.Protect("access-token");
         string unprotectedToken = protector.Unprotect(protectedToken);
 
-        Assert.StartsWith("fdp1:", protectedToken, StringComparison.Ordinal);
+        Assert.StartsWith("fdp1:", protectedToken.Value, StringComparison.Ordinal);
         Assert.Equal("access-token", unprotectedToken);
     }
 
     [Fact]
-    public void Protect_WhenAlreadyProtected_ReturnsTokenUnchanged() {
-        WearableTokenProtector protector = CreateProtector();
-        string protectedToken = protector.Protect("access-token");
-
-        string protectedAgain = protector.Protect(protectedToken);
-
-        Assert.Equal(protectedToken, protectedAgain);
-    }
-
-    [Fact]
-    public void Unprotect_WhenTokenIsPlain_ReturnsTokenUnchanged() {
+    public void Protect_WhenRawTokenStartsWithProtectedPrefix_StillProtectsIt() {
         WearableTokenProtector protector = CreateProtector();
 
-        string token = protector.Unprotect("access-token");
+        ProtectedWearableToken protectedToken = protector.Protect("fdp1:attacker-controlled");
 
-        Assert.Equal("access-token", token);
+        Assert.NotEqual("fdp1:attacker-controlled", protectedToken.Value, StringComparer.Ordinal);
+        Assert.Equal("fdp1:attacker-controlled", protector.Unprotect(protectedToken));
     }
 
     private static WearableTokenProtector CreateProtector() {

@@ -1,6 +1,7 @@
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Wearables;
 using Microsoft.EntityFrameworkCore;
@@ -73,7 +74,7 @@ public sealed class WearableTransactionRunnerIntegrationTests(PostgresDatabaseFi
                     userId,
                     WearableProvider.Fitbit,
                     externalUserId,
-                    "access-token",
+                    ProtectedWearableToken.FromProtectedValue("fdp1:access-token"),
                     refreshToken: null,
                     tokenExpiresAtUtc: null));
                 return true;

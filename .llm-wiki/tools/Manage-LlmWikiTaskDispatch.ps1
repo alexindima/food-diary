@@ -269,7 +269,7 @@ if ($Action -eq 'reconcile') {
             $validation = Test-Receipt $receipt
             if (-not $validation.valid -or -not $validation.terminal) { continue }
             if (-not [string]::IsNullOrWhiteSpace([string]$receipt.scheduleClaimId) -and $retainedClaimIds.ContainsKey([string]$receipt.scheduleClaimId)) { continue }
-            $terminalAtUtc = [DateTime]::Parse([string]$receipt.events[-1].atUtc).ToUniversalTime()
+            $terminalAtUtc = ([DateTimeOffset]$receipt.events[-1].atUtc).UtcDateTime
             if ($terminalAtUtc -gt $cutoff) { continue }
             $candidates.Add([pscustomobject][ordered]@{
                 dispatchId = [string]$receipt.dispatchId

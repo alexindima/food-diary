@@ -288,7 +288,9 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
     public async Task<IReadOnlyList<MealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
         UserId userId,
         DateTime date,
+        int limit,
         CancellationToken cancellationToken = default) {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(limit);
         DateTime from = StartOfUtcDay(date);
         DateTime toInclusive = EndOfUtcDay(date);
 
@@ -300,6 +302,8 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
                 item.Meal.Date <= toInclusive &&
                 item.ProductId != null &&
                 item.Product != null)
+            .OrderBy(static item => item.Id)
+            .Take(limit)
             .Select(item => new MealProductNutritionReadModel(
                 item.Amount,
                 item.Product!.BaseAmount,

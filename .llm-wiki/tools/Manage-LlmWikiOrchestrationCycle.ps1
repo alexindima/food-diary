@@ -21,7 +21,9 @@ $schedulerRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/scheduler'
 $cycleRoot = Join-Path $schedulerRoot 'cycles'
 $lockPath = Join-Path $schedulerRoot '.orchestration-cycle-lock'
 $now = $AsOfUtc.ToUniversalTime()
-$policy = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -Format Json | ConvertFrom-Json
+$policySnapshot = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -WithFingerprint -Format Json | ConvertFrom-Json
+$policy = $policySnapshot.policy
+$policyFingerprint = [string]$policySnapshot.fingerprint
 
 function Get-Hash([object]$Value) {
     $json = $Value | ConvertTo-Json -Depth 20 -Compress
@@ -136,7 +138,13 @@ try {
         }
         $postAudit = & (Join-Path $PSScriptRoot 'Test-LlmWikiOrchestrationLineage.ps1') -AsOfUtc $now -Format Json | ConvertFrom-Json
         if (-not $postAudit.valid) { $issues.Add("Postflight lineage audit has $($postAudit.summary.issueCount) issue(s).") }
-        $cycleDispatchIds = @($claimResult.dispatches | ForEach-Object { [string]$_.dispatchId } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+        $cycleDispatchIds = @(
+            if ($null -ne $claimResult) {
+                $claimResult.dispatches |
+                    ForEach-Object { [string]$_.dispatchId } |
+                    Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+            }
+        )
         $cycle = [pscustomobject][ordered]@{
             schemaVersion = 1
             cycleId = $cycleIdValue
@@ -145,7 +153,7 @@ try {
             apply = [bool]$Apply
             tasksPath = $TasksPath
             maxConcurrency = $(if ($null -ne $planResult) { $planResult.plan.maxConcurrency } else { $MaxConcurrency })
-            policyFingerprint = [string]$policy.fingerprint
+            policyFingerprint = $policyFingerprint
             state = $state
             preflight = [pscustomobject][ordered]@{
                 lineageValid = [bool]$preAudit.valid
@@ -175,7 +183,7 @@ try {
                 claimId = $(if ($null -ne $claimResult) { [string]$claimResult.claim.claimId } else { '' })
                 claimHash = $(if ($null -ne $claimResult) { [string]$claimResult.claim.claimHash } else { '' })
                 state = $(if ($null -ne $claimResult) { [string]$claimResult.state } else { '' })
-                dispatchCount = $cycleDispatchIds.Count
+                dispatchCount = @($cycleDispatchIds).Count
                 dispatchIds = @($cycleDispatchIds)
             }
             postflight = [pscustomobject][ordered]@{

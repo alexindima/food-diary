@@ -12,6 +12,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.TestHelper;
 using FoodDiary.Results;
@@ -160,7 +161,7 @@ public class WearablesFeatureTests {
     public async Task ConnectWearable_WithExistingConnection_UpdatesTokens() {
         var userId = UserId.New();
         var existing = WearableConnection.Create(
-            userId, WearableProvider.Fitbit, "ext-user", "old-token", "old-refresh", tokenExpiresAtUtc: null);
+            userId, WearableProvider.Fitbit, "ext-user", StoredToken("old-token"), StoredToken("old-refresh"), tokenExpiresAtUtc: null);
         var repo = new InMemoryWearableConnectionRepository();
         repo.Seed(existing);
 
@@ -183,7 +184,7 @@ public class WearablesFeatureTests {
     public async Task ConnectWearable_WithInactiveExistingConnection_ReactivatesExistingConnection() {
         var userId = UserId.New();
         var existing = WearableConnection.Create(
-            userId, WearableProvider.Fitbit, "old-ext-user", "old-token", "old-refresh", tokenExpiresAtUtc: null);
+            userId, WearableProvider.Fitbit, "old-ext-user", StoredToken("old-token"), StoredToken("old-refresh"), tokenExpiresAtUtc: null);
         existing.Deactivate();
         var repo = new InMemoryWearableConnectionRepository();
         repo.Seed(existing);
@@ -265,7 +266,7 @@ public class WearablesFeatureTests {
     public async Task DisconnectWearable_WithActiveConnection_Succeeds() {
         var userId = UserId.New();
         var connection = WearableConnection.Create(
-            userId, WearableProvider.Fitbit, "ext", "token", refreshToken: null, tokenExpiresAtUtc: null);
+            userId, WearableProvider.Fitbit, "ext", StoredToken("token"), refreshToken: null, tokenExpiresAtUtc: null);
         var repo = new InMemoryWearableConnectionRepository();
         repo.Seed(connection);
 
@@ -482,8 +483,8 @@ public class WearablesFeatureTests {
             userId,
             WearableProvider.Fitbit,
             "external",
-            "access",
-            "refresh",
+            StoredToken("access"),
+            StoredToken("refresh"),
             DateTime.UtcNow.AddHours(1));
         var repository = new InMemoryWearableConnectionRepository();
         repository.Seed(connection);
@@ -503,7 +504,7 @@ public class WearablesFeatureTests {
         var userId = UserId.New();
         var date = new DateTime(2026, 5, 6, 0, 0, 0, DateTimeKind.Utc);
         var connection = WearableConnection.Create(
-            userId, WearableProvider.Fitbit, "ext", "access", "refresh", DateTime.UtcNow.AddHours(1));
+            userId, WearableProvider.Fitbit, "ext", StoredToken("access"), StoredToken("refresh"), DateTime.UtcNow.AddHours(1));
         var connectionRepository = new InMemoryWearableConnectionRepository();
         connectionRepository.Seed(connection);
         var syncRepository = new InMemoryWearableSyncRepository();
@@ -531,7 +532,7 @@ public class WearablesFeatureTests {
     public async Task SyncWearableData_WhenProviderFails_DoesNotPersistOrMarkSynced() {
         var userId = UserId.New();
         var connection = WearableConnection.Create(
-            userId, WearableProvider.Fitbit, "ext", "access", "refresh", DateTime.UtcNow.AddHours(1));
+            userId, WearableProvider.Fitbit, "ext", StoredToken("access"), StoredToken("refresh"), DateTime.UtcNow.AddHours(1));
         var connectionRepository = new InMemoryWearableConnectionRepository();
         connectionRepository.Seed(connection);
         var syncRepository = new InMemoryWearableSyncRepository();
@@ -613,7 +614,7 @@ public class WearablesFeatureTests {
     public async Task SyncWearableData_WhenConnectionInactive_ReturnsNotConnected() {
         var userId = UserId.New();
         var connection = WearableConnection.Create(
-            userId, WearableProvider.Fitbit, "ext", "access", "refresh", DateTime.UtcNow.AddHours(1));
+            userId, WearableProvider.Fitbit, "ext", StoredToken("access"), StoredToken("refresh"), DateTime.UtcNow.AddHours(1));
         connection.Deactivate();
         var connectionRepository = new InMemoryWearableConnectionRepository();
         connectionRepository.Seed(connection);
@@ -637,7 +638,7 @@ public class WearablesFeatureTests {
     public async Task SyncWearableData_WhenProviderClientMissing_ReturnsProviderNotConfigured() {
         var userId = UserId.New();
         var connection = WearableConnection.Create(
-            userId, WearableProvider.Fitbit, "ext", "access", "refresh", DateTime.UtcNow.AddHours(1));
+            userId, WearableProvider.Fitbit, "ext", StoredToken("access"), StoredToken("refresh"), DateTime.UtcNow.AddHours(1));
         var connectionRepository = new InMemoryWearableConnectionRepository();
         connectionRepository.Seed(connection);
         var handler = new SyncWearableDataCommandHandler(
@@ -660,7 +661,7 @@ public class WearablesFeatureTests {
     public async Task SyncWearableData_WhenTokenExpired_RefreshesConnectionTokens() {
         var userId = UserId.New();
         var connection = WearableConnection.Create(
-            userId, WearableProvider.Fitbit, "ext", "old-access", "old-refresh", DateTime.UtcNow.AddMinutes(-1));
+            userId, WearableProvider.Fitbit, "ext", StoredToken("old-access"), StoredToken("old-refresh"), DateTime.UtcNow.AddMinutes(-1));
         var connectionRepository = new InMemoryWearableConnectionRepository();
         connectionRepository.Seed(connection);
         DateTime refreshExpiresAtUtc = DateTime.UtcNow.AddHours(2);
@@ -676,8 +677,8 @@ public class WearablesFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.Equal("protected:new-access", connection.AccessToken);
-        Assert.Equal("protected:new-refresh", connection.RefreshToken);
+        Assert.Equal("fdp1:new-access", connection.AccessToken.Value);
+        Assert.Equal("fdp1:new-refresh", connection.RefreshToken?.Value);
         Assert.Equal(2, connectionRepository.UpdateCallCount);
         await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
@@ -687,7 +688,7 @@ public class WearablesFeatureTests {
         var userId = UserId.New();
         var date = new DateTime(2026, 5, 7, 0, 0, 0, DateTimeKind.Utc);
         var connection = WearableConnection.Create(
-            userId, WearableProvider.Fitbit, "ext", "access", "refresh", DateTime.UtcNow.AddHours(1));
+            userId, WearableProvider.Fitbit, "ext", StoredToken("access"), StoredToken("refresh"), DateTime.UtcNow.AddHours(1));
         var connectionRepository = new InMemoryWearableConnectionRepository();
         connectionRepository.Seed(connection);
         var syncRepository = new InMemoryWearableSyncRepository();
@@ -718,7 +719,7 @@ public class WearablesFeatureTests {
     public async Task SyncWearableData_WhenTokenRefreshFails_DeactivatesConnectionAndReturnsFailure() {
         var userId = UserId.New();
         var connection = WearableConnection.Create(
-            userId, WearableProvider.Fitbit, "ext", "access", "refresh", DateTime.UtcNow.AddMinutes(-1));
+            userId, WearableProvider.Fitbit, "ext", StoredToken("access"), StoredToken("refresh"), DateTime.UtcNow.AddMinutes(-1));
         var connectionRepository = new InMemoryWearableConnectionRepository();
         connectionRepository.Seed(connection);
         var client = new StubWearableClient(WearableProvider.Fitbit, tokenResult: null) {
@@ -743,7 +744,7 @@ public class WearablesFeatureTests {
     public async Task SyncWearableData_WhenProviderFailsAfterTokenRefresh_PersistsRotatedTokens() {
         var userId = UserId.New();
         var connection = WearableConnection.Create(
-            userId, WearableProvider.Fitbit, "ext", "old-access", "old-refresh", DateTime.UtcNow.AddMinutes(-1));
+            userId, WearableProvider.Fitbit, "ext", StoredToken("old-access"), StoredToken("old-refresh"), DateTime.UtcNow.AddMinutes(-1));
         var connectionRepository = new InMemoryWearableConnectionRepository();
         connectionRepository.Seed(connection);
         var client = new StubWearableClient(WearableProvider.Fitbit, tokenResult: null) {
@@ -769,8 +770,8 @@ public class WearablesFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Multiple(
-            () => Assert.Equal("protected:rotated-access", connection.AccessToken),
-            () => Assert.Equal("protected:rotated-refresh", connection.RefreshToken),
+            () => Assert.Equal("fdp1:rotated-access", connection.AccessToken.Value),
+            () => Assert.Equal("fdp1:rotated-refresh", connection.RefreshToken?.Value),
             () => Assert.Null(connection.LastSyncedAtUtc));
         await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
@@ -792,15 +793,19 @@ public class WearablesFeatureTests {
 
     private static IWearableTokenProtector CreateTokenProtector() => new StubWearableTokenProtector();
 
+    private static ProtectedWearableToken StoredToken(string value) =>
+        ProtectedWearableToken.FromProtectedValue($"fdp1:{value}");
+
     private static IUnitOfWork CreateUnitOfWork() => Substitute.For<IUnitOfWork>();
 
     [ExcludeFromCodeCoverage]
     private sealed class StubWearableTokenProtector : IWearableTokenProtector {
-        private const string Prefix = "protected:";
+        private const string Prefix = "fdp1:";
 
-        public bool IsProtected(string token) => token.StartsWith(Prefix, StringComparison.Ordinal);
-        public string Protect(string token) => IsProtected(token) ? token : Prefix + token;
-        public string Unprotect(string protectedToken) => IsProtected(protectedToken) ? protectedToken[Prefix.Length..] : protectedToken;
+        public ProtectedWearableToken Protect(string token) => StoredToken(token);
+        public string Unprotect(ProtectedWearableToken protectedToken) => protectedToken.IsProtected
+            ? protectedToken.Value[Prefix.Length..]
+            : protectedToken.Value;
     }
 
     [ExcludeFromCodeCoverage]

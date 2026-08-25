@@ -10,6 +10,14 @@ $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
 $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = Split-Path -Parent $wikiRoot
+if ($Profile -in @('Core', 'Full') -and [string]::IsNullOrWhiteSpace([string]$env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT)) {
+    & (Join-Path $toolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
+        -ToolPath $PSCommandPath `
+        -ToolArguments @{ Profile = $Profile; MaxConcurrency = $MaxConcurrency } `
+        -PrepareCodeGraph
+    if (-not $? -or ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0)) { exit 1 }
+    return
+}
 if ($Profile -eq 'Focused') {
     Write-Host "LLM Wiki tool smoke: running the focused regression catalog with max concurrency $MaxConcurrency. Use -Profile Core or -Profile Full only for legacy audit coverage."
     & (Join-Path $toolsRoot 'Invoke-LlmWikiParallelSmoke.ps1') -AllGroups -MaxConcurrency $MaxConcurrency
@@ -51,6 +59,14 @@ function Assert-Wiki {
     if (-not $Condition) {
         $errors.Add($Message)
     }
+}
+
+function Get-WikiIssueTypes([object[]]$Issues) {
+    return @($Issues | ForEach-Object {
+        if ($null -ne $_ -and $null -ne $_.PSObject.Properties['type']) {
+            [string]$_.type
+        }
+    })
 }
 
 function Get-WikiObjectFingerprint([object]$Value) {
@@ -1238,7 +1254,13 @@ try {
         Assert-Wiki (
             $expandedRequirements.addedCount -gt 0 -and
             @($expandedAcceptance.criteria).Count -eq 2 + $expandedRequirements.addedCount -and
-            @($expandedAcceptance.criteria | Where-Object { $_.origin.kind -eq 'compound-split' -and $_.status -eq 'pending' }).Count -eq $expandedRequirements.addedCount
+            @($expandedAcceptance.criteria | Where-Object {
+                $_.PSObject.Properties['origin'] -and
+                $null -ne $_.origin -and
+                $_.origin.PSObject.Properties['kind'] -and
+                $_.origin.kind -eq 'compound-split' -and
+                $_.status -eq 'pending'
+            }).Count -eq $expandedRequirements.addedCount
         ) 'Requirement expansion did not append provenance-marked compound splits.'
     } finally {
         [IO.File]::WriteAllText($proofAcceptancePath, $proofAcceptanceRaw, [Text.UTF8Encoding]::new($false))
@@ -3864,7 +3886,10 @@ try {
             $appliedDecomposition.valid -and
             @($appliedDecomposition.application.childWorkspaces).Count -eq @($decompositionPlan.plan.shards).Count -and
             (Split-Path -Leaf $cacheSourceWorkspacePath) -notin @($decomposedGraph.nodes.name) -and
-            @($decomposedGraph.nodes | Where-Object { $_.decomposition.decompositionId -eq $decompositionPlan.plan.decompositionId }).Count -eq @($decompositionPlan.plan.shards).Count -and
+            @($decomposedGraph.nodes | Where-Object {
+                $null -ne $_.decomposition -and
+                [string]$_.decomposition.decompositionId -eq [string]$decompositionPlan.plan.decompositionId
+            }).Count -eq @($decompositionPlan.plan.shards).Count -and
             @($decomposedGraph.edges | Where-Object type -eq 'decomposition-prerequisite').Count -ge 1 -and
             $validChildContextCount -eq @($appliedDecomposition.application.childWorkspaces).Count
         ) 'Applied decomposition did not replace the parent with graph-native child workspaces.'
@@ -4190,7 +4215,7 @@ try {
             $compensatedDispatchView.dispatch.scheduleClaimId -eq $compensatedScheduleClaim.claim.claimId
         ) 'Compensated dispatch did not preserve schedule lineage.'
         $compensatedLineageAudit = & (Join-Path $toolsRoot 'Test-LlmWikiOrchestrationLineage.ps1') -AsOfUtc ($leaseNow.AddMinutes(1)) -Format Json | ConvertFrom-Json
-        Assert-Wiki ($compensatedLineageAudit.valid -and $compensatedLineageAudit.summary.linkedDispatchCount -eq 1) "Orchestration audit rejected valid compensated lineage: $(@($compensatedLineageAudit.issues.type) -join ', ')."
+        Assert-Wiki ($compensatedLineageAudit.valid -and $compensatedLineageAudit.summary.linkedDispatchCount -eq 1) "Orchestration audit rejected valid compensated lineage: $(@(Get-WikiIssueTypes @($compensatedLineageAudit.issues)) -join ', ')."
         $compensatedLeaseView = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc ($leaseNow.AddMinutes(1)) -Format Json | ConvertFrom-Json
         Assert-Wiki ($compensatedLeaseView.activeCount -eq 0) 'Compensated schedule claim left an active lease.'
         $compensatedDispatchReceiptPath = Join-Path (Split-Path -Parent $leaseRegistryPath) "dispatches/$($compensatedScheduleClaim.dispatches[0].dispatchId).json"
@@ -4216,7 +4241,7 @@ try {
             $appliedScheduleClaim.dispatches[0].scheduleClaimId -eq $appliedScheduleClaim.claim.claimId
         ) 'Claimed dispatch did not preserve bidirectional schedule lineage.'
         $claimedLineageAudit = & (Join-Path $toolsRoot 'Test-LlmWikiOrchestrationLineage.ps1') -AsOfUtc ($leaseNow.AddMinutes(1)) -Format Json | ConvertFrom-Json
-        Assert-Wiki ($claimedLineageAudit.valid -and $claimedLineageAudit.summary.linkedDispatchCount -eq 1) "Orchestration audit rejected valid claimed lineage: $(@($claimedLineageAudit.issues.type) -join ', ')."
+        Assert-Wiki ($claimedLineageAudit.valid -and $claimedLineageAudit.summary.linkedDispatchCount -eq 1) "Orchestration audit rejected valid claimed lineage: $(@(Get-WikiIssueTypes @($claimedLineageAudit.issues)) -join ', ')."
         & (Join-Path $toolsRoot 'Manage-LlmWikiTaskDispatch.ps1') complete `
             -DispatchId $appliedScheduleClaim.dispatches[0].dispatchId `
             -Owner 'smoke-backend-agent' `
@@ -4228,7 +4253,7 @@ try {
         $tamperedScheduleDispatch.schedulePlanId = [guid]::NewGuid().ToString('N')
         [System.IO.File]::WriteAllText($scheduleDispatchReceiptPath, (($tamperedScheduleDispatch | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))
         $tamperedLineageAudit = & (Join-Path $toolsRoot 'Test-LlmWikiOrchestrationLineage.ps1') -AsOfUtc ($leaseNow.AddMinutes(2)) -Format Json | ConvertFrom-Json
-        Assert-Wiki (-not $tamperedLineageAudit.valid -and @($tamperedLineageAudit.issues.type) -contains 'dispatch-plan-mismatch') 'Orchestration audit accepted a tampered dispatch-to-plan link.'
+        Assert-Wiki (-not $tamperedLineageAudit.valid -and @(Get-WikiIssueTypes @($tamperedLineageAudit.issues)) -contains 'dispatch-plan-mismatch') 'Orchestration audit accepted a tampered dispatch-to-plan link.'
         [System.IO.File]::WriteAllText($scheduleDispatchReceiptPath, $scheduleDispatchReceiptRaw, [System.Text.UTF8Encoding]::new($false))
         if (Test-Path -LiteralPath $scheduleDispatchReceiptPath) { Remove-Item -LiteralPath $scheduleDispatchReceiptPath -Force }
         $replayedScheduleClaim = & (Join-Path $toolsRoot 'Manage-LlmWikiSchedulePlan.ps1') claim `
@@ -4284,7 +4309,7 @@ try {
         $orchestrationArtifactPaths.Add($appliedCycleClaimPath)
         $orchestrationArtifactPaths.Add($appliedCycleDispatchPath)
         $cycleLineageAudit = & (Join-Path $toolsRoot 'Test-LlmWikiOrchestrationLineage.ps1') -AsOfUtc ($leaseNow.AddMinutes(5)) -Format Json | ConvertFrom-Json
-        Assert-Wiki ($cycleLineageAudit.valid -and $cycleLineageAudit.summary.cycleCount -eq 2) "Orchestration audit rejected supervisor receipts: $(@($cycleLineageAudit.issues.type) -join ', ')."
+        Assert-Wiki ($cycleLineageAudit.valid -and $cycleLineageAudit.summary.cycleCount -eq 2) "Orchestration audit rejected supervisor receipts: $(@(Get-WikiIssueTypes @($cycleLineageAudit.issues)) -join ', ')."
         if ($appliedCycle.cycle.claim.dispatchCount -eq 1) {
             & (Join-Path $toolsRoot 'Manage-LlmWikiTaskDispatch.ps1') complete `
                 -DispatchId $appliedCycleDispatchId `

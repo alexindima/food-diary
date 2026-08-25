@@ -162,7 +162,12 @@ if ($Action -eq 'create') {
     $workspaceAbsolute = Join-Path $repositoryRoot $normalizedWorkspace
     $descriptor = Get-Content -LiteralPath (Join-Path $workspaceAbsolute 'workspace.json') -Raw | ConvertFrom-Json
     $packet = Get-Content -LiteralPath (Join-Path $workspaceAbsolute 'change-packet.json') -Raw | ConvertFrom-Json
-    $moduleName = [string](@($packet.diff.modules | Select-Object -First 1).name)
+    $firstModule = @($packet.diff.modules | Select-Object -First 1)
+    $moduleName = if ($firstModule.Count -eq 1 -and $null -ne $firstModule[0].PSObject.Properties['name']) {
+        [string]$firstModule[0].name
+    } else {
+        ''
+    }
     $query = [string]$descriptor.objective
     $stopWords = @('safely', 'safe', 'change', 'changes', 'changing', 'modify', 'update', 'create', 'implement', 'feature', 'task', 'preserve', 'support', 'add', 'the', 'and', 'for', 'with')
     $semanticQuery = @([regex]::Matches($query.ToLowerInvariant(), '[\p{L}\p{N}]+') | ForEach-Object Value | Where-Object { $_.Length -ge 3 -and $_ -notin $stopWords } | Sort-Object -Unique) -join ' '

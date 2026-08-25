@@ -24,6 +24,15 @@ $results = [Collections.Generic.List[object]]::new()
 foreach ($case in $cases) {
     $expectedPaths = [string[]]@($case.expectedPaths | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
     if ($expectedPaths.Count -eq 0) { throw "SQL context evaluation case '$($case.id)' has no expected path." }
+    $acceptedPathsProperty = $case.PSObject.Properties['acceptedPaths']
+    $acceptedPaths = [string[]]@(
+        if ($null -ne $acceptedPathsProperty) {
+            $acceptedPathsProperty.Value |
+                Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) -and [string]$_ -notin $expectedPaths } |
+                Sort-Object -Unique
+        }
+    )
+    $relevantPaths = [string[]]@($expectedPaths + $acceptedPaths)
     $changeType = if ([string]::IsNullOrWhiteSpace([string]$case.changeType)) { 'Any' } else { [string]$case.changeType }
     $cohortProperty = $case.PSObject.Properties['cohort']
     $cohort = if ($null -eq $cohortProperty -or [string]::IsNullOrWhiteSpace([string]$cohortProperty.Value)) {
@@ -38,7 +47,7 @@ foreach ($case in $cases) {
         -SkipRefresh `
         -Format Json | ConvertFrom-Json
     $records = @($search.records)
-    $relevant = @($records | Where-Object { [string]$_.path -in $expectedPaths } | Sort-Object rank | Select-Object -First 1)
+    $relevant = @($records | Where-Object { [string]$_.path -in $relevantPaths } | Sort-Object rank | Select-Object -First 1)
     $rank = if ($relevant.Count -eq 1) { [int]$relevant[0].rank } else { $null }
     $results.Add([pscustomobject][ordered]@{
         id = [string]$case.id
@@ -46,6 +55,7 @@ foreach ($case in $cases) {
         changeType = $changeType
         cohort = $cohort
         expectedPaths = $expectedPaths
+        acceptedPaths = $acceptedPaths
         rank = $rank
         reciprocalRank = $(if ($null -eq $rank) { 0.0 } else { 1.0 / $rank })
         top1 = $rank -eq 1

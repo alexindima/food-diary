@@ -99,7 +99,7 @@ public sealed class BillingPayment : Entity<Guid> {
             CurrentPeriodStartUtc = normalizedPeriodStart,
             CurrentPeriodEndUtc = normalizedPeriodEnd,
             WebhookEventId = NormalizeOptional(webhookEventId, ExternalIdMaxLength, nameof(webhookEventId)),
-            ProviderMetadataJson = DomainGuard.OptionalJson(providerMetadataJson, nameof(providerMetadataJson)),
+            ProviderMetadataJson = DomainGuard.OptionalJson(providerMetadataJson, DomainConstants.JsonMaxLength, nameof(providerMetadataJson)),
         };
         payment.SetCreated();
         return payment;
@@ -146,7 +146,7 @@ public sealed class BillingPayment : Entity<Guid> {
         DateTime? normalizedPeriodEnd = NormalizeOptionalUtc(currentPeriodEndUtc, nameof(currentPeriodEndUtc)) ?? CurrentPeriodEndUtc;
         EnsureChronologicalRange(normalizedPeriodStart, normalizedPeriodEnd, nameof(currentPeriodStartUtc));
         string? normalizedWebhookEventId = NormalizeOptional(webhookEventId, ExternalIdMaxLength, nameof(webhookEventId)) ?? WebhookEventId;
-        string? normalizedMetadata = DomainGuard.OptionalJson(providerMetadataJson, nameof(providerMetadataJson)) ?? ProviderMetadataJson;
+        string? normalizedMetadata = DomainGuard.OptionalJson(providerMetadataJson, DomainConstants.JsonMaxLength, nameof(providerMetadataJson)) ?? ProviderMetadataJson;
 
         BillingSubscriptionId = normalizedBillingSubscriptionId;
         ExternalCustomerId = normalizedCustomerId;

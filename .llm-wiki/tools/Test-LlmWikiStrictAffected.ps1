@@ -159,6 +159,12 @@ if ($fullVerificationText -notmatch 'still running' -or $fullVerificationText -n
 if ($fullVerificationText -notmatch 'LLM Wiki tool verification profile' -or $fullVerificationText -notmatch '\$FullTools' -or $fullVerificationText -notmatch '\$CoreTools') {
     throw 'Full verification does not expose its adaptive tool profile and explicit override.'
 }
+if ($facadeText -notmatch "\[string\]\`$VerificationProfile = 'Full'" -or
+    $facadeText -notmatch "fullVerificationArguments\.FullTools = \`$true" -or
+    $facadeText -notmatch 'verify-runs/\$runId' -or
+    $facadeText -notmatch 'runProgressPath') {
+    throw 'verify-full is not exhaustive by default or concurrent verify runs do not retain isolated state.'
+}
 if ($fullVerificationText -notmatch 'Invoke-LlmWikiParallelSmoke\.ps1' -or $fullVerificationText -notmatch 'AllGroups') {
     throw 'Full verification omitted the complete focused regression suite.'
 }
@@ -167,7 +173,9 @@ if ($toolSmokeText -notmatch "ValidateSet\('Focused', 'Core', 'Full'\)" -or $too
 }
 if ($toolSmokeText -notmatch '\[string\]\$Profile = ''Focused''' -or
     $toolSmokeText -notmatch 'Invoke-LlmWikiParallelSmoke\.ps1' -or
-    $toolSmokeText -notmatch 'monolithic core phase completed') {
+    $toolSmokeText -notmatch 'monolithic core phase completed' -or
+    $toolSmokeText -notmatch 'LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT' -or
+    $toolSmokeText -notmatch 'PrepareCodeGraph') {
     throw 'Direct tool smoke must default to the parallel focused catalog while legacy audit profiles report phase timing.'
 }
 

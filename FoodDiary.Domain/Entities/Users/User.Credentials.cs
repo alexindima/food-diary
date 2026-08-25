@@ -25,25 +25,6 @@ public sealed partial class User {
         SetModified();
     }
 
-    public void UpdateRefreshToken(string? refreshToken, DateTime? changedAtUtc = null) {
-        UpdateRefreshToken(new UserRefreshTokenUpdate(refreshToken, changedAtUtc));
-    }
-
-    public void UpdateRefreshToken(UserRefreshTokenUpdate update) {
-        EnsureNotDeleted();
-        string? normalizedRefreshToken = NormalizeOptionalToken(update.RefreshToken);
-        DateTime effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(update.ChangedAtUtc, nameof(update.ChangedAtUtc));
-        UserSecurityState currentState = GetSecurityState();
-        UserSecurityState nextState = currentState.WithRefreshToken(normalizedRefreshToken, effectiveChangedAtUtc);
-        if (nextState == currentState) {
-            return;
-        }
-
-        ApplySecurityState(nextState);
-
-        SetModified(LatestAuditTimestamp(effectiveChangedAtUtc));
-    }
-
     public void RecordAuthenticationActivity(DateTime occurredAtUtc) {
         EnsureNotDeleted();
         DateTime normalizedOccurredAtUtc = NormalizeUtcTimestamp(occurredAtUtc, nameof(occurredAtUtc));

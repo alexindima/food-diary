@@ -203,6 +203,10 @@ if ([int]$postFixControlEvaluation.metrics.top1Count -lt 27 -or
 }
 $postTuneControlCases = @($postTuneControlCorpus.cases)
 $postTuneControlTargets = @($postTuneControlCases | ForEach-Object { [string]@($_.expectedPaths)[0] })
+$postTuneAcceptedTargets = @($postTuneControlCases | ForEach-Object {
+        $acceptedPathsProperty = $_.PSObject.Properties['acceptedPaths']
+        if ($null -ne $acceptedPathsProperty) { @($acceptedPathsProperty.Value) }
+    } | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
 if ($postTuneControlCases.Count -ne 30 -or
     @($postTuneControlCases.id | Sort-Object -Unique).Count -ne 30 -or
     @($postTuneControlTargets | Sort-Object -Unique).Count -ne 30) {
@@ -219,8 +223,11 @@ if ($reusedPostTuneControlTargets.Count -gt 0) {
 $missingPostTuneControlTargets = @($postTuneControlTargets | Where-Object {
         -not (Test-Path -LiteralPath (Join-Path $repositoryRoot $_))
     })
-if ($missingPostTuneControlTargets.Count -gt 0) {
-    throw "Second post-tuning control corpus targets are missing: $($missingPostTuneControlTargets -join ', ')."
+$missingPostTuneAcceptedTargets = @($postTuneAcceptedTargets | Where-Object {
+        -not (Test-Path -LiteralPath (Join-Path $repositoryRoot $_))
+    })
+if ($missingPostTuneControlTargets.Count -gt 0 -or $missingPostTuneAcceptedTargets.Count -gt 0) {
+    throw "Second post-tuning control corpus targets are missing: $(@($missingPostTuneControlTargets + $missingPostTuneAcceptedTargets) -join ', ')."
 }
 if ([int]$postTuneControlCorpus.blindBaseline.node.top1Count -ne 18 -or
     [int]$postTuneControlCorpus.blindBaseline.node.top10Count -ne 28 -or

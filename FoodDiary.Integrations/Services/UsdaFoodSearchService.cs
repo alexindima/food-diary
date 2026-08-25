@@ -14,6 +14,7 @@ namespace FoodDiary.Integrations.Services;
 internal sealed class UsdaFoodSearchService(
     HttpClient httpClient,
     IOptions<UsdaApiOptions> options,
+    UsdaFoodDetailCache detailCache,
     ILogger<UsdaFoodSearchService> logger) : IUsdaFoodSearchService {
     private const int MaximumSearchResults = 200;
     private static readonly JsonSerializerOptions JsonOptions = new() {
@@ -75,6 +76,17 @@ internal sealed class UsdaFoodSearchService(
             return null;
         }
 
+        return await detailCache.GetOrCreateAsync(
+            config.BaseUrl,
+            fdcId,
+            () => GetFoodDetailCoreAsync(config, fdcId, cancellationToken),
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<UsdaFoodDetailLookupResult> GetFoodDetailCoreAsync(
+        UsdaApiOptions config,
+        int fdcId,
+        CancellationToken cancellationToken) {
         try {
             using var request = new HttpRequestMessage(
                 HttpMethod.Get,
@@ -84,14 +96,14 @@ internal sealed class UsdaFoodSearchService(
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound) {
-                return null;
+                return new UsdaFoodDetailLookupResult(Cacheable: true, Value: null);
             }
 
             response.EnsureSuccessStatusCode();
 
             UsdaFoodDetailResponse? food = await ReadJsonAsync<UsdaFoodDetailResponse>(response.Content, cancellationToken).ConfigureAwait(false);
             if (food is null) {
-                return null;
+                return new UsdaFoodDetailLookupResult(Cacheable: false, Value: null);
             }
 
             var nutrients = food.FoodNutrients
@@ -115,18 +127,18 @@ internal sealed class UsdaFoodSearchService(
                     p.Modifier))
                 .ToList();
 
-            return new UsdaFoodDetailModel(
+            return new UsdaFoodDetailLookupResult(Cacheable: true, new UsdaFoodDetailModel(
                 food.FdcId,
                 food.Description,
                 food.FoodCategory?.Description ?? food.FoodCategoryDescription ?? food.BrandName,
                 nutrients,
                 portions,
-                HealthScores: null);
+                HealthScores: null));
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "USDA food detail lookup failed for FDC ID {FdcId}", fdcId);
-            return null;
+            return new UsdaFoodDetailLookupResult(Cacheable: false, Value: null);
         }
     }
 

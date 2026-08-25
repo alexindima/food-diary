@@ -55,7 +55,10 @@ public sealed class UsdaFoodReadService(
         }
 
         IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel> dailyValues = await repository.GetDailyReferenceValueReadModelsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<MicronutrientModel> nutrientModels = ApplyDailyValues(brandedDetail.Nutrients, dailyValues);
+        IReadOnlyList<MicronutrientModel> nutrientModels = ApplyDailyValues(brandedDetail.Nutrients, dailyValues)
+            .GroupBy(static nutrient => nutrient.NutrientId)
+            .Select(static group => group.First())
+            .ToList();
         var nutrientAmounts = nutrientModels.ToDictionary(static nutrient => nutrient.NutrientId, static nutrient => nutrient.AmountPer100G);
         var dvAmounts = dailyValues.ToDictionary(static kvp => kvp.Key, static kvp => kvp.Value.Value);
         var healthScores = HealthAreaScores.Calculate(nutrientAmounts, dvAmounts);

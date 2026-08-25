@@ -45,7 +45,7 @@ function ConvertTo-CanonicalHashValue([object]$Value) {
     if ($Value -is [Collections.IEnumerable]) {
         return @($Value | ForEach-Object { ConvertTo-CanonicalHashValue $_ })
     }
-    if ($Value -is [psobject] -and $Value.PSObject.Properties.Count -gt 0) {
+    if ($Value -is [psobject] -and @($Value.PSObject.Properties).Count -gt 0) {
         $result = [ordered]@{}
         foreach ($property in $Value.PSObject.Properties) {
             $result[$property.Name] = ConvertTo-CanonicalHashValue $property.Value
@@ -70,6 +70,13 @@ function Get-Hash([object]$Value) {
 }
 function Get-FileSha([string]$Path) {
     (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+function Get-PropertySum([object[]]$Items, [string]$Property) {
+    $measure = $Items | Measure-Object -Property $Property -Sum
+    if ($null -eq $measure -or $null -eq $measure.PSObject.Properties['Sum'] -or $null -eq $measure.Sum) {
+        return 0
+    }
+    return $measure.Sum
 }
 function Get-EventPayload([object]$Event) {
     [pscustomobject][ordered]@{
@@ -249,7 +256,7 @@ function Get-Evaluation([object]$Experiment, [int]$LookNumber, [string]$Evaluate
             }
         })
     }
-    $matchedWeight = [int](($matchedCohorts.weight | Measure-Object -Sum).Sum)
+    $matchedWeight = [int](Get-PropertySum $matchedCohorts 'weight')
     $outcomeDelta = if ($matchedWeight -eq 0) { $null } else {
         [Math]::Round([double](($matchedCohorts | ForEach-Object { [double]$_.outcomeGainPoints * [int]$_.weight } | Measure-Object -Sum).Sum) / $matchedWeight, 2)
     }
@@ -375,8 +382,8 @@ function Get-Forecast([object]$Experiment) {
         minimumOutcomeGainPoints = $effect
         cohortCount = $cohorts.Count
         cohorts = $cohorts
-        remainingCandidateSamples = [int](($cohorts.remainingCandidateSamples | Measure-Object -Sum).Sum)
-        planningStatus = $(if ($cohorts.Count -eq 0) { 'no-baseline-cohorts' } elseif (@($cohorts | Where-Object capped).Count -gt 0) { 'capped-estimate' } elseif ([int](($cohorts.remainingCandidateSamples | Measure-Object -Sum).Sum) -eq 0) { 'target-reached' } else { 'collecting' })
+        remainingCandidateSamples = [int](Get-PropertySum $cohorts 'remainingCandidateSamples')
+        planningStatus = $(if ($cohorts.Count -eq 0) { 'no-baseline-cohorts' } elseif (@($cohorts | Where-Object capped).Count -gt 0) { 'capped-estimate' } elseif ([int](Get-PropertySum $cohorts 'remainingCandidateSamples') -eq 0) { 'target-reached' } else { 'collecting' })
     }
 }
 function Write-Registry([object]$Registry) {
@@ -461,7 +468,8 @@ if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 30 } else {
     Write-Host "Instruction experiments: action=$Action, valid=$($result.valid)"
     if ($result.PSObject.Properties['experiments']) {
         foreach ($experiment in @($result.experiments)) {
-            Write-Host " - $($experiment.experimentId): state=$($experiment.state), path=$($experiment.definition.path), verdict=$($experiment.finalEvaluation.verdict)"
+            $verdict = if ($null -eq $experiment.finalEvaluation) { '' } else { [string]$experiment.finalEvaluation.verdict }
+            Write-Host " - $($experiment.experimentId): state=$($experiment.state), path=$($experiment.definition.path), verdict=$verdict"
         }
     }
     if ($result.PSObject.Properties['evaluation']) { Write-Host "Verdict=$($result.evaluation.verdict), outcome delta=$($result.evaluation.outcomeGainPoints), success delta=$($result.evaluation.successRateDeltaPoints)" }

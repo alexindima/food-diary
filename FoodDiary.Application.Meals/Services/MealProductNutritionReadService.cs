@@ -10,6 +10,7 @@ public sealed class MealProductNutritionReadService(IMealProductNutritionReadRep
     public Task<IReadOnlyList<MealProductNutritionReadModel>> GetForDateAsync(
         UserId userId,
         DateTime date,
+        int limit,
         CancellationToken cancellationToken) =>
-        repository.GetProductNutritionReadModelsAsync(userId, date, cancellationToken);
+        repository.GetProductNutritionReadModelsAsync(userId, date, limit, cancellationToken);
 }

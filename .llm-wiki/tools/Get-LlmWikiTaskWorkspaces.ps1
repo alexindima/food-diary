@@ -84,7 +84,10 @@ if (Test-Path -LiteralPath $absoluteTasksPath -PathType Container) {
             } else {
                 'incomplete'
             }
-            if ($null -ne $descriptor.decomposition -and [string]$descriptor.decomposition.state -eq 'applied') { $state = 'decomposed' }
+            $decompositionProperty = $descriptor.PSObject.Properties['decomposition']
+            $decomposition = if ($null -ne $decompositionProperty) { $decompositionProperty.Value } else { $null }
+            $decompositionStateProperty = if ($null -ne $decomposition) { $decomposition.PSObject.Properties['state'] } else { $null }
+            if ($null -ne $decompositionStateProperty -and [string]$decompositionStateProperty.Value -eq 'applied') { $state = 'decomposed' }
             $issues = @($doctor.errors)
             if (Test-Path -LiteralPath $completionPath -PathType Leaf) {
                 $state = if ($doctor.valid) {

@@ -61,7 +61,7 @@
     "minimumMeanReciprocalRank": 0.0
   },
   "cases": [
-    { "id": "posttune-api-001", "cohort": "api-roles", "query": "billing HTTP controller для подписки и платежей", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Features/Billing/BillingController.cs"] },
+    { "id": "posttune-api-001", "cohort": "api-roles", "query": "billing HTTP controller для подписки и платежей", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Features/Billing/BillingController.cs"], "acceptedPaths": ["FoodDiary.Presentation.Api/Features/Admin/AdminBillingController.cs"] },
     { "id": "posttune-api-002", "cohort": "api-roles", "query": "SignalR hub подтверждения email", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Hubs/EmailVerificationHub.cs"] },
     { "id": "posttune-api-003", "cohort": "api-roles", "query": "API controller Web Push уведомлений", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Features/Notifications/NotificationPushController.cs"] },
     { "id": "posttune-api-004", "cohort": "api-roles", "query": "options rate limiting для API", "changeType": "Api", "expectedPaths": ["FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs"] },

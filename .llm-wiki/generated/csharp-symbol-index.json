@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3447,
-    "symbols": 3455,
+    "sourceFiles": 3451,
+    "symbols": 3458,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 240,
     "kinds": {
-      "class": 1796,
+      "class": 1798,
       "enum": 62,
       "interface": 421,
-      "record": 1056,
+      "record": 1057,
       "record struct": 120
     },
     "roles": {
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 62,
-      "Other": 1329,
+      "Other": 1331,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -41,7 +41,7 @@
       "Request": 133,
       "Response": 179,
       "Service": 278,
-      "Validator": 204,
+      "Validator": 205,
       "ValueObject": 129,
       "WriteRepository": 46
     }
@@ -3720,7 +3720,7 @@
       "kind": "interface",
       "role": "Service",
       "path": "FoodDiary.Application.Abstractions/Usda/Common/IUsdaDailyMicronutrientReadService.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "IUsdaFoodReadModelRepository",
@@ -4434,7 +4434,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableTokenProtector.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "IWearableTransactionRunner",
@@ -12459,6 +12459,13 @@
       "line": 7
     },
     {
+      "name": "GetMicronutrientsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQueryValidator.cs",
+      "line": 4
+    },
+    {
       "name": "SearchUsdaFoodsQuery",
       "kind": "record",
       "role": "Query",
@@ -12484,7 +12491,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Application.Usda/Services/UsdaDailyMicronutrientReadService.cs",
-      "line": 10
+      "line": 12
     },
     {
       "name": "UsdaFoodReadService",
@@ -12988,7 +12995,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "ConnectWearableCommandValidator",
@@ -13030,7 +13037,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "SyncWearableDataCommandValidator",
@@ -14220,7 +14227,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "WearableSyncEntry",
@@ -15224,6 +15231,13 @@
       "line": 4
     },
     {
+      "name": "ProtectedWearableToken",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "FoodDiary.Domain/ValueObjects/ProtectedWearableToken.cs",
+      "line": 4
+    },
+    {
       "name": "RecipeDetailsState",
       "kind": "record struct",
       "role": "ValueObject",
@@ -15404,13 +15418,6 @@
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/UserProfileState.cs",
       "line": 5
-    },
-    {
-      "name": "UserRefreshTokenUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserRefreshTokenUpdate.cs",
-      "line": 2
     },
     {
       "name": "UserSecurityState",
@@ -16481,7 +16488,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Wearables/WearableConnectionConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "WearableSyncEntryConfiguration",
@@ -17650,7 +17657,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/DependencyInjection.FoodData.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "DependencyInjection",
@@ -17875,6 +17882,20 @@
       "role": "Service",
       "path": "FoodDiary.Integrations/Services/UnconfiguredImageStorageService.cs",
       "line": 5
+    },
+    {
+      "name": "UsdaFoodDetailCache",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Integrations/Services/UsdaFoodDetailCache.cs",
+      "line": 5
+    },
+    {
+      "name": "UsdaFoodDetailLookupResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Integrations/Services/UsdaFoodDetailLookupResult.cs",
+      "line": 4
     },
     {
       "name": "UsdaFoodSearchService",
@@ -21500,7 +21521,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/WeeklyCheckIn/WeeklyCheckInController.cs",
-      "line": 13
+      "line": 16
     },
     {
       "name": "WeeklyGoalHttpMappings",
@@ -22207,7 +22228,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Services/WearableTokenProtector.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "PresentationContractOperationFilter",

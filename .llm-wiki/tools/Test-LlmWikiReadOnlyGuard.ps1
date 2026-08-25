@@ -73,6 +73,11 @@ Start-Sleep -Milliseconds 750
     $null = New-Item -ItemType Directory -Path $cleanToolsRoot -Force
     Copy-Item -LiteralPath $guardPath -Destination (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -Force
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1') -Destination (Join-Path $cleanToolsRoot 'LlmWikiGitPaths.ps1') -Force
+    $fakeGraphManagerPath = Join-Path $cleanToolsRoot 'Manage-LlmWikiCodeGraph.ps1'
+    [IO.File]::WriteAllText(
+        $fakeGraphManagerPath,
+        "param([string]`$Action,[string]`$Format)`n`$marker=Join-Path (Resolve-Path (Join-Path `$PSScriptRoot '../..')).Path '.artifacts/llm-wiki/code-graph/prepared.marker'`n`$null=New-Item -ItemType Directory -Path (Split-Path -Parent `$marker) -Force`n[IO.File]::WriteAllText(`$marker,'prepared',[Text.Encoding]::ASCII)`n",
+        [Text.UTF8Encoding]::new($false))
     $cleanSafeTool = Join-Path $cleanToolsRoot 'clean-safe.ps1'
     [IO.File]::WriteAllText($cleanSafeTool, "Write-Output 'read-only-clean-control'", [Text.UTF8Encoding]::new($false))
     & git -C $cleanRepositoryRoot init --quiet
@@ -111,6 +116,19 @@ Start-Sleep -Milliseconds 750
     if (-not $cleanReadyFile) { throw 'Read-only guard did not publish the clean snapshot readiness marker.' }
     $cleanSnapshotRoot = Join-Path $cleanSnapshotParent $cleanReadyFile.BaseName
     $cachedGuardPath = Join-Path $cleanSnapshotRoot '.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1'
+    $cachedManagerPath = Join-Path $cleanSnapshotRoot '.llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1'
+    $cachedManagerLf = [IO.File]::ReadAllText($cachedManagerPath).Replace("`r`n", "`n").Replace("`r", "`n")
+    [IO.File]::WriteAllText($cachedManagerPath, $cachedManagerLf, [Text.UTF8Encoding]::new($false))
+    $reuseMarkerPath = Join-Path $cleanSnapshotRoot 'line-ending-cache-reuse.marker'
+    [IO.File]::WriteAllText($reuseMarkerPath, 'preserve-on-reuse', [Text.Encoding]::ASCII)
+    $lineEndingReuseOutput = @(& (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
+        -ToolPath $cleanSafeTool `
+        -ToolArguments @{ ProposedPath = @('CleanScope') })
+    if ('read-only-clean-control' -notin $lineEndingReuseOutput -or
+        -not (Test-Path -LiteralPath $reuseMarkerPath -PathType Leaf)) {
+        throw 'Read-only guard rebuilt a valid cached snapshot solely because Git normalized text-file line endings.'
+    }
+
     Remove-Item -LiteralPath $cachedGuardPath -Force
 
     $recoveredOutput = @(& (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
@@ -119,6 +137,19 @@ Start-Sleep -Milliseconds 750
     if ('read-only-clean-control' -notin $recoveredOutput -or
         -not (Test-Path -LiteralPath $cachedGuardPath -PathType Leaf)) {
         throw 'Read-only guard did not rebuild a cached snapshot whose required tooling was missing.'
+    }
+
+    $preparedSafeTool = Join-Path $cleanToolsRoot 'prepared-safe.ps1'
+    [IO.File]::WriteAllText(
+        $preparedSafeTool,
+        "`$marker=Join-Path (Get-Location).Path '.artifacts/llm-wiki/code-graph/prepared.marker'`nif(-not (Test-Path -LiteralPath `$marker -PathType Leaf)){throw 'Code graph was not prepared inside the snapshot.'}`nWrite-Output 'read-only-prepared-control'`n",
+        [Text.UTF8Encoding]::new($false))
+    $preparedOutput = @(& (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
+        -ToolPath $preparedSafeTool `
+        -ToolArguments @{ ProposedPath = @('CleanScope') } `
+        -PrepareCodeGraph)
+    if ('read-only-prepared-control' -notin $preparedOutput -or (Test-Path -LiteralPath (Join-Path $cleanRepositoryRoot '.artifacts/llm-wiki/code-graph/prepared.marker'))) {
+        throw 'Read-only guard did not prepare the code graph exclusively inside its stable snapshot.'
     }
 
     $productOnlyPlan = & (Join-Path $PSScriptRoot 'Invoke-LlmWikiAffectedSmoke.ps1') `

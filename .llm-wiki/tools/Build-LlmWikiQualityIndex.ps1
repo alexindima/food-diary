@@ -30,7 +30,7 @@ function Get-TextSha256([string]$Value) {
     } finally { $sha.Dispose() }
 }
 
-$cacheInputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', '*.cs', '*.ts') -FailureMessage 'Unable to enumerate quality-index inputs.')
+$cacheInputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', '*.cs', '*.ts', '*.ps1') -FailureMessage 'Unable to enumerate quality-index inputs.')
 $cacheInputs += @(
     '.llm-wiki/generated/csharp-symbol-index.json'
     '.llm-wiki/tools/Build-LlmWikiQualityIndex.ps1'
@@ -61,7 +61,7 @@ $criticalSymbols = @($symbols | Where-Object { $_.role -in $criticalRoles -and $
 
 $repositoryFiles = @(
     $cacheInputs |
-        Where-Object { $_ -match '\.(?:cs|ts)$' } |
+        Where-Object { $_ -match '\.(?:cs|ts|ps1)$' } |
         Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique |
         ForEach-Object {
             $relativePath = ([string]$_).TrimStart([char]0xFEFF).Replace('\', '/')
@@ -89,6 +89,13 @@ $testFiles = @(
                 path = $_.path
                 content = [System.IO.File]::ReadAllText($_.fullPath)
             }
+        }
+)
+$wikiTestFiles = @(
+    $repositoryFiles |
+        Where-Object { $_.extension -eq '.ps1' -and $_.path -match '^\.llm-wiki/tools/' -and $_.name -match '^Test-' } |
+        ForEach-Object {
+            [pscustomobject]@{ path = $_.path; content = [IO.File]::ReadAllText($_.fullPath) }
         }
 )
 
@@ -121,6 +128,25 @@ foreach ($symbol in $criticalSymbols) {
     })
 }
 
+$wikiTools = @($repositoryFiles | Where-Object {
+    $_.extension -eq '.ps1' -and
+    ($_.path -eq '.llm-wiki/wiki.ps1' -or $_.path -match '^\.llm-wiki/tools/') -and
+    $_.name -notmatch '^Test-'
+})
+foreach ($tool in $wikiTools) {
+    $references = @($wikiTestFiles | Where-Object {
+        $_.content.IndexOf($tool.name, [StringComparison]::OrdinalIgnoreCase) -ge 0
+    } | ForEach-Object path | Sort-Object -Unique)
+    $symbolCoverage.Add([pscustomobject]@{
+        name = [IO.Path]::GetFileNameWithoutExtension($tool.name)
+        role = 'WikiTool'
+        path = $tool.path
+        line = 1
+        testReferenceCount = $references.Count
+        testReferences = $references
+    })
+}
+
 $symbolCoverageByPath = [System.Collections.Generic.Dictionary[string, System.Collections.Generic.List[object]]]::new(
     [System.StringComparer]::Ordinal)
 foreach ($coverage in $symbolCoverage) {
@@ -133,11 +159,12 @@ foreach ($coverage in $symbolCoverage) {
 $productionFiles = @(
     $repositoryFiles |
         Where-Object {
-            $_.path -notmatch '^\.llm-wiki/tools/' -and
             $_.path -notmatch '(^|/)(tests|node_modules|obj|bin|dist|coverage|\.angular|\.artifacts|TestResults|Migrations)/' -and
-            ($_.extension -eq '.cs' -or
-             ($_.extension -eq '.ts' -and $_.path -match '(^|/)FoodDiary\.(Web\.Client|Mobile)/')) -and
-            $_.name -notmatch '\.(Designer|g|spec|test)\.(cs|ts)$'
+            (($_.extension -eq '.cs' -and $_.path -notmatch '^\.llm-wiki/') -or
+             ($_.extension -eq '.ts' -and $_.path -match '(^|/)FoodDiary\.(Web\.Client|Mobile)/') -or
+             ($_.extension -eq '.ps1' -and ($_.path -eq '.llm-wiki/wiki.ps1' -or $_.path -match '^\.llm-wiki/tools/'))) -and
+            $_.name -notmatch '\.(Designer|g|spec|test)\.(cs|ts)$' -and
+            -not ($_.extension -eq '.ps1' -and $_.name -match '^Test-')
         }
 )
 
@@ -178,13 +205,15 @@ foreach ($file in $productionFiles) {
 
 $unreferencedSymbols = @($symbolCoverage | Where-Object testReferenceCount -eq 0)
 $result = [ordered]@{
-    schemaVersion = 1
+    schemaVersion = 2
     semantics = [ordered]@{
         testReferenceCoverage = 'A symbol name appears in at least one test source file. This is not execution or line coverage.'
         structuralRiskScore = 'nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5'
     }
     summary = [ordered]@{
         productionFiles = $fileMetrics.Count
+        wikiToolFiles = @($fileMetrics | Where-Object path -match '^\.llm-wiki/(?:tools/|wiki\.ps1$)').Count
+        wikiToolsWithoutTestReferences = @($symbolCoverage | Where-Object { $_.role -eq 'WikiTool' -and $_.testReferenceCount -eq 0 }).Count
         criticalSymbols = $symbolCoverage.Count
         criticalSymbolsWithTestReferences = @($symbolCoverage | Where-Object testReferenceCount -gt 0).Count
         criticalSymbolsWithoutTestReferences = $unreferencedSymbols.Count
@@ -211,7 +240,7 @@ $result = [ordered]@{
                 line
     )
 }
-$jsonText = ($result | ConvertTo-Json -Depth 10) + [Environment]::NewLine
+$jsonText = (($result | ConvertTo-Json -Depth 10) -replace "`r`n", "`n") + "`n"
 
 if ($Check) {
     if (-not (Test-LlmWikiJsonEquivalent -ActualPath $outputPath -ExpectedJson $jsonText -Depth 10)) {

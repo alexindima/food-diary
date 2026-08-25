@@ -7,5 +7,6 @@ public interface IMealProductNutritionReadRepository {
     Task<IReadOnlyList<MealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
         UserId userId,
         DateTime date,
+        int limit,
         CancellationToken cancellationToken = default);
 }

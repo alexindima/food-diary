@@ -7,5 +7,6 @@ public interface IMealProductNutritionReadService {
     Task<IReadOnlyList<MealProductNutritionReadModel>> GetForDateAsync(
         UserId userId,
         DateTime date,
+        int limit,
         CancellationToken cancellationToken);
 }

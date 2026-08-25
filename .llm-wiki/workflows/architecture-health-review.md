@@ -34,9 +34,8 @@ services should not require new project edges. Confirm this through the
 architecture-health index and architecture tests rather than treating a clean
 handler dependency list as sufficient proof.
 
-Task-brief impact already reads architecture-health records from SQLite, while
-the standalone command intentionally remains on JSON. Its current projection
-does not contain every standalone view (`allowances`, ambiguous contracts, and
-unconsumed contracts), and the measured Node process route is slower. The
-migration report therefore marks this index partial rather than overstating it
-as fully migrated.
+Task-brief impact and every standalone view read architecture-health records from
+the exact in-process SQLite route. The projection includes allowances, ambiguous
+contracts, and unconsumed contracts. Generated JSON remains only as the source
+projection and explicit parity baseline; the migration report therefore marks
+the query layer fully migrated without claiming the source artifact is removable.

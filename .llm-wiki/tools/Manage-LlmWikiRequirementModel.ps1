@@ -183,7 +183,7 @@ function Get-Assessment {
     }
     for ($left = 0; $left -lt $criteria.Count; $left++) {
         for ($right = $left + 1; $right -lt $criteria.Count; $right++) {
-            if ((Get-CriterionOriginKind $criteria[$left]) -eq 'compound-split' -or (Get-CriterionOriginKind $criteria[$right]) -eq 'compound-split') { continue }
+            if ((Get-CriterionOriginKind $criteria[$left]) -like 'compound-*' -or (Get-CriterionOriginKind $criteria[$right]) -like 'compound-*') { continue }
             $leftType = Get-RequirementType ([string]$criteria[$left].text)
             $rightType = Get-RequirementType ([string]$criteria[$right].text)
             if ($leftType -ne $rightType) { continue }
@@ -259,7 +259,7 @@ if ($Action -eq 'expand') {
             if ($partIndex -eq 0) {
                 $criterion.text = $parts[$partIndex]
                 if ($wasSplit) {
-                    $criterion | Add-Member -NotePropertyName origin -NotePropertyValue ([pscustomobject][ordered]@{ kind = 'compound-split'; sourceCriterionId = [string]$criterion.id }) -Force
+                    $criterion | Add-Member -NotePropertyName origin -NotePropertyValue ([pscustomobject][ordered]@{ kind = 'compound-source'; sourceCriterionId = [string]$criterion.id }) -Force
                 }
                 $expandedCriteria.Add($criterion)
                 continue

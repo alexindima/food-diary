@@ -225,6 +225,7 @@ public sealed class ExternalFoodServiceTests {
                 ApiKey = apiKey,
                 BaseUrl = "https://usda.test",
             }),
+            new UsdaFoodDetailCache(TimeProvider.System),
             NullLogger<UsdaFoodSearchService>.Instance);
     }
 

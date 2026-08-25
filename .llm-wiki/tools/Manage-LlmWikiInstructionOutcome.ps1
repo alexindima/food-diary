@@ -176,7 +176,8 @@ if ($Action -eq 'observe') {
         if (-not (Test-Path -LiteralPath (Join-Path $absoluteWorkspace $name) -PathType Leaf)) { throw "Instruction outcome input is absent: $workspace/$name" }
     }
     $completion = ConvertFrom-LlmWikiJson (Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'completion.json') -Raw)
-    if ([string]$completion.completionFingerprint -in @($registry.events.completionFingerprint)) {
+    $observedCompletionFingerprints = @($registry.events | ForEach-Object { [string]$_.completionFingerprint })
+    if ([string]$completion.completionFingerprint -in $observedCompletionFingerprints) {
         $result = [pscustomobject][ordered]@{ action = 'observe'; valid = $true; addedCount = 0; eventHash = ''; reason = 'Completion outcome was already observed.' }
     } else {
         $packet = ConvertFrom-LlmWikiJson (Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'change-packet.json') -Raw)

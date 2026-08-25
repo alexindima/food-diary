@@ -21,7 +21,7 @@
     "backendBusinessModules": 33,
     "controllers": 88,
     "endpoints": 280,
-    "agentGuides": 74,
+    "agentGuides": 75,
     "documentationPages": 50
   },
   "dotnet": {
@@ -5431,7 +5431,7 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/weekly-check-in",
-            "line": 14
+            "line": 17
           }
         ]
       },
@@ -5684,6 +5684,7 @@
       "FoodDiary.Mobile/AGENTS.md",
       "FoodDiary.Presentation.Api/AGENTS.md",
       "FoodDiary.Resources/AGENTS.md",
+      "FoodDiary.TechRadar/AGENTS.md",
       "FoodDiary.Telegram.Bot/AGENTS.md",
       "FoodDiary.Web.Api/AGENTS.md",
       "FoodDiary.Web.Client/AGENTS.md",

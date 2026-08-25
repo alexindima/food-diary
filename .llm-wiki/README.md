@@ -62,6 +62,10 @@ In short, agents should prefer MCP for retrieval and the Wiki facade for
 governed lifecycle operations. They complement each other; neither turns the
 SQLite cache into an authority over Git-backed sources.
 
+Runtime Wiki and Development MCP queries require PowerShell 7 (`pwsh`). The
+single in-process SQLite reader targets the repository's current .NET runtime
+and is intentionally not duplicated for Windows PowerShell 5.1.
+
 For normal work, prefer the compact path:
 
 ```powershell
@@ -101,7 +105,10 @@ standalone command for diagnosis; publication CI still runs uncached strict
 verification.
 Interrupted local `verify` and `verify-full` runs resume passed stages by
 default; receipts are content-addressed independently from each stage's relevant
-inputs. CI disables this default and never trusts the local stage cache.
+inputs. Concurrent runs keep independent progress receipts and logs under
+`.artifacts/llm-wiki/verify-runs/<run-id>`; `verify-progress.json` is only the
+latest-run pointer. CI disables resume by default and never trusts the local
+stage cache.
 
 Repository queries use a derived SQLite layer under `.artifacts/llm-wiki` for
 symbols, typed edges, modules, contracts, tests, and quality risks. The database
@@ -115,6 +122,12 @@ indexes. Compiled JSON files remain publication artifacts while any generator
 or compatibility reader still consumes them; migration to SQLite removes
 query-time reads first, starting with cold context discovery, and a file is
 deleted only after a repository consumer scan proves it unused.
+Runtime topology, domain data, and architecture health use exact in-process
+SQLite readers. Runtime accepts a measured cold-process startup cost to keep one
+production query mechanism; its warm path is cached across tool-script scopes.
+JSON files remain projection sources and explicit parity oracles, never automatic
+fallbacks. Quality indexing also measures the Wiki's own non-test PowerShell
+tools and direct regression-script references.
 
 `get_server_status` exposes bounded SQL-route health under
 `runtimeMetrics.contextRouting`. The persistent sample contains only timestamp,
@@ -283,8 +296,9 @@ lifecycle.
 `verify` is the fast interactive and handoff gate. It starts with lint and its
 regression fixtures, then checks page structure, generated indexes, freshness,
 eval regressions, failure records, change policy, and impact review.
-`verify-full` adds the portable and complete stateful smoke suites while
-running independent index checks and tool scenarios concurrently. In CI the
+`verify-full` adds the portable and complete stateful smoke suites, including the
+actual monolithic `Full` audit profile by default. `-VerificationProfile
+Focused|Core` is an explicit diagnostic override. In CI the
 full Wiki gate is a separate job, so it no longer blocks backend restore,
 build, and tests.
 

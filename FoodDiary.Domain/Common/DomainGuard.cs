@@ -81,12 +81,18 @@ internal static class DomainGuard {
             : normalized;
     }
 
-    public static string? OptionalJson(string? value, string paramName) {
-        if (string.IsNullOrWhiteSpace(value)) {
+    public static string? OptionalJson(string? value, int maxLength, string paramName) {
+        if (value?.Length > maxLength) {
+            throw new ArgumentOutOfRangeException(
+                paramName,
+                string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."));
+        }
+
+        string? normalized = OptionalText(value, maxLength, paramName);
+        if (normalized is null) {
             return null;
         }
 
-        string normalized = value.Trim();
         ValidateJson(normalized, paramName);
         return normalized;
     }

@@ -74,13 +74,13 @@ foreach ($indexPath in @(
     '.llm-wiki/generated/architecture-health-index.json'
 )) {
     $migrationIndex = @($migration.indexes | Where-Object path -eq $indexPath | Select-Object -First 1)
-    if ($migrationIndex.Count -ne 1 -or [string]$migrationIndex[0].queryLayer -ne 'partial' -or
-        [string]$migrationIndex[0].defaultRoute -ne 'json-standalone-query; sqlite-task-brief-impact' -or
+    if ($migrationIndex.Count -ne 1 -or [string]$migrationIndex[0].queryLayer -ne 'migrated' -or
+        [string]$migrationIndex[0].defaultRoute -notmatch '^in-process-sqlite-' -or
         [bool]$migrationIndex[0].automaticJsonFallback) {
-        throw "Intentional standalone JSON route is not reported as a partial migration: $indexPath"
+        throw "Standalone query route is not reported as SQLite-primary without fallback: $indexPath"
     }
 }
-if ([int]$migration.migratedQueryLayerCount -ne 8 -or [int]$migration.partialQueryLayerCount -ne 2) {
+if ([int]$migration.migratedQueryLayerCount -ne 10 -or [int]$migration.partialQueryLayerCount -ne 0) {
     throw "Compiled-index migration totals are inaccurate: migrated=$($migration.migratedQueryLayerCount), partial=$($migration.partialQueryLayerCount)."
 }
 $compiledCounts = @{}

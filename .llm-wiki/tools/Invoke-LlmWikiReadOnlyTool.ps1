@@ -1,10 +1,18 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)][string]$ToolPath,
-    [hashtable]$ToolArguments = @{}
+    [hashtable]$ToolArguments = @{},
+    [switch]$PrepareCodeGraph
 )
 
 $ErrorActionPreference = 'Stop'
+$readOnlyInvocationStopwatch = [Diagnostics.Stopwatch]::StartNew()
+
+function Write-ReadOnlyTiming {
+    param([Parameter(Mandatory)][string]$Stage)
+    Write-Verbose ("Read-only snapshot stage={0} elapsedMs={1}" -f $Stage, [Math]::Round($readOnlyInvocationStopwatch.Elapsed.TotalMilliseconds, 2))
+}
+
 $sourceRepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $activeSnapshotRoot = [string]$env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
@@ -143,12 +151,24 @@ function Get-FileHashOrMissing {
     finally { $sha.Dispose(); $stream.Dispose() }
 }
 
+function Get-PortableTextHashOrMissing {
+    param([Parameter(Mandatory)][string]$Path)
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { return '<missing>' }
+    $normalizedText = [IO.File]::ReadAllText($Path).Replace("`r`n", "`n").Replace("`r", "`n")
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try {
+        return ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($normalizedText))) -replace '-', '').ToLowerInvariant()
+    } finally {
+        $sha.Dispose()
+    }
+}
+
 function Remove-StaleReadOnlySnapshots {
     param(
         [Parameter(Mandatory)][string]$RepositoryRoot,
         [Parameter(Mandatory)][string]$SnapshotParent,
         [Parameter(Mandatory)][string]$CurrentFingerprint,
-        [ValidateRange(2, 50)][int]$Retain = 8
+        [ValidateRange(2, 50)][int]$Retain = 2
     )
 
     $parentPrefix = [IO.Path]::GetFullPath($SnapshotParent).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
@@ -156,14 +176,22 @@ function Remove-StaleReadOnlySnapshots {
         Sort-Object LastWriteTimeUtc -Descending)
     $retained = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
     $null = $retained.Add($CurrentFingerprint)
-    foreach ($readyFile in $readyFiles | Select-Object -First $Retain) {
+    foreach ($readyFile in $readyFiles) {
+        if ($retained.Count -ge $Retain) { break }
         $null = $retained.Add([IO.Path]::GetFileNameWithoutExtension($readyFile.Name))
     }
-    foreach ($readyFile in $readyFiles) {
-        $fingerprint = [IO.Path]::GetFileNameWithoutExtension($readyFile.Name)
+    $snapshotDirectories = @(Get-ChildItem -LiteralPath $SnapshotParent -Directory -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -match '^[a-f0-9]{64}$' })
+    $candidateFingerprints = @(
+        @($readyFiles | ForEach-Object { [IO.Path]::GetFileNameWithoutExtension($_.Name) }) +
+        @($snapshotDirectories | ForEach-Object Name) |
+            Sort-Object -Unique
+    )
+    foreach ($fingerprint in $candidateFingerprints) {
         if ($fingerprint -notmatch '^[a-f0-9]{64}$' -or $retained.Contains($fingerprint)) { continue }
         $snapshotRoot = [IO.Path]::GetFullPath((Join-Path $SnapshotParent $fingerprint))
         if (-not $snapshotRoot.StartsWith($parentPrefix, [StringComparison]::OrdinalIgnoreCase)) { continue }
+        $readyPath = Join-Path $SnapshotParent "$fingerprint.ready"
         $lockPath = Join-Path $SnapshotParent "$fingerprint.lock"
         $pruneLock = $null
         try {
@@ -173,8 +201,11 @@ function Remove-StaleReadOnlySnapshots {
                 continue
             }
             $snapshotGitPath = Join-Path $snapshotRoot '.git'
-            if (Test-Path -LiteralPath $snapshotGitPath -PathType Container) {
-                Remove-Item -LiteralPath $snapshotRoot -Recurse -Force
+            if ((Test-Path -LiteralPath $snapshotGitPath -PathType Container) -or
+                -not (Test-Path -LiteralPath $snapshotGitPath)) {
+                if (Test-Path -LiteralPath $snapshotRoot) {
+                    Remove-Item -LiteralPath $snapshotRoot -Recurse -Force
+                }
                 $removeExitCode = 0
             } else {
                 $previousErrorActionPreference = $ErrorActionPreference
@@ -190,8 +221,7 @@ function Remove-StaleReadOnlySnapshots {
                 }
             }
             if ($removeExitCode -eq 0) {
-                Remove-Item -LiteralPath $readyFile.FullName -Force -ErrorAction SilentlyContinue
-                break
+                Remove-Item -LiteralPath $readyPath -Force -ErrorAction SilentlyContinue
             }
         } finally {
             if ($pruneLock) { $pruneLock.Dispose() }
@@ -282,6 +312,7 @@ function Invoke-ToolInsideSnapshot {
 }
 
 if (-not [string]::IsNullOrWhiteSpace($activeSnapshotRoot)) {
+    Write-ReadOnlyTiming -Stage 'inner-start'
     $repositoryRoot = [IO.Path]::GetFullPath($activeSnapshotRoot)
     $originalRoot = if (-not [string]::IsNullOrWhiteSpace($env:LLM_WIKI_READ_ONLY_SOURCE_ROOT)) {
         [IO.Path]::GetFullPath($env:LLM_WIKI_READ_ONLY_SOURCE_ROOT)
@@ -297,7 +328,19 @@ if (-not [string]::IsNullOrWhiteSpace($activeSnapshotRoot)) {
     } else {
         $ToolPath
     }
+    if ($PrepareCodeGraph) {
+        $graphManagerPath = Join-Path $repositoryRoot '.llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1'
+        if (-not (Test-Path -LiteralPath $graphManagerPath -PathType Leaf)) {
+            throw "Read-only snapshot is missing its code-graph manager: $graphManagerPath"
+        }
+        $null = & $graphManagerPath -Action build -Format Json
+        if (-not $? -or ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0)) {
+            throw 'Unable to refresh the SQLite compiled-index projection inside the read-only snapshot.'
+        }
+    }
+    Write-ReadOnlyTiming -Stage 'inner-before-tool'
     Invoke-ToolInsideSnapshot -RepositoryRoot $repositoryRoot -SnapshotToolPath $snapshotToolPath -Arguments $ToolArguments
+    Write-ReadOnlyTiming -Stage 'inner-complete'
     return
 }
 
@@ -325,7 +368,9 @@ $requestedScopePaths = if ($ToolArguments.ContainsKey('ProposedPath') -and @($To
 }
 $workspaceOverlayPaths = @(Get-WorkspaceOverlayPaths -RepositoryRoot $sourceRepositoryRoot -RelevantPath $requestedScopePaths)
 $overlayPaths = @(Select-RelevantOverlayPath -WorkspacePath $workspaceOverlayPaths -Arguments $ToolArguments)
+Write-ReadOnlyTiming -Stage 'outer-overlay-ready'
 $snapshotFingerprint = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $sourceRepositoryRoot -OverlayPath $overlayPaths
+Write-ReadOnlyTiming -Stage 'outer-fingerprint-ready'
 $snapshotRoot = Join-Path $snapshotParent $snapshotFingerprint
 $readyPath = Join-Path $snapshotParent "$snapshotFingerprint.ready"
 $snapshotLockPath = Join-Path $snapshotParent "$snapshotFingerprint.lock"
@@ -335,6 +380,7 @@ $snapshotCreated = $false
 $requiredSnapshotFiles = @(
     '.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1'
     '.llm-wiki/tools/LlmWikiGitPaths.ps1'
+    '.llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1'
 )
 $previousSnapshotRoot = $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT
 $previousSourceRoot = $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT
@@ -349,6 +395,7 @@ try {
             Start-Sleep -Milliseconds 100
         }
     }
+    Write-ReadOnlyTiming -Stage 'outer-lock-acquired'
     $snapshotIsReady = (Test-Path -LiteralPath $readyPath -PathType Leaf) -and
         (Test-Path -LiteralPath (Join-Path $snapshotRoot '.git'))
     if ($snapshotIsReady) {
@@ -356,7 +403,7 @@ try {
             $sourceRequiredPath = Join-Path $sourceRepositoryRoot $requiredPath
             $snapshotRequiredPath = Join-Path $snapshotRoot $requiredPath
             if (-not (Test-Path -LiteralPath $snapshotRequiredPath -PathType Leaf) -or
-                (Get-FileHashOrMissing $snapshotRequiredPath) -cne (Get-FileHashOrMissing $sourceRequiredPath)) {
+                (Get-PortableTextHashOrMissing $snapshotRequiredPath) -cne (Get-PortableTextHashOrMissing $sourceRequiredPath)) {
                 $snapshotIsReady = $false
                 break
             }
@@ -398,6 +445,7 @@ try {
         )
         [IO.File]::WriteAllText($readyPath, $snapshotFingerprint + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
     }
+    Write-ReadOnlyTiming -Stage $(if ($snapshotCreated) { 'outer-snapshot-created' } else { 'outer-snapshot-reused' })
     $snapshotToolPath = Join-Path $snapshotRoot $relativeToolPath
     if (-not (Test-Path -LiteralPath $snapshotToolPath -PathType Leaf) -or
         (Get-FileHashOrMissing $snapshotToolPath) -cne (Get-FileHashOrMissing $ToolPath)) {
@@ -407,7 +455,11 @@ try {
     $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT = $snapshotRoot
     $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT = $sourceRepositoryRoot
     try {
-        & (Join-Path $snapshotRoot '.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $snapshotToolPath -ToolArguments $ToolArguments
+        & (Join-Path $snapshotRoot '.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1') `
+            -ToolPath $snapshotToolPath `
+            -ToolArguments $ToolArguments `
+            -PrepareCodeGraph:$PrepareCodeGraph
+        Write-ReadOnlyTiming -Stage 'outer-inner-complete'
     } catch {
         if ($_.Exception.Message -like '*modified its isolated snapshot*') { $removeSnapshot = $true }
         throw
@@ -430,7 +482,7 @@ try {
         }
     }
     Remove-Item -LiteralPath $snapshotLockPath -Force -ErrorAction SilentlyContinue
-    if ($snapshotCreated) {
-        Remove-StaleReadOnlySnapshots -RepositoryRoot $sourceRepositoryRoot -SnapshotParent $snapshotParent -CurrentFingerprint $snapshotFingerprint
-    }
+    Write-ReadOnlyTiming -Stage 'outer-before-prune'
+    Remove-StaleReadOnlySnapshots -RepositoryRoot $sourceRepositoryRoot -SnapshotParent $snapshotParent -CurrentFingerprint $snapshotFingerprint
+    Write-ReadOnlyTiming -Stage 'outer-complete'
 }

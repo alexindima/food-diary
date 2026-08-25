@@ -8,6 +8,7 @@ using FoodDiary.Application.Usda.Queries.GetMicronutrients;
 using FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
 using FoodDiary.Application.Usda.Services;
 using FoodDiary.Application.Meals.Services;
+using FoodDiary.Application.Meals.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Usda;
@@ -116,6 +117,30 @@ public sealed class UsdaQueryHandlerTests {
     }
 
     [Fact]
+    public async Task GetMicronutrients_WhenProviderReturnsDuplicateNutrientIds_UsesFirstEntry() {
+        IUsdaFoodRepository repository = CreateUsdaFoodRepository();
+        IUsdaFoodSearchService branded = CreateUsdaFoodSearchService(
+            detail: new UsdaFoodDetailModel(
+                20,
+                "Branded yogurt",
+                "Branded",
+                [
+                    new MicronutrientModel(203, "Protein", "g", 10, DailyValue: null, PercentDailyValue: null),
+                    new MicronutrientModel(203, "Duplicate protein", "g", 11, DailyValue: null, PercentDailyValue: null),
+                ],
+                [],
+                HealthScores: null));
+        var handler = new GetMicronutrientsQueryHandler(new UsdaFoodReadService(repository, branded));
+
+        Result<UsdaFoodDetailModel> result = await handler.Handle(new GetMicronutrientsQuery(20), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        MicronutrientModel nutrient = Assert.Single(result.Value.Nutrients);
+        Assert.Equal("Protein", nutrient.Name);
+        Assert.Equal(10, nutrient.AmountPer100G);
+    }
+
+    [Fact]
     public async Task GetMicronutrients_WhenFoodMissingEverywhere_ReturnsNotFound() {
         var handler = new GetMicronutrientsQueryHandler(new UsdaFoodReadService(
             CreateUsdaFoodRepository(),
@@ -220,6 +245,32 @@ public sealed class UsdaQueryHandlerTests {
         Assert.Empty(result.Value.Nutrients);
         Assert.Null(result.Value.HealthScores);
         Assert.False(wereNutrientsByFdcIdsCalled());
+    }
+
+    [Fact]
+    public async Task GetDailyMicronutrients_WhenProductItemLimitIsExceeded_ReturnsRateLimitedFailure() {
+        IMealProductNutritionReadService mealNutrition = Substitute.For<IMealProductNutritionReadService>();
+        mealNutrition
+            .GetForDateAsync(
+                Arg.Any<UserId>(),
+                Arg.Any<DateTime>(),
+                UsdaDailyMicronutrientReadService.MaximumProductItemsPerDay + 1,
+                Arg.Any<CancellationToken>())
+            .Returns(Enumerable
+                .Repeat(
+                    new MealProductNutritionReadModel(Amount: 1, ProductBaseAmount: 100, UsdaFdcId: null),
+                    UsdaDailyMicronutrientReadService.MaximumProductItemsPerDay + 1)
+                .ToList());
+        var service = new UsdaDailyMicronutrientReadService(mealNutrition, CreateUsdaFoodRepository());
+
+        Result<DailyMicronutrientSummaryModel> result = await service.GetDailySummaryAsync(
+            UserId.New(),
+            DateTime.UtcNow,
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Usda.DailyMicronutrientItemLimitExceeded", result.Error.Code);
+        Assert.Equal(ErrorKind.RateLimited, result.Error.Kind);
     }
 
     [Fact]
@@ -493,7 +544,11 @@ public sealed class UsdaQueryHandlerTests {
             .GetWithItemsAndProductsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(meals));
         repository
-            .GetProductNutritionReadModelsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .GetProductNutritionReadModelsAsync(
+                Arg.Any<UserId>(),
+                Arg.Any<DateTime>(),
+                Arg.Any<int>(),
+                Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IReadOnlyList<MealProductNutritionReadModel>>([
                 .. meals
                     .SelectMany(static meal => meal.Items)

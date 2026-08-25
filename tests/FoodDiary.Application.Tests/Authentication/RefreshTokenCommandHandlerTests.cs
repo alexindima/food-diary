@@ -17,7 +17,6 @@ public sealed class RefreshTokenCommandHandlerTests {
     [Fact]
     public async Task Handle_WithStoredRefreshToken_RotatesTokens() {
         User user = CreateUser("refresh@example.com");
-        user.UpdateRefreshToken($"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("current-refresh-token")}");
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
         var hasher = new FakePasswordHasher();
@@ -42,7 +41,6 @@ public sealed class RefreshTokenCommandHandlerTests {
     [Fact]
     public async Task Handle_WithRememberMeRefreshToken_PreservesRememberMeOnRotation() {
         User user = CreateUser("remember-refresh@example.com");
-        user.UpdateRefreshToken($"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("remember-refresh-token")}");
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
         var hasher = new FakePasswordHasher();
@@ -87,7 +85,6 @@ public sealed class RefreshTokenCommandHandlerTests {
     [Fact]
     public async Task Handle_WithMismatchedStoredRefreshToken_ReturnsInvalidToken() {
         User user = CreateUser("refresh@example.com");
-        user.UpdateRefreshToken($"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("other-refresh-token")}");
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
         var hasher = new FakePasswordHasher();
@@ -177,7 +174,6 @@ public sealed class RefreshTokenCommandHandlerTests {
     [Fact]
     public async Task Handle_WithFastStorageHash_RotatesTokens() {
         User user = CreateUser("refresh-fast@example.com");
-        user.UpdateRefreshToken(SecurityTokenGenerator.HashForStorage("current-refresh-token"));
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
         var hasher = new FakePasswordHasher();
@@ -254,7 +250,6 @@ public sealed class RefreshTokenCommandHandlerTests {
     [Fact]
     public async Task Handle_WithInactiveUser_ReturnsInvalidToken() {
         User user = CreateUser("refresh@example.com");
-        user.UpdateRefreshToken($"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("current-refresh-token")}");
         user.Deactivate();
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
@@ -276,7 +271,6 @@ public sealed class RefreshTokenCommandHandlerTests {
     [Fact]
     public async Task Handle_WithDeletedUser_ReturnsInvalidToken() {
         User user = CreateUser("refresh@example.com");
-        user.UpdateRefreshToken($"hashed:{SecurityTokenGenerator.NormalizeForSecureHashing("current-refresh-token")}");
         user.DeleteAccount(DateTime.UtcNow);
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);

@@ -36,6 +36,12 @@ $items = [System.Collections.Generic.List[object]]::new()
 function Read-Json([string]$Path) {
     try { return Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json } catch { return $null }
 }
+function Get-PropertyValue([object]$Object, [string]$Name) {
+    if ($null -eq $Object) { return $null }
+    $property = $Object.PSObject.Properties[$Name]
+    if ($null -eq $property) { return $null }
+    return $property.Value
+}
 function Get-AgeDays([DateTime]$Timestamp) {
     return [Math]::Round([Math]::Max(0, ($auditTime - $Timestamp.ToUniversalTime()).TotalDays), 2)
 }
@@ -125,6 +131,18 @@ if (Test-Path -LiteralPath $absoluteTasksPath -PathType Container) {
             $doctor = [pscustomobject]@{
                 valid = $false
                 migrationRequired = $false
+                policyDrift = $false
+                workspaceSchemaVersion = 0
+                latestWorkspaceSchemaVersion = 0
+                storedPolicyFingerprint = ''
+                currentPolicyFingerprint = ''
+                policyImpact = [pscustomobject]@{
+                    snapshotAvailable = $false
+                    changeCount = 0
+                    affectingChangeCount = 0
+                    highestSeverity = 'none'
+                    requiredChecks = @()
+                }
                 errors = @($_.Exception.Message)
             }
         }
@@ -173,7 +191,8 @@ if (Test-Path -LiteralPath $absoluteTasksPath -PathType Container) {
             $directory.LastWriteTimeUtc
         }
         $contextTimestamp = if ($null -ne $descriptor) {
-            Convert-ToUtc $descriptor.lastRefreshedAtUtc (Convert-ToUtc $descriptor.createdAtUtc $lastActivity)
+            $createdAtUtc = Convert-ToUtc (Get-PropertyValue $descriptor 'createdAtUtc') $lastActivity
+            Convert-ToUtc (Get-PropertyValue $descriptor 'lastRefreshedAtUtc') $createdAtUtc
         } else {
             $lastActivity
         }
@@ -691,18 +710,19 @@ if (Test-Path -LiteralPath $absoluteTasksPath -PathType Container) {
             $reasons.Insert(0, "Workspace circuit is open until $($workspaceCircuit.openUntilUtc): $($workspaceCircuit.reason)")
             $actions.Insert(0, "./.llm-wiki/wiki.ps1 task-circuit-reset -WorkspacePath $workspacePath -Reason <reason>")
         }
-        if ($null -ne $descriptor.decomposition -and [string]$descriptor.decomposition.state -eq 'applied') {
+        $descriptorDecomposition = Get-PropertyValue $descriptor 'decomposition'
+        if ($null -ne $descriptorDecomposition -and [string]$descriptorDecomposition.state -eq 'applied') {
             $status = 'decomposed'
             $reasons.Clear()
             $actions.Clear()
-            $reasons.Add("Workspace was decomposed into $(@($descriptor.decomposition.childWorkspaces).Count) child workspace(s).")
+            $reasons.Add("Workspace was decomposed into $(@($descriptorDecomposition.childWorkspaces).Count) child workspace(s).")
             $actions.Add('./.llm-wiki/wiki.ps1 task-graph')
         }
 
         $items.Add([pscustomobject][ordered]@{
             name = $directory.Name
             path = $workspacePath
-            objective = [string]$descriptor.objective
+            objective = [string](Get-PropertyValue $descriptor 'objective')
             status = $status
             auditedAtUtc = $auditTime.ToString('o')
             lastActivityUtc = $lastActivity.ToUniversalTime().ToString('o')

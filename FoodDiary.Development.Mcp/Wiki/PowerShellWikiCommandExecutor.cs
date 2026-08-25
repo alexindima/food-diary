@@ -111,7 +111,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         CancellationToken cancellationToken) {
         using Process process = new() {
             StartInfo = new ProcessStartInfo {
-                FileName = OperatingSystem.IsWindows() ? "powershell.exe" : "pwsh",
+                FileName = "pwsh",
                 WorkingDirectory = repositoryRoot,
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,

@@ -149,12 +149,19 @@ function Get-SimilarityPercent([string]$Left, [string]$Right) {
     [Math]::Round(100 * $intersection.Count / $union.Count, 2)
 }
 function Get-DuplicateMatches([string]$Statement, [object[]]$Memories) {
-    @($Memories | Where-Object state -eq 'active' | ForEach-Object {
-        $similarity = Get-SimilarityPercent $Statement ([string]$_.statement)
+    $matches = [Collections.Generic.List[object]]::new()
+    foreach ($memory in @($Memories)) {
+        if ($null -eq $memory -or [string]$memory.state -ne 'active') { continue }
+        $similarity = Get-SimilarityPercent $Statement ([string]$memory.statement)
         if ($similarity -ge [int]$memoryPolicy.duplicateSimilarityPercent) {
-            [pscustomobject][ordered]@{ id = $_.id; similarityPercent = $similarity; statement = $_.statement }
+            $matches.Add([pscustomobject][ordered]@{
+                id = $memory.id
+                similarityPercent = $similarity
+                statement = $memory.statement
+            })
         }
-    } | Sort-Object @{Expression='similarityPercent';Descending=$true}, id)
+    }
+    @($matches | Sort-Object @{Expression='similarityPercent';Descending=$true}, id)
 }
 
 $registry = Read-Registry
@@ -198,7 +205,10 @@ if ($Action -eq 'promote') {
     $event.eventHash = Get-Hash (Get-EventPayload $event)
     $registry.events = @($registry.events) + $event
     Write-Registry $registry
-    $result = [pscustomobject][ordered]@{ action = 'promote'; valid = $true; memory = (Get-View $registry | Where-Object id -eq $memoryId); eventHash = $event.eventHash }
+    $result = [pscustomobject][ordered]@{
+        action = 'promote'; valid = $true; memory = (Get-View $registry | Where-Object id -eq $memoryId)
+        eventHash = $event.eventHash; issues = @()
+    }
 } elseif ($Action -eq 'candidates') {
     $workspace = Normalize-Workspace $WorkspacePath
     $issues = @(Test-Registry $registry)
@@ -208,7 +218,7 @@ if ($Action -eq 'promote') {
         @($evidenceArtifact.checks | Where-Object status -in @('passed', 'passed-with-known-baseline-failures') | ForEach-Object { "check:$($_.id):$($_.status)" }) +
         @($evidenceArtifact.reviews | Where-Object status -eq 'completed' | ForEach-Object { "review:$($_.id):completed" })
     )
-    $view = Get-View $registry
+    $view = @(Get-View $registry)
     $candidates = @($journal.entries | Where-Object {
         $_.type -in @('decision', 'learning') -and $_.status -eq 'open'
     } | ForEach-Object {
@@ -234,11 +244,11 @@ if ($Action -eq 'promote') {
         duplicateCandidateCount = @($candidates | Where-Object { @($_.duplicateMatches).Count -gt 0 }).Count
         minimumCandidateScore = [int]$memoryPolicy.minimumCandidateScore
         registryFingerprint = Get-Hash @($registry.events | ForEach-Object { [string]$_.eventHash })
-        issues = @($issues); candidates = $candidates
+        issues = @($issues); memories = @(); candidates = $candidates
     }
 } elseif ($Action -eq 'supersede') {
     if ([string]::IsNullOrWhiteSpace($Id) -or [string]::IsNullOrWhiteSpace($Reason)) { throw 'supersede requires -Id and -Reason.' }
-    $view = Get-View $registry
+    $view = @(Get-View $registry)
     $target = $view | Where-Object id -eq $Id | Select-Object -First 1
     if ($null -eq $target -or $target.state -eq 'superseded') { throw "Active or stale memory not found: $Id" }
     $previous = if (@($registry.events).Count -gt 0) { [string]$registry.events[-1].eventHash } else { '' }
@@ -250,10 +260,12 @@ if ($Action -eq 'promote') {
     $event.eventHash = Get-Hash (Get-EventPayload $event)
     $registry.events = @($registry.events) + $event
     Write-Registry $registry
-    $result = [pscustomobject][ordered]@{ action = 'supersede'; valid = $true; id = $Id; eventHash = $event.eventHash }
+    $result = [pscustomobject][ordered]@{
+        action = 'supersede'; valid = $true; id = $Id; eventHash = $event.eventHash; issues = @()
+    }
 } else {
     $issues = @(Test-Registry $registry)
-    $view = Get-View $registry
+    $view = @(Get-View $registry)
     if ($Action -eq 'show') {
         if ([string]::IsNullOrWhiteSpace($Id)) { throw 'show requires -Id.' }
         $view = @($view | Where-Object id -eq $Id)
@@ -274,7 +286,7 @@ if ($Action -eq 'promote') {
         staleCount = @($view | Where-Object state -eq 'stale').Count
         supersededCount = @($view | Where-Object state -eq 'superseded').Count
         registryFingerprint = Get-Hash @($registry.events | ForEach-Object { [string]$_.eventHash })
-        issues = @($issues); memories = @($view)
+        issues = @($issues); memories = @($view); candidates = @()
     }
 }
 

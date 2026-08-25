@@ -10,7 +10,7 @@ const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-gr
 const parserVersion = '11-javascript-context-v1';
 const contextSearchSchemaVersion = '1';
 const compiledIndexSchemaVersion = '4';
-const queryDocumentSchemaVersion = '7';
+const queryDocumentSchemaVersion = '8';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
 const roslynDll = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll');
 const typescriptExtractor = resolve(repositoryRoot, '.llm-wiki/tools/typescript-extractor.mjs');
@@ -531,7 +531,7 @@ function refreshQueryLayer(database) {
       }
     } else if (category === 'architecture-health') {
       let ordinal = 0;
-      for (const [recordKind, values] of Object.entries({ dependencyViolation: document.projectDependencyViolations ?? [], untrackedProject: document.untrackedProductionProjects ?? [], moduleCycle: document.moduleCycleNodes ?? [], selectorUnreferenced: document.selectorUnreferencedComponents ?? [], componentWithoutSpec: document.componentsWithoutDirectSpecs ?? [], criticalSymbolWithoutTest: document.criticalSymbolsWithoutTestReferences ?? [], debtMarker: document.explicitDebtMarkers ?? [] })) {
+      for (const [recordKind, values] of Object.entries({ dependencyViolation: document.projectDependencyViolations ?? [], unusedProjectAllowance: document.unusedProjectAllowances ?? [], untrackedProject: document.untrackedProductionProjects ?? [], moduleCycle: document.moduleCycleNodes ?? [], ambiguousContract: document.ambiguousBackendContracts ?? [], unconsumedBackendContract: document.unconsumedBackendContracts ?? [], selectorUnreferenced: document.selectorUnreferencedComponents ?? [], componentWithoutSpec: document.componentsWithoutDirectSpecs ?? [], criticalSymbolWithoutTest: document.criticalSymbolsWithoutTestReferences ?? [], debtMarker: document.explicitDebtMarkers ?? [] })) {
         for (const value of values) records.push({ key: `${recordKind}:${value.path ?? ''}:${value.name ?? value.class ?? value.module ?? value.line ?? ''}:${ordinal}`, path: value.path ?? '', kind: recordKind, ordinal: ordinal++, value });
       }
     }
@@ -1043,7 +1043,11 @@ function build(database, force = false) {
       .run('change_set_git_head', completedChangeSet.head);
     database.exec('COMMIT');
   } catch (error) {
-    database.exec('ROLLBACK');
+    try {
+      database.exec('ROLLBACK');
+    } catch (rollbackError) {
+      error.rollbackError = rollbackError instanceof Error ? rollbackError.message : String(rollbackError);
+    }
     throw error;
   }
   return {

@@ -134,16 +134,14 @@ Record keys include source ordinals so repeated fields or consumer edges cannot
 be collapsed by the projection's uniqueness constraint.
 
 Standalone migration status distinguishes a SQLite task-brief route from a
-SQLite standalone route. Quality and domain-data queries are fully SQLite-backed.
-Domain-data uses a fingerprinted tooling-only `Microsoft.Data.Sqlite` assembly
-inside the current PowerShell process; graph build publishes it under
-`.artifacts`, and the loader reuses both the build and loaded assembly. Runtime
-and architecture-health remain partial because their standalone commands still
-read JSON intentionally. `Measure-LlmWikiStandaloneIndexRoutes.ps1` measures the
-exact in-process domain default while retaining process-boundary shadows for the
-two remaining candidates. Architecture-health additionally lacks three
-standalone record kinds in the projection. A default may change only after a
-dedicated exact-parity test and a non-regressing complete-command measurement.
+SQLite standalone route. Quality, domain-data, runtime, and architecture-health
+queries are SQLite-backed through a fingerprinted tooling-only
+`Microsoft.Data.Sqlite` assembly. Graph build publishes it under `.artifacts`,
+and the loader caches the loaded assembly across tool-script scopes. Runtime
+accepts a measured cold-process reader-load cost so production keeps one query
+mechanism. Every runtime and architecture-health view has an exact JSON-parity
+regression; telemetry reports fresh-process and warm p50/p95 separately. No route
+silently falls back.
 
 Standalone privacy discovery uses a specialized query over the same sensitive
 documents. Category selection and token/scope matching run before payload
@@ -436,7 +434,10 @@ hidden refresh, uses exact symbols or high/medium ranked candidates to establish
 scope, and falls back to the established semantic trace when graph evidence is
 insufficient. Read-only snapshots copy the SQLite database (and active WAL when
 present) as a content-addressed dependency, so graph queries remain isolated
-without seeing an empty ignored `.artifacts` tree.
+without seeing an empty ignored `.artifacts` tree. Commands that require a fresh
+compiled projection rebuild the graph inside that stable snapshot, so an active
+writer in the source worktree cannot invalidate a long research query halfway
+through its graph refresh.
 Fast research requires an explicit module or planned path and returns bounded
 source, dependency, and downstream-consumer evidence. Its boundary report keeps
 the logical module, current project, physical source root, and target-project

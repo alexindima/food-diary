@@ -9,6 +9,7 @@ using FoodDiary.Application.Wearables.Wearables.Common;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Wearables.Wearables.Commands.SyncWearableData;
 
@@ -50,15 +51,15 @@ public sealed class SyncWearableDataCommandHandler(
 
         // Refresh token if expired
         if (connection.IsTokenExpired() && connection.RefreshToken is not null) {
-            string refreshToken = tokenProtector.Unprotect(connection.RefreshToken);
+            string refreshToken = tokenProtector.Unprotect(connection.RefreshToken.Value);
             WearableTokenResult? refreshResult = await client.RefreshTokenAsync(refreshToken, cancellationToken).ConfigureAwait(false);
             if (refreshResult is null) {
                 connection.Deactivate();
                 await PersistConnectionAsync(connection, cancellationToken).ConfigureAwait(false);
                 return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.AuthFailed(command.Provider));
             }
-            string protectedAccessToken = tokenProtector.Protect(refreshResult.AccessToken);
-            string? protectedRefreshToken = refreshResult.RefreshToken is null ? null : tokenProtector.Protect(refreshResult.RefreshToken);
+            ProtectedWearableToken protectedAccessToken = tokenProtector.Protect(refreshResult.AccessToken);
+            ProtectedWearableToken? protectedRefreshToken = refreshResult.RefreshToken is null ? null : tokenProtector.Protect(refreshResult.RefreshToken);
             connection.UpdateTokens(protectedAccessToken, protectedRefreshToken, refreshResult.ExpiresAtUtc);
             await PersistConnectionAsync(connection, cancellationToken).ConfigureAwait(false);
         }
@@ -90,14 +91,14 @@ public sealed class SyncWearableDataCommandHandler(
     }
 
     private void ProtectLegacyTokens(WearableConnection connection, string accessToken) {
-        if (tokenProtector.IsProtected(connection.AccessToken) &&
-            (connection.RefreshToken is null || tokenProtector.IsProtected(connection.RefreshToken))) {
+        if (connection.AccessToken.IsProtected &&
+            connection.RefreshToken?.IsProtected != false) {
             return;
         }
 
         connection.UpdateTokens(
             tokenProtector.Protect(accessToken),
-            connection.RefreshToken is null ? null : tokenProtector.Protect(tokenProtector.Unprotect(connection.RefreshToken)),
+            connection.RefreshToken is null ? null : tokenProtector.Protect(tokenProtector.Unprotect(connection.RefreshToken.Value)),
             connection.TokenExpiresAtUtc);
     }
 

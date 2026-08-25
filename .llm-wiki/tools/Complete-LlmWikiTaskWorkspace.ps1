@@ -64,11 +64,17 @@ function Write-Result([object]$Result) {
 
 if ($Action -eq 'verify') {
     $issues = [System.Collections.Generic.List[string]]::new()
+    $completion = $null
+    $storedPolicyFingerprint = ''
+    $policyDrift = $false
     if (-not (Test-Path -LiteralPath $completionPath -PathType Leaf)) {
         $issues.Add('completion.json is absent.')
     } else {
         try {
             $completion = Get-Content -LiteralPath $completionPath -Raw | ConvertFrom-Json
+            if ($null -ne $completion.PSObject.Properties['policyFingerprint']) {
+                $storedPolicyFingerprint = [string]$completion.policyFingerprint
+            }
             $fingerprintPayload = [ordered]@{
                 schemaVersion = $completion.schemaVersion
                 objective = $completion.objective
@@ -80,6 +86,7 @@ if ($Action -eq 'verify') {
             }
             if ($completion.schemaVersion -ge 2) {
                 $fingerprintPayload.policyFingerprint = $completion.policyFingerprint
+                $policyDrift = $storedPolicyFingerprint -cne [string]$policySnapshot.fingerprint
             }
             $expectedCompletionFingerprint = Get-ObjectFingerprint $fingerprintPayload
             if ($expectedCompletionFingerprint -cne [string]$completion.completionFingerprint) {
@@ -113,11 +120,9 @@ if ($Action -eq 'verify') {
         schemaVersion = 1
         workspace = $normalizedWorkspacePath
         valid = $issues.Count -eq 0
-        storedPolicyFingerprint = $(if ($null -ne $completion) { [string]$completion.policyFingerprint } else { '' })
+        storedPolicyFingerprint = $storedPolicyFingerprint
         currentPolicyFingerprint = [string]$policySnapshot.fingerprint
-        policyDrift = $null -ne $completion -and
-            $completion.schemaVersion -ge 2 -and
-            [string]$completion.policyFingerprint -cne [string]$policySnapshot.fingerprint
+        policyDrift = $policyDrift
         issues = @($issues)
     }
     Write-Result $result

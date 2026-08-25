@@ -197,7 +197,8 @@ function Test-Application([object]$Application) {
     if ([string]$Application.state -eq 'rollback-recommended' -and @($Application.postApply.failedGates).Count -eq 0) {
         $issues.Add('Rollback recommendation requires at least one failed post-apply gate.')
     }
-    if ([string]$Application.state -eq 'rolled-back' -and [string]::IsNullOrWhiteSpace([string]$Application.rollback.reason)) {
+    if ([string]$Application.state -eq 'rolled-back' -and
+        ($null -eq $Application.rollback -or [string]::IsNullOrWhiteSpace([string]$Application.rollback.reason))) {
         $issues.Add('Rolled-back strategy requires a rollback reason.')
     }
     @($issues)
