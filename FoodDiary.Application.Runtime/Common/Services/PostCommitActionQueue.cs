@@ -74,7 +74,8 @@ internal sealed class PostCommitActionQueue : IPostCommitActionQueue {
 
         try {
             while (_actions.TryDequeue(out PostCommitAction? action)) {
-                if (flushTimeoutSource.IsCancellationRequested) {
+                if (flushTimeoutSource.IsCancellationRequested ||
+                    _timeProvider.GetElapsedTime(startedAt) >= _flushTimeout) {
                     DropUnstartedActionsAfterFlushTimeout();
                     return;
                 }

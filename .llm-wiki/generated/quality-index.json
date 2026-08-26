@@ -16250,11 +16250,11 @@
     },
     {
       "path": "FoodDiary.Application.Runtime/Common/Services/PostCommitActionQueue.cs",
-      "nonBlankLines": 121,
-      "decisionPoints": 10,
+      "nonBlankLines": 122,
+      "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.42
+      "structuralRiskScore": 18.94
     },
     {
       "path": "FoodDiary.Application.Runtime/DependencyInjection.cs",
