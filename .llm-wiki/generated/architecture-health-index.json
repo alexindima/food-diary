@@ -12,8 +12,8 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 151,
     "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 26,
-    "explicitDebtMarkers": 9
+    "criticalSymbolsWithoutTestReferences": 23,
+    "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
   "unusedProjectAllowances": [],
@@ -5469,41 +5469,17 @@
       "testReferences": []
     },
     {
-      "name": "Complete-LlmWikiUnseenContextCorpus",
+      "name": "LlmWikiContextScoring",
       "role": "WikiTool",
-      "path": ".llm-wiki/tools/Complete-LlmWikiUnseenContextCorpus.ps1",
+      "path": ".llm-wiki/tools/LlmWikiContextScoring.ps1",
       "line": 1,
       "testReferenceCount": 0,
       "testReferences": []
     },
     {
-      "name": "Get-LlmWikiConcurrentDrift",
+      "name": "LlmWikiResearchPrimitives",
       "role": "WikiTool",
-      "path": ".llm-wiki/tools/Get-LlmWikiConcurrentDrift.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "Measure-LlmWikiContextConcurrency",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/Measure-LlmWikiContextConcurrency.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "Measure-LlmWikiContextLatency",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/Measure-LlmWikiContextLatency.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "Write-LlmWikiContextQueryObservation",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/Write-LlmWikiContextQueryObservation.ps1",
+      "path": ".llm-wiki/tools/LlmWikiResearchPrimitives.ps1",
       "line": 1,
       "testReferenceCount": 0,
       "testReferences": []
@@ -5529,6 +5505,11 @@
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
       "line": 196,
       "marker": "SuppressMessage"
+    },
+    {
+      "path": ".llm-wiki/tools/Complete-LlmWikiAnswerEvaluationCorpus.ps1",
+      "line": 32,
+      "marker": "todo"
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",

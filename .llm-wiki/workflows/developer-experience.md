@@ -19,6 +19,7 @@ sources:
   - .llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1
   - .llm-wiki/tools/Get-LlmWikiChangePacket.ps1
   - .llm-wiki/tools/LlmWikiQueryCache.ps1
+  - .llm-wiki/tools/Invoke-LlmWikiMcpCommand.ps1
   - .llm-wiki/tools/Test-LlmWikiQueryCache.ps1
   - .llm-wiki/policies/experience-policies.json
 ---
@@ -137,6 +138,14 @@ composition. Entries expire after two minutes; oversized results, failures, and
 cancellations are not retained. `get_server_status` exposes cache hit/miss counts,
 queue depth, active commands, failure categories, and bounded per-command p50/p95
 timings for operational diagnosis.
+
+The MCP command bridge sends compact `brief` and fast `test-plan` requests
+directly to their implementation scripts while keeping the public `wiki.ps1`
+facade as the fallback for every other command. It strips facade-only arguments
+before splatting, so direct execution preserves the same contract without paying
+for repeated facade initialization. The 12-case development-context gate now
+caps cold p95 at 20 seconds and warm p95 at 10 seconds; it continues to require
+complete bundles, focused checks, bounded scope, and explainable SQL ranking.
 
 Facade command routing is guarded structurally: the command-catalog regression
 parses `wiki.ps1`, requires every `ValidateSet` command to have exactly one

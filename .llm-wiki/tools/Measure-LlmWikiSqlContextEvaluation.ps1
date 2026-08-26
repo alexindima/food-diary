@@ -51,7 +51,7 @@ if (-not $NoBatch) {
             limit = $diagnosticLimit
         }
     })
-    [IO.File]::WriteAllText($batchPath, (($batchRequests | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText($batchPath, (($batchRequests | ConvertTo-Json -Depth 4 -AsArray) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
     try {
         $batch = & $manager search-batch -InputPath $batchPath -SkipRefresh -Format Json | ConvertFrom-Json
         $batchResults = @($batch.results)
@@ -92,6 +92,7 @@ foreach ($case in $cases) {
     $relevant = @($records | Where-Object { [string]$_.path -in $relevantPaths } | Sort-Object rank | Select-Object -First 1)
     $rank = if ($relevant.Count -eq 1) { [int]$relevant[0].rank } else { $null }
     $topPath = if ($records.Count -eq 0) { '' } else { [string]$records[0].path }
+    $topCandidate = if ($records.Count -eq 0) { $null } else { $records[0] }
     $results.Add([pscustomobject][ordered]@{
         id = [string]$case.id
         query = [string]$case.query
@@ -103,9 +104,11 @@ foreach ($case in $cases) {
         reciprocalRank = $(if ($null -eq $rank) { 0.0 } else { 1.0 / $rank })
         top1 = $rank -eq 1
         top10 = $null -ne $rank -and $rank -le 10
+        topCandidateConfidence = $(if ($null -eq $topCandidate) { 'unavailable' } else { [string]$topCandidate.confidence })
+        topCandidateAmbiguous = $null -ne $topCandidate -and [bool]$topCandidate.ambiguous
         failureCategory = $(if ($rank -eq 1) { $null } else { Get-FailureCategory ([string]$case.query) $expectedPaths[0] $topPath $changeType })
         sqlDurationMs = [double]$search.durationMs
-        topCandidates = @($records | Select-Object -First 5 rank, path, recordType, score)
+        topCandidates = @($records | Select-Object -First 5 rank, path, recordType, score, scoreMargin, confidence, ambiguous, ambiguityReason, sameNameCandidateCount)
     })
     $caseIndex++
 }
@@ -134,6 +137,36 @@ $cohortMetrics = @($results | Group-Object cohort | Sort-Object Name | ForEach-O
 $failureCategoryMetrics = @($results | Where-Object { -not $_.top1 } | Group-Object failureCategory | Sort-Object Count -Descending | ForEach-Object {
         [pscustomobject][ordered]@{ category = $_.Name; count = $_.Count; top10Misses = @($_.Group | Where-Object { -not $_.top10 }).Count }
     })
+$confidenceMetrics = @($results | Group-Object topCandidateConfidence | Sort-Object Name | ForEach-Object {
+        $confidenceResults = @($_.Group)
+        $confidenceTop1Count = @($confidenceResults | Where-Object top1).Count
+        [pscustomobject][ordered]@{
+            confidence = [string]$_.Name
+            caseCount = $confidenceResults.Count
+            top1Count = $confidenceTop1Count
+            precision = [Math]::Round($confidenceTop1Count / $confidenceResults.Count, 4)
+            coverage = [Math]::Round($confidenceResults.Count / $results.Count, 4)
+            ambiguousCount = @($confidenceResults | Where-Object topCandidateAmbiguous).Count
+        }
+    })
+$acceptedResults = @($results | Where-Object {
+        -not $_.topCandidateAmbiguous -and $_.topCandidateConfidence -in @('high', 'medium')
+    })
+$abstainedResults = @($results | Where-Object {
+        $_.topCandidateAmbiguous -or $_.topCandidateConfidence -notin @('high', 'medium')
+    })
+$wrongResults = @($results | Where-Object { -not $_.top1 })
+$acceptedTop1Count = @($acceptedResults | Where-Object top1).Count
+$capturedErrorCount = @($abstainedResults | Where-Object { -not $_.top1 }).Count
+$abstentionMetrics = [pscustomobject][ordered]@{
+    acceptedCount = $acceptedResults.Count
+    acceptedCoverage = [Math]::Round($acceptedResults.Count / $results.Count, 4)
+    acceptedPrecision = $(if ($acceptedResults.Count -eq 0) { 0.0 } else { [Math]::Round($acceptedTop1Count / $acceptedResults.Count, 4) })
+    abstainedCount = $abstainedResults.Count
+    abstentionRate = [Math]::Round($abstainedResults.Count / $results.Count, 4)
+    capturedErrorCount = $capturedErrorCount
+    errorCaptureRate = $(if ($wrongResults.Count -eq 0) { 1.0 } else { [Math]::Round($capturedErrorCount / $wrongResults.Count, 4) })
+}
 $liveGateProperty = $corpus.PSObject.Properties['liveRegressionGate']
 $liveGate = if ($null -eq $liveGateProperty) { $null } else { $liveGateProperty.Value }
 $liveGateGaps = [Collections.Generic.List[string]]::new()
@@ -147,6 +180,18 @@ if ($null -ne $liveGate) {
         $observed = @($cohortMetrics | Where-Object cohort -eq $cohortMinimum.Name | Select-Object -First 1)
         $observedCount = if ($observed.Count -eq 0) { 0 } else { [int]$observed[0].top1Count }
         if ($observedCount -lt [int]$cohortMinimum.Value) { $liveGateGaps.Add("cohort:$($cohortMinimum.Name)=$observedCount<$($cohortMinimum.Value)") }
+    }
+    if ($liveGate.PSObject.Properties['minimumAcceptedPrecision'] -and
+        $abstentionMetrics.acceptedPrecision -lt [double]$liveGate.minimumAcceptedPrecision) {
+        $liveGateGaps.Add("acceptedPrecision=$($abstentionMetrics.acceptedPrecision)<$($liveGate.minimumAcceptedPrecision)")
+    }
+    if ($liveGate.PSObject.Properties['minimumAcceptedCoverage'] -and
+        $abstentionMetrics.acceptedCoverage -lt [double]$liveGate.minimumAcceptedCoverage) {
+        $liveGateGaps.Add("acceptedCoverage=$($abstentionMetrics.acceptedCoverage)<$($liveGate.minimumAcceptedCoverage)")
+    }
+    if ($liveGate.PSObject.Properties['minimumErrorCaptureRate'] -and
+        $abstentionMetrics.errorCaptureRate -lt [double]$liveGate.minimumErrorCaptureRate) {
+        $liveGateGaps.Add("errorCaptureRate=$($abstentionMetrics.errorCaptureRate)<$($liveGate.minimumErrorCaptureRate)")
     }
 }
 $liveGatePassed = $null -eq $liveGate -or $liveGateGaps.Count -eq 0
@@ -198,6 +243,8 @@ $evaluation = [pscustomobject][ordered]@{
     }
     cohortMetrics = $cohortMetrics
     failureCategoryMetrics = $failureCategoryMetrics
+    confidenceMetrics = $confidenceMetrics
+    abstentionMetrics = $abstentionMetrics
     thresholds = $thresholds
     switchCriteria = $switchCriteria
     switchGaps = @($switchGaps)
@@ -215,6 +262,7 @@ if ($Format -eq 'Json') {
     foreach ($cohortMetric in $cohortMetrics) {
         Write-Host " Cohort $($cohortMetric.cohort): top1=$($cohortMetric.top1Count)/$($cohortMetric.caseCount), top10=$($cohortMetric.top10Count)/$($cohortMetric.caseCount), MRR=$($cohortMetric.meanReciprocalRank)."
     }
+    Write-Host " Confidence acceptance: precision=$($abstentionMetrics.acceptedPrecision), coverage=$($abstentionMetrics.acceptedCoverage), abstained=$($abstentionMetrics.abstainedCount), capturedErrors=$($abstentionMetrics.capturedErrorCount)/$($wrongResults.Count)."
     if (-not $switchReady) {
         Write-Host " Switch gaps: $($switchGaps -join '; ')"
     }

@@ -358,7 +358,7 @@
       "name": "SqliteConnectionStringBuilder",
       "type": "new",
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "line": 103
+      "line": 107
     },
     {
       "category": "credential",

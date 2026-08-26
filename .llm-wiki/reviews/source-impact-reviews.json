@@ -142,14 +142,14 @@
       "pageSha256": "6f8228462ed3f2c01895eccb72a9539e8fe90e102e32bb3e8b2b3927a5937f40",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
-          "sha256": "8c3f580a5db5467f0d0a1b960ce045bebcda60fefb95c7bdfd84604395ab45e2"
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "5ddc4a78043bd62f01ecea988707ae7ff88938222fec718921afa8f2a369e9fe"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Reviewed answer-evaluation governance, confidence calibration, MCP bridge behavior, and helper extraction against current tools and passing focused/full regressions.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:41:58.1855705Z"
+      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
+      "reviewedAtUtc": "2026-08-26T16:39:48.7509027Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -172,14 +172,14 @@
       "pageSha256": "f83da814d1fce3b0dcacba64e84e6a642d7475c3f8e22256df3958647aea0832",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
-          "sha256": "d2824439e4b7783652d7c0a5e090908d03f7443030d29c4a3196809200bbbb24"
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "945cfdc0a5acb65086cfbb8f4be25036729d73603960682f0db98b3467f54cce"
         }
       ],
-      "reason": "Git-based consumer enumeration preserves the compiled-index migration inventory without requiring ripgrep; architecture-health routing and review guidance remain current.",
+      "reason": "Reviewed answer-evaluation governance, confidence calibration, MCP bridge behavior, and helper extraction against current tools and passing focused/full regressions.",
       "baseRef": "HEAD",
-      "gitHead": "8602f0721c9bb578fb641d1485dee01703c28c39",
-      "reviewedAtUtc": "2026-08-25T23:51:05.9542709Z"
+      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
+      "reviewedAtUtc": "2026-08-26T16:39:49.2641165Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -188,13 +188,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "1d7744b001dd7633b7c5ab18a442765ee18b5043d2ea0f672ac7b6ca9dc8a2cd"
+          "sha256": "78dc4b09883109ce14eee0442c309a26c43ddbc7d2a757b99d5f1d185ba7ae27"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "f50368947314da30857c581a367ba0c4c5bc3302da7727c5a9d527acd39c1d67"
         }
       ],
-      "reason": "Reviewed the mutation transaction, PostgreSQL xmin row-lock, S3 staging, cleanup outbox, wearable token protection, and supply-chain guardrail corrections. Architecture 712/712, integration options 105/105, cleanup 4/4, focused Postgres 6/6, and full Web API integration 180/180 passed; API contracts and migrations are unchanged.",
+      "reason": "Reviewed regenerated backend contract index after notification scheduler contract changed to Result-returning bounded scheduling and API options/hosted-service registration were updated; corresponding application and API tests cover propagation, capacity, cancellation, and shutdown.",
       "baseRef": "HEAD",
-      "gitHead": "40cf68f587382ebc31d5c770354c9a8d0f318fba",
-      "reviewedAtUtc": "2026-08-25T21:50:49.6062581Z"
+      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
+      "reviewedAtUtc": "2026-08-26T17:05:27.8136646Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -277,30 +281,14 @@
       "pageSha256": "7bffe53a2b9adcc5af2edbe9acc5709865ea28f26a965f9033b1493557b70068",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "cac68af51a0fab9c502f11182723576981aa2a34678aac60588fa308e8d033c2"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
-          "sha256": "1b8e52b36ed3f524415c6307f85eb833abcdb1ac4872425c8b1b77b9da329c9a"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskDecomposition.ps1",
-          "sha256": "fa027dc893f0354cc259697e1928b76a64976bb92c7431e56454b420c5cd218a"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
-          "sha256": "83408f8abebedcd0eb2635f1f93ed2a7194eef2ac9b0b34deda3804789697fe2"
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "8a2bcb21d78bbe07e37abb1bb6b59bbd60ce99f89b633c6e40cbba6a8d0e2c85"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed context, integration-scan, and bundle workflow impacts; descriptions remain consistent with the direct bridge, shared scoring helpers, and current query behavior.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:42.782396Z"
+      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
+      "reviewedAtUtc": "2026-08-26T16:39:50.6865676Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -441,13 +429,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "d779b508b2fe8fd9995fcd3a0534c950d80d1382fd7e170b133a180eec08463e"
+          "sha256": "ede352e01cf168d67ae59fc5e8b0772aff8ee59a338cbb602c7321e6e28be758"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the context-ranking, batch-evaluation, and regenerated-index changes; the documented contracts remain accurate.",
+      "reason": "Reviewed regenerated configuration index for the new Notifications:TestScheduler:MaxPending setting; it is bound and validated at startup, has a safe positive default in appsettings, and is covered by scheduler capacity tests.",
       "baseRef": "HEAD",
-      "gitHead": "2f95077642c232d868c6f5428987275d909e2bdc",
-      "reviewedAtUtc": "2026-08-25T13:50:47.1914465Z"
+      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
+      "reviewedAtUtc": "2026-08-26T17:06:03.2675950Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -560,14 +548,14 @@
       "pageSha256": "995df7b3f6ad527c4094a25bf33831f1c30fae3ebff5aa469fa92f71f02bab43",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1",
-          "sha256": "87fb1a009d33ed7f51b34211c704f6fdeb9e4e9bfdee12a0e6d25086183a3ec6"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "f50368947314da30857c581a367ba0c4c5bc3302da7727c5a9d527acd39c1d67"
         }
       ],
-      "reason": "Impact-simulation parity now uses a load-relative outer-process envelope while preserving semantic parity, compiled-index reuse, payload reduction, and the strict 25ms incremental SQLite round-trip guard; the documented simulation behavior remains current.",
+      "reason": "Reviewed context, integration-scan, and bundle workflow impacts; descriptions remain consistent with the direct bridge, shared scoring helpers, and current query behavior.",
       "baseRef": "HEAD",
-      "gitHead": "d825282540643213d5b066dd9e01c7d9294c6619",
-      "reviewedAtUtc": "2026-08-25T23:29:41.8306358Z"
+      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
+      "reviewedAtUtc": "2026-08-26T16:39:51.3339368Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -639,14 +627,14 @@
       "pageSha256": "a952661d5073668178342e7b7131b00a3ea21d502dae2ea219a05a41d7094cdb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "8a3861c22f4dc44b92181f2fc714254dbdc4a96ccebfccb3c345340f93109b63"
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "5ddc4a78043bd62f01ecea988707ae7ff88938222fec718921afa8f2a369e9fe"
         }
       ],
-      "reason": "Reviewed Wiki-only modernization: command stability registry, tooling-scope routing, honest workflow metrics, range-aware CI deduplication, critical self-test coverage, and per-run verification result isolation.",
+      "reason": "Reviewed context, integration-scan, and bundle workflow impacts; descriptions remain consistent with the direct bridge, shared scoring helpers, and current query behavior.",
       "baseRef": "HEAD",
-      "gitHead": "af0aedebdd1a8835f466f51af09f264374a90316",
-      "reviewedAtUtc": "2026-08-25T08:53:04.129067Z"
+      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
+      "reviewedAtUtc": "2026-08-26T16:39:51.9638190Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -756,14 +744,18 @@
       "pageSha256": "0c99a578ac11c1f3db70d8e9470a8dcedb235a6f5d16147df9a123d0786f7095",
       "sources": [
         {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "858e3f805f9ea3e27487e4886b4b5df3c3c3488ff3e4c7d95701731f2f483e8e"
+        },
+        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "28910e5d9585929a99ce740870dc33f0b2cff31a71643831eba6c8bd92959f55"
+          "sha256": "f50368947314da30857c581a367ba0c4c5bc3302da7727c5a9d527acd39c1d67"
         }
       ],
-      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
+      "reason": "Reviewed regenerated sensitive-data projection and code-graph inputs; no credential, identity-data lifecycle, logging, or provider-sharing behavior changed.",
       "baseRef": "HEAD",
-      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
-      "reviewedAtUtc": "2026-08-25T20:20:27.3747975Z"
+      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
+      "reviewedAtUtc": "2026-08-26T16:39:52.5952342Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -806,13 +798,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b9e7a18b2c0f091366f21e95550d4ce53a2438f8dde55d6ded859fc061d07d44"
+          "sha256": "c0919767d311f1a4e548f480ca9884718879f3b86a9970fd10e3d1ccbe157827"
         }
       ],
-      "reason": "Reviewed task-workspace documentation against empty-scope portable initialization; the change enforces the documented shared manifest, acceptance, and evidence requirements without changing workflow inputs or lifecycle semantics.",
+      "reason": "Reviewed regenerated quality index after Wiki evaluation tooling, ranking tests, MCP tests, and notification scheduler tests changed; focused suites and Wiki evaluation gates passed before commit preparation.",
       "baseRef": "HEAD",
-      "gitHead": "0ed1e215e1074c1761fd76d2ae776e75c0036839",
-      "reviewedAtUtc": "2026-08-26T03:09:53.7072014Z"
+      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
+      "reviewedAtUtc": "2026-08-26T17:05:28.0906765Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1128,18 +1120,18 @@
       "pageSha256": "930668a8337c26264220ec069d062d4d90d8c52910cb7e00b79576180fe92478",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "74c72ad769604d609bfa9fe0141224dd8bbf67de52e475c42f2a71ae15a5ef03"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "f50368947314da30857c581a367ba0c4c5bc3302da7727c5a9d527acd39c1d67"
         },
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "28910e5d9585929a99ce740870dc33f0b2cff31a71643831eba6c8bd92959f55"
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "8a2bcb21d78bbe07e37abb1bb6b59bbd60ce99f89b633c6e40cbba6a8d0e2c85"
         }
       ],
-      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
+      "reason": "Reviewed context, integration-scan, and bundle workflow impacts; descriptions remain consistent with the direct bridge, shared scoring helpers, and current query behavior.",
       "baseRef": "HEAD",
-      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
-      "reviewedAtUtc": "2026-08-25T20:20:28.1924320Z"
+      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
+      "reviewedAtUtc": "2026-08-26T16:39:53.9500061Z"
     },
     {
       "pageId": "workflow.review-diff",

@@ -7,4 +7,9 @@ public sealed record WikiContextSearchCandidate(
     string Category,
     int Score,
     double LexicalRank,
-    IReadOnlyList<string> Reasons);
+    IReadOnlyList<string> Reasons,
+    int? ScoreMargin = null,
+    string Confidence = "unknown",
+    bool Ambiguous = false,
+    string? AmbiguityReason = null,
+    int SameNameCandidateCount = 1);

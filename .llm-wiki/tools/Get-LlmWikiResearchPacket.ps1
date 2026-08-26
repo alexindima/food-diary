@@ -36,6 +36,7 @@ if (-not [string]::IsNullOrWhiteSpace($Module)) {
 Write-Host "Research [1/3]: classify and scan current sources$(if ($Module) { " for module $Module" } else { '' })..."
 . (Join-Path $PSScriptRoot 'LlmWikiQueryCache.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiResearchPrimitives.ps1')
 $queryCacheEntry = $null
 $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'research' -Arguments @{
     Objective = $Objective; BaseRef = $BaseRef; HeadRef = $HeadRef
@@ -65,25 +66,6 @@ $assessmentIntent = $Objective -match '(?i)\b(assess|assessment|audit|evaluate|e
 $effectivePurpose = if ($Purpose -eq 'Auto') { $(if ($assessmentIntent) { 'Assessment' } else { 'Implementation' }) } else { $Purpose }
 
 $scopePaths = @($workflow.inferred.paths)
-function Get-ObjectPropertyValues([object[]]$InputObject, [string]$Name) {
-    @($InputObject | ForEach-Object {
-        if ($null -ne $_ -and $_.PSObject.Properties[$Name]) { $_.$Name }
-    } | Where-Object { $null -ne $_ -and -not [string]::IsNullOrWhiteSpace([string]$_) })
-}
-function Get-NormalizedResearchPaths([object[]]$InputObject) {
-    @($InputObject |
-        Where-Object { $null -ne $_ -and -not [string]::IsNullOrWhiteSpace([string]$_) } |
-        ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') } |
-        Where-Object { $_ } |
-        Sort-Object -Unique)
-}
-function Test-RepositoryReadPath([string]$Path) {
-    if ([string]::IsNullOrWhiteSpace($Path) -or [IO.Path]::IsPathRooted($Path)) { return $false }
-    Test-Path -LiteralPath (Join-Path $repositoryRoot $Path) -PathType Leaf
-}
-function Get-SharedPathCount([object[]]$Left, [object[]]$Right) {
-    @($Left | Where-Object { $_ -in $Right }).Count
-}
 function New-ResearchPlan([object[]]$Lanes) {
     $minimumSharedPaths = [Math]::Max(1, [int]$researchPlanningPolicy.minimumSharedPathsForGrouping)
     $maximumGroups = [Math]::Max(1, [int]$researchPlanningPolicy.maximumGroups)
@@ -164,7 +146,6 @@ function New-ResearchPlan([object[]]$Lanes) {
         executionHint = 'Groups describe reusable read sets. Executors may run them sequentially or in parallel without changing the contract.'
     }
 }
-function ConvertFrom-UnicodeEscape([string]$Value) { ('"' + $Value + '"') | ConvertFrom-Json }
 $foodDiaryIntentAliases = @(
     [pscustomobject]@{ source = (ConvertFrom-UnicodeEscape '\u0434\u0438\u0435\u0442\u043e\u043b\u043e\u0433'); target = 'dietologist' }
     [pscustomobject]@{ source = (ConvertFrom-UnicodeEscape '\u043f\u0440\u0438\u0433\u043b\u0430\u0448'); target = 'invitation invite' }
@@ -404,29 +385,6 @@ function Get-QuestionAnchor([switch]$AllowMissing) {
         symbol = $(if ($item.PSObject.Properties['symbol'] -and $item.symbol) { [string]$item.symbol } else { $null })
     }
 }
-function New-GroundedQuestion(
-    [string]$Id,
-    [bool]$Blocking,
-    [string]$Question,
-    [string]$EvidenceNeeded,
-    [string]$WhyUserInputIsRequired,
-    [object]$Anchor,
-    [string]$ResolutionCommand = ''
-) {
-    [pscustomobject][ordered]@{
-        id = $Id
-        blocking = $Blocking
-        question = $Question
-        evidenceNeeded = $EvidenceNeeded
-        whyUserInputIsRequired = $WhyUserInputIsRequired
-        anchorStatus = $(if ($null -ne $Anchor) { [string]$Anchor.status } else { 'missing' })
-        anchor = $(if ($null -ne $Anchor) {
-            [pscustomobject][ordered]@{ path = $Anchor.path; line = $Anchor.line; symbol = $Anchor.symbol }
-        } else { $null })
-        resolutionCommand = $ResolutionCommand
-    }
-}
-
 $openQuestions = [Collections.Generic.List[object]]::new()
 if (-not $workflow.scopeKnown -and $effectivePurpose -eq 'Implementation') {
     $openQuestions.Add((New-GroundedQuestion `

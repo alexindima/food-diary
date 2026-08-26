@@ -1,0 +1,953 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen-target-aware-synthetic-diagnostic",
+  "frozenAtUtc": "2026-08-26T10:47:26.3886287+00:00",
+  "methodology": "Queries were deterministically authored from target semantics and cohort intent without invoking context search or reading ranking policy. Evaluation must occur only after this file is frozen.",
+  "independence": "target-aware synthetic diagnostic; not independently authored and not evidence of real-user query quality",
+  "sourceDraftSha256": "0d07e95f6f64e71b54a1618a8d573333ccda84fdf8e06c38bf2e02657afe1154",
+  "diagnosticLimit": 100,
+  "blindBaseline": {
+    "recordedAtUtc": "2026-08-26T10:48:00Z",
+    "corpusSha256BeforeBaselineMetadata": "834acefd4ddfe4d63df29c778b1403e04e184d3ddd11426c93616bc45d8bfd90",
+    "top1Count": 51,
+    "top10Count": 83,
+    "meanReciprocalRank": 0.6069,
+    "averageSqlDurationMs": 203.69,
+    "p95SqlDurationMs": 314.06,
+    "cohortTop1Counts": {
+      "application-api": 9,
+      "behavior-to-test": 10,
+      "domain-invariants": 4,
+      "frontend": 15,
+      "integrations-persistence": 2,
+      "wiki-tooling": 11
+    }
+  },
+  "thresholds": {
+    "minimumTop1Rate": 0.5,
+    "minimumTop10Rate": 0.8,
+    "minimumMeanReciprocalRank": 0.6
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 100,
+    "minimumTop1Rate": 0.5,
+    "minimumTop10Rate": 0.8,
+    "minimumMeanReciprocalRank": 0.6
+  },
+  "liveRegressionGate": {
+    "minimumTop1Count": 51,
+    "minimumTop10Count": 83,
+    "minimumMeanReciprocalRank": 0.6069,
+    "maximumP95SqlDurationMs": 0,
+    "minimumCohortTop1Counts": {
+      "application-api": 9,
+      "behavior-to-test": 10,
+      "domain-invariants": 4,
+      "frontend": 15,
+      "integrations-persistence": 2,
+      "wiki-tooling": 11
+    }
+  },
+  "cases": [
+    {
+      "id": "unseen-v2-001",
+      "cohort": "application-api",
+      "query": "implementation contract for artificial intelligence usage daily summary",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Application.Abstractions/Admin/Models/AiUsageDailySummary.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-002",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for dietologist recommendation comment handler",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-003",
+      "cohort": "domain-invariants",
+      "query": "domain rule for ids shopping list item identifier",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/ValueObjects/Ids/ShoppingListItemId.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-004",
+      "cohort": "frontend",
+      "query": "client interface for admin sessions section",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-sessions-section.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-005",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for mail inbox mail transport inbound message store",
+      "changeType": "Any",
+      "expectedPaths": [
+        "MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/SmtpInboundMessageStoreTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-006",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for extraction planning",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/LlmWikiExtractionPlanning.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-007",
+      "cohort": "application-api",
+      "query": "implementation contract for dashboard body mapper",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Application.Dashboard/Services/DashboardBodyMapper.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-008",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for architecture abstractions boundary",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.ArchitectureTests/ApplicationAbstractionsBoundaryTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-009",
+      "cohort": "domain-invariants",
+      "query": "domain rule for enums cycle flow level",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/Enums/CycleFlowLevel.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-010",
+      "cohort": "frontend",
+      "query": "client interface for fd interface hint overlay",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/hint/fd-ui-hint-overlay.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-011",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for dashboard meal projection",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-012",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for read only guard",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-013",
+      "cohort": "application-api",
+      "query": "implementation contract for common i weight entry read service",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-014",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for architecture paths",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.ArchitectureTests/ArchitectureTestPaths.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-015",
+      "cohort": "domain-invariants",
+      "query": "domain rule for wearables wearable sync entry",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/Entities/Wearables/WearableSyncEntry.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-016",
+      "cohort": "frontend",
+      "query": "client interface for user manage dietologist summary tests",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-summary/user-manage-dietologist-summary.spec.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-017",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for tracking fasting session configuration",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Infrastructure/Persistence/Configurations/Tracking/FastingSessionConfiguration.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-018",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for concurrent verify",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Test-LlmWikiConcurrentVerify.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-019",
+      "cohort": "application-api",
+      "query": "implementation contract for product update applier",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateApplier.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-020",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for tracking and meal plan coverage gap",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Domain.Tests/Domain/TrackingAndMealPlanCoverageGapTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-021",
+      "cohort": "domain-invariants",
+      "query": "domain rule for recipe update",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/ValueObjects/RecipeUpdate.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-022",
+      "cohort": "frontend",
+      "query": "client interface for ai artificial intelligence consent dialog",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/components/shared/ai-consent-dialog/ai-consent-dialog.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-023",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for message broker message queue mail relay broker",
+      "changeType": "Any",
+      "expectedPaths": [
+        "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBroker.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-024",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for manage model routing",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Manage-LlmWikiModelRouting.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-025",
+      "cohort": "application-api",
+      "query": "implementation contract for open facts assembly info",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Application.OpenFoodFacts/AssemblyInfo.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-026",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for integrations external service",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Infrastructure.Tests/Integrations/ExternalFoodServiceTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-027",
+      "cohort": "domain-invariants",
+      "query": "domain rule for users user lifecycle",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/Entities/Users/User.Lifecycle.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-028",
+      "cohort": "frontend",
+      "query": "client interface for client dashboard",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-029",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for token authentication options",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Infrastructure/Options/JwtOptions.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-030",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for get task schedule",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Get-LlmWikiTaskSchedule.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-031",
+      "cohort": "application-api",
+      "query": "implementation contract for repeat meal command handler",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Application.Meals/Commands/RepeatMeal/RepeatMealCommandHandler.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-032",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for web api dietologist invitation notification integration",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationNotificationIntegrationTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-033",
+      "cohort": "domain-invariants",
+      "query": "domain rule for tracking waist entry",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/Entities/Tracking/WaistEntry.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-034",
+      "cohort": "frontend",
+      "query": "client interface for recipe detail ingredient preview",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-ingredient-preview/recipe-detail-ingredient-preview.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-035",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for i direct mail exchange endpoint connector",
+      "changeType": "Any",
+      "expectedPaths": [
+        "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxEndpointConnector.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-036",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for manage eval promotion",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Manage-LlmWikiEvalPromotion.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-037",
+      "cohort": "application-api",
+      "query": "implementation contract for search by barcode query handler",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-038",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for idempotency cache idempotency store",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Web.Api.Tests/Services/RedisIdempotencyStoreTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-039",
+      "cohort": "domain-invariants",
+      "query": "domain rule for user artificial intelligence token limit update",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/ValueObjects/UserAiTokenLimitUpdate.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-040",
+      "cohort": "frontend",
+      "query": "client interface for premium access error utils",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-lib/premium-access-error.utils.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-041",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for dietologist recommendation bulk dispatch configuration",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-042",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for show help",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Show-LlmWikiHelp.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-043",
+      "cohort": "application-api",
+      "query": "implementation contract for responses user desired weight http response",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Presentation.Api/Features/Users/Responses/UserDesiredWeightHttpResponse.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-044",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for weekly check in calculator",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-045",
+      "cohort": "domain-invariants",
+      "query": "domain rule for ids user achievement identifier",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/ValueObjects/Ids/UserAchievementId.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-046",
+      "cohort": "frontend",
+      "query": "client interface for cycle prediction block tests",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-prediction-block/cycle-prediction-block.spec.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-047",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for email outbox message",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxMessage.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-048",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for architecture health tool exclusion",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-049",
+      "cohort": "application-api",
+      "query": "implementation contract for mail inbox result extensions",
+      "changeType": "Any",
+      "expectedPaths": [
+        "MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxResultExtensions.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-050",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for api base http endpoint controller no namespace",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerNoNamespaceTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-051",
+      "cohort": "domain-invariants",
+      "query": "domain rule for meals meal artificial intelligence item",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/Entities/Meals/MealAiItem.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-052",
+      "cohort": "frontend",
+      "query": "client interface for waist history waist height ratio mapper",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/waist-history/lib/waist-history-wht.mapper.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-053",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for interceptors event dispatcher",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Infrastructure/Persistence/Interceptors/DomainEventDispatcher.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-054",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for manage dispatch watchdog",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Manage-LlmWikiDispatchWatchdog.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-055",
+      "cohort": "application-api",
+      "query": "implementation contract for user mappings",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Application.Users/Mappings/UserMappings.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-056",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for notifications preferences",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-057",
+      "cohort": "domain-invariants",
+      "query": "domain rule for user profile media state",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/ValueObjects/UserProfileMediaState.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-058",
+      "cohort": "frontend",
+      "query": "client interface for fd interface satiety scale tests",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/satiety-scale/fd-ui-satiety-scale.spec.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-059",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for direct mail exchange mail transport client factory",
+      "changeType": "Any",
+      "expectedPaths": [
+        "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientFactory.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-060",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for manage requirement model",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-061",
+      "cohort": "application-api",
+      "query": "implementation contract for cloud notification email provider webhook notification webhook http mappings",
+      "changeType": "Any",
+      "expectedPaths": [
+        "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/AwsSesSnsWebhookHttpMappings.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-062",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for payment provider kassa http endpoint client",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Infrastructure.Tests/Services/YooKassaApiClientTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-063",
+      "cohort": "domain-invariants",
+      "query": "domain rule for email address",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/ValueObjects/EmailAddress.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-064",
+      "cohort": "frontend",
+      "query": "client interface for dashboard layout service",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-layout.service.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-065",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for dependency injection export",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Infrastructure/DependencyInjection.Export.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-066",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for verification cache",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Test-LlmWikiVerificationCache.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-067",
+      "cohort": "application-api",
+      "query": "implementation contract for context routing retirement evaluation runner",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Development.Mcp/Wiki/ContextRoutingRetirementEvaluationRunner.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-068",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for api current user identifier model binder",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Presentation.Api.Tests/CurrentUserIdModelBinderTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-069",
+      "cohort": "domain-invariants",
+      "query": "domain rule for enums report target type",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/Enums/ReportTargetType.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-070",
+      "cohort": "frontend",
+      "query": "client interface for nutrition database micronutrient mapper tests",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/usda/lib/usda-micronutrient.mapper.spec.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-071",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for wearable provider options",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Integrations/Options/FitbitOptions.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-072",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for manage verification plan",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-073",
+      "cohort": "application-api",
+      "query": "implementation contract for shopping list summary model",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Application.MealPlanning/ShoppingLists/Models/ShoppingListSummaryModel.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-074",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for api lesson http mappings",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Presentation.Api.Tests/LessonHttpMappingsTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-075",
+      "cohort": "domain-invariants",
+      "query": "domain rule for ids cycle identifier",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/ValueObjects/Ids/CycleId.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-076",
+      "cohort": "frontend",
+      "query": "client interface for update success dialog",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/profile/dialogs/update-success-dialog/update-success-dialog.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-077",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for open telemetry options",
+      "changeType": "Any",
+      "expectedPaths": [
+        "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/OpenTelemetryOptions.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-078",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for manage quality adjustment",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Manage-LlmWikiQualityAdjustment.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-079",
+      "cohort": "application-api",
+      "query": "implementation contract for mail relay client",
+      "changeType": "Any",
+      "expectedPaths": [
+        "MailRelay/tests/FoodDiary.MailRelay.Client.Tests/MailRelayClientTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-080",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for user security version",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Domain.Tests/Domain/UserSecurityVersionTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-081",
+      "cohort": "domain-invariants",
+      "query": "domain rule for tracking cycle consent",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-082",
+      "cohort": "frontend",
+      "query": "client interface for cycle factor list",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-factor-list/cycle-factor-list.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-083",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for notification web push outbox options",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.JobManager/Services/NotificationWebPushOutboxOptions.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-084",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for manage instruction outcome",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Manage-LlmWikiInstructionOutcome.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-085",
+      "cohort": "application-api",
+      "query": "implementation contract for favorite meal http mappings",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Presentation.Api/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-086",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for extensions http endpoint host options configuration",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Web.Api.Tests/Extensions/ApiHostOptionsConfigurationTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-087",
+      "cohort": "domain-invariants",
+      "query": "domain rule for ids client task identifier",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/ValueObjects/Ids/ClientTaskId.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-088",
+      "cohort": "frontend",
+      "query": "client interface for fd interface date range input",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-089",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for tracking fasting plan repository",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Infrastructure/Persistence/Tracking/FastingPlanRepository.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-090",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for manage verification cache",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-091",
+      "cohort": "application-api",
+      "query": "implementation contract for process queued billing webhook command",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-092",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for api base http endpoint controller root namespace",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerFeaturesRootNamespaceTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-093",
+      "cohort": "domain-invariants",
+      "query": "domain rule for users user role",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/Entities/Users/UserRole.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-094",
+      "cohort": "frontend",
+      "query": "client interface for local date utils tests",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/lib/local-date.utils.spec.ts"
+      ]
+    },
+    {
+      "id": "unseen-v2-095",
+      "cohort": "integrations-persistence",
+      "query": "storage or provider implementation for pdf document export generator meal composition formatting",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-096",
+      "cohort": "wiki-tooling",
+      "query": "developer knowledge tooling for manage memory",
+      "changeType": "Any",
+      "expectedPaths": [
+        ".llm-wiki/tools/Manage-LlmWikiMemory.ps1"
+      ]
+    },
+    {
+      "id": "unseen-v2-097",
+      "cohort": "application-api",
+      "query": "implementation contract for shopping list item data",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListItemData.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-098",
+      "cohort": "behavior-to-test",
+      "query": "automated checks for notifications validator",
+      "changeType": "Tests",
+      "expectedPaths": [
+        "tests/FoodDiary.Application.Tests/Notifications/NotificationsValidatorTests.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-099",
+      "cohort": "domain-invariants",
+      "query": "domain rule for recipe nutrition",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Domain/ValueObjects/RecipeNutrition.cs"
+      ]
+    },
+    {
+      "id": "unseen-v2-100",
+      "cohort": "frontend",
+      "query": "client interface for weight history chart mapper tests",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history-chart.mapper.spec.ts"
+      ]
+    }
+  ]
+}

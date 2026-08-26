@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "description": "End-to-end evaluation of the SQL-first development context bundle: retrieval, bounded scope, change context, focused checks, and compact payload.",
+  "description": "End-to-end evaluation of SQL-first development-context readiness: retrieval, bounded scope, layer evidence, focused checks, and compact payload. It does not score model-authored prose.",
   "thresholds": {
     "minimumSqlitePrimaryRate": 1.0,
     "minimumScopeRecallRate": 1.0,
@@ -8,8 +8,12 @@
     "minimumCompleteBundleRate": 0.8,
     "minimumFocusedChecksRate": 0.8,
     "minimumExpectedLayersRate": 1.0,
+    "minimumExplainableRankingRate": 1.0,
+    "minimumContextBundleReadyRate": 0.8,
+    "minimumUnplannedQueryRate": 0.5,
     "maximumAverageExpandedScopePaths": 11.0,
-    "maximumP95DurationMilliseconds": 60000,
+    "maximumP95DurationMilliseconds": 20000,
+    "maximumWarmP95DurationMilliseconds": 10000,
     "maximumCompactCharacters": 120000
   },
   "cases": [
@@ -60,6 +64,54 @@
       "plannedPath": "FoodDiary.Web.Client/src/app/shared/i18n/",
       "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/i18n/translate-language.utils.ts"],
       "expectedLayers": ["Frontend"]
+    },
+    {
+      "id": "notification-domain-bundle",
+      "intent": "Review notification domain invariants before changing delivery state",
+      "query": "domain notification entity and its delivery state rules",
+      "plannedPath": null,
+      "expectedPaths": ["FoodDiary.Domain/Entities/Notifications/Notification.cs"],
+      "expectedLayers": ["Domain"]
+    },
+    {
+      "id": "fasting-plan-repository-bundle",
+      "intent": "Improve persistence of fasting plans without changing the domain contract",
+      "query": "repository that persists tracking fasting plans",
+      "plannedPath": null,
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Tracking/FastingPlanRepository.cs"],
+      "expectedLayers": ["Infrastructure"]
+    },
+    {
+      "id": "dashboard-meal-projection-bundle",
+      "intent": "Review the persisted dashboard meal projection",
+      "query": "database dashboard meal projection implementation",
+      "plannedPath": null,
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs"],
+      "expectedLayers": ["Infrastructure"]
+    },
+    {
+      "id": "usda-provider-bundle",
+      "intent": "Review the external USDA food-search provider",
+      "query": "external USDA food search HTTP provider implementation",
+      "plannedPath": null,
+      "expectedPaths": ["FoodDiary.Integrations/Services/UsdaFoodSearchService.cs"],
+      "expectedLayers": []
+    },
+    {
+      "id": "context-snapshot-tool-bundle",
+      "intent": "Improve publication of reproducible context-search benchmarks",
+      "query": "PowerShell tool writes context evaluation benchmark snapshot",
+      "plannedPath": null,
+      "expectedPaths": [".llm-wiki/tools/Write-LlmWikiContextEvaluationSnapshot.ps1"],
+      "expectedLayers": []
+    },
+    {
+      "id": "redis-idempotency-tests-bundle",
+      "intent": "Review automated coverage for the Redis idempotency store",
+      "query": "automated tests for Redis idempotency store behavior",
+      "plannedPath": null,
+      "expectedPaths": ["tests/FoodDiary.Web.Api.Tests/Services/RedisIdempotencyStoreTests.cs"],
+      "expectedLayers": []
     }
   ]
 }

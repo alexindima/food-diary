@@ -8,12 +8,17 @@ param(
     [int]$CandidateCount,
     [string]$TopLayer,
     [string]$TopRole,
-    [bool]$Ready = $true
+    [bool]$Ready = $true,
+    [string]$OutputPath = '.artifacts/llm-wiki/context-query-observations.jsonl'
 )
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$path = Join-Path $repositoryRoot '.artifacts/llm-wiki/context-query-observations.jsonl'
+$path = if ([IO.Path]::IsPathRooted($OutputPath)) {
+    [IO.Path]::GetFullPath($OutputPath)
+} else {
+    [IO.Path]::GetFullPath((Join-Path $repositoryRoot $OutputPath))
+}
 $null = New-Item -ItemType Directory -Path (Split-Path -Parent $path) -Force
 $entry = [pscustomobject][ordered]@{
     schemaVersion = 1

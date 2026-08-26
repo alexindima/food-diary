@@ -477,6 +477,27 @@ public partial class NotificationsFeatureTests {
     }
 
     [Fact]
+    public async Task ScheduleTestNotification_WhenSchedulerIsFull_ReturnsFailureWithoutAuditLog() {
+        User user = CreateUser();
+        var scheduler = new RecordingNotificationTestScheduler(
+            Result.Failure<ScheduledNotificationData>(NotificationErrors.TestScheduleCapacityExceeded()));
+        var auditLogger = new RecordingAuditLogger();
+        var handler = new ScheduleTestNotificationCommandHandler(
+            scheduler,
+            CreateCurrentUserAccessService(user),
+            auditLogger);
+
+        Result<ScheduledNotificationModel> result = await handler.Handle(
+            new ScheduleTestNotificationCommand(user.Id.Value, 15, NotificationTypes.FastingCompleted),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Notifications.TestScheduleCapacityExceeded");
+        Assert.Equal(ErrorKind.RateLimited, result.Error.Kind);
+        Assert.True(scheduler.WasCalled);
+        Assert.Empty(auditLogger.Action);
+    }
+
+    [Fact]
     public async Task ScheduleTestNotification_WithEmptyUserId_ReturnsInvalidToken() {
         var scheduler = new RecordingNotificationTestScheduler(
             new ScheduledNotificationData(NotificationTypes.FastingCompleted, 15, DateTime.UtcNow));

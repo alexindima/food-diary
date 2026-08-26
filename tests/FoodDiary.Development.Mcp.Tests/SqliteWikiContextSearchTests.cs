@@ -105,6 +105,100 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     }
 
     [Fact]
+    public async Task SearchAsync_AppliesGenericRoleAndLayerAffinities() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "service searches external USDA foods over HTTP provider",
+            limit: 10,
+            changeType: "Backend",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        WikiContextSearchCandidate top = Assert.Single(result.Candidates, candidate => candidate.Rank == 1);
+        Assert.Multiple(
+            () => Assert.Equal("FoodDiary.Integrations/Services/UsdaFoodSearchService.cs", top.Path),
+            () => Assert.Contains(top.Reasons, reason => reason.StartsWith("generic file-role affinity", StringComparison.Ordinal)),
+            () => Assert.Contains(top.Reasons, reason => string.Equals(reason, "generic integration-layer affinity", StringComparison.Ordinal)));
+    }
+
+    [Fact]
+    public async Task SearchAsync_KeepsTopConfidenceStableAcrossVisibleLimits() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult limitOne = await search.SearchAsync(
+            "strip user identity from web API telemetry logs",
+            limit: 1,
+            changeType: "Backend",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        WikiContextSearchResult limitFive = await search.SearchAsync(
+            "strip user identity from web API telemetry logs",
+            limit: 5,
+            changeType: "Backend",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        WikiContextSearchCandidate first = Assert.Single(limitOne.Candidates);
+        WikiContextSearchCandidate comparison = limitFive.Candidates[0];
+        Assert.Multiple(
+            () => Assert.Equal(comparison.Path, first.Path),
+            () => Assert.Equal(comparison.ScoreMargin, first.ScoreMargin),
+            () => Assert.Equal(comparison.Confidence, first.Confidence),
+            () => Assert.Equal(comparison.Ambiguous, first.Ambiguous),
+            () => Assert.Equal(comparison.SameNameCandidateCount, first.SameNameCandidateCount));
+    }
+
+    [Fact]
+    public async Task SearchAsync_ReportsNameCollisionsWithoutCallingCandidatesEquivalent() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "program host startup",
+            limit: 5,
+            changeType: "Any",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        WikiContextSearchCandidate[] programs = [.. result.Candidates.Where(candidate =>
+            candidate.Path.EndsWith("/Program.cs", StringComparison.Ordinal))];
+        Assert.Equal(2, programs.Length);
+        Assert.All(programs, candidate => Assert.Equal(2, candidate.SameNameCandidateCount));
+        Assert.DoesNotContain(programs, candidate => candidate.AmbiguityReason?.Contains(
+            "equivalent",
+            StringComparison.OrdinalIgnoreCase) == true);
+    }
+
+    [Fact]
+    public async Task SearchAsync_LowersConfidenceForDocumentationReturnedForImplementationChange() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "coveragebranch agent guide",
+            limit: 10,
+            changeType: "Backend",
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        WikiContextSearchCandidate guide = Assert.Single(result.Candidates, candidate =>
+            string.Equals(candidate.RecordType, "agent-guide", StringComparison.Ordinal));
+        Assert.Multiple(
+            () => Assert.Equal("low", guide.Confidence),
+            () => Assert.True(guide.Ambiguous),
+            () => Assert.Equal("record-type-change-type-mismatch", guide.AmbiguityReason));
+    }
+
+    [Fact]
     public async Task SearchAsync_ExpandsCommonEnglishInflections() {
         SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
 
@@ -704,6 +798,8 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
                 ('code', 'coverage-frontend', 'FoodDiary.Web.Client/src/app/coveragebranch.ts', 'coverage-frontend', 'typescript', 'CoverageBranch', 'coveragebranch'),
                 ('code', 'coverage-abstraction', 'FoodDiary.Application.Abstractions/ICoverageBranch.cs', 'coverage-abstraction', 'csharp', 'ICoverageBranch', 'coveragebranch'),
                 ('agent-guide', 'coverage-guide', 'FoodDiary.Infrastructure/AGENTS.md', 'coverage-guide', 'markdown', 'Coverage Branch Guide', 'coveragebranch'),
+                ('code', 'program-host-one', 'HostOne/Program.cs', 'program-host-one', 'csharp', 'Program', 'program host startup'),
+                ('code', 'program-host-two', 'HostTwo/Program.cs', 'program-host-two', 'csharp', 'Program', 'program host startup'),
                 ('code', 'coverage-duplicate-one', 'Shared/duplicate-coveragebranch.cs', 'coverage-duplicate-one', 'csharp', 'DuplicateCoverageBranch', 'coveragebranch'),
                 ('code', 'coverage-duplicate-two', 'Shared/duplicate-coveragebranch.cs', 'coverage-duplicate-two', 'csharp', 'DuplicateCoverageBranch', 'coveragebranch');
             """;

@@ -78,6 +78,9 @@
     "minimumTop1Count": 66,
     "minimumTop10Count": 100,
     "minimumMeanReciprocalRank": 0.79,
+    "minimumAcceptedPrecision": 0.95,
+    "minimumAcceptedCoverage": 0.5,
+    "minimumErrorCaptureRate": 0.9,
     "maximumP95SqlDurationMs": 0,
     "minimumCohortTop1Counts": {
       "adjacent-role-disambiguation": 9,
@@ -174,7 +177,7 @@
     { "id": "holdout100-int-002", "cohort": "integrations-jobs", "query": "адаптер платежного провайдера ЮKassa", "changeType": "Backend", "expectedPaths": ["FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs"] },
     { "id": "holdout100-int-003", "cohort": "integrations-jobs", "query": "адаптер чтения административного почтового inbox через клиент отдельного сервиса", "changeType": "Backend", "expectedPaths": ["FoodDiary.Integrations/Services/MailInbox/MailInboxClientAdminMailInboxReader.cs"] },
     { "id": "holdout100-int-004", "cohort": "integrations-jobs", "query": "хранилище текущего состояния выполнения фоновых задач", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/JobExecutionStateTracker.cs"] },
-    { "id": "holdout100-int-005", "cohort": "integrations-jobs", "query": "заглушка notification pusher которая ничего не отправляет", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/NoOpNotificationPusher.cs"] },
+    { "id": "holdout100-int-005", "cohort": "integrations-jobs", "query": "заглушка notification pusher которая ничего не отправляет", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/NoOpNotificationPusher.cs"], "acceptedPaths": ["FoodDiary.Initializer/NoOpNotificationPusher.cs"] },
     { "id": "holdout100-int-006", "cohort": "integrations-jobs", "query": "очистка персональных данных из telemetry фоновых задач", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/TelemetryPrivacyProcessor.cs"] },
     { "id": "holdout100-int-007", "cohort": "integrations-jobs", "query": "регистрация resource renderer для уведомлений в JobManager", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/NotificationResourceServiceCollectionExtensions.cs"] },
     { "id": "holdout100-int-008", "cohort": "integrations-jobs", "query": "options воркера удаления объектов изображений из outbox", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/ImageObjectDeletionOutboxOptions.cs"] },

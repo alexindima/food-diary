@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "optionTypes": 56,
+    "optionTypes": 57,
     "configurationFiles": 7,
-    "configurationKeys": 262,
+    "configurationKeys": 263,
     "environmentVariables": 188
   },
   "optionTypes": [
@@ -464,6 +464,14 @@
       "path": "FoodDiary.JobManager/Services/NotificationCleanupOptions.cs"
     },
     {
+      "type": "NotificationTestSchedulerOptions",
+      "section": "NotificationTestScheduler",
+      "properties": [
+        "MaxPending"
+      ],
+      "path": "FoodDiary.Web.Api/Options/NotificationTestSchedulerOptions.cs"
+    },
+    {
       "type": "NotificationWebPushOutboxOptions",
       "section": "NotificationWebPushOutbox",
       "properties": [
@@ -803,6 +811,7 @@
         "MailInboxClient:StateApiKey",
         "MailRelayClient:ApiKey",
         "MailRelayClient:BaseUrl",
+        "NotificationTestScheduler:MaxPending",
         "OpenAi:ApiKey",
         "OpenAi:MaxOutputTokens",
         "OpenAi:TextModel",

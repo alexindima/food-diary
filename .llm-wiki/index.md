@@ -137,6 +137,7 @@ authoritative.
 - [Reuse failure knowledge](workflows/failure-knowledge.md)
 - [Turn failures into governed regression evals](workflows/learned-regression-evals.md)
 - [Run AI development evals](workflows/evals.md)
+- [Current context retrieval evaluation](generated/context-evaluation-summary.md)
 - [Learn from completed AI tasks](workflows/post-task-retrospective.md)
 - [Promote repeated task learnings under review](workflows/controlled-learning-promotion.md)
 - [Promote task learnings into durable memory](workflows/durable-memory.md)

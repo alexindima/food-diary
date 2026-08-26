@@ -227,13 +227,17 @@ public partial class NotificationsFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingNotificationTestScheduler(ScheduledNotificationData scheduled) : INotificationTestScheduler {
+    private sealed class RecordingNotificationTestScheduler(Result<ScheduledNotificationData> result) : INotificationTestScheduler {
+        public RecordingNotificationTestScheduler(ScheduledNotificationData scheduled)
+            : this(Result.Success(scheduled)) {
+        }
+
         public bool WasCalled { get; private set; }
         public Guid UserId { get; private set; }
         public int DelaySeconds { get; private set; }
         public string Type { get; private set; } = string.Empty;
 
-        public Task<ScheduledNotificationData> ScheduleAsync(
+        public Task<Result<ScheduledNotificationData>> ScheduleAsync(
             Guid userId,
             int delaySeconds,
             string type,
@@ -242,7 +246,7 @@ public partial class NotificationsFeatureTests {
             UserId = userId;
             DelaySeconds = delaySeconds;
             Type = type;
-            return Task.FromResult(scheduled);
+            return Task.FromResult(result);
         }
     }
 

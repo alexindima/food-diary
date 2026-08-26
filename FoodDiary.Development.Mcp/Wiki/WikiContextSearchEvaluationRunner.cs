@@ -39,8 +39,11 @@ internal static class WikiContextSearchEvaluationRunner {
                 scopePaths: null,
                 cancellationToken,
                 expectedChangeSetFingerprint).ConfigureAwait(false);
+            string[] relevantPaths = [.. evaluationCase.ExpectedPaths
+                .Concat(evaluationCase.AcceptedPaths ?? [])
+                .Distinct(StringComparer.OrdinalIgnoreCase)];
             int? rank = searchResult.Candidates
-                .Where(candidate => evaluationCase.ExpectedPaths.Contains(
+                .Where(candidate => relevantPaths.Contains(
                     candidate.Path,
                     StringComparer.OrdinalIgnoreCase))
                 .Select(candidate => (int?)candidate.Rank)
@@ -48,6 +51,7 @@ internal static class WikiContextSearchEvaluationRunner {
                 .FirstOrDefault();
             results.Add(new EvaluationResult(
                 evaluationCase.Id,
+                searchResult.QueryTerms,
                 rank,
                 rank is null ? 0 : 1.0 / rank.Value,
                 rank == 1,
@@ -58,7 +62,8 @@ internal static class WikiContextSearchEvaluationRunner {
                 [.. searchResult.Candidates.Take(5).Select(candidate => new EvaluationCandidate(
                     candidate.Rank,
                     candidate.Path,
-                    candidate.Score))]));
+                    candidate.Score,
+                    candidate.Reasons))]));
         }
 
         int top1Count = results.Count(result => result.Top1);
@@ -155,10 +160,12 @@ internal static class WikiContextSearchEvaluationRunner {
         string Id,
         string Query,
         string? ChangeType,
-        string[] ExpectedPaths);
+        string[] ExpectedPaths,
+        string[]? AcceptedPaths = null);
 
     private sealed record EvaluationResult(
         string Id,
+        IReadOnlyList<string> QueryTerms,
         int? Rank,
         double ReciprocalRank,
         bool Top1,
@@ -168,5 +175,9 @@ internal static class WikiContextSearchEvaluationRunner {
         string? UnavailableReason,
         EvaluationCandidate[] TopCandidates);
 
-    private sealed record EvaluationCandidate(int Rank, string Path, int Score);
+    private sealed record EvaluationCandidate(
+        int Rank,
+        string Path,
+        int Score,
+        IReadOnlyList<string> Reasons);
 }

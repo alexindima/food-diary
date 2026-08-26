@@ -15,12 +15,20 @@ function Assert-CriticalTool([bool]$Condition, [string]$Message) {
 foreach ($contract in @(
     @{ file = 'Add-LlmWikiSourceReview.ps1'; marker = 'source-impact-reviews.json' }
     @{ file = 'Clear-LlmWikiReadOnlySnapshotCache.ps1'; marker = 'fooddiary-llm-wiki-read-only' }
+    @{ file = 'Complete-LlmWikiUnseenContextCorpus.ps1'; marker = 'frozen-independent-query-corpus' }
+    @{ file = 'Complete-LlmWikiAnswerEvaluationCorpus.ps1'; marker = 'frozen-independent-answer-corpus' }
+    @{ file = 'Get-LlmWikiConcurrentDrift.ps1'; marker = 'concurrentOrPreExistingPaths' }
     @{ file = 'Get-LlmWikiPhaseStatus.ps1'; marker = "ValidateSet('status', 'next', 'complete')" }
+    @{ file = 'Invoke-LlmWikiMcpCommand.ps1'; marker = "'test-plan'" }
     @{ file = 'LlmWikiChangeSetSnapshot.ps1'; marker = 'Get-LlmWikiChangeSetSnapshot' }
     @{ file = 'LlmWikiGitRenames.ps1'; marker = 'ConvertFrom-LlmWikiGitNameStatus' }
     @{ file = 'LlmWikiImplementationBrief.ps1'; marker = 'Normalize-LlmWikiImplementationBrief' }
     @{ file = 'Measure-LlmWikiCodeGraph.ps1'; marker = 'incremental-build' }
+    @{ file = 'Measure-LlmWikiContextConcurrency.ps1'; marker = 'throughputPerSecond' }
+    @{ file = 'Measure-LlmWikiContextLatency.ps1'; marker = 'warmQueryP95Ms' }
+    @{ file = 'Measure-LlmWikiAnswerQuality.ps1'; marker = 'claimCitationCoverage' }
     @{ file = 'Update-LlmWikiTaskEvidence.ps1'; marker = 'PacketPath must belong to WorkspacePath' }
+    @{ file = 'Write-LlmWikiContextQueryObservation.ps1'; marker = 'context-query-observations.jsonl' }
 )) {
     $contractSource = Get-Content -LiteralPath (Join-Path $PSScriptRoot $contract.file) -Raw
     Assert-CriticalTool ($contractSource.Contains($contract.marker)) "Critical tool contract marker is missing: $($contract.file)"
@@ -66,6 +74,131 @@ Assert-CriticalTool $invalidWorkspaceRejected 'Delivery finalization accepted an
 # exit-code propagation and transcript lifetime.
 $fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'critical-tool-contracts'
 try {
+    $unseenDraftPath = Join-Path $fixtureRoot 'unseen-draft.json'
+    $unseenFrozenPath = Join-Path $fixtureRoot 'unseen-frozen.json'
+    $unseenDraft = [pscustomobject]@{
+        schemaVersion = 1
+        status = 'draft-unseen-not-executable'
+        cases = @([pscustomobject]@{
+            id = 'independent-001'
+            cohort = 'wiki-tooling'
+            query = '<independent-author-query-required>'
+            changeType = 'Any'
+            expectedPaths = @('.llm-wiki/tools/code-graph.mjs')
+        })
+    }
+    [IO.File]::WriteAllText($unseenDraftPath, ($unseenDraft | ConvertTo-Json -Depth 6), [Text.UTF8Encoding]::new($false))
+    $placeholderRejected = $false
+    try {
+        & (Join-Path $PSScriptRoot 'Complete-LlmWikiUnseenContextCorpus.ps1') `
+            -DraftPath $unseenDraftPath -OutputPath $unseenFrozenPath | Out-Null
+    } catch {
+        $placeholderRejected = $_.Exception.Message -match 'independently authored query'
+    }
+    Assert-CriticalTool $placeholderRejected 'Unseen corpus freeze synthesized a query from the target path.'
+    $unseenDraft.cases[0].query = 'Which JavaScript module ranks repository context?'
+    [IO.File]::WriteAllText($unseenDraftPath, ($unseenDraft | ConvertTo-Json -Depth 6), [Text.UTF8Encoding]::new($false))
+    & (Join-Path $PSScriptRoot 'Complete-LlmWikiUnseenContextCorpus.ps1') `
+        -DraftPath $unseenDraftPath -OutputPath $unseenFrozenPath | Out-Null
+    $unseenFrozen = Get-Content -LiteralPath $unseenFrozenPath -Raw | ConvertFrom-Json
+    Assert-CriticalTool ($unseenFrozen.status -eq 'frozen-independent-query-corpus') 'Unseen corpus freeze omitted its authorship status.'
+    Assert-CriticalTool ($unseenFrozen.cases[0].query -eq $unseenDraft.cases[0].query) 'Unseen corpus freeze rewrote the authored query.'
+
+    $answerDraftPath = Join-Path $fixtureRoot 'answer-draft.json'
+    $answerCorpusPath = Join-Path $fixtureRoot 'answer-corpus.json'
+    $answerSubmissionPath = Join-Path $fixtureRoot 'answer-submission.json'
+    $answerReviewPath = Join-Path $fixtureRoot 'answer-review.json'
+    $answerDraft = [pscustomobject]@{
+        schemaVersion = 1
+        status = 'draft-human-query-intake'
+        description = 'Executable answer-quality contract fixture.'
+        thresholds = [pscustomobject]@{
+            minimumAverageCorrectness = 3.5; minimumAverageCompleteness = 3.5
+            minimumAverageActionability = 3.25; minimumClaimCitationCoverage = 1
+            minimumEvidenceRecall = 1; minimumValidCitationRate = 1; maximumUnsupportedClaimRate = 0
+        }
+        cases = @([pscustomobject]@{
+            id = 'answer-001'; query = 'Which module ranks Wiki repository context?'
+            authorship = [pscustomobject]@{
+                source = 'independent-human-authored'; authorOrSessionId = 'fixture-author'
+                collectedBeforeAnswerGeneration = $true
+            }
+            requiredEvidencePaths = @('.llm-wiki/tools/code-graph.mjs')
+        })
+    }
+    [IO.File]::WriteAllText($answerDraftPath, ($answerDraft | ConvertTo-Json -Depth 8), [Text.UTF8Encoding]::new($false))
+    & (Join-Path $PSScriptRoot 'Complete-LlmWikiAnswerEvaluationCorpus.ps1') `
+        -DraftPath $answerDraftPath -OutputPath $answerCorpusPath -MinimumCaseCount 1 | Out-Null
+    $answerSubmission = [pscustomobject]@{
+        schemaVersion = 1; generatorId = 'fixture-generator'
+        answers = @([pscustomobject]@{
+            id = 'answer-001'; answer = 'The Node code graph module performs the ranking.'
+            claims = @([pscustomobject]@{
+                text = 'The Node code graph module performs the ranking.'
+                citations = @([pscustomobject]@{ path = '.llm-wiki/tools/code-graph.mjs'; line = 1 })
+            })
+        })
+    }
+    $answerReview = [pscustomobject]@{
+        schemaVersion = 1; reviewerId = 'fixture-reviewer'; independentOfGenerator = $true
+        caseReviews = @([pscustomobject]@{
+            id = 'answer-001'; correctness = 4; completeness = 4; actionability = 4
+            unsupportedClaimCount = 0; notes = 'Fixture answer is grounded in the cited source.'
+        })
+    }
+    [IO.File]::WriteAllText($answerSubmissionPath, ($answerSubmission | ConvertTo-Json -Depth 8), [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText($answerReviewPath, ($answerReview | ConvertTo-Json -Depth 8), [Text.UTF8Encoding]::new($false))
+    $answerEvaluation = & (Join-Path $PSScriptRoot 'Measure-LlmWikiAnswerQuality.ps1') `
+        -CorpusPath $answerCorpusPath -SubmissionPath $answerSubmissionPath -ReviewPath $answerReviewPath `
+        -FailOnRegression -Format Json | ConvertFrom-Json
+    Assert-CriticalTool ([bool]$answerEvaluation.passed -and $answerEvaluation.caseCount -eq 1 -and
+        [double]$answerEvaluation.metrics.claimCitationCoverage -eq 1 -and
+        [double]$answerEvaluation.metrics.validCitationRate -eq 1) 'Answer-quality evaluation did not enforce its grounded citation contract.'
+    $answerReview.reviewerId = 'fixture-generator'
+    [IO.File]::WriteAllText($answerReviewPath, ($answerReview | ConvertTo-Json -Depth 8), [Text.UTF8Encoding]::new($false))
+    $selfReviewRejected = $false
+    try {
+        & (Join-Path $PSScriptRoot 'Measure-LlmWikiAnswerQuality.ps1') `
+            -CorpusPath $answerCorpusPath -SubmissionPath $answerSubmissionPath -ReviewPath $answerReviewPath `
+            -Format Json | Out-Null
+    } catch {
+        $selfReviewRejected = $_.Exception.Message -match 'reviewer must differ'
+    }
+    Assert-CriticalTool $selfReviewRejected 'Answer-quality evaluation accepted generator self-review.'
+
+    $drift = & (Join-Path $PSScriptRoot 'Get-LlmWikiConcurrentDrift.ps1') -Format Json | ConvertFrom-Json
+    $expectedDrift = @($drift.concurrentOrPreExistingPaths).Count -gt 0 -or [int]$drift.commitsAhead -gt 0
+    Assert-CriticalTool ([bool]$drift.driftDetected -eq $expectedDrift) 'Concurrent drift result contradicted its reported evidence.'
+
+    $contextCorpusPath = Join-Path $fixtureRoot 'context-corpus.json'
+    $contextCorpus = [pscustomobject]@{
+        schemaVersion = 1
+        diagnosticLimit = 10
+        thresholds = [pscustomobject]@{ minimumTop1Rate = 0; minimumTop10Rate = 0; minimumMeanReciprocalRank = 0 }
+        switchCriteria = [pscustomobject]@{ minimumCaseCount = 1; minimumTop1Rate = 0; minimumTop10Rate = 0; minimumMeanReciprocalRank = 0 }
+        cases = @([pscustomobject]@{
+            id = 'tool-contract-context'
+            query = 'JavaScript module ranks repository context'
+            changeType = 'Any'
+            expectedPaths = @('.llm-wiki/tools/code-graph.mjs')
+        })
+    }
+    [IO.File]::WriteAllText($contextCorpusPath, ($contextCorpus | ConvertTo-Json -Depth 6), [Text.UTF8Encoding]::new($false))
+    $latency = & (Join-Path $PSScriptRoot 'Measure-LlmWikiContextLatency.ps1') `
+        -CorpusPath $contextCorpusPath -Iterations 1 -Format Json | ConvertFrom-Json
+    Assert-CriticalTool ($latency.iterations -eq 1 -and [double]$latency.warmQueryP95Ms -ge 0 -and [bool]$latency.workspaceStable) 'Context latency probe returned an inconsistent measurement.'
+    $concurrency = & (Join-Path $PSScriptRoot 'Measure-LlmWikiContextConcurrency.ps1') `
+        -CorpusPath $contextCorpusPath -Workers 2 -QueriesPerWorker 1 -Format Json | ConvertFrom-Json
+    Assert-CriticalTool ($concurrency.queryCount -eq 2 -and [double]$concurrency.throughputPerSecond -gt 0 -and [bool]$concurrency.workspaceStable) 'Context concurrency probe returned an inconsistent measurement.'
+
+    $observationPath = Join-Path $fixtureRoot 'context-observations.jsonl'
+    & (Join-Path $PSScriptRoot 'Write-LlmWikiContextQueryObservation.ps1') `
+        -DurationMs 12.345 -QueryTermCount 3 -CandidateCount 7 -TopLayer '' -TopRole '' -Ready $true -OutputPath $observationPath
+    $observation = Get-Content -LiteralPath $observationPath | Select-Object -Last 1 | ConvertFrom-Json
+    Assert-CriticalTool ([double]$observation.durationMs -eq 12.34 -and $observation.queryTermCount -eq 3 -and
+        $observation.candidateCount -eq 7 -and $observation.topLayer -eq 'unknown' -and
+        $observation.topRole -eq 'unknown' -and [bool]$observation.ready) 'Context observation writer did not preserve its public record contract.'
+
     $fakeWikiPath = Join-Path $fixtureRoot 'fake-wiki.ps1'
     $argumentsPath = Join-Path $fixtureRoot 'arguments.json'
     $logPath = Join-Path $fixtureRoot 'worker.log'
@@ -103,4 +236,4 @@ $sqliteSecond = Initialize-LlmWikiInProcessSqlite
 Assert-CriticalTool ([bool]$sqliteFirst.ready -and [bool]$sqliteSecond.ready) 'In-process SQLite reader did not initialize.'
 Assert-CriticalTool ($sqliteFirst.fingerprint -eq $sqliteSecond.fingerprint -and $sqliteFirst.outputPath -eq $sqliteSecond.outputPath) 'In-process SQLite cache did not reuse the loaded runtime.'
 
-Write-Host 'LLM Wiki critical tool contracts passed: ownership, fingerprints, finalization boundaries, worker propagation, and SQLite cache reuse.'
+Write-Host 'LLM Wiki critical tool contracts passed: ownership, fingerprints, lifecycle boundaries, context measurement, worker propagation, and SQLite cache reuse.'

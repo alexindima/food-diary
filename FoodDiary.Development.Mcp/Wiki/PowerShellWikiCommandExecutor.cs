@@ -43,10 +43,15 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
     ) {
         string repositoryRoot = RepositoryRootResolver.Resolve();
         string wikiPath = Path.Combine(repositoryRoot, ".llm-wiki", "wiki.ps1");
-        if (!File.Exists(wikiPath)) {
+        string bridgePath = Path.Combine(
+            repositoryRoot,
+            ".llm-wiki",
+            "tools",
+            "Invoke-LlmWikiMcpCommand.ps1");
+        if (!File.Exists(wikiPath) || !File.Exists(bridgePath)) {
             throw new DevelopmentMcpException(
                 DevelopmentMcpErrorCodes.WikiUnavailable,
-                $"Wiki entrypoint was not found at {wikiPath}.");
+                $"Wiki entrypoint or MCP bridge was not found at {wikiPath} and {bridgePath}.");
         }
 
         var requestStopwatch = Stopwatch.StartNew();
@@ -76,6 +81,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
                     requestPath,
                     repositoryRoot,
                     wikiPath,
+                    bridgePath,
                     cancellationToken).ConfigureAwait(false);
                 stopwatch.Stop();
                 _telemetry.CommandCompleted(command, stopwatch.Elapsed);
@@ -108,6 +114,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         string requestPath,
         string repositoryRoot,
         string wikiPath,
+        string bridgePath,
         CancellationToken cancellationToken) {
         using Process process = new() {
             StartInfo = new ProcessStartInfo {
@@ -134,8 +141,11 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
             "[Console]::InputEncoding=[Text.UTF8Encoding]::new($false);" +
             "[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false);" +
             "$OutputEncoding=[Text.UTF8Encoding]::new($false);" +
-            "& $env:FOODDIARY_WIKI_PATH $env:FOODDIARY_WIKI_COMMAND " +
-            "-RequestFile $env:FOODDIARY_WIKI_REQUEST");
+            "& $env:FOODDIARY_WIKI_MCP_BRIDGE " +
+            "-Command $env:FOODDIARY_WIKI_COMMAND " +
+            "-RequestFile $env:FOODDIARY_WIKI_REQUEST " +
+            "-WikiPath $env:FOODDIARY_WIKI_PATH");
+        process.StartInfo.Environment["FOODDIARY_WIKI_MCP_BRIDGE"] = bridgePath;
         process.StartInfo.Environment["FOODDIARY_WIKI_PATH"] = wikiPath;
         process.StartInfo.Environment["FOODDIARY_WIKI_COMMAND"] = command;
         process.StartInfo.Environment["FOODDIARY_WIKI_REQUEST"] = requestPath;

@@ -36,11 +36,18 @@
   "agentGuideBoost": 120,
   "companionFilePenalty": 100,
   "crossLayerPenalty": 250,
+  "confidenceCalibration": {
+    "ambiguityMaximumMargin": 15,
+    "highMinimumMargin": 100,
+    "mediumMinimumMargin": 30,
+    "implementationChangeTypes": ["Api", "Backend", "Database", "Frontend", "Tests"],
+    "documentationRecordTypes": ["agent-guide", "documentation", "wiki-page"]
+  },
   "genericAffinities": {
     "roleScorePerMatch": 80,
     "maximumRoleScore": 240,
     "roleScoreOverrides": {"consumers": 120, "factory": 240},
-    "roleTerms": ["attribute", "binder", "configuration", "consumer", "consumers", "controller", "dialog", "entity", "exception", "facade", "factory", "gateway", "handler", "interceptor", "mapping", "middleware", "options", "provider", "remove", "renderer", "repository", "result", "sender", "service", "store", "tracker", "validator", "worker"],
+    "roleTerms": ["attribute", "binder", "configuration", "consumer", "consumers", "controller", "dialog", "entity", "exception", "facade", "factory", "gateway", "handler", "interceptor", "mapping", "middleware", "options", "plan", "provider", "remove", "renderer", "repository", "result", "sender", "service", "store", "tracker", "validator", "worker"],
     "domainIntentTerms": ["domain", "entity"],
     "domainPathPrefixes": ["FoodDiary.Domain/", "MailInbox/FoodDiary.MailInbox.Domain/", "MailRelay/FoodDiary.MailRelay.Domain/"],
     "domainScore": 220,
@@ -69,18 +76,14 @@
   "queryTermExpansions": {
     "create": ["factory"],
     "upstream": ["trace"],
-    "strip": ["sanitize", "privacy", "sensitive"],
-    "redact": ["sanitize", "privacy", "sensitive"],
-    "scrub": ["sanitize", "privacy", "sensitive"],
-    "identity": ["privacy", "user"],
-    "personal": ["privacy", "user"],
+    "strip|redact|scrub": ["sanitize", "privacy", "sensitive"],
+    "identity|personal": ["privacy", "user"],
     "external": ["integration", "integrations", "httpclient"],
     "provider": ["integration", "integrations", "client"],
     "http": ["httpclient", "integrations"],
     "reviews": ["review"],
     "recalculate": ["calculate", "update", "updater"],
-    "change": ["mutation", "update"],
-    "changes": ["mutation", "update"],
+    "change|changes": ["mutation", "update"],
     "identities": ["identity"],
     "boundaries": ["boundary"],
     "calibrates": ["calibrate"],
@@ -88,10 +91,8 @@
     "manually": ["manual"],
     "utility": ["utils"],
     "helper": ["utils", "util"],
-    "identifier": ["id"],
-    "identifiers": ["id"],
-    "english": ["i18n", "localization", "translation"],
-    "russian": ["i18n", "localization", "translation"],
+    "identifier|identifiers": ["id"],
+    "english|russian": ["i18n", "localization", "translation"],
     "translation": ["i18n", "localization", "translate"],
     "consistent": ["check", "validate"],
     "replay": ["recovery", "recover"],
@@ -105,18 +106,15 @@
     "components": ["component"],
     "purge": ["cleanup", "delete"],
     "undelete": ["restore"],
-    "orphaned": ["cleanup"],
+    "orphaned|expired|retention": ["cleanup"],
     "presigned": ["upload", "url"],
     "poison": ["dead", "letter"],
-    "calorie": ["nutrition"],
-    "macro": ["nutrition"],
+    "calorie|macro": ["nutrition"],
     "verified": ["verify"],
-    "expired": ["cleanup"],
-    "retention": ["cleanup"],
     "schedule": ["recurring", "job"],
     "command": ["handler"],
     "reader": ["read", "readservice"],
-    "load": ["read"],
+    "load|summary": ["read"],
     "ingest": ["ingestion"],
     "powershell": ["script", "tool"],
     "unauthenticated": ["auth", "guard"],
@@ -128,13 +126,10 @@
     "saves": ["save"],
     "builder": ["build"],
     "еды": ["food"],
-    "настройки": ["options", "settings"],
-    "настройке": ["options", "settings"],
-    "настроек": ["options", "settings"],
+    "настройки|настройке|настроек": ["options", "settings"],
     "definitions": ["definition"],
     "workers": ["runtime", "topology"],
-    "finds": ["find"],
-    "search": ["find"],
+    "finds|search": ["find"],
     "searches": ["search", "find"],
     "compile": ["get", "plan"],
     "compiles": ["compile", "get", "plan"],
@@ -148,7 +143,6 @@
     "signed": ["auth", "logged"],
     "tests": ["test"],
     "scenarios": ["scenario"],
-    "summary": ["read"],
     "authentication": ["auth"],
     "retrying": ["retry"],
     "ranked": ["context"],
@@ -340,6 +334,17 @@
     ,"валидатор": ["validator", "validation"]
     ,"репозитор": ["repository", "store"]
     ,"идемпотент": ["idempotency", "replay"]
+    ,"генератор": ["generate", "generator", "build"]
+    ,"индекс": ["index"]
+    ,"готовност": ["readiness", "ready", "verify"]
+    ,"миграц": ["migration"]
+    ,"стади": ["stage", "verification"]
+    ,"уведомлен": ["notification"]
+    ,"прочтен|прочитан": ["read"]
+    ,"доступ": ["access"]
+    ,"чтен": ["read", "readonly"]
+    ,"канал": ["channel"]
+    ,"freeze": ["manifest"]
     ,"достижен": ["achievement"]
     ,"создан": ["create"]
     ,"общ": ["common"]
@@ -366,7 +371,6 @@
     ,"сервис": ["service"]
     ,"исполн|выполн": ["execution"]
     ,"помет": ["mark"]
-    ,"прочитан": ["read"]
     ,"конфигурац": ["configuration"]
     ,"готовност": ["readiness", "healthcheck"]
     ,"ответ": ["response", "mapping"]
@@ -602,7 +606,7 @@
       "identityTerms": ["job"],
       "score": 60,
       "identityScope": "file",
-      "excludedQueryTerms": ["budget", "governed", "context"]
+      "excludedQueryTerms": ["budget", "governed", "context", "jobmanager"]
     },
     {
       "id": "recovery-job-intent",
@@ -775,9 +779,10 @@
       "queryTerms": ["job", "background"],
       "minimumMatches": 1,
       "identityTerms": ["job", "worker", "hostedservice"],
-      "score": 120,
+      "score": 500,
       "identityScope": "file",
-      "excludedQueryTerms": ["budget", "governed", "context"]
+      "directOnly": true,
+      "excludedQueryTerms": ["budget", "governed", "context", "jobmanager"]
     },
     {
       "id": "explicit-script-role",
@@ -2120,7 +2125,7 @@
       "changeTypes": ["Backend"],
       "excludeTests": true,
       "pathPrefixes": ["FoodDiary.JobManager/"],
-      "excludedQueryTerms": ["budget", "governed", "context"]
+      "excludedQueryTerms": ["budget", "governed", "context", "jobmanager"]
     },
     {
       "id": "backend-read-service-role",
@@ -3754,7 +3759,7 @@
       "minimumMatches": 3,
       "candidateTerms": ["compiled", "index", "migration"],
       "minimumCandidateMatches": 3,
-      "minimumQueryIdentityMatches": 3,
+      "minimumQueryIdentityMatches": 2,
       "score": 1100,
       "identityScope": "file",
       "affinityDirectOnly": false,
@@ -4136,6 +4141,66 @@
       "recordTypes": ["code"],
       "pathSuffixes": ["Service.cs"],
       "excludeTests": true
+    },
+    {
+      "id": "idempotency-filter-role",
+      "queryTerms": ["idempotency", "duplicate", "request", "key", "filter"],
+      "minimumMatches": 2,
+      "candidateTerms": ["idempotency", "filter"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 2,
+      "score": 1300,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Api"],
+      "recordTypes": ["code"],
+      "pathSuffixes": ["Filter.cs"],
+      "excludeTests": true
+    },
+    {
+      "id": "configured-delivery-policy-role",
+      "queryTerms": ["configured", "configuration", "deliver", "delivery", "policy"],
+      "minimumMatches": 2,
+      "candidateTerms": ["configured", "delivery", "policy"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 2,
+      "score": 720,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Backend"],
+      "recordTypes": ["code"],
+      "pathSuffixes": ["Policy.cs"],
+      "excludeTests": true
+    },
+    {
+      "id": "notification-domain-entity-role",
+      "queryTerms": ["domain", "notification", "read", "channel", "user"],
+      "minimumMatches": 3,
+      "candidateTerms": ["notification"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 1,
+      "score": 720,
+      "identityScope": "identity",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Backend"],
+      "recordTypes": ["code"],
+      "pathPrefixes": ["FoodDiary.Domain/Entities/Notifications/"],
+      "pathSuffixes": [".cs"],
+      "excludeTests": true
+    },
+    {
+      "id": "wiki-query-documentation-role",
+      "queryTerms": ["documentation", "query", "querying", "context", "wiki", "natural"],
+      "minimumMatches": 3,
+      "candidateTerms": ["query", "context"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 2,
+      "score": 520,
+      "identityScope": "identity",
+      "affinityDirectOnly": false,
+      "recordTypes": ["wiki-page"],
+      "pathPrefixes": [".llm-wiki/workflows/"],
+      "pathSuffixes": [".md"]
     }
   ]
 }

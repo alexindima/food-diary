@@ -33,6 +33,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         @"\.[^./\\]+\.cs$",
         RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture,
         TimeSpan.FromMilliseconds(100));
+    private static readonly Regex McpIntent = new(
+        @"(^|\W)mcp(\W|$)",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture,
+        TimeSpan.FromMilliseconds(100));
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly string _databasePath;
     private readonly Lazy<RankingPolicy> _policy;
@@ -145,7 +149,9 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             int candidateLimit = policy.CandidatePoolLimit;
             List<RawCandidate> rawCandidates = await ReadCandidatesAsync(
                 connection,
+                query,
                 queryTerms,
+                directQueryTerms,
                 candidateLimit,
                 policy.IdentityCandidatePoolLimit,
                 cancellationToken).ConfigureAwait(false);
@@ -227,7 +233,9 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private static async Task<List<RawCandidate>> ReadCandidatesAsync(
         SqliteConnection connection,
+        string query,
         IReadOnlyList<string> queryTerms,
+        IReadOnlyList<string> directQueryTerms,
         int candidateLimit,
         int identityCandidateLimit,
         CancellationToken cancellationToken) {
@@ -309,6 +317,49 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 }
             }
         }
+        string[] runtimeSuffixes = [];
+        if (directQueryTerms.Any(term => term is "node" or "javascript" or "mjs")) {
+            runtimeSuffixes = [".mjs", ".js", ".cjs"];
+        } else if (!McpIntent.IsMatch(query) &&
+            directQueryTerms.Any(term => term is "powershell" or "pwsh" or "ps1")) {
+            runtimeSuffixes = [".ps1"];
+        }
+        if (runtimeSuffixes.Length > 0) {
+            HashSet<string> runtimeCandidateKeys = new(StringComparer.Ordinal);
+            List<RawCandidate> runtimeCandidatesToPrepend = [];
+            foreach (string suffix in runtimeSuffixes) {
+                SqliteCommand command = connection.CreateCommand();
+                await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
+                command.CommandTimeout = 2;
+                command.CommandText = """
+                    SELECT record_type, record_key, path, source_path,
+                        COALESCE(category, ''), COALESCE(title, ''), 0.0 lexical_rank
+                    FROM context_search
+                    WHERE context_search.path GLOB $suffix
+                    ORDER BY context_search.path;
+                    """;
+                command.Parameters.AddWithValue("$suffix", $"*{suffix}");
+                SqliteDataReader reader = await command
+                    .ExecuteReaderAsync(cancellationToken)
+                    .ConfigureAwait(false);
+                await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
+                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                    RawCandidate candidate = new(
+                        reader.GetString(0),
+                        reader.GetString(1),
+                        reader.GetString(2),
+                        reader.GetString(3),
+                        reader.GetString(4),
+                        reader.GetString(5),
+                        reader.GetDouble(6));
+                    if (runtimeCandidateKeys.Add(CandidateKey(candidate))) {
+                        runtimeCandidatesToPrepend.Add(candidate);
+                    }
+                }
+            }
+            candidates.RemoveAll(candidate => runtimeCandidateKeys.Contains(CandidateKey(candidate)));
+            candidates.InsertRange(0, runtimeCandidatesToPrepend);
+        }
         return candidates;
     }
 
@@ -334,8 +385,17 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             .Where(path => !string.IsNullOrWhiteSpace(path))
             .Select(path => NormalizePath(path).ToLowerInvariant())];
         HashSet<string> terms = new(rankingTerms, StringComparer.Ordinal);
+        bool requestsGuidance = terms.Overlaps([
+            "agent", "agents", "guide", "guidance", "instruction", "instructions",
+        ]) || (terms.Overlaps(["policy", "rule", "rules"]) &&
+            terms.Overlaps(["repository", "project", "module", "convention", "access", "readonly"]));
         HashSet<string> directTerms = new(directQueryTerms, StringComparer.Ordinal);
         bool explicitlyRequestsTest = terms.Contains("test");
+        bool explicitlyRequestsMcp = McpIntent.IsMatch(query);
+        bool stronglyRequestsTest = explicitlyRequestsTest &&
+            (string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase) ||
+                (string.Equals(changeType, "Frontend", StringComparison.OrdinalIgnoreCase) &&
+                    directTerms.Contains("tests")));
         List<RankedCandidate> ranked = [];
         for (int index = 0; index < candidates.Count; index++) {
             RawCandidate candidate = candidates[index];
@@ -381,9 +441,120 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 score += identityScore;
                 reasons.Add($"path/title affinity {string.Join(", ", identityMatches)}");
             }
-            if (string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase) &&
-                isExplicitTestCandidate &&
-                explicitlyRequestsTest) {
+            GenericAffinities genericAffinity = policy.GenericAffinities;
+            string[] explicitRoleMatches = [.. genericAffinity.RoleTerms.Where(term => {
+                string normalizedTerm = term.ToLowerInvariant();
+                if (normalizedTerm is "consumer" or "consumers" && !terms.Contains("powershell")) {
+                    return false;
+                }
+                return terms.Contains(normalizedTerm) &&
+                    searchableFileIdentity.Contains(normalizedTerm, StringComparison.Ordinal);
+            })];
+            int explicitRoleScore = Math.Min(
+                explicitRoleMatches.Sum(term => genericAffinity.RoleScoreOverrides?.TryGetValue(
+                    term,
+                    out int overrideScore) == true
+                    ? overrideScore
+                    : genericAffinity.RoleScorePerMatch),
+                genericAffinity.MaximumRoleScore);
+            if (explicitRoleScore > 0) {
+                score += explicitRoleScore;
+                reasons.Add($"generic file-role affinity {string.Join(", ", explicitRoleMatches)}");
+            }
+            void ApplyGenericPathAffinity(
+                string id,
+                IReadOnlyList<string> intentTerms,
+                IReadOnlyList<string> pathValues,
+                int value,
+                bool suffix = false) {
+                bool intentMatched = intentTerms.Any(term => terms.Contains(term.ToLowerInvariant()));
+                bool pathMatched = pathValues.Any(pathValue => suffix
+                    ? normalizedPath.EndsWith(pathValue.ToLowerInvariant(), StringComparison.Ordinal)
+                    : normalizedPath.Contains(
+                        NormalizePath(pathValue).ToLowerInvariant(),
+                        StringComparison.Ordinal));
+                if (!intentMatched || !pathMatched || value == 0) {
+                    return;
+                }
+                score += value;
+                reasons.Add($"generic {id} affinity");
+            }
+            void ApplyChangeTypePathAffinity(
+                string id,
+                string expectedType,
+                IReadOnlyList<string> pathValues,
+                int value) {
+                if (!string.Equals(changeType, expectedType, StringComparison.OrdinalIgnoreCase) ||
+                    !pathValues.Any(pathValue => normalizedPath.Contains(
+                        NormalizePath(pathValue).ToLowerInvariant(),
+                        StringComparison.Ordinal))) {
+                    return;
+                }
+                score += value;
+                reasons.Add($"generic {id} affinity");
+            }
+            if (!string.Equals(changeType, "Database", StringComparison.OrdinalIgnoreCase)) {
+                ApplyGenericPathAffinity(
+                    "domain-layer",
+                    genericAffinity.DomainIntentTerms,
+                    genericAffinity.DomainPathPrefixes,
+                    genericAffinity.DomainScore);
+            }
+            ApplyGenericPathAffinity(
+                "api-layer",
+                genericAffinity.ApiIntentTerms,
+                genericAffinity.ApiPathFragments,
+                genericAffinity.ApiScore);
+            ApplyGenericPathAffinity(
+                "database-layer",
+                genericAffinity.DatabaseIntentTerms,
+                genericAffinity.DatabasePathFragments,
+                genericAffinity.DatabaseScore);
+            ApplyChangeTypePathAffinity(
+                "api-change-type",
+                "Api",
+                genericAffinity.ApiPathFragments,
+                genericAffinity.ApiScore);
+            ApplyChangeTypePathAffinity(
+                "database-change-type",
+                "Database",
+                genericAffinity.DatabasePathFragments,
+                genericAffinity.DatabaseScore);
+            ApplyGenericPathAffinity(
+                "admin-scope",
+                genericAffinity.AdminIntentTerms,
+                genericAffinity.AdminPathFragments,
+                genericAffinity.AdminScore);
+            ApplyGenericPathAffinity(
+                "integration-layer",
+                genericAffinity.IntegrationIntentTerms,
+                genericAffinity.IntegrationPathPrefixes,
+                genericAffinity.IntegrationScore);
+            ApplyGenericPathAffinity(
+                "node-runtime",
+                genericAffinity.NodeIntentTerms,
+                genericAffinity.NodePathSuffixes,
+                genericAffinity.NodeScore,
+                suffix: true);
+            if (!explicitlyRequestsMcp) {
+                ApplyGenericPathAffinity(
+                    "powershell-runtime",
+                    genericAffinity.PowershellIntentTerms,
+                    genericAffinity.PowershellPathSuffixes,
+                    genericAffinity.PowershellScore,
+                    suffix: true);
+            }
+            if (!string.Equals(changeType, "Frontend", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase) &&
+                !terms.Contains("how") &&
+                !explicitlyRequestsMcp) {
+                ApplyGenericPathAffinity(
+                    "wiki-tooling",
+                    genericAffinity.WikiToolIntentTerms,
+                    genericAffinity.WikiToolPathPrefixes,
+                    genericAffinity.WikiToolScore);
+            }
+            if (isExplicitTestCandidate && stronglyRequestsTest) {
                 int explicitTestScore = Math.Min(
                     identityMatches.Length * policy.ExplicitTestAffinity.ScorePerMatch,
                     policy.ExplicitTestAffinity.MaximumScore);
@@ -392,13 +563,17 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                     reasons.Add($"explicit test behavior affinity {identityMatches.Length} terms");
                 }
             }
-            if (string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase) &&
-                !isExplicitTestCandidate &&
-                explicitlyRequestsTest) {
+            if (!isExplicitTestCandidate && stronglyRequestsTest) {
                 score -= policy.ExplicitTestAffinity.NonTestPenalty;
                 reasons.Add("production candidate penalty for explicit test intent");
             }
             foreach (IdentityBoost boost in policy.IdentityBoosts) {
+                if (explicitlyRequestsMcp && string.Equals(
+                    boost.Id,
+                    "explicit-powershell-file-intent",
+                    StringComparison.Ordinal)) {
+                    continue;
+                }
                 bool matchesChangeType = boost.ChangeTypes is null ||
                     boost.ChangeTypes.Length == 0 ||
                     boost.ChangeTypes.Any(candidateChangeType =>
@@ -528,7 +703,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 reasons.Add($"negated role penalty {string.Join(", ", matchedNegativeRoles)}");
             }
             if (isExplicitTestCandidate &&
-                !string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase)) {
+                !string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase) &&
+                !stronglyRequestsTest) {
                 score -= policy.NonTestPenalty;
                 reasons.Add("test candidate ranked after production");
             }
@@ -566,7 +742,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 score += 20;
             }
             if (string.Equals(candidate.RecordType, "agent-guide", StringComparison.Ordinal)) {
-                score += policy.AgentGuideBoost;
+                score += requestsGuidance ? policy.AgentGuideBoost : -policy.AgentGuideBoost;
+                reasons.Add(requestsGuidance
+                    ? "agent guide affinity"
+                    : "agent guide penalty for code intent");
             }
             ranked.Add(new RankedCandidate(candidate, score, reasons));
         }
@@ -588,11 +767,46 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 candidate.Score,
                 Math.Round(candidate.Raw.LexicalRank, 6, MidpointRounding.AwayFromZero),
                 candidate.Reasons));
-            if (result.Count >= limit) {
-                break;
-            }
         }
-        return [.. result];
+        var fileNameCounts = result
+            .GroupBy(candidate => Path.GetFileName(candidate.Path), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.Count(), StringComparer.OrdinalIgnoreCase);
+        return [.. result.Select((candidate, index) => {
+            int? scoreMargin = index + 1 < result.Count
+                ? candidate.Score - result[index + 1].Score
+                : null;
+            string sameNameKey = Path.GetFileName(candidate.Path).ToLowerInvariant();
+            int sameNameCandidateCount = fileNameCounts[sameNameKey];
+            bool recordTypeMismatch = policy.ConfidenceCalibration.ImplementationChangeTypes.Any(candidateChangeType =>
+                    string.Equals(candidateChangeType, changeType, StringComparison.OrdinalIgnoreCase)) &&
+                policy.ConfidenceCalibration.DocumentationRecordTypes.Any(recordType =>
+                    string.Equals(recordType, candidate.RecordType, StringComparison.OrdinalIgnoreCase));
+            bool ambiguous = recordTypeMismatch || (scoreMargin is not null &&
+                scoreMargin <= policy.ConfidenceCalibration.AmbiguityMaximumMargin);
+            string? ambiguityReason = null;
+            if (recordTypeMismatch) {
+                ambiguityReason = "record-type-change-type-mismatch";
+            } else if (ambiguous) {
+                ambiguityReason = "top-score-margin";
+            }
+            string confidence;
+            if (ambiguous) {
+                confidence = "low";
+            } else if (scoreMargin is null) {
+                confidence = "unknown";
+            } else if (scoreMargin >= policy.ConfidenceCalibration.HighMinimumMargin) {
+                confidence = "high";
+            } else {
+                confidence = scoreMargin >= policy.ConfidenceCalibration.MediumMinimumMargin ? "medium" : "low";
+            }
+            return candidate with {
+                ScoreMargin = scoreMargin,
+                Confidence = confidence,
+                Ambiguous = ambiguous,
+                AmbiguityReason = ambiguityReason,
+                SameNameCandidateCount = sameNameCandidateCount,
+            };
+        }).Take(limit)];
     }
 
     private static string[] ExpandQueryTerms(string query, RankingPolicy policy) {
@@ -632,8 +846,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         List<string> terms,
         HashSet<string> seen) {
         foreach (string term in directTerms) {
-            if (policy.QueryTermExpansions.TryGetValue(term, out string[]? expansions)) {
-                AddExpansions(expansions, terms, seen);
+            foreach ((string termGroup, string[] expansions) in policy.QueryTermExpansions) {
+                if (termGroup.Split('|', StringSplitOptions.RemoveEmptyEntries).Contains(term, StringComparer.Ordinal)) {
+                    AddExpansions(expansions, terms, seen);
+                }
             }
             foreach ((string prefix, string[] prefixExpansions) in policy.QueryPrefixExpansions) {
                 if (prefix.Split('|', StringSplitOptions.RemoveEmptyEntries).Any(candidate =>
@@ -833,12 +1049,51 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         int AgentGuideBoost,
         int CompanionFilePenalty,
         int CrossLayerPenalty,
+        ConfidenceCalibration ConfidenceCalibration,
         Dictionary<string, string[]> QueryTermExpansions,
         Dictionary<string, string[]> QueryPrefixExpansions,
         Dictionary<string, string[]> NegatedRoleAlternatives,
         PathBoost[] PathBoosts,
         IdentityBoost[] IdentityBoosts,
+        GenericAffinities GenericAffinities,
         StructuralRoleBoost[]? StructuralRoleBoosts = null);
+
+    private sealed record ConfidenceCalibration(
+        int AmbiguityMaximumMargin,
+        int HighMinimumMargin,
+        int MediumMinimumMargin,
+        string[] ImplementationChangeTypes,
+        string[] DocumentationRecordTypes);
+
+    private sealed record GenericAffinities(
+        int RoleScorePerMatch,
+        int MaximumRoleScore,
+        string[] RoleTerms,
+        string[] DomainIntentTerms,
+        string[] DomainPathPrefixes,
+        int DomainScore,
+        string[] ApiIntentTerms,
+        string[] ApiPathFragments,
+        int ApiScore,
+        string[] DatabaseIntentTerms,
+        string[] DatabasePathFragments,
+        int DatabaseScore,
+        string[] AdminIntentTerms,
+        string[] AdminPathFragments,
+        int AdminScore,
+        string[] IntegrationIntentTerms,
+        string[] IntegrationPathPrefixes,
+        int IntegrationScore,
+        string[] NodeIntentTerms,
+        string[] NodePathSuffixes,
+        int NodeScore,
+        string[] PowershellIntentTerms,
+        string[] PowershellPathSuffixes,
+        int PowershellScore,
+        string[] WikiToolIntentTerms,
+        string[] WikiToolPathPrefixes,
+        int WikiToolScore,
+        Dictionary<string, int>? RoleScoreOverrides = null);
 
     private sealed record PathTermAffinity(
         int MinimumTermLength,

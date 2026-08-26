@@ -1,8 +1,10 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Results;
+using FoodDiary.Web.Api.Options;
 using FoodDiary.Web.Api.Services;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
+using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Web.Api.Tests;
 
@@ -23,85 +25,93 @@ public sealed class NotificationTestSchedulerTests {
                 dispatched.TrySetResult((call.ArgAt<Guid>(0), call.ArgAt<string>(1)));
                 return Task.CompletedTask;
             });
-        IHostApplicationLifetime lifetime = Substitute.For<IHostApplicationLifetime>();
-        lifetime.ApplicationStopping.Returns(CancellationToken.None);
         await using ServiceProvider serviceProvider = CreateServiceProvider(dispatcher);
-        var scheduler = new NotificationTestScheduler(serviceProvider.GetRequiredService<IServiceScopeFactory>(), lifetime, FixedTime, NullLogger<NotificationTestScheduler>.Instance);
+        NotificationTestScheduler scheduler = CreateScheduler(serviceProvider, maxPending: 10);
+        await scheduler.StartAsync(CancellationToken.None);
         var userId = Guid.NewGuid();
 
-        ScheduledNotificationData scheduled = await scheduler.ScheduleAsync(userId, 0, type, CancellationToken.None);
-        (Guid commandUserId, string commandType) = await dispatched.Task.WaitAsync(
-            TimeSpan.FromSeconds(3),
-            TimeProvider.System);
+        Result<ScheduledNotificationData> result = await scheduler.ScheduleAsync(userId, 0, type, CancellationToken.None);
+        Assert.True(result.IsSuccess);
+        ScheduledNotificationData scheduled = result.Value;
+        (Guid commandUserId, string commandType) = await dispatched.Task.WaitAsync(TimeSpan.FromSeconds(3));
+        await scheduler.StopAsync(CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.Equal(expectedType, scheduled.Type),
             () => Assert.Equal(1, scheduled.DelaySeconds),
-            () => Assert.Equal(FixedUtcNow.AddSeconds(1), scheduled.ScheduledAtUtc),
             () => Assert.Equal(userId, commandUserId),
             () => Assert.Equal(expectedType, commandType));
     }
 
     [Fact]
+    public async Task ScheduleAsync_WhenCapacityReached_ReturnsRateLimitedFailure() {
+        await using ServiceProvider serviceProvider = CreateServiceProvider(Substitute.For<ITestNotificationDeliveryDispatcher>());
+        NotificationTestScheduler scheduler = CreateScheduler(serviceProvider, maxPending: 2);
+
+        Result<ScheduledNotificationData> first = await scheduler.ScheduleAsync(
+            Guid.NewGuid(), 3600, NotificationTypes.FastingCompleted, CancellationToken.None);
+        Result<ScheduledNotificationData> second = await scheduler.ScheduleAsync(
+            Guid.NewGuid(), 3600, NotificationTypes.FastingCompleted, CancellationToken.None);
+        Result<ScheduledNotificationData> rejected = await scheduler.ScheduleAsync(
+            Guid.NewGuid(), 3600, NotificationTypes.FastingCompleted, CancellationToken.None);
+
+        Assert.True(first.IsSuccess);
+        Assert.True(second.IsSuccess);
+        Assert.True(rejected.IsFailure);
+        Assert.Equal("Notifications.TestScheduleCapacityExceeded", rejected.Error.Code);
+        Assert.Equal(ErrorKind.RateLimited, rejected.Error.Kind);
+    }
+
+    [Fact]
+    public async Task ScheduleAsync_WhenCalledConcurrently_NeverExceedsCapacity() {
+        const int capacity = 8;
+        await using ServiceProvider serviceProvider = CreateServiceProvider(Substitute.For<ITestNotificationDeliveryDispatcher>());
+        NotificationTestScheduler scheduler = CreateScheduler(serviceProvider, capacity);
+
+        Result<ScheduledNotificationData>[] results = await Task.WhenAll(Enumerable.Range(0, 64).Select(_ =>
+            scheduler.ScheduleAsync(Guid.NewGuid(), 3600, NotificationTypes.FastingCompleted, CancellationToken.None)));
+
+        Assert.Multiple(
+            () => Assert.Equal(capacity, results.Count(static result => result.IsSuccess)),
+            () => Assert.Equal(64 - capacity, results.Count(static result => result.IsFailure)),
+            () => Assert.All(results.Where(static result => result.IsFailure), result =>
+                Assert.Equal("Notifications.TestScheduleCapacityExceeded", result.Error.Code)));
+    }
+
+    [Fact]
     public async Task ScheduleAsync_WhenCallerCancelled_Throws() {
         await using ServiceProvider serviceProvider = CreateServiceProvider(Substitute.For<ITestNotificationDeliveryDispatcher>());
-        var scheduler = new NotificationTestScheduler(
-            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
-            Substitute.For<IHostApplicationLifetime>(),
-            FixedTime,
-            NullLogger<NotificationTestScheduler>.Instance);
+        NotificationTestScheduler scheduler = CreateScheduler(serviceProvider, maxPending: 1);
 
-        await Assert.ThrowsAsync<OperationCanceledException>(() =>
-            scheduler.ScheduleAsync(Guid.NewGuid(), 1, NotificationTypes.FastingCompleted, new CancellationToken(canceled: true)));
+        await Assert.ThrowsAsync<OperationCanceledException>(() => scheduler.ScheduleAsync(
+            Guid.NewGuid(),
+            1,
+            NotificationTypes.FastingCompleted,
+            new CancellationToken(canceled: true)));
     }
 
     [Fact]
-    public async Task RunScheduledAsync_WhenDeliveryFails_SwallowsFailure() {
-        ITestNotificationDeliveryDispatcher dispatcher = Substitute.For<ITestNotificationDeliveryDispatcher>();
-        dispatcher.DispatchAsync(Arg.Any<Guid>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .Returns<Task>(_ => throw new InvalidOperationException("delivery failed"));
-        await using ServiceProvider serviceProvider = CreateServiceProvider(dispatcher);
-        var scheduler = new NotificationTestScheduler(
-            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
-            Substitute.For<IHostApplicationLifetime>(),
-            FixedTime,
-            NullLogger<NotificationTestScheduler>.Instance);
-
-        await InvokeRunScheduledAsync(scheduler, CancellationToken.None);
-
-        await dispatcher.Received(1).DispatchAsync(Arg.Any<Guid>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
-    }
-
-    [Fact]
-    public async Task RunScheduledAsync_WhenApplicationStopping_SwallowsCancellation() {
+    public async Task ExecuteAsync_WhenApplicationStops_DoesNotDispatchPendingItems() {
         ITestNotificationDeliveryDispatcher dispatcher = Substitute.For<ITestNotificationDeliveryDispatcher>();
         await using ServiceProvider serviceProvider = CreateServiceProvider(dispatcher);
-        var scheduler = new NotificationTestScheduler(
-            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
-            Substitute.For<IHostApplicationLifetime>(),
-            FixedTime,
-            NullLogger<NotificationTestScheduler>.Instance);
+        NotificationTestScheduler scheduler = CreateScheduler(serviceProvider, maxPending: 1);
+        await scheduler.StartAsync(CancellationToken.None);
+        Result<ScheduledNotificationData> result = await scheduler.ScheduleAsync(
+            Guid.NewGuid(), 3600, NotificationTypes.FastingCompleted, CancellationToken.None);
 
-        await InvokeRunScheduledAsync(scheduler, new CancellationToken(canceled: true));
+        await scheduler.StopAsync(CancellationToken.None);
 
+        Assert.True(result.IsSuccess);
         await dispatcher.DidNotReceiveWithAnyArgs().DispatchAsync(default, default!, default);
     }
 
-    private static Task InvokeRunScheduledAsync(NotificationTestScheduler scheduler, CancellationToken cancellationToken) {
-        System.Reflection.MethodInfo method = typeof(NotificationTestScheduler).GetMethod(
-            "RunScheduledAsync",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
-        return (Task)method.Invoke(scheduler, [Guid.NewGuid(), 0, NotificationTypes.FastingCompleted, cancellationToken])!;
-    }
+    private static NotificationTestScheduler CreateScheduler(ServiceProvider serviceProvider, int maxPending) =>
+        new(
+            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            TimeProvider.System,
+            MsOptions.Create(new NotificationTestSchedulerOptions { MaxPending = maxPending }),
+            NullLogger<NotificationTestScheduler>.Instance);
 
     private static ServiceProvider CreateServiceProvider(ITestNotificationDeliveryDispatcher dispatcher) =>
         new ServiceCollection().AddSingleton(dispatcher).BuildServiceProvider();
-
-    private static readonly DateTime FixedUtcNow = new(2026, 4, 10, 13, 0, 0, DateTimeKind.Utc);
-    private static readonly TimeProvider FixedTime = new FixedTimeProvider(FixedUtcNow);
-
-    [ExcludeFromCodeCoverage]
-    private sealed class FixedTimeProvider(DateTime utcNow) : TimeProvider {
-        public override DateTimeOffset GetUtcNow() => new(utcNow);
-    }
 }

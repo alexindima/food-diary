@@ -49,6 +49,12 @@ public static class ApiOptionsServiceCollectionExtensions {
                 .Validate(ApiOutputCacheOptions.HasValidUserScoped,
                     "OutputCache:UserScoped:ExpirationSeconds must be greater than zero.")
                 .ValidateOnStart();
+            services
+                .AddOptions<NotificationTestSchedulerOptions>()
+                .BindConfiguration(NotificationTestSchedulerOptions.SectionName)
+                .Validate(NotificationTestSchedulerOptions.HasValidMaxPending,
+                    "NotificationTestScheduler:MaxPending must be greater than zero.")
+                .ValidateOnStart();
 
             return services;
         }

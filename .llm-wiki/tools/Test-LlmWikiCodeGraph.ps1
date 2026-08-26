@@ -112,8 +112,26 @@ if ([int]$warm.compiledIndexes.refreshed -ne 0) { throw 'Unchanged compiled-inde
 if ([int]$warm.contextSearch.documents -lt 1000) { throw 'Code graph FTS projection contains too few repository documents.' }
 $fts = & $manager search -Query 'Recipe nutrition updater' -Limit 20 -SkipRefresh -Format Json | ConvertFrom-Json
 if (-not $fts.ready -or
-    @($fts.records | Where-Object path -eq "$recipesSourcePrefix/Services/RecipeNutritionUpdater.cs").Count -ne 1) {
+    @($fts.records | Where-Object path -eq "$recipesSourcePrefix/Services/RecipeNutritionUpdater.cs").Count -ne 1 -or
+    [string]::IsNullOrWhiteSpace([string]$fts.rankingSummary.confidence) -or
+    $null -eq $fts.rankingSummary.PSObject.Properties['topScoreMargin']) {
     throw 'SQLite FTS context search did not locate RecipeNutritionUpdater.'
+}
+$ambiguousSearch = & $manager search -Query 'заглушка notification pusher которая ничего не отправляет' -ChangeType Backend -Limit 5 -SkipRefresh -Format Json | ConvertFrom-Json
+if (-not $ambiguousSearch.rankingSummary.ambiguous -or
+    $ambiguousSearch.rankingSummary.confidence -ne 'low' -or
+    $ambiguousSearch.rankingSummary.sameNameCandidateCount -ne 2 -or
+    $ambiguousSearch.rankingSummary.ambiguityReason -ne 'top-score-margin' -or
+    @($ambiguousSearch.records | Where-Object { $_.sameNameCandidateCount -eq 2 }).Count -ne 2) {
+    throw 'SQLite FTS context search did not expose close-score ambiguity and same-name collision diagnostics.'
+}
+$limitOneSearch = & $manager search -Query 'weekly check-in command handler' -Limit 1 -SkipRefresh -Format Json | ConvertFrom-Json
+$limitFiveSearch = & $manager search -Query 'weekly check-in command handler' -Limit 5 -SkipRefresh -Format Json | ConvertFrom-Json
+if ($limitOneSearch.records[0].path -ne $limitFiveSearch.records[0].path -or
+    $limitOneSearch.rankingSummary.confidence -ne $limitFiveSearch.rankingSummary.confidence -or
+    $limitOneSearch.rankingSummary.ambiguous -ne $limitFiveSearch.rankingSummary.ambiguous -or
+    $limitOneSearch.rankingSummary.topScoreMargin -ne $limitFiveSearch.rankingSummary.topScoreMargin) {
+    throw 'Context confidence and ambiguity changed when only the visible result limit changed.'
 }
 $prototypeTermSearch = & $manager search -Query 'primary constructor backing field' -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
 if (-not $prototypeTermSearch.ready) {

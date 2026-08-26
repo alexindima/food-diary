@@ -26,11 +26,16 @@ public sealed class ScheduleTestNotificationCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        ScheduledNotificationData scheduled = await notificationTestScheduler.ScheduleAsync(
+        Result<ScheduledNotificationData> scheduledResult = await notificationTestScheduler.ScheduleAsync(
             userId.Value,
             command.DelaySeconds,
             command.Type,
             cancellationToken).ConfigureAwait(false);
+        if (scheduledResult.IsFailure) {
+            return Result.Failure<ScheduledNotificationModel>(scheduledResult.Error);
+        }
+
+        ScheduledNotificationData scheduled = scheduledResult.Value;
 
         auditLogger.Log(
             "notifications.test.scheduled",

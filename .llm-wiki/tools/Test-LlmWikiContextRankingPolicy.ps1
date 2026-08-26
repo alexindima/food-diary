@@ -4,6 +4,8 @@ param(
     [int]$MaximumNormalizationRules = 400,
     [ValidateRange(1, 1000)]
     [int]$MaximumRankingRules = 400,
+    [ValidateRange(1, 2000)]
+    [int]$MaximumCombinedRules = 700,
     [ValidateRange(0, 200)]
     [int]$MaximumRuleGrowth = 60,
     [switch]$FailOnInvalid,
@@ -30,6 +32,7 @@ $duplicates = @($ids | Group-Object | Where-Object Count -gt 1 | Select-Object -
 $issues = [Collections.Generic.List[string]]::new()
 if ($counts.normalization -gt $MaximumNormalizationRules) { $issues.Add("normalization=$($counts.normalization)>$MaximumNormalizationRules") }
 if ($counts.ranking -gt $MaximumRankingRules) { $issues.Add("ranking=$($counts.ranking)>$MaximumRankingRules") }
+if (($counts.normalization + $counts.ranking) -gt $MaximumCombinedRules) { $issues.Add("combined=$($counts.normalization + $counts.ranking)>$MaximumCombinedRules") }
 if (($counts.normalization + $counts.ranking) - ($baselineCounts.normalization + $baselineCounts.ranking) -gt $MaximumRuleGrowth) { $issues.Add('policy growth exceeded the per-change budget') }
 if ($duplicates.Count -gt 0) { $issues.Add("duplicate ids: $($duplicates -join ', ')") }
 $result = [pscustomobject][ordered]@{
@@ -42,7 +45,7 @@ $result = [pscustomobject][ordered]@{
     issues = @($issues)
 }
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 6 } else {
-    Write-Host "Context ranking policy: valid=$($result.valid), normalization=$($counts.normalization)/$MaximumNormalizationRules, ranking=$($counts.ranking)/$MaximumRankingRules, growth=$($result.growth)/$MaximumRuleGrowth."
+    Write-Host "Context ranking policy: valid=$($result.valid), normalization=$($counts.normalization)/$MaximumNormalizationRules, ranking=$($counts.ranking)/$MaximumRankingRules, combined=$($counts.normalization + $counts.ranking)/$MaximumCombinedRules, growth=$($result.growth)/$MaximumRuleGrowth."
     foreach ($issue in $issues) { Write-Host " - $issue" }
 }
 if ($FailOnInvalid -and -not $result.valid) { throw "Context ranking policy governance failed: $($issues -join '; ')." }

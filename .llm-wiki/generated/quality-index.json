@@ -5,13 +5,13 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4666,
-    "wikiToolFiles": 189,
-    "wikiToolsWithoutTestReferences": 5,
-    "criticalSymbols": 764,
-    "criticalSymbolsWithTestReferences": 738,
-    "criticalSymbolsWithoutTestReferences": 26,
-    "debtMarkers": 9
+    "productionFiles": 4673,
+    "wikiToolFiles": 194,
+    "wikiToolsWithoutTestReferences": 2,
+    "criticalSymbols": 769,
+    "criticalSymbolsWithTestReferences": 746,
+    "criticalSymbolsWithoutTestReferences": 23,
+    "debtMarkers": 10
   },
   "hotspots": [
     {
@@ -24,11 +24,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 864,
-      "decisionPoints": 156,
+      "nonBlankLines": 1117,
+      "decisionPoints": 193,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 251.28
+      "structuralRiskScore": 311.84
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
@@ -63,14 +63,6 @@
       "structuralRiskScore": 200.86
     },
     {
-      "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-      "nonBlankLines": 863,
-      "decisionPoints": 119,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 197.76
-    },
-    {
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
       "nonBlankLines": 696,
       "decisionPoints": 122,
@@ -85,14 +77,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 193.76
-    },
-    {
-      "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-      "nonBlankLines": 610,
-      "decisionPoints": 116,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 188.2
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
@@ -111,6 +95,14 @@
       "structuralRiskScore": 183.62
     },
     {
+      "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+      "nonBlankLines": 569,
+      "decisionPoints": 112,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 181.38
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
       "nonBlankLines": 567,
       "decisionPoints": 111,
@@ -125,6 +117,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 179.42
+    },
+    {
+      "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+      "nonBlankLines": 782,
+      "decisionPoints": 104,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 173.64
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
@@ -383,6 +383,14 @@
       "structuralRiskScore": 108.34
     },
     {
+      "path": ".llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1",
+      "nonBlankLines": 275,
+      "decisionPoints": 67,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 108
+    },
+    {
       "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
       "nonBlankLines": 361,
       "decisionPoints": 67,
@@ -477,14 +485,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 99.12
-    },
-    {
-      "path": ".llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1",
-      "nonBlankLines": 227,
-      "decisionPoints": 60,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 96.54
     },
     {
       "path": "FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs",
@@ -719,6 +719,14 @@
       "structuralRiskScore": 77.08
     },
     {
+      "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
+      "nonBlankLines": 240,
+      "decisionPoints": 48,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 76.8
+    },
+    {
       "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
       "nonBlankLines": 276,
       "decisionPoints": 46,
@@ -805,14 +813,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 71.66
-    },
-    {
-      "path": ".llm-wiki/tools/Manage-LlmWikiAgentRegistry.ps1",
-      "nonBlankLines": 175,
-      "decisionPoints": 44,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 71.5
     }
   ],
   "files": [
@@ -945,6 +945,14 @@
       "structuralRiskScore": 46.34
     },
     {
+      "path": ".llm-wiki/tools/Complete-LlmWikiAnswerEvaluationCorpus.ps1",
+      "nonBlankLines": 72,
+      "decisionPoints": 15,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 25.94
+    },
+    {
       "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
       "nonBlankLines": 434,
       "decisionPoints": 62,
@@ -954,11 +962,11 @@
     },
     {
       "path": ".llm-wiki/tools/Complete-LlmWikiUnseenContextCorpus.ps1",
-      "nonBlankLines": 75,
-      "decisionPoints": 24,
+      "nonBlankLines": 48,
+      "decisionPoints": 14,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 44.5
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 23.96
     },
     {
       "path": ".llm-wiki/tools/Export-LlmWikiTaskWorkspace.ps1",
@@ -986,11 +994,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-      "nonBlankLines": 863,
-      "decisionPoints": 119,
+      "nonBlankLines": 782,
+      "decisionPoints": 104,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 197.76
+      "structuralRiskScore": 173.64
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiDomainData.ps1",
@@ -1109,8 +1117,8 @@
       "nonBlankLines": 24,
       "decisionPoints": 3,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 11.98
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.98
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiContentFingerprint.ps1",
@@ -1298,11 +1306,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-      "nonBlankLines": 610,
-      "decisionPoints": 116,
+      "nonBlankLines": 569,
+      "decisionPoints": 112,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 188.2
+      "structuralRiskScore": 181.38
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
@@ -1521,6 +1529,14 @@
       "structuralRiskScore": 210.46
     },
     {
+      "path": ".llm-wiki/tools/Invoke-LlmWikiMcpCommand.ps1",
+      "nonBlankLines": 51,
+      "decisionPoints": 7,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.52
+    },
+    {
       "path": ".llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1",
       "nonBlankLines": 65,
       "decisionPoints": 9,
@@ -1591,6 +1607,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 8.26
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiContextScoring.ps1",
+      "nonBlankLines": 82,
+      "decisionPoints": 15,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 31.14
     },
     {
       "path": ".llm-wiki/tools/LlmWikiDependencyManifest.ps1",
@@ -1695,6 +1719,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.64
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiResearchPrimitives.ps1",
+      "nonBlankLines": 44,
+      "decisionPoints": 4,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 13.88
     },
     {
       "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",
@@ -2161,6 +2193,14 @@
       "structuralRiskScore": 99.98
     },
     {
+      "path": ".llm-wiki/tools/Measure-LlmWikiAnswerQuality.ps1",
+      "nonBlankLines": 146,
+      "decisionPoints": 24,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 40.92
+    },
+    {
       "path": ".llm-wiki/tools/Measure-LlmWikiCodeGraph.ps1",
       "nonBlankLines": 46,
       "decisionPoints": 4,
@@ -2173,24 +2213,24 @@
       "nonBlankLines": 58,
       "decisionPoints": 8,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 20.16
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.16
     },
     {
       "path": ".llm-wiki/tools/Measure-LlmWikiContextLatency.ps1",
       "nonBlankLines": 56,
       "decisionPoints": 4,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 14.12
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.12
     },
     {
       "path": ".llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1",
-      "nonBlankLines": 227,
-      "decisionPoints": 60,
+      "nonBlankLines": 275,
+      "decisionPoints": 67,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 96.54
+      "structuralRiskScore": 108
     },
     {
       "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
@@ -2282,19 +2322,19 @@
     },
     {
       "path": ".llm-wiki/tools/Write-LlmWikiContextEvaluationSnapshot.ps1",
-      "nonBlankLines": 101,
-      "decisionPoints": 16,
+      "nonBlankLines": 182,
+      "decisionPoints": 28,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 28.02
+      "structuralRiskScore": 47.64
     },
     {
       "path": ".llm-wiki/tools/Write-LlmWikiContextQueryObservation.ps1",
-      "nonBlankLines": 43,
-      "decisionPoints": 4,
+      "nonBlankLines": 48,
+      "decisionPoints": 5,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 13.86
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.46
     },
     {
       "path": ".llm-wiki/tools/Write-LlmWikiIndexVerificationReceipt.ps1",
@@ -5650,11 +5690,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationTestScheduler.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.18
     },
     {
       "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationTextRenderer.cs",
@@ -5770,6 +5810,14 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/Notifications/Common/NotificationCleanupPolicy.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "FoodDiary.Application.Abstractions/Notifications/Common/NotificationErrors.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -14722,11 +14770,11 @@
     },
     {
       "path": "FoodDiary.Application.Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandHandler.cs",
-      "nonBlankLines": 42,
-      "decisionPoints": 1,
+      "nonBlankLines": 46,
+      "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.34
+      "structuralRiskScore": 5.92
     },
     {
       "path": "FoodDiary.Application.Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandValidator.cs",
@@ -17730,11 +17778,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Protocol/WikiContextSearchCandidate.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.28
     },
     {
       "path": "FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs",
@@ -17794,11 +17842,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
-      "nonBlankLines": 190,
-      "decisionPoints": 32,
+      "nonBlankLines": 240,
+      "decisionPoints": 48,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 51.8
+      "structuralRiskScore": 76.8
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/IWikiCommandExecutor.cs",
@@ -17818,19 +17866,19 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/PowerShellWikiCommandExecutor.cs",
-      "nonBlankLines": 255,
-      "decisionPoints": 21,
+      "nonBlankLines": 265,
+      "decisionPoints": 22,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 36.6
+      "structuralRiskScore": 38.3
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 864,
-      "decisionPoints": 156,
+      "nonBlankLines": 1117,
+      "decisionPoints": 193,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 251.28
+      "structuralRiskScore": 311.84
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandRequest.cs",
@@ -17866,11 +17914,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiContextSearchEvaluationRunner.cs",
-      "nonBlankLines": 159,
-      "decisionPoints": 15,
+      "nonBlankLines": 170,
+      "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.68
+      "structuralRiskScore": 27.4
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiOutputParser.cs",
@@ -27490,19 +27538,19 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiOptionsServiceCollectionExtensions.cs",
-      "nonBlankLines": 105,
+      "nonBlankLines": 111,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.1
+      "structuralRiskScore": 2.22
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 132,
+      "nonBlankLines": 140,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.64
+      "structuralRiskScore": 5.8
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -27649,6 +27697,14 @@
       "structuralRiskScore": 8.2
     },
     {
+      "path": "FoodDiary.Web.Api/Options/NotificationTestSchedulerOptions.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
       "path": "FoodDiary.Web.Api/Options/OpenTelemetryOptions.cs",
       "nonBlankLines": 12,
       "decisionPoints": 1,
@@ -27690,11 +27746,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Services/NotificationTestScheduler.cs",
-      "nonBlankLines": 44,
-      "decisionPoints": 5,
+      "nonBlankLines": 116,
+      "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.38
+      "structuralRiskScore": 24.82
     },
     {
       "path": "FoodDiary.Web.Api/Services/RedisAdminSsoCodeStore.cs",
@@ -44383,6 +44439,16 @@
       ]
     },
     {
+      "name": "Complete-LlmWikiAnswerEvaluationCorpus",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Complete-LlmWikiAnswerEvaluationCorpus.ps1",
+      "line": 1,
+      "testReferenceCount": 1,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiCriticalToolContracts.ps1"
+      ]
+    },
+    {
       "name": "Complete-LlmWikiTaskWorkspace",
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -44398,8 +44464,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Complete-LlmWikiUnseenContextCorpus.ps1",
       "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferenceCount": 1,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiCriticalToolContracts.ps1"
+      ]
     },
     {
       "name": "Export-LlmWikiTaskWorkspace",
@@ -44602,8 +44670,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Get-LlmWikiConcurrentDrift.ps1",
       "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferenceCount": 1,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiCriticalToolContracts.ps1"
+      ]
     },
     {
       "name": "Get-LlmWikiContentFingerprint",
@@ -45143,6 +45213,16 @@
       ]
     },
     {
+      "name": "Invoke-LlmWikiMcpCommand",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Invoke-LlmWikiMcpCommand.ps1",
+      "line": 1,
+      "testReferenceCount": 1,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiCriticalToolContracts.ps1"
+      ]
+    },
+    {
       "name": "Invoke-LlmWikiObservedStage",
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1",
@@ -45239,6 +45319,14 @@
         ".llm-wiki/tools/Test-LlmWikiCollections.ps1",
         ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1"
       ]
+    },
+    {
+      "name": "LlmWikiContextScoring",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/LlmWikiContextScoring.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": []
     },
     {
       "name": "LlmWikiDependencyManifest",
@@ -45379,6 +45467,14 @@
       ]
     },
     {
+      "name": "LlmWikiResearchPrimitives",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/LlmWikiResearchPrimitives.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
       "name": "LlmWikiSmokeSandbox",
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",
@@ -45493,11 +45589,12 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
       "line": 1,
-      "testReferenceCount": 13,
+      "testReferenceCount": 14,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiBackendContractSqlParity.ps1",
         ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
         ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
+        ".llm-wiki/tools/Test-LlmWikiContextEvaluationSnapshot.ps1",
         ".llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1",
         ".llm-wiki/tools/Test-LlmWikiFrontendContractSqlParity.ps1",
         ".llm-wiki/tools/Test-LlmWikiFrontendRuntimeOwnerSqlParity.ps1",
@@ -46027,6 +46124,16 @@
       ]
     },
     {
+      "name": "Measure-LlmWikiAnswerQuality",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Measure-LlmWikiAnswerQuality.ps1",
+      "line": 1,
+      "testReferenceCount": 1,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiCriticalToolContracts.ps1"
+      ]
+    },
+    {
       "name": "Measure-LlmWikiCodeGraph",
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Measure-LlmWikiCodeGraph.ps1",
@@ -46041,16 +46148,20 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Measure-LlmWikiContextConcurrency.ps1",
       "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferenceCount": 1,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiCriticalToolContracts.ps1"
+      ]
     },
     {
       "name": "Measure-LlmWikiContextLatency",
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Measure-LlmWikiContextLatency.ps1",
       "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferenceCount": 1,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiCriticalToolContracts.ps1"
+      ]
     },
     {
       "name": "Measure-LlmWikiSqlContextEvaluation",
@@ -46188,8 +46299,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Write-LlmWikiContextQueryObservation.ps1",
       "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferenceCount": 1,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiCriticalToolContracts.ps1"
+      ]
     },
     {
       "name": "Write-LlmWikiIndexVerificationReceipt",
@@ -46265,6 +46378,11 @@
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
       "line": 196,
       "marker": "SuppressMessage"
+    },
+    {
+      "path": ".llm-wiki/tools/Complete-LlmWikiAnswerEvaluationCorpus.ps1",
+      "line": 32,
+      "marker": "todo"
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",

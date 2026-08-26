@@ -87,6 +87,26 @@ public sealed class PowerShellWikiCommandExecutorTests {
     }
 
     [Fact]
+    public async Task ExecuteAsync_CompactBrief_IgnoresFacadeOnlyNoBaselineFlag() {
+        PowerShellWikiCommandExecutor executor = new();
+        using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(60));
+
+        WikiCommandResult result = await executor.ExecuteAsync(
+            "brief",
+            [
+                "-Format", "Json",
+                "-Compact",
+                "-SkipTestPlan",
+                "-NoBaseline",
+                "-Objective", "Review the Development MCP Wiki query service",
+                "-ProposedPath", "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
+            ],
+            timeout.Token);
+
+        Assert.StartsWith("{", result.RawOutput, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task ExecuteAsync_UsesRequestFileForLongUnicodeScope() {
         PowerShellWikiCommandExecutor executor = new();
         using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(60));

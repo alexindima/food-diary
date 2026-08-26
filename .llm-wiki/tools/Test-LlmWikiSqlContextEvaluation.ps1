@@ -40,6 +40,15 @@ $retirementHoldoutEvaluation = & $measure `
 if (-not [bool]$retirementHoldoutEvaluation.liveRegressionPassed) {
     throw "Independent 100-case holdout live regression gate failed: $($retirementHoldoutEvaluation.liveRegressionGaps -join '; ')."
 }
+$unseenCorpusPath = Join-Path $PSScriptRoot '../evals/context-search-unseen-20260826.json'
+$unseenEvaluation = & $measure `
+    -CorpusPath $unseenCorpusPath `
+    -SkipBuild `
+    -FailOnRegression `
+    -Format Json | ConvertFrom-Json
+if (-not [bool]$unseenEvaluation.liveRegressionPassed -or -not [bool]$unseenEvaluation.passed) {
+    throw "Target-aware unseen context regression gate failed: $($unseenEvaluation.liveRegressionGaps -join '; ')."
+}
 $postFixControlCorpusPath = Join-Path $PSScriptRoot '../evals/context-search-postfix-control-30.json'
 $postFixControlCorpus = [IO.File]::ReadAllText(
     (Resolve-Path -LiteralPath $postFixControlCorpusPath).Path,
@@ -66,8 +75,9 @@ $normalizationRuleCount = @($rankingPolicy.queryTermExpansions.PSObject.Properti
     @($rankingPolicy.queryPrefixExpansions.PSObject.Properties).Count
 $rankingRuleCount = @($rankingPolicy.pathBoosts).Count + @($rankingPolicy.identityBoosts).Count +
     @($rankingPolicy.structuralRoleBoosts).Count
-if ($normalizationRuleCount -gt 400 -or $rankingRuleCount -gt 400 -or $null -eq $rankingPolicy.genericAffinities) {
-    throw "Context search exceeded its staged complexity budget or lost generic affinities: normalization=$normalizationRuleCount/400; ranking=$rankingRuleCount/400."
+if ($normalizationRuleCount -gt 400 -or $rankingRuleCount -gt 400 -or
+    ($normalizationRuleCount + $rankingRuleCount) -gt 700 -or $null -eq $rankingPolicy.genericAffinities) {
+    throw "Context search exceeded its staged complexity budget or lost generic affinities: normalization=$normalizationRuleCount/400; ranking=$rankingRuleCount/400; combined=$($normalizationRuleCount + $rankingRuleCount)/700."
 }
 $allEvaluations = @($primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $imageWikiRegressionEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation, $probe6Evaluation, $probe7Evaluation)
 foreach ($evaluation in $allEvaluations) {
@@ -310,4 +320,40 @@ if ($strictTop10Count -ne $strictCaseCount) {
 }
 $probeCaseCount = [int](($probeEvaluation.caseCount, $probe2Evaluation.caseCount, $probe3Evaluation.caseCount, $probe4Evaluation.caseCount, $probe5Evaluation.caseCount, $probe6Evaluation.caseCount, $probe7Evaluation.caseCount | Measure-Object -Sum).Sum)
 $probeTop1Count = [int](($probeEvaluation.metrics.top1Count, $probe2Evaluation.metrics.top1Count, $probe3Evaluation.metrics.top1Count, $probe4Evaluation.metrics.top1Count, $probe5Evaluation.metrics.top1Count, $probe6Evaluation.metrics.top1Count, $probe7Evaluation.metrics.top1Count | Measure-Object -Sum).Sum)
+$runtimeParityArtifacts = Join-Path $repositoryRoot '.artifacts/llm-wiki/runtime-parity'
+$runtimeProject = Join-Path $repositoryRoot 'FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj'
+& dotnet build $runtimeProject --artifacts-path $runtimeParityArtifacts --nologo --verbosity quiet
+if ($LASTEXITCODE -ne 0) { throw 'Unable to build the .NET context-search runtime parity evaluator.' }
+$runtimeAssembly = Join-Path $runtimeParityArtifacts 'bin/FoodDiary.Development.Mcp/debug/FoodDiary.Development.Mcp.dll'
+function Assert-CurrentRuntimeParity(
+    [pscustomobject]$NodeEvaluation,
+    [string]$CorpusPath,
+    [string]$Label) {
+    $runtimeEvaluation = & dotnet $runtimeAssembly --evaluate-context-search $CorpusPath | ConvertFrom-Json
+    if ($LASTEXITCODE -ne 0 -or [string]$runtimeEvaluation.reader -ne 'in-process-microsoft-data-sqlite') {
+        throw "$Label .NET runtime evaluation failed."
+    }
+    $nodeResults = @($NodeEvaluation.results)
+    $runtimeResults = @($runtimeEvaluation.results)
+    if ($nodeResults.Count -ne $runtimeResults.Count) {
+        throw "$Label Node/.NET parity returned different case counts: node=$($nodeResults.Count), runtime=$($runtimeResults.Count)."
+    }
+    $differences = [Collections.Generic.List[string]]::new()
+    for ($index = 0; $index -lt $nodeResults.Count; $index++) {
+        $nodeResult = $nodeResults[$index]
+        $runtimeResult = $runtimeResults[$index]
+        $nodeTopFive = @($nodeResult.topCandidates | ForEach-Object { "$($_.path)|$($_.score)" })
+        $runtimeTopFive = @($runtimeResult.topCandidates | ForEach-Object { "$($_.path)|$($_.score)" })
+        if ([string]$nodeResult.id -ne [string]$runtimeResult.id -or
+            $nodeResult.rank -ne $runtimeResult.rank -or
+            ($nodeTopFive -join "`0") -cne ($runtimeTopFive -join "`0")) {
+            $differences.Add("$($nodeResult.id): rank $($nodeResult.rank)/$($runtimeResult.rank), top $($nodeTopFive[0])/$($runtimeTopFive[0])")
+        }
+    }
+    if ($differences.Count -gt 0) {
+        throw "$Label current Node/.NET ranking parity failed for $($differences.Count)/$($nodeResults.Count) case(s): $(@($differences | Select-Object -First 10) -join '; ')."
+    }
+}
+Assert-CurrentRuntimeParity $retirementHoldoutEvaluation $retirementHoldoutCorpusPath 'Independent holdout'
+Assert-CurrentRuntimeParity $unseenEvaluation $unseenCorpusPath 'Target-aware unseen corpus'
 Write-Host "LLM Wiki SQL context evaluation passed: promoted top1=$strictTop1Count/$strictCaseCount and top10=$strictTop10Count/$strictCaseCount; promotion top10=$combinedTop10Count/$combinedCaseCount; primary MRR=$($primaryEvaluation.metrics.meanReciprocalRank), p95=$($primaryEvaluation.metrics.p95SqlDurationMs)ms; challenge MRR=$($challengeEvaluation.metrics.meanReciprocalRank), p95=$($challengeEvaluation.metrics.p95SqlDurationMs)ms; generalization MRR=$($generalizationEvaluation.metrics.meanReciprocalRank), p95=$($generalizationEvaluation.metrics.p95SqlDurationMs)ms; validation MRR=$($validationEvaluation.metrics.meanReciprocalRank), p95=$($validationEvaluation.metrics.p95SqlDurationMs)ms; probes top1=$probeTop1Count/$probeCaseCount; probe5 baseline=22/40 and promoted=$($probe5Evaluation.metrics.top1Count)/$($probe5Evaluation.caseCount); probe6 baseline=9/30 and promoted=$($probe6Evaluation.metrics.top1Count)/$($probe6Evaluation.caseCount); probe7 corrected baseline=18/40 and promoted=$($probe7Evaluation.metrics.top1Count)/$($probe7Evaluation.caseCount); controls=$($postFixControlEvaluation.metrics.top1Count)/30 and $($postTuneControlEvaluation.metrics.top1Count)/30 top1, both 30/30 top10."

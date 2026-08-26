@@ -46,7 +46,7 @@ public sealed class EvaluationRunnerTests {
               "switchCriteria": { "minimumCaseCount": 3, "minimumTop1Rate": 1, "minimumTop10Rate": 1, "minimumMeanReciprocalRank": 1 },
               "cases": [
                 { "id": "hit", "query": "users", "changeType": "Backend", "expectedPaths": ["FoodDiary.Application.Users/Handler.cs"] },
-                { "id": "second", "query": "billing", "expectedPaths": ["FoodDiary.Application.Billing/Handler.cs"] }
+                { "id": "second", "query": "billing", "expectedPaths": ["FoodDiary.Application.Billing/Handler.cs"], "acceptedPaths": ["Other.cs"] }
               ]
             }
             """);
@@ -78,7 +78,7 @@ public sealed class EvaluationRunnerTests {
             () => Assert.True(root.GetProperty("passed").GetBoolean()),
             () => Assert.False(root.GetProperty("switchReady").GetBoolean()),
             () => Assert.Equal(2, root.GetProperty("caseCount").GetInt32()),
-            () => Assert.Equal(1, root.GetProperty("metrics").GetProperty("top1Count").GetInt32()),
+            () => Assert.Equal(2, root.GetProperty("metrics").GetProperty("top1Count").GetInt32()),
             () => Assert.Empty(root.GetProperty("misses").EnumerateArray()));
     }
 
@@ -133,7 +133,7 @@ public sealed class EvaluationRunnerTests {
         snapshots.GetAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
         snapshots.RefreshAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
         var search = new SequencedContextSearch([CreateSearchResult([
-            new WikiContextSearchCandidate(1, "FoodDiary.Application.Users/Handler.cs", "symbol", "Application", 100, 1, []),
+            new WikiContextSearchCandidate(1, "FoodDiary.Application.Users/Handler.cs", "symbol", "Application", 100, 1, ["path/title affinity user handler"]),
         ])]);
         var queries = new WikiQueryService(executor, snapshots, contextSearch: search);
         await using var output = new StringWriter();
@@ -150,7 +150,63 @@ public sealed class EvaluationRunnerTests {
             () => Assert.True(root.GetProperty("passed").GetBoolean()),
             () => Assert.Equal(1, root.GetProperty("caseCount").GetInt32()),
             () => Assert.Equal(1, root.GetProperty("metrics").GetProperty("sqlitePrimaryRate").GetDouble()),
+            () => Assert.Equal(1, root.GetProperty("metrics").GetProperty("explainableRankingRate").GetDouble()),
+            () => Assert.Equal(1, root.GetProperty("metrics").GetProperty("contextBundleReadyRate").GetDouble()),
+            () => Assert.Equal(0, root.GetProperty("metrics").GetProperty("unplannedQueryRate").GetDouble()),
             () => Assert.Empty(root.GetProperty("failures").EnumerateArray()));
+    }
+
+    [Fact]
+    public async Task DevelopmentContextEvaluationRunner_WithNoCandidates_DoesNotTreatRankingAsExplainable() {
+        string corpusPath = await WriteCorpusAsync("""
+            {
+              "schemaVersion": 1,
+              "thresholds": {
+                "minimumSqlitePrimaryRate": 0,
+                "minimumScopeRecallRate": 0,
+                "minimumSqlTopTenRecallRate": 0,
+                "minimumCompleteBundleRate": 0,
+                "minimumFocusedChecksRate": 0,
+                "minimumExpectedLayersRate": 0,
+                "minimumExplainableRankingRate": 0,
+                "minimumContextBundleReadyRate": 0,
+                "maximumAverageExpandedScopePaths": 10,
+                "maximumP95DurationMilliseconds": 10000,
+                "maximumCompactCharacters": 10000
+              },
+              "cases": [{
+                "id": "empty",
+                "intent": "Inspect users",
+                "query": "missing context",
+                "plannedPath": "FoodDiary.Application.Users",
+                "expectedPaths": ["FoodDiary.Application.Users/Missing.cs"],
+                "expectedLayers": []
+              }]
+            }
+            """);
+        IWikiCommandExecutor executor = Substitute.For<IWikiCommandExecutor>();
+        executor.ExecuteAsync(Arg.Any<string>(), Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(call => Task.FromResult(CreateCommandResult(call.ArgAt<string>(0))));
+        IChangeSetSnapshotService snapshots = Substitute.For<IChangeSetSnapshotService>();
+        var snapshot = new ChangeSetSnapshot("head", "fingerprint", [], DateTimeOffset.UtcNow);
+        snapshots.GetAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
+        snapshots.RefreshAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
+        var search = new SequencedContextSearch([CreateSearchResult([]), CreateSearchResult([])]);
+        var queries = new WikiQueryService(executor, snapshots, contextSearch: search);
+        await using var output = new StringWriter();
+
+        try {
+            await DevelopmentContextEvaluationRunner.RunAsync(queries, corpusPath, output, CancellationToken.None);
+        } finally {
+            File.Delete(corpusPath);
+        }
+
+        using var document = JsonDocument.Parse(output.ToString());
+        JsonElement root = document.RootElement;
+        Assert.Multiple(
+            () => Assert.Equal(0, root.GetProperty("metrics").GetProperty("explainableRankingRate").GetDouble()),
+            () => Assert.Equal(0, root.GetProperty("metrics").GetProperty("contextBundleReadyRate").GetDouble()),
+            () => Assert.Single(root.GetProperty("failures").EnumerateArray()));
     }
 
     [Theory]

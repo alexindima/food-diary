@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3461,
-    "symbols": 3468,
+    "sourceFiles": 3463,
+    "symbols": 3470,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 242,
+    "dependencyInjectionRegistrations": 241,
     "kinds": {
-      "class": 1803,
+      "class": 1805,
       "enum": 62,
       "interface": 423,
       "record": 1060,
@@ -31,8 +31,8 @@
       "LookupRepository": 3,
       "Mapper": 8,
       "Mapping": 4,
-      "Options": 62,
-      "Other": 1338,
+      "Options": 63,
+      "Other": 1339,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -3160,7 +3160,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationTestScheduler.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "INotificationTextRenderer",
@@ -3266,6 +3266,13 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Notifications/Common/NotificationCleanupPolicy.cs",
       "line": 2
+    },
+    {
+      "name": "NotificationErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Notifications/Common/NotificationErrors.cs",
+      "line": 4
     },
     {
       "name": "NotificationPayloads",
@@ -22245,6 +22252,13 @@
       "line": 9
     },
     {
+      "name": "NotificationTestSchedulerOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "FoodDiary.Web.Api/Options/NotificationTestSchedulerOptions.cs",
+      "line": 2
+    },
+    {
       "name": "OpenTelemetryOptions",
       "kind": "class",
       "role": "Options",
@@ -22284,7 +22298,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Services/NotificationTestScheduler.cs",
-      "line": 4
+      "line": 7
     },
     {
       "name": "RedisAdminSsoCodeStore",
@@ -27583,18 +27597,11 @@
       "line": 107
     },
     {
-      "service": "INotificationTestScheduler",
-      "implementation": "NotificationTestScheduler",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 108
-    },
-    {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 131
+      "line": 139
     },
     {
       "service": "IMailInboxReadinessChecker",

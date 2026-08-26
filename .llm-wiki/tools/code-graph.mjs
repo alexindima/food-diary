@@ -8,7 +8,7 @@ import { DatabaseSync } from 'node:sqlite';
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
 const parserVersion = '12-wiki-policy-context-v1';
-const contextSearchSchemaVersion = '3';
+const contextSearchSchemaVersion = '4';
 const compiledIndexSchemaVersion = '4';
 const queryDocumentSchemaVersion = '8';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
@@ -2066,7 +2066,9 @@ function configuredSearchTermExpansions(direct) {
   const expanded = [];
   const configuredTerms = contextSearchRanking.queryTermExpansions ?? {};
   for (const term of direct) {
-    if (Object.hasOwn(configuredTerms, term)) expanded.push(...configuredTerms[term]);
+    for (const [termGroup, expansions] of Object.entries(configuredTerms)) {
+      if (termGroup.split('|').includes(term)) expanded.push(...expansions);
+    }
     for (const [prefixGroup, expansions] of Object.entries(contextSearchRanking.queryPrefixExpansions ?? {})) {
       if (prefixGroup.split('|').some((prefix) => term.startsWith(prefix))) expanded.push(...expansions);
     }
@@ -2182,9 +2184,10 @@ function searchContext(database, query, limit, filters = {}) {
   }
   const normalizedQueryForRuntime = expandSearchText(query).toLowerCase();
   const runtimeSuffixes = /(^|\s)(?:node|javascript|mjs)(\s|$)/.test(normalizedQueryForRuntime)
-    ? ['%.mjs', '%.js', '%.cjs']
-    : !explicitlyRequestsMcp && /(^|\s)(?:powershell|pwsh|ps1)(\s|$)/.test(normalizedQueryForRuntime) ? ['%.ps1'] : [];
+    ? ['.mjs', '.js', '.cjs']
+    : !explicitlyRequestsMcp && /(^|\s)(?:powershell|pwsh|ps1)(\s|$)/.test(normalizedQueryForRuntime) ? ['.ps1'] : [];
   const runtimeCandidatesToPrepend = [];
+  const runtimeCandidateKeys = new Set();
   for (const suffix of runtimeSuffixes) {
     const runtimeCandidates = database.prepare(`
       SELECT context_search.record_type recordType, record_key recordKey, context_search.path, source_path sourcePath,
@@ -2192,15 +2195,20 @@ function searchContext(database, query, limit, filters = {}) {
         features.extension, 0.0 lexicalRank
       FROM context_search
       JOIN context_search_features features ON features.context_rowid = context_search.rowid
-      WHERE context_search.path LIKE ?
+      WHERE context_search.path GLOB ?
       ORDER BY context_search.path
-    `).all(suffix);
+    `).all(`*${suffix}`);
     for (const runtimeCandidate of runtimeCandidates) {
       const key = `${runtimeCandidate.recordType}\0${runtimeCandidate.recordKey}\0${runtimeCandidate.path}`;
-      if (candidateIndexes.has(key)) continue;
-      candidateIndexes.set(key, candidates.length);
+      if (runtimeCandidateKeys.has(key)) continue;
+      runtimeCandidateKeys.add(key);
       runtimeCandidatesToPrepend.push(runtimeCandidate);
     }
+  }
+  for (let index = candidates.length - 1; index >= 0; index -= 1) {
+    const item = candidates[index];
+    const key = `${item.recordType}\0${item.recordKey}\0${item.path}`;
+    if (runtimeCandidateKeys.has(key)) candidates.splice(index, 1);
   }
   candidates.unshift(...runtimeCandidatesToPrepend);
   const normalizedQuery = expandSearchText(query).toLowerCase();
@@ -2433,7 +2441,9 @@ function searchContext(database, query, limit, filters = {}) {
     if (isCode) score += 20;
     if (item.recordType === 'agent-guide') {
       const requestsGuidance = boostTerms.some((term) =>
-        ['agent', 'agents', 'guide', 'guidance', 'instruction', 'instructions', 'policy', 'rule', 'rules'].includes(term));
+        ['agent', 'agents', 'guide', 'guidance', 'instruction', 'instructions'].includes(term)) ||
+        (boostTerms.some((term) => ['policy', 'rule', 'rules'].includes(term)) &&
+          boostTerms.some((term) => ['repository', 'project', 'module', 'convention', 'access', 'readonly'].includes(term)));
       score += requestsGuidance ? Number(contextSearchRanking.agentGuideBoost ?? 15) : -Number(contextSearchRanking.agentGuideBoost ?? 15);
       reasons.push(requestsGuidance ? 'agent guide affinity' : 'agent guide penalty for code intent');
     }
@@ -2446,8 +2456,45 @@ function searchContext(database, query, limit, filters = {}) {
     if (seenPaths.has(identity)) continue;
     seenPaths.add(identity);
     records.push({ ...item, rank: records.length + 1 });
-    if (records.length >= limit) break;
   }
+  const fileNameCounts = new Map();
+  for (const item of records) {
+    const key = basename(String(item.path ?? '')).toLowerCase();
+    fileNameCounts.set(key, (fileNameCounts.get(key) ?? 0) + 1);
+  }
+  const decoratedRecords = records.map((item, index) => {
+    const nextScore = records[index + 1]?.score;
+    const scoreMargin = nextScore === undefined ? null : item.score - nextScore;
+    const sameNameKey = basename(String(item.path ?? '')).toLowerCase();
+    const sameNameCandidateCount = fileNameCounts.get(sameNameKey) ?? 1;
+    const confidenceCalibration = contextSearchRanking.confidenceCalibration ?? {};
+    const ambiguityMaximumMargin = Number(confidenceCalibration.ambiguityMaximumMargin ?? 15);
+    const highMinimumMargin = Number(confidenceCalibration.highMinimumMargin ?? 100);
+    const mediumMinimumMargin = Number(confidenceCalibration.mediumMinimumMargin ?? 30);
+    const implementationChangeTypes = (confidenceCalibration.implementationChangeTypes ?? [])
+      .map((value) => String(value).toLowerCase());
+    const documentationRecordTypes = (confidenceCalibration.documentationRecordTypes ?? [])
+      .map((value) => String(value).toLowerCase());
+    const recordTypeMismatch = implementationChangeTypes.includes(changeType)
+      && documentationRecordTypes.includes(String(item.recordType ?? '').toLowerCase());
+    const ambiguous = (scoreMargin !== null && scoreMargin <= ambiguityMaximumMargin) || recordTypeMismatch;
+    const confidence = ambiguous
+      ? 'low'
+      : scoreMargin === null
+        ? 'unknown'
+        : scoreMargin >= highMinimumMargin
+          ? 'high'
+          : scoreMargin >= mediumMinimumMargin ? 'medium' : 'low';
+    return {
+      ...item,
+      scoreMargin,
+      confidence,
+      ambiguous,
+      ambiguityReason: recordTypeMismatch ? 'record-type-change-type-mismatch' : ambiguous ? 'top-score-margin' : null,
+      sameNameCandidateCount,
+    };
+  });
+  const visibleRecords = decoratedRecords.slice(0, limit);
   return {
     query,
     queryTerms: terms,
@@ -2455,7 +2502,14 @@ function searchContext(database, query, limit, filters = {}) {
     indexedDocuments,
     fingerprint,
     updatedAtUtc: database.prepare("SELECT value FROM metadata WHERE key='context_search_updated_at_utc'").get()?.value ?? null,
-    records,
+    records: visibleRecords,
+    rankingSummary: {
+      confidence: visibleRecords[0]?.confidence ?? 'none',
+      ambiguous: visibleRecords[0]?.ambiguous ?? false,
+      ambiguityReason: visibleRecords[0]?.ambiguityReason ?? null,
+      topScoreMargin: visibleRecords[0]?.scoreMargin ?? null,
+      sameNameCandidateCount: visibleRecords[0]?.sameNameCandidateCount ?? 0,
+    },
     durationMs: Math.round((performance.now() - started) * 100) / 100,
   };
 }
@@ -2592,7 +2646,9 @@ try {
   else if (action === 'frontend-runtime-owner') result = frontendRuntimeOwnerContext(database, options.query ?? '', (options.path ?? '').split(';').filter(Boolean), Number(options.limit ?? 5));
   else if (action === 'frontend-trace') result = frontendTraceContext(database, options.query ?? '', Number(options.limit ?? 10));
   else if (action === 'compiled-context') result = compiledContext(database, options);
-  else result = {
+  else {
+    const currentChangeSet = changeSetSnapshot();
+    result = {
     action: 'status',
     databasePath,
     parserVersion: database.prepare("SELECT value FROM metadata WHERE key='parser_version'").get()?.value ?? null,
@@ -2602,8 +2658,15 @@ try {
     typedEdges: database.prepare('SELECT COUNT(*) count FROM typed_edges').get().count,
     searchDocuments: database.prepare('SELECT COUNT(*) count FROM context_search').get().count,
     searchFingerprint: database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value ?? null,
+    changeSetFingerprint: database.prepare("SELECT value FROM metadata WHERE key='change_set_fingerprint'").get()?.value ?? null,
+    changeSetGitHead: database.prepare("SELECT value FROM metadata WHERE key='change_set_git_head'").get()?.value ?? null,
+    currentChangeSetFingerprint: currentChangeSet.fingerprint,
+    currentChangeSetGitHead: currentChangeSet.head,
+    changeSetFresh: database.prepare("SELECT value FROM metadata WHERE key='change_set_fingerprint'").get()?.value === currentChangeSet.fingerprint,
+    contextSearchUpdatedAtUtc: database.prepare("SELECT value FROM metadata WHERE key='context_search_updated_at_utc'").get()?.value ?? null,
     compiledIndexes: database.prepare('SELECT index_name indexName, source_path sourcePath, content_hash contentHash FROM compiled_indexes ORDER BY index_name').all(),
-  };
+    };
+  }
   process.stdout.write(`${JSON.stringify(result)}\n`);
 } finally {
   database?.close();

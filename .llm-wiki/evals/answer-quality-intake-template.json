@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "status": "draft-human-query-intake",
+  "description": "Template only. Copy it outside the tuned evaluation workflow and collect 100-200 real-user or independently human-authored questions before generating answers.",
+  "thresholds": {
+    "minimumAverageCorrectness": 3.5,
+    "minimumAverageCompleteness": 3.5,
+    "minimumAverageActionability": 3.25,
+    "minimumClaimCitationCoverage": 0.95,
+    "minimumEvidenceRecall": 0.8,
+    "minimumValidCitationRate": 1.0,
+    "maximumUnsupportedClaimRate": 0.05
+  },
+  "cases": [
+    {
+      "id": "replace-with-independent-case-id",
+      "query": "<independent-human-or-real-user-query-required>",
+      "authorship": {
+        "source": "real-user-query",
+        "authorOrSessionId": "<opaque-id-required>",
+        "collectedBeforeAnswerGeneration": true
+      },
+      "requiredEvidencePaths": ["<reviewed-repository-path-required>"]
+    }
+  ]
+}

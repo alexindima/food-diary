@@ -42,6 +42,7 @@ sources:
   - .llm-wiki/evals/context-search-probe-6.json
   - .llm-wiki/evals/context-search-probe-7.json
   - .llm-wiki/evals/context-search-holdout-100.json
+  - .llm-wiki/evals/context-search-unseen-20260826.json
   - .llm-wiki/evals/context-search-postfix-control-30.json
   - .llm-wiki/evals/context-search-posttune-control-30.json
   - .llm-wiki/evals/development-context-bundles.json
@@ -171,6 +172,19 @@ reports both source hashes, scanned/candidate/returned counts, SQL duration, and
 full round-trip duration; its eight-case smoke requires exact output parity and a
 measurable average improvement.
 
+Context-search confidence is calculated from the full deduplicated candidate
+pool before the requested visible limit is applied, so asking for one or ten
+records cannot change the top result's confidence. Margin thresholds and the
+record/change-type compatibility rules live in the shared ranking policy and are
+consumed identically by Node and .NET. A close next candidate is ambiguous; a
+documentation record returned for an implementation change is also deliberately
+low-confidence with `record-type-change-type-mismatch`. A matching basename is
+reported separately as `sameNameCandidateCount`; it is a collision diagnostic,
+not a claim that implementations are semantically equivalent. The SQL evaluator
+reports precision and coverage for every confidence level plus accepted-result
+precision, abstention rate, and captured-error rate. The 100-case live gate
+therefore protects calibration as well as ranking accuracy.
+
 The committed retrieval suite has a 60-case regression corpus in
 `.llm-wiki/evals/context-search.json` and a separately authored 40-case
 challenge corpus in `.llm-wiki/evals/context-search-holdout.json`. The challenge
@@ -221,7 +235,8 @@ A seventh 40-case probe adds five equal methodology cohorts: conversational
 Russian, mixed RU/EN, adjacent-role disambiguation, behavior-to-test lookup,
 and Wiki-intent lookup. Its raw blind baseline was 17/40 top-1, 32/40 top-10,
 and 0.5574 MRR. One query that did not name a module was adjudicated to accept
-all equivalent UTC normalizers; the corrected baseline is 18/40 top-1, 33/40
+the explicitly reviewed UTC-normalizer implementations; the corrected baseline
+is 18/40 top-1, 33/40
 top-10, and 0.5812 MRR. General negated-role handling, explicit test-behavior
 affinity, bilingual term normalization, and structural source roles raised it
 to 40/40 top-1, with every cohort at 8/8. The same work made configured term
@@ -261,6 +276,8 @@ run the combined gate:
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
   -CorpusPath .llm-wiki/evals/context-search-holdout-100.json
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
+  -CorpusPath .llm-wiki/evals/context-search-unseen-20260826.json
+./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
   -CorpusPath .llm-wiki/evals/context-search-postfix-control-30.json
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 `
   -CorpusPath .llm-wiki/evals/context-search-posttune-control-30.json
@@ -271,8 +288,11 @@ run the combined gate:
 Each evaluation reports top-1 accuracy, top-10 recall, mean reciprocal rank,
 SQL timing, per-query misses, and metrics grouped by the optional case `cohort`.
 The regression gate budgets query normalization and candidate ranking
-separately (400 entries each). This keeps bilingual vocabulary growth visible
-without conflating it with path, identity, and structural ranking complexity.
+separately (400 entries each) and caps their combined size at 700. This keeps
+bilingual vocabulary growth visible without conflating it with path, identity,
+and structural ranking complexity. Exact terms and prefixes that share the same
+expansion are represented as `|`-separated groups, so one semantic rule is
+counted and reviewed once.
 Cases without a cohort remain compatible and are reported as `unclassified`.
 Each corpus keeps lower regression thresholds
 separate from stricter `switchCriteria`. The combined gate requires at least
@@ -297,7 +317,19 @@ exact-rank or top-five differences. A later role-generalization pass raised the
 same frozen diagnostic corpus to 96/100 top-1, 100/100 top-10, and 0.9783 MRR
 while preserving the promoted and control gates. The original blind result
 remains immutable; later results are regression evidence, not new blind
-baselines. Use a new unseen holdout for any later generalization claim.
+baselines. The current fresh-graph regression result is 99/100 top-1, 100/100
+top-10, and 0.9914 MRR; the live gate builds the current .NET reader and requires
+exact rank and ordered top-five path/score parity with Node. Use a new unseen
+holdout for any later generalization claim.
+
+The frozen `context-search-unseen-20260826.json` corpus is a target-aware
+synthetic diagnostic: its targets were new, but its query text was generated
+from target semantics. It is useful for repeatable regression checks and exact
+Node/.NET parity, not as proof of real-user query quality. For a genuinely
+independently authored corpus, collect every query manually before search, leave
+target-derived placeholders unresolved until then, and use
+`context-unseen-freeze`; the freeze tool preserves supplied text verbatim and
+rejects missing queries.
 
 Runtime search data belongs in SQLite: FTS5 owns lexical candidate retrieval,
 compiled records and reconstructable indexes are projected into relational
@@ -354,7 +386,9 @@ dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll
 ```
 
 The separate full-bundle evaluation runs real SQL retrieval, compact brief,
-and fast test planning on one snapshot. It gates SQL routing, top-10 scope
+and fast test planning on one snapshot. It evaluates whether a structured
+development context bundle is ready for an agent; it does not evaluate the
+quality or factual correctness of a final model-written answer. It gates SQL routing, top-10 scope
 recall, bounded expansion, complete components, focused checks, effective
 layers, payload size, and end-to-end p95. It is intentionally a deep smoke
 evaluation rather than a pre-commit check:

@@ -105,10 +105,18 @@ public static class ApiServiceCollectionExtensions {
                 .AddIntegrations(configuration)
                 .AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>()
                 .AddSingleton<IDiaryPdfReportTextProvider, DiaryPdfReportResourceTextProvider>()
-                .AddSingleton<INotificationTestScheduler, NotificationTestScheduler>()
+                .AddNotificationTestScheduler()
                 .AddApiDistributedCache(configuration, environment)
                 .AddPresentationApi()
                 .AddEndpointsApiExplorer();
+        }
+        private IServiceCollection AddNotificationTestScheduler() {
+            services.AddSingleton<NotificationTestScheduler>();
+            services.AddSingleton<INotificationTestScheduler>(static provider =>
+                provider.GetRequiredService<NotificationTestScheduler>());
+            services.AddHostedService(static provider =>
+                provider.GetRequiredService<NotificationTestScheduler>());
+            return services;
         }
         private IServiceCollection AddApiDistributedCache(IConfiguration configuration, IHostEnvironment? environment) {
             string? redisConnectionString = configuration.GetConnectionString("Redis");
