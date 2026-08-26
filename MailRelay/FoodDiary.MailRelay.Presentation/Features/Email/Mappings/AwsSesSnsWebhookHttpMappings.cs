@@ -36,12 +36,17 @@ public static class AwsSesSnsWebhookHttpMappings {
             return false;
         }
 
+        if (string.IsNullOrWhiteSpace(request.MessageId)) {
+            error = "SNS notification MessageId is required for replay protection.";
+            return false;
+        }
+
         if (string.Equals(notification.NotificationType, "Bounce", StringComparison.OrdinalIgnoreCase)) {
-            return TryMapBounce(notification, out events, out error);
+            return TryMapBounce(notification, request.MessageId, out events, out error);
         }
 
         if (string.Equals(notification.NotificationType, "Complaint", StringComparison.OrdinalIgnoreCase)) {
-            return TryMapComplaint(notification, out events, out error);
+            return TryMapComplaint(notification, request.MessageId, out events, out error);
         }
 
         error = $"Unsupported SES notification type '{notification.NotificationType}'.";
@@ -50,6 +55,7 @@ public static class AwsSesSnsWebhookHttpMappings {
 
     private static bool TryMapBounce(
         AwsSesNotificationHttpRequest notification,
+        string providerEventId,
         out IReadOnlyList<IngestMailEventRequest> events,
         out string? error) {
         string classification = string.Equals(notification.Bounce?.BounceType, "Permanent", StringComparison.OrdinalIgnoreCase)
@@ -64,7 +70,8 @@ public static class AwsSesSnsWebhookHttpMappings {
                          "aws-ses-sns",
                          classification,
                          notification.Mail.MessageId,
-                         recipient.DiagnosticCode))
+                         recipient.DiagnosticCode,
+                         ProviderEventId: providerEventId))
                      .ToArray()
                  ?? [];
 
@@ -76,6 +83,7 @@ public static class AwsSesSnsWebhookHttpMappings {
 
     private static bool TryMapComplaint(
         AwsSesNotificationHttpRequest notification,
+        string providerEventId,
         out IReadOnlyList<IngestMailEventRequest> events,
         out string? error) {
         events = notification.Complaint?.ComplainedRecipients
@@ -86,7 +94,8 @@ public static class AwsSesSnsWebhookHttpMappings {
                          "aws-ses-sns",
                          Classification: null,
                          notification.Mail.MessageId,
-                         "complaint"))
+                         "complaint",
+                         ProviderEventId: providerEventId))
                      .ToArray()
                  ?? [];
 

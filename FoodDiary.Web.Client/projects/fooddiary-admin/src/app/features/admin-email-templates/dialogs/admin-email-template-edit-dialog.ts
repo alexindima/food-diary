@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { disabled, email, form, FormField, FormRoot, required } from '@angular/forms/signals';
-import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -47,7 +46,6 @@ export class AdminEmailTemplateEditDialogComponent {
     protected readonly data = inject<AdminEmailTemplate>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<AdminEmailTemplateEditDialogComponent, boolean>>(FdUiDialogRef);
     private readonly templatesFacade = inject(AdminEmailTemplatesFacade);
-    private readonly sanitizer = inject(DomSanitizer);
 
     protected readonly isNew = (this.data as AdminEmailTemplate & { isNew?: boolean }).isNew === true;
     protected readonly isSaving = signal(false);
@@ -90,7 +88,7 @@ export class AdminEmailTemplateEditDialogComponent {
             },
         },
     );
-    protected readonly previewHtml = computed<SafeHtml>(() => {
+    protected readonly previewHtml = computed(() => {
         const { htmlBody, subject } = this.formModel();
         const html = this.applyTokens(
             htmlBody !== '' ? htmlBody : `<div style="font-family:Segoe UI,Arial,sans-serif;">${subject}</div>`,
@@ -99,7 +97,7 @@ export class AdminEmailTemplateEditDialogComponent {
             this.previewClientName(),
         );
 
-        return this.sanitizer.bypassSecurityTrustHtml(html);
+        return html;
     });
     protected readonly previewText = computed(() => {
         const { subject, textBody } = this.formModel();

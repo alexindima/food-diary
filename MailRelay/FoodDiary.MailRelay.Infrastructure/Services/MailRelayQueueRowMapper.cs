@@ -53,9 +53,10 @@ public static class MailRelayQueueRowMapper {
             reader.GetString(3),
             await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(4),
             await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(5),
-            await reader.IsDBNullAsync(6, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(6),
-            GetDateTimeOffset(reader, 7),
-            GetDateTimeOffset(reader, 8));
+            await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(7),
+            GetDateTimeOffset(reader, 8),
+            GetDateTimeOffset(reader, 9),
+            await reader.IsDBNullAsync(6, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(6));
 
     public static MailRelayQueueStats ReadQueueStats(NpgsqlDataReader reader) =>
         new(

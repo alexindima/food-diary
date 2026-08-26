@@ -36,7 +36,7 @@ jobs:
           : > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
 
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
@@ -58,7 +58,7 @@ jobs:
 
       - name: Login to GitHub Container Registry
         id: login_ghcr
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -75,7 +75,7 @@ jobs:
 
       - name: Set up Docker Buildx
         id: setup_buildx
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4
 
       - name: Record failure step
         if: always() && steps.setup_buildx.outcome == 'failure'
@@ -88,7 +88,7 @@ jobs:
 
       - name: Install Cosign
         id: install_cosign
-        uses: sigstore/cosign-installer@v3
+        uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac # v3
 
       - name: Record failure step
         if: always() && steps.install_cosign.outcome == 'failure'
@@ -101,7 +101,7 @@ jobs:
 
       - name: Build and push API
         id: build_api
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
           file: FoodDiary.Web.Api/Dockerfile
@@ -123,7 +123,7 @@ jobs:
 
       - name: Build and push Telegram Bot
         id: build_telegram_bot
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
           file: FoodDiary.Telegram.Bot/Dockerfile
@@ -145,7 +145,7 @@ jobs:
 
       - name: Build and push Initializer
         id: build_initializer
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
           file: FoodDiary.Initializer/Dockerfile
@@ -167,7 +167,7 @@ jobs:
 
       - name: Build and push Job Manager
         id: build_job_manager
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
           file: FoodDiary.JobManager/Dockerfile
@@ -189,7 +189,7 @@ jobs:
 
       - name: Build and push Mail Relay
         id: build_mail_relay
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
           file: MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile
@@ -211,7 +211,7 @@ jobs:
 
       - name: Build and push Mail Relay Initializer
         id: build_mailrelay_initializer
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
           file: MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile
@@ -233,7 +233,7 @@ jobs:
 
       - name: Build and push Mail Inbox
         id: build_mail_inbox
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
           file: MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile
@@ -255,7 +255,7 @@ jobs:
 
       - name: Build and push Mail Inbox PostgreSQL TLS Initializer
         id: build_mailinbox_postgres_tls_init
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
           file: MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile.postgres-tls-init
@@ -277,7 +277,7 @@ jobs:
 
       - name: Build and push Mail Inbox Initializer
         id: build_mailinbox_initializer
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
           file: MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile
@@ -299,7 +299,7 @@ jobs:
 
       - name: Build and push Client
         id: build_client
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: FoodDiary.Web.Client
           file: FoodDiary.Web.Client/Dockerfile
@@ -323,7 +323,7 @@ jobs:
 
       - name: Build and push Technology Radar
         id: build_tech_radar
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: FoodDiary.TechRadar
           file: FoodDiary.TechRadar/Dockerfile
@@ -371,10 +371,16 @@ jobs:
 
       - name: Setup SSH
         id: setup_ssh
+        shell: bash
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          set -euo pipefail
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_rsa ~/.ssh/known_hosts
+          test -s ~/.ssh/id_rsa
+          test -s ~/.ssh/known_hosts
+          ssh-keygen -F "${{ env.SERVER_IP }}" -f ~/.ssh/known_hosts >/dev/null
 
       - name: Record failure step
         if: always() && steps.setup_ssh.outcome == 'failure'
@@ -388,16 +394,43 @@ jobs:
       - name: Verify server env file
         id: verify_server_env
         run: |
-          SSH_CMD="ssh -T -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30 -o ServerAliveInterval=30 -o ServerAliveCountMax=6 root@${{ env.SERVER_IP }}"
+          SSH_CMD="ssh -T -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o ConnectTimeout=30 -o ServerAliveInterval=30 -o ServerAliveCountMax=6 root@${{ env.SERVER_IP }}"
           $SSH_CMD 'set -eu
           env_file=/etc/fooddiary/fooddiary.env
           test -f "$env_file"
-          required="MAIL_INBOX_CONTENT_API_KEY MAIL_INBOX_METADATA_API_KEY MAIL_INBOX_POSTGRES_PASSWORD MAIL_INBOX_POSTGRES_RUNTIME_PASSWORD MAIL_INBOX_STATE_API_KEY MAIL_INBOX_TRUSTED_RELAY_NETWORK"
+          required="POSTGRES_PASSWORD MAIL_RELAY_POSTGRES_PASSWORD MailRelayBroker__Password MAIL_INBOX_CONTENT_API_KEY MAIL_INBOX_METADATA_API_KEY MAIL_INBOX_POSTGRES_PASSWORD MAIL_INBOX_POSTGRES_RUNTIME_PASSWORD MAIL_INBOX_STATE_API_KEY MAIL_INBOX_TRUSTED_RELAY_NETWORK"
           for name in $required; do
             if ! grep -qE "^${name}=.+$" "$env_file"; then
               echo "Required production variable is missing: $name"
               exit 1
             fi
+          done
+
+          credential_names="POSTGRES_PASSWORD MAIL_RELAY_POSTGRES_PASSWORD MailRelayBroker__Password MAIL_INBOX_CONTENT_API_KEY MAIL_INBOX_METADATA_API_KEY MAIL_INBOX_POSTGRES_PASSWORD MAIL_INBOX_POSTGRES_RUNTIME_PASSWORD MAIL_INBOX_STATE_API_KEY"
+          for name in $credential_names; do
+            value=$(sed -n "s/^${name}=//p" "$env_file" | tail -n 1)
+            value=$(printf "%s" "$value" | tr -d "\r")
+            value="${value#"${value%%[![:space:]]*}"}"
+            value="${value%"${value##*[![:space:]]}"}"
+            first_character="${value:0:1}"
+            last_character="${value: -1}"
+            single_quote=$(printf "\047")
+            if { [ "$first_character" = "\"" ] && [ "$last_character" = "\"" ]; } || \
+               { [ "$first_character" = "$single_quote" ] && [ "$last_character" = "$single_quote" ]; }; then
+              value="${value:1:${#value}-2}"
+              value="${value#"${value%%[![:space:]]*}"}"
+              value="${value%"${value##*[![:space:]]}"}"
+            fi
+            if [ -z "$value" ]; then
+              echo "Production variable uses an empty or quoted-empty value: $name"
+              exit 1
+            fi
+            case "${value,,}" in
+              guest|change-me-*|34525)
+                echo "Production variable uses a forbidden placeholder: $name"
+                exit 1
+                ;;
+            esac
           done
 
           if grep -qE "^S3__(AccessKeyId|SecretAccessKey|Region|Bucket|StagingBucket|ServiceUrl|PublicBaseUrl)=.+$" "$env_file"; then
@@ -451,8 +484,8 @@ jobs:
           MAIL_INBOX_INITIALIZER_IMAGE_REF="${{ env.IMAGE_PREFIX }}/mailinbox-initializer@${{ steps.build_mailinbox_initializer.outputs.digest }}"
           CLIENT_IMAGE_REF="${{ env.IMAGE_PREFIX }}/client@${{ steps.build_client.outputs.digest }}"
           TECH_RADAR_IMAGE_REF="${{ env.IMAGE_PREFIX }}/tech-radar@${{ steps.build_tech_radar.outputs.digest }}"
-          SSH_CMD="ssh -T -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30 -o ServerAliveInterval=30 -o ServerAliveCountMax=6 root@${{ env.SERVER_IP }}"
-          SCP_CMD="scp -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30"
+          SSH_CMD="ssh -T -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o ConnectTimeout=30 -o ServerAliveInterval=30 -o ServerAliveCountMax=6 root@${{ env.SERVER_IP }}"
+          SCP_CMD="scp -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o ConnectTimeout=30"
 
           echo "${{ secrets.GITHUB_TOKEN }}" | $SSH_CMD "docker login ghcr.io -u ${{ github.actor }} --password-stdin"
           $SSH_CMD "mkdir -p /opt/fooddiary/nginx/sites-enabled /opt/fooddiary/MailInbox/FoodDiary.MailInbox.WebApi /opt/fooddiary/scripts /var/www/storybook.fooddiary.club /var/log/nginx"

@@ -47,9 +47,13 @@ Required server env keys for the current Docker path:
 - `POSTGRES_DB`
 - `POSTGRES_USER`
 - `POSTGRES_PASSWORD`
+- `MAIL_RELAY_POSTGRES_PASSWORD`
+- `MailRelayBroker__Password`
 - `ConnectionStrings__DefaultConnection`
 - `ConnectionStrings__Redis`
 - backend runtime secrets such as JWT, SMTP, S3, Telegram, and OpenAI settings
+
+The GitHub deployment environment must also provide `SSH_KNOWN_HOSTS` containing the pinned production host entry. The deploy workflow fails closed when that entry is absent or does not match `SERVER_IP`.
 
 Important rule:
 

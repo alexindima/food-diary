@@ -4504,7 +4504,7 @@
         },
         {
           "name": "contentHtml",
-          "type": "SafeHtml | null",
+          "type": "string | null",
           "required": false
         },
         {

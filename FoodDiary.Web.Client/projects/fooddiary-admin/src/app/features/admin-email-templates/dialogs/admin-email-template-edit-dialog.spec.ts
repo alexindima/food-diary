@@ -84,6 +84,20 @@ describe('AdminEmailTemplateEditDialogComponent preview', () => {
         component['setPreviewMode']('text');
         expect(component['previewMode']()).toBe('text');
     });
+
+    it('should sanitize unsafe html while preserving safe preview markup', async () => {
+        const { component, fixture } = await setupEmailTemplateDialogAsync();
+        component['formModel'].update(value => ({
+            ...value,
+            htmlBody: '<strong>Safe</strong><img src="x" onerror="alert(1)"><script>alert(2)</script>',
+        }));
+        fixture.detectChanges();
+
+        const preview = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.preview--html');
+        expect(preview?.querySelector('strong')?.textContent).toBe('Safe');
+        expect(preview?.querySelector('img')?.hasAttribute('onerror')).toBe(false);
+        expect(preview?.querySelector('script')).toBeNull();
+    });
 });
 
 describe('AdminEmailTemplateEditDialogComponent saving', () => {

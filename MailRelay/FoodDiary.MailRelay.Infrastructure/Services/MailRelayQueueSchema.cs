@@ -56,7 +56,8 @@ internal static class MailRelayQueueSchema {
                                                processed_at_utc timestamptz null,
                                                created_at_utc timestamptz not null,
                                                updated_at_utc timestamptz not null,
-                                               last_error text null
+                                               last_error text null,
+                                               claim_token uuid null
                                            );
 
                                            create unique index if not exists ux_mailrelay_inbox_messages_consumer_message_key
@@ -78,6 +79,7 @@ internal static class MailRelayQueueSchema {
                                                source text not null,
                                                classification text null,
                                                provider_message_id text null,
+                                               provider_event_id text null,
                                                reason text null,
                                                occurred_at_utc timestamptz not null,
                                                created_at_utc timestamptz not null
@@ -85,6 +87,16 @@ internal static class MailRelayQueueSchema {
 
                                             create index if not exists ix_mailrelay_delivery_events_email_created
                                                 on mailrelay_delivery_events (email, created_at_utc desc);
+
+                                            alter table mailrelay_delivery_events
+                                                add column if not exists provider_event_id text null;
+
+                                            create unique index if not exists ux_mailrelay_delivery_events_provider_event
+                                                on mailrelay_delivery_events (source, provider_event_id, email, event_type)
+                                                where provider_event_id is not null;
+
+                                            alter table mailrelay_inbox_messages
+                                                add column if not exists claim_token uuid null;
 
                                             create table if not exists mailrelay_schema_versions (
                                                 version integer primary key,
@@ -100,6 +112,30 @@ internal static class MailRelayQueueSchema {
                                             values (
                                                 1,
                                                 'baseline mail relay queue, outbox, inbox, suppressions, and delivery events schema',
+                                                now()
+                                            )
+                                            on conflict (version) do nothing;
+
+                                            insert into mailrelay_schema_versions (
+                                                version,
+                                                description,
+                                                applied_at_utc
+                                            )
+                                            values (
+                                                2,
+                                                'provider delivery event replay deduplication',
+                                                now()
+                                            )
+                                            on conflict (version) do nothing;
+
+                                            insert into mailrelay_schema_versions (
+                                                version,
+                                                description,
+                                                applied_at_utc
+                                            )
+                                            values (
+                                                3,
+                                                'race-safe inbox message claims',
                                                 now()
                                             )
                                             on conflict (version) do nothing;

@@ -24,7 +24,12 @@ public sealed class MailRelayMessageProcessor(
 
             await smtpSubmissionService.SendAsync(queuedEmail, cancellationToken).ConfigureAwait(false);
             queuedEmail.MarkSent();
-            await queueStore.MarkSentAsync(queuedEmail.Id, cancellationToken).ConfigureAwait(false);
+            // SMTP cannot atomically commit remote acceptance together with our
+            // PostgreSQL state. Complete the local acknowledgement even when a
+            // host shutdown is requested after SendAsync returns. A process
+            // crash can still cause an at-least-once retry with the same stable
+            // Message-Id, which is preferable to silently losing the email.
+            await queueStore.MarkSentAsync(queuedEmail.Id, CancellationToken.None).ConfigureAwait(false);
             logger.LogInformation(
                 "Relay email {QueuedEmailId} sent successfully on attempt {AttemptCount}.",
                 queuedEmail.Id,

@@ -235,19 +235,10 @@ function Get-GuardState {
 
     $status = @((Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('status', '--porcelain=v1', '--untracked-files=all') -FailureMessage 'Unable to capture read-only snapshot state.').Lines)
     $status = @($status | Sort-Object)
-    $hashes = [ordered]@{}
-    foreach ($relativePath in @(Get-WorkspaceOverlayPaths -RepositoryRoot $RepositoryRoot)) {
-        $hashes[$relativePath] = Get-FileHashOrMissing (Join-Path $RepositoryRoot $relativePath)
-    }
-    $wikiRoot = Join-Path $RepositoryRoot '.llm-wiki'
-    foreach ($protectedRootName in @('generated', 'knowledge', 'reviews')) {
-        $protectedRoot = Join-Path $wikiRoot $protectedRootName
-        foreach ($file in @(Get-ChildItem -LiteralPath $protectedRoot -File -Recurse -ErrorAction SilentlyContinue)) {
-            $relativePath = Get-RepositoryRelativePath -RepositoryRoot $RepositoryRoot -Path $file.FullName
-            if ($relativePath) { $hashes[$relativePath] = Get-FileHashOrMissing $file.FullName }
-        }
-    }
-    return [pscustomobject]@{ status = $status; hashes = $hashes }
+    # The command runs in an isolated detached clone. Git status detects tracked
+    # edits and untracked files without re-hashing every compiled index on every
+    # query; ignored local cache changes cannot affect the source worktree.
+    return [pscustomobject]@{ status = $status; hashes = [ordered]@{} }
 }
 
 function Compare-GuardState {

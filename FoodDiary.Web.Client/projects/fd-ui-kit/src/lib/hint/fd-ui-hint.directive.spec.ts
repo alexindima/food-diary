@@ -203,7 +203,7 @@ function registerDisplayTests(): void {
 
 function registerContentTests(): void {
     describe('content', () => {
-        it('renders trusted html content when html mode is enabled', async () => {
+        it('renders safe html content when html mode is enabled', async () => {
             const context = await createContextAsync(TestHostComponent, component => {
                 component.hint = '<strong>Important</strong>';
                 component.html = true;
@@ -212,6 +212,19 @@ function registerContentTests(): void {
             showWithMouse(context);
 
             expect(context.overlayRoot.querySelector('strong')?.textContent).toBe('Important');
+        });
+
+        it('sanitizes unsafe html content when html mode is enabled', async () => {
+            const context = await createContextAsync(TestHostComponent, component => {
+                component.hint = '<strong>Important</strong><img src="x" onerror="alert(1)"><script>alert(2)</script>';
+                component.html = true;
+            });
+
+            showWithMouse(context);
+
+            expect(context.overlayRoot.querySelector('strong')?.textContent).toBe('Important');
+            expect(context.overlayRoot.querySelector('img')?.hasAttribute('onerror')).toBe(false);
+            expect(context.overlayRoot.querySelector('script')).toBeNull();
         });
 
         it('renders template content with context', async () => {

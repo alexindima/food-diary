@@ -5,6 +5,18 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class JobManagerGuardrailTests {
     [Fact]
+    public void JobManagerTrackedConfiguration_DoesNotContainDatabaseCredentials() {
+        string settings = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.JobManager", "appsettings.json"));
+        string program = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.JobManager", "Program.cs"));
+
+        Assert.Multiple(
+            () => Assert.DoesNotContain("Password=", settings, StringComparison.OrdinalIgnoreCase),
+            () => Assert.Contains("\"DefaultConnection\": \"\"", settings, StringComparison.Ordinal),
+            () => Assert.Contains("string.IsNullOrWhiteSpace(connectionString)", program, StringComparison.Ordinal),
+            () => Assert.Contains("environment variables or user secrets", program, StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void JobManager_RegistersOnlyApplicationModulesRequiredByScheduledJobs() {
         string program = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.JobManager", "Program.cs"));
         string[] expectedRegistrations = [

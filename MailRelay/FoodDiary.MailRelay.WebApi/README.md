@@ -34,6 +34,12 @@ It accepts internal send requests over HTTP, persists them to PostgreSQL, writes
 ## Messaging Semantics
 
 - PostgreSQL remains the source of truth for delivery state
+- SMTP delivery is explicitly **at least once**, not exactly once. After a
+  remote server accepts a message, MailRelay finalizes PostgreSQL state without
+  propagating host-shutdown cancellation. A process crash inside the unavoidable
+  SMTP/database commit gap may retry the message with the same deterministic
+  `Message-Id`; this favors delivery over silent loss and lets downstream mail
+  systems correlate or deduplicate rare repeats.
 - `mailrelay_outbox_messages` provides transactional publish handoff to RabbitMQ
 - RabbitMQ drives near-real-time processing
 - failed attempts schedule the next RabbitMQ publish through the outbox at the same `available_at_utc` used by queue state

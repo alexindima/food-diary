@@ -123,7 +123,8 @@ public sealed class MailRelayEmailHttpMappingsTests {
                     ]
                   }
                 }
-                """);
+                """,
+            MessageId: "sns-bounce-1");
 
         MailRelayMappedRequest<IReadOnlyList<MailRelayDeliveryEventEntry>> mapped = request.ToMappedCommand();
 
@@ -135,6 +136,7 @@ public sealed class MailRelayEmailHttpMappingsTests {
             () => Assert.Equal("a@example.com", deliveryEvent.Email),
             () => Assert.Equal("hard", deliveryEvent.Classification),
             () => Assert.Equal("ses-message-1", deliveryEvent.ProviderMessageId),
+            () => Assert.Equal("sns-bounce-1", deliveryEvent.ProviderEventId),
             () => Assert.Equal("smtp; 550", deliveryEvent.Reason));
     }
 
@@ -153,7 +155,8 @@ public sealed class MailRelayEmailHttpMappingsTests {
                     ]
                   }
                 }
-                """);
+                """,
+            MessageId: "sns-complaint-1");
 
         MailRelayMappedRequest<IReadOnlyList<MailRelayDeliveryEventEntry>> mapped = request.ToMappedCommand();
 
@@ -166,6 +169,7 @@ public sealed class MailRelayEmailHttpMappingsTests {
             () => Assert.Equal("aws-ses-sns", deliveryEvent.Source),
             () => Assert.Null(deliveryEvent.Classification),
             () => Assert.Equal("ses-message-2", deliveryEvent.ProviderMessageId),
+            () => Assert.Equal("sns-complaint-1", deliveryEvent.ProviderEventId),
             () => Assert.Equal("complaint", deliveryEvent.Reason));
     }
 
@@ -179,7 +183,8 @@ public sealed class MailRelayEmailHttpMappingsTests {
                   "mail": { "messageId": "ses-message-1", "destination": [] },
                   "bounce": { "bounceType": "Transient", "bouncedRecipients": [] }
                 }
-                """);
+                """,
+            MessageId: "sns-empty-bounce");
 
         MailRelayMappedRequest<IReadOnlyList<MailRelayDeliveryEventEntry>> mapped = request.ToMappedCommand();
 
@@ -197,7 +202,8 @@ public sealed class MailRelayEmailHttpMappingsTests {
                   "mail": { "messageId": "ses-message-2", "destination": [] },
                   "complaint": { "complainedRecipients": [] }
                 }
-                """);
+                """,
+            MessageId: "sns-empty-complaint");
 
         MailRelayMappedRequest<IReadOnlyList<MailRelayDeliveryEventEntry>> mapped = request.ToMappedCommand();
 
@@ -244,7 +250,8 @@ public sealed class MailRelayEmailHttpMappingsTests {
                   "notificationType": "Delivery",
                   "mail": { "messageId": "ses-message-3", "destination": [] }
                 }
-                """);
+                """,
+            MessageId: "sns-unsupported");
 
         MailRelayMappedRequest<IReadOnlyList<MailRelayDeliveryEventEntry>> mapped = request.ToMappedCommand();
 
@@ -270,7 +277,8 @@ public sealed class MailRelayEmailHttpMappingsTests {
             Recipient: "a@example.com",
             Id: "mailgun-1",
             Severity: "permanent",
-            Reason: "smtp; 550"));
+            Reason: "smtp; 550",
+            Message: new MailgunMessageHttpRequest(new MailgunMessageHeadersHttpRequest("mailgun-message-1"))));
 
         MailRelayMappedRequest<MailRelayDeliveryEventEntry> mapped = request.ToMappedCommand();
 
@@ -280,7 +288,39 @@ public sealed class MailRelayEmailHttpMappingsTests {
             () => Assert.Equal("bounce", command.Request.EventType),
             () => Assert.Equal("a@example.com", command.Request.Email),
             () => Assert.Equal("hard", command.Request.Classification),
-            () => Assert.Equal("mailgun-1", command.Request.ProviderMessageId));
+            () => Assert.Equal("mailgun-message-1", command.Request.ProviderMessageId),
+            () => Assert.Equal("mailgun-1", command.Request.ProviderEventId));
+    }
+
+    [Fact]
+    public void MailgunWebhook_ToMappedCommand_WhenProviderEventIdIsMissing_ReturnsFailure() {
+        var request = new MailgunWebhookHttpRequest(new MailgunEventDataHttpRequest(
+            Event: "failed",
+            Recipient: "a@example.com",
+            Severity: "permanent"));
+
+        MailRelayMappedRequest<MailRelayDeliveryEventEntry> mapped = request.ToMappedCommand();
+
+        Assert.False(mapped.IsSuccess);
+        Assert.Contains("event-data.id is required", mapped.Error, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AwsSesWebhook_ToMappedCommand_WhenProviderEventIdIsMissing_ReturnsFailure() {
+        var request = new AwsSesSnsWebhookHttpRequest(
+            Type: "Notification",
+            Message: """
+                {
+                  "notificationType": "Complaint",
+                  "mail": { "messageId": "ses-message-2", "destination": ["a@example.com"] },
+                  "complaint": { "complainedRecipients": [{ "emailAddress": "a@example.com" }] }
+                }
+                """);
+
+        MailRelayMappedRequest<IReadOnlyList<MailRelayDeliveryEventEntry>> mapped = request.ToMappedCommand();
+
+        Assert.False(mapped.IsSuccess);
+        Assert.Contains("MessageId is required", mapped.Error, StringComparison.Ordinal);
     }
 
     [Fact]

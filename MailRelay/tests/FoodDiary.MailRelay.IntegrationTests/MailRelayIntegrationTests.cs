@@ -177,7 +177,8 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
                 ]
               }
             }
-            """);
+            """,
+            MessageId: "sns-event-1");
 
         bool mapped = payload.TryMapToDeliveryEvents(out IReadOnlyList<IngestMailEventRequest>? events, out string? error);
 
@@ -187,6 +188,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         Assert.Equal("bounce", events[0].EventType);
         Assert.Equal("hard", events[0].Classification);
         Assert.Equal("user@example.com", events[0].Email);
+        Assert.Equal("sns-event-1", events[0].ProviderEventId);
     }
 
     [Fact]
@@ -206,6 +208,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         Assert.Equal("complaint", deliveryEvent!.EventType);
         Assert.Equal("user@example.com", deliveryEvent.Email);
         Assert.Equal("mailgun-webhook", deliveryEvent.Source);
+        Assert.Equal("mailgun-1", deliveryEvent.ProviderEventId);
     }
 
     private static MeterListener CreateMailRelayListener(

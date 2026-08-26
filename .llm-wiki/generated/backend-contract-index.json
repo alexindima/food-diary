@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1063,
+    "contracts": 1065,
     "ambiguousContracts": 3,
-    "consumerEdges": 7489,
-    "productionConsumerEdges": 4526,
-    "testConsumerEdges": 2963,
-    "consumedContracts": 1063,
+    "consumerEdges": 7493,
+    "productionConsumerEdges": 4528,
+    "testConsumerEdges": 2965,
+    "consumedContracts": 1065,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -13343,6 +13343,38 @@
       "ambiguous": false
     },
     {
+      "name": "MailgunMessageHeadersHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "MailRelay"
+      ],
+      "definitionPaths": [
+        "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHeadersHttpRequest.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "MailgunMessageHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "MailRelay"
+      ],
+      "definitionPaths": [
+        "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHttpRequest.cs"
+      ],
+      "ambiguous": false
+    },
+    {
       "name": "MailgunSignatureHttpRequest",
       "roles": [
         "Request"
@@ -21131,7 +21163,7 @@
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayEmailHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "AwsSesSnsWebhookHttpRequest",
@@ -69517,7 +69549,7 @@
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/MailRelayQueueStoreIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IngestMailEventRequest",
@@ -97570,7 +97602,7 @@
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayEmailHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "MailgunEventDataHttpRequest",
@@ -97584,6 +97616,58 @@
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
       "isTest": true,
       "referenceCount": 9
+    },
+    {
+      "contract": "MailgunMessageHeadersHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHeadersHttpRequest.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHttpRequest.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MailgunMessageHeadersHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHeadersHttpRequest.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayEmailHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MailgunMessageHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHttpRequest.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunEventDataHttpRequest.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MailgunMessageHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHttpRequest.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayEmailHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "MailgunSignatureHttpRequest",
@@ -97687,7 +97771,7 @@
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayEmailHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "MailgunWebhookHttpRequest",
@@ -98155,7 +98239,7 @@
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayEmailHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 11
+      "referenceCount": 13
     },
     {
       "contract": "MailRelayMessageDetailsHttpResponse",

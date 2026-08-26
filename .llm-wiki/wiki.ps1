@@ -282,6 +282,7 @@ Set-Item -LiteralPath "Env:GIT_CONFIG_KEY_$gitConfigCount" -Value 'core.safecrlf
 Set-Item -LiteralPath "Env:GIT_CONFIG_VALUE_$gitConfigCount" -Value 'false'
 $env:GIT_CONFIG_COUNT = [string]($gitConfigCount + 1)
 $toolsRoot = Join-Path $PSScriptRoot 'tools'
+$explicitChangedPathInput = $PSBoundParameters.ContainsKey('ChangedPath') -or $PSBoundParameters.ContainsKey('ChangedPathList')
 if (-not [string]::IsNullOrWhiteSpace($ChangedPathList)) {
     $ChangedPath = [string[]]@(
         $ChangedPathList -split "`r?`n" |
@@ -350,7 +351,9 @@ if ($Command -in @('verify', 'verify-full') -and $env:CI -ne 'true' -and -not $P
 $deltaAwareCommands = @('update', 'repair-verify', 'completion', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'review-affected', 'ownership', 'policy')
 $explicitScopePlanningCommands = @('research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision')
 $readOnlyFacadeCommands = @('research', 'research-next-question', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'ui', 'contracts', 'diff', 'ownership', 'api-compat')
-$compiledIndexReadOnlyCommands = @('research', 'research-next-question', 'context', 'packet', 'brief', 'integration-scan', 'design', 'implementation-plan', 'plan', 'test-plan', 'decision', 'rollout', 'ui', 'contracts', 'diff', 'ownership')
+# Read-only commands consume the already published projection. They report stale
+# or unavailable state instead of refreshing indexes as an implicit side effect.
+$compiledIndexReadOnlyCommands = @()
 $wikiToolingPlanningIntent = $Command -in $explicitScopePlanningCommands -and
     -not [string]::IsNullOrWhiteSpace([string]$Objective) -and
     ([string]$Objective) -match '(?i)\b(llm[- ]?wiki|wiki\.ps1|wiki tooling|development mcp)\b'
@@ -394,7 +397,14 @@ function Invoke-WikiTool {
 
     $toolPath = Join-Path $toolsRoot $Name
     $global:LASTEXITCODE = 0
-    if ($Command -in $readOnlyFacadeCommands) {
+    $pureIndexedReaders = @(
+        'Find-LlmWikiContext.ps1'
+        'Find-LlmWikiIntentOwnership.ps1'
+        'Find-LlmWikiTraceCandidates.ps1'
+    )
+    if ($Name -in $pureIndexedReaders) {
+        & $toolPath @ToolArguments
+    } elseif ($Command -in $readOnlyFacadeCommands) {
         & (Join-Path $toolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
             -ToolPath $toolPath `
             -ToolArguments $ToolArguments `
@@ -977,6 +987,10 @@ switch ($Command) {
         }
     }
     'trace' {
+        if ($Query -match '(?i)^\s*trace\b.*\buser\s+(?:scenario|journey|flow)\b') {
+            Invoke-WikiTool 'Find-LlmWikiTraceCandidates.ps1' @{ Query = $Query; Format = $Format; Limit = [Math]::Min($Limit, 30) }
+            break
+        }
         $backendIntent = $Query -match '(?i)\b(smtp|persistence|repository|readiness|telemetry|outbox|hosted service|background service|worker|database|infrastructure)\b'
         $filteredGraphTrace = $Fast -or $TraceView -eq 'Backend' -or $backendIntent -or $SymbolKind -ne 'Any' -or -not [string]::IsNullOrWhiteSpace($PathPrefix)
         if ($filteredGraphTrace) {
@@ -2528,6 +2542,10 @@ switch ($Command) {
         Write-Host "Affected reviews: recorded=$($pending.Count), areas=$($areas.Count), already-reviewed=$([int]$impact.impactCount - $pending.Count)."
     }
     'ownership' {
+        if (-not [string]::IsNullOrWhiteSpace($Query) -and -not $explicitChangedPathInput) {
+            Invoke-WikiTool 'Find-LlmWikiIntentOwnership.ps1' @{ Query = $Query; Format = $Format; Limit = $Limit }
+            break
+        }
         $ownershipArguments = @{ BaseRef = $BaseRef; Format = $Format }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $ownershipArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $ownershipArguments.ChangedPath = $ChangedPath }
@@ -2758,7 +2776,11 @@ switch ($Command) {
         }
     }
     { $_ -in @('catalog', 'symbols', 'frontend', 'frontend-contract', 'backend-contract', 'architecture-health', 'domain-data', 'configuration', 'quality', 'runtime', 'sensitive-data', 'modules') } {
-        Invoke-WikiTool $indexCommandTools[$Command] @{ Check = $Check }
+        if ($Check) {
+            Invoke-WikiTool $indexCommandTools[$Command] @{ Check = $true }
+        } else {
+            Invoke-WikiTool 'Read-LlmWikiCompiledIndex.ps1' @{ Index = $Command; Format = $Format; Limit = $Limit }
+        }
     }
     'delivery-finalize' {
         Invoke-WikiTool 'Invoke-LlmWikiDeliveryFinalization.ps1' @{

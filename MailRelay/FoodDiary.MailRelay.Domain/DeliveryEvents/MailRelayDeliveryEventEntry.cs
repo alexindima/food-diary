@@ -9,4 +9,5 @@ public sealed record MailRelayDeliveryEventEntry(
     string? ProviderMessageId,
     string? Reason,
     DateTimeOffset OccurredAtUtc,
-    DateTimeOffset CreatedAtUtc);
+    DateTimeOffset CreatedAtUtc,
+    string? ProviderEventId = null);

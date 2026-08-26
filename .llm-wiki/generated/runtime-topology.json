@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "summary": {
     "composeServices": 23,
-    "hostedServices": 9,
+    "hostedServices": 10,
     "httpClients": 12,
     "webhooks": 22,
     "recurringJobRegistrations": 16
@@ -197,6 +197,11 @@
       "name": "MailRelaySchemaInitializerHostedService",
       "baseType": "IHostedService",
       "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelaySchemaInitializerHostedService.cs"
+    },
+    {
+      "name": "NotificationTestScheduler",
+      "baseType": "BackgroundService",
+      "path": "FoodDiary.Web.Api/Services/NotificationTestScheduler.cs"
     },
     {
       "name": "RabbitMqMailRelayBootstrapHostedService",

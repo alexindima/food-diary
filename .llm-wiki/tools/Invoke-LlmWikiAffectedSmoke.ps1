@@ -162,6 +162,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         'read-only-guard' {
             & (Join-Path $toolsRoot 'Test-LlmWikiReadOnlyGuard.ps1')
             if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiReadOnlyRetrievalContracts.ps1')
+            if (-not $?) { exit 1 }
         }
         'trace-output' {
             & (Join-Path $toolsRoot 'Test-LlmWikiTraceOutput.ps1')

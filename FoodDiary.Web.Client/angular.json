@@ -230,7 +230,6 @@
                         "configDir": ".storybook",
                         "browserTarget": "fd-ui-kit:build",
                         "port": 6006,
-                        "allowedHosts": ["storybook-dev.fooddiary.club"],
                         "styles": [
                             "node_modules/@material-design-icons/font/filled.css",
                             "src/styles/design-tokens.global.scss",

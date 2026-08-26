@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3463,
-    "symbols": 3470,
+    "sourceFiles": 3465,
+    "symbols": 3472,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 241,
     "kinds": {
       "class": 1805,
       "enum": 62,
       "interface": 423,
-      "record": 1060,
+      "record": 1062,
       "record struct": 120
     },
     "roles": {
@@ -38,7 +38,7 @@
       "ReadModelRepository": 29,
       "ReadRepository": 46,
       "Repository": 103,
-      "Request": 133,
+      "Request": 135,
       "Response": 180,
       "Service": 278,
       "Validator": 205,
@@ -18021,7 +18021,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 58
+      "line": 60
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -23936,7 +23936,7 @@
       "kind": "class",
       "role": "Other",
       "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailgunWebhookHttpMappings.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "MailRelayEmailHttpMappings",
@@ -24013,6 +24013,20 @@
       "kind": "record",
       "role": "Request",
       "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunEventDataHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "MailgunMessageHeadersHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHeadersHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "MailgunMessageHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHttpRequest.cs",
       "line": 2
     },
     {
@@ -27517,7 +27531,7 @@
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 50
+      "line": 52
     },
     {
       "service": "INotificationPusher",

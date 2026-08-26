@@ -10,7 +10,29 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Build-time analyzers: `FoodDiary.Analyzers/AGENTS.md`
 - Application abstractions: `FoodDiary.Application.Abstractions/AGENTS.md`
 - Admin application module: `FoodDiary.Application.Admin/AGENTS.md`
+- AI application module: `FoodDiary.Application.Ai/AGENTS.md`
+- Body metrics application module: `FoodDiary.Application.BodyMetrics/AGENTS.md`
+- Cycles application module: `FoodDiary.Application.Cycles/AGENTS.md`
+- Dietologist application module: `FoodDiary.Application.Dietologist/AGENTS.md`
+- Exercises application module: `FoodDiary.Application.Exercises/AGENTS.md`
+- Fasting application module: `FoodDiary.Application.Fasting/AGENTS.md`
+- Favorites application module: `FoodDiary.Application.Favorites/AGENTS.md`
+- Hydration application module: `FoodDiary.Application.Hydration/AGENTS.md`
+- Identity application module: `FoodDiary.Application.Identity/AGENTS.md`
+- Images application module: `FoodDiary.Application.Images/AGENTS.md`
+- Lessons application module: `FoodDiary.Application.Lessons/AGENTS.md`
+- Meal planning application module: `FoodDiary.Application.MealPlanning/AGENTS.md`
+- Meals application module: `FoodDiary.Application.Meals/AGENTS.md`
+- Open Food Facts application module: `FoodDiary.Application.OpenFoodFacts/AGENTS.md`
+- Products application module: `FoodDiary.Application.Products/AGENTS.md`
+- Recipe community application module: `FoodDiary.Application.RecipeCommunity/AGENTS.md`
+- Recipes application module: `FoodDiary.Application.Recipes/AGENTS.md`
+- Statistics application module: `FoodDiary.Application.Statistics/AGENTS.md`
+- TDEE application module: `FoodDiary.Application.Tdee/AGENTS.md`
+- Wearables application module: `FoodDiary.Application.Wearables/AGENTS.md`
 - Frontend app: `FoodDiary.Web.Client/AGENTS.md`
+- Frontend application shell: `FoodDiary.Web.Client/src/app/AGENTS.md`
+- Frontend feature folders: `FoodDiary.Web.Client/src/app/features/AGENTS.md`
 - Frontend admin app: `FoodDiary.Web.Client/projects/fooddiary-admin/AGENTS.md`
 - UI kit: `FoodDiary.Web.Client/projects/fd-ui-kit/AGENTS.md`
 - Tour engine: `FoodDiary.Web.Client/projects/fd-tour/AGENTS.md`
@@ -34,6 +56,9 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Integrations layer: `FoodDiary.Integrations/AGENTS.md`
 - Initializer: `FoodDiary.Initializer/AGENTS.md`
 - Job manager: `FoodDiary.JobManager/AGENTS.md`
+- Development MCP: `FoodDiary.Development.Mcp/AGENTS.md`
+- Mobile shell: `FoodDiary.Mobile/AGENTS.md`
+- Technology radar: `FoodDiary.TechRadar/AGENTS.md`
 - Resources/localization/report text: `FoodDiary.Resources/AGENTS.md`
 - Shared mediator: `Shared/FoodDiary.Mediator/AGENTS.md`
 - Shared domain primitives: `Shared/FoodDiary.Domain.Primitives/AGENTS.md`
@@ -47,12 +72,14 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Mail inbox presentation layer: `MailInbox/FoodDiary.MailInbox.Presentation/AGENTS.md`
 - Mail inbox Web API host: `MailInbox/FoodDiary.MailInbox.WebApi/AGENTS.md`
 - Mail relay application layer: `MailRelay/FoodDiary.MailRelay.Application/AGENTS.md`
+- Mail relay service root: `MailRelay/AGENTS.md`
 - Mail relay client package: `MailRelay/FoodDiary.MailRelay.Client/AGENTS.md`
 - Mail relay domain layer: `MailRelay/FoodDiary.MailRelay.Domain/AGENTS.md`
 - Mail relay infrastructure layer: `MailRelay/FoodDiary.MailRelay.Infrastructure/AGENTS.md`
 - Mail relay initializer: `MailRelay/FoodDiary.MailRelay.Initializer/AGENTS.md`
 - Mail relay presentation layer: `MailRelay/FoodDiary.MailRelay.Presentation/AGENTS.md`
 - Mail relay Web API host: `MailRelay/FoodDiary.MailRelay.WebApi/AGENTS.md`
+- Mail relay tests: `MailRelay/tests/AGENTS.md`
 - Telegram bot: `FoodDiary.Telegram.Bot/AGENTS.md`
 - Shared result primitives: `Shared/FoodDiary.Results/AGENTS.md`
 

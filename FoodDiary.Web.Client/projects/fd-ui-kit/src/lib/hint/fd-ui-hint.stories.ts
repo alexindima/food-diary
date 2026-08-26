@@ -77,6 +77,21 @@ export const WithHtml: Story = {
     }),
 };
 
+export const SanitizedHtml: Story = {
+    render: () => ({
+        template: `
+            <div style="padding: calc(var(--fd-space-xxl) + var(--fd-space-lg)); display: flex; justify-content: center;">
+                <fd-ui-button
+                    variant="secondary"
+                    fill="outline"
+                    fdUiHint='<strong>Safe</strong><img src="invalid" onerror="alert(1)"><script>alert(2)</script>'
+                    [fdUiHintHtml]="true"
+                >Sanitized HTML Hint</fd-ui-button>
+            </div>
+        `,
+    }),
+};
+
 export const AllPositions: Story = {
     render: () => ({
         template: `

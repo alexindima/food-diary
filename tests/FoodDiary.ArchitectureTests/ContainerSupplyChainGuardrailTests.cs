@@ -66,7 +66,7 @@ public sealed class ContainerSupplyChainGuardrailTests {
         string workflow = ReadDeployWorkflow();
 
         Assert.Contains("id-token: write", workflow, StringComparison.Ordinal);
-        Assert.Contains("uses: sigstore/cosign-installer@v3", workflow, StringComparison.Ordinal);
+        Assert.Contains("uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac # v3", workflow, StringComparison.Ordinal);
 
         int signingStep = workflow.IndexOf("- name: Sign and verify production images", StringComparison.Ordinal);
         int sshStep = workflow.IndexOf("- name: Setup SSH", StringComparison.Ordinal);
@@ -86,6 +86,61 @@ public sealed class ContainerSupplyChainGuardrailTests {
         Assert.Contains("group: fooddiary-production-deploy", workflow, StringComparison.Ordinal);
         Assert.Contains("cancel-in-progress: false", workflow, StringComparison.Ordinal);
         Assert.DoesNotContain("cancel-in-progress: true", workflow, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Workflows_PinEveryExternalActionToACommitSha() {
+        string workflowsRoot = ArchitectureTestPaths.FromRoot(".github", "workflows");
+        string[] violations = [.. Directory
+            .EnumerateFiles(workflowsRoot, "*.*", SearchOption.AllDirectories)
+            .Where(static path => Path.GetExtension(path).Equals(".yml", StringComparison.OrdinalIgnoreCase) ||
+                Path.GetExtension(path).Equals(".yaml", StringComparison.OrdinalIgnoreCase))
+            .SelectMany(path => File.ReadLines(path)
+                .Select(static line => {
+                    string normalized = line.TrimStart();
+                    return normalized.StartsWith("- ", StringComparison.Ordinal) ? normalized[2..].TrimStart() : normalized;
+                })
+                .Where(static line => line.StartsWith("uses:", StringComparison.Ordinal))
+                .Select(static line => line["uses:".Length..].Split('#', 2)[0].Trim())
+                .Where(static use => !use.StartsWith("./", StringComparison.Ordinal))
+                .Select(use => {
+                    int separator = use.LastIndexOf('@');
+                    return new {
+                    Path = Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path),
+                    Action = separator > 0 ? use[..separator] : use,
+                    Reference = separator > 0 ? use[(separator + 1)..] : string.Empty,
+                };
+                }))
+            .Where(static item => item.Reference.Length != 40 ||
+                item.Reference.Any(static character => !Uri.IsHexDigit(character) || char.IsUpper(character)))
+            .Select(item => $"{item.Path}: {item.Action}@{item.Reference}")
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void DeployWorkflow_AuthenticatesSshHostAndRequiresProductionCredentials() {
+        string workflow = ReadDeployWorkflow();
+        string compose = File.ReadAllText(ArchitectureTestPaths.FromRoot("docker-compose.yml"));
+
+        Assert.Multiple(
+            () => Assert.Contains("secrets.SSH_KNOWN_HOSTS", workflow, StringComparison.Ordinal),
+            () => Assert.Contains("ssh-keygen -F", workflow, StringComparison.Ordinal),
+            () => Assert.Contains("StrictHostKeyChecking=yes", workflow, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("StrictHostKeyChecking=no", workflow, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("StrictHostKeyChecking=accept-new", workflow, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("UserKnownHostsFile=/dev/null", workflow, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("GlobalKnownHostsFile=/dev/null", workflow, StringComparison.Ordinal),
+            () => Assert.Contains("POSTGRES_PASSWORD MAIL_RELAY_POSTGRES_PASSWORD MailRelayBroker__Password", workflow, StringComparison.Ordinal),
+            () => Assert.Contains("MAIL_INBOX_POSTGRES_PASSWORD MAIL_INBOX_POSTGRES_RUNTIME_PASSWORD", workflow, StringComparison.Ordinal),
+            () => Assert.Contains("case \"${value,,}\"", workflow, StringComparison.Ordinal),
+            () => Assert.Contains("${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}", compose, StringComparison.Ordinal),
+            () => Assert.Contains("${MAIL_RELAY_POSTGRES_PASSWORD:?Set MAIL_RELAY_POSTGRES_PASSWORD}", compose, StringComparison.Ordinal),
+            () => Assert.Contains("${MailRelayBroker__Password:?Set MailRelayBroker__Password}", compose, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("Password=${POSTGRES_PASSWORD:-", compose, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("Password=${MAIL_RELAY_POSTGRES_PASSWORD:-", compose, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("RABBITMQ_DEFAULT_PASS: ${MailRelayBroker__Password:-", compose, StringComparison.Ordinal));
     }
 
     [Fact]

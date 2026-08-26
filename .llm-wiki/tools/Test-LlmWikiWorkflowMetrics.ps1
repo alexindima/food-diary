@@ -6,6 +6,8 @@ $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 $fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'workflow-metrics'
 $metricsRoot = Join-Path $fixtureRoot 'workflow-metrics'
+$tasksRoot = Join-Path $fixtureRoot 'tasks'
+$relativeTasksPath = [IO.Path]::GetRelativePath($repositoryRoot, $tasksRoot).Replace('\', '/')
 $contextRegistryPath = Join-Path $fixtureRoot 'context-outcomes.json'
 $modelRegistryPath = Join-Path $fixtureRoot 'model-outcomes.json'
 $previousMetricsRoot = $env:LLM_WIKI_WORKFLOW_METRICS_ROOT
@@ -14,6 +16,7 @@ $previousModelRegistry = $env:LLM_WIKI_MODEL_ROUTE_OUTCOME_REGISTRY_PATH
 
 try {
     $null = New-Item -ItemType Directory -Path $metricsRoot -Force
+    $null = New-Item -ItemType Directory -Path $tasksRoot -Force
     $env:LLM_WIKI_WORKFLOW_METRICS_ROOT = $metricsRoot
     $env:LLM_WIKI_CONTEXT_OUTCOME_REGISTRY_PATH = $contextRegistryPath
     $env:LLM_WIKI_MODEL_ROUTE_OUTCOME_REGISTRY_PATH = $modelRegistryPath
@@ -22,10 +25,10 @@ try {
     [IO.File]::WriteAllText($modelRegistryPath, (($emptyRegistry | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
 
     foreach ($sample in @(
-        [pscustomobject]@{ operation = 'research'; outcome = 'passed'; duration = 1.0 }
-        [pscustomobject]@{ operation = 'research'; outcome = 'failed'; duration = 2.0 }
-        [pscustomobject]@{ operation = 'verify'; outcome = 'timed-out'; duration = 3.0 }
-        [pscustomobject]@{ operation = 'verify-full'; outcome = 'interrupted'; duration = 4.0 }
+        [pscustomobject]@{ operation = 'research'; outcome = 'passed'; duration = 1.0; phase = $null; profile = $null; runId = $null }
+        [pscustomobject]@{ operation = 'research'; outcome = 'failed'; duration = 2.0; phase = $null; profile = $null; runId = $null }
+        [pscustomobject]@{ operation = 'verify'; outcome = 'timed-out'; duration = 3.0; phase = $null; profile = $null; runId = $null }
+        [pscustomobject]@{ operation = 'verify-full'; outcome = 'interrupted'; duration = 4.0; phase = $null; profile = $null; runId = $null }
         [pscustomobject]@{ operation = 'verify-full-group'; outcome = 'passed'; duration = 5.0; phase = 'indexes'; profile = 'Focused'; runId = 'run-1' }
     )) {
         & (Join-Path $PSScriptRoot 'Write-LlmWikiWorkflowMetric.ps1') `
@@ -36,7 +39,7 @@ try {
             -Profile $sample.profile `
             -RunId $sample.runId
     }
-    $metrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkflowMetrics.ps1') -Format Json | ConvertFrom-Json
+    $metrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkflowMetrics.ps1') -TasksPath $relativeTasksPath -Format Json | ConvertFrom-Json
     $research = @($metrics.adaptive.byOperation | Where-Object operation -eq 'research')[0]
     $verify = @($metrics.adaptive.byOperation | Where-Object operation -eq 'verify')[0]
     $fullGroup = @($metrics.adaptive.recent | Where-Object operation -eq 'verify-full-group')[0]

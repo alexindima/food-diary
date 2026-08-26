@@ -1458,14 +1458,14 @@
       "role": "Component",
       "selector": "fd-ui-hint-overlay",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/hint/fd-ui-hint-overlay.ts",
-      "line": 12
+      "line": 11
     },
     {
       "name": "FdUiHintDirective",
       "role": "Directive",
       "selector": "[fdUiHint]",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/hint/fd-ui-hint.directive.ts",
-      "line": 95
+      "line": 94
     },
     {
       "name": "FdUiIconComponent",
@@ -1920,7 +1920,7 @@
       "role": "Component",
       "selector": "fd-admin-email-template-edit-dialog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/dialogs/admin-email-template-edit-dialog.ts",
-      "line": 46
+      "line": 45
     },
     {
       "name": "AdminEmailTemplatesFacade",

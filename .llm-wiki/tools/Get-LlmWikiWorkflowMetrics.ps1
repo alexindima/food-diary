@@ -21,15 +21,18 @@ if (Test-Path -LiteralPath $root -PathType Container) {
         $acceptancePath = Join-Path $directory.FullName 'acceptance-matrix.json'
         $completionPath = Join-Path $directory.FullName 'completion.json'
         $evidence = if (Test-Path -LiteralPath $evidencePath) { Get-Content -LiteralPath $evidencePath -Raw | ConvertFrom-Json } else { $null }
+        $workspaceState = if ($workspace.PSObject.Properties['state']) { [string]$workspace.state } else { '' }
+        $evidenceChecks = if ($null -ne $evidence -and $evidence.PSObject.Properties['checks']) { @($evidence.checks) } else { @() }
+        $evidenceReviews = if ($null -ne $evidence -and $evidence.PSObject.Properties['reviews']) { @($evidence.reviews) } else { @() }
         $items.Add([pscustomobject][ordered]@{
             id = $directory.Name
             objective = [string]$workspace.objective
-            state = $(if (Test-Path -LiteralPath $completionPath -PathType Leaf) { 'sealed' } elseif (-not [string]::IsNullOrWhiteSpace([string]$workspace.state)) { [string]$workspace.state } else { 'in-progress' })
+            state = $(if (Test-Path -LiteralPath $completionPath -PathType Leaf) { 'sealed' } elseif (-not [string]::IsNullOrWhiteSpace($workspaceState)) { $workspaceState } else { 'in-progress' })
             hasManifest = Test-Path -LiteralPath $manifestPath
             hasAcceptance = Test-Path -LiteralPath $acceptancePath
-            resolvedChecks = @($evidence.checks | Where-Object status -in @('passed', 'passed-with-known-baseline-failures', 'not-applicable')).Count
-            failedChecks = @($evidence.checks | Where-Object status -eq 'failed').Count
-            resolvedReviews = @($evidence.reviews | Where-Object status -in @('completed', 'not-applicable')).Count
+            resolvedChecks = @($evidenceChecks | Where-Object status -in @('passed', 'passed-with-known-baseline-failures', 'not-applicable')).Count
+            failedChecks = @($evidenceChecks | Where-Object status -eq 'failed').Count
+            resolvedReviews = @($evidenceReviews | Where-Object status -in @('completed', 'not-applicable')).Count
         })
     }
 }

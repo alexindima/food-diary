@@ -156,6 +156,33 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
     }
 
     [RequiresDockerFact]
+    public async Task InboxClaim_WhenProcessingLeaseIsFresh_DoesNotAllowConcurrentClaim() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        MailRelayQueueStore store = CreateStore(dataSource);
+
+        MailRelayInboxClaimResult first = await store.TryClaimInboxMessageAsync("consumer", "message-key", CancellationToken.None);
+        MailRelayInboxClaimResult second = await store.TryClaimInboxMessageAsync("consumer", "message-key", CancellationToken.None);
+
+        Assert.True(first.Claimed);
+        Assert.False(second.Claimed);
+        Assert.Equal(first.InboxId, second.InboxId);
+    }
+
+    [RequiresDockerFact]
+    public async Task InboxClaim_WhenFirstClaimsRace_AllReturnOneIdentityAndOnlyOneClaimSucceeds() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        MailRelayQueueStore store = CreateStore(dataSource);
+
+        MailRelayInboxClaimResult[] claims = await Task.WhenAll(Enumerable.Range(0, 8)
+            .Select(_ => store.TryClaimInboxMessageAsync("concurrent-consumer", "concurrent-message-key", CancellationToken.None)));
+
+        Assert.Single(claims, static claim => claim.Claimed);
+        Assert.Single(claims.Select(static claim => claim.InboxId).Distinct());
+    }
+
+    [RequiresDockerFact]
     public async Task InboxClaim_WhenMessageFails_CanBeClaimedAgainWithLastErrorStored() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
@@ -196,11 +223,11 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
     }
 
     [RequiresDockerFact]
-    public async Task EnsureSchemaAsync_RecordsBaselineSchemaVersion() {
+    public async Task EnsureSchemaAsync_RecordsAppliedSchemaVersions() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
 
-        Assert.Equal(1, await CountRowsAsync(dataSource, "mailrelay_schema_versions"));
+        Assert.Equal(3, await CountRowsAsync(dataSource, "mailrelay_schema_versions"));
     }
 
     [RequiresDockerFact]
@@ -227,6 +254,29 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
 
         Assert.True(await store.RemoveSuppressionAsync("user@example.com", CancellationToken.None));
         Assert.Empty(await store.GetSuppressionsAsync("user@example.com", CancellationToken.None));
+    }
+
+    [RequiresDockerFact]
+    public async Task RecordDeliveryEventAsync_WhenProviderEventIsReplayed_ReturnsExistingEvent() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        MailRelayQueueStore store = CreateStore(dataSource);
+        var request = new IngestMailEventRequest(
+            "bounce",
+            "USER@example.com",
+            "mailgun-webhook",
+            "hard",
+            "provider-message-1",
+            "hard-bounce",
+            ProviderEventId: "provider-event-1");
+
+        MailRelayDeliveryEventEntry first = await store.RecordDeliveryEventAsync(request, CancellationToken.None);
+        MailRelayDeliveryEventEntry replay = await store.RecordDeliveryEventAsync(
+            request with { Email = "user@EXAMPLE.com", Reason = "replayed payload" },
+            CancellationToken.None);
+
+        Assert.Equal(first.Id, replay.Id);
+        Assert.Equal(1, await CountRowsAsync(dataSource, "mailrelay_delivery_events"));
     }
 
     [RequiresDockerFact]

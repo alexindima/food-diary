@@ -29,12 +29,17 @@ $frontendIndexPath = Join-Path $wikiRoot 'generated/frontend-index.json'
 if ([string]::IsNullOrWhiteSpace($Module) -and [string]::IsNullOrWhiteSpace($Query)) {
     throw 'Provide -Module, -Query, or both.'
 }
+if ($SqlShadow) {
+    # Shadow mode intentionally keeps the legacy JSON projection authoritative
+    # while comparing it with the read-only SQLite search result.
+    $CompiledIndexSource = 'Json'
+}
 if ($CompiledIndexSource -eq 'Json' -and -not (Test-Path -LiteralPath $catalogPath)) {
     throw 'Repository catalog is missing. Run Build-LlmWikiCatalog.ps1 first.'
 }
 
 $queryCacheEntry = $null
-if ($Format -eq 'Json' -and -not $SqlShadow -and -not $SkipQueryCache) {
+if ($Format -eq 'Json' -and $CompiledIndexSource -eq 'Json' -and -not $SqlShadow -and -not $SkipQueryCache) {
     $cacheRelevantPaths = @(
         @($ScopePath) + $(if (-not [string]::IsNullOrWhiteSpace($Module)) {
             @("FoodDiary.Application/$Module", "FoodDiary.Application.$Module")
@@ -89,6 +94,98 @@ $frontendOnlyScope = $ChangeType -eq 'Frontend' -and
 $compiledIndexStopwatch = [Diagnostics.Stopwatch]::StartNew()
 $compiledIndexDiagnostics = $null
 if ($CompiledIndexSource -eq 'Sqlite') {
+    $graphStatus = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
+        -Action status `
+        -SkipRefresh `
+        -Format Json | ConvertFrom-Json
+    $indexFresh = [bool]$graphStatus.changeSetFresh
+    $searchLimit = [Math]::Min(50, [Math]::Max(20, $Limit * 4))
+    $sqlResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
+        -Action search `
+        -Query $searchText `
+        -Module $Module `
+        -ChangedPath $scopePaths `
+        -ChangeType $ChangeType `
+        -Limit $searchLimit `
+        -SkipRefresh `
+        -Format Json | ConvertFrom-Json
+    if (-not [bool]$sqlResult.ready) {
+        throw 'SQLite search index is unavailable. Run ./.llm-wiki/wiki.ps1 graph-build and retry.'
+    }
+    $compiledIndexStopwatch.Stop()
+    $records = @($sqlResult.records)
+    $top = @($records | Select-Object -First 1)
+    $ranking = $sqlResult.rankingSummary
+    $confidence = if ($null -eq $ranking) { 'low' } else { [string]$ranking.confidence }
+    $ambiguous = if ($null -eq $ranking) { $true } else { [bool]$ranking.ambiguous }
+    $conclusive = $indexFresh -and $records.Count -gt 0 -and $confidence -in @('high', 'medium') -and -not $ambiguous
+    $toItem = { [pscustomobject][ordered]@{
+        path = [string]$_.path
+        score = [double]$_.score
+        rank = [int]$_.rank
+        confidence = [string]$_.confidence
+        reasons = @($_.reasons)
+    } }
+    $testRecords = @($records | Where-Object { [bool]$_.isTest } | Select-Object -First $Limit)
+    $wikiRecords = @($records | Where-Object { $_.path -match '^(\.llm-wiki/|docs/).+\.md$' } | Select-Object -First $Limit)
+    $guideRecords = @($records | Where-Object { $_.path -match '(^|/)AGENTS\.md$' } | Select-Object -First $Limit)
+    $implementationRecords = @($records | Where-Object {
+        -not [bool]$_.isTest -and $_.path -notmatch '^(\.llm-wiki/|docs/)' -and $_.path -notmatch '(^|/)AGENTS\.md$'
+    } | Select-Object -First $Limit)
+    $frontendRecords = @($implementationRecords | Where-Object { $_.path -match '^FoodDiary\.Web\.Client/' })
+    $symbolRecords = @($implementationRecords | Where-Object { $_.recordType -eq 'code' -and $_.role -ne 'other' })
+    $context = [ordered]@{
+        query = [ordered]@{ module = $Module; text = $Query; changeType = $ChangeType; scopePaths = $scopePaths }
+        module = $(if ($top.Count -gt 0 -and -not [string]::IsNullOrWhiteSpace([string]$top[0].module)) {
+            [pscustomobject][ordered]@{ name = [string]$top[0].module; dependencies = @(); consumers = @(); origin = 'sqlite-search' }
+        } else { $null })
+        confidence = $confidence
+        conclusive = $conclusive
+        abstained = -not $conclusive
+        ambiguityReason = $(if (-not $indexFresh) { 'stale-index' } elseif ($records.Count -eq 0) { 'no-indexed-candidates' } elseif ($ambiguous) { [string]$ranking.ambiguityReason } elseif (-not $conclusive) { 'low-confidence' } else { $null })
+        candidates = @($records | Select-Object -First $Limit)
+        wikiPages = @($wikiRecords | ForEach-Object $toItem)
+        agentGuides = @($guideRecords | ForEach-Object $toItem)
+        projects = @()
+        frontendProjects = @()
+        frontendFeatures = @()
+        frontendSymbols = @($frontendRecords | ForEach-Object $toItem)
+        frontendRoutes = @()
+        implementationFiles = @($implementationRecords | ForEach-Object $toItem)
+        localization = @()
+        controllers = @($implementationRecords | Where-Object role -eq 'controller' | ForEach-Object $toItem)
+        symbols = @($symbolRecords | ForEach-Object $toItem)
+        dependencyInjection = @()
+        tests = @($testRecords | ForEach-Object $toItem)
+        recommendedChecks = @(
+            $(if ($ChangeType -eq 'Frontend') { 'cd FoodDiary.Web.Client && npm run verify' } else { 'Run focused tests for the highest-ranked current-source candidates.' })
+            'Verify inferred paths in current code before editing.'
+        )
+        compiledIndex = [ordered]@{
+            source = 'sqlite-search'
+            fingerprint = $sqlResult.fingerprint
+            updatedAtUtc = $sqlResult.updatedAtUtc
+            indexedDocuments = [int]$sqlResult.indexedDocuments
+            returnedRecords = $records.Count
+            sqlDurationMs = [double]$sqlResult.durationMs
+            roundTripDurationMs = [Math]::Round($compiledIndexStopwatch.Elapsed.TotalMilliseconds, 2)
+            fresh = $indexFresh
+            indexedChangeSetFingerprint = [string]$graphStatus.changeSetFingerprint
+            currentChangeSetFingerprint = [string]$graphStatus.currentChangeSetFingerprint
+        }
+    }
+    $contextJson = $context | ConvertTo-Json -Depth 12
+    if ($Format -eq 'Json') {
+        if ($null -ne $queryCacheEntry) { Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $contextJson }
+        Write-Output $contextJson
+        return
+    }
+    Write-Host "LLM Wiki context: '$searchText' [$ChangeType]"
+    Write-Host "Confidence: $confidence; conclusive=$conclusive; candidates=$($records.Count); round-trip=$($context.compiledIndex.roundTripDurationMs)ms."
+    if (-not $conclusive) { Write-Host "Abstained: $($context.ambiguityReason). Inspect candidates or narrow the query." }
+    foreach ($record in @($records | Select-Object -First $Limit)) { Write-Host " - #$($record.rank) [$($record.confidence)] $($record.path) score=$($record.score)" }
+    return
+
     $compiledResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
         -Action compiled-context `
         -Query $Query `

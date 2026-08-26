@@ -593,7 +593,8 @@ public sealed class MailRelayPresentationTests {
 
         IActionResult result = await controller.IngestAwsSesSns(new AwsSesSnsWebhookHttpRequest(
             Type: "Notification",
-            Message: message));
+            Message: message,
+            MessageId: "sns-event-1"));
 
         CreatedResult created = Assert.IsType<CreatedResult>(result);
         Assert.Equal("/api/email/providers/aws-ses/sns", created.Location);

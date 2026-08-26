@@ -27,7 +27,9 @@ function Get-FirstXmlValue {
     )
 
     foreach ($propertyGroup in $PropertyGroups) {
-        $property = $propertyGroup.$PropertyName
+        if ($null -eq $propertyGroup) { continue }
+        $propertyEntry = $propertyGroup.PSObject.Properties[$PropertyName]
+        $property = if ($null -eq $propertyEntry) { $null } else { $propertyEntry.Value }
         if ($null -ne $property -and -not [string]::IsNullOrWhiteSpace([string]$property)) {
             return [string]$property
         }

@@ -58,6 +58,22 @@ public sealed class MailRelayMessageProcessorTests {
             Assert.Equal($"{messageId:N}@mailrelay.invalid", request.MessageId));
     }
 
+    [Fact]
+    public async Task ProcessAsync_WhenShutdownStartsAfterSmtpAcceptance_FinalizesSentStateWithoutCancellation() {
+        var store = new RecordingQueueStore();
+        using var cancellationTokenSource = new CancellationTokenSource();
+        var transport = new RecordingTransport {
+            AfterSend = cancellationTokenSource.Cancel,
+        };
+        MailRelayMessageProcessor processor = CreateProcessor(store, transport);
+
+        MailRelayProcessResult result = await processor.ProcessAsync(CreateMessage(), cancellationTokenSource.Token);
+
+        Assert.True(result.Succeeded);
+        Assert.Equal(QueuedEmailStatus.Sent, store.Status);
+        Assert.False(store.MarkSentCancellationToken.CanBeCanceled);
+    }
+
     [Theory]
     [InlineData(1, 3, QueuedEmailStatus.Retry, false)]
     [InlineData(3, 3, QueuedEmailStatus.Failed, true)]
@@ -143,11 +159,13 @@ public sealed class MailRelayMessageProcessorTests {
     private sealed class RecordingTransport : IRelayDeliveryTransport {
         public bool SendCalled { get; private set; }
         public Exception? Exception { get; init; }
+        public Action? AfterSend { get; init; }
         public List<RelayEmailMessageRequest> Requests { get; } = [];
 
         public Task SendAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
             SendCalled = true;
             Requests.Add(request);
+            AfterSend?.Invoke();
             return Exception is null ? Task.CompletedTask : Task.FromException(Exception);
         }
     }
@@ -157,6 +175,7 @@ public sealed class MailRelayMessageProcessorTests {
         public IReadOnlyList<string> SuppressedRecipients { get; init; } = [];
         public string? Status { get; private set; }
         public QueuedEmailFailureDecision? FailureDecision { get; private set; }
+        public CancellationToken MarkSentCancellationToken { get; private set; }
 
         public Task<Guid> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) =>
             Task.FromResult(Guid.NewGuid());
@@ -186,6 +205,7 @@ public sealed class MailRelayMessageProcessorTests {
         public Task MarkInboxFailedAsync(Guid id, string error, CancellationToken cancellationToken) => Task.CompletedTask;
 
         public Task MarkSentAsync(Guid id, CancellationToken cancellationToken) {
+            MarkSentCancellationToken = cancellationToken;
             Status = QueuedEmailStatus.Sent;
             return Task.CompletedTask;
         }

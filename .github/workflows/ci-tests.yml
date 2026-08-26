@@ -17,12 +17,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
       - name: Setup Node.js for Wiki compiler analysis
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 22
           cache: npm
@@ -71,10 +71,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 22
           cache: npm
@@ -93,7 +93,7 @@ jobs:
         run: git diff --exit-code -- FoodDiary.TechRadar/generated/inventory.json
 
       - name: Build production image
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: FoodDiary.TechRadar
           file: FoodDiary.TechRadar/Dockerfile
@@ -110,17 +110,17 @@ jobs:
           : > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
 
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
         with:
           dotnet-version: 10.0.102
 
       - name: Setup Node.js for development MCP tests
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 22
           cache: npm
@@ -268,7 +268,7 @@ jobs:
 
       - name: Upload CI failure logs
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: ci-failure-logs-dotnet
           path: ${{ runner.temp }}/ci-test-logs/
@@ -286,10 +286,10 @@ jobs:
           : > "${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env"
 
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
         with:
           dotnet-version: 10.0.102
 
@@ -429,7 +429,7 @@ jobs:
 
       - name: Upload PostgreSQL critical-flow failure logs
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: ci-failure-logs-postgres-critical-flows
           path: ${{ runner.temp }}/postgres-critical-flow-logs/
@@ -447,10 +447,10 @@ jobs:
           : > "${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env"
 
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
         with:
           dotnet-version: 10.0.102
 
@@ -593,7 +593,7 @@ jobs:
 
       - name: Upload dependency audit failure logs
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: ci-failure-logs-dependency-audit
           path: ${{ runner.temp }}/dependency-audit-logs/
@@ -611,10 +611,10 @@ jobs:
           : > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
 
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 22
           cache: npm
@@ -790,7 +790,7 @@ jobs:
           fi
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('FoodDiary.Web.Client/package-lock.json') }}
@@ -1094,7 +1094,7 @@ jobs:
 
       - name: Upload frontend failure logs
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: ci-failure-logs-frontend
           path: ${{ runner.temp }}/frontend-checks-logs/
@@ -1112,7 +1112,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.sha }}
 
@@ -1134,7 +1134,7 @@ jobs:
 
       - name: Download dotnet failure logs
         if: needs.dotnet-tests.result == 'failure'
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: ci-failure-logs-dotnet
           path: ${{ runner.temp }}/ci-test-logs
@@ -1142,7 +1142,7 @@ jobs:
 
       - name: Download PostgreSQL critical-flow failure logs
         if: needs.backend-postgres-critical-flows.result == 'failure'
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: ci-failure-logs-postgres-critical-flows
           path: ${{ runner.temp }}/postgres-critical-flow-logs
@@ -1150,7 +1150,7 @@ jobs:
 
       - name: Download dependency audit failure logs
         if: needs.backend-dependency-audit.result == 'failure'
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: ci-failure-logs-dependency-audit
           path: ${{ runner.temp }}/dependency-audit-logs
@@ -1158,7 +1158,7 @@ jobs:
 
       - name: Download frontend failure logs
         if: needs.frontend-checks.result == 'failure'
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: ci-failure-logs-frontend
           path: ${{ runner.temp }}/frontend-checks-logs

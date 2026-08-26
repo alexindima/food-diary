@@ -38,8 +38,10 @@ builder.Services.AddJobManagerServices(builder.Configuration);
 builder.Services.AddJobManagerOpenTelemetry(builder.Configuration);
 
 builder.Services.AddHangfire((_, config) => {
-    string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                           ?? throw new InvalidOperationException("DefaultConnection is not configured.");
+    string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (string.IsNullOrWhiteSpace(connectionString)) {
+        throw new InvalidOperationException("DefaultConnection must be supplied through environment variables or user secrets.");
+    }
 
     config
         .UseSimpleAssemblyNameTypeSerializer()

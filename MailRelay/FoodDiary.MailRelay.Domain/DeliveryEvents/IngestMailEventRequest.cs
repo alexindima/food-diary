@@ -7,4 +7,5 @@ public sealed record IngestMailEventRequest(
     string? Classification = null,
     string? ProviderMessageId = null,
     string? Reason = null,
-    DateTimeOffset? OccurredAtUtc = null);
+    DateTimeOffset? OccurredAtUtc = null,
+    string? ProviderEventId = null);

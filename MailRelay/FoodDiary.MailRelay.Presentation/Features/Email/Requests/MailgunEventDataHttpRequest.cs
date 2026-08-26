@@ -5,4 +5,5 @@ public sealed record MailgunEventDataHttpRequest(
     string Recipient,
     string? Id = null,
     string? Severity = null,
-    string? Reason = null);
+    string? Reason = null,
+    MailgunMessageHttpRequest? Message = null);

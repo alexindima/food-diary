@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 151,
     "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 23,
+    "criticalSymbolsWithoutTestReferences": 26,
     "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
@@ -3728,7 +3728,7 @@
         },
         {
           "name": "contentHtml",
-          "type": "SafeHtml | null",
+          "type": "string | null",
           "required": false
         },
         {
@@ -5469,6 +5469,22 @@
       "testReferences": []
     },
     {
+      "name": "Find-LlmWikiIntentOwnership",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Find-LlmWikiIntentOwnership.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
+      "name": "Find-LlmWikiTraceCandidates",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Find-LlmWikiTraceCandidates.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
       "name": "LlmWikiContextScoring",
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiContextScoring.ps1",
@@ -5480,6 +5496,14 @@
       "name": "LlmWikiResearchPrimitives",
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiResearchPrimitives.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
+      "name": "Read-LlmWikiCompiledIndex",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Read-LlmWikiCompiledIndex.ps1",
       "line": 1,
       "testReferenceCount": 0,
       "testReferences": []

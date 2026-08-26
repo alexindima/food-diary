@@ -4,17 +4,17 @@
     {
       "pageId": "index",
       "pagePath": ".llm-wiki/index.md",
-      "pageSha256": "08a0a00cfc3f2f52223fa5049e7fe070f844f3892184bc2735f8208059cf2e7e",
+      "pageSha256": "38036ef8e49f1556bdb83ed6c4a946a88c480c5aabf9e1e11b47f88f627674b0",
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "fbade0d1d8ee469a80ba3c60d8715e81a7fcd7973e0aed1ea8b58b4efde48dc6"
+          "sha256": "708d716605e327e200ccf81416be587a78019109956eeec9859eec3541af6a69"
         }
       ],
-      "reason": "Reviewed after root hook-artifact guidance changed: the change only isolates PID-scoped .NET outputs and preserves shared Wiki caches; this overview remains accurate, while operational behavior is documented in workflow-index-pipeline.",
+      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "70ff5e9c225a74242ac5eb2032aad58b629818ce",
-      "reviewedAtUtc": "2026-08-24T22:42:30.4631086Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T18:45:53.6245241Z"
     },
     {
       "pageId": "module.mail-services",
@@ -82,14 +82,14 @@
       "pageSha256": "1ea0c12ce78af5d45542c40530c4a07ae52fdd0a10b3ab76e7f37e89601f1226",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1",
-          "sha256": "e24baf3b6295515c49fe31581facadcd09091784efdc44aeeb31c001ffb6eae4"
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "c4787d4722c73ec364c5bf74aefecab22e7d1342d8d83f973b32ffcb69e2f864"
         }
       ],
-      "reason": "Ported native git invocations across the tool suite from the PowerShell & call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2>$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1's default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-      "reviewedAtUtc": "2026-08-23T01:47:08.234443Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T18:45:54.5815669Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -98,13 +98,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "fbade0d1d8ee469a80ba3c60d8715e81a7fcd7973e0aed1ea8b58b4efde48dc6"
+          "sha256": "708d716605e327e200ccf81416be587a78019109956eeec9859eec3541af6a69"
         }
       ],
-      "reason": "Reviewed after root hook-artifact guidance changed: the change only isolates PID-scoped .NET outputs and preserves shared Wiki caches; this overview remains accurate, while operational behavior is documented in workflow-index-pipeline.",
+      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "70ff5e9c225a74242ac5eb2032aad58b629818ce",
-      "reviewedAtUtc": "2026-08-24T22:42:30.7605101Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T18:45:56.2051330Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -112,14 +112,18 @@
       "pageSha256": "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
       "sources": [
         {
-          "path": "Directory.Packages.props",
-          "sha256": "c468935b647f50057b666b9ec6af50dde35192f06ffd434a13891dcd615ca6fc"
+          "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+          "sha256": "cb804d3b060eccea863ae8160f465a2e9882e511aad483457e474e93926e0b73"
+        },
+        {
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "c4787d4722c73ec364c5bf74aefecab22e7d1342d8d83f973b32ffcb69e2f864"
         }
       ],
-      "reason": "Microsoft.Data.Sqlite 10.0.11 is centrally pinned, lockfiles are refreshed, the MCP is the sole new consumer, and the generated repository catalog is current.",
+      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "0f638db5cb0a099b921fc3d057e163248b5329cb",
-      "reviewedAtUtc": "2026-08-21T04:29:06.3645594Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T18:45:57.3602320Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -142,14 +146,14 @@
       "pageSha256": "6f8228462ed3f2c01895eccb72a9539e8fe90e102e32bb3e8b2b3927a5937f40",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "5ddc4a78043bd62f01ecea988707ae7ff88938222fec718921afa8f2a369e9fe"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+          "sha256": "0bec8f4cdbac1f00d5153d27bb2fff42b5586c4c79c64a57b8fa43a5129f8ee8"
         }
       ],
-      "reason": "Reviewed answer-evaluation governance, confidence calibration, MCP bridge behavior, and helper extraction against current tools and passing focused/full regressions.",
+      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
-      "reviewedAtUtc": "2026-08-26T16:39:48.7509027Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T18:45:58.0940705Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -173,13 +177,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "945cfdc0a5acb65086cfbb8f4be25036729d73603960682f0db98b3467f54cce"
+          "sha256": "a8da30ff947c0d946b5ec96dec9c1af8afa25751a0ebb53345214a68e7e05524"
         }
       ],
-      "reason": "Reviewed answer-evaluation governance, confidence calibration, MCP bridge behavior, and helper extraction against current tools and passing focused/full regressions.",
+      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
-      "reviewedAtUtc": "2026-08-26T16:39:49.2641165Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T18:45:58.7079465Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -188,17 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "78dc4b09883109ce14eee0442c309a26c43ddbc7d2a757b99d5f1d185ba7ae27"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "f50368947314da30857c581a367ba0c4c5bc3302da7727c5a9d527acd39c1d67"
+          "sha256": "49f326d8c01e6bfb14aafb4a4b6ef3ae6ebbed368ec502f4b319d50da64de603"
         }
       ],
-      "reason": "Reviewed regenerated backend contract index after notification scheduler contract changed to Result-returning bounded scheduling and API options/hosted-service registration were updated; corresponding application and API tests cover propagation, capacity, cancellation, and shutdown.",
+      "reason": "Reviewed the final 53-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff after bypass remediation; regenerated all affected indexes, validated distinct provider event/message identity, race-safe inbox claims, read-only freshness signaling, and broad-trace abstention behavior.",
       "baseRef": "HEAD",
-      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
-      "reviewedAtUtc": "2026-08-26T17:05:27.8136646Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T19:01:24.6842741Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -233,17 +233,29 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "09a37af45fe8b4901fc2ef94c789650225eb345581ea996591487035d48a503c",
+      "pageSha256": "b0f85b72b9b077c2dc844daf653575e7178f0ff97641857452ddbf8b0d25b92d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
-          "sha256": "d2824439e4b7783652d7c0a5e090908d03f7443030d29c4a3196809200bbbb24"
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "326ae34eaeabf65829d086d5f3421259d8edd4bab77dfb1030a19b0705d8504c"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
+          "sha256": "7f7eb6b588f22a63769072444009f4aa05866971c30317f14153ffe8e7c20d2b"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextShadow.ps1",
+          "sha256": "ebc31b2410acdd1241ecad739ca89ad91098f9b1f052a93f2c9f2c5eff66fa7e"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "ac098d97ed37e2839140f500f17f1159af35be156d34872dd53a2df1e2d3cd8e"
         }
       ],
-      "reason": "Git-based consumer enumeration preserves the compiled-index migration inventory without requiring ripgrep; code-graph routing and migration reporting remain current.",
+      "reason": "Final source-impact review after all Wiki regression updates: code-graph and query-context pages match the read-only SQLite search contract, JSON-only immutable caching fallback, explicit stale-state abstention, and current quality-index evidence caveats.",
       "baseRef": "HEAD",
-      "gitHead": "8602f0721c9bb578fb641d1485dee01703c28c39",
-      "reviewedAtUtc": "2026-08-25T23:51:07.7239544Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T19:26:03.7068938Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -282,13 +294,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "8a2bcb21d78bbe07e37abb1bb6b59bbd60ce99f89b633c6e40cbba6a8d0e2c85"
+          "sha256": "326ae34eaeabf65829d086d5f3421259d8edd4bab77dfb1030a19b0705d8504c"
         }
       ],
-      "reason": "Reviewed context, integration-scan, and bundle workflow impacts; descriptions remain consistent with the direct bridge, shared scoring helpers, and current query behavior.",
+      "reason": "Updated context regression coverage for the fast SQLite reader: shadow mode explicitly compares against the legacy JSON authority, while immutable query-cache assertions remain scoped to the JSON fallback because SQLite reads intentionally bypass per-query cache writes.",
       "baseRef": "HEAD",
-      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
-      "reviewedAtUtc": "2026-08-26T16:39:50.6865676Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T19:18:48.7344194Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -429,13 +441,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "ede352e01cf168d67ae59fc5e8b0772aff8ee59a338cbb602c7321e6e28be758"
+          "sha256": "f43c1f400fe1c425b493c142bdd6864bf81df75d1eafd7e158487ed0ad2be21d"
         }
       ],
-      "reason": "Reviewed regenerated configuration index for the new Notifications:TestScheduler:MaxPending setting; it is bound and validated at startup, has a safe positive default in appsettings, and is covered by scheduler capacity tests.",
+      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
-      "reviewedAtUtc": "2026-08-26T17:06:03.2675950Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T18:46:02.8862277Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -597,14 +609,26 @@
       "pageSha256": "7cf34e384c94c0427431d4d5b600c1aa2b1cad26fa2eb72f02b0942e6e2240ca",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1",
-          "sha256": "b2dec22d8a1fc30a4f8e327cbc66f88767b21a211cf16bc4d43f08eedae29fd1"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "975c443decb60df672fd277e525af02cd6133ef97d63cf6f93458ab2edc91605"
+        },
+        {
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "c5b912de97a46092cce695627c716ae809e9dd3727d6f5c52b99c7251f5d02db"
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+          "sha256": "9cad7d29b8f23c2532a5dcb0bbb40a4cbbbb3c9492ee5d4a39e9384aa149fb6c"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "ac098d97ed37e2839140f500f17f1159af35be156d34872dd53a2df1e2d3cd8e"
         }
       ],
-      "reason": "Concurrent index and verification tests now request hidden process windows only on Windows; Unix process behavior and documented index locking, reuse, and verification contracts remain unchanged.",
+      "reason": "Reviewed the final 53-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff after bypass remediation; regenerated all affected indexes, validated distinct provider event/message identity, race-safe inbox claims, read-only freshness signaling, and broad-trace abstention behavior.",
       "baseRef": "HEAD",
-      "gitHead": "01b3bea1d87c6239bdf24aa4a6c3ad1ba2a0f2d8",
-      "reviewedAtUtc": "2026-08-26T00:11:02.3610646Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T19:01:26.2889543Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -798,13 +822,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c0919767d311f1a4e548f480ca9884718879f3b86a9970fd10e3d1ccbe157827"
+          "sha256": "c91c8b6d1fd9cd67f73e36b83cf00bd3c5f3a2b79ac99afa0bbbadf52e11de9f"
+        },
+        {
+          "path": ".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1",
+          "sha256": "c1f39243b8f54f16e874f4a7f55af9f894b537a98d68e505c9bf3c1f22cdfbff"
         }
       ],
-      "reason": "Reviewed regenerated quality index after Wiki evaluation tooling, ranking tests, MCP tests, and notification scheduler tests changed; focused suites and Wiki evaluation gates passed before commit preparation.",
+      "reason": "Final source-impact review after all Wiki regression updates: code-graph and query-context pages match the read-only SQLite search contract, JSON-only immutable caching fallback, explicit stale-state abstention, and current quality-index evidence caveats.",
       "baseRef": "HEAD",
-      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
-      "reviewedAtUtc": "2026-08-26T17:05:28.0906765Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T19:26:04.1545972Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -846,14 +874,14 @@
       "pageSha256": "5e6a677aea63de29735a1273138f3aaab35e410cb1f930a49d44d9270d162480",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-          "sha256": "4eff4c48ba89da9dd21e88efff00ca497bf02834c6738fedd5986124a15624d7"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "975c443decb60df672fd277e525af02cd6133ef97d63cf6f93458ab2edc91605"
         }
       ],
-      "reason": "Reviewed snapshot-aware verification telemetry and removed the remaining release-readiness query-time JSON dependency; focused regressions and SQLite readiness smoke pass.",
+      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
-      "reviewedAtUtc": "2026-08-25T16:57:22.3490294Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T18:46:06.3228776Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -876,14 +904,14 @@
       "pageSha256": "6b362e1e892d8259af8d9c085e45a942632b1331bcdda099af53546e9bf215e4",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
-          "sha256": "d2824439e4b7783652d7c0a5e090908d03f7443030d29c4a3196809200bbbb24"
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "e3a09360da50d5501130dec199315d59706e0cb3e1f437f6bd0c2888bebb851d"
         }
       ],
-      "reason": "Git-based consumer enumeration preserves the compiled-index migration inventory without requiring ripgrep; runtime-topology routing and impact guidance remain current.",
+      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "8602f0721c9bb578fb641d1485dee01703c28c39",
-      "reviewedAtUtc": "2026-08-25T23:51:14.5410753Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T18:46:06.7138266Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -956,13 +984,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "12ef9ff7d77cfbfacc031496933391397edfd2c17c351042cd7f07c16efb38eb"
+          "sha256": "ac098d97ed37e2839140f500f17f1159af35be156d34872dd53a2df1e2d3cd8e"
         }
       ],
-      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
+      "reason": "Reviewed the final 53-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff after bypass remediation; regenerated all affected indexes, validated distinct provider event/message identity, race-safe inbox claims, read-only freshness signaling, and broad-trace abstention behavior.",
       "baseRef": "HEAD",
-      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
-      "reviewedAtUtc": "2026-08-25T20:20:28.8728800Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T19:01:28.5654394Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1015,14 +1043,18 @@
       "pageSha256": "0dc23a14a2f598d67f9e84a22147eb0c2a64bbbb2ad9105dee754ee053a8abda",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiFrontendTraceSqlParity.ps1",
-          "sha256": "f399b333c1a2120b38dcdea2fcd5141cb26a8517e12003705eb9da7b7896b7e2"
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "ca6a901daac2026463353d93fc1d3d382928a901ea04b53f662082babef9a87c"
+        },
+        {
+          "path": ".llm-wiki/generated/frontend-index.json",
+          "sha256": "2484915b530aafeb7f3e4012918714a7b5680d287221ab80a9a4b706e5a9cb7e"
         }
       ],
-      "reason": "Frontend trace and runtime-owner parity retain exact output, source-hash, route-source, and payload-reduction assertions; only shared-runner end-to-end timing now uses a noise-tolerant hang/regression watchdog, so documented trace behavior remains current.",
+      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "d300ef5f6be157e27f9819022c2034fe4cab2faf",
-      "reviewedAtUtc": "2026-08-26T00:34:21.9104429Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T18:46:07.4679457Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1061,13 +1093,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "fbade0d1d8ee469a80ba3c60d8715e81a7fcd7973e0aed1ea8b58b4efde48dc6"
+          "sha256": "708d716605e327e200ccf81416be587a78019109956eeec9859eec3541af6a69"
         }
       ],
-      "reason": "Reviewed after root hook-artifact guidance changed: the change only isolates PID-scoped .NET outputs and preserves shared Wiki caches; this overview remains accurate, while operational behavior is documented in workflow-index-pipeline.",
+      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "70ff5e9c225a74242ac5eb2032aad58b629818ce",
-      "reviewedAtUtc": "2026-08-24T22:42:30.9992828Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T18:46:00.0399123Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1102,17 +1134,17 @@
     {
       "pageId": "workflow.frontend-contract-review",
       "pagePath": ".llm-wiki/workflows/frontend-contract-review.md",
-      "pageSha256": "225c45ee233216765f042957a19f615952f2ca2256542e58d3a7abf02d25d2f2",
+      "pageSha256": "c9bda8503dfd73d482a27bcdfd5ab318a8ebe5bf60a6279d29dbd31458e41995",
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "27bd8f349dec3ddec82bb5784b97e626393be5e1df60acda05a30e661e1c096c"
+          "sha256": "ca6a901daac2026463353d93fc1d3d382928a901ea04b53f662082babef9a87c"
         }
       ],
-      "reason": "Reviewed intentional admin impersonation contract break: JWT response was replaced by a one-time code, both frontend consumers were updated, OpenAPI snapshots pass, and retaining accessToken would preserve the vulnerability.",
+      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "6b27621307bfea7fc295d0a5cfd6a257f9ee2c68",
-      "reviewedAtUtc": "2026-08-23T21:17:41.6560247Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T18:46:04.1217480Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1120,18 +1152,30 @@
       "pageSha256": "930668a8337c26264220ec069d062d4d90d8c52910cb7e00b79576180fe92478",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "f50368947314da30857c581a367ba0c4c5bc3302da7727c5a9d527acd39c1d67"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "da80aade67532790e8c52c02742af153d25e93d2574363fff0c216cb9e9440be"
+        },
+        {
+          "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+          "sha256": "cb804d3b060eccea863ae8160f465a2e9882e511aad483457e474e93926e0b73"
         },
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "8a2bcb21d78bbe07e37abb1bb6b59bbd60ce99f89b633c6e40cbba6a8d0e2c85"
+          "sha256": "326ae34eaeabf65829d086d5f3421259d8edd4bab77dfb1030a19b0705d8504c"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
+          "sha256": "7f7eb6b588f22a63769072444009f4aa05866971c30317f14153ffe8e7c20d2b"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "708d716605e327e200ccf81416be587a78019109956eeec9859eec3541af6a69"
         }
       ],
-      "reason": "Reviewed context, integration-scan, and bundle workflow impacts; descriptions remain consistent with the direct bridge, shared scoring helpers, and current query behavior.",
+      "reason": "Final source-impact review after all Wiki regression updates: code-graph and query-context pages match the read-only SQLite search contract, JSON-only immutable caching fallback, explicit stale-state abstention, and current quality-index evidence caveats.",
       "baseRef": "HEAD",
-      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
-      "reviewedAtUtc": "2026-08-26T16:39:53.9500061Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T19:26:04.5103943Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1140,13 +1184,17 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "12ef9ff7d77cfbfacc031496933391397edfd2c17c351042cd7f07c16efb38eb"
+          "sha256": "ac098d97ed37e2839140f500f17f1159af35be156d34872dd53a2df1e2d3cd8e"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "708d716605e327e200ccf81416be587a78019109956eeec9859eec3541af6a69"
         }
       ],
-      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
+      "reason": "Reviewed the final 53-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff after bypass remediation; regenerated all affected indexes, validated distinct provider event/message identity, race-safe inbox claims, read-only freshness signaling, and broad-trace abstention behavior.",
       "baseRef": "HEAD",
-      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
-      "reviewedAtUtc": "2026-08-25T20:20:28.5415396Z"
+      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
+      "reviewedAtUtc": "2026-08-26T19:01:27.9843484Z"
     }
   ]
 }

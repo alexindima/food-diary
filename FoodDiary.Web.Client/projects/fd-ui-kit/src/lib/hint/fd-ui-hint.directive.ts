@@ -2,7 +2,6 @@ import { type ConnectedPosition, Overlay, type OverlayRef } from '@angular/cdk/o
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import { booleanAttribute, DestroyRef, Directive, ElementRef, inject, input, TemplateRef } from '@angular/core';
-import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 
 import { FD_UI_HINT_SHOW_DELAY_MS } from './fd-ui-hint.tokens';
 import { FdUiHintOverlayComponent } from './fd-ui-hint-overlay';
@@ -106,7 +105,6 @@ export class FdUiHintDirective {
 
     private readonly overlay = inject(Overlay);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly sanitizer = inject(DomSanitizer);
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
     private readonly tooltipId = `fd-ui-hint-${nextHintId++}`;
@@ -224,7 +222,7 @@ export class FdUiHintDirective {
         } else if (this.fdUiHintHtml()) {
             ref.setInput('contentTemplate', null);
             ref.setInput('contentText', null);
-            ref.setInput('contentHtml', this.toSafeHtml(content));
+            ref.setInput('contentHtml', content);
         } else {
             ref.setInput('contentTemplate', null);
             ref.setInput('contentText', content);
@@ -298,10 +296,6 @@ export class FdUiHintDirective {
         }
 
         host.removeAttribute('aria-describedby');
-    }
-
-    private toSafeHtml(content: string): SafeHtml {
-        return this.sanitizer.bypassSecurityTrustHtml(content);
     }
 
     private clearTimers(): void {

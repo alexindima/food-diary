@@ -105,13 +105,19 @@ turning an already-successful query into a failure.
 Reads parse the cached payload as JSON before reuse. A truncated or otherwise
 invalid entry is deleted and treated as a miss, preventing derived-command
 success with missing structured data after a crash or interrupted write.
-Before a read-only facade that composes context, diff, task brief, research,
-planning, rollout, ownership, backend contracts, or frontend contracts creates
-its isolated Git snapshot, it
-incrementally refreshes the SQLite code graph. The snapshot copies that
-projection and its dependency fingerprint, so compiled catalog/symbol and
-contract-query reads verify the same normalized source state without mutating
-tracked files inside the snapshot.
+Read-only facade commands consume the already published SQLite projection and
+its dependency fingerprint. They never refresh or regenerate indexes as an
+implicit side effect. Missing or stale projections stop with an explicit
+recovery action; `graph-build`, `update`, and `verify` remain the deliberate
+writer/verification paths. Isolated snapshots use Git status to detect tracked
+or untracked mutations without re-hashing every multi-megabyte compiled index on
+each query.
+
+The table-driven `catalog`, `symbols`, `frontend`, contract, topology, quality,
+configuration, sensitive-data, architecture-health, and module commands are
+readers by default. They return bounded sections from committed projections and
+state that freshness is not verified. `-Check` invokes the corresponding
+generator in verification-only mode; regeneration belongs to `update`.
 
 Adaptive routing asks the task brief to omit focused test-plan construction,
 because route selection consumes scope, risk, ownership, rollout, privacy, and

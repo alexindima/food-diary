@@ -140,6 +140,15 @@ JSON files remain projection sources and explicit parity oracles, never automati
 fallbacks. Quality indexing also measures the Wiki's own non-test PowerShell
 tools and direct regression-script references.
 
+Interactive `context` requests query the SQLite FTS projection directly and
+return ranked candidates with top-level confidence, ambiguity, and explicit
+abstention fields. A read does not refresh the projection: stale or unavailable
+state is reported and must be repaired with `graph-build` or `update`. Broad
+"trace the primary scenario" requests return ranked entry candidates and
+abstain from inventing an end-to-end chain until an exact symbol or endpoint is
+selected. Intent-based `ownership -Query` follows the same calibrated contract;
+path-based ownership remains available through `-ChangedPath`.
+
 `get_server_status` exposes bounded SQL-route health under
 `runtimeMetrics.contextRouting`. The persistent sample contains only timestamp,
 route, normalized fallback category, duration, and refresh outcome. It never
@@ -167,6 +176,8 @@ The unified developer entrypoint is:
 ./.llm-wiki/wiki.ps1 verify-full
 ./.llm-wiki/wiki.ps1 workspace-policy -FailOnInvalid
 ./.llm-wiki/wiki.ps1 context -Module Billing -ChangeType Api
+./.llm-wiki/wiki.ps1 catalog -Format Json -Limit 20
+./.llm-wiki/wiki.ps1 ownership -Query "billing renewal"
 ./.llm-wiki/wiki.ps1 brief
 ./.llm-wiki/wiki.ps1 plan -Objective "Describe the intended outcome"
 ./.llm-wiki/wiki.ps1 packet -Objective "Describe the intended outcome" -OutputPath .artifacts/llm-wiki/change-packet.json
@@ -324,6 +335,9 @@ Verify the wiki from the repository root:
 Regenerate and verify the machine-readable repository catalog:
 
 ```powershell
+./.llm-wiki/wiki.ps1 catalog                  # read the compiled projection
+./.llm-wiki/wiki.ps1 catalog -Check           # verify freshness without writing
+./.llm-wiki/wiki.ps1 update -AffectedOnly     # regenerate affected projections
 ./.llm-wiki/tools/Build-LlmWikiCatalog.ps1
 ./.llm-wiki/tools/Build-LlmWikiCatalog.ps1 -Check
 ./.llm-wiki/tools/Build-LlmWikiModulePages.ps1

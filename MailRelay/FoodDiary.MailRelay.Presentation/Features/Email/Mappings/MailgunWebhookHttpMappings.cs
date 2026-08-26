@@ -1,4 +1,5 @@
 using FoodDiary.MailRelay.Presentation.Features.Email.Requests;
+using System.Diagnostics;
 
 namespace FoodDiary.MailRelay.Presentation.Features.Email.Mappings;
 
@@ -11,29 +12,36 @@ public static class MailgunWebhookHttpMappings {
         error = null;
 
         string eventType = request.EventData.Event.Trim().ToLowerInvariant();
+        if (eventType is not ("complained" or "failed" or "bounced")) {
+            error = $"Unsupported Mailgun event '{request.EventData.Event}'.";
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(request.EventData.Id)) {
+            error = "Mailgun event-data.id is required for replay protection.";
+            return false;
+        }
+
+        string? providerMessageId = request.EventData.Message?.Headers?.MessageId;
         deliveryEvent = eventType switch {
             "complained" => new IngestMailEventRequest(
                 "complaint",
                 request.EventData.Recipient,
                 "mailgun-webhook",
                 Classification: null,
-                request.EventData.Id,
-                request.EventData.Reason ?? "complaint"),
+                providerMessageId,
+                request.EventData.Reason ?? "complaint",
+                ProviderEventId: request.EventData.Id),
             "failed" or "bounced" => new IngestMailEventRequest(
                 "bounce",
                 request.EventData.Recipient,
                 "mailgun-webhook",
                 string.Equals(request.EventData.Severity, "permanent", StringComparison.OrdinalIgnoreCase) ? "hard" : "soft",
-                request.EventData.Id,
-                request.EventData.Reason),
-            _ => null,
+                providerMessageId,
+                request.EventData.Reason,
+                ProviderEventId: request.EventData.Id),
+            _ => throw new UnreachableException(),
         };
-
-        if (deliveryEvent is not null) {
-            return true;
-        }
-
-        error = $"Unsupported Mailgun event '{request.EventData.Event}'.";
-        return false;
+        return true;
     }
 }
