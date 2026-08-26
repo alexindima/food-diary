@@ -398,7 +398,34 @@ jobs:
               echo "Required production variable is missing: $name"
               exit 1
             fi
-          done'
+          done
+
+          if grep -qE "^S3__(AccessKeyId|SecretAccessKey|Region|Bucket|StagingBucket|ServiceUrl|PublicBaseUrl)=.+$" "$env_file"; then
+            s3_required="S3__AccessKeyId S3__SecretAccessKey S3__Bucket S3__StagingBucket"
+            for name in $s3_required; do
+              if ! grep -qE "^${name}=.+$" "$env_file"; then
+                echo "Configured S3 storage is missing required production variable: $name"
+                exit 1
+              fi
+            done
+
+            if ! grep -qE "^S3__(Region|ServiceUrl)=.+$" "$env_file"; then
+              echo "Configured S3 storage requires S3__Region or S3__ServiceUrl"
+              exit 1
+            fi
+
+            bucket=$(sed -n "s/^S3__Bucket=//p" "$env_file" | tail -n 1)
+            staging_bucket=$(sed -n "s/^S3__StagingBucket=//p" "$env_file" | tail -n 1)
+            if [ "$bucket" = "$staging_bucket" ]; then
+              echo "S3__Bucket and S3__StagingBucket must be distinct"
+              exit 1
+            fi
+
+            if ! grep -qE "^S3__AllowPublicImageAccess=true$" "$env_file"; then
+              echo "Configured S3 storage requires S3__AllowPublicImageAccess=true"
+              exit 1
+            fi
+          fi'
 
       - name: Record failure step
         if: always() && steps.verify_server_env.outcome == 'failure'

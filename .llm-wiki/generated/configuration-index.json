@@ -4,7 +4,7 @@
     "optionTypes": 56,
     "configurationFiles": 7,
     "configurationKeys": 262,
-    "environmentVariables": 187
+    "environmentVariables": 188
   },
   "optionTypes": [
     {
@@ -1216,6 +1216,7 @@
         "S3__Region",
         "S3__SecretAccessKey",
         "S3__ServiceUrl",
+        "S3__StagingBucket",
         "Stripe__CancelUrl",
         "Stripe__PortalReturnUrl",
         "Stripe__PremiumMonthlyPriceId",
