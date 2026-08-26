@@ -1,6 +1,8 @@
 using FoodDiary.Application.Runtime;
 using FoodDiary.Application.Billing;
+using FoodDiary.Application.Dietologist;
 using FoodDiary.Application.Fasting;
+using FoodDiary.Application.Favorites;
 using FoodDiary.Application.Gamification;
 using FoodDiary.Application.Identity;
 using FoodDiary.Application.Images;
@@ -8,6 +10,7 @@ using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Meals;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Application.Users;
+using FoodDiary.Application.WeeklyGoals;
 using FoodDiary.Infrastructure;
 using FoodDiary.Integrations;
 using FoodDiary.JobManager.Services;
@@ -27,6 +30,7 @@ public sealed class DependencyInjectionTests {
         ServiceCollection services = CreateProductionServices(configuration);
 
         using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions {
+            ValidateOnBuild = true,
             ValidateScopes = true,
         });
         using IServiceScope scope = provider.CreateScope();
@@ -110,15 +114,19 @@ public sealed class DependencyInjectionTests {
         services.AddApplicationRuntime();
         services.AddUsersModule();
         services.AddBillingModule();
+        services.AddDietologistModule();
         services.AddFastingModule();
+        services.AddFavoritesModule();
         services.AddGamificationModule();
         services.AddIdentityModule();
         services.AddImagesModule();
         services.AddMarketingModule();
         services.AddMealsModule();
         services.AddNotificationsModule();
+        services.AddWeeklyGoalsModule();
         services.AddInfrastructure(configuration);
         services.AddIntegrations(configuration);
+        services.AddDataProtection();
         services.AddNotificationResources();
         services.AddJobManagerServices(configuration);
         services.AddJobManagerOpenTelemetry(configuration);

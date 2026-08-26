@@ -55,6 +55,10 @@ if (command is null) {
 }
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+builder.ConfigureContainer(new DefaultServiceProviderFactory(new ServiceProviderOptions {
+    ValidateOnBuild = false,
+    ValidateScopes = builder.Environment.IsDevelopment(),
+}));
 builder.Configuration.AddEnvironmentVariables("FOODDIARY_");
 
 string webApiSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "FoodDiary.Web.Api");

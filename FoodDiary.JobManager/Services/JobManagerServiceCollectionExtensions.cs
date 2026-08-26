@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Dietologist.Services;
 
@@ -95,6 +96,8 @@ public static class JobManagerServiceCollectionExtensions {
         }
 
         private void AddJobManagerJobs() {
+            services.AddScoped<IEmailVerificationNotifier, NoOpEmailVerificationNotifier>();
+            services.AddSingleton<INotificationTestScheduler, UnavailableNotificationTestScheduler>();
             services.AddScoped<INotificationPusher, NoOpNotificationPusher>();
             services.AddTransient<ImageCleanupJob>();
             services.AddTransient<BillingRenewalJob>();

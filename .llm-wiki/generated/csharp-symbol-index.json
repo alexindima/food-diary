@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3465,
-    "symbols": 3472,
+    "sourceFiles": 3467,
+    "symbols": 3474,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 241,
+    "dependencyInjectionRegistrations": 243,
     "kinds": {
-      "class": 1805,
+      "class": 1807,
       "enum": 62,
       "interface": 423,
       "record": 1062,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 63,
-      "Other": 1339,
+      "Other": 1341,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -17573,7 +17573,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 393
+      "line": 397
     },
     {
       "name": "UsdaCsvReader",
@@ -18021,7 +18021,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 60
+      "line": 63
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -18189,7 +18189,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "JobManagerTelemetry",
@@ -18218,6 +18218,13 @@
       "role": "Options",
       "path": "FoodDiary.JobManager/Services/MarketingAttributionCleanupOptions.cs",
       "line": 2
+    },
+    {
+      "name": "NoOpEmailVerificationNotifier",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.JobManager/Services/NoOpEmailVerificationNotifier.cs",
+      "line": 4
     },
     {
       "name": "NoOpNotificationPusher",
@@ -18294,6 +18301,13 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/TelemetryPrivacyProcessor.cs",
+      "line": 5
+    },
+    {
+      "name": "UnavailableNotificationTestScheduler",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.JobManager/Services/UnavailableNotificationTestScheduler.cs",
       "line": 5
     },
     {
@@ -27447,14 +27461,14 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 122
+      "line": 126
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 123
+      "line": 127
     },
     {
       "service": "IGoogleTokenValidator",
@@ -27531,21 +27545,35 @@
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 52
+      "line": 55
+    },
+    {
+      "service": "IEmailVerificationNotifier",
+      "implementation": "NoOpEmailVerificationNotifier",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
+      "line": 99
+    },
+    {
+      "service": "INotificationTestScheduler",
+      "implementation": "UnavailableNotificationTestScheduler",
+      "lifetime": "Singleton",
+      "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
+      "line": 100
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 98
+      "line": 101
     },
     {
       "service": "IJobExecutionStateTracker",
       "implementation": "JobExecutionStateTracker",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 120
+      "line": 123
     },
     {
       "service": "INotificationTextRenderer",

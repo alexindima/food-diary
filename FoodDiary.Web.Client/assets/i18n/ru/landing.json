@@ -1,4 +1,14 @@
 {
+    "DASHBOARD": {
+        "DAY_SUMMARY": {
+            "TITLE": "Сводка дня",
+            "GOAL_MARKER": "Цель по нутриенту",
+            "CALORIE_PROGRESS": "Прогресс калорий за день",
+            "REMAINING": "Осталось {{value}} {{unit}}",
+            "EXCEEDED_BY": "Превышено на {{value}} {{unit}}",
+            "TARGET_REACHED": "Цель достигнута"
+        }
+    },
     "LANDING_HERO": {
         "OVERLINE": "Дневник питания и счётчик калорий",
         "HEADLINE": "Питание и прогресс — без таблиц и хаоса",

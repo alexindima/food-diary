@@ -24,6 +24,7 @@ public sealed class JobManagerGuardrailTests {
             "AddBillingModule",
             "AddDietologistModule",
             "AddFastingModule",
+            "AddFavoritesModule",
             "AddGamificationModule",
             "AddIdentityModule",
             "AddImagesModule",

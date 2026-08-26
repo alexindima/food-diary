@@ -1,4 +1,14 @@
 {
+    "DASHBOARD": {
+        "DAY_SUMMARY": {
+            "TITLE": "Day summary",
+            "GOAL_MARKER": "Nutrient goal",
+            "CALORIE_PROGRESS": "Daily calorie progress",
+            "REMAINING": "{{value}} {{unit}} remaining",
+            "EXCEEDED_BY": "Exceeded by {{value}} {{unit}}",
+            "TARGET_REACHED": "Target reached"
+        }
+    },
     "LANDING_HERO": {
         "OVERLINE": "Food diary and calorie counter",
         "HEADLINE": "Nutrition and progress — without spreadsheets or chaos",

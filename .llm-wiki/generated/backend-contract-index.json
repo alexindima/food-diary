@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1065,
     "ambiguousContracts": 3,
-    "consumerEdges": 7493,
-    "productionConsumerEdges": 4528,
+    "consumerEdges": 7497,
+    "productionConsumerEdges": 4532,
     "testConsumerEdges": 2965,
     "consumedContracts": 1065,
     "unconsumedContracts": 0
@@ -59277,6 +59277,32 @@
         "FoodDiary.Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEmailVerificationNotifier",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.JobManager/Services/NoOpEmailVerificationNotifier.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEmailVerificationNotifier",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
       "isTest": false,
       "referenceCount": 1
@@ -71081,6 +71107,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationTestScheduler",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationTestScheduler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationTestScheduler",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationTestScheduler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.JobManager/Services/UnavailableNotificationTestScheduler.cs",
       "isTest": false,
       "referenceCount": 1
     },

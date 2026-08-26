@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4678,
+    "productionFiles": 4680,
     "wikiToolFiles": 197,
     "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 772,
@@ -22370,11 +22370,11 @@
     },
     {
       "path": "FoodDiary.Initializer/Program.cs",
-      "nonBlankLines": 358,
+      "nonBlankLines": 362,
       "decisionPoints": 41,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 68.66
+      "structuralRiskScore": 68.74
     },
     {
       "path": "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -22890,11 +22890,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Program.cs",
-      "nonBlankLines": 53,
+      "nonBlankLines": 56,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.56
+      "structuralRiskScore": 2.62
     },
     {
       "path": "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -23082,11 +23082,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "nonBlankLines": 116,
+      "nonBlankLines": 119,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.32
+      "structuralRiskScore": 2.38
     },
     {
       "path": "FoodDiary.JobManager/Services/JobManagerTelemetry.cs",
@@ -23119,6 +23119,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.24
+    },
+    {
+      "path": "FoodDiary.JobManager/Services/NoOpEmailVerificationNotifier.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
     },
     {
       "path": "FoodDiary.JobManager/Services/NoOpNotificationPusher.cs",
@@ -23207,6 +23215,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 17.54
+    },
+    {
+      "path": "FoodDiary.JobManager/Services/UnavailableNotificationTestScheduler.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
     },
     {
       "path": "FoodDiary.JobManager/Services/UserCleanupJob.cs",
