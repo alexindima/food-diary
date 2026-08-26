@@ -1,6 +1,6 @@
 FROM postgres:18-alpine@sha256:d3e1620b530c944afa6e887d22eb899824da68e19c52024bf98f5220c88a65b2
 
-RUN apk add --no-cache openssl=3.5.7-r0
+RUN apk add --no-cache openssl=3.5.8-r0
 
 COPY scripts/initialize-mail-inbox-postgres-tls.sh /scripts/initialize-mail-inbox-postgres-tls.sh
 
