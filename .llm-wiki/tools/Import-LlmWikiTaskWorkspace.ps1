@@ -79,13 +79,15 @@ $changedPaths = @(
         ForEach-Object { Assert-SafeChangedPath $_ } |
         Select-Object -Unique
 )
-$allowedPatterns = if ($changedPaths.Count -gt 0) {
-    @($changedPaths | ForEach-Object { '^' + [regex]::Escape($_) + '$' })
-} else {
-    @($handoff.scope.allowedPathPatterns | ForEach-Object { [string]$_ } | Where-Object {
-        -not [string]::IsNullOrWhiteSpace($_)
-    })
-}
+$allowedPatterns = @(
+    if ($changedPaths.Count -gt 0) {
+        $changedPaths | ForEach-Object { '^' + [regex]::Escape($_) + '$' }
+    } else {
+        $handoff.scope.allowedPathPatterns | ForEach-Object { [string]$_ } | Where-Object {
+            -not [string]::IsNullOrWhiteSpace($_)
+        }
+    }
+)
 if ($allowedPatterns.Count -eq 0) {
     throw 'Import package has neither changed paths nor an allowed-path scope contract.'
 }
@@ -94,20 +96,20 @@ $excludedPatterns = @($handoff.scope.excludedPathPatterns | ForEach-Object { [st
 })
 
 $sourceEntries = @($handoff.journal.entries)
-$journalPlan = if ($SkipJournal) {
-    @()
-} else {
-    @($sourceEntries | ForEach-Object {
-        $sourceType = [string]$_.type
-        $sourceStatus = [string]$_.status
-        [pscustomobject][ordered]@{
-            sourceId = [string]$_.id
-            type = $(if ($sourceType -eq 'blocker' -and $sourceStatus -eq 'open') { 'blocker' } elseif ($sourceType -in @('decision', 'assumption', 'learning', 'note')) { $sourceType } else { 'learning' })
-            text = "[Imported $([string]$_.id)/$sourceStatus] $([string]$_.text)"
-            rationale = $(if (-not [string]::IsNullOrWhiteSpace([string]$_.resolution)) { "Source resolution: $([string]$_.resolution)" } else { [string]$_.rationale })
+$journalPlan = @(
+    if (-not $SkipJournal) {
+        $sourceEntries | ForEach-Object {
+            $sourceType = [string]$_.type
+            $sourceStatus = [string]$_.status
+            [pscustomobject][ordered]@{
+                sourceId = [string]$_.id
+                type = $(if ($sourceType -eq 'blocker' -and $sourceStatus -eq 'open') { 'blocker' } elseif ($sourceType -in @('decision', 'assumption', 'learning', 'note')) { $sourceType } else { 'learning' })
+                text = "[Imported $([string]$_.id)/$sourceStatus] $([string]$_.text)"
+                rationale = $(if (-not [string]::IsNullOrWhiteSpace([string]$_.resolution)) { "Source resolution: $([string]$_.resolution)" } else { [string]$_.rationale })
+            }
         }
-    })
-}
+    }
+)
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     valid = $true

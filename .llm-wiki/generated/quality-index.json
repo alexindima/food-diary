@@ -1442,11 +1442,11 @@
     },
     {
       "path": ".llm-wiki/tools/Import-LlmWikiTaskWorkspace.ps1",
-      "nonBlankLines": 203,
+      "nonBlankLines": 205,
       "decisionPoints": 29,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 49.56
+      "structuralRiskScore": 49.6
     },
     {
       "path": ".llm-wiki/tools/Initialize-LlmWikiTaskWorkspace.ps1",

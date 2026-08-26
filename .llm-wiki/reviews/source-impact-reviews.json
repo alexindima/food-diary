@@ -806,17 +806,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ccb74eb210eefddf58ff3a9e9406f1c6f0faf09d8faca6a679c02596fe9c918a"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
-          "sha256": "d2824439e4b7783652d7c0a5e090908d03f7443030d29c4a3196809200bbbb24"
+          "sha256": "db8ae7aff0d5118041b6268c0b0c06da612b2d3113f2f65ca71611c922fab925"
         }
       ],
-      "reason": "Git-based consumer enumeration preserves the compiled-index migration inventory without requiring ripgrep; quality-index routing and review guidance remain current.",
+      "reason": "Reviewed task-workspace documentation against the importer change; portable array normalization fixes 0/1-item runtime behavior without changing the documented export, validation, scope, acceptance-reset, or journal-import contract.",
       "baseRef": "HEAD",
-      "gitHead": "8602f0721c9bb578fb641d1485dee01703c28c39",
-      "reviewedAtUtc": "2026-08-25T23:51:12.8552809Z"
+      "gitHead": "d9e9c586cee3ec887c248d019a8858db78fedfff",
+      "reviewedAtUtc": "2026-08-26T02:36:13.7203011Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -997,14 +993,14 @@
       "pageSha256": "19d360f7ae44b67345aa130aad1b1ab9d343d76912b945a5c75f9ce0627c3818",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-          "sha256": "4eff4c48ba89da9dd21e88efff00ca497bf02834c6738fedd5986124a15624d7"
+          "path": ".llm-wiki/tools/Import-LlmWikiTaskWorkspace.ps1",
+          "sha256": "2bbaf867bbaa767184bde7198a085142fe5659a25bd60db1af90fdcbcfb7ce3a"
         }
       ],
-      "reason": "Reviewed snapshot-aware verification telemetry and removed the remaining release-readiness query-time JSON dependency; focused regressions and SQLite readiness smoke pass.",
+      "reason": "Reviewed task-workspace documentation against the importer change; portable array normalization fixes 0/1-item runtime behavior without changing the documented export, validation, scope, acceptance-reset, or journal-import contract.",
       "baseRef": "HEAD",
-      "gitHead": "f0d1d690bbabb8eb7b9d0af26d0bbc1d3823a0f5",
-      "reviewedAtUtc": "2026-08-25T16:57:22.6633263Z"
+      "gitHead": "d9e9c586cee3ec887c248d019a8858db78fedfff",
+      "reviewedAtUtc": "2026-08-26T02:36:14.2319754Z"
     },
     {
       "pageId": "workflow-test-plan",
