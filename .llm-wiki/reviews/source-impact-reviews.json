@@ -1024,17 +1024,17 @@
     {
       "pageId": "workflow-trace-feature",
       "pagePath": ".llm-wiki/workflows/trace-feature.md",
-      "pageSha256": "e1655efc476bf4c727322d870d5951e28a7f1165ff29555671079e5ffa61f874",
+      "pageSha256": "0dc23a14a2f598d67f9e84a22147eb0c2a64bbbb2ad9105dee754ee053a8abda",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "27bd8f349dec3ddec82bb5784b97e626393be5e1df60acda05a30e661e1c096c"
+          "path": ".llm-wiki/tools/Test-LlmWikiFrontendTraceSqlParity.ps1",
+          "sha256": "f399b333c1a2120b38dcdea2fcd5141cb26a8517e12003705eb9da7b7896b7e2"
         }
       ],
-      "reason": "Reviewed regenerated repository and frontend trace indexes against the changed Identity-Users-Admin flow; generated navigation matches the implementation and current scoped guides.",
+      "reason": "Frontend trace and runtime-owner parity retain exact output, source-hash, route-source, and payload-reduction assertions; only shared-runner end-to-end timing now uses a noise-tolerant hang/regression watchdog, so documented trace behavior remains current.",
       "baseRef": "HEAD",
-      "gitHead": "6b27621307bfea7fc295d0a5cfd6a257f9ee2c68",
-      "reviewedAtUtc": "2026-08-23T21:17:45.1767644Z"
+      "gitHead": "d300ef5f6be157e27f9819022c2034fe4cab2faf",
+      "reviewedAtUtc": "2026-08-26T00:34:21.9104429Z"
     },
     {
       "pageId": "workflow-verification-planner",

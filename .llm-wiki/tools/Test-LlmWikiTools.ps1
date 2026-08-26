@@ -807,10 +807,14 @@ Assert-Wiki (-not (Test-LlmWikiPresentationOnlyTemplateDiff $behavioralTemplateD
 
 $routingToolPlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
     -ChangedPath '.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1') -join [Environment]::NewLine
-Assert-Wiki ($routingToolPlanText -match 'Affected index tools:\s*$' -and $routingToolPlanText -notmatch 'Build-LlmWiki') 'Routing-only Wiki change unnecessarily selected compiled indexes.'
+Assert-Wiki ($routingToolPlanText -match 'Build-LlmWikiQualityIndex.ps1' -and
+    $routingToolPlanText -match 'Build-LlmWikiArchitectureHealthIndex.ps1' -and
+    $routingToolPlanText -notmatch 'Build-LlmWiki(?:Catalog|SymbolIndex|FrontendIndex|FrontendContractIndex|BackendContractIndex|DomainDataIndex|ConfigurationIndex|RuntimeTopology|SensitiveDataIndex|ModulePages)\.ps1') 'Routing-only Wiki change selected an incorrect compiled-index set.'
 $wikiTestPlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
     -ChangedPath '.llm-wiki/tools/Test-LlmWikiTools.ps1') -join [Environment]::NewLine
-Assert-Wiki ($wikiTestPlanText -match 'Affected index tools:\s*$' -and $wikiTestPlanText -notmatch 'Build-LlmWiki') 'Wiki test-only change unnecessarily selected compiled indexes.'
+Assert-Wiki ($wikiTestPlanText -match 'Build-LlmWikiQualityIndex.ps1' -and
+    $wikiTestPlanText -match 'Build-LlmWikiArchitectureHealthIndex.ps1' -and
+    $wikiTestPlanText -notmatch 'Build-LlmWiki(?:Catalog|SymbolIndex|FrontendIndex|FrontendContractIndex|BackendContractIndex|DomainDataIndex|ConfigurationIndex|RuntimeTopology|SensitiveDataIndex|ModulePages)\.ps1') 'Wiki test-only change selected an incorrect compiled-index set.'
 $frontendBuilderPlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -AffectedOnly -Plan `
     -ChangedPath '.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1') -join [Environment]::NewLine
 Assert-Wiki ($frontendBuilderPlanText -match 'Build-LlmWikiFrontendIndex.ps1' -and $frontendBuilderPlanText -notmatch 'Build-LlmWikiArchitectureHealthIndex.ps1') 'Frontend-index builder change selected unrelated downstream indexes.'
@@ -2241,18 +2245,31 @@ try {
             $_.priority -gt $_.basePriority
         }).Count -eq 0
     ) 'Verification planner did not apply bounded failure-probability priority boosts.'
-    $historicalFailurePrediction = & (Join-Path $toolsRoot 'Manage-LlmWikiFailurePrediction.ps1') verify `
-        -WorkspacePath $taskWorkspacePath `
-        -Format Json | ConvertFrom-Json
-    $historicalCostForecast = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCost.ps1') verify `
-        -WorkspacePath $taskWorkspacePath `
-        -Format Json | ConvertFrom-Json
-    Assert-Wiki (
-        $historicalFailurePrediction.prediction.predictions[0].signals.verificationHistory -gt 0 -and
-        $historicalFailurePrediction.prediction.predictions[0].telemetryFlaky -and
-        $historicalCostForecast.forecast.estimates[0].verificationCostSource -eq 'blended-history' -and
-        $historicalCostForecast.forecast.estimates[0].telemetryMedianDurationSeconds -eq 20
-    ) 'Failure and cost forecasts did not consume durable verification telemetry.'
+    $failurePredictionBeforeTelemetryRefresh = Get-Content -LiteralPath $failurePredictionPath -Raw
+    $verificationCostBeforeTelemetryRefresh = Get-Content -LiteralPath $verificationCostPath -Raw
+    try {
+        $historicalFailurePrediction = & (Join-Path $toolsRoot 'Manage-LlmWikiFailurePrediction.ps1') create `
+            -WorkspacePath $taskWorkspacePath `
+            -AsOfUtc ([DateTime]'2026-01-01T00:14:00Z') `
+            -Format Json | ConvertFrom-Json
+        $historicalCostForecast = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCost.ps1') create `
+            -WorkspacePath $taskWorkspacePath `
+            -AsOfUtc ([DateTime]'2026-01-01T00:14:00Z') `
+            -Format Json | ConvertFrom-Json
+        $historicalFailureEntry = $historicalFailurePrediction.prediction.predictions | Where-Object checkId -eq 'architecture-tests' | Select-Object -First 1
+        $historicalCostEntry = $historicalCostForecast.forecast.estimates | Where-Object checkId -eq 'architecture-tests' | Select-Object -First 1
+        Assert-Wiki (
+            $null -ne $historicalFailureEntry -and
+            $null -ne $historicalCostEntry -and
+            $historicalFailureEntry.signals.verificationHistory -gt 0 -and
+            $historicalFailureEntry.telemetryFlaky -and
+            $historicalCostEntry.verificationCostSource -eq 'blended-history' -and
+            $historicalCostEntry.telemetryMedianDurationSeconds -eq 25
+        ) 'Failure and cost forecasts did not consume durable verification telemetry.'
+    } finally {
+        [IO.File]::WriteAllText($failurePredictionPath, $failurePredictionBeforeTelemetryRefresh, [Text.UTF8Encoding]::new($false))
+        [IO.File]::WriteAllText($verificationCostPath, $verificationCostBeforeTelemetryRefresh, [Text.UTF8Encoding]::new($false))
+    }
     $riskCalibrationPath = Join-Path $absoluteTaskWorkspacePath 'risk-calibration.json'
     $riskCalibration = & (Join-Path $toolsRoot 'Manage-LlmWikiRiskCalibration.ps1') verify `
         -WorkspacePath $taskWorkspacePath `
