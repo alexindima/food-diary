@@ -609,14 +609,14 @@
       "pageSha256": "7cf34e384c94c0427431d4d5b600c1aa2b1cad26fa2eb72f02b0942e6e2240ca",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
-          "sha256": "d2824439e4b7783652d7c0a5e090908d03f7443030d29c4a3196809200bbbb24"
+          "path": ".llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1",
+          "sha256": "b2dec22d8a1fc30a4f8e327cbc66f88767b21a211cf16bc4d43f08eedae29fd1"
         }
       ],
-      "reason": "Git-based consumer enumeration preserves the compiled-index migration inventory without requiring ripgrep; index-pipeline behavior remains current.",
+      "reason": "Concurrent index and verification tests now request hidden process windows only on Windows; Unix process behavior and documented index locking, reuse, and verification contracts remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "8602f0721c9bb578fb641d1485dee01703c28c39",
-      "reviewedAtUtc": "2026-08-25T23:51:11.0705785Z"
+      "gitHead": "01b3bea1d87c6239bdf24aa4a6c3ad1ba2a0f2d8",
+      "reviewedAtUtc": "2026-08-26T00:11:02.3610646Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",

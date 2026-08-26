@@ -72,19 +72,23 @@ try {
     [IO.File]::WriteAllText($fakeWikiPath, "param([string]`$Command, [string]`$Probe)`nif (`$Command -ne 'verify' -or `$Probe -ne 'ok') { throw 'worker arguments were not forwarded' }`nWrite-Host 'worker-probe-ok'`n", [Text.UTF8Encoding]::new($false))
     [IO.File]::WriteAllText($argumentsPath, '{"Probe":"ok"}', [Text.UTF8Encoding]::new($false))
     $shellPath = (Get-Process -Id $PID).Path
-    $process = Start-Process -FilePath $shellPath -ArgumentList @(
+    $windowParameters = @{}
+    if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
+        $windowParameters.WindowStyle = 'Hidden'
+    }
+    $process = Start-Process @windowParameters -FilePath $shellPath -ArgumentList @(
         '-NoLogo', '-NoProfile', '-File', (Join-Path $PSScriptRoot 'Start-LlmWikiVerifyWorker.ps1'),
         '-WikiPath', $fakeWikiPath, '-ArgumentsPath', $argumentsPath, '-LogPath', $logPath
-    ) -Wait -PassThru -WindowStyle Hidden
+    ) -Wait -PassThru
     Assert-CriticalTool ($process.ExitCode -eq 0) 'Verify worker did not propagate a successful invocation.'
     Assert-CriticalTool ((Get-Content -LiteralPath $logPath -Raw) -match 'worker-probe-ok') 'Verify worker transcript omitted child output.'
 
     [IO.File]::WriteAllText($fakeWikiPath, "param([string]`$Command, [string]`$Probe)`nthrow 'worker-probe-failed'`n", [Text.UTF8Encoding]::new($false))
     $failureLogPath = Join-Path $fixtureRoot 'worker-failure.log'
-    $failedProcess = Start-Process -FilePath $shellPath -ArgumentList @(
+    $failedProcess = Start-Process @windowParameters -FilePath $shellPath -ArgumentList @(
         '-NoLogo', '-NoProfile', '-File', (Join-Path $PSScriptRoot 'Start-LlmWikiVerifyWorker.ps1'),
         '-WikiPath', $fakeWikiPath, '-ArgumentsPath', $argumentsPath, '-LogPath', $failureLogPath
-    ) -Wait -PassThru -WindowStyle Hidden
+    ) -Wait -PassThru
     Assert-CriticalTool ($failedProcess.ExitCode -ne 0) 'Verify worker swallowed a child failure.'
     Assert-CriticalTool ((Get-Content -LiteralPath $failureLogPath -Raw) -match 'worker-probe-failed') 'Verify worker failure transcript omitted the child error.'
 } finally {

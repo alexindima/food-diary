@@ -19,15 +19,18 @@ $secondOutputPath = Join-Path $testRoot 'second.out.log'
 $secondErrorPath = Join-Path $testRoot 'second.err.log'
 $first = $null
 $second = $null
+$windowParameters = @{}
+if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
+    $windowParameters.WindowStyle = 'Hidden'
+}
 
 try {
-    $first = Start-Process `
+    $first = Start-Process @windowParameters `
         -FilePath $shellPath `
         -ArgumentList $arguments `
         -WorkingDirectory $repositoryRoot `
         -RedirectStandardOutput $firstOutputPath `
         -RedirectStandardError $firstErrorPath `
-        -WindowStyle Hidden `
         -PassThru
 
     $ownershipDeadline = [DateTime]::UtcNow.AddSeconds(45)
@@ -41,13 +44,12 @@ try {
     }
     if ([DateTime]::UtcNow -ge $ownershipDeadline) { throw 'Timed out waiting for the first concurrent refresh to acquire the update lock.' }
 
-    $second = Start-Process `
+    $second = Start-Process @windowParameters `
         -FilePath $shellPath `
         -ArgumentList $arguments `
         -WorkingDirectory $repositoryRoot `
         -RedirectStandardOutput $secondOutputPath `
         -RedirectStandardError $secondErrorPath `
-        -WindowStyle Hidden `
         -PassThru
 
     $first.WaitForExit()

@@ -15,6 +15,10 @@ $shellPath = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $processes = [Collections.Generic.List[Diagnostics.Process]]::new()
 $createdRunDirectories = @()
 $runIdPrefix = "concurrent-test-$PID-$([guid]::NewGuid().ToString('N'))"
+$windowParameters = @{}
+if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
+    $windowParameters.WindowStyle = 'Hidden'
+}
 
 try {
     $null = New-Item -ItemType Directory -Path $fixtureRoot -Force
@@ -25,11 +29,10 @@ try {
         $runId = "$runIdPrefix-$index"
         $stdoutPath = Join-Path $fixtureRoot "verify-$index.stdout.log"
         $stderrPath = Join-Path $fixtureRoot "verify-$index.stderr.log"
-        $process = Start-Process `
+        $process = Start-Process @windowParameters `
             -FilePath $shellPath `
             -ArgumentList @('-NoLogo', '-NoProfile', '-File', "`"$wikiPath`"", 'verify', '-Stage', '"workspace policy"', '-ChangedPath', '.llm-wiki/wiki.ps1', '-VerifyRunId', $runId) `
             -WorkingDirectory $repositoryRoot `
-            -WindowStyle Hidden `
             -RedirectStandardOutput $stdoutPath `
             -RedirectStandardError $stderrPath `
             -PassThru
