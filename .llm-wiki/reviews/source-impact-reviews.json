@@ -806,13 +806,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "db8ae7aff0d5118041b6268c0b0c06da612b2d3113f2f65ca71611c922fab925"
+          "sha256": "b9e7a18b2c0f091366f21e95550d4ce53a2438f8dde55d6ded859fc061d07d44"
         }
       ],
-      "reason": "Reviewed task-workspace documentation against the importer change; portable array normalization fixes 0/1-item runtime behavior without changing the documented export, validation, scope, acceptance-reset, or journal-import contract.",
+      "reason": "Reviewed task-workspace documentation against empty-scope portable initialization; the change enforces the documented shared manifest, acceptance, and evidence requirements without changing workflow inputs or lifecycle semantics.",
       "baseRef": "HEAD",
-      "gitHead": "d9e9c586cee3ec887c248d019a8858db78fedfff",
-      "reviewedAtUtc": "2026-08-26T02:36:13.7203011Z"
+      "gitHead": "0ed1e215e1074c1761fd76d2ae776e75c0036839",
+      "reviewedAtUtc": "2026-08-26T03:09:53.7072014Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -993,14 +993,14 @@
       "pageSha256": "19d360f7ae44b67345aa130aad1b1ab9d343d76912b945a5c75f9ce0627c3818",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Import-LlmWikiTaskWorkspace.ps1",
-          "sha256": "2bbaf867bbaa767184bde7198a085142fe5659a25bd60db1af90fdcbcfb7ce3a"
+          "path": ".llm-wiki/tools/Initialize-LlmWikiTaskWorkspace.ps1",
+          "sha256": "efdf177a053493f400b157066d3cbdfc078e6fbcf2f18d8aa531236aca2faa4a"
         }
       ],
-      "reason": "Reviewed task-workspace documentation against the importer change; portable array normalization fixes 0/1-item runtime behavior without changing the documented export, validation, scope, acceptance-reset, or journal-import contract.",
+      "reason": "Reviewed task-workspace documentation against empty-scope portable initialization; the change enforces the documented shared manifest, acceptance, and evidence requirements without changing workflow inputs or lifecycle semantics.",
       "baseRef": "HEAD",
-      "gitHead": "d9e9c586cee3ec887c248d019a8858db78fedfff",
-      "reviewedAtUtc": "2026-08-26T02:36:14.2319754Z"
+      "gitHead": "0ed1e215e1074c1761fd76d2ae776e75c0036839",
+      "reviewedAtUtc": "2026-08-26T03:09:54.3914884Z"
     },
     {
       "pageId": "workflow-test-plan",

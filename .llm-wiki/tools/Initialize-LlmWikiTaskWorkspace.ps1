@@ -116,6 +116,55 @@ try {
     if ($PSBoundParameters.ContainsKey('HeadRef')) { $evidenceArguments.HeadRef = $HeadRef }
     if ($PSBoundParameters.ContainsKey('ChangedPath')) { $evidenceArguments.ChangedPath = $ChangedPath }
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiEvidence.ps1') init @evidenceArguments | Out-Null
+
+    # The manifest also considers the task objective, while the acceptance and
+    # evidence initializers are primarily path-policy driven. Keep all three
+    # artifacts on the manifest's requirement contract when a portable task has
+    # an allowed-path scope but no concrete changed paths in the new checkout.
+    $manifest = Get-Content -LiteralPath (Join-Path $temporaryAbsolutePath 'change-manifest.json') -Raw | ConvertFrom-Json
+    $acceptance = Get-Content -LiteralPath (Join-Path $temporaryAbsolutePath 'acceptance-matrix.json') -Raw | ConvertFrom-Json
+    $evidence = Get-Content -LiteralPath (Join-Path $temporaryAbsolutePath 'evidence.json') -Raw | ConvertFrom-Json
+    foreach ($requiredCheck in @($manifest.plan.requiredChecks)) {
+        if ([string]$requiredCheck.id -notin @($acceptance.availableEvidence.checks | ForEach-Object { [string]$_.id })) {
+            $acceptance.availableEvidence.checks = @($acceptance.availableEvidence.checks) + [pscustomobject][ordered]@{
+                id = [string]$requiredCheck.id
+                command = [string]$requiredCheck.command
+            }
+        }
+        if ([string]$requiredCheck.id -notin @($evidence.checks | ForEach-Object { [string]$_.id })) {
+            $evidence.checks = @($evidence.checks) + [pscustomobject][ordered]@{
+                id = [string]$requiredCheck.id
+                status = 'pending'
+                command = [string]$requiredCheck.command
+                durationSeconds = $null
+                reason = ''
+            }
+        }
+    }
+    foreach ($requiredReview in @($manifest.plan.reviewObligations)) {
+        if ([string]$requiredReview.id -notin @($acceptance.availableEvidence.reviews | ForEach-Object { [string]$_.id })) {
+            $acceptance.availableEvidence.reviews = @($acceptance.availableEvidence.reviews) + [pscustomobject][ordered]@{
+                id = [string]$requiredReview.id
+                description = [string]$requiredReview.description
+            }
+        }
+        if ([string]$requiredReview.id -notin @($evidence.reviews | ForEach-Object { [string]$_.id })) {
+            $evidence.reviews = @($evidence.reviews) + [pscustomobject][ordered]@{
+                id = [string]$requiredReview.id
+                status = 'pending'
+                description = [string]$requiredReview.description
+                reason = ''
+            }
+        }
+    }
+    [System.IO.File]::WriteAllText(
+        (Join-Path $temporaryAbsolutePath 'acceptance-matrix.json'),
+        (($acceptance | ConvertTo-Json -Depth 15) + [Environment]::NewLine),
+        [System.Text.UTF8Encoding]::new($false))
+    [System.IO.File]::WriteAllText(
+        (Join-Path $temporaryAbsolutePath 'evidence.json'),
+        (($evidence | ConvertTo-Json -Depth 15) + [Environment]::NewLine),
+        [System.Text.UTF8Encoding]::new($false))
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskJournal.ps1') init `
         -WorkspacePath $temporaryRelativePath | Out-Null
 
