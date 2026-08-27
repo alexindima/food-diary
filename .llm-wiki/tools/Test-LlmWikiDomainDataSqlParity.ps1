@@ -137,7 +137,8 @@ if ($warmSqlAverage -ge $warmJsonAverage) {
 $pwsh = (Get-Process -Id $PID).Path
 $coldSqlDurations = [Collections.Generic.List[double]]::new()
 $coldJsonDurations = [Collections.Generic.List[double]]::new()
-for ($iteration = 0; $iteration -lt 4; $iteration++) {
+$coldPairedDeltas = [Collections.Generic.List[double]]::new()
+for ($iteration = 0; $iteration -lt 6; $iteration++) {
     $measureSqlCold = {
         & $pwsh -NoProfile -NonInteractive -File $queryTool -View invariants -Query weight -Limit 30 -Format Json | Out-Null
         if ($LASTEXITCODE -ne 0) { throw 'Cold in-process SQLite domain-data query failed.' }
@@ -147,17 +148,21 @@ for ($iteration = 0; $iteration -lt 4; $iteration++) {
         if ($LASTEXITCODE -ne 0) { throw 'Cold JSON domain-data query failed.' }
     }
     if (($iteration % 2) -eq 0) {
-        $coldJsonDurations.Add((Measure-Command $measureJsonCold).TotalMilliseconds)
-        $coldSqlDurations.Add((Measure-Command $measureSqlCold).TotalMilliseconds)
+        $jsonDuration = (Measure-Command $measureJsonCold).TotalMilliseconds
+        $sqlDuration = (Measure-Command $measureSqlCold).TotalMilliseconds
     } else {
-        $coldSqlDurations.Add((Measure-Command $measureSqlCold).TotalMilliseconds)
-        $coldJsonDurations.Add((Measure-Command $measureJsonCold).TotalMilliseconds)
+        $sqlDuration = (Measure-Command $measureSqlCold).TotalMilliseconds
+        $jsonDuration = (Measure-Command $measureJsonCold).TotalMilliseconds
     }
+    $coldSqlDurations.Add($sqlDuration)
+    $coldJsonDurations.Add($jsonDuration)
+    $coldPairedDeltas.Add($sqlDuration - $jsonDuration)
 }
-$coldSqlMedian = [Math]::Round((@($coldSqlDurations | Sort-Object)[1..2] | Measure-Object -Average).Average, 2)
-$coldJsonMedian = [Math]::Round((@($coldJsonDurations | Sort-Object)[1..2] | Measure-Object -Average).Average, 2)
+$coldSqlMedian = [Math]::Round((@($coldSqlDurations | Sort-Object)[2..3] | Measure-Object -Average).Average, 2)
+$coldJsonMedian = [Math]::Round((@($coldJsonDurations | Sort-Object)[2..3] | Measure-Object -Average).Average, 2)
+$coldPairedDeltaMedian = [Math]::Round((@($coldPairedDeltas | Sort-Object)[2..3] | Measure-Object -Average).Average, 2)
 $coldLoadEnvelope = [Math]::Max(150, [Math]::Round($coldJsonMedian * 0.25, 2))
-if ($coldSqlMedian -gt ($coldJsonMedian + $coldLoadEnvelope)) {
-    throw "In-process SQLite domain-data cold route exceeded its noise-tolerant load envelope: SQL=${coldSqlMedian}ms, JSON=${coldJsonMedian}ms, envelope=${coldLoadEnvelope}ms."
+if ($coldPairedDeltaMedian -gt $coldLoadEnvelope) {
+    throw "In-process SQLite domain-data cold route exceeded its noise-tolerant load envelope: SQL=${coldSqlMedian}ms, JSON=${coldJsonMedian}ms, paired delta=${coldPairedDeltaMedian}ms, envelope=${coldLoadEnvelope}ms."
 }
-Write-Host "LLM Wiki domain-data in-process SQL parity passed: $($cases.Count)/$($cases.Count) cases; warm SQL=${warmSqlAverage}ms/JSON=${warmJsonAverage}ms; cold median SQL=${coldSqlMedian}ms/JSON=${coldJsonMedian}ms; materialized=$($probe._diagnostics.sourceBytesMaterialized)/$($probe._diagnostics.sourceBytesVerified) bytes."
+Write-Host "LLM Wiki domain-data in-process SQL parity passed: $($cases.Count)/$($cases.Count) cases; warm SQL=${warmSqlAverage}ms/JSON=${warmJsonAverage}ms; cold median SQL=${coldSqlMedian}ms/JSON=${coldJsonMedian}ms, paired delta=${coldPairedDeltaMedian}ms; materialized=$($probe._diagnostics.sourceBytesMaterialized)/$($probe._diagnostics.sourceBytesVerified) bytes."

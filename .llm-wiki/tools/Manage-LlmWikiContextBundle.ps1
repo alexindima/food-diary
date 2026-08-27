@@ -191,8 +191,24 @@ if ($Action -eq 'create') {
     foreach ($path in @($packet.brief.focusedTests)) { Add-Candidate $candidates $path 'test' 80 'Focused test selected by the task packet.' $null $false }
     foreach ($item in @($discovered.agentGuides)) { Add-Candidate $candidates $item.path 'guide' (70 + [Math]::Min(20, [int]$item.score)) 'Semantic context search matched an agent guide.' $null $false }
     foreach ($item in @($discovered.wikiPages)) { Add-Candidate $candidates $item.path 'wiki' (65 + [Math]::Min(20, [int]$item.score)) 'Semantic context search matched a Wiki page.' $null $false }
-    foreach ($item in @($discovered.symbols)) { Add-Candidate $candidates $item.path 'symbol' (55 + [Math]::Min(20, [int]$item.score)) "Matched C# symbol '$($item.name)'." ([int]$item.line) $false }
-    foreach ($item in @($discovered.frontendSymbols)) { Add-Candidate $candidates $item.path 'symbol' (55 + [Math]::Min(20, [int]$item.score)) "Matched frontend symbol '$($item.name)'." ([int]$item.line) $false }
+    foreach ($item in @($discovered.symbols)) {
+        $symbolName = if ($null -ne $item.PSObject.Properties['name'] -and -not [string]::IsNullOrWhiteSpace([string]$item.name)) {
+            [string]$item.name
+        } else {
+            [IO.Path]::GetFileNameWithoutExtension([string]$item.path)
+        }
+        $symbolLine = if ($null -ne $item.PSObject.Properties['line'] -and $null -ne $item.line) { [int]$item.line } else { $null }
+        Add-Candidate $candidates $item.path 'symbol' (55 + [Math]::Min(20, [int]$item.score)) "Matched C# symbol '$symbolName'." $symbolLine $false
+    }
+    foreach ($item in @($discovered.frontendSymbols)) {
+        $symbolName = if ($null -ne $item.PSObject.Properties['name'] -and -not [string]::IsNullOrWhiteSpace([string]$item.name)) {
+            [string]$item.name
+        } else {
+            [IO.Path]::GetFileNameWithoutExtension([string]$item.path)
+        }
+        $symbolLine = if ($null -ne $item.PSObject.Properties['line'] -and $null -ne $item.line) { [int]$item.line } else { $null }
+        Add-Candidate $candidates $item.path 'symbol' (55 + [Math]::Min(20, [int]$item.score)) "Matched frontend symbol '$symbolName'." $symbolLine $false
+    }
     foreach ($item in @($discovered.tests)) { Add-Candidate $candidates $item.path 'test' (50 + [Math]::Min(20, [int]$item.score)) 'Semantic context search matched a test.' $null $false }
     foreach ($profile in @($feedbackMetrics.profiles | Where-Object { $_.eligible -and $_.missingCount -gt 0 })) {
         Add-Candidate $candidates ([string]$profile.path) 'feedback-recovery' 68 'Prior terminal tasks reported this context as missing.' $null $false

@@ -93,13 +93,47 @@ $frontendOnlyScope = $ChangeType -eq 'Frontend' -and
     ($scopePaths.Count -eq 0 -or @($scopePaths | Where-Object { $_ -notmatch '^FoodDiary\.Web\.Client/' }).Count -eq 0)
 $compiledIndexStopwatch = [Diagnostics.Stopwatch]::StartNew()
 $compiledIndexDiagnostics = $null
+function Test-ContextScopeMatch([string]$Path, [string]$ScopePath) {
+    $normalizedPath = $Path.Replace('\', '/').TrimEnd('/').ToLowerInvariant()
+    $normalizedScope = $ScopePath.Replace('\', '/').TrimEnd('/').ToLowerInvariant()
+    return $normalizedPath -eq $normalizedScope -or
+        $normalizedPath.StartsWith("$normalizedScope/", [StringComparison]::Ordinal) -or
+        $normalizedScope.StartsWith("$normalizedPath/", [StringComparison]::Ordinal)
+}
+function Select-ContextRecordsWithScopeCoverage([object[]]$Records, [string[]]$Scopes, [int]$Maximum) {
+    $selected = [Collections.Generic.List[object]]::new()
+    foreach ($record in @($Records | Select-Object -First $Maximum)) { $selected.Add($record) }
+    if ($selected.Count -eq 0 -or @($Scopes).Count -eq 0 -or $Maximum -lt @($Scopes).Count) { return @($selected) }
+    foreach ($scope in @($Scopes)) {
+        if (@($selected | Where-Object { Test-ContextScopeMatch ([string]$_.path) $scope }).Count -gt 0) { continue }
+        $scopedCandidate = $Records | Where-Object { Test-ContextScopeMatch ([string]$_.path) $scope } | Select-Object -First 1
+        if ($null -eq $scopedCandidate) { continue }
+        $replacementIndex = -1
+        for ($index = $selected.Count - 1; $index -ge 0; $index--) {
+            $current = $selected[$index]
+            $isOnlyRepresentative = $false
+            foreach ($candidateScope in @($Scopes)) {
+                if ((Test-ContextScopeMatch ([string]$current.path) $candidateScope) -and
+                    @($selected | Where-Object { Test-ContextScopeMatch ([string]$_.path) $candidateScope }).Count -eq 1) {
+                    $isOnlyRepresentative = $true
+                    break
+                }
+            }
+            if (-not $isOnlyRepresentative) { $replacementIndex = $index; break }
+        }
+        if ($replacementIndex -ge 0) {
+            $selected[$replacementIndex] = $scopedCandidate
+        }
+    }
+    return @($selected | Sort-Object rank, path)
+}
 if ($CompiledIndexSource -eq 'Sqlite') {
     $graphStatus = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
         -Action status `
         -SkipRefresh `
         -Format Json | ConvertFrom-Json
     $indexFresh = [bool]$graphStatus.changeSetFresh
-    $searchLimit = [Math]::Min(50, [Math]::Max(20, $Limit * 4))
+    $searchLimit = [Math]::Min(100, [Math]::Max(50, $Limit * 4))
     $sqlResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
         -Action search `
         -Query $searchText `
@@ -126,25 +160,51 @@ if ($CompiledIndexSource -eq 'Sqlite') {
         confidence = [string]$_.confidence
         reasons = @($_.reasons)
     } }
+    $selectionScopes = @($scopePaths)
+    if (-not [string]::IsNullOrWhiteSpace($Module)) {
+        $moduleImplementationScope = "FoodDiary.Application.$Module"
+        if (Test-Path -LiteralPath (Join-Path $repositoryRoot $moduleImplementationScope) -PathType Container) {
+            $selectionScopes += $moduleImplementationScope
+        }
+    }
+    $visibleRecords = @(Select-ContextRecordsWithScopeCoverage $records $selectionScopes $Limit)
     $testRecords = @($records | Where-Object { [bool]$_.isTest } | Select-Object -First $Limit)
     $wikiRecords = @($records | Where-Object { $_.path -match '^(\.llm-wiki/|docs/).+\.md$' } | Select-Object -First $Limit)
     $guideRecords = @($records | Where-Object { $_.path -match '(^|/)AGENTS\.md$' } | Select-Object -First $Limit)
-    $implementationRecords = @($records | Where-Object {
+    $implementationRecordPool = @($records | Where-Object {
         -not [bool]$_.isTest -and $_.path -notmatch '^(\.llm-wiki/|docs/)' -and $_.path -notmatch '(^|/)AGENTS\.md$'
-    } | Select-Object -First $Limit)
-    $frontendRecords = @($implementationRecords | Where-Object { $_.path -match '^FoodDiary\.Web\.Client/' })
+    })
+    $implementationRecords = @(Select-ContextRecordsWithScopeCoverage $implementationRecordPool $selectionScopes $Limit)
+    $frontendRecordPool = @($implementationRecordPool | Where-Object { $_.path -match '^FoodDiary\.Web\.Client/' })
+    $frontendRecords = @(Select-ContextRecordsWithScopeCoverage $frontendRecordPool $scopePaths $Limit)
     $symbolRecords = @($implementationRecords | Where-Object { $_.recordType -eq 'code' -and $_.role -ne 'other' })
+    $modulePagePath = $null
+    $explicitModulePage = if (-not [string]::IsNullOrWhiteSpace($Module)) {
+        $moduleSlug = [regex]::Replace($Module, '([a-z0-9])([A-Z])', '$1-$2').ToLowerInvariant()
+        $modulePagePath = ".llm-wiki/generated/modules/$moduleSlug.md"
+        if (Test-Path -LiteralPath (Join-Path $repositoryRoot $modulePagePath) -PathType Leaf) {
+            [pscustomobject][ordered]@{
+                path = $modulePagePath
+                score = 1000
+                rank = 0
+                confidence = 'high'
+                reasons = @("explicit module $Module")
+            }
+        }
+    }
     $context = [ordered]@{
         query = [ordered]@{ module = $Module; text = $Query; changeType = $ChangeType; scopePaths = $scopePaths }
-        module = $(if ($top.Count -gt 0 -and -not [string]::IsNullOrWhiteSpace([string]$top[0].module)) {
+        module = $(if (-not [string]::IsNullOrWhiteSpace($Module)) {
+            [pscustomobject][ordered]@{ name = $Module; dependencies = @(); consumers = @(); origin = 'explicit-module' }
+        } elseif ($top.Count -gt 0 -and -not [string]::IsNullOrWhiteSpace([string]$top[0].module)) {
             [pscustomobject][ordered]@{ name = [string]$top[0].module; dependencies = @(); consumers = @(); origin = 'sqlite-search' }
         } else { $null })
         confidence = $confidence
         conclusive = $conclusive
         abstained = -not $conclusive
         ambiguityReason = $(if (-not $indexFresh) { 'stale-index' } elseif ($records.Count -eq 0) { 'no-indexed-candidates' } elseif ($ambiguous) { [string]$ranking.ambiguityReason } elseif (-not $conclusive) { 'low-confidence' } else { $null })
-        candidates = @($records | Select-Object -First $Limit)
-        wikiPages = @($wikiRecords | ForEach-Object $toItem)
+        candidates = @($visibleRecords)
+        wikiPages = @($explicitModulePage) + @($wikiRecords | Where-Object path -ne $modulePagePath | ForEach-Object $toItem)
         agentGuides = @($guideRecords | ForEach-Object $toItem)
         projects = @()
         frontendProjects = @()

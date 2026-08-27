@@ -168,12 +168,15 @@ $billingJson = & (Join-Path $toolsRoot 'Find-LlmWikiContext.ps1') `
     -Format Json `
     -Limit 8
 $billing = $billingJson | ConvertFrom-Json
-Assert-Wiki ($billing.module.name -eq 'Billing') 'Billing context did not resolve the extracted application module.'
+Assert-Wiki ($billing.module.name -eq 'Billing' -and $billing.module.origin -eq 'explicit-module') 'Billing context did not preserve the explicitly requested module.'
 $billingWikiPagePaths = @($billing.wikiPages | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['path']) { [string]$_.path } })
 Assert-Wiki ($billingWikiPagePaths -contains '.llm-wiki/generated/modules/billing.md') 'Billing module page is missing from context.'
-Assert-Wiki (@($billing.controllers.name) -contains 'BillingController') 'BillingController is missing from API context.'
-Assert-Wiki (@($billing.projects.name) -contains 'FoodDiary.Application.Billing') 'Billing application project is missing from context.'
-Assert-Wiki (@($billing.symbols | ForEach-Object { if ($_.PSObject.Properties['path']) { [string]$_.path } } | Where-Object { $_ -match '/Billing/' }).Count -gt 0) 'Billing symbols are not ranked into context.'
+Assert-Wiki (@($billing.controllers.path) -contains 'FoodDiary.Presentation.Api/Features/Billing/BillingController.cs') 'BillingController is missing from API context.'
+Assert-Wiki (@($billing.implementationFiles.path | Where-Object { $_ -like 'FoodDiary.Application.Billing/*' }).Count -gt 0) 'Billing application implementation is missing from context.'
+Assert-Wiki (@($billing.implementationFiles | Where-Object {
+    $_.path -match '/Billing/' -and
+    @($_.reasons) -contains 'module Billing'
+}).Count -gt 0) 'Billing implementations are missing ranked module-affinity evidence.'
 Assert-Wiki (@($billing.tests | ForEach-Object { if ($_.PSObject.Properties['path']) { [string]$_.path } } | Where-Object { $_ -match '/Billing/' }).Count -gt 0) 'Billing focused tests are missing from context.'
 
 $frontendContext = & (Join-Path $toolsRoot 'Find-LlmWikiContext.ps1') `
@@ -181,16 +184,16 @@ $frontendContext = & (Join-Path $toolsRoot 'Find-LlmWikiContext.ps1') `
     -ChangeType Frontend `
     -ScopePath 'FoodDiary.Web.Client/src/app/features/dashboard;FoodDiary.Web.Client/src/app/components/shared/ai-input-bar' `
     -Format Json | ConvertFrom-Json
-Assert-Wiki (@($frontendContext.frontendSymbols.name) -contains 'AiPhotoResultComponent') 'Scoped frontend context omitted the AI photo component cluster.'
+Assert-Wiki (@($frontendContext.frontendSymbols.path | Where-Object { $_ -like 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/*' }).Count -gt 0) 'Scoped frontend context omitted the AI photo component cluster.'
 Assert-Wiki (@($frontendContext.projects).Count -eq 0) 'Frontend-only context retained unrelated .NET projects.'
 Assert-Wiki (@($frontendContext.symbols | ForEach-Object { if ($_.PSObject.Properties['path']) { [string]$_.path } } | Where-Object { $_ -match 'MailInbox' }).Count -eq 0) 'Frontend AI context included the unrelated MailInbox cluster.'
 Assert-Wiki (@($frontendContext.query.scopePaths).Count -eq 2) 'Context did not normalize semicolon-delimited planned paths.'
 Assert-Wiki (@($frontendContext.implementationFiles).Count -gt 0) 'Scoped frontend context omitted ranked implementation files.'
 Assert-Wiki (@($frontendContext.implementationFiles | Where-Object {
     $_.PSObject.Properties['path'] -and $_.path -like 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/*' -and
-    $_.provenance -eq 'tracked-source' -and
-    $_.match -in @('path', 'content', 'path-and-content')
-}).Count -gt 0) 'Frontend implementation search omitted scoped provenance and match evidence.'
+    $_.rank -gt 0 -and $_.score -gt 0 -and
+    @($_.reasons) -contains 'planned scope affinity'
+}).Count -gt 0) 'Frontend implementation search omitted scoped ranking and match evidence.'
 
 $diffJson = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') `
     -ChangedPath @(

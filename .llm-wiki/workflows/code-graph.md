@@ -178,7 +178,10 @@ records cannot change the top result's confidence. Margin thresholds and the
 record/change-type compatibility rules live in the shared ranking policy and are
 consumed identically by Node and .NET. A close next candidate is ambiguous; a
 documentation record returned for an implementation change is also deliberately
-low-confidence with `record-type-change-type-mismatch`. A matching basename is
+low-confidence with `record-type-change-type-mismatch`. When several planned
+scopes are supplied and the result limit is large enough to represent them,
+both readers reserve a visible candidate for each scope without changing the
+confidence calculated from the full ranking. A matching basename is
 reported separately as `sameNameCandidateCount`; it is a collision diagnostic,
 not a claim that implementations are semantically equivalent. The SQL evaluator
 reports precision and coverage for every confidence level plus accepted-result

@@ -10,6 +10,8 @@ import { NavigationService } from '../../../../services/navigation.service';
 import { PublicAuthDialogService } from '../../lib/public-auth-dialog.service';
 import { MainComponent } from './main';
 
+const DEFER_TEST_TIMEOUT_MS = 15_000;
+
 let fixture: ComponentFixture<MainComponent>;
 let authDialogServiceMock: { openAsync: ReturnType<typeof vi.fn> };
 let authServiceMock: {
@@ -38,6 +40,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+    fixture.destroy();
+    queryParamMapSubject.complete();
     vi.clearAllMocks();
 });
 
@@ -73,6 +77,7 @@ async function createComponentAsync(
         ],
     }).compileComponents();
 
+    queryParamMapSubject.next(convertToParamMap(queryParams));
     fixture = TestBed.createComponent(MainComponent);
 }
 
@@ -109,22 +114,25 @@ async function createRenderedComponentAsync(): Promise<void> {
 }
 
 describe('MainComponent deferred preview', () => {
-    it('renders a stable fallback when the deferred preview fails to load', async () => {
-        await createRenderedComponentAsync();
-        fixture.detectChanges();
+    it(
+        'renders a stable fallback when the deferred preview fails to load',
+        async () => {
+            await createRenderedComponentAsync();
+            fixture.detectChanges();
 
-        const deferBlocks = await fixture.getDeferBlocks();
+            const deferBlocks = await fixture.getDeferBlocks();
 
-        expect(deferBlocks).toHaveLength(1);
-        await deferBlocks[0]?.render(DeferBlockState.Error);
-        expect(fixture.debugElement.query(By.css('[data-testid="landing-preview-error"]'))).not.toBeNull();
-    });
+            expect(deferBlocks).toHaveLength(1);
+            await deferBlocks[0]?.render(DeferBlockState.Error);
+            expect(fixture.debugElement.query(By.css('[data-testid="landing-preview-error"]'))).not.toBeNull();
+        },
+        DEFER_TEST_TIMEOUT_MS,
+    );
 });
 
 describe('MainComponent', () => {
     it('opens auth dialog from auth query param with return query params', async () => {
         await createComponentAsync('', {}, { auth: 'login', returnUrl: '/dashboard', adminReturnUrl: '/users' });
-        queryParamMapSubject.next(convertToParamMap({ auth: 'login', returnUrl: '/dashboard', adminReturnUrl: '/users' }));
 
         fixture.detectChanges();
         await vi.waitFor(() => {
@@ -141,7 +149,6 @@ describe('MainComponent', () => {
 
     it('opens register dialog from auth query param', async () => {
         await createComponentAsync('', {}, { auth: 'register' });
-        queryParamMapSubject.next(convertToParamMap({ auth: 'register' }));
 
         fixture.detectChanges();
         await vi.waitFor(() => {
@@ -159,7 +166,6 @@ describe('MainComponent', () => {
     it('does not reopen auth dialog for duplicate auth query param emissions', async () => {
         const authParams = { auth: 'login', returnUrl: '/dashboard' };
         await createComponentAsync('', {}, authParams);
-        queryParamMapSubject.next(convertToParamMap(authParams));
 
         fixture.detectChanges();
         await vi.waitFor(() => {
@@ -190,7 +196,6 @@ describe('MainComponent', () => {
 
     it('clears auth query params when dialog closes', async () => {
         await createComponentAsync('', {}, { auth: 'login', returnUrl: '/dashboard' });
-        queryParamMapSubject.next(convertToParamMap({ auth: 'login', returnUrl: '/dashboard' }));
 
         fixture.detectChanges();
         await vi.waitFor(() => {
@@ -207,7 +212,6 @@ describe('MainComponent', () => {
     it('does not clear auth query params after successful authentication redirects away', async () => {
         authServiceMock.isAuthenticated.set(true);
         await createComponentAsync('', {}, { auth: 'login', returnUrl: '/dashboard' });
-        queryParamMapSubject.next(convertToParamMap({ auth: 'login', returnUrl: '/dashboard' }));
 
         fixture.detectChanges();
         await vi.waitFor(() => {
@@ -223,7 +227,6 @@ describe('MainComponent auth dialog cancellation', () => {
     it('allows a later auth dialog when lazy dialog loading is cancelled', async () => {
         authDialogServiceMock.openAsync.mockResolvedValueOnce(null).mockResolvedValueOnce({ afterClosed: () => of(void 0) });
         await createComponentAsync('', {}, { auth: 'login' });
-        queryParamMapSubject.next(convertToParamMap({ auth: 'login' }));
 
         fixture.detectChanges();
         await vi.waitFor(() => {

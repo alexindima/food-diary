@@ -18,10 +18,12 @@ sources:
 # Query Repository Context
 
 Use the context resolver before exploring a cross-cutting change. It returns a
-compact, ranked packet of wiki pages, scoped instructions, projects,
-controllers, C# symbols, dependency-injection registrations, tests, module
-dependencies, Angular features/routes/symbols/localization, ranked
-implementation files, and recommended verification commands.
+compact packet built around one unified ranked candidate list, plus derived
+Wiki pages, scoped instructions, controllers, implementation files, symbols,
+tests, and recommended verification commands. Some legacy-shaped sections such
+as projects, routes, or dependency-injection registrations can be empty on the
+SQL route; use the ranked paths and their reasons as the primary navigation
+contract.
 
 The resolver reads repository-catalog, C# symbol, and frontend feature/symbol/
 route/localization candidates from the local SQLite compiled-index projection
@@ -49,11 +51,12 @@ Unchanged orchestration calls avoid querying and transporting catalog/symbol
 records again.
 Text output remains an uncached interactive view.
 
-Required smoke tests compare SQLite and JSON-baseline output for context, diff,
-and task-brief routes. They check exact functional parity, normalized source
-hashes, changed-path candidate reduction, and bounded SQL/transport overhead.
-Context parity includes frontend results and test recommendations across
-frontend-specific queries. Task-brief parity excludes only route diagnostics,
+Required smoke tests compare SQLite and JSON-baseline output for diff and
+task-brief routes and exercise the SQL context route directly. They check
+normalized source hashes, changed-path candidate reduction, multi-scope
+coverage, and bounded SQL/transport overhead. Context coverage includes
+frontend results and test recommendations across frontend-specific queries.
+Task-brief parity excludes only route diagnostics,
 requires exact functional output, proves that the SQLite intent selection is
 reused by nested diff, and checks the seven-source impact projection across
 compact and full results. It guards duplicate preservation, normalized source
@@ -83,20 +86,27 @@ JSON consumers migrate incrementally.
   -Format Json
 ```
 
-`-Module` is matched against the executable application-module graph. `-Query`
-adds free-text search terms. `-ChangeType` adjusts project ranking and emits
-area-specific checks. `-PlannedPath`/`-ScopePath` boosts candidates in the
-declared directories and feature roots. A frontend-only query suppresses
-unrelated .NET clusters. CamelCase-aware token boundaries ensure a short term
-such as `AI` matches `AiPhotoResult`, but not the letters inside `MailInbox`.
-`-Limit` controls the maximum results per category.
+`-Module` is matched against the executable application-module graph, remains
+the returned module identity, and includes its generated module page and a
+representative application implementation when available. `-Query` adds
+free-text search terms. `-ChangeType` adjusts ranking and emits area-specific
+checks. `-PlannedPath`/`-ScopePath` boosts candidates in the declared
+directories and feature roots; when the visible limit can hold them, the
+resolver preserves at least one ranked representative for every supplied
+scope. A frontend-only query suppresses unrelated .NET clusters.
+CamelCase-aware token boundaries ensure a short term such as `AI` matches
+`AiPhotoResult`, but not the letters inside `MailInbox`. `-Limit` controls the
+maximum visible results per category; the resolver searches a larger bounded
+pool so focused tests and scope representatives are not lost behind production
+matches.
 
 For frontend work, `implementationFiles` searches tracked TypeScript, template,
-and stylesheet sources. Planned paths are a hard boundary when supplied; files
-outside that scope are excluded. Results expose whether the query matched the
-path, content, or both, plus provenance and score. This list is intended to
-answer “where is the implementation?” more directly than the broader feature
-and symbol sections.
+and stylesheet sources. Planned paths guarantee representative coverage rather
+than acting as an exclusion boundary, so a strongly relevant dependency outside
+the supplied scopes can still appear. Results expose rank, score, confidence,
+and explainable reasons such as `planned scope affinity`. This list is intended
+to answer “where is the implementation?” more directly than the broader symbol
+sections.
 
 ## Interpretation
 

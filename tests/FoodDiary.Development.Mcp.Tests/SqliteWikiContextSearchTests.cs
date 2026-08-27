@@ -647,6 +647,32 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     }
 
     [Fact]
+    public async Task SearchAsync_PreservesCoverageForEveryPlannedScope() {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "scopediversity",
+            limit: 2,
+            changeType: "Frontend",
+            module: null,
+            scopePaths: [
+                "FoodDiary.Web.Client/src/app/scope-a",
+                "FoodDiary.Web.Client/src/app/scope-b",
+            ],
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Multiple(
+            () => Assert.Equal(2, result.Candidates.Count),
+            () => Assert.Contains(result.Candidates, candidate =>
+                candidate.Path.StartsWith("FoodDiary.Web.Client/src/app/scope-a/", StringComparison.Ordinal)),
+            () => Assert.Contains(result.Candidates, candidate =>
+                candidate.Path.StartsWith("FoodDiary.Web.Client/src/app/scope-b/", StringComparison.Ordinal)),
+            () => Assert.All(result.Candidates, candidate =>
+                Assert.Contains("planned scope affinity", candidate.Reasons, StringComparer.Ordinal)));
+    }
+
+    [Fact]
     public async Task SearchAsync_RejectsAnIndexFromAnotherChangeSet() {
         SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
 
@@ -796,6 +822,9 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
                 ('code', 'generic-enum-parser', 'FoodDiary.Application.Fasting/Common/EnumValueParser.cs', 'generic-enum-parser', 'csharp', 'EnumValueParser', 'parser category difficulty enum field'),
                 ('code', 'coverage-exact', 'FoodDiary.Infrastructure/Services/CoverageBranch.cs', 'coverage-exact', 'csharp', 'coveragebranch', 'coveragebranch'),
                 ('code', 'coverage-frontend', 'FoodDiary.Web.Client/src/app/coveragebranch.ts', 'coverage-frontend', 'typescript', 'CoverageBranch', 'coveragebranch'),
+                ('code', 'scope-a-one', 'FoodDiary.Web.Client/src/app/scope-a/first.ts', 'scope-a-one', 'typescript', 'Scope Diversity First', 'scopediversity'),
+                ('code', 'scope-a-two', 'FoodDiary.Web.Client/src/app/scope-a/second.ts', 'scope-a-two', 'typescript', 'Scope Diversity Second', 'scopediversity'),
+                ('code', 'scope-b-one', 'FoodDiary.Web.Client/src/app/scope-b/only.ts', 'scope-b-one', 'typescript', 'Scope Diversity Only', 'scopediversity'),
                 ('code', 'coverage-abstraction', 'FoodDiary.Application.Abstractions/ICoverageBranch.cs', 'coverage-abstraction', 'csharp', 'ICoverageBranch', 'coveragebranch'),
                 ('agent-guide', 'coverage-guide', 'FoodDiary.Infrastructure/AGENTS.md', 'coverage-guide', 'markdown', 'Coverage Branch Guide', 'coveragebranch'),
                 ('code', 'program-host-one', 'HostOne/Program.cs', 'program-host-one', 'csharp', 'Program', 'program host startup'),

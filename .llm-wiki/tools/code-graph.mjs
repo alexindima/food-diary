@@ -2457,13 +2457,42 @@ function searchContext(database, query, limit, filters = {}) {
     seenPaths.add(identity);
     records.push({ ...item, rank: records.length + 1 });
   }
+  const pathMatchesScope = (path, scope) => {
+    const normalizedPath = String(path ?? '').replaceAll('\\', '/').toLowerCase();
+    return normalizedPath === scope || normalizedPath.startsWith(`${scope}/`) || scope.startsWith(`${normalizedPath}/`);
+  };
+  const selectedRecords = records.slice(0, limit);
+  if (limit >= scopePaths.length) {
+    for (const scope of scopePaths) {
+      if (selectedRecords.some((item) => pathMatchesScope(item.path, scope))) continue;
+      const scopedCandidate = records.find((item) => pathMatchesScope(item.path, scope));
+      if (!scopedCandidate || selectedRecords.includes(scopedCandidate)) continue;
+      let replacementIndex = -1;
+      for (let index = selectedRecords.length - 1; index >= 0; index -= 1) {
+        const current = selectedRecords[index];
+        const isOnlyRepresentative = scopePaths.some((candidateScope) =>
+          pathMatchesScope(current.path, candidateScope)
+          && selectedRecords.filter((item) => pathMatchesScope(item.path, candidateScope)).length === 1);
+        if (!isOnlyRepresentative) {
+          replacementIndex = index;
+          break;
+        }
+      }
+      if (replacementIndex >= 0) {
+        selectedRecords[replacementIndex] = scopedCandidate;
+        selectedRecords.sort((left, right) =>
+          right.score - left.score || left.lexicalRank - right.lexicalRank || left.path.localeCompare(right.path));
+      }
+    }
+  }
   const fileNameCounts = new Map();
   for (const item of records) {
     const key = basename(String(item.path ?? '')).toLowerCase();
     fileNameCounts.set(key, (fileNameCounts.get(key) ?? 0) + 1);
   }
-  const decoratedRecords = records.map((item, index) => {
-    const nextScore = records[index + 1]?.score;
+  const decoratedRecords = selectedRecords.map((item, index) => {
+    const originalIndex = item.rank - 1;
+    const nextScore = records[originalIndex + 1]?.score;
     const scoreMargin = nextScore === undefined ? null : item.score - nextScore;
     const sameNameKey = basename(String(item.path ?? '')).toLowerCase();
     const sameNameCandidateCount = fileNameCounts.get(sameNameKey) ?? 1;
@@ -2487,6 +2516,7 @@ function searchContext(database, query, limit, filters = {}) {
           : scoreMargin >= mediumMinimumMargin ? 'medium' : 'low';
     return {
       ...item,
+      rank: index + 1,
       scoreMargin,
       confidence,
       ambiguous,
@@ -2494,7 +2524,7 @@ function searchContext(database, query, limit, filters = {}) {
       sameNameCandidateCount,
     };
   });
-  const visibleRecords = decoratedRecords.slice(0, limit);
+  const visibleRecords = decoratedRecords;
   return {
     query,
     queryTerms: terms,

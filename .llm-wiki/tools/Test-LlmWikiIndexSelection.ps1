@@ -30,6 +30,10 @@ Assert-Plan ($frontendPlan -match 'Build-LlmWikiFrontendIndex.ps1' -and $fronten
 $frontendTestPlan = Get-IndexPlan 'FoodDiary.Web.Client/src/app/example/example.spec.ts'
 Assert-Plan ($frontendTestPlan -match 'Build-LlmWikiQualityIndex.ps1' -and $frontendTestPlan -notmatch 'Build-LlmWikiArchitectureHealthIndex.ps1') 'Frontend tests should update quality without architecture health.'
 
+$frontendLocalizationPlan = Get-IndexPlan 'FoodDiary.Web.Client/assets/i18n/en/landing.json'
+Assert-Plan ($frontendLocalizationPlan -match 'Build-LlmWikiFrontendIndex.ps1') 'Frontend localization changes should update the localization-reading frontend index.'
+Assert-Plan ($frontendLocalizationPlan -notmatch 'Build-LlmWikiFrontendContractIndex.ps1|Build-LlmWikiQualityIndex.ps1|Build-LlmWikiArchitectureHealthIndex.ps1') 'Frontend localization changes selected unrelated indexes.'
+
 $csharpTestPlan = Get-IndexPlan 'tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs'
 Assert-Plan ($csharpTestPlan -match 'Build-LlmWikiQualityIndex.ps1') 'C# tests should update the quality index.'
 foreach ($unexpectedTool in @(

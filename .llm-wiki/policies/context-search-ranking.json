@@ -4189,6 +4189,20 @@
       "excludeTests": true
     },
     {
+      "id": "notification-test-scheduler-role",
+      "queryTerms": ["notification", "test", "schedule", "delivery"],
+      "minimumMatches": 3,
+      "candidateTerms": ["notification", "test", "scheduler"],
+      "minimumCandidateMatches": 3,
+      "minimumQueryIdentityMatches": 3,
+      "score": 520,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "pathPrefixes": ["FoodDiary.Web.Api/Services/"],
+      "pathSuffixes": ["Scheduler.cs"],
+      "excludeTests": true
+    },
+    {
       "id": "wiki-query-documentation-role",
       "queryTerms": ["documentation", "query", "querying", "context", "wiki", "natural"],
       "minimumMatches": 3,

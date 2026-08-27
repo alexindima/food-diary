@@ -56,10 +56,11 @@ The selector combines mandatory task scope with semantic discovery:
 - semantically related Wiki pages, guides, C# or frontend symbols, ranked
   tracked implementation files, and tests.
 
-When planned frontend paths are available, implementation-file discovery stays
-inside those paths and records whether relevance came from the path, source
-content, or both. Context bundles can therefore prefer concrete implementation
-sources without widening the declared task scope.
+When planned frontend paths are available, implementation-file discovery keeps
+at least one ranked representative from every scope when the item limit permits.
+Other strongly relevant dependencies can remain visible; the bundle records
+rank, score, confidence, and reasons such as planned-scope affinity. The task
+contract—not search filtering—remains the authority for permitted edit scope.
 
 Every item records its kind, score, inclusion reasons, existence state, source
 SHA-256, and a bounded excerpt. Generic task verbs are removed from the semantic

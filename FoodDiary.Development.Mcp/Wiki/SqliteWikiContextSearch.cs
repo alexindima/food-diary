@@ -771,7 +771,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         var fileNameCounts = result
             .GroupBy(candidate => Path.GetFileName(candidate.Path), StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.Count(), StringComparer.OrdinalIgnoreCase);
-        return [.. result.Select((candidate, index) => {
+        List<WikiContextSearchCandidate> decorated = [.. result.Select((candidate, index) => {
             int? scoreMargin = index + 1 < result.Count
                 ? candidate.Score - result[index + 1].Score
                 : null;
@@ -806,7 +806,63 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 AmbiguityReason = ambiguityReason,
                 SameNameCandidateCount = sameNameCandidateCount,
             };
-        }).Take(limit)];
+        })];
+        List<WikiContextSearchCandidate> selected = PreserveScopeCoverage(
+            decorated,
+            normalizedScopes,
+            limit);
+        return [.. selected.Select((candidate, index) => candidate with { Rank = index + 1 })];
+    }
+
+    private static List<WikiContextSearchCandidate> PreserveScopeCoverage(
+        IReadOnlyList<WikiContextSearchCandidate> ranked,
+        IReadOnlyList<string> normalizedScopes,
+        int limit) {
+        List<WikiContextSearchCandidate> selected = [.. ranked.Take(limit)];
+        if (selected.Count == 0 || normalizedScopes.Count == 0 || limit < normalizedScopes.Count) {
+            return selected;
+        }
+
+        foreach (string scope in normalizedScopes) {
+            if (selected.Any(candidate => IsWithinScope(candidate.Path, scope))) {
+                continue;
+            }
+
+            WikiContextSearchCandidate? scopedCandidate = ranked.FirstOrDefault(candidate =>
+                IsWithinScope(candidate.Path, scope));
+            if (scopedCandidate is null || selected.Contains(scopedCandidate)) {
+                continue;
+            }
+
+            int replacementIndex = -1;
+            for (int index = selected.Count - 1; index >= 0; index--) {
+                WikiContextSearchCandidate current = selected[index];
+                bool isOnlyRepresentative = normalizedScopes.Any(candidateScope =>
+                    IsWithinScope(current.Path, candidateScope) &&
+                    selected.Count(candidate => IsWithinScope(candidate.Path, candidateScope)) == 1);
+                if (!isOnlyRepresentative) {
+                    replacementIndex = index;
+                    break;
+                }
+            }
+            if (replacementIndex >= 0) {
+                selected[replacementIndex] = scopedCandidate;
+                selected.Sort((left, right) => {
+                    int scoreComparison = right.Score.CompareTo(left.Score);
+                    return scoreComparison != 0
+                        ? scoreComparison
+                        : StringComparer.Ordinal.Compare(left.Path, right.Path);
+                });
+            }
+        }
+        return selected;
+    }
+
+    private static bool IsWithinScope(string path, string normalizedScope) {
+        string normalizedPath = NormalizePath(path).ToLowerInvariant();
+        return normalizedPath.Equals(normalizedScope, StringComparison.Ordinal) ||
+            normalizedPath.StartsWith($"{normalizedScope}/", StringComparison.Ordinal) ||
+            normalizedScope.StartsWith($"{normalizedPath}/", StringComparison.Ordinal);
     }
 
     private static string[] ExpandQueryTerms(string query, RankingPolicy policy) {

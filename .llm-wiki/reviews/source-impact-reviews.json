@@ -146,14 +146,14 @@
       "pageSha256": "6f8228462ed3f2c01895eccb72a9539e8fe90e102e32bb3e8b2b3927a5937f40",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "0bec8f4cdbac1f00d5153d27bb2fff42b5586c4c79c64a57b8fa43a5129f8ee8"
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "60ead69dbb68d89b89ef52e2c46df65e426fd12a0dc2cf694a6e89da03484054"
         }
       ],
-      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
+      "reason": "Reviewed the affected workflow pages against locale-aware frontend-index routing and scalar-safe research planning; their documented commands, guarantees, and verification model remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
-      "reviewedAtUtc": "2026-08-26T18:45:58.0940705Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-26T22:42:15.1117942Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -191,14 +191,14 @@
       "pageSha256": "ab1e4ba6f832f69547b9b819096039b1837170c84a9a84ce5c47c7f28a485568",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "49f326d8c01e6bfb14aafb4a4b6ef3ae6ebbed368ec502f4b319d50da64de603"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "cf701fb4384a99982377e5e89bfdc2d9f7a4894a9dcdcd39c6734f073934a418"
         }
       ],
-      "reason": "Reviewed the final 53-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff after bypass remediation; regenerated all affected indexes, validated distinct provider event/message identity, race-safe inbox claims, read-only freshness signaling, and broad-trace abstention behavior.",
+      "reason": "Reviewed multi-scope context ranking changes; specialized backend-contract SQL views and contract semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
-      "reviewedAtUtc": "2026-08-26T19:01:24.6842741Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-27T00:20:59.5571677Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -236,26 +236,18 @@
       "pageSha256": "b0f85b72b9b077c2dc844daf653575e7178f0ff97641857452ddbf8b0d25b92d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "326ae34eaeabf65829d086d5f3421259d8edd4bab77dfb1030a19b0705d8504c"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "6d4af99ede8aab61c9aadc8ef97d1a90a6a4db0a652bbc1ce4899d0abcc55085"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
-          "sha256": "7f7eb6b588f22a63769072444009f4aa05866971c30317f14153ffe8e7c20d2b"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextShadow.ps1",
-          "sha256": "ebc31b2410acdd1241ecad739ca89ad91098f9b1f052a93f2c9f2c5eff66fa7e"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "ac098d97ed37e2839140f500f17f1159af35be156d34872dd53a2df1e2d3cd8e"
+          "path": ".llm-wiki/tools/Test-LlmWikiDomainDataSqlParity.ps1",
+          "sha256": "69f831457be30d9d681036dcdd1e010064c44ea908cd273c18318491ab5cac72"
         }
       ],
-      "reason": "Final source-impact review after all Wiki regression updates: code-graph and query-context pages match the read-only SQLite search contract, JSON-only immutable caching fallback, explicit stale-state abstention, and current quality-index evidence caveats.",
+      "reason": "Reviewed scheduler ranking and paired cold-start parity sampling; SQLite projections, fingerprints, and refresh behavior remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
-      "reviewedAtUtc": "2026-08-26T19:26:03.7068938Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-26T23:13:37.6886934Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -279,13 +271,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "cac68af51a0fab9c502f11182723576981aa2a34678aac60588fa308e8d033c2"
+          "sha256": "93577dd72dfc9702078990dfade28ffef39ca6d3bade54ae5c7cf857b8cc0547"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
+      "reason": "Reviewed optional SQL symbol metadata fallback; context selection, budgets, trust, learning, memory, and scheduling semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:42.2949434Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-26T23:39:15.0428918Z"
     },
     {
       "pageId": "workflow-context-bundles",
@@ -293,14 +285,14 @@
       "pageSha256": "7bffe53a2b9adcc5af2edbe9acc5709865ea28f26a965f9033b1493557b70068",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "326ae34eaeabf65829d086d5f3421259d8edd4bab77dfb1030a19b0705d8504c"
+          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+          "sha256": "93577dd72dfc9702078990dfade28ffef39ca6d3bade54ae5c7cf857b8cc0547"
         }
       ],
-      "reason": "Updated context regression coverage for the fast SQLite reader: shadow mode explicitly compares against the legacy JSON authority, while immutable query-cache assertions remain scoped to the JSON fallback because SQLite reads intentionally bypass per-query cache writes.",
+      "reason": "Reviewed optional SQL symbol metadata fallback; context selection, budgets, trust, learning, memory, and scheduling semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
-      "reviewedAtUtc": "2026-08-26T19:18:48.7344194Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-26T23:39:15.9754429Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -324,13 +316,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "cac68af51a0fab9c502f11182723576981aa2a34678aac60588fa308e8d033c2"
+          "sha256": "93577dd72dfc9702078990dfade28ffef39ca6d3bade54ae5c7cf857b8cc0547"
         }
       ],
-      "reason": "Regenerated sensitive-data indexes and the complete Full audit validated redaction, trust-boundary, and context-integrity behavior; the documented security workflow remains accurate.",
+      "reason": "Reviewed optional SQL symbol metadata fallback; context selection, budgets, trust, learning, memory, and scheduling semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:43.273525Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-26T23:39:16.8958859Z"
     },
     {
       "pageId": "workflow-context-strategy-experiments",
@@ -368,18 +360,14 @@
       "pageSha256": "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
+          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+          "sha256": "93577dd72dfc9702078990dfade28ffef39ca6d3bade54ae5c7cf857b8cc0547"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Reviewed optional SQL symbol metadata fallback; context selection, budgets, trust, learning, memory, and scheduling semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:00.2885606Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-26T23:39:17.8080781Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -452,17 +440,17 @@
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "50b1572ee2e7ac55db95acbdf6c55c89fb593369feed38551300b44b06518395",
+      "pageSha256": "523e0cc455a3fc7563fd04531fddd355ffeace3fc857b27bf9aeaa98be241d06",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "12ef9ff7d77cfbfacc031496933391397edfd2c17c351042cd7f07c16efb38eb"
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "60ead69dbb68d89b89ef52e2c46df65e426fd12a0dc2cf694a6e89da03484054"
         }
       ],
-      "reason": "Reviewed the frozen unseen-corpus workflow, generalized test-intent routing, persistence affinity, agent-guide calibration, concurrency benchmark, facade commands, and regenerated indexes. Strict SQL evaluation passed with 480/480 top-10, the blind-to-results 100-case corpus improved from 37/70 to 51/83 top-1/top-10, 4-worker load remained read-only, 33 MCP parity tests and affected smoke passed, and no API, privacy, dispatch, or architectural contract changed.",
+      "reason": "Reviewed the affected workflow pages against locale-aware frontend-index routing and scalar-safe research planning; their documented commands, guarantees, and verification model remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "dc6c6b4516915b5d04d480f549c3d1015c6c56a2",
-      "reviewedAtUtc": "2026-08-25T20:20:26.3910225Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-26T22:42:15.7909169Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -470,14 +458,14 @@
       "pageSha256": "740dd5bba75b488c88d30cb9fda34ae14a0f7441a6d375ba03994ceaf41bc86f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
-          "sha256": "d2824439e4b7783652d7c0a5e090908d03f7443030d29c4a3196809200bbbb24"
+          "path": ".llm-wiki/tools/Test-LlmWikiDomainDataSqlParity.ps1",
+          "sha256": "69f831457be30d9d681036dcdd1e010064c44ea908cd273c18318491ab5cac72"
         }
       ],
-      "reason": "Git-based consumer enumeration preserves the compiled-index migration inventory without requiring ripgrep; domain-data routing and review guidance remain current.",
+      "reason": "Reviewed six-sample paired cold-start comparison; domain-data query semantics and SQL/JSON parity expectations remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "8602f0721c9bb578fb641d1485dee01703c28c39",
-      "reviewedAtUtc": "2026-08-25T23:51:09.3766062Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-26T23:13:38.5476381Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -485,14 +473,14 @@
       "pageSha256": "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
+          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+          "sha256": "93577dd72dfc9702078990dfade28ffef39ca6d3bade54ae5c7cf857b8cc0547"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Reviewed optional SQL symbol metadata fallback; context selection, budgets, trust, learning, memory, and scheduling semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:00.9889119Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-26T23:39:18.9068786Z"
     },
     {
       "pageId": "workflow-failure-knowledge",
@@ -561,13 +549,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "f50368947314da30857c581a367ba0c4c5bc3302da7727c5a9d527acd39c1d67"
+          "sha256": "cf701fb4384a99982377e5e89bfdc2d9f7a4894a9dcdcd39c6734f073934a418"
         }
       ],
-      "reason": "Reviewed context, integration-scan, and bundle workflow impacts; descriptions remain consistent with the direct bridge, shared scoring helpers, and current query behavior.",
+      "reason": "Reviewed context-search scope diversification; impact-simulation inputs and alignment semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
-      "reviewedAtUtc": "2026-08-26T16:39:51.3339368Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-27T00:21:00.4732916Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -609,26 +597,18 @@
       "pageSha256": "7cf34e384c94c0427431d4d5b600c1aa2b1cad26fa2eb72f02b0942e6e2240ca",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "975c443decb60df672fd277e525af02cd6133ef97d63cf6f93458ab2edc91605"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
+          "sha256": "69b2a55d68a4985aacbdd470f09f3956e55d32d9e01fac0ede4e290c666486d6"
         },
         {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "c5b912de97a46092cce695627c716ae809e9dd3727d6f5c52b99c7251f5d02db"
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "9cad7d29b8f23c2532a5dcb0bbb40a4cbbbb3c9492ee5d4a39e9384aa149fb6c"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "ac098d97ed37e2839140f500f17f1159af35be156d34872dd53a2df1e2d3cd8e"
+          "path": ".llm-wiki/tools/Test-LlmWikiDomainDataSqlParity.ps1",
+          "sha256": "69f831457be30d9d681036dcdd1e010064c44ea908cd273c18318491ab5cac72"
         }
       ],
-      "reason": "Reviewed the final 53-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff after bypass remediation; regenerated all affected indexes, validated distinct provider event/message identity, race-safe inbox claims, read-only freshness signaling, and broad-trace abstention behavior.",
+      "reason": "Reviewed locale-aware frontend selection and the affected domain-data regression mapping; documented pipeline stages remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
-      "reviewedAtUtc": "2026-08-26T19:01:26.2889543Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-26T23:13:39.4423017Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -652,13 +632,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "5ddc4a78043bd62f01ecea988707ae7ff88938222fec718921afa8f2a369e9fe"
+          "sha256": "60ead69dbb68d89b89ef52e2c46df65e426fd12a0dc2cf694a6e89da03484054"
         }
       ],
-      "reason": "Reviewed context, integration-scan, and bundle workflow impacts; descriptions remain consistent with the direct bridge, shared scoring helpers, and current query behavior.",
+      "reason": "Reviewed integration-scan and trace-feature source dependencies; the research grouping fix and localization metadata refresh do not change their documented behavior.",
       "baseRef": "HEAD",
-      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
-      "reviewedAtUtc": "2026-08-26T16:39:51.9638190Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-26T22:42:17.2910209Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -768,18 +748,14 @@
       "pageSha256": "0c99a578ac11c1f3db70d8e9470a8dcedb235a6f5d16147df9a123d0786f7095",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "858e3f805f9ea3e27487e4886b4b5df3c3c3488ff3e4c7d95701731f2f483e8e"
-        },
-        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "f50368947314da30857c581a367ba0c4c5bc3302da7727c5a9d527acd39c1d67"
+          "sha256": "cf701fb4384a99982377e5e89bfdc2d9f7a4894a9dcdcd39c6734f073934a418"
         }
       ],
-      "reason": "Reviewed regenerated sensitive-data projection and code-graph inputs; no credential, identity-data lifecycle, logging, or provider-sharing behavior changed.",
+      "reason": "Reviewed context-search scope diversification; sensitive-data views, redaction, and privacy obligations remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "deef276dbdcdc1f2d55601372ca0431db195ae39",
-      "reviewedAtUtc": "2026-08-26T16:39:52.5952342Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-27T00:21:01.4322373Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -822,17 +798,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c91c8b6d1fd9cd67f73e36b83cf00bd3c5f3a2b79ac99afa0bbbadf52e11de9f"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1",
-          "sha256": "c1f39243b8f54f16e874f4a7f55af9f894b537a98d68e505c9bf3c1f22cdfbff"
+          "sha256": "31777779a905e15fb65c3fde5d8543e350c36401185758a5022c7cadd43c3441"
         }
       ],
-      "reason": "Final source-impact review after all Wiki regression updates: code-graph and query-context pages match the read-only SQLite search contract, JSON-only immutable caching fallback, explicit stale-state abstention, and current quality-index evidence caveats.",
+      "reason": "Reviewed regenerated quality references after context-search regression coverage; quality-risk guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
-      "reviewedAtUtc": "2026-08-26T19:26:04.1545972Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-27T00:21:02.8887211Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -998,14 +970,14 @@
       "pageSha256": "b964048fb46e10eb6f3e28c3ddcfb451e3443691f1da29c8708d768c8ac1629c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
+          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+          "sha256": "93577dd72dfc9702078990dfade28ffef39ca6d3bade54ae5c7cf857b8cc0547"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Reviewed optional SQL symbol metadata fallback; context selection, budgets, trust, learning, memory, and scheduling semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:06.9796316Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-26T23:39:20.0763691Z"
     },
     {
       "pageId": "workflow-task-workspace",
@@ -1043,18 +1015,14 @@
       "pageSha256": "0dc23a14a2f598d67f9e84a22147eb0c2a64bbbb2ad9105dee754ee053a8abda",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "ca6a901daac2026463353d93fc1d3d382928a901ea04b53f662082babef9a87c"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "2484915b530aafeb7f3e4012918714a7b5680d287221ab80a9a4b706e5a9cb7e"
+          "sha256": "4945b890d8129274a84ed5ec3277f8e32ade0894518e694490d34e6a952563e4"
         }
       ],
-      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
+      "reason": "Reviewed integration-scan and trace-feature source dependencies; the research grouping fix and localization metadata refresh do not change their documented behavior.",
       "baseRef": "HEAD",
-      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
-      "reviewedAtUtc": "2026-08-26T18:46:07.4679457Z"
+      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
+      "reviewedAtUtc": "2026-08-26T22:42:18.9150962Z"
     },
     {
       "pageId": "workflow-verification-planner",

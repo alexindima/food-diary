@@ -16,6 +16,7 @@ $cases = @(
     @{ Module = 'Meals'; Query = 'meal projection read repository'; ScopePath = 'FoodDiary.Application.Meals'; ChangeType = 'Backend'; ExpectedPath = '^FoodDiary\.Application\.Meals/' }
     @{ Module = ''; Query = 'autocomplete product search component'; ScopePath = 'FoodDiary.Web.Client/src/app/features/products'; ChangeType = 'Frontend'; ExpectedPath = '^FoodDiary\.Web\.Client/src/app/features/products/' }
     @{ Module = ''; Query = 'responsive dashboard component layout'; ScopePath = 'FoodDiary.Web.Client/src/app/features/dashboard'; ChangeType = 'Frontend'; ExpectedPath = '^FoodDiary\.Web\.Client/src/app/features/dashboard/' }
+    @{ Module = ''; Query = 'AI dashboard'; ScopePath = 'FoodDiary.Web.Client/src/app/features/dashboard;FoodDiary.Web.Client/src/app/components/shared/ai-input-bar'; ChangeType = 'Frontend'; ExpectedPaths = @('^FoodDiary\.Web\.Client/src/app/features/dashboard/', '^FoodDiary\.Web\.Client/src/app/components/shared/ai-input-bar/') }
     @{ Module = ''; Query = 'translation locale'; ScopePath = 'FoodDiary.Web.Client/assets/i18n'; ChangeType = 'Frontend'; ExpectedPath = '^FoodDiary\.Web\.Client/(?:scripts/check-i18n\.mjs|src/app/shared/i18n/)'; ExpectAbstention = $true }
 )
 $endToEndDurations = [Collections.Generic.List[double]]::new()
@@ -40,8 +41,11 @@ foreach ($case in $cases) {
     if (-not [bool]$sqlite.compiledIndex.fresh -or [string]$sqlite.compiledIndex.indexedChangeSetFingerprint -cne [string]$sqlite.compiledIndex.currentChangeSetFingerprint) {
         throw "$($case.Query): SQLite context route reported stale or mismatched workspace state after an explicit graph build."
     }
-    if (@($sqlite.candidates).Count -eq 0 -or -not (@($sqlite.candidates.path) -match $case.ExpectedPath)) {
-        throw "$($case.Query): SQLite context route did not return a candidate inside the requested scope."
+    $expectedPaths = if ($case.ContainsKey('ExpectedPaths')) { @($case.ExpectedPaths) } else { @($case.ExpectedPath) }
+    if (@($sqlite.candidates).Count -eq 0 -or @($expectedPaths | Where-Object {
+        -not (@($sqlite.candidates.path) -match $_)
+    }).Count -gt 0) {
+        throw "$($case.Query): SQLite context route did not return a candidate inside every requested scope."
     }
     if ($case.ContainsKey('ExpectAbstention') -and [bool]$case.ExpectAbstention -and -not [bool]$sqlite.abstained) {
         throw "$($case.Query): SQLite context route claimed conclusive coverage for a scope whose locale JSON files are not directly indexed."

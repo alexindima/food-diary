@@ -71,9 +71,11 @@ function New-ResearchPlan([object[]]$Lanes) {
     $maximumGroups = [Math]::Max(1, [int]$researchPlanningPolicy.maximumGroups)
     $maximumLanesPerGroup = [Math]::Max(1, [int]$researchPlanningPolicy.maximumLanesPerGroup)
     $groups = [Collections.Generic.List[object]]::new()
+    $allReadAssignments = [Collections.Generic.List[string]]::new()
 
     foreach ($lane in $Lanes) {
         $readPaths = @(Get-NormalizedResearchPaths $lane.sources | Where-Object { Test-RepositoryReadPath $_ })
+        foreach ($readPath in $readPaths) { $allReadAssignments.Add($readPath) }
         $lane | Add-Member -NotePropertyName readPaths -NotePropertyValue $readPaths -Force
         $bestGroup = $null
         $bestOverlap = 0
@@ -113,8 +115,7 @@ function New-ResearchPlan([object[]]$Lanes) {
         foreach ($group in $kept) { $groups.Add($group) }
     }
 
-    $allReadAssignments = @($Lanes | ForEach-Object { @($_.readPaths) })
-    $readSet = @(Get-NormalizedResearchPaths $allReadAssignments)
+    $readSet = @(Get-NormalizedResearchPaths @($allReadAssignments))
     $compiledGroups = @(
         for ($index = 0; $index -lt $groups.Count; $index++) {
             $group = $groups[$index]
@@ -138,7 +139,7 @@ function New-ResearchPlan([object[]]$Lanes) {
         }
         groups = $compiledGroups
         readSet = $readSet
-        laneCount = $Lanes.Count
+        laneCount = @($Lanes).Count
         groupCount = $compiledGroups.Count
         totalReadAssignments = $allReadAssignments.Count
         uniqueReadPathCount = $readSet.Count
@@ -431,12 +432,18 @@ elseif ($researchBlockerConfidence -eq 'medium') { $researchConfidenceReasons.Ad
 if ($researchImplementationScopeConfidence -eq 'not-required') { $researchConfidenceReasons.Add('Implementation scope is not rated because this is a read-only assessment.') }
 elseif ($researchImplementationScopeConfidence -ne 'high') { $researchConfidenceReasons.Add('Implementation scope is not high because the discovered paths were not confirmed as the future edit boundary.') }
 
+$guidanceSources = @(Get-NormalizedResearchPaths @(
+    Get-ObjectPropertyValues @($explicitPlannedFiles | Where-Object {
+        $_.path -match '(^|/)AGENTS\.md$' -or $_.path -match '^\.llm-wiki/'
+    }) 'path'
+    Get-ObjectPropertyValues @(@($contextAgentGuides) + @($contextWikiPages)) 'path'
+) | Select-Object -First $Limit)
 $researchLanes = @(
     [pscustomobject][ordered]@{ id = 'flow'; purpose = 'Current implementation and entry points'; evidenceCount = @($implementationFiles).Count + @($symbolFiles).Count + @($frontendFiles).Count; sources = @(Get-NormalizedResearchPaths @((Get-ObjectPropertyValues @($implementationFiles) 'path') + (Get-ObjectPropertyValues @($symbolFiles) 'path') + (Get-ObjectPropertyValues @($frontendFiles) 'path'))) }
     [pscustomobject][ordered]@{ id = 'tests'; purpose = 'Focused regression and contract evidence'; evidenceCount = @($contextTests).Count; sources = @(Get-NormalizedResearchPaths (Get-ObjectPropertyValues @($contextTests) 'path') | Select-Object -First $Limit) }
     [pscustomobject][ordered]@{ id = 'integrations'; purpose = 'Runtime, provider, DI, and delivery boundaries'; evidenceCount = @(@($contextHttpClients) + @($contextHostedServices) + @($contextWebhooks) + @($contextDependencyInjection) | Where-Object { $null -ne $_ }).Count; sources = @(Get-NormalizedResearchPaths (Get-ObjectPropertyValues @(@($contextHttpClients) + @($contextHostedServices) + @($contextWebhooks) + @($contextDependencyInjection)) 'path') | Select-Object -First $Limit) }
     [pscustomobject][ordered]@{ id = 'precedents'; purpose = 'Git precedents and verified failure knowledge'; evidenceCount = @($precedents.precedents).Count + @($failureMatches).Count; sources = @((Get-ObjectPropertyValues @($precedents.precedents) 'shortHash') + (Get-ObjectPropertyValues @($failureMatches) 'id') | Where-Object { $_ } | Sort-Object -Unique) }
-    [pscustomobject][ordered]@{ id = 'guidance'; purpose = 'Scoped instructions and governed Wiki context'; evidenceCount = @($contextAgentGuides).Count + @($contextWikiPages).Count; sources = @(Get-NormalizedResearchPaths (Get-ObjectPropertyValues @(@($contextAgentGuides) + @($contextWikiPages)) 'path') | Select-Object -First $Limit) }
+    [pscustomobject][ordered]@{ id = 'guidance'; purpose = 'Scoped instructions and governed Wiki context'; evidenceCount = $guidanceSources.Count; sources = $guidanceSources }
 ) | Where-Object { [int]$_.evidenceCount -gt 0 -or @($_.sources).Count -gt 0 }
 $researchPlan = New-ResearchPlan $researchLanes
 
