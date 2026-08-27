@@ -7,10 +7,10 @@
   "summary": {
     "productionFiles": 4685,
     "wikiToolFiles": 199,
-    "wikiToolsWithoutTestReferences": 6,
+    "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 775,
-    "criticalSymbolsWithTestReferences": 748,
-    "criticalSymbolsWithoutTestReferences": 27,
+    "criticalSymbolsWithTestReferences": 749,
+    "criticalSymbolsWithoutTestReferences": 26,
     "debtMarkers": 10
   },
   "hotspots": [
@@ -1757,8 +1757,8 @@
       "nonBlankLines": 37,
       "decisionPoints": 1,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 9.24
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.24
     },
     {
       "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",
@@ -45612,8 +45612,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1",
       "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferenceCount": 1,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiTools.ps1"
+      ]
     },
     {
       "name": "LlmWikiSmokeSandbox",

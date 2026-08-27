@@ -14,13 +14,13 @@ function Get-LlmWikiRuntimeTopologyFingerprint {
     )
     $material = [Text.StringBuilder]::new()
     foreach ($path in $sourcePaths) {
-        $stream = [IO.File]::OpenRead($path)
+        $content = [IO.File]::ReadAllText($path).Replace("`r`n", "`n").Replace("`r", "`n")
+        $contentBytes = [Text.Encoding]::UTF8.GetBytes($content)
         $fileHasher = [Security.Cryptography.SHA256]::Create()
         try {
-            $hash = ([BitConverter]::ToString($fileHasher.ComputeHash($stream)) -replace '-', '').ToLowerInvariant()
+            $hash = ([BitConverter]::ToString($fileHasher.ComputeHash($contentBytes)) -replace '-', '').ToLowerInvariant()
         } finally {
             $fileHasher.Dispose()
-            $stream.Dispose()
         }
         $relativePath = [IO.Path]::GetFullPath($path).Substring([IO.Path]::GetFullPath($RepositoryRoot).TrimEnd('\', '/').Length + 1).Replace('\', '/')
         $null = $material.Append($relativePath).Append('=').Append($hash).Append("`n")

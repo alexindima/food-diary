@@ -21,7 +21,7 @@ foreach ($requiredPath in @($qualityPath, $sensitiveDataPath, $runtimeTopologyPa
 
 $reviewQueries = if ([string]::IsNullOrWhiteSpace($Query)) {
     @(
-        'WebPush SSRF DNS rebinding endpoint validation'
+        'WebPush connect-time DNS address control SocketsHttpHandlerFactory'
         'Mailgun webhook replay idempotency signature timestamp'
         'browser refresh token localStorage CSP XSS'
         'nginx TLS SSL proxy transport security'

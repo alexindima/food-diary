@@ -618,6 +618,25 @@ Assert-Wiki (@($hotspotView.items | Where-Object path -match '^\.llm-wiki/').Cou
 $wikiHotspots = & (Join-Path $toolsRoot 'Find-LlmWikiQualityRisk.ps1') -View hotspots -Area Wiki -Limit 3 -Format Json | ConvertFrom-Json
 Assert-Wiki ($wikiHotspots.count -gt 0 -and @($wikiHotspots.items | Where-Object path -notmatch '^\.llm-wiki/').Count -eq 0) 'Wiki-only hotspot query did not isolate Wiki implementation records.'
 
+. (Join-Path $toolsRoot 'LlmWikiRuntimeTopologyFingerprint.ps1')
+$runtimeFingerprintFixtureRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/runtime-fingerprint-$([guid]::NewGuid().ToString('N'))"
+try {
+    New-Item -ItemType Directory -Path $runtimeFingerprintFixtureRoot -Force | Out-Null
+    $runtimeFingerprintComposePath = Join-Path $runtimeFingerprintFixtureRoot 'docker-compose.yml'
+    $runtimeFingerprintSourcePath = Join-Path $runtimeFingerprintFixtureRoot 'Worker.cs'
+    [IO.File]::WriteAllText($runtimeFingerprintComposePath, "services:`n  worker:`n    image: example`n", [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText($runtimeFingerprintSourcePath, "sealed class Worker`n{`n}`n", [Text.UTF8Encoding]::new($false))
+    $lfRuntimeFingerprint = Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $runtimeFingerprintFixtureRoot
+    [IO.File]::WriteAllText($runtimeFingerprintComposePath, "services:`r`n  worker:`r`n    image: example`r`n", [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText($runtimeFingerprintSourcePath, "sealed class Worker`r`n{`r`n}`r`n", [Text.UTF8Encoding]::new($false))
+    $crlfRuntimeFingerprint = Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $runtimeFingerprintFixtureRoot
+    Assert-Wiki ($lfRuntimeFingerprint.sourceFingerprint -eq $crlfRuntimeFingerprint.sourceFingerprint) 'Runtime topology fingerprint changes with platform-specific line endings.'
+} finally {
+    if (Test-Path -LiteralPath $runtimeFingerprintFixtureRoot) {
+        Remove-Item -LiteralPath $runtimeFingerprintFixtureRoot -Recurse -Force
+    }
+}
+
 $runtime = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/runtime-topology.json') -Raw | ConvertFrom-Json
 Assert-Wiki ($runtime.summary.composeServices -eq 17) 'Runtime topology did not isolate the 17 declared Compose services.'
 Assert-Wiki (@($runtime.composeServices | Where-Object name -eq 'postgres-data').Count -eq 0) 'Runtime topology misclassified a named volume as a Compose service.'

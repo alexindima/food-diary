@@ -375,14 +375,14 @@ if ($Action -eq 'simulate') {
 
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 40 } else {
     if ($Action -eq 'simulate') {
-        Write-Host "Impact simulation: paths=$(@($result.proposedPaths).Count), blast=$($result.impact.blastRadiusLevel) ($($result.impact.blastRadiusScore)/100)"
-        Write-Host "Objective/path alignment: $($result.alignment.status) (confidence=$($result.alignment.confidence))"
-        foreach ($reason in @($result.alignment.reasons)) { Write-Host " - $reason" }
-        foreach ($path in @($result.alignment.suggestedPaths)) { Write-Host " - Suggested: $path" }
+        Write-Output "Impact simulation: paths=$(@($result.proposedPaths).Count), blast=$($result.impact.blastRadiusLevel) ($($result.impact.blastRadiusScore)/100)"
+        Write-Output "Objective/path alignment: $($result.alignment.status) (confidence=$($result.alignment.confidence))"
+        foreach ($reason in @($result.alignment.reasons)) { Write-Output " - $reason" }
+        foreach ($path in @($result.alignment.suggestedPaths)) { Write-Output " - Suggested: $path" }
     } else {
-        Write-Host "Impact simulation: action=$($result.action), valid=$($result.valid), forecast=$($result.simulation.forecast.blastRadiusScore), actual=$($result.simulation.actual.blastRadiusScore), delta=$($result.simulation.comparison.scoreDelta)"
-        foreach ($finding in @($result.simulation.findings)) { Write-Host " - [$($finding.severity)] $($finding.id): $($finding.count)" }
-        foreach ($issue in @($result.issues)) { Write-Host " - $issue" }
+        Write-Output "Impact simulation: action=$($result.action), valid=$($result.valid), forecast=$($result.simulation.forecast.blastRadiusScore), actual=$($result.simulation.actual.blastRadiusScore), delta=$($result.simulation.comparison.scoreDelta)"
+        foreach ($finding in @($result.simulation.findings)) { Write-Output " - [$($finding.severity)] $($finding.id): $($finding.count)" }
+        foreach ($issue in @($result.issues)) { Write-Output " - $issue" }
     }
 }
 if ($FailOnInvalid -and -not $result.valid) { exit 1 }
