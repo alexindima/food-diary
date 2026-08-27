@@ -24,6 +24,12 @@ $jobs = for ($worker = 0; $worker -lt $Workers; $worker++) {
     }
     Start-Job -ScriptBlock {
         param($Manager, $Items)
+        # Node 22 reports the built-in SQLite module as experimental on stderr.
+        # PowerShell remotes native stderr as ErrorRecord output from Start-Job,
+        # which can terminate the parent smoke test under ErrorActionPreference=Stop.
+        # Suppress only that warning category; non-zero Node exits still propagate
+        # through Manage-LlmWikiCodeGraph and fail the worker.
+        $env:NODE_OPTIONS = ("$env:NODE_OPTIONS --disable-warning=ExperimentalWarning").Trim()
         $durations = foreach ($item in $Items) {
             $started = [Diagnostics.Stopwatch]::StartNew()
             $null = & $Manager search -Query ([string]$item.query) -ChangeType ([string]$item.changeType) -Limit 10 -SkipRefresh -Format Json

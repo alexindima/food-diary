@@ -798,13 +798,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "31777779a905e15fb65c3fde5d8543e350c36401185758a5022c7cadd43c3441"
+          "sha256": "4ee1b48399b420bb5647077fc87d71eae9619739d8a141c3b3f49080811f2f09"
         }
       ],
-      "reason": "Reviewed regenerated quality references after context-search regression coverage; quality-risk guidance remains accurate.",
+      "reason": "Reviewed the context-concurrency worker warning suppression and regenerated quality metrics; quality-risk scoring and test-reference guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
-      "reviewedAtUtc": "2026-08-27T00:21:02.8887211Z"
+      "gitHead": "4fe954df62a36d649dd5e55a8ccafc51d27f2129",
+      "reviewedAtUtc": "2026-08-27T02:37:51.5866276Z"
     },
     {
       "pageId": "workflow-release-readiness",

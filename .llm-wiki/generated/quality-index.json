@@ -2226,11 +2226,11 @@
     },
     {
       "path": ".llm-wiki/tools/Measure-LlmWikiContextConcurrency.ps1",
-      "nonBlankLines": 58,
+      "nonBlankLines": 64,
       "decisionPoints": 8,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.16
+      "structuralRiskScore": 15.28
     },
     {
       "path": ".llm-wiki/tools/Measure-LlmWikiContextLatency.ps1",
