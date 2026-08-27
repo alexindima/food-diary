@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
   "semantics": {
-    "inventory": "Name-based candidate sensitive fields. Confirm semantics in source before making privacy claims.",
+    "inventory": "Name-and-context-based candidate sensitive fields. Generic quantity Amount fields are not financial without billing or monetary context. Confirm semantics in source before making privacy claims.",
     "potentialLogging": "A logging call near a candidate field name. This is a review lead, not proof that a runtime value is logged.",
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1495,
+    "candidateFields": 1425,
     "credential": 161,
     "identity": 156,
     "health": 672,
-    "financial": 202,
+    "financial": 132,
     "privateContent": 304,
-    "boundaryFiles": 187,
+    "boundaryFiles": 175,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -22,7 +22,7 @@
       "name": "SqliteConnectionStringBuilder",
       "type": "new",
       "path": ".llm-wiki/tools/LlmWiki.SqliteReader/CompiledIndexReader.cs",
-      "line": 94
+      "line": 95
     },
     {
       "category": "credential",
@@ -1146,6 +1146,55 @@
     },
     {
       "category": "financial",
+      "name": "LiteralExpressionSyntax",
+      "type": "as",
+      "path": ".llm-wiki/tools/roslyn-extractor/Program.cs",
+      "line": 142
+    },
+    {
+      "category": "financial",
+      "name": "RecordDeclarationSyntax",
+      "type": "is",
+      "path": ".llm-wiki/tools/roslyn-extractor/Program.cs",
+      "line": 207
+    },
+    {
+      "category": "financial",
+      "name": "LiteralExpressionSyntax",
+      "type": "as",
+      "path": ".llm-wiki/tools/roslyn-extractor/Program.cs",
+      "line": 272
+    },
+    {
+      "category": "financial",
+      "name": "LiteralExpressionSyntax",
+      "type": "as",
+      "path": ".llm-wiki/tools/roslyn-extractor/Program.cs",
+      "line": 277
+    },
+    {
+      "category": "financial",
+      "name": "RecordDeclarationSyntax",
+      "type": "is",
+      "path": "FoodDiary.Analyzers/ParameterNamingAnalyzer.cs",
+      "line": 33
+    },
+    {
+      "category": "financial",
+      "name": "ClassDeclarationSyntax",
+      "type": "not",
+      "path": "FoodDiary.Analyzers/PrimaryConstructorBackingFieldAnalyzer.cs",
+      "line": 35
+    },
+    {
+      "category": "financial",
+      "name": "ArgumentSyntax",
+      "type": "is",
+      "path": "FoodDiary.Analyzers/ProjectConventionAnalyzer.cs",
+      "line": 138
+    },
+    {
+      "category": "financial",
       "name": "BillingSubscriptionId",
       "type": "Guid?",
       "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
@@ -1181,6 +1230,13 @@
     },
     {
       "category": "financial",
+      "name": "ExternalPriceId",
+      "type": "string?",
+      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "line": 13
+    },
+    {
+      "category": "financial",
       "name": "Amount",
       "type": "decimal?",
       "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
@@ -1202,10 +1258,24 @@
     },
     {
       "category": "financial",
+      "name": "Refunds",
+      "type": "decimal",
+      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+      "line": 6
+    },
+    {
+      "category": "financial",
       "name": "SuccessfulPayments",
       "type": "int",
       "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
       "line": 10
+    },
+    {
+      "category": "financial",
+      "name": "Tax",
+      "type": "decimal",
+      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+      "line": 11
     },
     {
       "category": "financial",
@@ -1237,24 +1307,17 @@
     },
     {
       "category": "financial",
+      "name": "ExternalPriceId",
+      "type": "string?",
+      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "line": 11
+    },
+    {
+      "category": "financial",
       "name": "NextBillingAttemptUtc",
       "type": "DateTime?",
       "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
       "line": 17
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "decimal",
-      "path": "FoodDiary.Application.Abstractions/Ai/Models/FoodNutritionItemModel.cs",
-      "line": 5
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "decimal",
-      "path": "FoodDiary.Application.Abstractions/Ai/Models/FoodVisionItemModel.cs",
-      "line": 6
     },
     {
       "category": "financial",
@@ -1269,6 +1332,13 @@
       "type": "string",
       "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingCheckoutSessionModel.cs",
       "line": 6
+    },
+    {
+      "category": "financial",
+      "name": "PriceId",
+      "type": "string",
+      "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingCheckoutSessionModel.cs",
+      "line": 7
     },
     {
       "category": "financial",
@@ -1297,6 +1367,13 @@
       "type": "string",
       "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingRecurringPaymentModel.cs",
       "line": 5
+    },
+    {
+      "category": "financial",
+      "name": "PriceId",
+      "type": "string?",
+      "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingRecurringPaymentModel.cs",
+      "line": 6
     },
     {
       "category": "financial",
@@ -1370,6 +1447,13 @@
     },
     {
       "category": "financial",
+      "name": "ExternalPriceId",
+      "type": "string?",
+      "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingWebhookEventModel.cs",
+      "line": 9
+    },
+    {
+      "category": "financial",
       "name": "Amount",
       "type": "decimal?",
       "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingWebhookEventModel.cs",
@@ -1384,171 +1468,10 @@
     },
     {
       "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealAiItemReadModel.cs",
-      "line": 8
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealItemReadModel.cs",
-      "line": 6
-    },
-    {
-      "category": "financial",
-      "name": "ProductBaseAmount",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealItemReadModel.cs",
-      "line": 11
-    },
-    {
-      "category": "financial",
-      "name": "AmountColumn",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Export/Common/DiaryPdfReportTexts.cs",
-      "line": 29
-    },
-    {
-      "category": "financial",
-      "name": "PreferredPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
-      "line": 23
-    },
-    {
-      "category": "financial",
-      "name": "DefaultPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
-      "line": 24
-    },
-    {
-      "category": "financial",
-      "name": "PreferredPortionAmount",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
-      "line": 24
-    },
-    {
-      "category": "financial",
-      "name": "DefaultPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
-      "line": 25
-    },
-    {
-      "category": "financial",
-      "name": "AmountMl",
-      "type": "int",
-      "path": "FoodDiary.Application.Abstractions/Hydration/Models/HydrationEntryReadModel.cs",
-      "line": 3
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealAiItemProjectionReadModel.cs",
-      "line": 10
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealItemProjectionReadModel.cs",
-      "line": 8
-    },
-    {
-      "category": "financial",
-      "name": "ProductBaseAmount",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealItemProjectionReadModel.cs",
-      "line": 13
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealProductNutritionReadModel.cs",
-      "line": 4
-    },
-    {
-      "category": "financial",
-      "name": "ProductBaseAmount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealProductNutritionReadModel.cs",
+      "name": "ITransactionalCommand",
+      "type": "IRequest<TResponse>,",
+      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs",
       "line": 5
-    },
-    {
-      "category": "financial",
-      "name": "BaseAmount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Products/Models/ProductOverviewReadItem.cs",
-      "line": 19
-    },
-    {
-      "category": "financial",
-      "name": "DefaultPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Products/Models/ProductOverviewReadItem.cs",
-      "line": 20
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Recipes/Models/RecipeOverviewIngredientReadItem.cs",
-      "line": 5
-    },
-    {
-      "category": "financial",
-      "name": "ProductBaseAmount",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Recipes/Models/RecipeOverviewIngredientReadItem.cs",
-      "line": 9
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/ShoppingLists/Models/ShoppingListItemReadModel.cs",
-      "line": 8
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/ShoppingLists/Models/ShoppingListItemSourceReadModel.cs",
-      "line": 12
-    },
-    {
-      "category": "financial",
-      "name": "TotalAmount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/DailyMicronutrientModel.cs",
-      "line": 7
-    },
-    {
-      "category": "financial",
-      "name": "AmountPer100G",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/MicronutrientModel.cs",
-      "line": 7
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/UsdaFoodPortionModel.cs",
-      "line": 5
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/UsdaNutrientReadModel.cs",
-      "line": 7
     },
     {
       "category": "financial",
@@ -1559,10 +1482,45 @@
     },
     {
       "category": "financial",
+      "name": "ITransactionalCommand",
+      "type": "IRequest<Result<BillingCheckoutSessionModel>>,",
+      "path": "FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommand.cs",
+      "line": 13
+    },
+    {
+      "category": "financial",
+      "name": "ITransactionalCommand",
+      "type": "IRequest<Result<BillingPortalSessionModel>>,",
+      "path": "FoodDiary.Application.Billing/Commands/CreatePortalSession/CreatePortalSessionCommand.cs",
+      "line": 9
+    },
+    {
+      "category": "financial",
       "name": "Subscription",
       "type": "BillingSubscription?",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookProcessingContext.cs",
       "line": 6
+    },
+    {
+      "category": "financial",
+      "name": "ITransactionalCommand",
+      "type": "IRequest<Result>,",
+      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommand.cs",
+      "line": 12
+    },
+    {
+      "category": "financial",
+      "name": "ITransactionalCommand",
+      "type": "IRequest<Result>,",
+      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
+      "line": 8
+    },
+    {
+      "category": "financial",
+      "name": "ITransactionalCommand",
+      "type": "IRequest<Result<BillingOverviewModel>>,",
+      "path": "FoodDiary.Application.Billing/Commands/StartPremiumTrial/StartPremiumTrialCommand.cs",
+      "line": 9
     },
     {
       "category": "financial",
@@ -1587,38 +1545,10 @@
     },
     {
       "category": "financial",
-      "name": "PreferredPortionAmount",
-      "type": "double?",
-      "path": "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs",
-      "line": 11
-    },
-    {
-      "category": "financial",
-      "name": "PreferredPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs",
-      "line": 11
-    },
-    {
-      "category": "financial",
-      "name": "AmountMl",
-      "type": "int",
-      "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
-      "line": 10
-    },
-    {
-      "category": "financial",
-      "name": "AmountMl",
-      "type": "int?",
-      "path": "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
-      "line": 11
-    },
-    {
-      "category": "financial",
-      "name": "AmountMl",
-      "type": "int",
-      "path": "FoodDiary.Application.Hydration/Models/HydrationEntryModel.cs",
-      "line": 6
+      "name": "ITransactionalCommand",
+      "type": "IRequest<Result>,",
+      "path": "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
+      "line": 21
     },
     {
       "category": "financial",
@@ -1626,160 +1556,6 @@
       "type": "IMarketingConversionRecorder,",
       "path": "FoodDiary.Application.Marketing/Services/MarketingConversionRecorder.cs",
       "line": 11
-    },
-    {
-      "category": "financial",
-      "name": "TotalAmount",
-      "type": "double",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-      "line": 139
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-      "line": 150
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListCreationItem.cs",
-      "line": 9
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListCreationSource.cs",
-      "line": 13
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double?",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListItemInput.cs",
-      "line": 7
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double?",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Models/ShoppingListItemModel.cs",
-      "line": 8
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Models/ShoppingListItemSourceModel.cs",
-      "line": 12
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double?",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListItemData.cs",
-      "line": 10
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Meals/Common/MealAiItemInput.cs",
-      "line": 6
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Meals/Common/MealItemInput.cs",
-      "line": 6
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Meals/Models/MealAiItemModel.cs",
-      "line": 11
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Meals/Models/MealItemModel.cs",
-      "line": 9
-    },
-    {
-      "category": "financial",
-      "name": "ProductBaseAmount",
-      "type": "double?",
-      "path": "FoodDiary.Application.Meals/Models/MealItemModel.cs",
-      "line": 14
-    },
-    {
-      "category": "financial",
-      "name": "BaseAmount",
-      "type": "double",
-      "path": "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs",
-      "line": 19
-    },
-    {
-      "category": "financial",
-      "name": "DefaultPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs",
-      "line": 20
-    },
-    {
-      "category": "financial",
-      "name": "BaseAmount",
-      "type": "double?",
-      "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
-      "line": 27
-    },
-    {
-      "category": "financial",
-      "name": "DefaultPortionAmount",
-      "type": "double?",
-      "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
-      "line": 28
-    },
-    {
-      "category": "financial",
-      "name": "BaseAmount",
-      "type": "double",
-      "path": "FoodDiary.Application.Products/Products/Models/ProductModel.cs",
-      "line": 18
-    },
-    {
-      "category": "financial",
-      "name": "DefaultPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Application.Products/Products/Models/ProductModel.cs",
-      "line": 19
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Recipes/Recipes/Common/RecipeIngredientInput.cs",
-      "line": 6
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Application.Recipes/Recipes/Models/RecipeIngredientModel.cs",
-      "line": 8
-    },
-    {
-      "category": "financial",
-      "name": "ProductBaseAmount",
-      "type": "double?",
-      "path": "FoodDiary.Application.Recipes/Recipes/Models/RecipeIngredientModel.cs",
-      "line": 12
     },
     {
       "category": "financial",
@@ -1818,6 +1594,13 @@
     },
     {
       "category": "financial",
+      "name": "ExternalPriceId",
+      "type": "string?",
+      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+      "line": 22
+    },
+    {
+      "category": "financial",
       "name": "Amount",
       "type": "decimal?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
@@ -1832,10 +1615,24 @@
     },
     {
       "category": "financial",
+      "name": "Tax",
+      "type": "decimal?",
+      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+      "line": 28
+    },
+    {
+      "category": "financial",
       "name": "PayoutCurrency",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
       "line": 31
+    },
+    {
+      "category": "financial",
+      "name": "PayoutEarnings",
+      "type": "decimal?",
+      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+      "line": 32
     },
     {
       "category": "financial",
@@ -1850,6 +1647,20 @@
       "type": "decimal?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
       "line": 187
+    },
+    {
+      "category": "financial",
+      "name": "Tax",
+      "type": "decimal?",
+      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+      "line": 188
+    },
+    {
+      "category": "financial",
+      "name": "PayoutEarnings",
+      "type": "decimal?",
+      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+      "line": 191
     },
     {
       "category": "financial",
@@ -1871,6 +1682,13 @@
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
       "line": 19
+    },
+    {
+      "category": "financial",
+      "name": "ExternalPriceId",
+      "type": "string?",
+      "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
+      "line": 20
     },
     {
       "category": "financial",
@@ -1909,185 +1727,10 @@
     },
     {
       "category": "financial",
-      "name": "PreferredPortionAmount",
-      "type": "double?",
-      "path": "FoodDiary.Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
-      "line": 13
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Meals/MealAiItem.cs",
-      "line": 13
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Meals/MealAiItemData.cs",
-      "line": 9
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-      "line": 25
-    },
-    {
-      "category": "financial",
-      "name": "SnapshotBaseAmount",
-      "type": "double?",
-      "path": "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-      "line": 29
-    },
-    {
-      "category": "financial",
       "name": "WebPushSubscription",
       "type": "new",
       "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
       "line": 37
-    },
-    {
-      "category": "financial",
-      "name": "BaseAmount",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 40
-    },
-    {
-      "category": "financial",
-      "name": "DefaultPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 41
-    },
-    {
-      "category": "financial",
-      "name": "BaseAmount",
-      "type": "BaseUnit,",
-      "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 518
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Recipes/RecipeIngredient.cs",
-      "line": 15
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double?",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 20
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
-      "line": 19
-    },
-    {
-      "category": "financial",
-      "name": "AmountMl",
-      "type": "int",
-      "path": "FoodDiary.Domain/Entities/Tracking/HydrationEntry.cs",
-      "line": 14
-    },
-    {
-      "category": "financial",
-      "name": "MaximumAmountMl",
-      "type": "value,",
-      "path": "FoodDiary.Domain/Entities/Tracking/HydrationEntry.cs",
-      "line": 76
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodNutrient.cs",
-      "line": 21
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodPortion.cs",
-      "line": 21
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double?",
-      "path": "FoodDiary.Domain/Events/ShoppingListItemAddedDomainEvent.cs",
-      "line": 41
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Domain/ValueObjects/MealAiItemState.cs",
-      "line": 12
-    },
-    {
-      "category": "financial",
-      "name": "BaseAmount",
-      "type": "double",
-      "path": "FoodDiary.Domain/ValueObjects/ProductMeasurementState.cs",
-      "line": 9
-    },
-    {
-      "category": "financial",
-      "name": "DefaultPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Domain/ValueObjects/ProductMeasurementState.cs",
-      "line": 10
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
-      "line": 10
-    },
-    {
-      "category": "financial",
-      "name": "SnapshotBaseAmount",
-      "type": "double?",
-      "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
-      "line": 15
-    },
-    {
-      "category": "financial",
-      "name": "ProductBaseAmount",
-      "type": "double?",
-      "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
-      "line": 25
-    },
-    {
-      "category": "financial",
-      "name": "BaseAmount",
-      "type": "double",
-      "path": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 180
-    },
-    {
-      "category": "financial",
-      "name": "DefaultPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 181
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "string",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs",
-      "line": 158
     },
     {
       "category": "financial",
@@ -2105,10 +1748,24 @@
     },
     {
       "category": "financial",
+      "name": "PriceId",
+      "type": "string",
+      "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
+      "line": 773
+    },
+    {
+      "category": "financial",
       "name": "Checkout",
       "type": "TransactionCheckoutResponse?",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
       "line": 781
+    },
+    {
+      "category": "financial",
+      "name": "Price",
+      "type": "TransactionPriceResponse?",
+      "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
+      "line": 788
     },
     {
       "category": "financial",
@@ -2175,10 +1832,38 @@
     },
     {
       "category": "financial",
+      "name": "PremiumMonthlyPriceId",
+      "type": "string",
+      "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
+      "line": 15
+    },
+    {
+      "category": "financial",
+      "name": "PremiumYearlyPriceId",
+      "type": "string",
+      "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
+      "line": 16
+    },
+    {
+      "category": "financial",
       "name": "CheckoutUrl",
       "type": "string",
       "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
       "line": 17
+    },
+    {
+      "category": "financial",
+      "name": "PremiumMonthlyPriceId",
+      "type": "string",
+      "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
+      "line": 9
+    },
+    {
+      "category": "financial",
+      "name": "PremiumYearlyPriceId",
+      "type": "string",
+      "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
+      "line": 10
     },
     {
       "category": "financial",
@@ -2200,20 +1885,6 @@
       "type": "string",
       "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
       "line": 11
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double?",
-      "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "line": 207
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double?",
-      "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "line": 229
     },
     {
       "category": "financial",
@@ -2266,6 +1937,13 @@
     },
     {
       "category": "financial",
+      "name": "ExternalPriceId",
+      "type": "string?",
+      "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
+      "line": 13
+    },
+    {
+      "category": "financial",
       "name": "Amount",
       "type": "decimal?",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
@@ -2287,10 +1965,24 @@
     },
     {
       "category": "financial",
+      "name": "Refunds",
+      "type": "decimal",
+      "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "category": "financial",
       "name": "SuccessfulPayments",
       "type": "int",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
       "line": 10
+    },
+    {
+      "category": "financial",
+      "name": "Tax",
+      "type": "decimal",
+      "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
+      "line": 11
     },
     {
       "category": "financial",
@@ -2322,24 +2014,17 @@
     },
     {
       "category": "financial",
+      "name": "ExternalPriceId",
+      "type": "string?",
+      "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",
+      "line": 11
+    },
+    {
+      "category": "financial",
       "name": "NextBillingAttemptUtc",
       "type": "DateTime?",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",
       "line": 17
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "decimal",
-      "path": "FoodDiary.Presentation.Api/Features/Ai/Models/FoodVisionItemHttpModel.cs",
-      "line": 6
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "decimal",
-      "path": "FoodDiary.Presentation.Api/Features/Ai/Responses/FoodNutritionItemHttpResponse.cs",
-      "line": 5
     },
     {
       "category": "financial",
@@ -2364,188 +2049,6 @@
     },
     {
       "category": "financial",
-      "name": "PreferredPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/FavoriteProducts/Requests/UpdateFavoriteProductHttpRequest.cs",
-      "line": 3
-    },
-    {
-      "category": "financial",
-      "name": "PreferredPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
-      "line": 23
-    },
-    {
-      "category": "financial",
-      "name": "DefaultPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
-      "line": 24
-    },
-    {
-      "category": "financial",
-      "name": "AmountMl",
-      "type": "int",
-      "path": "FoodDiary.Presentation.Api/Features/Hydration/Requests/CreateHydrationEntryHttpRequest.cs",
-      "line": 5
-    },
-    {
-      "category": "financial",
-      "name": "AmountMl",
-      "type": "int?",
-      "path": "FoodDiary.Presentation.Api/Features/Hydration/Requests/UpdateHydrationEntryHttpRequest.cs",
-      "line": 5
-    },
-    {
-      "category": "financial",
-      "name": "AmountMl",
-      "type": "int",
-      "path": "FoodDiary.Presentation.Api/Features/Hydration/Responses/HydrationEntryHttpResponse.cs",
-      "line": 6
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/Meals/Requests/MealAiItemHttpRequest.cs",
-      "line": 6
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/Meals/Requests/MealItemHttpRequest.cs",
-      "line": 6
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/Meals/Responses/MealAiItemHttpResponse.cs",
-      "line": 8
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/Meals/Responses/MealItemHttpResponse.cs",
-      "line": 6
-    },
-    {
-      "category": "financial",
-      "name": "ProductBaseAmount",
-      "type": "double?",
-      "path": "FoodDiary.Presentation.Api/Features/Meals/Responses/MealItemHttpResponse.cs",
-      "line": 11
-    },
-    {
-      "category": "financial",
-      "name": "BaseAmount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/Products/Requests/CreateProductHttpRequest.cs",
-      "line": 14
-    },
-    {
-      "category": "financial",
-      "name": "DefaultPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/Products/Requests/CreateProductHttpRequest.cs",
-      "line": 15
-    },
-    {
-      "category": "financial",
-      "name": "BaseAmount",
-      "type": "double?",
-      "path": "FoodDiary.Presentation.Api/Features/Products/Requests/UpdateProductHttpRequest.cs",
-      "line": 21
-    },
-    {
-      "category": "financial",
-      "name": "DefaultPortionAmount",
-      "type": "double?",
-      "path": "FoodDiary.Presentation.Api/Features/Products/Requests/UpdateProductHttpRequest.cs",
-      "line": 22
-    },
-    {
-      "category": "financial",
-      "name": "BaseAmount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/Products/Responses/ProductHttpResponse.cs",
-      "line": 15
-    },
-    {
-      "category": "financial",
-      "name": "DefaultPortionAmount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/Products/Responses/ProductHttpResponse.cs",
-      "line": 16
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/Recipes/Requests/RecipeIngredientHttpRequest.cs",
-      "line": 6
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/Recipes/Responses/RecipeIngredientHttpResponse.cs",
-      "line": 5
-    },
-    {
-      "category": "financial",
-      "name": "ProductBaseAmount",
-      "type": "double?",
-      "path": "FoodDiary.Presentation.Api/Features/Recipes/Responses/RecipeIngredientHttpResponse.cs",
-      "line": 9
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double?",
-      "path": "FoodDiary.Presentation.Api/Features/ShoppingLists/Requests/ShoppingListItemHttpRequest.cs",
-      "line": 7
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double?",
-      "path": "FoodDiary.Presentation.Api/Features/ShoppingLists/Responses/ShoppingListItemHttpResponse.cs",
-      "line": 8
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/ShoppingLists/Responses/ShoppingListItemSourceHttpResponse.cs",
-      "line": 12
-    },
-    {
-      "category": "financial",
-      "name": "TotalAmount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/Usda/Responses/DailyMicronutrientHttpResponse.cs",
-      "line": 7
-    },
-    {
-      "category": "financial",
-      "name": "AmountPer100G",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/Usda/Responses/MicronutrientHttpResponse.cs",
-      "line": 7
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "double",
-      "path": "FoodDiary.Presentation.Api/Features/Usda/Responses/UsdaFoodPortionHttpResponse.cs",
-      "line": 5
-    },
-    {
-      "category": "financial",
       "name": "WebPushSubscriptions",
       "type": "IReadOnlyList<WebPushSubscriptionHttpResponse>",
       "path": "FoodDiary.Presentation.Api/Features/Users/Responses/ProfileOverviewHttpResponse.cs",
@@ -2557,6 +2060,13 @@
       "type": "FixedWindowPolicyOptions",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
       "line": 56
+    },
+    {
+      "category": "financial",
+      "name": "NpgsqlTransaction",
+      "type": "Func<NpgsqlConnection,",
+      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
+      "line": 61
     },
     {
       "category": "health",
@@ -10487,11 +9997,10 @@
     {
       "path": "FoodDiary.Application.Abstractions/Export/Common/DiaryPdfReportTexts.cs",
       "categories": [
-        "financial",
         "health",
         "privateContent"
       ],
-      "fieldCount": 5
+      "fieldCount": 4
     },
     {
       "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
@@ -10513,7 +10022,7 @@
         "financial",
         "identity"
       ],
-      "fieldCount": 4
+      "fieldCount": 6
     },
     {
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
@@ -10549,7 +10058,7 @@
         "credential",
         "financial"
       ],
-      "fieldCount": 5
+      "fieldCount": 7
     },
     {
       "path": "FoodDiary.Integrations/Options/S3Options.cs",
@@ -10561,9 +10070,10 @@
     {
       "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
       "categories": [
-        "credential"
+        "credential",
+        "financial"
       ],
-      "fieldCount": 2
+      "fieldCount": 4
     },
     {
       "path": "FoodDiary.Integrations/Options/TelegramAuthOptions.cs",
@@ -10597,10 +10107,9 @@
     {
       "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
       "categories": [
-        "financial",
         "health"
       ],
-      "fieldCount": 3
+      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
@@ -10679,14 +10188,14 @@
         "financial",
         "identity"
       ],
-      "fieldCount": 8
+      "fieldCount": 9
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingRevenueCurrencyHttpResponse.cs",
       "categories": [
         "financial"
       ],
-      "fieldCount": 3
+      "fieldCount": 5
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",
@@ -10694,7 +10203,7 @@
         "financial",
         "identity"
       ],
-      "fieldCount": 5
+      "fieldCount": 6
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Admin/Responses/AdminImpersonationSessionHttpResponse.cs",
@@ -10742,13 +10251,6 @@
       "fieldCount": 1
     },
     {
-      "path": "FoodDiary.Presentation.Api/Features/Ai/Models/FoodVisionItemHttpModel.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 1
-    },
-    {
       "path": "FoodDiary.Presentation.Api/Features/Ai/Requests/FoodVisionHttpRequest.cs",
       "categories": [
         "privateContent"
@@ -10765,10 +10267,9 @@
     {
       "path": "FoodDiary.Presentation.Api/Features/Ai/Responses/FoodNutritionItemHttpResponse.cs",
       "categories": [
-        "financial",
         "health"
       ],
-      "fieldCount": 2
+      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/ConfirmPasswordResetHttpRequest.cs",
@@ -11148,20 +10649,12 @@
       "fieldCount": 1
     },
     {
-      "path": "FoodDiary.Presentation.Api/Features/FavoriteProducts/Requests/UpdateFavoriteProductHttpRequest.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 1
-    },
-    {
       "path": "FoodDiary.Presentation.Api/Features/FavoriteProducts/Responses/FavoriteProductHttpResponse.cs",
       "categories": [
-        "financial",
         "health",
         "privateContent"
       ],
-      "fieldCount": 5
+      "fieldCount": 3
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
@@ -11184,27 +10677,6 @@
         "health"
       ],
       "fieldCount": 9
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Features/Hydration/Requests/CreateHydrationEntryHttpRequest.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Features/Hydration/Requests/UpdateHydrationEntryHttpRequest.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Features/Hydration/Responses/HydrationEntryHttpResponse.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/MealPlans/Responses/MealPlanHttpResponse.cs",
@@ -11237,10 +10709,9 @@
     {
       "path": "FoodDiary.Presentation.Api/Features/Meals/Requests/MealAiItemHttpRequest.cs",
       "categories": [
-        "financial",
         "health"
       ],
-      "fieldCount": 2
+      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Meals/Requests/MealAiSessionHttpRequest.cs",
@@ -11248,13 +10719,6 @@
         "privateContent"
       ],
       "fieldCount": 2
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Features/Meals/Requests/MealItemHttpRequest.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Meals/Requests/UpdateMealHttpRequest.cs",
@@ -11266,10 +10730,9 @@
     {
       "path": "FoodDiary.Presentation.Api/Features/Meals/Responses/MealAiItemHttpResponse.cs",
       "categories": [
-        "financial",
         "health"
       ],
-      "fieldCount": 2
+      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
@@ -11289,11 +10752,10 @@
     {
       "path": "FoodDiary.Presentation.Api/Features/Meals/Responses/MealItemHttpResponse.cs",
       "categories": [
-        "financial",
         "health",
         "privateContent"
       ],
-      "fieldCount": 6
+      "fieldCount": 4
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Notifications/Requests/UpdateNotificationPreferencesHttpRequest.cs",
@@ -11327,29 +10789,26 @@
     {
       "path": "FoodDiary.Presentation.Api/Features/Products/Requests/CreateProductHttpRequest.cs",
       "categories": [
-        "financial",
         "health",
         "privateContent"
       ],
-      "fieldCount": 6
+      "fieldCount": 4
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Products/Requests/UpdateProductHttpRequest.cs",
       "categories": [
-        "financial",
         "health",
         "privateContent"
       ],
-      "fieldCount": 9
+      "fieldCount": 7
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Products/Responses/ProductHttpResponse.cs",
       "categories": [
-        "financial",
         "health",
         "privateContent"
       ],
-      "fieldCount": 6
+      "fieldCount": 4
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Products/Responses/ProductSearchSuggestionHttpResponse.cs",
@@ -11366,13 +10825,6 @@
         "privateContent"
       ],
       "fieldCount": 5
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Features/Recipes/Requests/RecipeIngredientHttpRequest.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Recipes/Requests/RecipeStepHttpRequest.cs",
@@ -11400,10 +10852,9 @@
     {
       "path": "FoodDiary.Presentation.Api/Features/Recipes/Responses/RecipeIngredientHttpResponse.cs",
       "categories": [
-        "financial",
         "health"
       ],
-      "fieldCount": 4
+      "fieldCount": 2
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Recipes/Responses/RecipeStepHttpResponse.cs",
@@ -11411,27 +10862,6 @@
         "privateContent"
       ],
       "fieldCount": 2
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Features/ShoppingLists/Requests/ShoppingListItemHttpRequest.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Features/ShoppingLists/Responses/ShoppingListItemHttpResponse.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Features/ShoppingLists/Responses/ShoppingListItemSourceHttpResponse.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Statistics/Responses/AggregatedStatisticsHttpResponse.cs",
@@ -11455,26 +10885,11 @@
       "fieldCount": 3
     },
     {
-      "path": "FoodDiary.Presentation.Api/Features/Usda/Responses/DailyMicronutrientHttpResponse.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Features/Usda/Responses/MicronutrientHttpResponse.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 1
-    },
-    {
       "path": "FoodDiary.Presentation.Api/Features/Usda/Responses/UsdaFoodPortionHttpResponse.cs",
       "categories": [
-        "financial",
         "health"
       ],
-      "fieldCount": 2
+      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Users/Requests/ChangePasswordHttpRequest.cs",
@@ -11771,9 +11186,10 @@
     {
       "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
       "categories": [
-        "credential"
+        "credential",
+        "financial"
       ],
-      "fieldCount": 2
+      "fieldCount": 3
     },
     {
       "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Queue.cs",

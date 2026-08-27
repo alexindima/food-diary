@@ -12,6 +12,21 @@ function ConvertTo-RepositoryPath {
     return [System.IO.Path]::GetFullPath($Path).Substring($repositoryRoot.Length + 1).Replace('\', '/')
 }
 
+function Get-ComposePropertyBlock {
+    param([string]$Body, [string]$Name)
+    $escapedName = [regex]::Escape($Name)
+    $match = [regex]::Match($Body, "(?ms)^    ${escapedName}:\s*\r?\n(?<block>.*?)(?=^    [a-zA-Z0-9_-]+:\s*|\z)")
+    return $(if ($match.Success) { $match.Groups['block'].Value } else { '' })
+}
+
+function Get-ComposeListValues {
+    param([string]$Block)
+    return @(
+        [regex]::Matches($Block, '(?m)^\s{6}-\s*["'']?(?<value>[^\r\n"'']+)["'']?\s*$') |
+            ForEach-Object { $_.Groups['value'].Value.Trim() }
+    )
+}
+
 $sourceFiles = @(
     Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
         Where-Object {
@@ -24,6 +39,7 @@ $hostedServices = [System.Collections.Generic.List[object]]::new()
 $httpClients = [System.Collections.Generic.List[object]]::new()
 $webhooks = [System.Collections.Generic.List[object]]::new()
 $jobRegistrations = [System.Collections.Generic.List[object]]::new()
+$networkPolicies = [System.Collections.Generic.List[object]]::new()
 
 foreach ($file in $sourceFiles) {
     $content = [System.IO.File]::ReadAllText($file.FullName)
@@ -64,8 +80,39 @@ foreach ($file in $sourceFiles) {
         foreach ($match in [regex]::Matches(
             $content,
             '(?m)(?:class|sealed\s+class)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*(?:Webhook|WebhookController|WebhookAuthorizer)[A-Za-z0-9_]*)')) {
-            $webhooks.Add([pscustomobject]@{ name = $match.Groups['name'].Value; path = $path })
+            $signals = @(
+                if ($content -match '(?i)HMAC|signature|CryptographicOperations') { 'signature-validation' }
+                if ($content -match '(?i)timestamp|tolerance|freshness') { 'freshness-validation' }
+                if ($content -match '(?i)ApiKey|Authorization') { 'request-authentication' }
+                if ($content -match '(?i)idempoten|deduplicat|alreadyprocessed|unique') { 'replay-or-duplicate-control' }
+            ) | Sort-Object -Unique
+            $webhooks.Add([pscustomobject]@{
+                name = $match.Groups['name'].Value
+                path = $path
+                securitySignals = @($signals)
+                evidenceStatus = 'inferred-from-code'
+            })
         }
+    }
+    if ($content -match '\b(HttpClient|HttpMessageHandler|SocketsHttpHandler|ConnectCallback|SendAsync)\b' -and
+        $content -match '(?i)(ConnectCallback|AllowAutoRedirect|UseProxy|Dns\.|GetHostAddresses|IPAddress|CheckHostName|MaxResponseContentBufferSize|Timeout|private|loopback|linklocal)') {
+        $signals = @(
+            if ($content -match '(?i)ConnectCallback') { 'connect-time-address-control' }
+            if ($content -match '(?i)AllowAutoRedirect\s*=\s*false') { 'redirects-disabled' }
+            if ($content -match '(?i)UseProxy\s*=\s*false') { 'proxy-disabled' }
+            if ($content -match '(?i)Dns\.|GetHostAddresses') { 'dns-resolution' }
+            if ($content -match '(?i)IPAddress|loopback|private|linklocal') { 'ip-address-policy' }
+            if ($content -match '(?i)Timeout') { 'timeout-policy' }
+            if ($content -match '(?i)MaxResponseContentBufferSize|maximum.*(?:bytes|size)|bounded') { 'response-size-policy' }
+            if ($content -match '(?i)https|CheckHostName|Uri') { 'uri-policy' }
+        ) | Sort-Object -Unique
+        $networkPolicies.Add([pscustomobject]@{
+            name = [IO.Path]::GetFileNameWithoutExtension($path)
+            path = $path
+            securitySignals = @($signals)
+            evidenceStatus = 'inferred-from-code'
+            runtimeEvidenceRequired = @('effective DNS result at connection time', 'effective proxy and redirect behavior')
+        })
     }
     foreach ($match in [regex]::Matches(
         $content,
@@ -86,10 +133,25 @@ if (Test-Path -LiteralPath $composePath) {
         $body = $match.Groups['body'].Value
         $imageMatch = [regex]::Match($body, '(?m)^\s{4}image:\s*(?<value>.+)$')
         $dockerfileMatch = [regex]::Match($body, '(?m)^\s{6}dockerfile:\s*(?<value>.+)$')
+        $dependsOnBlock = Get-ComposePropertyBlock -Body $body -Name 'depends_on'
+        $environmentBlock = Get-ComposePropertyBlock -Body $body -Name 'environment'
+        $portsBlock = Get-ComposePropertyBlock -Body $body -Name 'ports'
+        $profilesBlock = Get-ComposePropertyBlock -Body $body -Name 'profiles'
+        $networksBlock = Get-ComposePropertyBlock -Body $body -Name 'networks'
+        $volumesBlock = Get-ComposePropertyBlock -Body $body -Name 'volumes'
         $dependencies = @(
-            [regex]::Matches($body, '(?m)^\s{6}(?<name>[a-zA-Z0-9_-]+):\s*(?:\r?\n|$)') |
+            [regex]::Matches($dependsOnBlock, '(?m)^\s{6}(?<name>[a-zA-Z0-9_-]+):\s*(?:\r?\n|$)') |
                 ForEach-Object { $_.Groups['name'].Value } |
-                Where-Object { $_ -notin @('condition', 'environment', 'healthcheck', 'profiles', 'build') } |
+                Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique
+        )
+        $environmentKeys = @(
+            @([regex]::Matches($environmentBlock, '(?m)^\s{6}(?<name>[A-Za-z_][A-Za-z0-9_]*):') | ForEach-Object { $_.Groups['name'].Value }) +
+            @([regex]::Matches($environmentBlock, '(?m)^\s{6}-\s*(?<name>[A-Za-z_][A-Za-z0-9_]*)=') | ForEach-Object { $_.Groups['name'].Value }) |
+                Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique
+        )
+        $networkNames = @(
+            [regex]::Matches($networksBlock, '(?m)^\s{6}(?<name>[a-zA-Z0-9_-]+):\s*(?:\r?\n|$)') |
+                ForEach-Object { $_.Groups['name'].Value } |
                 Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique
         )
         $composeServices.Add([pscustomobject]@{
@@ -97,6 +159,15 @@ if (Test-Path -LiteralPath $composePath) {
             image = if ($imageMatch.Success) { $imageMatch.Groups['value'].Value.Trim() } else { $null }
             dockerfile = if ($dockerfileMatch.Success) { $dockerfileMatch.Groups['value'].Value.Trim() } else { $null }
             dependsOn = $dependencies
+            ports = @(Get-ComposeListValues $portsBlock)
+            profiles = @(Get-ComposeListValues $profilesBlock)
+            networks = $networkNames
+            environmentKeys = $environmentKeys
+            volumeMounts = @(Get-ComposeListValues $volumesBlock)
+            readOnlyRootFilesystem = [bool]($body -match '(?m)^    read_only:\s*true\s*$')
+            dropsAllCapabilities = [bool]($body -match '(?ms)^    cap_drop:\s*\r?\n(?:\s{6}-\s*)?ALL\s*$')
+            noNewPrivileges = [bool]($body -match '(?m)^\s{6}-\s*no-new-privileges:true\s*$')
+            evidenceStatus = 'declared-in-repository'
         })
     }
 }
@@ -109,12 +180,19 @@ $result = [ordered]@{
         httpClients = @($httpClients | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.implementation)`0$($_.registrationPath)" } -Unique).Count
         webhooks = @($webhooks | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.name)`0$($_.path)" } -Unique).Count
         recurringJobRegistrations = $jobRegistrations.Count
+        networkPolicies = @($networkPolicies | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.name)`0$($_.path)" } -Unique).Count
+    }
+    semantics = [ordered]@{
+        declared = 'Compose fields describe repository declarations, not effective production exposure or IAM.'
+        inferred = 'Code security signals are navigation evidence and require source and runtime validation.'
+        externalEvidence = @('effective firewall and reverse-proxy exposure', 'cloud IAM and database grants', 'runtime DNS, redirect, proxy, and certificate behavior')
     }
     composeServices = @($composeServices | Sort-Object { Get-LlmWikiOrdinalSortKey $_.name })
     hostedServices = @($hostedServices | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.name)`0$($_.path)" } -Unique)
     httpClients = @($httpClients | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.implementation)`0$($_.registrationPath)" } -Unique)
     webhooks = @($webhooks | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.name)`0$($_.path)" } -Unique)
     recurringJobRegistrations = @($jobRegistrations | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.path)`0$($_.detail)" })
+    networkPolicies = @($networkPolicies | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.name)`0$($_.path)" } -Unique)
 }
 $jsonText = ($result | ConvertTo-Json -Depth 10) + [Environment]::NewLine
 if ($Check) {

@@ -34,6 +34,13 @@ function Get-Hash([object]$Value) {
     $sha = [Security.Cryptography.SHA256]::Create()
     try { ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($json))) -replace '-', '').ToLowerInvariant() } finally { $sha.Dispose() }
 }
+function Get-PropertyValues([object[]]$Items, [string]$Name) {
+    @(
+        $Items | ForEach-Object {
+            if ($null -ne $_ -and $null -ne $_.PSObject.Properties[$Name]) { [string]$_.$Name }
+        }
+    )
+}
 function Read-Registry {
     $value = Get-Content -LiteralPath $registryPath -Raw | ConvertFrom-Json
     if ($value.schemaVersion -ne 1 -or $null -eq $value.events) { throw 'Unsupported eval-promotion registry schema.' }
@@ -179,10 +186,10 @@ function New-Observation([string]$Workspace) {
     $case = [pscustomobject][ordered]@{
         id = $candidateId
         changedPaths = $changedPaths
-        expectedModules = @($diff.modules.name | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
+        expectedModules = @(Get-PropertyValues @($diff.modules) 'name' | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
         expectedScopes = @($diff.scopes | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
-        expectedRules = @($changePolicy.matchedRules.id | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
-        expectedChecks = @($changePolicy.requiredChecks.id | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
+        expectedRules = @(Get-PropertyValues @($changePolicy.matchedRules) 'id' | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
+        expectedChecks = @(Get-PropertyValues @($changePolicy.requiredChecks) 'id' | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
         expectedViolationRules = @(
             @($changePolicy.violations) |
                 ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['rule']) { [string]$_.rule } } |
@@ -205,8 +212,8 @@ function Test-CaseExecution([object]$Case) {
     $diff = & (Join-Path $PSScriptRoot 'Get-LlmWikiDiffContext.ps1') -ChangedPath @($Case.changedPaths) -Format Json | ConvertFrom-Json
     $changePolicy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') -ChangedPath @($Case.changedPaths) -Format Json | ConvertFrom-Json
     $actual = @{
-        expectedModules = @($diff.modules.name); expectedScopes = @($diff.scopes)
-        expectedRules = @($changePolicy.matchedRules.id); expectedChecks = @($changePolicy.requiredChecks.id)
+        expectedModules = @(Get-PropertyValues @($diff.modules) 'name'); expectedScopes = @($diff.scopes)
+        expectedRules = @(Get-PropertyValues @($changePolicy.matchedRules) 'id'); expectedChecks = @(Get-PropertyValues @($changePolicy.requiredChecks) 'id')
         expectedViolationRules = @(
             @($changePolicy.violations) |
                 ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['rule']) { [string]$_.rule } }

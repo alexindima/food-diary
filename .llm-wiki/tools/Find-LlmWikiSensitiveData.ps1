@@ -8,6 +8,7 @@ param(
     [ValidateRange(1, 100)]
     [int]$Limit = 30,
     [switch]$NoImplicitScope,
+    [switch]$RepositoryWide,
     [ValidateSet('Sqlite', 'Json')]
     [string]$CompiledIndexSource = 'Sqlite',
     [switch]$IncludeDiagnostics,
@@ -28,8 +29,11 @@ $scopePaths = @(
         Where-Object { $_.Length -gt 0 } |
         Sort-Object -Unique
 )
-$scopeMode = if ($scopePaths.Count -gt 0) { 'explicit' } else { 'none' }
-if (-not $NoImplicitScope -and $scopePaths.Count -eq 0 -and [string]::IsNullOrWhiteSpace($Query) -and $Category -eq 'all') {
+if ($RepositoryWide -and $scopePaths.Count -gt 0) {
+    throw 'RepositoryWide cannot be combined with ScopePath.'
+}
+$scopeMode = if ($RepositoryWide) { 'repository' } elseif ($scopePaths.Count -gt 0) { 'explicit' } else { 'none' }
+if (-not $RepositoryWide -and -not $NoImplicitScope -and $scopePaths.Count -eq 0 -and [string]::IsNullOrWhiteSpace($Query) -and $Category -eq 'all') {
     $gitPaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('diff', '--name-only', 'HEAD', '--') -FailureMessage 'Unable to enumerate changed paths for sensitive-data scope.')
     $gitPaths += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to enumerate untracked paths for sensitive-data scope.')
     $scopePaths = @(
@@ -140,7 +144,8 @@ $guidance = @()
 if ($scopeMode -eq 'none' -and [string]::IsNullOrWhiteSpace($Query) -and $Category -eq 'all') {
     $items = @()
     $guidance = @(
-        "Provide -Query, choose -PrivacyCategory, or scope the review with -PlannedPath @('path/one','path/two')."
+        "Repository summary is shown without candidate details. Use -RepositoryWide for a bounded repository-wide candidate list."
+        "Provide -Query, choose -PrivacyCategory, or scope the review with -PlannedPath @('path/one','path/two') for a focused review."
         "Unless -NoImplicitScope is set, a non-wiki git diff scopes the default privacy command to that diff."
     )
 }
@@ -160,7 +165,11 @@ if ($Format -eq 'Json') {
     [pscustomobject]$output | ConvertTo-Json -Depth 8
     exit 0
 }
-Write-Host "Sensitive data '$Category': $($items.Count) candidate(s), scope=$scopeMode."
+if ($scopeMode -eq 'none' -and [string]::IsNullOrWhiteSpace($Query) -and $Category -eq 'all') {
+    Write-Host "Sensitive data repository summary: credential=$($summary.credential), identity=$($summary.identity), health=$($summary.health), financial=$($summary.financial), private-content=$($summary.privateContent), boundaries=$($summary.boundaryFiles), external-transfers=$($summary.externalTransferLeads)."
+} else {
+    Write-Host "Sensitive data '$Category': $($items.Count) candidate(s), scope=$scopeMode."
+}
 if ($IncludeDiagnostics) { Write-Host "Source: $($diagnostics.source), returned=$($diagnostics.returnedRecords)/$($diagnostics.candidateRecords), round-trip=$($diagnostics.roundTripDurationMs)ms." }
 foreach ($message in $guidance) { Write-Host " - $message" }
 foreach ($item in $items) { Write-Host " - $(($item | ConvertTo-Json -Compress))" }

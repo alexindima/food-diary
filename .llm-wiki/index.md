@@ -99,6 +99,9 @@ authoritative.
 - [Review frontend contracts](workflows/frontend-contract-review.md)
 - [Review domain and data contracts](workflows/domain-data-review.md)
 - [Review runtime and integration impact](workflows/runtime-impact.md)
+- [Compile security-review evidence](workflows/security-review.md) — rank likely
+  security boundaries, test signals, runtime declarations, and privacy leads while
+  preserving explicit evidence limitations.
 - [Review sensitive data lifecycle](workflows/privacy-review.md)
 - [Review performance and observability risk](workflows/performance-observability-review.md)
 - [Review structural hotspots and test gaps](workflows/quality-risk.md)

@@ -40,6 +40,7 @@ if ($CompiledIndexSource -eq 'Sqlite') {
         httpClients = @($topology.httpClients)
         webhooks = @($topology.webhooks)
         recurringJobRegistrations = @($topology.recurringJobRegistrations)
+        networkPolicies = @($topology.networkPolicies)
     }
     $candidateRecords = 0
     foreach ($key in @($groups.Keys)) {
@@ -54,7 +55,7 @@ if ($CompiledIndexSource -eq 'Sqlite') {
     $sourceBytes = [Text.Encoding]::UTF8.GetByteCount($topologyRaw)
     $diagnostics = [pscustomobject][ordered]@{
         source = 'json-baseline'; reader = 'powershell-json'; readerLoadDurationMs = 0; sqlDurationMs = $null
-        scannedRecords = @($topology.composeServices).Count + @($topology.hostedServices).Count + @($topology.httpClients).Count + @($topology.webhooks).Count + @($topology.recurringJobRegistrations).Count
+        scannedRecords = @($topology.composeServices).Count + @($topology.hostedServices).Count + @($topology.httpClients).Count + @($topology.webhooks).Count + @($topology.recurringJobRegistrations).Count + @($topology.networkPolicies).Count
         candidateRecords = $candidateRecords; returnedRecords = $returnedRecords; sourceHash = $null
         sourceBytesVerified = $sourceBytes; sourceBytesMaterialized = $sourceBytes
     }
@@ -71,6 +72,7 @@ if ($Format -eq 'Json') {
 if ($IncludeDiagnostics -and $null -ne $diagnostics) {
     Write-Host "Source: $($diagnostics.source), reader=$($diagnostics.reader), returned=$($diagnostics.returnedRecords)/$($diagnostics.candidateRecords), load=$($diagnostics.readerLoadDurationMs)ms, query=$($diagnostics.sqlDurationMs)ms."
 }
+Write-Host 'Evidence boundary: repository declarations and inferred code signals do not prove effective production exposure, IAM, grants, DNS behavior, or webhook idempotency.'
 foreach ($key in $groups.Keys) {
     Write-Host "$key ($(@($groups[$key]).Count)):"
     foreach ($item in @($groups[$key] | Select-Object -First $Limit)) {

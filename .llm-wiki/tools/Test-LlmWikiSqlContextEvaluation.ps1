@@ -14,6 +14,8 @@ $imageWikiRegressionCorpus = Join-Path $PSScriptRoot '../evals/context-search-im
 $imageWikiRegressionEvaluation = & $measure -CorpusPath $imageWikiRegressionCorpus -SkipBuild -Format Json | ConvertFrom-Json
 $businessWikiRegressionCorpus = Join-Path $PSScriptRoot '../evals/context-search-business-wiki-regression.json'
 $businessWikiRegressionEvaluation = & $measure -CorpusPath $businessWikiRegressionCorpus -SkipBuild -Format Json | ConvertFrom-Json
+$securityRegressionCorpus = Join-Path $PSScriptRoot '../evals/context-search-security-regression.json'
+$securityRegressionEvaluation = & $measure -CorpusPath $securityRegressionCorpus -SkipBuild -Format Json | ConvertFrom-Json
 $probeCorpus = Join-Path $PSScriptRoot '../evals/context-search-probe.json'
 $probeEvaluation = & $measure -CorpusPath $probeCorpus -SkipBuild -Format Json | ConvertFrom-Json
 $probe2Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-2.json'
@@ -79,7 +81,7 @@ if ($normalizationRuleCount -gt 400 -or $rankingRuleCount -gt 400 -or
     ($normalizationRuleCount + $rankingRuleCount) -gt 700 -or $null -eq $rankingPolicy.genericAffinities) {
     throw "Context search exceeded its staged complexity budget or lost generic affinities: normalization=$normalizationRuleCount/400; ranking=$rankingRuleCount/400; combined=$($normalizationRuleCount + $rankingRuleCount)/700."
 }
-$allEvaluations = @($primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $imageWikiRegressionEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation, $probe6Evaluation, $probe7Evaluation)
+$allEvaluations = @($primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $imageWikiRegressionEvaluation, $securityRegressionEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation, $probe6Evaluation, $probe7Evaluation)
 foreach ($evaluation in $allEvaluations) {
     if (-not $evaluation.passed) {
         $missIds = @($evaluation.misses | ForEach-Object {
@@ -103,6 +105,7 @@ if ([int]$generalizationEvaluation.caseCount -lt 70) { throw 'Generalization SQL
 if ([int]$validationEvaluation.caseCount -lt 50) { throw 'Validation SQL context evaluation must contain at least 50 frozen cases.' }
 if ([int]$imageWikiRegressionEvaluation.caseCount -lt 30) { throw 'Image and Wiki regression evaluation must contain at least 30 frozen cases.' }
 if ([int]$businessWikiRegressionEvaluation.caseCount -lt 20) { throw 'Business and Wiki regression evaluation must contain at least 20 frozen cases.' }
+if ([int]$securityRegressionEvaluation.caseCount -ne 4) { throw 'Security-boundary regression evaluation must preserve exactly four focused cases.' }
 if ([int]$probeEvaluation.caseCount -lt 30) { throw 'Promoted probe SQL context evaluation must contain at least 30 frozen cases.' }
 if ([int]$probe2Evaluation.caseCount -lt 30) { throw 'Second promoted probe SQL context evaluation must contain at least 30 frozen cases.' }
 if ([int]$probe3Evaluation.caseCount -lt 30) { throw 'Third promoted probe SQL context evaluation must contain at least 30 frozen cases.' }

@@ -12,6 +12,13 @@ sources:
 
 The generated topology inventories Docker Compose services, hosted workers,
 typed or direct `HttpClient` consumers, webhook-related types, and recurring job
-registrations. It is a source-linked runtime navigation aid; deployed topology,
-provider dashboards, queue/broker configuration, and environment-specific
+registrations. Compose records include declared ports, profiles, networks,
+environment-key names, mounts, dependencies, and selected container-hardening
+flags. Webhook and outbound-network records include inferred security signals.
+
+Every record distinguishes repository declarations or code inference from
+runtime proof. The topology cannot establish effective production exposure,
+cloud IAM or database grants, DNS answers at connect time, proxy/redirect
+behavior, certificate validation, or webhook replay/idempotency. Deployed
+topology, provider dashboards, runtime probes, and environment-specific
 infrastructure remain authoritative.

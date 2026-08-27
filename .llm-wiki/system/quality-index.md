@@ -23,3 +23,10 @@ behavioral coverage.
 Local `verify-fast` may reuse a content-addressed receipt when source inputs,
 generator implementation, symbol index, and generated output are byte-for-byte
 unchanged. Strict `wiki verify` always performs the full computation.
+
+The `hotspots`, `test-gaps`, and `debt` facade views default to
+`-QualityArea Product`, excluding `.llm-wiki/` implementation records so the
+application review queue is not dominated by the tooling that produced it.
+Use `-QualityArea Wiki` to maintain the Wiki itself or `-QualityArea All` for a
+combined view. Unqueried product views apply light top-level path diversity;
+explicit queries preserve score order.

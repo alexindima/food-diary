@@ -369,7 +369,7 @@ if ($CompiledIndexSource -eq 'Sqlite') {
     $domainData = Read-ImpactIndex 'generated/domain-data-index.json'
     $backendContract = Read-ImpactIndex 'generated/backend-contract-index.json'
     if ($null -eq $qualityIndex) { $qualityIndex = [pscustomobject]@{ files = @(); criticalSymbols = @() } }
-    if ($null -eq $runtimeTopology) { $runtimeTopology = [pscustomobject]@{ hostedServices = @(); httpClients = @(); webhooks = @(); recurringJobRegistrations = @(); composeServices = @() } }
+    if ($null -eq $runtimeTopology) { $runtimeTopology = [pscustomobject]@{ hostedServices = @(); httpClients = @(); webhooks = @(); recurringJobRegistrations = @(); networkPolicies = @(); composeServices = @() } }
     if ($null -eq $sensitiveData) { $sensitiveData = [pscustomobject]@{ fields = @(); boundaryFiles = @(); potentialLogging = @(); externalTransfers = @() } }
     if ($null -eq $frontendContract) { $frontendContract = [pscustomobject]@{ components = @(); apiCalls = @(); translationUsage = @(); consumerEdges = @() } }
     if ($null -eq $domainData) { $domainData = [pscustomobject]@{ domainTypes = @(); invariants = @(); persistenceMappings = @() } }

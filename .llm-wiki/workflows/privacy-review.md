@@ -26,6 +26,7 @@ sources:
 ./.llm-wiki/wiki.ps1 privacy `
   -PlannedPath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result'
 ./.llm-wiki/wiki.ps1 privacy -NoImplicitScope
+./.llm-wiki/wiki.ps1 privacy -RepositoryWide
 ```
 
 The default `all` view no longer emits an arbitrary repository-wide first
@@ -36,6 +37,8 @@ terms. For example, an AI photo path can still surface the external OpenAI
 image boundary without flooding the result with every image-named field.
 Use `-NoImplicitScope` for deterministic automation that must ignore unrelated
 working-tree changes and require an explicit query or planned path.
+Use `-RepositoryWide` when the broad inventory is intentional; it cannot be
+combined with `-PlannedPath`/`-ScopePath`.
 
 The privacy query reads the refreshed SQLite sensitive-data projection by
 default. SQLite selects the requested category and evaluates query/scope
@@ -55,6 +58,9 @@ user-facing disclosure. Confirm every candidate against source semantics.
 Plain fields named `Token` are classified as credential candidates as well as
 more specific access, refresh, and hash forms; callers must still confirm the
 field's semantics in source.
+Plain `Amount` names require an explicit monetary name or a billing/payment
+path context, so food quantities and unrelated measurements do not create
+financial-review noise.
 
 External identity credentials used to bridge an anonymous login attempt into an
 authenticated linking request should remain in memory only. Do not place them

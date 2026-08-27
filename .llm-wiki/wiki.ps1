@@ -3,7 +3,7 @@ param(
     [Parameter(Position = 0)]
     [ValidateSet(
         'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-status', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'research-next-question', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'delivery-finalize', 'context', 'context-explain', 'context-latency', 'context-concurrency', 'context-policy', 'context-drift', 'context-unseen-draft', 'context-unseen-freeze', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'coverage-plan', 'decision',
-        'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'contract-consumers', 'extraction', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
+        'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'security', 'contract-consumers', 'extraction', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'graph-build', 'graph-status', 'graph-symbol', 'graph-consumers', 'graph-trace', 'graph-impact', 'graph-relations', 'graph-coverage',
         'diff', 'impact', 'review', 'review-affected', 'ownership', 'api-compat', 'policy', 'verification-record', 'verification-list',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate', 'task-evidence-import',
@@ -72,6 +72,8 @@ param(
     [string]$BackendContractView = 'all',
     [ValidateSet('all', 'drift', 'allowances', 'untracked', 'cycles', 'ambiguous', 'dead-candidates', 'spec-gaps', 'test-gaps', 'debt')]
     [string]$HealthView = 'all',
+    [ValidateSet('Product', 'Wiki', 'All')]
+    [string]$QualityArea = 'Product',
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateSet('portable', 'linux', 'tools')]
@@ -102,6 +104,7 @@ param(
     [switch]$Compact,
     [switch]$NoBaseline,
     [switch]$NoImplicitScope,
+    [switch]$RepositoryWide,
     [switch]$SkipHistory,
     [switch]$SkipTestPlan,
     [switch]$FailOnUnreviewed,
@@ -350,7 +353,7 @@ if ($Command -in @('verify', 'verify-full') -and $env:CI -ne 'true' -and -not $P
 
 $deltaAwareCommands = @('update', 'repair-verify', 'completion', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'review-affected', 'ownership', 'policy')
 $explicitScopePlanningCommands = @('research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision')
-$readOnlyFacadeCommands = @('research', 'research-next-question', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'ui', 'contracts', 'diff', 'ownership', 'api-compat')
+$readOnlyFacadeCommands = @('research', 'research-next-question', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'security', 'ui', 'contracts', 'diff', 'ownership', 'api-compat')
 # Read-only commands consume the already published projection. They report stale
 # or unavailable state instead of refreshing indexes as an implicit side effect.
 $compiledIndexReadOnlyCommands = @()
@@ -2409,7 +2412,15 @@ switch ($Command) {
         }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $privacyArguments.ScopePath = $ProposedPath }
         if ($NoImplicitScope) { $privacyArguments.NoImplicitScope = $true }
+        if ($RepositoryWide) { $privacyArguments.RepositoryWide = $true }
         Invoke-WikiTool 'Find-LlmWikiSensitiveData.ps1' $privacyArguments
+    }
+    'security' {
+        Invoke-WikiTool 'Find-LlmWikiSecurityReview.ps1' @{
+            Query = $Query
+            Limit = $Limit
+            Format = $Format
+        }
     }
     'ui' {
         Invoke-WikiTool 'Find-LlmWikiFrontendContract.ps1' @{
@@ -2444,13 +2455,13 @@ switch ($Command) {
         }
     }
     'hotspots' {
-        Invoke-WikiTool 'Find-LlmWikiQualityRisk.ps1' @{ View = 'hotspots'; Query = $Query; Limit = $Limit; Format = $Format }
+        Invoke-WikiTool 'Find-LlmWikiQualityRisk.ps1' @{ View = 'hotspots'; Area = $QualityArea; Query = $Query; Limit = $Limit; Format = $Format }
     }
     'test-gaps' {
-        Invoke-WikiTool 'Find-LlmWikiQualityRisk.ps1' @{ View = 'test-gaps'; Query = $Query; Limit = $Limit; Format = $Format }
+        Invoke-WikiTool 'Find-LlmWikiQualityRisk.ps1' @{ View = 'test-gaps'; Area = $QualityArea; Query = $Query; Limit = $Limit; Format = $Format }
     }
     'debt' {
-        Invoke-WikiTool 'Find-LlmWikiQualityRisk.ps1' @{ View = 'debt'; Query = $Query; Limit = $Limit; Format = $Format }
+        Invoke-WikiTool 'Find-LlmWikiQualityRisk.ps1' @{ View = 'debt'; Area = $QualityArea; Query = $Query; Limit = $Limit; Format = $Format }
     }
     'diff' {
         $diffArguments = @{

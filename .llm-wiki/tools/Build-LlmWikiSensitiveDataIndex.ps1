@@ -16,7 +16,7 @@ $categories = [ordered]@{
     credential = '(?i)(Password|RefreshToken|AccessToken|TokenHash|Token$|Secret|ApiKey|SigningKey|Credential|ConnectionString)'
     identity = '(?i)(Email|Phone|Telegram(UserId|Username)?|GoogleSubject|IpAddress|UserAgent|ExternalIdentity)'
     health = '(?i)(Weight|Waist|Height|Birth(Date)?|DateOfBirth|Gender|ActivityLevel|Cycle|Fasting|Nutrition|Calories|Hydration|Exercise|Satiety|Tdee)'
-    financial = '(?i)(Payment|Subscription|CustomerId|Invoice|Checkout|Billing|Money|Amount|Currency)'
+    financial = '(?i)(Payment|Subscription|CustomerId|Invoice|Checkout|Billing|Money|Currency|Price|Cost|Revenue|Tax|Refund|Payout|Transaction)'
     privateContent = '(?i)(MessageBody|MessageContent|Comment|Notes|Prompt|ImageUrl|ImageAsset|ReportReason)'
 }
 
@@ -50,6 +50,11 @@ foreach ($file in $sourceFiles) {
         $category = $null
         foreach ($entry in $categories.GetEnumerator()) {
             if ($name -match $entry.Value) { $category = $entry.Key; break }
+        }
+        if ($null -eq $category -and $name -match '(?i)Amount') {
+            $financialContext = $path -match '(?i)(Billing|Payment|Subscription|Invoice|Checkout|YooKassa|Paddle)' -or
+                $name -match '(?i)(Premium|Payment|Paid|Due|Refund|Payout|Invoice|Transaction|Monetary).*Amount|Amount.*(Paid|Due|Refund|Payout|Currency)'
+            if ($financialContext) { $category = 'financial' }
         }
         if ($null -eq $category) { continue }
         $line = 1 + [regex]::Matches($content.Substring(0, $match.Index), "`n").Count
@@ -134,7 +139,7 @@ $uniqueExternalTransfers = @($externalTransfers | Sort-Object path, line, provid
 $result = [ordered]@{
     schemaVersion = 1
     semantics = [ordered]@{
-        inventory = 'Name-based candidate sensitive fields. Confirm semantics in source before making privacy claims.'
+        inventory = 'Name-and-context-based candidate sensitive fields. Generic quantity Amount fields are not financial without billing or monetary context. Confirm semantics in source before making privacy claims.'
         potentialLogging = 'A logging call near a candidate field name. This is a review lead, not proof that a runtime value is logged.'
         externalTransfers = 'An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload.'
     }

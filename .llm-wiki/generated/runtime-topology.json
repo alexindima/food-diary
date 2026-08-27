@@ -5,7 +5,17 @@
     "hostedServices": 10,
     "httpClients": 12,
     "webhooks": 22,
-    "recurringJobRegistrations": 16
+    "recurringJobRegistrations": 16,
+    "networkPolicies": 29
+  },
+  "semantics": {
+    "declared": "Compose fields describe repository declarations, not effective production exposure or IAM.",
+    "inferred": "Code security signals are navigation evidence and require source and runtime validation.",
+    "externalEvidence": [
+      "effective firewall and reverse-proxy exposure",
+      "cloud IAM and database grants",
+      "runtime DNS, redirect, proxy, and certificate behavior"
+    ]
   },
   "composeServices": [
     {
@@ -17,13 +27,52 @@
         "mail-relay",
         "rabbitmq",
         "redis"
-      ]
+      ],
+      "ports": [
+        "${API_HOST_BIND:-127.0.0.1}:${API_PORT:-5000}:5000"
+      ],
+      "profiles": [
+        "full",
+        "backend"
+      ],
+      "networks": [],
+      "environmentKeys": [
+        "ASPNETCORE_ENVIRONMENT",
+        "BuildInfo__CommitSha",
+        "BuildInfo__ImageTag",
+        "ConnectionStrings__DefaultConnection",
+        "ConnectionStrings__Redis",
+        "DataProtection__KeyRingPath",
+        "MailInboxClient__BaseUrl",
+        "MailInboxClient__ContentApiKey",
+        "MailInboxClient__MetadataApiKey",
+        "MailInboxClient__StateApiKey",
+        "MailRelayClient__AllowInsecureHttp",
+        "MailRelayClient__ApiKey",
+        "MailRelayClient__BaseUrl"
+      ],
+      "volumeMounts": [
+        "api-data-protection-keys:/var/lib/fooddiary/data-protection-keys"
+      ],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "api-data-protection-keys",
       "image": null,
       "dockerfile": null,
-      "dependsOn": []
+      "dependsOn": [],
+      "ports": [],
+      "profiles": [],
+      "networks": [],
+      "environmentKeys": [],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "client",
@@ -31,7 +80,20 @@
       "dockerfile": "Dockerfile",
       "dependsOn": [
         "api"
-      ]
+      ],
+      "ports": [
+        "${CLIENT_HOST_BIND:-127.0.0.1}:${CLIENT_PORT:-4200}:80"
+      ],
+      "profiles": [
+        "full"
+      ],
+      "networks": [],
+      "environmentKeys": [],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "db-init",
@@ -39,7 +101,25 @@
       "dockerfile": "FoodDiary.Initializer/Dockerfile",
       "dependsOn": [
         "postgres"
-      ]
+      ],
+      "ports": [],
+      "profiles": [
+        "full",
+        "backend"
+      ],
+      "networks": [],
+      "environmentKeys": [
+        "ConnectionStrings__DefaultConnection",
+        "InitialAdmin__Email",
+        "InitialAdmin__Password",
+        "MailRelayClient__AllowInsecureHttp",
+        "MailRelayClient__BaseUrl"
+      ],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "job-manager",
@@ -47,16 +127,66 @@
       "dockerfile": "FoodDiary.JobManager/Dockerfile",
       "dependsOn": [
         "db-init"
-      ]
+      ],
+      "ports": [],
+      "profiles": [
+        "full",
+        "jobs"
+      ],
+      "networks": [],
+      "environmentKeys": [
+        "ConnectionStrings__DefaultConnection",
+        "MailRelayClient__AllowInsecureHttp",
+        "MailRelayClient__ApiKey",
+        "MailRelayClient__BaseUrl"
+      ],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "mail-inbox",
       "image": "${MAIL_INBOX_IMAGE_REF:-ghcr.io/alexindima/food-diary/mail-inbox:local}",
       "dockerfile": "MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile",
       "dependsOn": [
-        "default",
         "mailinbox-db-init"
-      ]
+      ],
+      "ports": [
+        "${MAIL_INBOX_HOST_BIND:-127.0.0.1}:${MAIL_INBOX_PORT:-5098}:5098",
+        "${MAIL_INBOX_SMTP_HOST_BIND:-0.0.0.0}:${MAIL_INBOX_SMTP_PORT:-2525}:2525"
+      ],
+      "profiles": [
+        "mail-inbox"
+      ],
+      "networks": [
+        "default"
+      ],
+      "environmentKeys": [
+        "ASPNETCORE_ENVIRONMENT",
+        "ASPNETCORE_Kestrel__Certificates__Default__KeyPath",
+        "ASPNETCORE_Kestrel__Certificates__Default__Path",
+        "ASPNETCORE_URLS",
+        "ConnectionStrings__DefaultConnection",
+        "MailInboxHttp__ContentApiKey",
+        "MailInboxHttp__MetadataApiKey",
+        "MailInboxHttp__StateApiKey",
+        "MailInboxRuntimeDatabase__RoleName",
+        "MailInboxSmtp__AllowUntrustedSources",
+        "MailInboxSmtp__CertificatePath",
+        "MailInboxSmtp__PrivateKeyPath",
+        "MailInboxSmtp__TrustedRelayNetworks__0"
+      ],
+      "volumeMounts": [
+        "/etc/letsencrypt/live/mail.fooddiary.club:/run/letsencrypt/live/mail.fooddiary.club:ro",
+        "/etc/letsencrypt/archive/mail.fooddiary.club:/run/letsencrypt/archive/mail.fooddiary.club:ro",
+        "mailinbox-postgres-client-ca:/run/mailinbox-postgres-ca:ro"
+      ],
+      "readOnlyRootFilesystem": true,
+      "dropsAllCapabilities": true,
+      "noNewPrivileges": true,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "mail-relay",
@@ -65,7 +195,30 @@
       "dependsOn": [
         "mailrelay-db-init",
         "rabbitmq"
-      ]
+      ],
+      "ports": [
+        "${MAIL_RELAY_HOST_BIND:-127.0.0.1}:${MAIL_RELAY_PORT:-5088}:5088"
+      ],
+      "profiles": [
+        "full",
+        "backend"
+      ],
+      "networks": [],
+      "environmentKeys": [
+        "ASPNETCORE_ENVIRONMENT",
+        "ConnectionStrings__DefaultConnection",
+        "MailRelayBroker__HostName",
+        "MailRelay__ApiKey",
+        "MailRelay__ExpectedAwsSesSnsTopicArn",
+        "MailRelay__MailgunWebhookSigningKey",
+        "MailRelay__RequireAwsSesSnsSignature",
+        "MailRelay__RequireMailgunWebhookSignature"
+      ],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "mailinbox-db-init",
@@ -73,7 +226,25 @@
       "dockerfile": "MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile",
       "dependsOn": [
         "mailinbox-postgres"
-      ]
+      ],
+      "ports": [],
+      "profiles": [
+        "mail-inbox"
+      ],
+      "networks": [],
+      "environmentKeys": [
+        "ConnectionStrings__DefaultConnection",
+        "MailInboxRuntimeDatabase__Password",
+        "MailInboxRuntimeDatabase__ProvisionRole",
+        "MailInboxRuntimeDatabase__RoleName"
+      ],
+      "volumeMounts": [
+        "mailinbox-postgres-client-ca:/run/mailinbox-postgres-ca:ro"
+      ],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "mailinbox-postgres",
@@ -81,31 +252,93 @@
       "dockerfile": null,
       "dependsOn": [
         "mailinbox-postgres-tls-init"
-      ]
+      ],
+      "ports": [
+        "${MAIL_INBOX_POSTGRES_HOST_BIND:-127.0.0.1}:${MAIL_INBOX_POSTGRES_PORT:-5434}:5432"
+      ],
+      "profiles": [
+        "mail-inbox"
+      ],
+      "networks": [],
+      "environmentKeys": [
+        "POSTGRES_DB",
+        "POSTGRES_PASSWORD",
+        "POSTGRES_USER"
+      ],
+      "volumeMounts": [
+        "mailinbox-postgres-data:/var/lib/postgresql/data",
+        "mailinbox-postgres-server-tls:/run/postgresql-tls:ro",
+        "./MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf:/etc/postgresql/mailinbox-pg_hba.conf:ro"
+      ],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "mailinbox-postgres-client-ca",
       "image": null,
       "dockerfile": null,
-      "dependsOn": []
+      "dependsOn": [],
+      "ports": [],
+      "profiles": [],
+      "networks": [],
+      "environmentKeys": [],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "mailinbox-postgres-data",
       "image": null,
       "dockerfile": null,
-      "dependsOn": []
+      "dependsOn": [],
+      "ports": [],
+      "profiles": [],
+      "networks": [],
+      "environmentKeys": [],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "mailinbox-postgres-server-tls",
       "image": null,
       "dockerfile": null,
-      "dependsOn": []
+      "dependsOn": [],
+      "ports": [],
+      "profiles": [],
+      "networks": [],
+      "environmentKeys": [],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "mailinbox-postgres-tls-init",
       "image": "${MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF:-fooddiary-mailinbox-postgres-tls-init:local}",
       "dockerfile": "MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile.postgres-tls-init",
-      "dependsOn": []
+      "dependsOn": [],
+      "ports": [],
+      "profiles": [
+        "mail-inbox"
+      ],
+      "networks": [],
+      "environmentKeys": [],
+      "volumeMounts": [
+        "mailinbox-postgres-server-tls:/server",
+        "mailinbox-postgres-client-ca:/trust"
+      ],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "mailrelay-db-init",
@@ -113,55 +346,189 @@
       "dockerfile": "MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile",
       "dependsOn": [
         "mailrelay-postgres"
-      ]
+      ],
+      "ports": [],
+      "profiles": [
+        "full",
+        "backend"
+      ],
+      "networks": [],
+      "environmentKeys": [
+        "ConnectionStrings__DefaultConnection"
+      ],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "mailrelay-postgres",
       "image": "postgres:17-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73",
       "dockerfile": null,
-      "dependsOn": []
+      "dependsOn": [],
+      "ports": [
+        "${MAIL_RELAY_POSTGRES_HOST_BIND:-127.0.0.1}:${MAIL_RELAY_POSTGRES_PORT:-5433}:5432"
+      ],
+      "profiles": [
+        "full",
+        "backend"
+      ],
+      "networks": [],
+      "environmentKeys": [
+        "POSTGRES_DB",
+        "POSTGRES_PASSWORD",
+        "POSTGRES_USER"
+      ],
+      "volumeMounts": [
+        "mailrelay-postgres-data:/var/lib/postgresql/data"
+      ],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "mailrelay-postgres-data",
       "image": null,
       "dockerfile": null,
-      "dependsOn": []
+      "dependsOn": [],
+      "ports": [],
+      "profiles": [],
+      "networks": [],
+      "environmentKeys": [],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "nginx",
       "image": "nginx:alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752",
       "dockerfile": null,
-      "dependsOn": []
+      "dependsOn": [],
+      "ports": [],
+      "profiles": [
+        "full"
+      ],
+      "networks": [],
+      "environmentKeys": [],
+      "volumeMounts": [
+        "./nginx.conf:/etc/nginx/nginx.conf:ro",
+        "./nginx/sites-enabled:/etc/nginx/sites-enabled:ro",
+        "/etc/letsencrypt:/etc/letsencrypt:ro",
+        "/var/www/fooddiary.club:/var/www/fooddiary.club:ro",
+        "/var/www/admin.fooddiary.club:/var/www/admin.fooddiary.club:ro",
+        "/var/www/storybook.fooddiary.club:/var/www/storybook.fooddiary.club:ro",
+        "/var/log/nginx:/var/log/nginx"
+      ],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "postgres",
       "image": "postgres:17-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73",
       "dockerfile": null,
-      "dependsOn": []
+      "dependsOn": [],
+      "ports": [
+        "${POSTGRES_HOST_BIND:-127.0.0.1}:${POSTGRES_PORT:-5432}:5432"
+      ],
+      "profiles": [],
+      "networks": [],
+      "environmentKeys": [
+        "POSTGRES_DB",
+        "POSTGRES_PASSWORD",
+        "POSTGRES_USER"
+      ],
+      "volumeMounts": [
+        "postgres-data:/var/lib/postgresql/data"
+      ],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "postgres-data",
       "image": null,
       "dockerfile": null,
-      "dependsOn": []
+      "dependsOn": [],
+      "ports": [],
+      "profiles": [],
+      "networks": [],
+      "environmentKeys": [],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "rabbitmq",
       "image": "rabbitmq:4-management@sha256:eb5295d083325da5929a5ade766684d4019ffd2bce8bc7e43d6f9a05cafc8646",
       "dockerfile": null,
-      "dependsOn": []
+      "dependsOn": [],
+      "ports": [
+        "${RABBITMQ_HOST_BIND:-127.0.0.1}:${RABBITMQ_PORT:-5672}:5672",
+        "${RABBITMQ_MANAGEMENT_HOST_BIND:-127.0.0.1}:${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+      ],
+      "profiles": [
+        "full",
+        "backend"
+      ],
+      "networks": [],
+      "environmentKeys": [
+        "RABBITMQ_DEFAULT_PASS",
+        "RABBITMQ_DEFAULT_USER",
+        "RABBITMQ_DEFAULT_VHOST"
+      ],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "redis",
       "image": "redis:7-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2",
       "dockerfile": null,
-      "dependsOn": []
+      "dependsOn": [],
+      "ports": [
+        "${REDIS_HOST_BIND:-127.0.0.1}:${REDIS_PORT:-6379}:6379"
+      ],
+      "profiles": [
+        "full",
+        "backend"
+      ],
+      "networks": [],
+      "environmentKeys": [],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "tech-radar",
       "image": "${TECH_RADAR_IMAGE_REF:-ghcr.io/alexindima/food-diary/tech-radar:local}",
       "dockerfile": "Dockerfile",
-      "dependsOn": []
+      "dependsOn": [],
+      "ports": [
+        "${TECH_RADAR_HOST_BIND:-127.0.0.1}:${TECH_RADAR_PORT:-4210}:80"
+      ],
+      "profiles": [
+        "full"
+      ],
+      "networks": [],
+      "environmentKeys": [],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": true,
+      "dropsAllCapabilities": true,
+      "noNewPrivileges": true,
+      "evidenceStatus": "declared-in-repository"
     },
     {
       "name": "telegram-bot",
@@ -169,7 +536,18 @@
       "dockerfile": "FoodDiary.Telegram.Bot/Dockerfile",
       "dependsOn": [
         "api"
-      ]
+      ],
+      "ports": [],
+      "profiles": [
+        "full"
+      ],
+      "networks": [],
+      "environmentKeys": [],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": false,
+      "dropsAllCapabilities": false,
+      "noNewPrivileges": false,
+      "evidenceStatus": "declared-in-repository"
     }
   ],
   "hostedServices": [
@@ -289,91 +667,154 @@
   "webhooks": [
     {
       "name": "AwsSesSnsWebhookHttpMappings",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/AwsSesSnsWebhookHttpMappings.cs"
+      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/AwsSesSnsWebhookHttpMappings.cs",
+      "securitySignals": [],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookContextResolver",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs"
+      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
+      "securitySignals": [],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookController",
-      "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs"
+      "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs",
+      "securitySignals": [
+        "request-authentication"
+      ],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookEvent",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs"
+      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
+      "securitySignals": [
+        "freshness-validation"
+      ],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookEventAlreadyProcessedException",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/BillingWebhookEventAlreadyProcessedException.cs"
+      "path": "FoodDiary.Application.Abstractions/Billing/Common/BillingWebhookEventAlreadyProcessedException.cs",
+      "securitySignals": [
+        "replay-or-duplicate-control"
+      ],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookEventConfiguration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Billing/BillingWebhookEventConfiguration.cs"
+      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Billing/BillingWebhookEventConfiguration.cs",
+      "securitySignals": [
+        "freshness-validation",
+        "replay-or-duplicate-control"
+      ],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookEventProcessor",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs"
+      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
+      "securitySignals": [
+        "replay-or-duplicate-control"
+      ],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookEventRepository",
-      "path": "FoodDiary.Infrastructure/Persistence/Billing/BillingWebhookEventRepository.cs"
+      "path": "FoodDiary.Infrastructure/Persistence/Billing/BillingWebhookEventRepository.cs",
+      "securitySignals": [],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookEventValidator",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs"
+      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
+      "securitySignals": [],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookHttpProcessor",
-      "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookHttpProcessor.cs"
+      "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookHttpProcessor.cs",
+      "securitySignals": [
+        "signature-validation"
+      ],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookInboxJob",
-      "path": "FoodDiary.JobManager/Services/BillingWebhookInboxJob.cs"
+      "path": "FoodDiary.JobManager/Services/BillingWebhookInboxJob.cs",
+      "securitySignals": [],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookInboxService",
-      "path": "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs"
+      "path": "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
+      "securitySignals": [],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookPaymentRecorder",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs"
+      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
+      "securitySignals": [],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookPremiumRoleSyncer",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs"
+      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
+      "securitySignals": [],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookRequestLimits",
-      "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookRequestLimits.cs"
+      "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookRequestLimits.cs",
+      "securitySignals": [],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookSubscriptionWriter",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookSubscriptionWriter.cs"
+      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookSubscriptionWriter.cs",
+      "securitySignals": [],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "GetAdminBillingWebhookEventsQueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQueryHandler.cs"
+      "path": "FoodDiary.Application.Admin/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQueryHandler.cs",
+      "securitySignals": [],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "MailgunWebhookHttpMappings",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailgunWebhookHttpMappings.cs"
+      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailgunWebhookHttpMappings.cs",
+      "securitySignals": [],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "ProcessBillingWebhookCommandHandler",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs"
+      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
+      "securitySignals": [
+        "replay-or-duplicate-control",
+        "signature-validation"
+      ],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "ProcessBillingWebhookCommandValidator",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandValidator.cs"
+      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandValidator.cs",
+      "securitySignals": [],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "ProcessQueuedBillingWebhookCommandHandler",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs"
+      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
+      "securitySignals": [],
+      "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "ProviderWebhookAuthorizer",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs"
+      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs",
+      "securitySignals": [
+        "freshness-validation",
+        "signature-validation"
+      ],
+      "evidenceStatus": "inferred-from-code"
     }
   ],
   "recurringJobRegistrations": [
@@ -456,6 +897,411 @@
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.WeeklyGoalReminders",
       "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+    }
+  ],
+  "networkPolicies": [
+    {
+      "name": "CompiledIndexReader",
+      "path": ".llm-wiki/tools/LlmWiki.SqliteReader/CompiledIndexReader.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "ConfigurableRelayDeliveryTransport",
+      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfigurableRelayDeliveryTransport.cs",
+      "securitySignals": [
+        "ip-address-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "DependencyInjection.Export",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
+      "securitySignals": [
+        "connect-time-address-control",
+        "dns-resolution",
+        "ip-address-policy",
+        "proxy-disabled",
+        "redirects-disabled",
+        "timeout-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "timeout-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "DiaryPdfGenerator.ImageLoader",
+      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageLoader.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "DirectMxRelayDeliveryTransport",
+      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxRelayDeliveryTransport.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "DirectMxSmtpClientAdapter",
+      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientAdapter.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "EmailSender",
+      "path": "FoodDiary.Application.Identity/Authentication/Services/EmailSender.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "FitbitClient",
+      "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "response-size-policy",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "MailInboxClient",
+      "path": "MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "MailInboxLocalTlsHealthCheck",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxLocalTlsHealthCheck.cs",
+      "securitySignals": [
+        "connect-time-address-control",
+        "ip-address-policy",
+        "proxy-disabled",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "MailRelayClient",
+      "path": "MailRelay/FoodDiary.MailRelay.Client/MailRelayClient.cs",
+      "securitySignals": [
+        "ip-address-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "OpenAiFoodClient",
+      "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "response-size-policy",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "OpenFoodFactsService",
+      "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "response-size-policy",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "PaddleApiClient",
+      "path": "FoodDiary.Integrations/Billing/PaddleApiClient.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "response-size-policy",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "PaddleBillingGateway",
+      "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "PaddleNotificationRecoveryService",
+      "path": "FoodDiary.Integrations/Billing/PaddleNotificationRecoveryService.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "response-size-policy",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "ProviderWebhookAuthorizer",
+      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "RelayEmailTransport",
+      "path": "FoodDiary.Integrations/Services/RelayEmailTransport.cs",
+      "securitySignals": [
+        "ip-address-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "SendAdminEmailTemplateTestCommandHandler",
+      "path": "FoodDiary.Application.Admin/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommandHandler.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "SmtpRelayDeliveryTransport",
+      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/SmtpRelayDeliveryTransport.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "TelegramBotWorker",
+      "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "UsdaFoodSearchService",
+      "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "response-size-policy",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "WebPushClientAdapter",
+      "path": "FoodDiary.Integrations/Services/WebPushClientAdapter.cs",
+      "securitySignals": [
+        "ip-address-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "WebPushEndpointValidationHandler",
+      "path": "FoodDiary.Integrations/Services/WebPushEndpointValidationHandler.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "WebPushNotificationSender",
+      "path": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "WebPushSocketsHttpHandlerFactory",
+      "path": "FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs",
+      "securitySignals": [
+        "connect-time-address-control",
+        "dns-resolution",
+        "ip-address-policy",
+        "proxy-disabled",
+        "redirects-disabled"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "YooKassaApiClient",
+      "path": "FoodDiary.Integrations/Billing/YooKassaApiClient.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "response-size-policy",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "YooKassaBillingGateway",
+      "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "response-size-policy",
+        "uri-policy"
+      ],
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
     }
   ]
 }

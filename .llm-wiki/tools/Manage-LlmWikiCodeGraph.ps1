@@ -9,6 +9,8 @@ param(
     [string[]]$RelationKind,
     [string]$Module,
     [string]$PathPrefix,
+    [string]$ExcludePathPrefix,
+    [string]$RecordKind,
     [string]$InputPath,
     [ValidateSet('Context', 'ChangedPaths')]
     [string]$CompiledMode = 'Context',
@@ -20,6 +22,7 @@ param(
     [ValidateSet('all', 'credential', 'identity', 'health', 'financial', 'privateContent', 'logging', 'boundaries', 'external')]
     [string]$SensitiveDataView = 'all',
     [switch]$SensitiveDataFilter,
+    [switch]$OnlyUnreferenced,
     [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Tests')]
     [string]$ChangeType = 'Any',
     [ValidateSet('Any', 'HostedService', 'Service', 'Handler', 'Controller', 'Repository', 'Component')]
@@ -44,6 +47,9 @@ if (-not [string]::IsNullOrWhiteSpace($Query)) { $arguments += "--query=$Query" 
 if ($Action -eq 'query') { $arguments += "--category=$Category" }
 if (-not [string]::IsNullOrWhiteSpace($Module)) { $arguments += "--module=$Module" }
 if (-not [string]::IsNullOrWhiteSpace($PathPrefix)) { $arguments += "--path-prefix=$PathPrefix" }
+if (-not [string]::IsNullOrWhiteSpace($ExcludePathPrefix)) { $arguments += "--exclude-path-prefix=$ExcludePathPrefix" }
+if (-not [string]::IsNullOrWhiteSpace($RecordKind)) { $arguments += "--record-kind=$RecordKind" }
+if ($OnlyUnreferenced) { $arguments += '--only-unreferenced=true' }
 if ($Action -eq 'compiled-context') { $arguments += "--compiled-mode=$($CompiledMode.ToLowerInvariant() -replace 'changedpaths', 'changed-paths')" }
 if ($IncludeFrontendFeatures) { $arguments += '--include-frontend-features=true' }
 if ($Action -eq 'backend-contract') { $arguments += "--view=$BackendContractView" }

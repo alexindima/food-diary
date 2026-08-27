@@ -21,6 +21,7 @@ sources:
 ./.llm-wiki/wiki.ps1 hotspots -Limit 20
 ./.llm-wiki/wiki.ps1 test-gaps -Query Billing
 ./.llm-wiki/wiki.ps1 debt
+./.llm-wiki/wiki.ps1 hotspots -QualityArea Wiki
 ```
 
 Use hotspots to choose review depth and refactoring candidates. Use test gaps to
@@ -32,11 +33,12 @@ Integration, dynamic, reflection-based, or differently named tests may still
 cover the behavior; `test-gaps` is an investigation queue, never proof of
 missing execution coverage.
 
-The same index measures the Wiki's own non-test PowerShell tools. They participate
-in structural hotspots, explicit debt discovery, and conservative test-script
-name-reference coverage. This makes growth in the facade and tool suite visible;
-as with application symbols, a missing direct reference is an investigation lead
-rather than proof that no behavioral coverage exists.
+The default facade view is product-only and excludes `.llm-wiki/` records so a
+repository review is not dominated by Wiki implementation complexity. The same
+index still measures the Wiki's own non-test PowerShell tools: select them with
+`-QualityArea Wiki`, or use `-QualityArea All` for a combined view. As with
+application symbols, a missing direct reference is an investigation lead rather
+than proof that no behavioral coverage exists.
 
 Standalone quality queries already use the SQLite `query_documents` projection;
 the generated JSON is retained as its projection source, not as an automatic

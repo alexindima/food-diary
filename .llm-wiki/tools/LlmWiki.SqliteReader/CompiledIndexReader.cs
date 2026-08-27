@@ -28,6 +28,7 @@ public static class CompiledIndexReader {
                 new("httpClients", "httpClient"),
                 new("webhooks", "webhook"),
                 new("recurringJobRegistrations", "recurringJob"),
+                new("networkPolicies", "networkPolicy"),
             ],
             query,
             limit,

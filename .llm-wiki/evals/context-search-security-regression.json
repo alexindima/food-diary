@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "description": "Focused security-boundary retrieval regression captured from the 2026-08-27 Wiki-first security audit.",
+  "diagnosticLimit": 50,
+  "thresholds": {
+    "minimumCaseCount": 4,
+    "minimumTop1Rate": 1.0,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 1.0
+  },
+  "switchCriteria": {
+    "minimumCaseCount": 4,
+    "minimumTop1Rate": 1.0,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 1.0
+  },
+  "cases": [
+    {
+      "id": "security-webpush-connect-time",
+      "cohort": "security-boundaries",
+      "query": "WebPush connect-time DNS address control SocketsHttpHandlerFactory",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs"]
+    },
+    {
+      "id": "security-mailgun-replay",
+      "cohort": "security-boundaries",
+      "query": "Mailgun webhook authorizer signature timestamp replay",
+      "changeType": "Backend",
+      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs"]
+    },
+    {
+      "id": "security-browser-token-storage",
+      "cohort": "security-boundaries",
+      "query": "browser refresh token persistence localStorage service",
+      "changeType": "Frontend",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/platform/browser-storage.service.ts",
+        "FoodDiary.Web.Client/src/app/services/token-storage.service.ts"
+      ]
+    },
+    {
+      "id": "security-nginx-transport",
+      "cohort": "security-boundaries",
+      "query": "nginx TLS protocol reverse proxy config",
+      "changeType": "Any",
+      "expectedPaths": ["nginx.conf"]
+    }
+  ]
+}

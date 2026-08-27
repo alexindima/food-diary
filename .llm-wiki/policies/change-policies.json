@@ -127,7 +127,7 @@
       "id": "security-sensitive",
       "description": "Authentication, billing, webhook, privacy, and personal-data changes require explicit security review.",
       "pathPatterns": [
-        "(^|[./])(Auth|Authentication|Billing|Webhooks?|PersonalData|Privacy)/",
+        "(?i)(^|[./])(Auth|Authentication|Billing|Webhooks?|PersonalData|Privacy)([/.-]|$)",
         "PERSONAL_DATA_LIFECYCLE\\.md$",
         "BACKEND_SECURITY_HARDENING\\.md$",
         "THREAT_MODEL\\.md$"

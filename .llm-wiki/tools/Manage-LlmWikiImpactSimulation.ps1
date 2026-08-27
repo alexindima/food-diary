@@ -365,7 +365,7 @@ if ($Action -eq 'simulate') {
             if (Test-Path -LiteralPath $temporaryPath) { [IO.File]::Delete($temporaryPath) }
         }
     }
-    $result = [pscustomobject][ordered]@{ action = $Action; valid = $receipt.valid; simulation = $receipt; savedPath = $(if ($Action -eq 'create') { "$normalizedWorkspace/impact-simulation.json" } else { $null }) }
+    $result = [pscustomobject][ordered]@{ action = $Action; valid = $receipt.valid; issues = @(); simulation = $receipt; savedPath = $(if ($Action -eq 'create') { "$normalizedWorkspace/impact-simulation.json" } else { $null }) }
 } else {
     if (-not (Test-Path -LiteralPath $receiptPath -PathType Leaf)) { throw "Impact simulation is absent: $normalizedWorkspace/impact-simulation.json" }
     $receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json

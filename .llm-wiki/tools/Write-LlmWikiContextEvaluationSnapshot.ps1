@@ -81,7 +81,7 @@ $snapshot = [pscustomobject][ordered]@{
         powershell = $PSVersionTable.PSVersion.ToString()
         node = (& node --version).Trim()
         codeGraphParserVersion = [string]$graphStatus.parserVersion
-        contextSearchSchemaVersion = 4
+        contextSearchSchemaVersion = 5
         codeGraphSourceSha256 = (Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'code-graph.mjs') -Algorithm SHA256).Hash.ToLowerInvariant()
     }
     changeSetFingerprint = $changeSetFingerprintBefore

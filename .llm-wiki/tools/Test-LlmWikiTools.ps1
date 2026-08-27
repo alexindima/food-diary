@@ -614,12 +614,21 @@ Assert-Wiki (@($quality.hotspots).Count -gt 0) 'Quality index did not rank struc
 $hotspotJson = & (Join-Path $toolsRoot 'Find-LlmWikiQualityRisk.ps1') -View hotspots -Limit 3 -Format Json
 $hotspotView = $hotspotJson | ConvertFrom-Json
 Assert-Wiki ($hotspotView.count -le 3 -and $hotspotView.count -eq @($hotspotView.items).Count) 'Hotspot query exceeded its result limit or reported an inconsistent count.'
+Assert-Wiki (@($hotspotView.items | Where-Object path -match '^\.llm-wiki/').Count -eq 0) 'Default hotspot query included Wiki implementation records instead of product code.'
+$wikiHotspots = & (Join-Path $toolsRoot 'Find-LlmWikiQualityRisk.ps1') -View hotspots -Area Wiki -Limit 3 -Format Json | ConvertFrom-Json
+Assert-Wiki ($wikiHotspots.count -gt 0 -and @($wikiHotspots.items | Where-Object path -notmatch '^\.llm-wiki/').Count -eq 0) 'Wiki-only hotspot query did not isolate Wiki implementation records.'
 
 $runtime = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/runtime-topology.json') -Raw | ConvertFrom-Json
 Assert-Wiki ($runtime.summary.composeServices -gt 0) 'Runtime topology did not extract Compose services.'
 Assert-Wiki ($runtime.summary.hostedServices -gt 0) 'Runtime topology did not extract hosted services.'
 Assert-Wiki ($runtime.summary.httpClients -gt 0) 'Runtime topology did not extract HTTP clients.'
 Assert-Wiki ($runtime.summary.recurringJobRegistrations -gt 0) 'Runtime topology did not extract recurring jobs.'
+Assert-Wiki ($runtime.summary.networkPolicies -gt 0) 'Runtime topology did not extract outbound network policy evidence.'
+$mailInboxCompose = @($runtime.composeServices | Where-Object name -eq 'mail-inbox')
+Assert-Wiki ($mailInboxCompose.Count -eq 1) 'Runtime topology did not extract the mail-inbox Compose service exactly once.'
+Assert-Wiki (@($mailInboxCompose[0].dependsOn) -contains 'mailinbox-db-init') 'Runtime topology omitted the mail-inbox dependency.'
+Assert-Wiki (@($mailInboxCompose[0].dependsOn) -notcontains 'default') 'Runtime topology misclassified a Compose network as a service dependency.'
+Assert-Wiki ([bool]$mailInboxCompose[0].readOnlyRootFilesystem -and [bool]$mailInboxCompose[0].dropsAllCapabilities -and [bool]$mailInboxCompose[0].noNewPrivileges) 'Runtime topology omitted declared mail-inbox container-hardening controls.'
 
 $topologyJson = & (Join-Path $toolsRoot 'Find-LlmWikiRuntimeTopology.ps1') -Query MailRelay -Format Json
 $topology = $topologyJson | ConvertFrom-Json
@@ -640,6 +649,12 @@ Assert-Wiki (@($sensitiveData.externalTransfers | Where-Object {
     $_.providerHost -eq 'api.openai.com' -and
     @($_.dataNames) -contains 'imageUrl'
 }).Count -gt 0) 'Sensitive data index did not connect the food image URL to the external OpenAI boundary.'
+Assert-Wiki (@($sensitiveData.fields | Where-Object {
+    $_.category -eq 'financial' -and $_.name -eq 'Amount' -and $_.path -match 'Meals|Recipes|ShoppingLists|Usda'
+}).Count -eq 0) 'Sensitive data index still classifies generic food or shopping Amount fields as financial.'
+Assert-Wiki (@($sensitiveData.fields | Where-Object {
+    $_.category -eq 'financial' -and $_.name -eq 'Amount' -and $_.path -match 'Billing'
+}).Count -gt 0) 'Sensitive data index lost monetary Billing Amount fields.'
 
 $privacyJson = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') `
     -Category credential `
@@ -656,11 +671,20 @@ Assert-Wiki (@($externalPrivacy.items | Where-Object providerHost -eq 'api.opena
 $unscopedPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') -Category all -NoImplicitScope -Format Json | ConvertFrom-Json
 Assert-Wiki ($unscopedPrivacy.scope.mode -eq 'none') 'Unscoped privacy query unexpectedly inferred a non-feature scope.'
 Assert-Wiki ($unscopedPrivacy.count -eq 0 -and @($unscopedPrivacy.guidance).Count -gt 0) 'Unscoped privacy query returned a noisy repository-wide candidate list.'
+$repositoryPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') -Category credential -RepositoryWide -Limit 5 -Format Json | ConvertFrom-Json
+Assert-Wiki ($repositoryPrivacy.scope.mode -eq 'repository' -and $repositoryPrivacy.count -gt 0) 'Explicit repository-wide privacy review did not return bounded credential candidates.'
 $scopedPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') `
     -Category all `
     -ScopePath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result' `
     -Format Json | ConvertFrom-Json
 Assert-Wiki (@($scopedPrivacy.items | Where-Object { $_.PSObject.Properties['providerHost'] -and $_.providerHost -eq 'api.openai.com' }).Count -gt 0) 'Scoped photo privacy review omitted the external OpenAI image boundary.'
+
+$securityReview = & (Join-Path $toolsRoot 'Find-LlmWikiSecurityReview.ps1') -Limit 20 -Format Json | ConvertFrom-Json
+Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -eq 'FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs' -and [int]$_.rank -le 3 }).Count -gt 0) 'Security review did not rank the WebPush connect-time network boundary in the top three.'
+Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -eq 'MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs' -and [int]$_.rank -le 3 }).Count -gt 0) 'Security review did not rank the Mailgun webhook authorization boundary in the top three.'
+Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -eq 'FoodDiary.Web.Client/src/app/services/token-storage.service.ts' -and [int]$_.rank -le 3 }).Count -gt 0) 'Security review did not rank browser token persistence in the top three.'
+Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -in @('nginx.conf', 'nginx/sites-enabled/fooddiary.club') -and [int]$_.rank -le 4 }).Count -gt 0) 'Security review did not rank nginx transport configuration in the top four.'
+Assert-Wiki (@($securityReview.securityTestSignals).Count -gt 0 -and @($securityReview.limitations).Count -ge 3) 'Security review omitted test signals or evidence limitations.'
 
 $multiPathBrief = & (Join-Path $wikiRoot 'wiki.ps1') brief `
     -PlannedPath 'FoodDiary.Web.Client/src/app/features/dashboard;FoodDiary.Web.Client/src/app/components/shared/ai-input-bar' `
@@ -1563,6 +1587,11 @@ try {
             -WorkspacePath $taskWorkspacePath `
             -AsOfUtc ([DateTime]'2026-01-01T00:04:42Z') `
             -Format Json | Out-Null
+        $impactSimulationText = (& (Join-Path $toolsRoot 'Manage-LlmWikiImpactSimulation.ps1') create `
+            -WorkspacePath $taskWorkspacePath `
+            -AsOfUtc ([DateTime]'2026-01-01T00:04:42Z') `
+            -Format Text) -join [Environment]::NewLine
+        Assert-Wiki ($impactSimulationText -match 'Impact simulation: action=create, valid=True') 'Impact simulation create failed in text mode under strict property access.'
         $retrospectiveCompletionPath = Join-Path $absoluteTaskWorkspacePath 'completion.json'
         $retrospectiveCompletion = [pscustomobject][ordered]@{
             schemaVersion = 2

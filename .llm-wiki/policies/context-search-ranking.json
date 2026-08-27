@@ -95,7 +95,13 @@
     "english|russian": ["i18n", "localization", "translation"],
     "translation": ["i18n", "localization", "translate"],
     "consistent": ["check", "validate"],
-    "replay": ["recovery", "recover"],
+    "replay": ["idempotency", "deduplication", "duplicate", "event"],
+    "ssrf": ["endpoint", "url", "uri", "dns", "ipaddress", "connectcallback"],
+    "dns|rebinding": ["resolve", "ipaddress", "connectcallback", "endpoint"],
+    "csp": ["contentsecuritypolicy", "securityheaders", "xss", "browser"],
+    "xss": ["html", "sanitize", "browser", "localstorage", "csp"],
+    "tls|ssl": ["sslprotocols", "https", "certificate", "nginx"],
+    "localstorage": ["browserstorage", "tokenstorage", "browser"],
     "receives": ["receive"],
     "revise": ["revision", "update", "recalculate"],
     "predicts": ["predict", "prediction"],
@@ -426,6 +432,34 @@
     ,"смен": ["change"]
   },
   "pathBoosts": [
+    {
+      "id": "mailgun-webhook-security",
+      "queryTerms": ["mailgun", "webhook", "replay", "idempotency"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["MailRelay/"],
+      "score": 300
+    },
+    {
+      "id": "webpush-network-security",
+      "queryTerms": ["webpush", "ssrf", "dns", "endpoint", "connectcallback"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["FoodDiary.Integrations/Services/WebPush"],
+      "score": 300
+    },
+    {
+      "id": "nginx-transport-security",
+      "queryTerms": ["nginx", "tls", "ssl", "protocols"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["nginx.conf", "nginx/"],
+      "score": 360
+    },
+    {
+      "id": "browser-token-storage-security",
+      "queryTerms": ["token", "localstorage", "browser", "xss", "csp"],
+      "minimumMatches": 3,
+      "pathPrefixes": ["FoodDiary.Web.Client/src/app/services/", "FoodDiary.Web.Client/src/app/shared/platform/"],
+      "score": 260
+    },
     {
       "id": "external-provider-integration",
       "queryTerms": ["external", "provider"],

@@ -7,10 +7,10 @@ import { DatabaseSync } from 'node:sqlite';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
-const parserVersion = '12-wiki-policy-context-v1';
-const contextSearchSchemaVersion = '4';
+const parserVersion = '13-security-config-context-v1';
+const contextSearchSchemaVersion = '5';
 const compiledIndexSchemaVersion = '4';
-const queryDocumentSchemaVersion = '8';
+const queryDocumentSchemaVersion = '9';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
 const roslynDll = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll');
 const typescriptExtractor = resolve(repositoryRoot, '.llm-wiki/tools/typescript-extractor.mjs');
@@ -202,10 +202,12 @@ function changeSetSnapshot() {
 
 function gitPaths() {
   return repositoryPaths()
-    .filter((path) => /\.(?:cs|csproj|props|targets|ts|js|mjs|cjs|html|ps1)$/.test(path)
+    .filter((path) => /\.(?:cs|csproj|props|targets|ts|js|mjs|cjs|html|ps1|conf)$/.test(path)
       || /(^|\/)(?:appsettings(?:\.[^.\/]+)?|package|angular|backend-modules|module-dependencies)\.json$/.test(path)
       || /^\.llm-wiki\/policies\/[^/]+\.json$/.test(path)
-      || /^\.github\/workflows\/[^/]+\.ya?ml$/.test(path))
+      || /^\.github\/workflows\/[^/]+\.ya?ml$/.test(path)
+      || /^docker-compose(?:\.[^/]*)?\.ya?ml$/.test(path)
+      || /^nginx(?:\.conf|\/)/.test(path))
     .filter((path) => !/(^|\/)(?:bin|obj|node_modules|\.artifacts|TestResults)(\/|$)/.test(path))
     .filter((path) => !/\.(?:Designer|g)\.cs$/.test(path) && !/ModelSnapshot\.cs$/.test(path));
 }
@@ -232,6 +234,7 @@ function languageOf(path) {
   if (extension === '.html') return 'html';
   if (extension === '.json') return 'json';
   if (extension === '.yml' || extension === '.yaml') return 'yaml';
+  if (extension === '.conf' || path.startsWith('nginx/')) return 'configuration';
   return 'typescript';
 }
 
@@ -530,7 +533,7 @@ function refreshQueryLayer(database) {
       }
     } else if (category === 'runtime') {
       let ordinal = 0;
-      for (const [recordKind, values] of Object.entries({ composeService: document.composeServices ?? [], hostedService: document.hostedServices ?? [], httpClient: document.httpClients ?? [], webhook: document.webhooks ?? [], recurringJob: document.recurringJobRegistrations ?? [] })) {
+      for (const [recordKind, values] of Object.entries({ composeService: document.composeServices ?? [], hostedService: document.hostedServices ?? [], httpClient: document.httpClients ?? [], webhook: document.webhooks ?? [], recurringJob: document.recurringJobRegistrations ?? [], networkPolicy: document.networkPolicies ?? [] })) {
         for (const value of values) {
           const path = recordKind === 'composeService' ? 'docker-compose.yml' : value.path ?? value.registrationPath ?? '';
           records.push({ key: `${recordKind}:${path}:${value.name ?? value.contract ?? value.api ?? ''}:${ordinal}`, path, kind: recordKind, ordinal: ordinal++, value });
@@ -979,7 +982,7 @@ function refreshContextSearch(database) {
       features.role, features.isTest, features.extension);
   };
   for (const file of files) {
-    const sourceBody = file.language === 'powershell' || file.language === 'json'
+    const sourceBody = ['powershell', 'json', 'yaml', 'configuration'].includes(file.language)
       ? readFileSync(resolve(repositoryRoot, file.path), 'utf8')
       : (tokensByPath.get(file.path) ?? []).join(' ');
     insertContextRecord(
@@ -1160,7 +1163,7 @@ function buildPlan(database, force = false) {
   };
 }
 
-function queryDocuments(database, category, query, limit) {
+function queryDocuments(database, category, query, limit, recordKind = '', pathPrefix = '', excludePathPrefix = '', onlyUnreferenced = false) {
   if (category === 'tests') {
     const terms = `%${query}%`;
     const rows = database.prepare(`
@@ -1172,12 +1175,27 @@ function queryDocuments(database, category, query, limit) {
     return { category, query, records: rows };
   }
   const term = `%${query}%`;
+  const includedPath = `${String(pathPrefix ?? '').replaceAll('\\', '/')}%`;
+  const excludedPath = `${String(excludePathPrefix ?? '').replaceAll('\\', '/')}%`;
   const rows = database.prepare(`
     SELECT category, record_key recordKey, path, source_path sourcePath, payload_json payloadJson
     FROM query_documents
-    WHERE category=? AND (?='' OR record_key LIKE ? COLLATE NOCASE OR path LIKE ? COLLATE NOCASE OR payload_json LIKE ? COLLATE NOCASE)
-    ORDER BY path, record_key LIMIT ?
-  `).all(category, query, term, term, term, limit).map((row) => ({ ...row, payload: JSON.parse(row.payloadJson) }));
+    WHERE category=?
+      AND (?='' OR record_kind = ?)
+      AND (?='' OR record_key LIKE ? COLLATE NOCASE OR path LIKE ? COLLATE NOCASE OR payload_json LIKE ? COLLATE NOCASE)
+      AND (?='' OR path LIKE ? COLLATE NOCASE)
+      AND (?='' OR path NOT LIKE ? COLLATE NOCASE)
+      AND (?=0 OR COALESCE(json_extract(payload_json, '$.testReferenceCount'), 0) = 0)
+    ORDER BY source_ordinal LIMIT ?
+  `).all(
+    category,
+    recordKind, recordKind,
+    query, term, term, term,
+    pathPrefix, includedPath,
+    excludePathPrefix, excludedPath,
+    onlyUnreferenced ? 1 : 0,
+    limit,
+  ).map((row) => ({ ...row, payload: JSON.parse(row.payloadJson) }));
   for (const row of rows) delete row.payloadJson;
   return { category, query, records: rows };
 }
@@ -1378,6 +1396,7 @@ function taskBriefImpactContext(database, changedPaths) {
       httpClients: selectByPaths('runtime', 'httpClient'),
       webhooks: selectByPaths('runtime', 'webhook'),
       recurringJobRegistrations: selectByPaths('runtime', 'recurringJob'),
+      networkPolicies: selectByPaths('runtime', 'networkPolicy'),
     },
     sensitiveData: {
       fields: selectByPaths('sensitive', 'field'),
@@ -2668,7 +2687,16 @@ try {
   else if (action === 'relations') result = relations(database, (options.path ?? '').split(';').filter(Boolean), (options.kind ?? '').split(';').filter(Boolean), Number(options.limit ?? 100));
   else if (action === 'coverage') result = coverage(database);
   else if (action === 'fingerprint') result = fingerprint(database, (options.path ?? '').split(';').filter(Boolean));
-  else if (action === 'query') result = queryDocuments(database, options.category ?? 'modules', options.query ?? '', Number(options.limit ?? 50));
+  else if (action === 'query') result = queryDocuments(
+    database,
+    options.category ?? 'modules',
+    options.query ?? '',
+    Number(options.limit ?? 50),
+    options['record-kind'] ?? '',
+    options['path-prefix'] ?? '',
+    options['exclude-path-prefix'] ?? '',
+    options['only-unreferenced'] === 'true',
+  );
   else if (action === 'backend-contract') result = backendContractContext(database, options.view ?? 'all', options.query ?? '', Number(options.limit ?? 30));
   else if (action === 'frontend-contract') result = frontendContractContext(database, options.view ?? 'all', options.query ?? '', Number(options.limit ?? 30));
   else if (action === 'task-brief-impact') result = taskBriefImpactContext(database, (options.path ?? '').split(';').filter(Boolean));

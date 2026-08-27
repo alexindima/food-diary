@@ -5,22 +5,22 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4680,
-    "wikiToolFiles": 197,
+    "productionFiles": 4681,
+    "wikiToolFiles": 198,
     "wikiToolsWithoutTestReferences": 5,
-    "criticalSymbols": 772,
-    "criticalSymbolsWithTestReferences": 746,
+    "criticalSymbols": 773,
+    "criticalSymbolsWithTestReferences": 747,
     "criticalSymbolsWithoutTestReferences": 26,
     "debtMarkers": 10
   },
   "hotspots": [
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 2791,
-      "decisionPoints": 357,
+      "nonBlankLines": 2802,
+      "decisionPoints": 359,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 593.32
+      "structuralRiskScore": 596.54
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
@@ -199,20 +199,20 @@
       "structuralRiskScore": 135.06
     },
     {
+      "path": ".llm-wiki/tools/Manage-LlmWikiEvalPromotion.ps1",
+      "nonBlankLines": 295,
+      "decisionPoints": 82,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 130.9
+    },
+    {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
       "nonBlankLines": 618,
       "decisionPoints": 78,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 129.36
-    },
-    {
-      "path": ".llm-wiki/tools/Manage-LlmWikiEvalPromotion.ps1",
-      "nonBlankLines": 288,
-      "decisionPoints": 81,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 129.26
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
@@ -695,6 +695,14 @@
       "structuralRiskScore": 78.72
     },
     {
+      "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
+      "nonBlankLines": 148,
+      "decisionPoints": 49,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 78.46
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskSimilarity.ps1",
       "nonBlankLines": 272,
       "decisionPoints": 47,
@@ -781,14 +789,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 73.12
-    },
-    {
-      "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-      "nonBlankLines": 142,
-      "decisionPoints": 45,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 72.34
     },
     {
       "path": "FoodDiary.Initializer/UsdaDataSeeder.cs",
@@ -906,19 +906,19 @@
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiRuntimeTopology.ps1",
-      "nonBlankLines": 124,
-      "decisionPoints": 17,
+      "nonBlankLines": 200,
+      "decisionPoints": 31,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 29.98
+      "structuralRiskScore": 52.5
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiSensitiveDataIndex.ps1",
-      "nonBlankLines": 159,
-      "decisionPoints": 18,
+      "nonBlankLines": 164,
+      "decisionPoints": 20,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 32.18
+      "structuralRiskScore": 35.28
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1",
@@ -1042,27 +1042,35 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1",
-      "nonBlankLines": 78,
-      "decisionPoints": 11,
+      "nonBlankLines": 120,
+      "decisionPoints": 22,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.06
+      "structuralRiskScore": 37.4
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiRuntimeTopology.ps1",
-      "nonBlankLines": 79,
+      "nonBlankLines": 81,
       "decisionPoints": 13,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.08
+      "structuralRiskScore": 23.12
+    },
+    {
+      "path": ".llm-wiki/tools/Find-LlmWikiSecurityReview.ps1",
+      "nonBlankLines": 137,
+      "decisionPoints": 13,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 24.24
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiSensitiveData.ps1",
-      "nonBlankLines": 165,
-      "decisionPoints": 23,
+      "nonBlankLines": 174,
+      "decisionPoints": 28,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 39.8
+      "structuralRiskScore": 47.48
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
@@ -1810,11 +1818,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-      "nonBlankLines": 142,
-      "decisionPoints": 45,
+      "nonBlankLines": 148,
+      "decisionPoints": 49,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 72.34
+      "structuralRiskScore": 78.46
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
@@ -1906,11 +1914,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiEvalPromotion.ps1",
-      "nonBlankLines": 288,
-      "decisionPoints": 81,
+      "nonBlankLines": 295,
+      "decisionPoints": 82,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 129.26
+      "structuralRiskScore": 130.9
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
@@ -2386,11 +2394,11 @@
     },
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 2791,
-      "decisionPoints": 357,
+      "nonBlankLines": 2802,
+      "decisionPoints": 359,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 593.32
+      "structuralRiskScore": 596.54
     },
     {
       "path": "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
@@ -44641,6 +44649,16 @@
       "testReferenceCount": 2,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiRuntimeArchitectureSqlParity.ps1",
+        ".llm-wiki/tools/Test-LlmWikiTools.ps1"
+      ]
+    },
+    {
+      "name": "Find-LlmWikiSecurityReview",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Find-LlmWikiSecurityReview.ps1",
+      "line": 1,
+      "testReferenceCount": 1,
+      "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ]
     },

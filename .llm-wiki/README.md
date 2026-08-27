@@ -278,9 +278,13 @@ The unified developer entrypoint is:
 ./.llm-wiki/wiki.ps1 dependencies -BaseRef origin/master
 ./.llm-wiki/wiki.ps1 rollout
 ./.llm-wiki/wiki.ps1 hotspots
+./.llm-wiki/wiki.ps1 hotspots -QualityArea Wiki
 ./.llm-wiki/wiki.ps1 test-gaps
 ./.llm-wiki/wiki.ps1 topology
 ./.llm-wiki/wiki.ps1 privacy -PrivacyCategory credential
+./.llm-wiki/wiki.ps1 privacy -RepositoryWide
+./.llm-wiki/wiki.ps1 security
+./.llm-wiki/wiki.ps1 security -Query 'Mailgun webhook replay idempotency'
 ./.llm-wiki/wiki.ps1 ui -FrontendView components -Query autocomplete
 ./.llm-wiki/wiki.ps1 domain -DomainView invariants -Query weight
 ./.llm-wiki/wiki.ps1 contracts -BackendContractView consumers -Query StartFastingCommand
