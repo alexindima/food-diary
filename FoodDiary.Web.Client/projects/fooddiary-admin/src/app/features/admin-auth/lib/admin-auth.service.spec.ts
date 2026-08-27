@@ -69,6 +69,7 @@ describe('AdminAuthService SSO exchange', () => {
         const req = httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual({ code: 'sso-code' });
+        expect(req.request.withCredentials).toBe(true);
         req.flush({
             accessToken: createToken({ role: 'Admin' }),
             refreshToken: 'refresh-token',
@@ -77,7 +78,7 @@ describe('AdminAuthService SSO exchange', () => {
         await promise;
 
         expect(localStorage.getItem('authToken')).toBeTruthy();
-        expect(localStorage.getItem('refreshToken')).toBe('refresh-token');
+        expect(localStorage.getItem('refreshToken')).toBeNull();
         expect(sessionStorage.getItem('adminSsoCode')).toBe('sso-code');
         expect(replaceStateSpy).toHaveBeenCalledWith({}, '', '/admin?foo=1');
     });
@@ -88,6 +89,7 @@ describe('AdminAuthService SSO exchange', () => {
         const req = httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual({ code: 'return-code' });
+        expect(req.request.withCredentials).toBe(true);
         req.flush({
             accessToken: createToken({ role: 'Admin' }),
             refreshToken: 'refresh-token',
@@ -114,6 +116,7 @@ describe('AdminAuthService admin upgrade', () => {
         const exchangeReq = httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`);
         expect(exchangeReq.request.method).toBe('POST');
         expect(exchangeReq.request.body).toEqual({ code: 'upgrade-code' });
+        expect(exchangeReq.request.withCredentials).toBe(true);
         exchangeReq.flush({
             accessToken: createToken({ role: 'Admin' }),
             refreshToken: 'refresh-token',

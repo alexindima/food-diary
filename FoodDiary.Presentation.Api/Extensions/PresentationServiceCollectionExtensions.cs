@@ -19,6 +19,8 @@ public static class PresentationServiceCollectionExtensions {
         public IServiceCollection AddPresentationApi() {
             services.AddScoped<TelemetryActionFilter>();
             services.AddScoped<IdempotencyFilter>();
+            services.AddScoped<AuthenticationCookieResultFilter>();
+            services.AddScoped<RefreshTokenCookieService>();
             services.AddScoped<BillingWebhookHttpProcessor>();
             services.AddScoped<ClientTelemetryHttpProcessor>();
             services.TryAddSingleton(TimeProvider.System);
@@ -31,6 +33,7 @@ public static class PresentationServiceCollectionExtensions {
                 .AddControllers(options => {
                     options.Filters.AddService<TelemetryActionFilter>();
                     options.Filters.AddService<IdempotencyFilter>();
+                    options.Filters.AddService<AuthenticationCookieResultFilter>();
                 })
                 .ConfigureApiBehaviorOptions(options => {
                     options.InvalidModelStateResponseFactory = context => {

@@ -3,6 +3,7 @@ param([switch]$Check)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiRuntimeTopologyFingerprint.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $outputPath = Join-Path $wikiRoot 'generated/runtime-topology.json'
@@ -30,7 +31,7 @@ function Get-ComposeListValues {
 $sourceFiles = @(
     Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
         Where-Object {
-            $_.FullName -notmatch '[\\/](tests|obj|bin|\.artifacts|TestResults|Migrations)[\\/]' -and
+            $_.FullName -notmatch '[\\/](tests|obj|bin|\.artifacts|\.llm-wiki|TestResults|Migrations)[\\/]' -and
             $_.Name -notmatch '\.(Designer|g)\.cs$'
         } |
         Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName }
@@ -129,7 +130,9 @@ $composeServices = [System.Collections.Generic.List[object]]::new()
 $composePath = Join-Path $repositoryRoot 'docker-compose.yml'
 if (Test-Path -LiteralPath $composePath) {
     $compose = Get-Content -LiteralPath $composePath -Raw
-    foreach ($match in [regex]::Matches($compose, '(?ms)^  (?<name>[a-zA-Z0-9_-]+):\r?\n(?<body>.*?)(?=^  [a-zA-Z0-9_-]+:|\z)')) {
+    $servicesMatch = [regex]::Match($compose, '(?ms)^services:\s*\r?\n(?<body>.*?)(?=^[a-zA-Z0-9_-]+:\s*(?:\r?\n|$)|\z)')
+    $servicesBody = if ($servicesMatch.Success) { $servicesMatch.Groups['body'].Value } else { '' }
+    foreach ($match in [regex]::Matches($servicesBody, '(?ms)^  (?<name>[a-zA-Z0-9_-]+):\r?\n(?<body>.*?)(?=^  [a-zA-Z0-9_-]+:|\z)')) {
         $body = $match.Groups['body'].Value
         $imageMatch = [regex]::Match($body, '(?m)^\s{4}image:\s*(?<value>.+)$')
         $dockerfileMatch = [regex]::Match($body, '(?m)^\s{6}dockerfile:\s*(?<value>.+)$')
@@ -174,6 +177,7 @@ if (Test-Path -LiteralPath $composePath) {
 
 $result = [ordered]@{
     schemaVersion = 1
+    freshness = Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $repositoryRoot
     summary = [ordered]@{
         composeServices = $composeServices.Count
         hostedServices = @($hostedServices | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.name)`0$($_.path)" } -Unique).Count

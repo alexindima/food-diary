@@ -14,8 +14,10 @@ using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Responses;
+using FoodDiary.Presentation.Api.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 
 namespace FoodDiary.Presentation.Api.Tests;
@@ -131,6 +133,21 @@ public sealed class AuthSessionControllerTests {
     }
 
     [Fact]
+    public async Task Refresh_UsesHttpOnlyCookieWhenBodyTokenIsAbsent() {
+        AuthenticationModel model = CreateAuthenticationModel();
+        IRequest<Result<AuthenticationModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
+        AuthSessionController controller = CreateController(sender);
+        controller.HttpContext.Request.Headers.Cookie = $"{RefreshTokenCookieService.CookieName}=cookie-refresh-token";
+
+        IActionResult result = await controller.Refresh();
+
+        Assert.IsType<OkObjectResult>(result);
+        RefreshTokenCommand command = Assert.IsType<RefreshTokenCommand>(sentRequest);
+        Assert.Equal("cookie-refresh-token", command.RefreshToken);
+    }
+
+    [Fact]
     public async Task RestoreAccount_SendsRestoreCommandAndReturnsAuthenticationResponse() {
         AuthenticationModel model = CreateAuthenticationModel();
         IRequest<Result<AuthenticationModel>>? sentRequest = null;
@@ -188,7 +205,12 @@ public sealed class AuthSessionControllerTests {
         };
 
     private static DefaultHttpContext CreateHttpContext() {
-        var httpContext = new DefaultHttpContext();
+        var services = new ServiceCollection();
+        services.AddSingleton(TimeProvider.System);
+        services.AddScoped<RefreshTokenCookieService>();
+        var httpContext = new DefaultHttpContext {
+            RequestServices = services.BuildServiceProvider(),
+        };
         httpContext.Connection.RemoteIpAddress = IPAddress.Parse("203.0.113.10");
         httpContext.Request.Headers.UserAgent = "AuthSessionTests/1.0";
         return httpContext;

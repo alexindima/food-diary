@@ -1,12 +1,16 @@
 {
   "schemaVersion": 1,
+  "freshness": {
+    "sourceFingerprint": "4bb3b16228a8b24a2d09a30bd8e53ac7ad9f0296cdfd2fd1065a0f0c1896840c",
+    "sourceFileCount": 3471
+  },
   "summary": {
-    "composeServices": 23,
+    "composeServices": 17,
     "hostedServices": 10,
     "httpClients": 12,
     "webhooks": 22,
     "recurringJobRegistrations": 16,
-    "networkPolicies": 29
+    "networkPolicies": 28
   },
   "semantics": {
     "declared": "Compose fields describe repository declarations, not effective production exposure or IAM.",
@@ -54,24 +58,9 @@
       "volumeMounts": [
         "api-data-protection-keys:/var/lib/fooddiary/data-protection-keys"
       ],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
-      "evidenceStatus": "declared-in-repository"
-    },
-    {
-      "name": "api-data-protection-keys",
-      "image": null,
-      "dockerfile": null,
-      "dependsOn": [],
-      "ports": [],
-      "profiles": [],
-      "networks": [],
-      "environmentKeys": [],
-      "volumeMounts": [],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
+      "readOnlyRootFilesystem": true,
+      "dropsAllCapabilities": true,
+      "noNewPrivileges": true,
       "evidenceStatus": "declared-in-repository"
     },
     {
@@ -90,9 +79,9 @@
       "networks": [],
       "environmentKeys": [],
       "volumeMounts": [],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
+      "readOnlyRootFilesystem": true,
+      "dropsAllCapabilities": true,
+      "noNewPrivileges": true,
       "evidenceStatus": "declared-in-repository"
     },
     {
@@ -141,9 +130,9 @@
         "MailRelayClient__BaseUrl"
       ],
       "volumeMounts": [],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
+      "readOnlyRootFilesystem": true,
+      "dropsAllCapabilities": true,
+      "noNewPrivileges": true,
       "evidenceStatus": "declared-in-repository"
     },
     {
@@ -215,9 +204,9 @@
         "MailRelay__RequireMailgunWebhookSignature"
       ],
       "volumeMounts": [],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
+      "readOnlyRootFilesystem": true,
+      "dropsAllCapabilities": true,
+      "noNewPrivileges": true,
       "evidenceStatus": "declared-in-repository"
     },
     {
@@ -270,51 +259,6 @@
         "mailinbox-postgres-server-tls:/run/postgresql-tls:ro",
         "./MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf:/etc/postgresql/mailinbox-pg_hba.conf:ro"
       ],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
-      "evidenceStatus": "declared-in-repository"
-    },
-    {
-      "name": "mailinbox-postgres-client-ca",
-      "image": null,
-      "dockerfile": null,
-      "dependsOn": [],
-      "ports": [],
-      "profiles": [],
-      "networks": [],
-      "environmentKeys": [],
-      "volumeMounts": [],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
-      "evidenceStatus": "declared-in-repository"
-    },
-    {
-      "name": "mailinbox-postgres-data",
-      "image": null,
-      "dockerfile": null,
-      "dependsOn": [],
-      "ports": [],
-      "profiles": [],
-      "networks": [],
-      "environmentKeys": [],
-      "volumeMounts": [],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
-      "evidenceStatus": "declared-in-repository"
-    },
-    {
-      "name": "mailinbox-postgres-server-tls",
-      "image": null,
-      "dockerfile": null,
-      "dependsOn": [],
-      "ports": [],
-      "profiles": [],
-      "networks": [],
-      "environmentKeys": [],
-      "volumeMounts": [],
       "readOnlyRootFilesystem": false,
       "dropsAllCapabilities": false,
       "noNewPrivileges": false,
@@ -389,21 +333,6 @@
       "evidenceStatus": "declared-in-repository"
     },
     {
-      "name": "mailrelay-postgres-data",
-      "image": null,
-      "dockerfile": null,
-      "dependsOn": [],
-      "ports": [],
-      "profiles": [],
-      "networks": [],
-      "environmentKeys": [],
-      "volumeMounts": [],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
-      "evidenceStatus": "declared-in-repository"
-    },
-    {
       "name": "nginx",
       "image": "nginx:alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752",
       "dockerfile": null,
@@ -423,9 +352,9 @@
         "/var/www/storybook.fooddiary.club:/var/www/storybook.fooddiary.club:ro",
         "/var/log/nginx:/var/log/nginx"
       ],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
+      "readOnlyRootFilesystem": true,
+      "dropsAllCapabilities": true,
+      "noNewPrivileges": true,
       "evidenceStatus": "declared-in-repository"
     },
     {
@@ -446,21 +375,6 @@
       "volumeMounts": [
         "postgres-data:/var/lib/postgresql/data"
       ],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
-      "evidenceStatus": "declared-in-repository"
-    },
-    {
-      "name": "postgres-data",
-      "image": null,
-      "dockerfile": null,
-      "dependsOn": [],
-      "ports": [],
-      "profiles": [],
-      "networks": [],
-      "environmentKeys": [],
-      "volumeMounts": [],
       "readOnlyRootFilesystem": false,
       "dropsAllCapabilities": false,
       "noNewPrivileges": false,
@@ -544,9 +458,9 @@
       "networks": [],
       "environmentKeys": [],
       "volumeMounts": [],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
+      "readOnlyRootFilesystem": true,
+      "dropsAllCapabilities": true,
+      "noNewPrivileges": true,
       "evidenceStatus": "declared-in-repository"
     }
   ],
@@ -900,20 +814,6 @@
     }
   ],
   "networkPolicies": [
-    {
-      "name": "CompiledIndexReader",
-      "path": ".llm-wiki/tools/LlmWiki.SqliteReader/CompiledIndexReader.cs",
-      "securitySignals": [
-        "ip-address-policy",
-        "timeout-policy",
-        "uri-policy"
-      ],
-      "evidenceStatus": "inferred-from-code",
-      "runtimeEvidenceRequired": [
-        "effective DNS result at connection time",
-        "effective proxy and redirect behavior"
-      ]
-    },
     {
       "name": "ConfigurableRelayDeliveryTransport",
       "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfigurableRelayDeliveryTransport.cs",

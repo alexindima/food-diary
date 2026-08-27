@@ -80,6 +80,7 @@ public sealed class ControllerConventionsTests {
             ["AuthImpersonationController"] = "api/v{version:apiVersion}/auth/impersonation",
             ["AuthPasswordController"] = "api/v{version:apiVersion}/auth/password-reset",
             ["AuthSessionController"] = "api/v{version:apiVersion}/auth",
+            ["AuthSessionLifecycleController"] = "api/v{version:apiVersion}/auth",
             ["AuthTelegramController"] = "api/v{version:apiVersion}/auth/telegram",
         };
 
@@ -180,6 +181,7 @@ public sealed class ControllerConventionsTests {
             "AuthSessionController.Register",
             "AuthSessionController.RestoreAccount",
             "AuthSessionController.VerifyEmail",
+            "AuthSessionLifecycleController.Logout",
             "AuthTelegramController.TelegramBotAuth",
             "AuthTelegramController.TelegramLoginWidget",
             "AuthTelegramController.TelegramVerify",

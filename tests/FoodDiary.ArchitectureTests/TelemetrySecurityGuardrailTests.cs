@@ -157,6 +157,57 @@ public sealed class TelemetrySecurityGuardrailTests {
     }
 
     [Fact]
+    public void ReverseProxy_AllowsOnlyModernTlsProtocols() {
+        string[] configurationPaths = [
+            ArchitectureTestPaths.FromRoot("nginx.conf"),
+            .. Directory.GetFiles(ArchitectureTestPaths.FromRoot("nginx", "sites-enabled"), "*", SearchOption.TopDirectoryOnly),
+        ];
+        List<string> violations = [];
+
+        foreach (string path in configurationPaths) {
+            string[] lines = File.ReadAllLines(path);
+            for (int index = 0; index < lines.Length; index++) {
+                string line = lines[index].Trim();
+                if (!line.StartsWith("ssl_protocols ", StringComparison.Ordinal) || line.StartsWith('#')) {
+                    continue;
+                }
+
+                string[] protocols = line["ssl_protocols ".Length..]
+                    .TrimEnd(';')
+                    .Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                if (!protocols.SequenceEqual(["TLSv1.2", "TLSv1.3"], StringComparer.Ordinal)) {
+                    violations.Add($"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path)}:{(index + 1).ToString(CultureInfo.InvariantCulture)}: {line}");
+                }
+            }
+        }
+
+        Assert.Multiple(
+            () => Assert.Contains("ssl_protocols TLSv1.2 TLSv1.3;", ReadSource("nginx.conf"), StringComparison.Ordinal),
+            () => Assert.Empty(violations.Order(StringComparer.Ordinal)));
+    }
+
+    [Fact]
+    public void BrowserApplications_EnforceContentSecurityPolicyAcrossStaticLocations() {
+        string embeddedClient = ReadSource("FoodDiary.Web.Client/nginx.conf");
+        string productionSite = ReadSource("nginx/sites-enabled/fooddiary.club");
+        int adminServerStart = productionSite.IndexOf("server_name admin.fooddiary.club;", StringComparison.Ordinal);
+        Assert.True(adminServerStart >= 0, "The production admin HTTPS server is missing.");
+        string adminServer = productionSite[adminServerStart..];
+
+        Assert.Multiple(
+            () => Assert.Contains("add_header Content-Security-Policy ", embeddedClient, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("Content-Security-Policy-Report-Only", embeddedClient, StringComparison.Ordinal),
+            () => Assert.Contains("default-src 'self'", embeddedClient, StringComparison.Ordinal),
+            () => Assert.Contains("object-src 'none'", embeddedClient, StringComparison.Ordinal),
+            () => Assert.Contains("frame-ancestors 'none'", embeddedClient, StringComparison.Ordinal),
+            () => Assert.Contains("add_header_inherit merge;", embeddedClient, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("Content-Security-Policy-Report-Only", productionSite, StringComparison.Ordinal),
+            () => Assert.Equal(2, CountOccurrences(productionSite, "add_header Content-Security-Policy ")),
+            () => Assert.Contains("add_header Content-Security-Policy ", adminServer, StringComparison.Ordinal),
+            () => Assert.Contains("add_header_inherit merge;", adminServer, StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void ApiExceptionLogs_UseBoundedRouteLabels() {
         string exceptionHandler = ReadSource("FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs");
 

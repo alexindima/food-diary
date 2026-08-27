@@ -217,13 +217,14 @@ export class AuthService extends ApiService {
             return this.refreshInFlight$;
         }
 
-        const refreshToken = this.tokenStorage.getRefreshToken();
-        if (refreshToken === null || refreshToken.length === 0) {
+        if (!this.tokenStorage.hasRefreshSession()) {
             void this.onLogoutAsync(true);
             return of(null);
         }
 
-        const refreshRequest$ = this.post<AuthResponse>('refresh', { refreshToken }).pipe(
+        const legacyRefreshToken = this.tokenStorage.consumeLegacyRefreshToken();
+        const request = legacyRefreshToken === null ? {} : { refreshToken: legacyRefreshToken };
+        const refreshRequest$ = this.post<AuthResponse>('refresh', request).pipe(
             map(response => {
                 const accessToken = response.accessToken;
                 if (accessToken.length > 0) {
@@ -246,6 +247,9 @@ export class AuthService extends ApiService {
     }
 
     public async onLogoutAsync(redirectToAuth = false): Promise<void> {
+        if (!redirectToAuth && this.tokenStorage.hasRefreshSession()) {
+            await firstValueFrom(this.post<void>('logout', {}).pipe(catchError(() => of(undefined))));
+        }
         this.sessionEvents.notifySessionEnded();
         this.authTokenSignal.set(null);
         this.userSignal.set(null);
@@ -286,7 +290,7 @@ export class AuthService extends ApiService {
 
     private applyAuthenticatedSession(authResponse: AuthResponse, rememberMe?: boolean): void {
         this.tokenStorage.setToken(authResponse.accessToken, rememberMe);
-        this.tokenStorage.setRefreshToken(authResponse.refreshToken);
+        this.tokenStorage.markRefreshSession();
         this.authTokenSignal.set(authResponse.accessToken);
 
         const preferredLanguage = authResponse.user.language;
@@ -336,8 +340,7 @@ export class AuthService extends ApiService {
             return;
         }
 
-        const refreshToken = this.tokenStorage.getRefreshToken();
-        if (refreshToken === null || refreshToken.length === 0) {
+        if (!this.tokenStorage.hasRefreshSession()) {
             this.clearStoredIdentity();
             return;
         }

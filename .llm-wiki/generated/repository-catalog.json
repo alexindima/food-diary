@@ -19,8 +19,8 @@
     "applicationModules": 0,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 33,
-    "controllers": 88,
-    "endpoints": 281,
+    "controllers": 89,
+    "endpoints": 282,
     "agentGuides": 76,
     "documentationPages": 50
   },
@@ -4002,42 +4002,54 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/register",
-            "line": 27
+            "line": 28
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/login",
-            "line": 37
+            "line": 38
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/google",
-            "line": 46
+            "line": 47
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/google/link",
-            "line": 57
+            "line": 58
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/refresh",
-            "line": 69
+            "line": 70
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/restore",
-            "line": 78
+            "line": 79
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/verify-email",
-            "line": 88
+            "line": 89
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/verify-email/resend",
-            "line": 100
+            "line": 101
+          }
+        ]
+      },
+      {
+        "name": "AuthSessionLifecycleController",
+        "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
+        "routePrefix": "api/v{version:apiVersion}/auth",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/logout",
+            "line": 16
           }
         ]
       },

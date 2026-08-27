@@ -5,22 +5,22 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4681,
-    "wikiToolFiles": 198,
-    "wikiToolsWithoutTestReferences": 5,
-    "criticalSymbols": 773,
-    "criticalSymbolsWithTestReferences": 747,
-    "criticalSymbolsWithoutTestReferences": 26,
+    "productionFiles": 4685,
+    "wikiToolFiles": 199,
+    "wikiToolsWithoutTestReferences": 6,
+    "criticalSymbols": 775,
+    "criticalSymbolsWithTestReferences": 748,
+    "criticalSymbolsWithoutTestReferences": 27,
     "debtMarkers": 10
   },
   "hotspots": [
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 2802,
-      "decisionPoints": 359,
+      "nonBlankLines": 2809,
+      "decisionPoints": 360,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 596.54
+      "structuralRiskScore": 598.18
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
@@ -906,11 +906,11 @@
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiRuntimeTopology.ps1",
-      "nonBlankLines": 200,
-      "decisionPoints": 31,
+      "nonBlankLines": 204,
+      "decisionPoints": 32,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 52.5
+      "structuralRiskScore": 54.08
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiSensitiveDataIndex.ps1",
@@ -1050,11 +1050,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiRuntimeTopology.ps1",
-      "nonBlankLines": 81,
-      "decisionPoints": 13,
+      "nonBlankLines": 90,
+      "decisionPoints": 12,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.12
+      "structuralRiskScore": 21.8
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiSecurityReview.ps1",
@@ -1753,6 +1753,14 @@
       "structuralRiskScore": 13.88
     },
     {
+      "path": ".llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1",
+      "nonBlankLines": 37,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 9.24
+    },
+    {
       "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",
       "nonBlankLines": 38,
       "decisionPoints": 2,
@@ -2394,11 +2402,11 @@
     },
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 2802,
-      "decisionPoints": 359,
+      "nonBlankLines": 2809,
+      "decisionPoints": 360,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 596.54
+      "structuralRiskScore": 598.18
     },
     {
       "path": "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
@@ -23354,11 +23362,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "nonBlankLines": 60,
+      "nonBlankLines": 63,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.2
+      "structuralRiskScore": 1.26
     },
     {
       "path": "FoodDiary.Presentation.Api/Extensions/ResultExtensions.cs",
@@ -24194,11 +24202,19 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
-      "nonBlankLines": 98,
+      "nonBlankLines": 104,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.08
+    },
+    {
+      "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
+      "nonBlankLines": 21,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.96
+      "structuralRiskScore": 2.42
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthTelegramController.cs",
@@ -24211,10 +24227,10 @@
     {
       "path": "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpMappings.cs",
       "nonBlankLines": 196,
-      "decisionPoints": 0,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.92
+      "structuralRiskScore": 5.42
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpResponseMappings.cs",
@@ -27161,6 +27177,14 @@
       "structuralRiskScore": 3.1
     },
     {
+      "path": "FoodDiary.Presentation.Api/Filters/AuthenticationCookieResultFilter.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.76
+    },
+    {
       "path": "FoodDiary.Presentation.Api/Filters/EnableIdempotencyAttribute.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -27399,6 +27423,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.06
+    },
+    {
+      "path": "FoodDiary.Presentation.Api/Security/RefreshTokenCookieService.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
     },
     {
       "path": "FoodDiary.Presentation.Api/Security/RequireTelegramBotSecretAttribute.cs",
@@ -29066,11 +29098,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "nonBlankLines": 222,
+      "nonBlankLines": 223,
       "decisionPoints": 42,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 67.44
+      "structuralRiskScore": 67.46
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/admin-billing.routes.ts",
@@ -34986,19 +35018,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/api.service.ts",
-      "nonBlankLines": 56,
+      "nonBlankLines": 58,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.62
+      "structuralRiskScore": 5.66
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 366,
+      "nonBlankLines": 369,
       "decisionPoints": 40,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 67.32
+      "structuralRiskScore": 67.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/error-handler.service.ts",
@@ -35082,11 +35114,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/token-storage.service.ts",
-      "nonBlankLines": 105,
-      "decisionPoints": 21,
+      "nonBlankLines": 110,
+      "decisionPoints": 22,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 33.6
+      "structuralRiskScore": 35.2
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/unsaved-changes.service.ts",
@@ -40137,13 +40169,24 @@
       "name": "AuthSessionController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
-      "line": 25,
+      "line": 26,
       "testReferenceCount": 4,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/AuthSessionControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/PresentationHardeningContractTests.cs"
+      ]
+    },
+    {
+      "name": "AuthSessionLifecycleController",
+      "role": "Controller",
+      "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
+      "line": 14,
+      "testReferenceCount": 2,
+      "testReferences": [
+        "tests/FoodDiary.Presentation.Api.Tests/AuthSessionLifecycleControllerTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
       ]
     },
     {
@@ -45560,6 +45603,14 @@
       "name": "LlmWikiResearchPrimitives",
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiResearchPrimitives.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
+      "name": "LlmWikiRuntimeTopologyFingerprint",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1",
       "line": 1,
       "testReferenceCount": 0,
       "testReferences": []

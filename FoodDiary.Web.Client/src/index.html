@@ -33,6 +33,7 @@
                     const hasStoredSession =
                         localStorage.getItem('authToken') !== null ||
                         sessionStorage.getItem('authToken') !== null ||
+                        localStorage.getItem('refreshSession') === 'true' ||
                         localStorage.getItem('refreshToken') !== null;
 
                     if (hasStoredSession) {

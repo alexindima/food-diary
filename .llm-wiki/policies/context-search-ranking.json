@@ -96,6 +96,7 @@
     "translation": ["i18n", "localization", "translate"],
     "consistent": ["check", "validate"],
     "replay": ["idempotency", "deduplication", "duplicate", "event"],
+    "pdf": ["diarypdf", "remoteimage", "export"],
     "ssrf": ["endpoint", "url", "uri", "dns", "ipaddress", "connectcallback"],
     "dns|rebinding": ["resolve", "ipaddress", "connectcallback", "endpoint"],
     "csp": ["contentsecuritypolicy", "securityheaders", "xss", "browser"],
@@ -459,6 +460,41 @@
       "minimumMatches": 3,
       "pathPrefixes": ["FoodDiary.Web.Client/src/app/services/", "FoodDiary.Web.Client/src/app/shared/platform/"],
       "score": 260
+    },
+    {
+      "id": "pdf-remote-image-security",
+      "queryTerms": ["pdf", "image", "remote", "ssrf", "dns", "rebinding", "connectcallback"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["FoodDiary.Infrastructure/DependencyInjection.Export.cs", "FoodDiary.Infrastructure/Services/DiaryPdf/"],
+      "score": 520
+    },
+    {
+      "id": "web-api-cors-csrf-security",
+      "queryTerms": ["cors", "csrf", "origin", "trusted"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["FoodDiary.Web.Api/Options/Cors", "FoodDiary.Web.Api/Extensions/"],
+      "score": 420
+    },
+    {
+      "id": "compose-container-hardening",
+      "queryTerms": ["compose", "container", "readonly", "capability", "hardening"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["docker-compose.yml"],
+      "score": 600
+    },
+    {
+      "id": "browser-csp-config",
+      "queryTerms": ["browser", "csp", "contentsecuritypolicy", "nginx", "xss"],
+      "minimumMatches": 2,
+      "pathPrefixes": ["FoodDiary.Web.Client/nginx.conf", "nginx/sites-enabled/fooddiary.club"],
+      "score": 560
+    },
+    {
+      "id": "user-privacy-deletion-lifecycle",
+      "queryTerms": ["privacy", "user", "deletion", "delete", "purge", "lifecycle", "sensitive", "health"],
+      "minimumMatches": 3,
+      "pathPrefixes": ["FoodDiary.Application.Users/Commands/DeleteUser/", "FoodDiary.Infrastructure/Persistence/Users/UserCleanupService.cs"],
+      "score": 520
     },
     {
       "id": "external-provider-integration",

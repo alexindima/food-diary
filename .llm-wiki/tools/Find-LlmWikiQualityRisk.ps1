@@ -42,11 +42,11 @@ $riskRecords = @($riskRecords | Where-Object {
     }
 })
 
-$items = switch ($View) {
+$items = @(switch ($View) {
     'test-gaps' { @($riskRecords | Where-Object { $_.payload.recordKind -eq 'criticalSymbol' -and [int]$_.payload.testReferenceCount -eq 0 } | ForEach-Object payload) }
     'debt' { @($riskRecords | Where-Object { $_.payload.recordKind -eq 'debtMarker' } | ForEach-Object payload) }
     default { @($riskRecords | Where-Object { $_.payload.recordKind -eq 'hotspot' } | ForEach-Object payload) }
-}
+})
 if ($Area -eq 'Product' -and [string]::IsNullOrWhiteSpace($Query) -and $items.Count -gt $Limit) {
     $selected = [System.Collections.Generic.List[object]]::new()
     $deferred = [System.Collections.Generic.List[object]]::new()

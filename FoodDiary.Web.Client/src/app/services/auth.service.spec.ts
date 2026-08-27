@@ -145,14 +145,15 @@ describe('login', () => {
         req.flush(loginAuthResponse);
     });
 
-    it('should store tokens on successful login with rememberMe=true', () => {
+    it('should store the access token and only a refresh-session marker on successful login', () => {
         service.login(loginRequest).subscribe();
 
         const req = httpMock.expectOne(`${authBaseUrl}/login`);
         req.flush(loginAuthResponse);
 
         expect(localStorage.getItem('authToken')).toBe(loginFakeToken);
-        expect(localStorage.getItem('refreshToken')).toBe('refresh-token-abc');
+        expect(localStorage.getItem('refreshToken')).toBeNull();
+        expect(localStorage.getItem('refreshSession')).toBe('true');
     });
 
     it('should store token in sessionStorage when rememberMe=false', () => {
@@ -369,10 +370,11 @@ describe('refreshToken', () => {
         });
 
         expect(results).toEqual([newToken, newToken]);
-        expect(localStorage.getItem('refreshToken')).toBe('rotated-refresh-token');
+        expect(localStorage.getItem('refreshToken')).toBeNull();
+        expect(localStorage.getItem('refreshSession')).toBe('true');
     });
 
-    it('should rotate stored refresh token on success', () => {
+    it('should keep rotated refresh tokens out of Web Storage', () => {
         localStorage.setItem('refreshToken', 'existing-refresh-token');
 
         service.refreshToken().subscribe();
@@ -384,7 +386,8 @@ describe('refreshToken', () => {
             user: { id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
         });
 
-        expect(localStorage.getItem('refreshToken')).toBe('rotated-refresh-token');
+        expect(localStorage.getItem('refreshToken')).toBeNull();
+        expect(localStorage.getItem('refreshSession')).toBe('true');
     });
 
     it('should return null and logout when no refresh token exists', () => {
@@ -510,7 +513,7 @@ describe('logout', () => {
     });
 
     it('should clear all auth data', async () => {
-        await service.onLogoutAsync(false);
+        await completeLogoutAsync();
 
         expect(localStorage.getItem('authToken')).toBeNull();
         expect(localStorage.getItem('refreshToken')).toBeNull();
@@ -527,7 +530,7 @@ describe('logout', () => {
     });
 
     it('should navigate to landing when redirectToAuth is false', async () => {
-        await service.onLogoutAsync(false);
+        await completeLogoutAsync();
 
         expect(navigationServiceSpy.navigateToLandingAsync).toHaveBeenCalled();
         expect(navigationServiceSpy.navigateToAuthAsync).not.toHaveBeenCalled();
@@ -538,23 +541,31 @@ describe('logout', () => {
         service.initializeAuth();
         expect(service.isAuthenticated()).toBe(true);
 
-        await service.onLogoutAsync(false);
+        await completeLogoutAsync();
 
         expect(service.isAuthenticated()).toBe(false);
     });
 
     it('should clear stored language', async () => {
-        await service.onLogoutAsync(false);
+        await completeLogoutAsync();
 
         expect(localizationServiceSpy.clearStoredLanguage).toHaveBeenCalled();
     });
 
     it('should publish session ended event', async () => {
-        await service.onLogoutAsync(false);
+        await completeLogoutAsync();
 
         expect(sessionEventsSpy.notifySessionEnded).toHaveBeenCalledOnce();
     });
 });
+
+async function completeLogoutAsync(): Promise<void> {
+    const logoutPromise = service.onLogoutAsync(false);
+    const request = httpMock.expectOne(`${authBaseUrl}/logout`);
+    expect(request.request.withCredentials).toBe(true);
+    request.flush(null);
+    await logoutPromise;
+}
 
 describe('JWT decoding', () => {
     it('should extract userId from nameid claim', () => {

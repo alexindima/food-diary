@@ -99,7 +99,7 @@ public static class AuthHttpMappings {
 
     extension(RefreshTokenHttpRequest request) {
         public RefreshTokenCommand ToCommand() {
-            return new RefreshTokenCommand(RefreshToken: request.RefreshToken);
+            return new RefreshTokenCommand(RefreshToken: request.RefreshToken ?? string.Empty);
         }
     }
 

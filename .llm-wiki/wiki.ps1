@@ -354,9 +354,16 @@ if ($Command -in @('verify', 'verify-full') -and $env:CI -ne 'true' -and -not $P
 $deltaAwareCommands = @('update', 'repair-verify', 'completion', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'review-affected', 'ownership', 'policy')
 $explicitScopePlanningCommands = @('research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision')
 $readOnlyFacadeCommands = @('research', 'research-next-question', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'security', 'ui', 'contracts', 'diff', 'ownership', 'api-compat')
-# Read-only commands consume the already published projection. They report stale
-# or unavailable state instead of refreshing indexes as an implicit side effect.
-$compiledIndexReadOnlyCommands = @()
+# SQLite-backed read-only facades build their projection only inside the
+# content-addressed temporary snapshot. This keeps the source checkout clean
+# while making a fresh clone immediately usable.
+$compiledIndexReadOnlyCommands = @(
+    'research', 'research-next-question', 'context', 'trace', 'packet', 'brief',
+    'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace',
+    'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies',
+    'rollout', 'topology', 'privacy', 'security', 'ui', 'contracts', 'diff',
+    'ownership', 'api-compat'
+)
 $wikiToolingPlanningIntent = $Command -in $explicitScopePlanningCommands -and
     -not [string]::IsNullOrWhiteSpace([string]$Objective) -and
     ([string]$Objective) -match '(?i)\b(llm[- ]?wiki|wiki\.ps1|wiki tooling|development mcp)\b'
@@ -405,7 +412,7 @@ function Invoke-WikiTool {
         'Find-LlmWikiIntentOwnership.ps1'
         'Find-LlmWikiTraceCandidates.ps1'
     )
-    if ($Name -in $pureIndexedReaders) {
+    if ($Name -in $pureIndexedReaders -and $Command -notin $readOnlyFacadeCommands) {
         & $toolPath @ToolArguments
     } elseif ($Command -in $readOnlyFacadeCommands) {
         & (Join-Path $toolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `

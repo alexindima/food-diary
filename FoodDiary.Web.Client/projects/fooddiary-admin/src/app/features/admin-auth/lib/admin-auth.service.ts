@@ -121,14 +121,16 @@ export class AdminAuthService {
 
     public async exchangeSsoCodeAsync(code: string): Promise<boolean> {
         try {
-            const response = await firstValueFrom(this.http.post<AuthenticationResponse>(`${this.authUrl}/admin-sso/exchange`, { code }));
+            const response = await firstValueFrom(
+                this.http.post<AuthenticationResponse>(`${this.authUrl}/admin-sso/exchange`, { code }, { withCredentials: true }),
+            );
 
             if (response.accessToken.length === 0) {
                 return false;
             }
 
             this.localStorageRef?.setItem('authToken', response.accessToken);
-            this.localStorageRef?.setItem('refreshToken', response.refreshToken);
+            this.localStorageRef?.removeItem('refreshToken');
             return true;
         } catch {
             return false;
@@ -263,7 +265,6 @@ export class AdminAuthService {
 
 type AuthenticationResponse = {
     accessToken: string;
-    refreshToken: string;
 };
 
 type AdminSsoStartResponse = {

@@ -105,7 +105,7 @@ if ([int]$generalizationEvaluation.caseCount -lt 70) { throw 'Generalization SQL
 if ([int]$validationEvaluation.caseCount -lt 50) { throw 'Validation SQL context evaluation must contain at least 50 frozen cases.' }
 if ([int]$imageWikiRegressionEvaluation.caseCount -lt 30) { throw 'Image and Wiki regression evaluation must contain at least 30 frozen cases.' }
 if ([int]$businessWikiRegressionEvaluation.caseCount -lt 20) { throw 'Business and Wiki regression evaluation must contain at least 20 frozen cases.' }
-if ([int]$securityRegressionEvaluation.caseCount -ne 4) { throw 'Security-boundary regression evaluation must preserve exactly four focused cases.' }
+if ([int]$securityRegressionEvaluation.caseCount -ne 10) { throw 'Security-boundary regression evaluation must preserve exactly ten focused cases.' }
 if ([int]$probeEvaluation.caseCount -lt 30) { throw 'Promoted probe SQL context evaluation must contain at least 30 frozen cases.' }
 if ([int]$probe2Evaluation.caseCount -lt 30) { throw 'Second promoted probe SQL context evaluation must contain at least 30 frozen cases.' }
 if ([int]$probe3Evaluation.caseCount -lt 30) { throw 'Third promoted probe SQL context evaluation must contain at least 30 frozen cases.' }

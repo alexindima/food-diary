@@ -70,20 +70,29 @@ describe('TokenStorageService clearToken', () => {
 });
 
 describe('TokenStorageService refreshToken', () => {
-    it('should get and set refresh token', () => {
-        service.setRefreshToken('refresh-123');
-        expect(service.getRefreshToken()).toBe('refresh-123');
+    it('should persist only a non-sensitive refresh-session marker', () => {
+        service.markRefreshSession();
+        expect(service.hasRefreshSession()).toBe(true);
+        expect(localStorage.getItem('refreshSession')).toBe('true');
+        expect(localStorage.getItem('refreshToken')).toBeNull();
     });
 
-    it('should return null for invalid refresh tokens', () => {
+    it('should consume and remove a legacy refresh token once', () => {
+        localStorage.setItem('refreshToken', 'legacy-refresh');
+        expect(service.consumeLegacyRefreshToken()).toBe('legacy-refresh');
+        expect(localStorage.getItem('refreshToken')).toBeNull();
+    });
+
+    it('should reject invalid legacy refresh tokens', () => {
         localStorage.setItem('refreshToken', 'undefined');
-        expect(service.getRefreshToken()).toBeNull();
+        expect(service.consumeLegacyRefreshToken()).toBeNull();
     });
 
-    it('should clear refresh token', () => {
-        service.setRefreshToken('refresh-123');
-        service.clearRefreshToken();
-        expect(service.getRefreshToken()).toBeNull();
+    it('should clear the marker and legacy token', () => {
+        service.markRefreshSession();
+        localStorage.setItem('refreshToken', 'legacy-refresh');
+        service.clearRefreshSession();
+        expect(service.hasRefreshSession()).toBe(false);
     });
 });
 

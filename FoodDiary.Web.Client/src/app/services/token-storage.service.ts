@@ -34,25 +34,32 @@ export class TokenStorageService {
         this.storage.removeItem('session', 'authToken');
     }
 
-    public getRefreshToken(): string | null {
+    public hasRefreshSession(): boolean {
+        if (this.storage.getItem('local', 'refreshSession') === 'true') {
+            return true;
+        }
+
         const token = this.storage.getItem('local', 'refreshToken');
+        return token !== null && token !== 'undefined' && token !== 'null' && token.length > 0;
+    }
+
+    public consumeLegacyRefreshToken(): string | null {
+        const token = this.storage.getItem('local', 'refreshToken');
+        this.storage.removeItem('local', 'refreshToken');
         if (token === null || token === 'undefined' || token === 'null' || token.length === 0) {
-            this.clearRefreshToken();
             return null;
         }
         return token;
     }
 
-    public setRefreshToken(token: string | null | undefined): void {
-        if (token === null || token === undefined || token.length === 0) {
-            this.clearRefreshToken();
-            return;
-        }
-        this.storage.setItem('local', 'refreshToken', token);
+    public markRefreshSession(): void {
+        this.storage.removeItem('local', 'refreshToken');
+        this.storage.setItem('local', 'refreshSession', 'true');
     }
 
-    public clearRefreshToken(): void {
+    public clearRefreshSession(): void {
         this.storage.removeItem('local', 'refreshToken');
+        this.storage.removeItem('local', 'refreshSession');
     }
 
     public loadUserId(): string | null {
@@ -116,7 +123,7 @@ export class TokenStorageService {
 
     public clearAll(): void {
         this.clearToken();
-        this.clearRefreshToken();
+        this.clearRefreshSession();
         this.clearUserId();
         this.clearEmailConfirmed();
         this.clearMustChangePassword();

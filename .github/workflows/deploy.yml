@@ -398,7 +398,7 @@ jobs:
           $SSH_CMD 'set -eu
           env_file=/etc/fooddiary/fooddiary.env
           test -f "$env_file"
-          required="POSTGRES_PASSWORD MAIL_RELAY_POSTGRES_PASSWORD MailRelayBroker__Password MAIL_INBOX_CONTENT_API_KEY MAIL_INBOX_METADATA_API_KEY MAIL_INBOX_POSTGRES_PASSWORD MAIL_INBOX_POSTGRES_RUNTIME_PASSWORD MAIL_INBOX_STATE_API_KEY MAIL_INBOX_TRUSTED_RELAY_NETWORK"
+          required="POSTGRES_PASSWORD MAIL_RELAY_POSTGRES_PASSWORD MailRelayBroker__Password MailRelay__RequireMailgunWebhookSignature MailRelay__MailgunWebhookSigningKey MAIL_INBOX_CONTENT_API_KEY MAIL_INBOX_METADATA_API_KEY MAIL_INBOX_POSTGRES_PASSWORD MAIL_INBOX_POSTGRES_RUNTIME_PASSWORD MAIL_INBOX_STATE_API_KEY MAIL_INBOX_TRUSTED_RELAY_NETWORK"
           for name in $required; do
             if ! grep -qE "^${name}=.+$" "$env_file"; then
               echo "Required production variable is missing: $name"
@@ -406,7 +406,7 @@ jobs:
             fi
           done
 
-          credential_names="POSTGRES_PASSWORD MAIL_RELAY_POSTGRES_PASSWORD MailRelayBroker__Password MAIL_INBOX_CONTENT_API_KEY MAIL_INBOX_METADATA_API_KEY MAIL_INBOX_POSTGRES_PASSWORD MAIL_INBOX_POSTGRES_RUNTIME_PASSWORD MAIL_INBOX_STATE_API_KEY"
+          credential_names="POSTGRES_PASSWORD MAIL_RELAY_POSTGRES_PASSWORD MailRelayBroker__Password MailRelay__MailgunWebhookSigningKey MAIL_INBOX_CONTENT_API_KEY MAIL_INBOX_METADATA_API_KEY MAIL_INBOX_POSTGRES_PASSWORD MAIL_INBOX_POSTGRES_RUNTIME_PASSWORD MAIL_INBOX_STATE_API_KEY"
           for name in $credential_names; do
             value=$(sed -n "s/^${name}=//p" "$env_file" | tail -n 1)
             value=$(printf "%s" "$value" | tr -d "\r")
@@ -432,6 +432,11 @@ jobs:
                 ;;
             esac
           done
+
+          if ! grep -qiE "^MailRelay__RequireMailgunWebhookSignature=[[:space:]]*(true|\"true\")[[:space:]]*$" "$env_file"; then
+            echo "Production requires MailRelay__RequireMailgunWebhookSignature=true"
+            exit 1
+          fi
 
           if grep -qE "^S3__(AccessKeyId|SecretAccessKey|Region|Bucket|StagingBucket|ServiceUrl|PublicBaseUrl)=.+$" "$env_file"; then
             s3_required="S3__AccessKeyId S3__SecretAccessKey S3__Bucket S3__StagingBucket"

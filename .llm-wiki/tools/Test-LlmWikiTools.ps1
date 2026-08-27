@@ -619,7 +619,9 @@ $wikiHotspots = & (Join-Path $toolsRoot 'Find-LlmWikiQualityRisk.ps1') -View hot
 Assert-Wiki ($wikiHotspots.count -gt 0 -and @($wikiHotspots.items | Where-Object path -notmatch '^\.llm-wiki/').Count -eq 0) 'Wiki-only hotspot query did not isolate Wiki implementation records.'
 
 $runtime = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/runtime-topology.json') -Raw | ConvertFrom-Json
-Assert-Wiki ($runtime.summary.composeServices -gt 0) 'Runtime topology did not extract Compose services.'
+Assert-Wiki ($runtime.summary.composeServices -eq 17) 'Runtime topology did not isolate the 17 declared Compose services.'
+Assert-Wiki (@($runtime.composeServices | Where-Object name -eq 'postgres-data').Count -eq 0) 'Runtime topology misclassified a named volume as a Compose service.'
+Assert-Wiki (-not [string]::IsNullOrWhiteSpace([string]$runtime.freshness.sourceFingerprint)) 'Runtime topology omitted its deterministic source fingerprint.'
 Assert-Wiki ($runtime.summary.hostedServices -gt 0) 'Runtime topology did not extract hosted services.'
 Assert-Wiki ($runtime.summary.httpClients -gt 0) 'Runtime topology did not extract HTTP clients.'
 Assert-Wiki ($runtime.summary.recurringJobRegistrations -gt 0) 'Runtime topology did not extract recurring jobs.'
@@ -632,6 +634,7 @@ Assert-Wiki ([bool]$mailInboxCompose[0].readOnlyRootFilesystem -and [bool]$mailI
 
 $topologyJson = & (Join-Path $toolsRoot 'Find-LlmWikiRuntimeTopology.ps1') -Query MailRelay -Format Json
 $topology = $topologyJson | ConvertFrom-Json
+Assert-Wiki ([bool]$topology._freshness.verified) 'Runtime topology query did not verify its projection against current sources.'
 Assert-Wiki (@($topology.httpClients).Count -gt 0) 'Runtime topology query did not resolve MailRelay clients.'
 Assert-Wiki (@($topology.hostedServices).Count -gt 0) 'Runtime topology query did not resolve MailRelay workers.'
 

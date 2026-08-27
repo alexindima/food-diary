@@ -811,7 +811,7 @@
     {
       "category": "credential",
       "name": "RefreshToken",
-      "type": "string",
+      "type": "string?",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/RefreshTokenHttpRequest.cs",
       "line": 7
     },

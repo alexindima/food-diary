@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Presentation.Api.Features.Auth;
 
@@ -71,8 +72,8 @@ public sealed class AuthSessionController(ISender mediator) : BaseApiController(
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
-    public Task<IActionResult> Refresh([FromBody] RefreshTokenHttpRequest request) =>
-        HandleOk(request.ToCommand(), static value => value.ToHttpResponse());
+    public Task<IActionResult> Refresh([FromBody] RefreshTokenHttpRequest? request = null) =>
+        HandleRefreshAsync(request);
 
     [AllowAnonymous]
     [HttpPost("restore")]
@@ -104,4 +105,10 @@ public sealed class AuthSessionController(ISender mediator) : BaseApiController(
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> ResendVerifyEmail([FromCurrentUser] Guid userId, [FromBody] ResendEmailVerificationHttpRequest? request = null) =>
         HandleNoContent(userId.ToResendVerificationCommand(request?.ClientOrigin));
+
+    private Task<IActionResult> HandleRefreshAsync(RefreshTokenHttpRequest? request) {
+        RefreshTokenCookieService refreshTokenCookies = HttpContext.RequestServices.GetRequiredService<RefreshTokenCookieService>();
+        string refreshToken = request?.RefreshToken ?? refreshTokenCookies.Read(HttpContext) ?? string.Empty;
+        return HandleOk(new RefreshTokenHttpRequest(refreshToken).ToCommand(), static value => value.ToHttpResponse());
+    }
 }

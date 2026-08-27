@@ -3,13 +3,13 @@
   "description": "Focused security-boundary retrieval regression captured from the 2026-08-27 Wiki-first security audit.",
   "diagnosticLimit": 50,
   "thresholds": {
-    "minimumCaseCount": 4,
+    "minimumCaseCount": 10,
     "minimumTop1Rate": 1.0,
     "minimumTop10Rate": 1.0,
     "minimumMeanReciprocalRank": 1.0
   },
   "switchCriteria": {
-    "minimumCaseCount": 4,
+    "minimumCaseCount": 10,
     "minimumTop1Rate": 1.0,
     "minimumTop10Rate": 1.0,
     "minimumMeanReciprocalRank": 1.0
@@ -45,6 +45,59 @@
       "query": "nginx TLS protocol reverse proxy config",
       "changeType": "Any",
       "expectedPaths": ["nginx.conf"]
+    },
+    {
+      "id": "security-pdf-remote-image",
+      "cohort": "security-boundaries",
+      "query": "Diary PDF remote image SSRF DNS rebinding connect callback",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
+        "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
+        "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
+        "FoodDiary.Infrastructure/Services/DiaryPdf/RemoteImageAddressPolicy.cs"
+      ]
+    },
+    {
+      "id": "security-cors-csrf",
+      "cohort": "security-boundaries",
+      "query": "CORS CSRF trusted origins configuration",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Web.Api/Options/CorsOptionsSetup.cs"]
+    },
+    {
+      "id": "security-outbox-duplicate-delivery",
+      "cohort": "security-boundaries",
+      "query": "email outbox retry race duplicate delivery",
+      "changeType": "Backend",
+      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Email/EmailOutboxProcessor.cs"]
+    },
+    {
+      "id": "security-user-deletion-lifecycle",
+      "cohort": "security-boundaries",
+      "query": "delete user account purge rows images providers lifecycle",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommandHandler.cs",
+        "FoodDiary.Infrastructure/Persistence/Users/UserCleanupService.cs"
+      ]
+    },
+    {
+      "id": "security-compose-hardening",
+      "cohort": "security-boundaries",
+      "query": "docker compose container read_only cap_drop no-new-privileges hardening",
+      "changeType": "Any",
+      "expectedPaths": ["docker-compose.yml"]
+    },
+    {
+      "id": "security-browser-csp",
+      "cohort": "security-boundaries",
+      "query": "browser CSP static Angular nginx security header",
+      "changeType": "Any",
+      "expectedPaths": [
+        "FoodDiary.Web.Client/nginx.conf",
+        "nginx/sites-enabled/fooddiary.club"
+      ]
     }
   ]
 }

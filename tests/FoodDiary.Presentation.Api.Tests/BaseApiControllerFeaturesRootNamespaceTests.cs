@@ -9,7 +9,7 @@ namespace FoodDiary.Presentation.Api.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class BaseApiControllerFeaturesRootNamespaceTests {
     [Fact]
-    public void AddPresentationApi_RegistersOneGlobalTelemetryFilter() {
+    public void AddPresentationApi_RegistersRequiredGlobalFilters() {
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddPresentationApi();
@@ -19,7 +19,12 @@ public sealed class BaseApiControllerFeaturesRootNamespaceTests {
         ServiceFilterAttribute telemetryFilter = Assert.Single(
             options.Filters.OfType<ServiceFilterAttribute>(),
             filter => filter.ServiceType == typeof(TelemetryActionFilter));
+        ServiceFilterAttribute authenticationCookieFilter = Assert.Single(
+            options.Filters.OfType<ServiceFilterAttribute>(),
+            filter => filter.ServiceType == typeof(AuthenticationCookieResultFilter));
 
-        Assert.Equal(typeof(TelemetryActionFilter), telemetryFilter.ServiceType);
+        Assert.Multiple(
+            () => Assert.Equal(typeof(TelemetryActionFilter), telemetryFilter.ServiceType),
+            () => Assert.Equal(typeof(AuthenticationCookieResultFilter), authenticationCookieFilter.ServiceType));
     }
 }

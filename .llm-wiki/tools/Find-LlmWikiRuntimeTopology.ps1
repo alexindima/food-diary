@@ -13,6 +13,10 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiRuntimeTopologyFingerprint.ps1')
+$topologyPath = Join-Path $wikiRoot 'generated/runtime-topology.json'
+$storedTopology = Get-Content -LiteralPath $topologyPath -Raw | ConvertFrom-Json
+$currentFreshness = Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $repositoryRoot
 $stopwatch = [Diagnostics.Stopwatch]::StartNew()
 $groups = [ordered]@{}
 $diagnostics = $null
@@ -25,14 +29,13 @@ if ($CompiledIndexSource -eq 'Sqlite') {
         $Limit,
         [bool]$IncludeDiagnostics,
         [double]$reader.loadDurationMs)
-    if ($Format -eq 'Json') { $resultJson; exit 0 }
     $result = $resultJson | ConvertFrom-Json
     foreach ($property in $result.PSObject.Properties) {
         if ($property.Name -eq '_diagnostics') { $diagnostics = $property.Value }
         else { $groups[$property.Name] = @($property.Value) }
     }
 } else {
-    $topologyRaw = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/runtime-topology.json') -Raw
+    $topologyRaw = Get-Content -LiteralPath $topologyPath -Raw
     $topology = $topologyRaw | ConvertFrom-Json
     $groups = [ordered]@{
         composeServices = @($topology.composeServices)
@@ -60,10 +63,16 @@ if ($CompiledIndexSource -eq 'Sqlite') {
         sourceBytesVerified = $sourceBytes; sourceBytesMaterialized = $sourceBytes
     }
 }
+$groups['_freshness'] = [pscustomobject][ordered]@{
+    verified = [string]$storedTopology.freshness.sourceFingerprint -eq [string]$currentFreshness.sourceFingerprint
+    storedSourceFingerprint = [string]$storedTopology.freshness.sourceFingerprint
+    currentSourceFingerprint = [string]$currentFreshness.sourceFingerprint
+    sourceFileCount = [int]$currentFreshness.sourceFileCount
+}
 $stopwatch.Stop()
 if ($Format -eq 'Json') {
     if ($IncludeDiagnostics) {
-        $diagnostics | Add-Member -NotePropertyName completeCommandDurationMs -NotePropertyValue ([Math]::Round($stopwatch.Elapsed.TotalMilliseconds, 2))
+        $diagnostics | Add-Member -NotePropertyName completeCommandDurationMs -NotePropertyValue ([Math]::Round($stopwatch.Elapsed.TotalMilliseconds, 2)) -Force
         $groups['_diagnostics'] = $diagnostics
     }
     [pscustomobject]$groups | ConvertTo-Json -Depth 8

@@ -13,27 +13,27 @@ export abstract class ApiService {
 
     protected get<T>(endpoint: string, params?: HttpRequestParams, headers?: HttpHeaders, context?: HttpContext): Observable<T> {
         const httpParams = this.buildHttpParams(params);
-        return this.http.get<T>(`${this.baseUrl}/${endpoint}`, { params: httpParams, headers, context });
+        return this.http.get<T>(`${this.baseUrl}/${endpoint}`, { params: httpParams, headers, context, withCredentials: true });
     }
 
     protected post<T>(endpoint: string, body: RequestBody, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
         const httpParams = this.buildHttpParams(params);
-        return this.http.post<T>(`${this.baseUrl}/${endpoint}`, body, { headers, params: httpParams });
+        return this.http.post<T>(`${this.baseUrl}/${endpoint}`, body, { headers, params: httpParams, withCredentials: true });
     }
 
     protected put<T>(endpoint: string, body: RequestBody, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
         const httpParams = this.buildHttpParams(params);
-        return this.http.put<T>(`${this.baseUrl}/${endpoint}`, body, { headers, params: httpParams });
+        return this.http.put<T>(`${this.baseUrl}/${endpoint}`, body, { headers, params: httpParams, withCredentials: true });
     }
 
     protected patch<T>(endpoint: string, body: RequestBody, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
         const httpParams = this.buildHttpParams(params);
-        return this.http.patch<T>(`${this.baseUrl}/${endpoint}`, body, { headers, params: httpParams });
+        return this.http.patch<T>(`${this.baseUrl}/${endpoint}`, body, { headers, params: httpParams, withCredentials: true });
     }
 
     protected delete<T>(endpoint: string, headers?: HttpHeaders, params?: HttpRequestParams): Observable<T> {
         const httpParams = this.buildHttpParams(params);
-        return this.http.delete<T>(`${this.baseUrl}/${endpoint}`, { headers, params: httpParams });
+        return this.http.delete<T>(`${this.baseUrl}/${endpoint}`, { headers, params: httpParams, withCredentials: true });
     }
 
     protected getBlob(endpoint: string, params?: HttpRequestParams): Observable<HttpResponse<Blob>> {
@@ -42,6 +42,7 @@ export abstract class ApiService {
             params: httpParams,
             responseType: 'blob',
             observe: 'response',
+            withCredentials: true,
         });
     }
 
@@ -49,6 +50,7 @@ export abstract class ApiService {
         return this.http.post(`${this.baseUrl}/${endpoint}`, body, {
             responseType: 'blob',
             observe: 'response',
+            withCredentials: true,
         });
     }
 

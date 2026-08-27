@@ -1050,6 +1050,8 @@
         "MAIL_RELAY_POSTGRES_USER",
         "MailRelayBroker__Password",
         "MailRelayBroker__UserName",
+        "MailRelay__MailgunWebhookSigningKey",
+        "MailRelay__RequireMailgunWebhookSignature",
         "POSTGRES_DB",
         "POSTGRES_HOST_BIND",
         "POSTGRES_PASSWORD",

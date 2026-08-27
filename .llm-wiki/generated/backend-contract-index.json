@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1065,
     "ambiguousContracts": 3,
-    "consumerEdges": 7497,
-    "productionConsumerEdges": 4532,
-    "testConsumerEdges": 2965,
+    "consumerEdges": 7500,
+    "productionConsumerEdges": 4534,
+    "testConsumerEdges": 2966,
     "consumedContracts": 1065,
     "unconsumedContracts": 0
   },
@@ -20966,9 +20966,35 @@
         "FoodDiary.Presentation.Api/Features/Auth/Responses/AuthenticationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Filters/AuthenticationCookieResultFilter.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AuthenticationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Auth/Responses/AuthenticationHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdminSsoControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "AuthenticationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Auth/Responses/AuthenticationHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AuthenticationCookieResultFilterTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "AuthenticationHttpResponse",
@@ -82652,7 +82678,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AuthSessionControllerTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "IRequest",
@@ -83860,6 +83886,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -85083,7 +85122,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AuthSessionControllerTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 11
     },
     {
       "contract": "ISender",
@@ -103348,7 +103387,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AuthSessionControllerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "RefreshTokenHttpRequest",
@@ -103361,7 +103400,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 3
     },
     {
       "contract": "RefreshTokenHttpRequest",

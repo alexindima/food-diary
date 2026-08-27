@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3467,
-    "symbols": 3474,
+    "sourceFiles": 3470,
+    "symbols": 3477,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 243,
     "kinds": {
-      "class": 1807,
+      "class": 1810,
       "enum": 62,
       "interface": 423,
       "record": 1062,
@@ -23,7 +23,7 @@
       "Command": 160,
       "CommandHandler": 156,
       "Configuration": 90,
-      "Controller": 91,
+      "Controller": 92,
       "Entity": 84,
       "Event": 19,
       "Factory": 11,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 63,
-      "Other": 1341,
+      "Other": 1342,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -40,7 +40,7 @@
       "Repository": 103,
       "Request": 135,
       "Response": 180,
-      "Service": 278,
+      "Service": 279,
       "Validator": 205,
       "ValueObject": 129,
       "WriteRepository": 46
@@ -19148,7 +19148,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
-      "line": 25
+      "line": 26
+    },
+    {
+      "name": "AuthSessionLifecycleController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
+      "line": 14
     },
     {
       "name": "AuthTelegramController",
@@ -21741,6 +21748,13 @@
       "line": 15
     },
     {
+      "name": "AuthenticationCookieResultFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Filters/AuthenticationCookieResultFilter.cs",
+      "line": 7
+    },
+    {
       "name": "EnableIdempotencyAttribute",
       "kind": "class",
       "role": "Other",
@@ -21948,6 +21962,13 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Security/BlockImpersonatedAccessAttribute.cs",
+      "line": 4
+    },
+    {
+      "name": "RefreshTokenCookieService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.Presentation.Api/Security/RefreshTokenCookieService.cs",
       "line": 4
     },
     {
@@ -27587,28 +27608,28 @@
       "implementation": "InMemoryIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 25
+      "line": 27
     },
     {
       "service": "IUserIdProvider",
       "implementation": "UserIdProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 57
+      "line": 60
     },
     {
       "service": "IEmailVerificationNotifier",
       "implementation": "EmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 58
+      "line": 61
     },
     {
       "service": "INotificationPusher",
       "implementation": "NotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 59
+      "line": 62
     },
     {
       "service": "IAuthorizationMiddlewareResultHandler",

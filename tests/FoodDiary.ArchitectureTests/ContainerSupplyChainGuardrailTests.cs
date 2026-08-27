@@ -1,7 +1,10 @@
+using System.Text.RegularExpressions;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ContainerSupplyChainGuardrailTests {
+    private static readonly string[] HardenedRuntimeServices = ["api", "mail-relay", "telegram-bot", "job-manager", "client", "nginx"];
     private static readonly string[] ExpectedProductionProjects = [
         "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
         "FoodDiary.JobManager/FoodDiary.JobManager.csproj",
@@ -132,9 +135,10 @@ public sealed class ContainerSupplyChainGuardrailTests {
             () => Assert.DoesNotContain("StrictHostKeyChecking=accept-new", workflow, StringComparison.Ordinal),
             () => Assert.DoesNotContain("UserKnownHostsFile=/dev/null", workflow, StringComparison.Ordinal),
             () => Assert.DoesNotContain("GlobalKnownHostsFile=/dev/null", workflow, StringComparison.Ordinal),
-            () => Assert.Contains("POSTGRES_PASSWORD MAIL_RELAY_POSTGRES_PASSWORD MailRelayBroker__Password", workflow, StringComparison.Ordinal),
+            () => Assert.Contains("MailRelayBroker__Password MailRelay__RequireMailgunWebhookSignature MailRelay__MailgunWebhookSigningKey", workflow, StringComparison.Ordinal),
             () => Assert.Contains("MAIL_INBOX_POSTGRES_PASSWORD MAIL_INBOX_POSTGRES_RUNTIME_PASSWORD", workflow, StringComparison.Ordinal),
             () => Assert.Contains("case \"${value,,}\"", workflow, StringComparison.Ordinal),
+            () => Assert.Contains("Production requires MailRelay__RequireMailgunWebhookSignature=true", workflow, StringComparison.Ordinal),
             () => Assert.Contains("${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}", compose, StringComparison.Ordinal),
             () => Assert.Contains("${MAIL_RELAY_POSTGRES_PASSWORD:?Set MAIL_RELAY_POSTGRES_PASSWORD}", compose, StringComparison.Ordinal),
             () => Assert.Contains("${MailRelayBroker__Password:?Set MailRelayBroker__Password}", compose, StringComparison.Ordinal),
@@ -271,6 +275,27 @@ public sealed class ContainerSupplyChainGuardrailTests {
         Assert.Contains("rabbitmq:4-management@sha256:", compose, StringComparison.Ordinal);
         Assert.Contains("redis:7-alpine@sha256:", compose, StringComparison.Ordinal);
         Assert.Contains("nginx:alpine@sha256:", compose, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void InternetFacingAndApplicationContainers_UseRuntimeHardeningBaseline() {
+        string compose = File.ReadAllText(ArchitectureTestPaths.FromRoot("docker-compose.yml"));
+        foreach (string serviceName in HardenedRuntimeServices) {
+            Match service = Regex.Match(
+                compose,
+                $@"(?ms)^  {Regex.Escape(serviceName)}:\r?\n.*?(?=^  [a-zA-Z0-9_-]+:\r?$|\z)",
+                RegexOptions.None,
+                TimeSpan.FromSeconds(1));
+            Assert.True(service.Success, $"Compose service '{serviceName}' is missing.");
+            string block = service.Value;
+
+            Assert.Multiple(
+                () => Assert.Contains("read_only: true", block, StringComparison.Ordinal),
+                () => Assert.Contains("cap_drop:", block, StringComparison.Ordinal),
+                () => Assert.Contains("- ALL", block, StringComparison.Ordinal),
+                () => Assert.Contains("no-new-privileges:true", block, StringComparison.Ordinal),
+                () => Assert.Contains("tmpfs:", block, StringComparison.Ordinal));
+        }
     }
 
     [Fact]

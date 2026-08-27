@@ -507,6 +507,16 @@ public sealed class MailRelayArchitectureTests {
         Assert.Contains("service_completed_successfully", compose, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void MailRelayCompose_RequiresMailgunSignatureVerification() {
+        string compose = File.ReadAllText(Path.Combine(GetRepositoryRoot(), "docker-compose.yml"));
+
+        Assert.Multiple(
+            () => Assert.Contains("MailRelay__RequireMailgunWebhookSignature: ${MailRelay__RequireMailgunWebhookSignature:-true}", compose, StringComparison.Ordinal),
+            () => Assert.Contains("MailRelay__MailgunWebhookSigningKey: ${MailRelay__MailgunWebhookSigningKey:-}", compose, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("MailRelay__RequireMailgunWebhookSignature:-false", compose, StringComparison.Ordinal));
+    }
+
     private static HashSet<string> GetProjectReferences(string relativeProjectPath) {
         string root = GetRepositoryRoot();
         string projectPath = Path.Combine(root, relativeProjectPath.Replace('/', Path.DirectorySeparatorChar));
