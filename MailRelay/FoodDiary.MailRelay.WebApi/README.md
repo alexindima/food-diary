@@ -65,8 +65,8 @@ It accepts internal send requests over HTTP, persists them to PostgreSQL, writes
 - `ConnectionStrings__DefaultConnection`
 - `MailRelay__RequireApiKey`
 - `MailRelay__ApiKey`
-- `MailRelay__RequireMailgunWebhookSignature`
-- `MailRelay__MailgunWebhookSigningKey`
+- `MailRelay__RequireMailgunWebhookSignature`: absent or `false` disables Mailgun ingestion; set to `true` to enable it with mandatory signature verification
+- `MailRelay__MailgunWebhookSigningKey` (required only when Mailgun ingestion is enabled)
 - `MailRelay__RequireAwsSesSnsSignature`
 - `MailRelay__ExpectedAwsSesSnsTopicArn` (required when AWS SNS signature verification is enabled)
 - `MailRelayQueue__*`
@@ -76,6 +76,8 @@ It accepts internal send requests over HTTP, persists them to PostgreSQL, writes
 - `DirectMx__*`
 - `MailRelayDkim__*`
 - `OpenTelemetry__Otlp__Endpoint`
+
+Provider webhook routes also require the internal relay API key. Exposing one to an external provider therefore requires an explicit trusted ingress that injects `X-Relay-Api-Key`; the production nginx configuration does not publish MailRelay directly.
 
 MailRelay should use its own PostgreSQL database. The local default is `fooddiary_mailrelay`; in Docker Compose it runs against the separate `mailrelay-postgres` service and `mailrelay-postgres-data` volume.
 

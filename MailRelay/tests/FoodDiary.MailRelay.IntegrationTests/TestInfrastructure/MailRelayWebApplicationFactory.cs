@@ -21,6 +21,7 @@ public sealed class MailRelayWebApplicationFactory(
                 ["ConnectionStrings:DefaultConnection"] = databaseConnectionString,
                 ["MailRelay:RequireApiKey"] = "true",
                 ["MailRelay:ApiKey"] = "integration-relay-api-key",
+                ["MailRelay:RequireMailgunWebhookSignature"] = "true",
                 ["MailRelay:MailgunWebhookSigningKey"] = "integration-mailgun-signing-key",
                 ["MailRelayBroker:Backend"] = "RabbitMq",
                 ["MailRelayBroker:HostName"] = fixture.RabbitMqHostName,

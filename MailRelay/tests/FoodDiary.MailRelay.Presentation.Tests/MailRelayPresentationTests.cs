@@ -198,7 +198,7 @@ public sealed class MailRelayPresentationTests {
     }
 
     [Fact]
-    public void ProviderWebhookAuthorizer_WhenMailgunSignatureRequirementIsDisabled_AllowsRequest() {
+    public void ProviderWebhookAuthorizer_WhenMailgunIsDisabled_RejectsRequest() {
         var authorizer = new ProviderWebhookAuthorizer(
             Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
                 RequireMailgunWebhookSignature = false,
@@ -206,7 +206,7 @@ public sealed class MailRelayPresentationTests {
             new HttpClient(new RecordingHttpMessageHandler()),
             FixedTime);
 
-        Assert.True(authorizer.IsMailgunAuthorized(new MailgunWebhookHttpRequest(
+        Assert.False(authorizer.IsMailgunAuthorized(new MailgunWebhookHttpRequest(
             new MailgunEventDataHttpRequest("failed", "user@example.com"),
             Signature: null)));
     }
@@ -499,8 +499,9 @@ public sealed class MailRelayPresentationTests {
 
     [Fact]
     public async Task ProviderEventsController_WhenMailgunSignatureIsInvalid_ReturnsUnauthorized() {
+        var sender = new RecordingSender();
         MailRelayProviderEventsController controller = CreateProviderEventsController(
-            new RecordingSender(),
+            sender,
             new ProviderWebhookAuthorizer(
                 Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
                     RequireMailgunWebhookSignature = true,
@@ -516,14 +517,12 @@ public sealed class MailRelayPresentationTests {
         UnauthorizedObjectResult unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
         MailRelayApiErrorHttpResponse response = Assert.IsType<MailRelayApiErrorHttpResponse>(unauthorized.Value);
         Assert.Equal("MailRelay.ProviderWebhook.Unauthorized", response.Error);
+        Assert.Null(sender.LastRequest);
     }
 
     [Fact]
-    public async Task ProviderEventsController_WhenMailgunEventIsAccepted_ReturnsCreatedResponse() {
-        MailRelayDeliveryEventEntry entry = CreateDeliveryEvent();
-        var sender = new RecordingSender {
-            DeliveryEventResult = Result.Success(entry),
-        };
+    public async Task ProviderEventsController_WhenMailgunIsDisabled_ReturnsUnauthorizedWithoutDispatch() {
+        var sender = new RecordingSender();
         MailRelayProviderEventsController controller = CreateProviderEventsController(
             sender,
             new ProviderWebhookAuthorizer(
@@ -534,8 +533,37 @@ public sealed class MailRelayPresentationTests {
                 FixedTime));
 
         IActionResult result = await controller.IngestMailgun(new MailgunWebhookHttpRequest(
-            new MailgunEventDataHttpRequest("failed", "user@example.com", Id: "provider-id", Severity: "permanent"),
+            new MailgunEventDataHttpRequest("failed", "user@example.com"),
             Signature: null));
+
+        UnauthorizedObjectResult unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
+        MailRelayApiErrorHttpResponse response = Assert.IsType<MailRelayApiErrorHttpResponse>(unauthorized.Value);
+        Assert.Equal("MailRelay.ProviderWebhook.Unauthorized", response.Error);
+        Assert.Null(sender.LastRequest);
+    }
+
+    [Fact]
+    public async Task ProviderEventsController_WhenMailgunEventIsAccepted_ReturnsCreatedResponse() {
+        MailRelayDeliveryEventEntry entry = CreateDeliveryEvent();
+        var sender = new RecordingSender {
+            DeliveryEventResult = Result.Success(entry),
+        };
+        string timestamp = FixedNow.ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture);
+        const string token = "token";
+        string signature = CreateMailgunSignature("mailgun-secret", timestamp, token);
+        MailRelayProviderEventsController controller = CreateProviderEventsController(
+            sender,
+            new ProviderWebhookAuthorizer(
+                Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+                    RequireMailgunWebhookSignature = true,
+                    MailgunWebhookSigningKey = "mailgun-secret",
+                }),
+                new HttpClient(new RecordingHttpMessageHandler()),
+                FixedTime));
+
+        IActionResult result = await controller.IngestMailgun(new MailgunWebhookHttpRequest(
+            new MailgunEventDataHttpRequest("failed", "user@example.com", Id: "provider-id", Severity: "permanent"),
+            new MailgunSignatureHttpRequest(timestamp, token, signature)));
 
         CreatedResult created = Assert.IsType<CreatedResult>(result);
         Assert.Equal("/api/email/providers/mailgun/events", created.Location);

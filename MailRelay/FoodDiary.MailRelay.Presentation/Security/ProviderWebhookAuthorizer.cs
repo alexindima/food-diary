@@ -18,7 +18,7 @@ public sealed class ProviderWebhookAuthorizer(
 
     public bool IsMailgunAuthorized(MailgunWebhookHttpRequest request) {
         if (!_options.RequireMailgunWebhookSignature) {
-            return true;
+            return false;
         }
 
         if (string.IsNullOrWhiteSpace(_options.MailgunWebhookSigningKey) || request.Signature is null) {

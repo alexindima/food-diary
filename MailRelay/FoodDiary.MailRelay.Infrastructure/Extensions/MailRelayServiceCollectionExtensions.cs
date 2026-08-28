@@ -13,7 +13,7 @@ public static class MailRelayServiceCollectionExtensions {
                 .Bind(configuration.GetSection(MailRelayOptions.SectionName))
                 .Validate(MailRelayOptions.HasValidListenApiKey, "MailRelay:RequireApiKey must be true and MailRelay:ApiKey must be provided.")
                 .Validate(MailRelayOptions.HasValidProviderWebhookConfiguration,
-                    "MailRelay webhook verification requires MailgunWebhookSigningKey and ExpectedAwsSesSnsTopicArn when their signature checks are enabled.")
+                    "MailRelay webhook verification requires MailgunWebhookSigningKey when Mailgun is enabled and ExpectedAwsSesSnsTopicArn when AWS SNS signature checks are enabled.")
                 .ValidateOnStart();
             services.AddOptions<MailRelaySmtpOptions>()
                 .Bind(configuration.GetSection(MailRelaySmtpOptions.SectionName))

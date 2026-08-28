@@ -97706,7 +97706,7 @@
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "MailgunMessageHeadersHttpRequest",
@@ -97784,7 +97784,7 @@
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 6
     },
     {
       "contract": "MailgunWebhookHttpRequest",
@@ -97875,7 +97875,7 @@
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "MailInboxApiErrorHttpResponse",
@@ -98187,7 +98187,7 @@
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
       "isTest": true,
-      "referenceCount": 15
+      "referenceCount": 17
     },
     {
       "contract": "MailRelayDeliveryEventHttpResponse",

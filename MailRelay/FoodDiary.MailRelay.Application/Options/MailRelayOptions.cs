@@ -5,7 +5,7 @@ public sealed class MailRelayOptions {
 
     public bool RequireApiKey { get; init; } = true;
     public string ApiKey { get; init; } = string.Empty;
-    public bool RequireMailgunWebhookSignature { get; init; } = true;
+    public bool RequireMailgunWebhookSignature { get; init; }
     public string MailgunWebhookSigningKey { get; init; } = string.Empty;
     public bool RequireAwsSesSnsSignature { get; init; } = true;
     public string ExpectedAwsSesSnsTopicArn { get; init; } = string.Empty;

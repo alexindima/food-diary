@@ -284,8 +284,14 @@ X-Relay-Api-Key: your-internal-relay-key
 - принимает Mailgun webhook payload
 - поддерживает `complained`, `failed`, `bounced`
 
-Пока это adapter layer без полноценной криптографической проверки подписи провайдера.
-То есть для production лучше ставить их либо за trusted ingress/gateway, либо следующим шагом добавить signature verification отдельно.
+Mailgun adapter по умолчанию отключён: отсутствующий параметр или
+`MailRelay__RequireMailgunWebhookSignature=false` отвергает все запросы к endpoint-у. Чтобы включить его, установите значение `true`
+и задайте `MailRelay__MailgunWebhookSigningKey`; после этого timestamp и HMAC-SHA256
+подпись каждого webhook-а проверяются до обработки события.
+
+Provider endpoint-ы также требуют внутренний `X-Relay-Api-Key`. Для внешнего
+провайдера нужен отдельный trusted ingress, который добавляет этот заголовок;
+текущая production-конфигурация nginx не публикует MailRelay напрямую.
 
 ## Что такое outbox и inbox в этой реализации
 

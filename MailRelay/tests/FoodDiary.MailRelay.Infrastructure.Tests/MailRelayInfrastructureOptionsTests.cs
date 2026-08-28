@@ -216,6 +216,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["MailRelay:RequireApiKey"] = "true",
                 ["MailRelay:ApiKey"] = "secret",
+                ["MailRelay:RequireMailgunWebhookSignature"] = "true",
                 ["MailRelay:MailgunWebhookSigningKey"] = "mailgun-secret",
                 ["RelaySmtp:Port"] = "587",
                 ["MailRelayDelivery:Mode"] = MailRelayDeliveryOptions.DirectMxMode,

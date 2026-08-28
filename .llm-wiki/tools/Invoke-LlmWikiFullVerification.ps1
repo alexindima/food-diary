@@ -7,10 +7,10 @@ param(
     [switch]$ResumePassedStages,
     [ValidateRange(30, 3600)]
     # The explicit legacy Full audit includes extended orchestration and has a
-    # measured Windows runtime slightly above 900 seconds. Keep the daily
-    # focused gate unchanged while allowing the opt-in exhaustive profile to
-    # finish and report a real assertion result.
-    [int]$GroupTimeoutSeconds = 1500
+    # measured cold Windows runtime above 1,600 seconds. Keep the daily focused
+    # gate unchanged while allowing the opt-in exhaustive profile to finish
+    # and report a real assertion result with a bounded amount of runner noise.
+    [int]$GroupTimeoutSeconds = 2100
 )
 
 $ErrorActionPreference = 'Stop'
