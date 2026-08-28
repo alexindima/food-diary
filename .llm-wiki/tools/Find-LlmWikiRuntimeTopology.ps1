@@ -21,6 +21,7 @@ $stopwatch = [Diagnostics.Stopwatch]::StartNew()
 $groups = [ordered]@{}
 $diagnostics = $null
 $querySupplied = -not [string]::IsNullOrWhiteSpace($Query)
+$behavioralQuery = $querySupplied -and $Query -match '(?i)retry|resilien|timeout|cancellation|idempoten|duplicate|deduplic|replay|outbox|concurren'
 if ($CompiledIndexSource -eq 'Sqlite') {
     . (Join-Path $PSScriptRoot 'LlmWikiInProcessSqlite.ps1')
     $reader = Initialize-LlmWikiInProcessSqlite -Projection runtime
@@ -80,10 +81,11 @@ if ($querySupplied) {
     $groups['_selection'] = [pscustomobject][ordered]@{
         status = $selectionStatus
         query = $Query
+        queryKind = $(if ($behavioralQuery) { 'behavioral-signal' } else { 'record-text' })
         candidateRecords = $candidateRecords
         returnedRecords = $returnedRecords
         recallConfidence = $(if ($selectionStatus -eq 'abstained-empty-filter') { 'low' } elseif ($selectionStatus -eq 'matched') { 'bounded' } else { 'not-rated' })
-        recommendation = $(if ($selectionStatus -eq 'abstained-empty-filter') { 'Repeat topology without -Query, then inspect the relevant category with a narrower term.' } else { $null })
+        recommendation = $(if ($selectionStatus -eq 'abstained-empty-filter' -and $behavioralQuery) { "Runtime topology contains only registered runtime surfaces and their inferred signals. Continue with research -Intent '$Query' and test-plan -Intent '$Query' to inspect code paths that are not hosted services, clients, webhooks, jobs, or network policies." } elseif ($selectionStatus -eq 'abstained-empty-filter') { 'Repeat topology without -Query, then inspect the relevant category with a narrower term.' } else { $null })
     }
 }
 $groups['_freshness'] = [pscustomobject][ordered]@{

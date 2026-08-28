@@ -268,6 +268,20 @@ $ungrounded = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive (-not $ungrounded.scopeKnown -and $ungrounded.requiresPathDiscovery) 'Ungrounded intent silently absorbed working-tree paths.'
 Assert-Adaptive ($ungrounded.confidence -eq 'low') 'Ungrounded intent did not expose low confidence.'
+
+$repositoryAssessment = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
+    -Objective 'Независимый аудит всего проекта на уязвимости и проблемы.' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($repositoryAssessment.profile -eq 'repository-assessment') 'Repository-wide audit was routed as an ungrounded feature.'
+Assert-Adaptive ($repositoryAssessment.scopeKnown -and -not $repositoryAssessment.requiresPathDiscovery) 'Repository-wide assessment incorrectly required a feature path.'
+Assert-Adaptive (-not $repositoryAssessment.requiresWorkspace -and -not $repositoryAssessment.requiresDesign) 'Read-only repository assessment gained implementation ceremony.'
+Assert-Adaptive ((@(Get-AdaptiveIds @($repositoryAssessment.stages | Where-Object required)) -join ',') -eq 'assessment-map,risk-lanes,journey-sampling,verification-sampling,source-validation,assessment-report') 'Repository assessment omitted a required evidence lane.'
+
+$assessmentJourneys = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') `
+    -Query 'Аудит всего проекта на уязвимости и проблемы.' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive ($assessmentJourneys.selectionMode -eq 'repository-assessment-sample') 'Repository assessment did not activate representative journey sampling.'
+Assert-Adaptive (@($assessmentJourneys.journeys | Where-Object risk -eq 'critical').Count -ge 5) 'Repository assessment omitted critical product journeys.'
 }
 if ($Group -in @('All', 'Experience')) {
 $workspaceReuseName = ".workspace-reuse-$([Guid]::NewGuid().ToString('N'))"

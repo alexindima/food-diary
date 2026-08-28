@@ -49,6 +49,9 @@ Assert-CriticalTool (
 Assert-CriticalTool (
     $facadeSource -match "Parameters\.ContainsKey\('CompiledIndexSource'\)") `
     'Facade dispatch no longer propagates the selected compiled-index source to compatible tools.'
+Assert-CriticalTool (
+    $facadeSource -match '\$automaticJsonFallbackCommands\s*=\s*@\([^)]*''start''[^)]*''brief''[^)]*''research''') `
+    'Cold-checkout start must select the JSON baseline alongside brief and research.'
 
 $helpOutput = @(& (Join-Path $PSScriptRoot 'Show-LlmWikiHelp.ps1') -Tier core 6>&1 | ForEach-Object { [string]$_ })
 Assert-CriticalTool ($helpOutput -contains 'Command stability tiers: core, governed, experimental.') 'Registry-backed compact help omitted stability tiers.'

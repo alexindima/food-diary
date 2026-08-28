@@ -48,7 +48,22 @@ $effectivePaths = @(
         Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
         Sort-Object -Unique
 )
-if ($effectivePaths.Count -gt 0) { $common.ChangedPath = $effectivePaths }
+$normalizedIntent = ([string]$Intent).ToLowerInvariant()
+$assessmentDimensionCount = @(
+    [regex]::Matches($normalizedIntent, '\b(correctness|reliability|concurrency|architecture|privacy|security|ci|operations|operational|project|repository|cross-layer|system-wide)\b|корректност|над[её]жност|конкурент|архитектур|приватност|конфиденциальност|безопасност|уязвимост|операц|проект|репозитор') |
+        ForEach-Object Value |
+        Sort-Object -Unique
+).Count
+$explicitRepositoryWideIntent = $normalizedIntent -match '\b(entire|whole)\s+(project|repository|codebase)\b|\brepository-wide\b|всего\s+проекта|всей\s+кодовой\s+базы'
+$repositoryAssessment = $normalizedIntent -match '\b(audit|assessment|evaluate|review)\b|аудит|оцен' -and
+    ($assessmentDimensionCount -ge 3 -or ($explicitRepositoryWideIntent -and $assessmentDimensionCount -ge 2))
+if ($effectivePaths.Count -gt 0) {
+    $common.ChangedPath = $effectivePaths
+} elseif ($repositoryAssessment) {
+    # A repository assessment is intentionally broader than the current diff.
+    # Keep an unrelated dirty worktree out of its evidence selection.
+    $common.ChangedPath = @()
+}
 
 $diffArguments = @{} + $common
 $diffArguments.Limit = [Math]::Min($Limit, 20)
@@ -69,6 +84,7 @@ $siblingTests = [System.Collections.Generic.HashSet[string]]::new([System.String
 $consumerTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $behavioralIntentTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $neighborTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+$repositoryAssessmentTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $repositoryAntipatterns = [System.Collections.Generic.List[object]]::new()
 $directConsumerProjects = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $changedTestFiles = @(
@@ -231,6 +247,26 @@ if (-not [string]::IsNullOrWhiteSpace($Intent) -and $Intent -match '(?i)idempote
         }
     }
 }
+if ($repositoryAssessment) {
+    foreach ($assessmentTest in @(
+        'tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs'
+        'tests/FoodDiary.ArchitectureTests/SideEffectReliabilityGuardrailTests.cs'
+        'tests/FoodDiary.Web.Api.IntegrationTests/RedisIdempotencyConcurrencyIntegrationTests.cs'
+        'tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs'
+        'tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs'
+        'tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs'
+        'tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs'
+        'tests/FoodDiary.Web.Api.Tests/Extensions/RateLimiterOptionsSetupTests.cs'
+        'MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayMessageProcessorTests.cs'
+        'MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/NpgsqlInboundMailStoreIntegrationTests.cs'
+        'FoodDiary.Web.Client/src/app/services/auth.service.spec.ts'
+        'FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard.service.spec.ts'
+    )) {
+        if (Test-Path -LiteralPath (Join-Path $repositoryRoot $assessmentTest) -PathType Leaf) {
+            $null = $repositoryAssessmentTests.Add($assessmentTest)
+        }
+    }
+}
 foreach ($directTest in @($directTests)) {
     $directory = Split-Path -Parent (Join-Path $repositoryRoot $directTest)
     if (-not (Test-Path -LiteralPath $directory -PathType Container)) { continue }
@@ -272,6 +308,7 @@ $affineDirectTests = @($directTests | Where-Object {
 } | Sort-Object)
 Add-RankedTests $affineDirectTests 90 'references-changed-symbol-in-feature-boundary'
 Add-RankedTests @($behavioralIntentTests | Sort-Object) 85 'behavioral-intent-and-scope-affinity'
+Add-RankedTests @($repositoryAssessmentTests | Sort-Object) 85 'repository-assessment-risk-lane'
 Add-RankedTests @($neighborTests | Sort-Object) 70 'neighboring-test-class'
 $scopeAffinityTokens = @($effectivePaths | ForEach-Object {
     [regex]::Matches(([string]$_).ToLowerInvariant(), '[a-z0-9]+') | ForEach-Object Value
@@ -386,6 +423,13 @@ if ('architecture-drift' -in $ruleIds) {
     Add-Scenario 'architecture-dependency-drift' 'Verify every project reference is explicitly allowed, new production projects are governed, and module dependencies remain acyclic.' 'Architecture health index and architecture tests'
     Add-Scenario 'architecture-dependency-necessity' 'Confirm new references are necessary, point in the intended layer direction, and do not bypass client or abstraction boundaries.' 'Dependency and ADR review'
 }
+if ($repositoryAssessment) {
+    Add-Scenario 'assessment-architecture' 'Check dependency rules, module cycles, composition roots, and executable-host boundaries.' 'Architecture tests plus source validation'
+    Add-Scenario 'assessment-security-privacy' 'Check authentication, authorization, abuse controls, secret handling, sensitive-data boundaries, and provider sharing.' 'Critical API tests plus privacy/security source review'
+    Add-Scenario 'assessment-reliability-concurrency' 'Check retries, cancellation, idempotency, duplicate delivery, concurrency, outbox recovery, and graceful shutdown.' 'Focused integration and delivery tests'
+    Add-Scenario 'assessment-contracts-data' 'Check API compatibility, persistence invariants, migrations, serialization, and realistic query behavior.' 'Contract, domain, and provider-backed tests'
+    Add-Scenario 'assessment-client-ci-operations' 'Check frontend auth/data flows, builds, deterministic CI gates, startup configuration, and operational readiness.' 'Frontend verification, build, and configuration tests'
+}
 
 $commands = @(@(
     @($policy.requiredChecks | ForEach-Object { [pscustomobject]@{
@@ -403,6 +447,20 @@ $commands = @(@(
         reason = 'broad-change-context'
     } })
 ) | Sort-Object command -Unique)
+if ($repositoryAssessment) {
+    $commands += [pscustomobject]@{
+        id = 'assessment-architecture'; command = 'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore'
+        source = 'repository-assessment'; priority = 'required'; reason = 'repository-wide-architecture-lane'; commandEvidence = 'tests/FoodDiary.ArchitectureTests'
+    }
+    $commands += [pscustomobject]@{
+        id = 'assessment-backend'; command = 'dotnet test FoodDiary.slnx --no-restore'
+        source = 'repository-assessment'; priority = 'recommended'; reason = 'repository-wide-backend-regression'; commandEvidence = 'FoodDiary.slnx'
+    }
+    $commands += [pscustomobject]@{
+        id = 'assessment-frontend'; command = 'cd FoodDiary.Web.Client && npm run verify'
+        source = 'repository-assessment'; priority = 'recommended'; reason = 'repository-wide-frontend-regression'; commandEvidence = 'FoodDiary.Web.Client/package.json'
+    }
+}
 
 $frontendFocusedTests = @(
     $selectedFocusedTests | ForEach-Object { if ($_.PSObject.Properties['path']) { $_.path } } |
@@ -590,6 +648,7 @@ $commands = @($commands | ForEach-Object {
 })
 
 $result = [pscustomobject]@{
+    selectionMode = $(if ($repositoryAssessment) { 'repository-assessment' } else { 'change-focused' })
     baseline = [pscustomobject][ordered]@{
         available = -not [bool]$NoBaseline
         baseRevision = $(if ($NoBaseline) { $null } else { $BaseRef })

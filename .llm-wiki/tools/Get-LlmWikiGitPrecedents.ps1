@@ -34,7 +34,8 @@ foreach ($line in $raw) {
 if ($null -ne $current) { $commits.Add([pscustomobject]$current) }
 
 $ranked = @(
-    foreach ($commit in $commits) {
+    @(
+        foreach ($commit in $commits) {
         $subject = $commit.subject.ToLowerInvariant()
         $tokenMatches = @($tokens | Where-Object { $subject.Contains($_) }).Count
         $pathMatches = 0
@@ -61,8 +62,9 @@ $ranked = @(
                 }).Count -gt 0
             } | Select-Object -First 12)
         }
-    }
-) | Sort-Object @{ Expression = 'score'; Descending = $true }, @{ Expression = 'date'; Descending = $true } | Select-Object -First $Limit
+        }
+    ) | Sort-Object @{ Expression = 'score'; Descending = $true }, @{ Expression = 'date'; Descending = $true } | Select-Object -First $Limit
+)
 
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1

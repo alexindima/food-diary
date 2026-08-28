@@ -70,3 +70,21 @@ if ($declaredTypeTest.Count -ne 1 -or $declaredTypeTest[0].reason -ne 'reference
     throw 'A test referencing the changed repository type was displaced by common member-name matches.'
 }
 Write-Host 'LLM Wiki test-plan semantic selection passed: planned symbols, idempotency tests, neighboring tests, and repeated antipatterns are visible.'
+
+$assessmentPlan = & $tool `
+    -Intent 'Независимый аудит всего проекта на уязвимости и проблемы.' `
+    -NoBaseline `
+    -Limit 12 `
+    -Format Json | ConvertFrom-Json
+if ($assessmentPlan.selectionMode -ne 'repository-assessment') {
+    throw 'Repository audit test plan did not activate assessment selection.'
+}
+if (@($assessmentPlan.scenarios.id | Where-Object { $_ -like 'assessment-*' }).Count -ne 5) {
+    throw 'Repository audit test plan omitted one or more risk-lane scenarios.'
+}
+if (@($assessmentPlan.focusedTestFiles | Where-Object { $_ -match 'RedisIdempotencyConcurrency|SideEffectReliability|auth\.service\.spec' }).Count -lt 3) {
+    throw 'Repository audit test plan omitted representative concurrency, reliability, or frontend tests.'
+}
+if (@($assessmentPlan.commands | Where-Object source -eq 'repository-assessment').Count -lt 3) {
+    throw 'Repository audit test plan omitted repository-wide verification commands.'
+}

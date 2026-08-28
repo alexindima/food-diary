@@ -28,6 +28,19 @@ function Get-ComposeListValues {
     )
 }
 
+function Get-BehaviorSignals {
+    param([string]$Content)
+    return @(
+        if ($Content -match '(?i)retry|resilien(?:ce|cy)|Polly|AutomaticRetry') { 'retry-or-resilience' }
+        if ($Content -match '(?i)timeout|TimeSpan\.From(?:Milliseconds|Seconds|Minutes)') { 'timeout-or-delay' }
+        if ($Content -match '(?i)CancellationToken|stoppingToken') { 'cancellation' }
+        if ($Content -match '(?i)idempoten') { 'idempotency' }
+        if ($Content -match '(?i)deduplic|duplicate|replay|alreadyprocessed') { 'duplicate-or-replay-control' }
+        if ($Content -match '(?i)outbox') { 'outbox-delivery' }
+        if ($Content -match '(?i)concurren|SemaphoreSlim|Interlocked|lock\s*\(') { 'concurrency-control' }
+    ) | Sort-Object -Unique
+}
+
 $sourceFiles = @(
     Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
         Where-Object {
@@ -45,6 +58,7 @@ $networkPolicies = [System.Collections.Generic.List[object]]::new()
 foreach ($file in $sourceFiles) {
     $content = [System.IO.File]::ReadAllText($file.FullName)
     $path = ConvertTo-RepositoryPath $file.FullName
+    $behaviorSignals = @(Get-BehaviorSignals -Content $content)
     foreach ($match in [regex]::Matches(
         $content,
         '(?ms)(?:class|sealed\s+class)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*).{0,1500}?\)\s*:\s*(?<base>BackgroundService|IHostedService)\b|(?:class|sealed\s+class)\s+(?<name2>[A-Za-z_][A-Za-z0-9_]*)\s*:\s*(?<base2>BackgroundService|IHostedService)\b')) {
@@ -54,6 +68,7 @@ foreach ($file in $sourceFiles) {
             name = $serviceName
             baseType = $baseType
             path = $path
+            behaviorSignals = $behaviorSignals
         })
     }
     foreach ($match in [regex]::Matches(
@@ -63,6 +78,7 @@ foreach ($file in $sourceFiles) {
             contract = $match.Groups['contract'].Value
             implementation = $match.Groups['implementation'].Value
             registrationPath = $path
+            behaviorSignals = $behaviorSignals
         })
     }
     foreach ($match in [regex]::Matches(
@@ -74,6 +90,7 @@ foreach ($file in $sourceFiles) {
                 contract = $null
                 implementation = $implementation
                 registrationPath = $path
+                behaviorSignals = $behaviorSignals
             })
         }
     }
@@ -91,6 +108,7 @@ foreach ($file in $sourceFiles) {
                 name = $match.Groups['name'].Value
                 path = $path
                 securitySignals = @($signals)
+                behaviorSignals = $behaviorSignals
                 evidenceStatus = 'inferred-from-code'
             })
         }
@@ -111,6 +129,7 @@ foreach ($file in $sourceFiles) {
             name = [IO.Path]::GetFileNameWithoutExtension($path)
             path = $path
             securitySignals = @($signals)
+            behaviorSignals = $behaviorSignals
             evidenceStatus = 'inferred-from-code'
             runtimeEvidenceRequired = @('effective DNS result at connection time', 'effective proxy and redirect behavior')
         })
@@ -122,6 +141,7 @@ foreach ($file in $sourceFiles) {
             api = $match.Groups['api'].Value
             detail = $match.Groups['detail'].Value.Trim()
             path = $path
+            behaviorSignals = $behaviorSignals
         })
     }
 }

@@ -379,7 +379,7 @@ $compiledIndexReadOnlyCommands = @(
     'rollout', 'topology', 'privacy', 'security', 'ui', 'contracts', 'diff',
     'ownership', 'api-compat'
 )
-$automaticJsonFallbackCommands = @('brief', 'research')
+$automaticJsonFallbackCommands = @('start', 'brief', 'research')
 $compiledIndexSourceWasExplicit = $PSBoundParameters.ContainsKey('CompiledIndexSource')
 if (-not $compiledIndexSourceWasExplicit -and
     $CompiledIndexSource -eq 'Sqlite' -and
@@ -1173,7 +1173,14 @@ switch ($Command) {
     }
     'start' {
         if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'start requires -Intent <task description>.' }
-        $startArguments = @{ Objective = $Objective; BaseRef = $BaseRef; WorkspacePath = $WorkspacePath; Format = $Format; Limit = [Math]::Min($Limit, 30) }
+        $startArguments = @{
+            Objective = $Objective
+            BaseRef = $BaseRef
+            WorkspacePath = $WorkspacePath
+            CompiledIndexSource = $CompiledIndexSource
+            Format = $Format
+            Limit = [Math]::Min($Limit, 30)
+        }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $startArguments.ProposedPath = $ProposedPath }
         Invoke-WikiTool 'Start-LlmWikiDevelopment.ps1' $startArguments
     }

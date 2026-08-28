@@ -9,6 +9,7 @@
     "bug": { "label": "focused", "maximumRequiredStages": 5, "workspace": false, "design": false, "independentReview": false },
     "pattern-extension": { "label": "precedent-focused", "maximumRequiredStages": 5, "workspace": false, "design": false, "independentReview": false },
     "test-only": { "label": "coverage-focused", "maximumRequiredStages": 4, "workspace": false, "design": false, "independentReview": false },
+    "repository-assessment": { "label": "assessment", "maximumRequiredStages": 6, "workspace": false, "design": false, "independentReview": false },
     "feature": { "label": "designed", "maximumRequiredStages": 7, "workspace": "when-cross-cutting", "design": true, "independentReview": false },
     "critical": { "label": "governed", "maximumRequiredStages": 11, "workspace": true, "design": true, "independentReview": true },
     "architectural": { "label": "governed", "maximumRequiredStages": 11, "workspace": true, "design": true, "independentReview": true }

@@ -4,6 +4,7 @@ param(
     [string]$BaseRef = 'HEAD',
     [string[]]$ProposedPath,
     [string]$WorkspacePath = '.artifacts/llm-wiki/tasks/current',
+    [ValidateSet('Sqlite', 'Json')][string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')][string]$Format = 'Text',
     [ValidateRange(1, 30)][int]$Limit = 12
 )
@@ -28,10 +29,22 @@ if (Test-Path -LiteralPath $absoluteWorkspace -PathType Container) {
         throw "Existing governed workspace '$WorkspacePath' belongs to a different objective ('$existingObjective'). Supply a new -WorkspacePath for '$Objective'; the workspace was not reused."
     }
 }
-$workflowArguments = @{ Objective = $Objective; BaseRef = $BaseRef; Format = 'Json'; Limit = $Limit }
+$workflowArguments = @{
+    Objective = $Objective
+    BaseRef = $BaseRef
+    CompiledIndexSource = $CompiledIndexSource
+    Format = 'Json'
+    Limit = $Limit
+}
 if ($PSBoundParameters.ContainsKey('ProposedPath')) { $workflowArguments.ProposedPath = $ProposedPath }
 $workflow = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') @workflowArguments | ConvertFrom-Json
-$researchArguments = @{ Objective = $Objective; BaseRef = $BaseRef; Format = 'Json'; Limit = $Limit }
+$researchArguments = @{
+    Objective = $Objective
+    BaseRef = $BaseRef
+    CompiledIndexSource = $CompiledIndexSource
+    Format = 'Json'
+    Limit = $Limit
+}
 if ($PSBoundParameters.ContainsKey('ProposedPath')) { $researchArguments.ProposedPath = $ProposedPath }
 $research = & (Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1') @researchArguments | ConvertFrom-Json
 $scopeTokens = @($ProposedPath | ForEach-Object {

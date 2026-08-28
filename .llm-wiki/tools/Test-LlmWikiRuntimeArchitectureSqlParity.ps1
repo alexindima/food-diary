@@ -28,6 +28,14 @@ if ([string]$runtimeDiagnostics._diagnostics.source -ne 'sqlite-runtime-in-proce
     [int64]$runtimeDiagnostics._diagnostics.sourceBytesVerified -le 0) {
     throw 'Runtime-topology SQLite diagnostics are incomplete.'
 }
+$retryTopology = & $runtimeTool -Query retry -CompiledIndexSource Sqlite -Format Json | ConvertFrom-Json
+if ($retryTopology._selection.status -ne 'matched' -or $retryTopology._selection.queryKind -ne 'behavioral-signal') {
+    throw 'Runtime topology did not retrieve retry/resilience behavior signals.'
+}
+$idempotencyTopology = & $runtimeTool -Query idempotency -CompiledIndexSource Sqlite -Format Json | ConvertFrom-Json
+if ($idempotencyTopology._selection.status -eq 'abstained-empty-filter' -and $idempotencyTopology._selection.recommendation -notmatch 'research.*test-plan') {
+    throw 'Runtime topology did not route an unsupported behavioral query to source and test evidence.'
+}
 
 $architectureTool = Join-Path $PSScriptRoot 'Find-LlmWikiArchitectureHealth.ps1'
 foreach ($view in @('all', 'drift', 'allowances', 'untracked', 'cycles', 'ambiguous', 'dead-candidates', 'spec-gaps', 'test-gaps', 'debt')) {

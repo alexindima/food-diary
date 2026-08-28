@@ -82,6 +82,7 @@ $effectivePaths = @(
         Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
         Sort-Object -Unique
 )
+$proposedPathCount = @($ProposedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) }).Count
 $inferredPaths = @()
 $intentCompiledResult = $null
 $intentIndexDiagnostics = $null
@@ -89,12 +90,13 @@ $normalizedIntent = ([string]$Intent).ToLowerInvariant()
 $broadAssessmentDimensionCount = @(
     [regex]::Matches(
         $normalizedIntent,
-        '\b(correctness|reliability|concurrency|architecture|privacy|security|ci|operations|operational|project|repository|cross-layer|system-wide)\b') |
+        '\b(correctness|reliability|concurrency|architecture|privacy|security|ci|operations|operational|project|repository|cross-layer|system-wide)\b|корректност|над[её]жност|конкурент|архитектур|приватност|конфиденциальност|безопасност|уязвимост|операц|проект|репозитор') |
         ForEach-Object Value |
         Sort-Object -Unique
 ).Count
+$explicitRepositoryWideIntent = $normalizedIntent -match '\b(entire|whole)\s+(project|repository|codebase)\b|\brepository-wide\b|всего\s+проекта|всей\s+кодовой\s+базы'
 $broadAssessmentIntent = $normalizedIntent -match '\b(audit|assessment|evaluate|review)\b|аудит|оцен' -and
-    $broadAssessmentDimensionCount -ge 3
+    ($broadAssessmentDimensionCount -ge 3 -or ($explicitRepositoryWideIntent -and $broadAssessmentDimensionCount -ge 2))
 $wikiInternalIntent = $normalizedIntent -match '\b(llm[- ]?wiki|wiki\.ps1|wiki tooling|development mcp)\b'
 if ($effectivePaths.Count -eq 0 -and $wikiInternalIntent) {
     # Tooling objectives use a dedicated Wiki code/workflow index instead of
@@ -648,11 +650,11 @@ if ($inferredPaths.Count -gt 0 -and
     $riskCalibration = 'intent-inference-cap'
 }
 $riskLevel = if ($riskScore -ge 7) { 'high' } elseif ($riskScore -ge 3) { 'medium' } else { 'low' }
-$analysisMode = if ($broadAssessmentIntent -and @($ProposedPath).Count -eq 0 -and @($diff.changedPaths).Count -eq 0) {
+$analysisMode = if ($broadAssessmentIntent -and $proposedPathCount -eq 0 -and @($diff.changedPaths).Count -eq 0) {
     'broad-assessment'
 } elseif ($inferredPaths.Count -gt 0) {
     'intent-inferred'
-} elseif (@($ProposedPath).Count -gt 0) {
+} elseif ($proposedPathCount -gt 0) {
     'planned-paths'
 } elseif (@($diff.changedPaths).Count -gt 0) {
     'git-diff'
@@ -706,7 +708,7 @@ $brief = [pscustomobject]@{
     change = [pscustomobject]@{
         intent = $Intent
         paths = @($diff.changedPaths)
-        proposedPaths = @($ProposedPath)
+        proposedPaths = @($ProposedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
         scopes = @($diff.scopes)
         directModules = @($ownership.directModules)
         downstreamModules = @($ownership.downstreamModules)

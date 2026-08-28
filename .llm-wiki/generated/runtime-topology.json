@@ -468,114 +468,206 @@
     {
       "name": "MailInboxRetentionHostedService",
       "baseType": "BackgroundService",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs"
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs",
+      "behaviorSignals": [
+        "cancellation"
+      ]
     },
     {
       "name": "MailInboxSmtpHostedService",
       "baseType": "BackgroundService",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs"
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ]
     },
     {
       "name": "MailRelayOutboxPublisherHostedService",
       "baseType": "BackgroundService",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayOutboxPublisherHostedService.cs"
+      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayOutboxPublisherHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "timeout-or-delay"
+      ]
     },
     {
       "name": "MailRelayQueueProcessorHostedService",
       "baseType": "BackgroundService",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueProcessorHostedService.cs"
+      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueProcessorHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ]
     },
     {
       "name": "MailRelaySchemaInitializerHostedService",
       "baseType": "IHostedService",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelaySchemaInitializerHostedService.cs"
+      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelaySchemaInitializerHostedService.cs",
+      "behaviorSignals": [
+        "cancellation"
+      ]
     },
     {
       "name": "NotificationTestScheduler",
       "baseType": "BackgroundService",
-      "path": "FoodDiary.Web.Api/Services/NotificationTestScheduler.cs"
+      "path": "FoodDiary.Web.Api/Services/NotificationTestScheduler.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "concurrency-control"
+      ]
     },
     {
       "name": "RabbitMqMailRelayBootstrapHostedService",
       "baseType": "IHostedService",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBootstrapHostedService.cs"
+      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBootstrapHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "name": "RabbitMqMailRelayConsumerHostedService",
       "baseType": "BackgroundService",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs"
+      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "name": "RecurringJobsHostedService",
       "baseType": "IHostedService",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "name": "TelegramBotWorker",
       "baseType": "BackgroundService",
-      "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs"
+      "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     }
   ],
   "httpClients": [
     {
       "contract": "IDiaryPdfGenerator",
       "implementation": "DiaryPdfGenerator",
-      "registrationPath": "FoodDiary.Infrastructure/DependencyInjection.Export.cs"
+      "registrationPath": "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ]
     },
     {
       "contract": null,
       "implementation": "FitbitClient",
-      "registrationPath": "FoodDiary.Integrations/Wearables/FitbitClient.cs"
+      "registrationPath": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ]
     },
     {
       "contract": "IMailInboxClient",
       "implementation": "MailInboxClient",
-      "registrationPath": "MailInbox/FoodDiary.MailInbox.Client/Extensions/MailInboxClientServiceCollectionExtensions.cs"
+      "registrationPath": "MailInbox/FoodDiary.MailInbox.Client/Extensions/MailInboxClientServiceCollectionExtensions.cs",
+      "behaviorSignals": [
+        "timeout-or-delay"
+      ]
     },
     {
       "contract": "IMailRelayClient",
       "implementation": "MailRelayClient",
-      "registrationPath": "MailRelay/FoodDiary.MailRelay.Client/Extensions/MailRelayClientServiceCollectionExtensions.cs"
+      "registrationPath": "MailRelay/FoodDiary.MailRelay.Client/Extensions/MailRelayClientServiceCollectionExtensions.cs",
+      "behaviorSignals": [
+        "timeout-or-delay"
+      ]
     },
     {
       "contract": "IOpenAiFoodClient",
       "implementation": "OpenAiFoodClient",
-      "registrationPath": "FoodDiary.Integrations/DependencyInjection.Ai.cs"
+      "registrationPath": "FoodDiary.Integrations/DependencyInjection.Ai.cs",
+      "behaviorSignals": [
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "contract": "IOpenFoodFactsService",
       "implementation": "OpenFoodFactsService",
-      "registrationPath": "FoodDiary.Integrations/DependencyInjection.FoodData.cs"
+      "registrationPath": "FoodDiary.Integrations/DependencyInjection.FoodData.cs",
+      "behaviorSignals": [
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "contract": null,
       "implementation": "PaddleApiClient",
-      "registrationPath": "FoodDiary.Integrations/Billing/PaddleApiClient.cs"
+      "registrationPath": "FoodDiary.Integrations/Billing/PaddleApiClient.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ]
     },
     {
       "contract": null,
       "implementation": "PaddleBillingGateway",
-      "registrationPath": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs"
+      "registrationPath": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "idempotency",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "contract": "IUsdaFoodSearchService",
       "implementation": "UsdaFoodSearchService",
-      "registrationPath": "FoodDiary.Integrations/DependencyInjection.FoodData.cs"
+      "registrationPath": "FoodDiary.Integrations/DependencyInjection.FoodData.cs",
+      "behaviorSignals": [
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "contract": "IWebPushClientAdapter",
       "implementation": "WebPushClientAdapter",
-      "registrationPath": "FoodDiary.Integrations/DependencyInjection.Notifications.cs"
+      "registrationPath": "FoodDiary.Integrations/DependencyInjection.Notifications.cs",
+      "behaviorSignals": [
+        "timeout-or-delay"
+      ]
     },
     {
       "contract": null,
       "implementation": "YooKassaApiClient",
-      "registrationPath": "FoodDiary.Integrations/Billing/YooKassaApiClient.cs"
+      "registrationPath": "FoodDiary.Integrations/Billing/YooKassaApiClient.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "idempotency",
+        "timeout-or-delay"
+      ]
     },
     {
       "contract": null,
       "implementation": "YooKassaBillingGateway",
-      "registrationPath": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs"
+      "registrationPath": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "idempotency"
+      ]
     }
   ],
   "webhooks": [
@@ -583,12 +675,18 @@
       "name": "AwsSesSnsWebhookHttpMappings",
       "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/AwsSesSnsWebhookHttpMappings.cs",
       "securitySignals": [],
+      "behaviorSignals": [
+        "duplicate-or-replay-control"
+      ],
       "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookContextResolver",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
       "securitySignals": [],
+      "behaviorSignals": [
+        "cancellation"
+      ],
       "evidenceStatus": "inferred-from-code"
     },
     {
@@ -597,6 +695,7 @@
       "securitySignals": [
         "request-authentication"
       ],
+      "behaviorSignals": [],
       "evidenceStatus": "inferred-from-code"
     },
     {
@@ -605,6 +704,7 @@
       "securitySignals": [
         "freshness-validation"
       ],
+      "behaviorSignals": [],
       "evidenceStatus": "inferred-from-code"
     },
     {
@@ -612,6 +712,9 @@
       "path": "FoodDiary.Application.Abstractions/Billing/Common/BillingWebhookEventAlreadyProcessedException.cs",
       "securitySignals": [
         "replay-or-duplicate-control"
+      ],
+      "behaviorSignals": [
+        "duplicate-or-replay-control"
       ],
       "evidenceStatus": "inferred-from-code"
     },
@@ -622,6 +725,7 @@
         "freshness-validation",
         "replay-or-duplicate-control"
       ],
+      "behaviorSignals": [],
       "evidenceStatus": "inferred-from-code"
     },
     {
@@ -630,18 +734,26 @@
       "securitySignals": [
         "replay-or-duplicate-control"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "duplicate-or-replay-control"
+      ],
       "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookEventRepository",
       "path": "FoodDiary.Infrastructure/Persistence/Billing/BillingWebhookEventRepository.cs",
       "securitySignals": [],
+      "behaviorSignals": [
+        "cancellation"
+      ],
       "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookEventValidator",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
       "securitySignals": [],
+      "behaviorSignals": [],
       "evidenceStatus": "inferred-from-code"
     },
     {
@@ -650,54 +762,82 @@
       "securitySignals": [
         "signature-validation"
       ],
+      "behaviorSignals": [
+        "cancellation"
+      ],
       "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookInboxJob",
       "path": "FoodDiary.JobManager/Services/BillingWebhookInboxJob.cs",
       "securitySignals": [],
+      "behaviorSignals": [
+        "cancellation",
+        "concurrency-control",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookInboxService",
       "path": "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
       "securitySignals": [],
+      "behaviorSignals": [
+        "cancellation"
+      ],
       "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookPaymentRecorder",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
       "securitySignals": [],
+      "behaviorSignals": [
+        "cancellation"
+      ],
       "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookPremiumRoleSyncer",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
       "securitySignals": [],
+      "behaviorSignals": [
+        "cancellation"
+      ],
       "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookRequestLimits",
       "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookRequestLimits.cs",
       "securitySignals": [],
+      "behaviorSignals": [],
       "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "BillingWebhookSubscriptionWriter",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookSubscriptionWriter.cs",
       "securitySignals": [],
+      "behaviorSignals": [
+        "cancellation"
+      ],
       "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "GetAdminBillingWebhookEventsQueryHandler",
       "path": "FoodDiary.Application.Admin/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQueryHandler.cs",
       "securitySignals": [],
+      "behaviorSignals": [
+        "cancellation"
+      ],
       "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "MailgunWebhookHttpMappings",
       "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailgunWebhookHttpMappings.cs",
       "securitySignals": [],
+      "behaviorSignals": [
+        "duplicate-or-replay-control"
+      ],
       "evidenceStatus": "inferred-from-code"
     },
     {
@@ -707,18 +847,26 @@
         "replay-or-duplicate-control",
         "signature-validation"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "duplicate-or-replay-control"
+      ],
       "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "ProcessBillingWebhookCommandValidator",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandValidator.cs",
       "securitySignals": [],
+      "behaviorSignals": [],
       "evidenceStatus": "inferred-from-code"
     },
     {
       "name": "ProcessQueuedBillingWebhookCommandHandler",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
       "securitySignals": [],
+      "behaviorSignals": [
+        "cancellation"
+      ],
       "evidenceStatus": "inferred-from-code"
     },
     {
@@ -728,6 +876,10 @@
         "freshness-validation",
         "signature-validation"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code"
     }
   ],
@@ -735,82 +887,178 @@
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.AchievementEvaluationOutbox",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.BillingRenewal",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.BillingWebhookInbox",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.ClientTaskReminders",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.EmailOutbox",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.FastingNotifications",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.FastingTelemetryCleanup",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.ImageAssetsCleanup",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.ImageObjectDeletionOutbox",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.MarketingAttributionCleanup",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.NotificationWebPushOutbox",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.NotificationsCleanup",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.PaddleNotificationRecovery",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.UserLoginEventsCleanup",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.UsersCleanup",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.WeeklyGoalReminders",
-      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs"
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ]
     }
   ],
   "networkPolicies": [
@@ -819,6 +1067,9 @@
       "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfigurableRelayDeliveryTransport.cs",
       "securitySignals": [
         "ip-address-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation"
       ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
@@ -837,6 +1088,10 @@
         "redirects-disabled",
         "timeout-policy"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -849,6 +1104,11 @@
       "securitySignals": [
         "ip-address-policy",
         "timeout-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation",
+        "concurrency-control",
+        "timeout-or-delay"
       ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
@@ -864,6 +1124,11 @@
         "timeout-policy",
         "uri-policy"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "concurrency-control",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -878,6 +1143,10 @@
         "timeout-policy",
         "uri-policy"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -891,6 +1160,9 @@
         "ip-address-policy",
         "uri-policy"
       ],
+      "behaviorSignals": [
+        "cancellation"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -903,6 +1175,10 @@
       "securitySignals": [
         "ip-address-policy",
         "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation",
+        "outbox-delivery"
       ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
@@ -919,6 +1195,10 @@
         "timeout-policy",
         "uri-policy"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -931,6 +1211,9 @@
       "securitySignals": [
         "ip-address-policy",
         "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation"
       ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
@@ -948,6 +1231,10 @@
         "timeout-policy",
         "uri-policy"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -959,6 +1246,9 @@
       "path": "MailRelay/FoodDiary.MailRelay.Client/MailRelayClient.cs",
       "securitySignals": [
         "ip-address-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation"
       ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
@@ -975,6 +1265,11 @@
         "timeout-policy",
         "uri-policy"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -989,6 +1284,11 @@
         "response-size-policy",
         "timeout-policy",
         "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation",
+        "concurrency-control",
+        "timeout-or-delay"
       ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
@@ -1005,6 +1305,10 @@
         "timeout-policy",
         "uri-policy"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -1018,6 +1322,12 @@
         "ip-address-policy",
         "timeout-policy",
         "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation",
+        "idempotency",
+        "retry-or-resilience",
+        "timeout-or-delay"
       ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
@@ -1034,6 +1344,11 @@
         "timeout-policy",
         "uri-policy"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "duplicate-or-replay-control",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -1047,6 +1362,10 @@
         "ip-address-policy",
         "uri-policy"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -1058,6 +1377,10 @@
       "path": "FoodDiary.Integrations/Services/RelayEmailTransport.cs",
       "securitySignals": [
         "ip-address-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation",
+        "idempotency"
       ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
@@ -1071,6 +1394,9 @@
       "securitySignals": [
         "ip-address-policy",
         "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation"
       ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
@@ -1086,6 +1412,10 @@
         "timeout-policy",
         "uri-policy"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -1098,6 +1428,11 @@
       "securitySignals": [
         "ip-address-policy",
         "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation",
+        "retry-or-resilience",
+        "timeout-or-delay"
       ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
@@ -1114,6 +1449,10 @@
         "timeout-policy",
         "uri-policy"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -1125,6 +1464,9 @@
       "path": "FoodDiary.Integrations/Services/WebPushClientAdapter.cs",
       "securitySignals": [
         "ip-address-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation"
       ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
@@ -1139,6 +1481,9 @@
         "ip-address-policy",
         "uri-policy"
       ],
+      "behaviorSignals": [
+        "cancellation"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -1151,6 +1496,11 @@
       "securitySignals": [
         "ip-address-policy",
         "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation",
+        "concurrency-control",
+        "timeout-or-delay"
       ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
@@ -1168,6 +1518,10 @@
         "proxy-disabled",
         "redirects-disabled"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -1183,6 +1537,11 @@
         "timeout-policy",
         "uri-policy"
       ],
+      "behaviorSignals": [
+        "cancellation",
+        "idempotency",
+        "timeout-or-delay"
+      ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [
         "effective DNS result at connection time",
@@ -1196,6 +1555,10 @@
         "ip-address-policy",
         "response-size-policy",
         "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation",
+        "idempotency"
       ],
       "evidenceStatus": "inferred-from-code",
       "runtimeEvidenceRequired": [

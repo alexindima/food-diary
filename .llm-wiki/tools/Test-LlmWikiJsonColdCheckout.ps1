@@ -45,6 +45,16 @@ try {
         [Text.UTF8Encoding]::new($false))
 
     $facade = Join-Path $checkoutWikiRoot 'wiki.ps1'
+    $coldStartObjective = 'независимый широкий аудит всего проекта'
+    $start = Invoke-JsonFacade -Facade $facade -FacadeCommand start -FacadeParameters @{
+        Objective = $coldStartObjective; Format = 'Json'; Limit = 3
+        TaskSessionId = "json-cold-checkout-$([Guid]::NewGuid().ToString('N'))"
+    }
+    Assert-ColdCheckout (
+        [string]$start.objective -eq $coldStartObjective -and
+        [string]$start.research.discovery.runtimeFlow.status -eq 'not-requested-json-baseline') `
+        'Cold-checkout start did not complete through the JSON baseline.'
+
     $defaultBrief = Invoke-JsonFacade -Facade $facade -FacadeCommand brief -FacadeParameters @{
         Objective = 'audit wearable synchronization'; ProposedPath = @('FoodDiary.Application.Wearables')
         Compact = $true; Format = 'Json'; Limit = 3
