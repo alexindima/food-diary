@@ -60,8 +60,10 @@ param(
     [ValidateSet('Any', 'HostedService', 'Service', 'Handler', 'Controller', 'Repository', 'Component')]
     [string]$SymbolKind = 'Any',
     [string]$PathPrefix,
-    [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Tests')]
+    [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Persistence', 'Tests')]
     [string]$ChangeType = 'Any',
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('all', 'credential', 'identity', 'health', 'financial', 'privateContent', 'logging', 'boundaries', 'external')]
     [string]$PrivacyCategory = 'all',
     [ValidateSet('all', 'components', 'consumers', 'api', 'translations', 'spec-gaps')]
@@ -251,6 +253,10 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+if ($ChangeType -eq 'Persistence') {
+    $ChangeType = 'Database'
+    Write-Verbose "Compatibility alias: ChangeType 'Persistence' -> 'Database'."
+}
 if (-not [string]::IsNullOrWhiteSpace($RequestFile)) {
     $request = Get-Content -LiteralPath $RequestFile -Raw | ConvertFrom-Json
     if ([int]$request.schemaVersion -ne 1 -or $null -eq $request.arguments) {
@@ -945,6 +951,7 @@ switch ($Command) {
             Module = $Module
             Query = $Query
             ChangeType = $ChangeType
+            CompiledIndexSource = $CompiledIndexSource
             Format = $Format
             Limit = $Limit
         }
@@ -2408,13 +2415,14 @@ switch ($Command) {
         }
     }
     'topology' {
-        Invoke-WikiTool 'Find-LlmWikiRuntimeTopology.ps1' @{ Query = $Query; Limit = $Limit; Format = $Format }
+        Invoke-WikiTool 'Find-LlmWikiRuntimeTopology.ps1' @{ Query = $Query; Limit = $Limit; CompiledIndexSource = $CompiledIndexSource; Format = $Format }
     }
     'privacy' {
         $privacyArguments = @{
             Query = $Query
             Category = $PrivacyCategory
             Limit = $Limit
+            CompiledIndexSource = $CompiledIndexSource
             Format = $Format
         }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $privacyArguments.ScopePath = $ProposedPath }
@@ -2434,6 +2442,7 @@ switch ($Command) {
             Query = $Query
             View = $FrontendView
             Limit = $Limit
+            CompiledIndexSource = $CompiledIndexSource
             Format = $Format
         }
     }
@@ -2442,6 +2451,7 @@ switch ($Command) {
             Query = $Query
             View = $DomainView
             Limit = $Limit
+            CompiledIndexSource = $CompiledIndexSource
             Format = $Format
         }
     }
@@ -2450,6 +2460,7 @@ switch ($Command) {
             Query = $Query
             View = $BackendContractView
             Limit = $Limit
+            CompiledIndexSource = $CompiledIndexSource
             Format = $Format
         }
     }
@@ -2458,17 +2469,18 @@ switch ($Command) {
             Query = $Query
             View = $HealthView
             Limit = $Limit
+            CompiledIndexSource = $CompiledIndexSource
             Format = $Format
         }
     }
     'hotspots' {
-        Invoke-WikiTool 'Find-LlmWikiQualityRisk.ps1' @{ View = 'hotspots'; Area = $QualityArea; Query = $Query; Limit = $Limit; Format = $Format }
+        Invoke-WikiTool 'Find-LlmWikiQualityRisk.ps1' @{ View = 'hotspots'; Area = $QualityArea; Query = $Query; Limit = $Limit; CompiledIndexSource = $CompiledIndexSource; Format = $Format }
     }
     'test-gaps' {
-        Invoke-WikiTool 'Find-LlmWikiQualityRisk.ps1' @{ View = 'test-gaps'; Area = $QualityArea; Query = $Query; Limit = $Limit; Format = $Format }
+        Invoke-WikiTool 'Find-LlmWikiQualityRisk.ps1' @{ View = 'test-gaps'; Area = $QualityArea; Query = $Query; Limit = $Limit; CompiledIndexSource = $CompiledIndexSource; Format = $Format }
     }
     'debt' {
-        Invoke-WikiTool 'Find-LlmWikiQualityRisk.ps1' @{ View = 'debt'; Area = $QualityArea; Query = $Query; Limit = $Limit; Format = $Format }
+        Invoke-WikiTool 'Find-LlmWikiQualityRisk.ps1' @{ View = 'debt'; Area = $QualityArea; Query = $Query; Limit = $Limit; CompiledIndexSource = $CompiledIndexSource; Format = $Format }
     }
     'diff' {
         $diffArguments = @{
@@ -2797,7 +2809,7 @@ switch ($Command) {
         if ($Check) {
             Invoke-WikiTool $indexCommandTools[$Command] @{ Check = $true }
         } else {
-            Invoke-WikiTool 'Read-LlmWikiCompiledIndex.ps1' @{ Index = $Command; Format = $Format; Limit = $Limit }
+            Invoke-WikiTool 'Read-LlmWikiCompiledIndex.ps1' @{ Index = $Command; Query = $Query; Format = $Format; Limit = $Limit }
         }
     }
     'delivery-finalize' {

@@ -380,6 +380,7 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         Assert.Equal(
             "FoodDiary.Integrations/Options/IntegrationUriValidator.cs",
             result.Candidates[0].Path);
+        Assert.Contains("uri", result.QueryTerms, StringComparer.Ordinal);
     }
 
     [Fact]

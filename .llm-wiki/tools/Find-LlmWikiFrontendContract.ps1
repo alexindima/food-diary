@@ -18,6 +18,8 @@ $stopwatch = [Diagnostics.Stopwatch]::StartNew()
 $diagnostics = $null
 $groups = [ordered]@{}
 if ($CompiledIndexSource -eq 'Sqlite') {
+    . (Join-Path $PSScriptRoot 'Ensure-LlmWikiSqliteProjection.ps1')
+    Ensure-LlmWikiSqliteProjection -Category frontend-contracts
     $sqlResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
         -Action frontend-contract `
         -FrontendContractView $View `

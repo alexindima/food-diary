@@ -7,6 +7,7 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
   - .llm-wiki/tools/code-graph.mjs
+  - .llm-wiki/tools/Ensure-LlmWikiSqliteProjection.ps1
   - .llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1
   - .llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1
   - .llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1
@@ -32,6 +33,14 @@ read-only facade snapshot is created, and the reader verifies normalized source
 hashes before returning data. A missing or stale projection fails explicitly;
 `-CompiledIndexSource Json` is reserved for parity tests and diagnostics rather
 than automatic fallback.
+
+On a clean checkout, backend-oriented context requests can bootstrap the SQLite
+projection without installing frontend packages. That backend-only refresh
+publishes C# and generated query documents and marks the TypeScript projection
+as incomplete. A later `Any` or `Frontend` context request automatically performs
+the full graph refresh. If the TypeScript compiler is unavailable, the full
+refresh fails immediately with an actionable `npm ci` message; it never waits for
+a late parser failure and never silently switches to JSON.
 
 Diff context uses the same projection in `changed-paths` mode. SQLite applies
 the exact changed-path predicate before transporting C# and frontend symbol payloads, while

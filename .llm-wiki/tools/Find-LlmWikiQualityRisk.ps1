@@ -7,12 +7,36 @@ param(
     [string]$Query,
     [ValidateRange(1, 100)]
     [int]$Limit = 20,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'
 )
 
 $ErrorActionPreference = 'Stop'
 $recordKind = switch ($View) { 'test-gaps' { 'criticalSymbol' } 'debt' { 'debtMarker' } default { 'hotspot' } }
+$wikiRoot = Split-Path -Parent $PSScriptRoot
+if ($CompiledIndexSource -eq 'Json') {
+    $index = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/quality-index.json') -Raw | ConvertFrom-Json
+    $items = switch ($View) {
+        'test-gaps' { @($index.criticalSymbols | Where-Object testReferenceCount -eq 0) }
+        'debt' { @($index.debtMarkers) }
+        default { @($index.hotspots) }
+    }
+    $items = @($items | Where-Object {
+        $path = [string]$_.path
+        $areaMatches = $Area -eq 'All' -or ($Area -eq 'Wiki') -eq ($path -match '^\.llm-wiki/')
+        $queryMatches = [string]::IsNullOrWhiteSpace($Query) -or (($_ | ConvertTo-Json -Depth 6 -Compress) -match [regex]::Escape($Query))
+        $areaMatches -and $queryMatches
+    } | Select-Object -First $Limit)
+    $result = [pscustomobject][ordered]@{ schemaVersion = 1; view = $View; area = $Area; query = $Query; count = $items.Count; conclusive = $false; abstained = $true; abstentionReason = 'Explicit JSON baseline selected; freshness and SQLite parity were not verified.'; scope = [pscustomobject]@{ source = 'json-baseline'; fresh = $false }; items = $items }
+    if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 8; exit 0 }
+    Write-Host "Quality view '$View' ($Area), explicit JSON baseline: $($items.Count) result(s)."
+    foreach ($item in $items) { Write-Host " - $(($item | ConvertTo-Json -Depth 6 -Compress))" }
+    exit 0
+}
+. (Join-Path $PSScriptRoot 'Ensure-LlmWikiSqliteProjection.ps1')
+Ensure-LlmWikiSqliteProjection -Category risks
 $queryLimit = if ($Area -eq 'Product' -and [string]::IsNullOrWhiteSpace($Query)) { 100 } else { $Limit }
 $queryArguments = @{
     Action = 'query'

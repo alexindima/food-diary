@@ -422,6 +422,14 @@ Build or incrementally refresh the graph:
 ./.llm-wiki/wiki.ps1 graph-build
 ```
 
+Backend-only query facades may cold-bootstrap the same database without the
+frontend `typescript` package. This reduced refresh is intentionally internal:
+it sets `typescript_projection_complete=false`, so a later frontend or broad
+context query must run a full build before using TypeScript candidates. A full
+build checks for the TypeScript compiler before scanning and fails fast with the
+dependency recovery command. Explicit `-CompiledIndexSource Json` remains a
+diagnostic baseline selected by the caller, never an automatic fallback.
+
 The first build scans tracked and untracked C#, TypeScript, HTML, and project
 files. C# declarations, identifier references, inheritance, method calls,
 object construction, DI, mediator, HTTP, and migration relations are extracted

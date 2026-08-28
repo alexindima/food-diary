@@ -125,6 +125,8 @@ foreach ($symbol in $criticalSymbols) {
         line = $symbol.line
         testReferenceCount = $references.Count
         testReferences = $references
+        coverageKind = $(if ($references.Count -gt 0) { 'direct-symbol-reference' } else { 'none' })
+        coveredThrough = @()
     })
 }
 
@@ -144,7 +146,39 @@ foreach ($tool in $wikiTools) {
         line = 1
         testReferenceCount = $references.Count
         testReferences = $references
+        coverageKind = $(if ($references.Count -gt 0) { 'direct-symbol-reference' } else { 'none' })
+        coveredThrough = @()
     })
+}
+
+# Internal helpers often receive behavioral coverage through a tested public
+# handler or validator that calls them. Attribute that evidence explicitly
+# instead of reporting an exact-name false positive, while preserving the
+# distinction from direct symbol references.
+$productionSourceFiles = @(
+    $repositoryFiles |
+        Where-Object { $_.extension -eq '.cs' -and $_.path -notmatch '(^|/)tests/' } |
+        ForEach-Object { [pscustomobject]@{ path = $_.path; content = [IO.File]::ReadAllText($_.fullPath) } }
+)
+foreach ($coverage in @($symbolCoverage | Where-Object testReferenceCount -eq 0)) {
+    $consumerCoverage = @(
+        foreach ($sourceFile in $productionSourceFiles) {
+            if ($sourceFile.path -eq $coverage.path -or $sourceFile.content.IndexOf($coverage.name, [StringComparison]::Ordinal) -lt 0) { continue }
+            foreach ($consumer in @($symbolCoverage | Where-Object { $_.path -eq $sourceFile.path -and $_.testReferenceCount -gt 0 })) {
+                [pscustomobject]@{ symbol = $consumer.name; path = $consumer.path; testReferences = @($consumer.testReferences) }
+            }
+        }
+    )
+    $inheritedReferences = @(
+        $consumerCoverage |
+            ForEach-Object { @($_.testReferences) } |
+            Sort-Object -Unique
+    )
+    if ($inheritedReferences.Count -eq 0) { continue }
+    $coverage.testReferenceCount = $inheritedReferences.Count
+    $coverage.testReferences = $inheritedReferences
+    $coverage.coverageKind = 'tested-consumer-reference'
+    $coverage.coveredThrough = @($consumerCoverage | Select-Object symbol, path -Unique)
 }
 
 $symbolCoverageByPath = [System.Collections.Generic.Dictionary[string, System.Collections.Generic.List[object]]]::new(
@@ -207,7 +241,7 @@ $unreferencedSymbols = @($symbolCoverage | Where-Object testReferenceCount -eq 0
 $result = [ordered]@{
     schemaVersion = 2
     semantics = [ordered]@{
-        testReferenceCoverage = 'A symbol name appears in at least one test source file. This is not execution or line coverage.'
+        testReferenceCoverage = 'A symbol name appears in a test source file, or a directly tested production symbol references the helper. Coverage kind distinguishes direct from consumer-attributed evidence; neither is execution or line coverage.'
         structuralRiskScore = 'nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5'
     }
     summary = [ordered]@{

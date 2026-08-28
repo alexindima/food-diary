@@ -7,6 +7,7 @@ Major parts:
 - `src/app` - primary web application.
 - `projects/fooddiary-admin` - admin Angular application.
 - `projects/fd-ui-kit` - reusable UI primitives, visual tokens, Storybook documentation.
+- `projects/fd-tour` - reusable guided-tour engine and host integration.
 
 ## Main App Structure
 
@@ -46,6 +47,11 @@ Rules:
 - Do not deep-import `projects/fd-ui-kit/src/lib/**`.
 - Prefer adding/fixing shared UI behavior in the UI kit over repeated app-level overrides.
 - Update Storybook docs/examples when UI kit APIs, token groups, or visual primitives change.
+
+## Tour Engine
+Use `fd-tour` for reusable guided-tour orchestration. Keep product-specific tour
+content in the consuming application and keep the library's public API,
+animation behavior, and persistence contracts covered by its dedicated tests.
 
 ## Angular Conventions
 Follow the official Angular conventions reflected in ESLint and `AGENTS.md`:

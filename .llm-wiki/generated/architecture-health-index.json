@@ -8,11 +8,11 @@
     "moduleCycleNodes": 0,
     "backendBusinessModules": 33,
     "moduleHotspotReviewCandidates": 0,
-    "ambiguousBackendContracts": 3,
+    "ambiguousBackendContracts": 0,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 151,
-    "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 26,
+    "componentsWithoutDirectSpecs": 128,
+    "criticalSymbolsWithoutTestReferences": 17,
     "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
@@ -238,61 +238,7 @@
       "role": "aggregate-owner"
     }
   ],
-  "ambiguousBackendContracts": [
-    {
-      "name": "InitializerCommand",
-      "roles": [
-        "Command"
-      ],
-      "kinds": [
-        "record"
-      ],
-      "areas": [
-        "FoodDiary",
-        "MailInbox",
-        "MailRelay"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Initializer/InitializerCommand.cs",
-        "MailInbox/FoodDiary.MailInbox.Initializer/InitializerCommand.cs",
-        "MailRelay/FoodDiary.MailRelay.Initializer/InitializerCommand.cs"
-      ],
-      "ambiguous": true
-    },
-    {
-      "name": "IRequest",
-      "roles": [
-        "Request"
-      ],
-      "kinds": [
-        "interface"
-      ],
-      "areas": [
-        "Shared"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/IRequest.cs"
-      ],
-      "ambiguous": true
-    },
-    {
-      "name": "MailRelayMappedRequest",
-      "roles": [
-        "Request"
-      ],
-      "kinds": [
-        "class",
-        "record"
-      ],
-      "areas": [
-        "MailRelay"
-      ],
-      "definitionPaths": [
-        "MailRelay/FoodDiary.MailRelay.Presentation/Controllers/MailRelayMappedRequest.cs"
-      ],
-      "ambiguous": true
-    }
-  ],
+  "ambiguousBackendContracts": [],
   "unconsumedBackendContracts": [],
   "selectorUnreferencedComponents": [
     {
@@ -493,7 +439,7 @@
       "feature": "auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/mobile-login/mobile-login.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/mobile-login/mobile-login.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/auth/pages/mobile-login/mobile-login.spec.ts"
     },
     {
       "class": "PasswordResetComponent",
@@ -509,7 +455,7 @@
       "feature": "auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.spec.ts"
     },
     {
       "class": "CycleCurrentCardComponent",
@@ -1859,26 +1805,6 @@
           "required": true
         }
       ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "MobileLoginComponent",
-      "selector": "fd-mobile-login",
-      "feature": "auth",
-      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/mobile-login/mobile-login.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/mobile-login/mobile-login.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "RequiredPasswordChangeComponent",
-      "selector": "fd-required-password-change",
-      "feature": "auth",
-      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.html",
-      "inputs": [],
       "outputs": [],
       "specPath": null
     },
@@ -5306,15 +5232,9 @@
       "path": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
       "line": 7,
       "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "BillingWebhookEventValidator",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
-      "line": 6,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "EnqueueMailRelayEmailCommandValidator",
@@ -5322,7 +5242,9 @@
       "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "ExchangeAdminImpersonationCommandValidator",
@@ -5330,7 +5252,9 @@
       "path": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "GetMailRelayDeliveryEventsQueryValidator",
@@ -5338,7 +5262,9 @@
       "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "GetMailRelayMessageDetailsQueryValidator",
@@ -5346,7 +5272,9 @@
       "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "GetMailRelaySuppressionsQueryValidator",
@@ -5354,7 +5282,9 @@
       "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "GetNotificationPreferencesQueryValidator",
@@ -5362,7 +5292,9 @@
       "path": "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "GetProfileOverviewQueryValidator",
@@ -5370,7 +5302,9 @@
       "path": "FoodDiary.Application.Users/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "IngestMailRelayDeliveryEventCommandValidator",
@@ -5378,7 +5312,9 @@
       "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "MealAiItemInputValidator",
@@ -5386,47 +5322,9 @@
       "path": "FoodDiary.Application.Meals/Common/Validators/MealAiItemInputValidator.cs",
       "line": 6,
       "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "MealAiSessionInputValidator",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Meals/Common/Validators/MealAiSessionInputValidator.cs",
-      "line": 6,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "OptionalEntityIdValidator",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Internal/Validation/OptionalEntityIdValidator.cs",
-      "line": 5,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "OptionalEntityIdValidator",
-      "role": "Validator",
-      "path": "FoodDiary.Application.MealPlanning/Common/Validation/OptionalEntityIdValidator.cs",
-      "line": 5,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "OptionalEntityIdValidator",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Meals/Common/Validation/OptionalEntityIdValidator.cs",
-      "line": 5,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "ProductUpdateLimitValidator",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
-      "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "RecipeIngredientInputValidator",
@@ -5434,31 +5332,9 @@
       "path": "FoodDiary.Application.Recipes/Common/Validators/RecipeIngredientInputValidator.cs",
       "line": 5,
       "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "RecipeStepInputValidator",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Common/Validators/RecipeStepInputValidator.cs",
-      "line": 5,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "ShoppingListItemInputValidator",
-      "role": "Validator",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListItemInputValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "TelegramAuthTimestampValidator",
-      "role": "Validator",
-      "path": "FoodDiary.Integrations/Authentication/TelegramAuthTimestampValidator.cs",
-      "line": 2,
-      "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "UpdateFavoriteProductCommandValidator",
@@ -5466,7 +5342,9 @@
       "path": "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "Find-LlmWikiIntentOwnership",
@@ -5474,7 +5352,9 @@
       "path": ".llm-wiki/tools/Find-LlmWikiIntentOwnership.ps1",
       "line": 1,
       "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "Find-LlmWikiTraceCandidates",
@@ -5482,7 +5362,9 @@
       "path": ".llm-wiki/tools/Find-LlmWikiTraceCandidates.ps1",
       "line": 1,
       "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "LlmWikiContextScoring",
@@ -5490,7 +5372,9 @@
       "path": ".llm-wiki/tools/LlmWikiContextScoring.ps1",
       "line": 1,
       "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "LlmWikiResearchPrimitives",
@@ -5498,7 +5382,9 @@
       "path": ".llm-wiki/tools/LlmWikiResearchPrimitives.ps1",
       "line": 1,
       "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     },
     {
       "name": "Read-LlmWikiCompiledIndex",
@@ -5506,28 +5392,30 @@
       "path": ".llm-wiki/tools/Read-LlmWikiCompiledIndex.ps1",
       "line": 1,
       "testReferenceCount": 0,
-      "testReferences": []
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
     }
   ],
   "explicitDebtMarkers": [
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 196,
+      "line": 230,
       "marker": "TODO"
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 196,
+      "line": 230,
       "marker": "FIXME"
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 196,
+      "line": 230,
       "marker": "HACK"
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 196,
+      "line": 230,
       "marker": "SuppressMessage"
     },
     {

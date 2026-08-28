@@ -1,10 +1,11 @@
-import { isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, type ElementRef, inject, PLATFORM_ID, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
+
+import { BrowserWindowService } from '../../../shared/platform/browser-window.service';
 
 @Component({
     selector: 'fd-barcode-scanner',
@@ -16,8 +17,7 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 export class BarcodeScannerComponent {
     private readonly dialogRef = inject(FdUiDialogRef<BarcodeScannerComponent, string | null>);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly platformId = inject(PLATFORM_ID);
-    private readonly isBrowser = isPlatformBrowser(this.platformId);
+    private readonly browserWindow = inject(BrowserWindowService);
     private readonly videoRef = viewChild<ElementRef<HTMLVideoElement>>('video');
 
     protected readonly isCameraReady = signal(false);
@@ -25,31 +25,30 @@ export class BarcodeScannerComponent {
     protected readonly isUnsupported = signal(false);
 
     private stream: MediaStream | null = null;
-    private animationFrameId = 0;
+    private animationFrameId: number | null = null;
     private readonly detector: BarcodeDetector | null = null;
 
     public constructor() {
-        if (!this.isBrowser || !('BarcodeDetector' in window)) {
+        const detector = this.browserWindow.createBarcodeDetector([
+            'ean_13',
+            'ean_8',
+            'upc_a',
+            'upc_e',
+            'code_128',
+            'code_39',
+            'code_93',
+            'codabar',
+            'itf',
+            'qr_code',
+            'data_matrix',
+            'pdf417',
+            'aztec',
+        ]);
+        if (detector === null) {
             this.isUnsupported.set(true);
             return;
         }
-        this.detector = new BarcodeDetector({
-            formats: [
-                'ean_13',
-                'ean_8',
-                'upc_a',
-                'upc_e',
-                'code_128',
-                'code_39',
-                'code_93',
-                'codabar',
-                'itf',
-                'qr_code',
-                'data_matrix',
-                'pdf417',
-                'aztec',
-            ],
-        });
+        this.detector = detector;
         void this.startCameraAsync();
         this.destroyRef.onDestroy(() => {
             this.stopCamera();
@@ -63,7 +62,7 @@ export class BarcodeScannerComponent {
 
     private async startCameraAsync(): Promise<void> {
         try {
-            this.stream = await navigator.mediaDevices.getUserMedia({
+            this.stream = await this.browserWindow.getUserMediaAsync({
                 video: { facingMode: 'environment' },
             });
             // Wait for next tick so viewChild is available
@@ -87,11 +86,7 @@ export class BarcodeScannerComponent {
             return;
         }
 
-        if (!this.isBrowser) {
-            return;
-        }
-
-        this.animationFrameId = window.requestAnimationFrame(() => {
+        this.animationFrameId = this.browserWindow.requestAnimationFrame(() => {
             void this.scanFrameAsync(video);
         });
     }
@@ -117,9 +112,8 @@ export class BarcodeScannerComponent {
     }
 
     private stopCamera(): void {
-        if (this.isBrowser) {
-            window.cancelAnimationFrame(this.animationFrameId);
-        }
+        this.browserWindow.cancelAnimationFrame(this.animationFrameId);
+        this.animationFrameId = null;
         this.stream?.getTracks().forEach(track => {
             track.stop();
         });

@@ -77,6 +77,7 @@ beforeEach(() => {
 
     documentLang = null;
     mockDocument = {
+        defaultView: window,
         location: { hostname: 'fooddiary.club' },
         documentElement: {
             setAttribute: vi.fn((name: string, value: string) => {

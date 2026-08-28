@@ -1,9 +1,12 @@
-import { Service } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { inject, Service } from '@angular/core';
 
 type StorageScope = 'local' | 'session';
 
 @Service()
 export class BrowserStorageService {
+    private readonly document = inject(DOCUMENT);
+
     public getItem(scope: StorageScope, key: string): string | null {
         try {
             return this.getStorage(scope)?.getItem(key) ?? null;
@@ -51,12 +54,9 @@ export class BrowserStorageService {
     }
 
     private getStorage(scope: StorageScope): Storage | null {
-        if (typeof window === 'undefined') {
-            return null;
-        }
-
         try {
-            return scope === 'local' ? window.localStorage : window.sessionStorage;
+            const view = this.document.defaultView;
+            return view === null ? null : scope === 'local' ? view.localStorage : view.sessionStorage;
         } catch {
             return null;
         }

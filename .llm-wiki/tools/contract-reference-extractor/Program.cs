@@ -219,7 +219,7 @@ sealed class MultiPatternScanner {
 sealed record ScannerInput(string[] Paths, string[]? Names = null, ContractInput[]? Contracts = null);
 sealed record FileReferenceResult(string Path, IReadOnlyList<ReferenceCount> References);
 sealed record ReferenceCount(string Name, int Count);
-sealed record ContractInput(string Name, string[] Roles, string[] Kinds, string[] Areas, string[] DefinitionPaths, bool Ambiguous);
+sealed record ContractInput(string Name, string[] Roles, string[] Kinds, string[] Areas, string[] DefinitionPaths, bool Ambiguous, string CollisionClassification);
 sealed record ConsumerEdge(string Contract, string[] Roles, string[] DefinitionPaths, string ConsumerArea, string ConsumerPath, bool IsTest, int ReferenceCount);
 sealed record BackendSummary(int Contracts, int AmbiguousContracts, int ConsumerEdges, int ProductionConsumerEdges, int TestConsumerEdges, int ConsumedContracts, int UnconsumedContracts);
 sealed record BackendIndex(int SchemaVersion, BackendSummary Summary, ContractInput[] Contracts, ConsumerEdge[] ConsumerEdges);

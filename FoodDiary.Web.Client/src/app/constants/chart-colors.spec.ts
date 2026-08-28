@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { CHART_COLORS } from './chart-colors';
+import { CHART_COLORS, createChartColorPalette } from './chart-colors';
 
 describe('CHART_COLORS', () => {
     afterEach(() => {
@@ -12,8 +12,9 @@ describe('CHART_COLORS', () => {
         document.documentElement.style.setProperty('--fd-color-chart-proteins', 'rgb(1, 2, 3)');
         document.documentElement.style.setProperty('--fd-color-primary-600', '#123456');
 
-        expect(CHART_COLORS.proteins).toBe('rgb(1, 2, 3)');
-        expect(CHART_COLORS.primaryLine).toBe('#123456');
+        const palette = createChartColorPalette(document);
+        expect(palette.proteins).toBe('rgb(1, 2, 3)');
+        expect(palette.primaryLine).toBe('#123456');
     });
 
     it('should fall back when CSS variables are not defined', () => {

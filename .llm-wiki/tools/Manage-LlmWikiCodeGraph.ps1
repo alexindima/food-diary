@@ -30,6 +30,7 @@ param(
     [ValidateRange(1, 500)]
     [int]$Limit = 50,
     [switch]$Force,
+    [switch]$BackendOnlyRefresh,
     [switch]$SkipRefresh,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'
@@ -39,7 +40,9 @@ $ErrorActionPreference = 'Stop'
 $scriptPath = Join-Path $PSScriptRoot 'code-graph.mjs'
 $insideReadOnlySnapshot = -not [string]::IsNullOrWhiteSpace([string]$env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT)
 if ($Action -notin @('build', 'build-plan', 'status') -and -not $SkipRefresh -and -not $insideReadOnlySnapshot) {
-    $refreshOutput = & node $scriptPath build
+    $refreshArguments = @($scriptPath, 'build')
+    if ($BackendOnlyRefresh) { $refreshArguments += '--skip-typescript=true' }
+    $refreshOutput = & node @refreshArguments
     if ($LASTEXITCODE -ne 0) { throw "Code graph incremental refresh failed with exit code $LASTEXITCODE." }
 }
 $arguments = @($scriptPath, $Action, "--limit=$Limit")
@@ -67,6 +70,7 @@ if ($normalizedChangedPaths.Length -gt 0) { $arguments += "--path=$($normalizedC
 $normalizedRelationKinds = [string[]]@($RelationKind | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
 if ($normalizedRelationKinds.Length -gt 0) { $arguments += "--kind=$($normalizedRelationKinds -join ';')" }
 if ($Force) { $arguments += '--force=true' }
+if ($BackendOnlyRefresh) { $arguments += '--skip-typescript=true' }
 $json = & node @arguments
 if ($LASTEXITCODE -ne 0) { throw "Code graph action '$Action' failed with exit code $LASTEXITCODE." }
 $result = $json | ConvertFrom-Json

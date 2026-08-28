@@ -19,7 +19,7 @@ $groups = [ordered]@{}
 $diagnostics = $null
 if ($CompiledIndexSource -eq 'Sqlite') {
     . (Join-Path $PSScriptRoot 'LlmWikiInProcessSqlite.ps1')
-    $reader = Initialize-LlmWikiInProcessSqlite
+    $reader = Initialize-LlmWikiInProcessSqlite -Projection architecture-health
     $resultJson = [LlmWiki.SqliteReader.CompiledIndexReader]::QueryArchitectureHealth(
         $repositoryRoot,
         $View,

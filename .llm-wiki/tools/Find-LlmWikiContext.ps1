@@ -128,13 +128,27 @@ function Select-ContextRecordsWithScopeCoverage([object[]]$Records, [string[]]$S
     return @($selected | Sort-Object rank, path)
 }
 if ($CompiledIndexSource -eq 'Sqlite') {
-    $graphStatus = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
+    $graphManager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'
+    $graphStatus = & $graphManager `
         -Action status `
         -SkipRefresh `
         -Format Json | ConvertFrom-Json
+    $requiresTypeScriptProjection = $ChangeType -in @('Any', 'Frontend')
+    $typescriptProjectionComplete = $null -ne $graphStatus.typescriptProjectionComplete -and [bool]$graphStatus.typescriptProjectionComplete
+    if (-not [bool]$graphStatus.changeSetFresh -or
+        [int]$graphStatus.searchDocuments -eq 0 -or
+        ($requiresTypeScriptProjection -and -not $typescriptProjectionComplete)) {
+        $backendOnlyRefresh = $ChangeType -in @('Api', 'Backend', 'Database', 'Tests')
+        try {
+            & $graphManager -Action build -BackendOnlyRefresh:$backendOnlyRefresh -Format Json | Out-Null
+        } catch {
+            throw "SQLite context projection could not be prepared. $($_.Exception.Message) Use explicit -CompiledIndexSource Json only when a read-only baseline is acceptable."
+        }
+        $graphStatus = & $graphManager -Action status -SkipRefresh -Format Json | ConvertFrom-Json
+    }
     $indexFresh = [bool]$graphStatus.changeSetFresh
     $searchLimit = [Math]::Min(100, [Math]::Max(50, $Limit * 4))
-    $sqlResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
+    $sqlResult = & $graphManager `
         -Action search `
         -Query $searchText `
         -Module $Module `

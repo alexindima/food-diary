@@ -15,6 +15,7 @@ import { type SeoData, SeoService } from '../services/seo.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { NotificationRealtimeService } from '../shared/notifications/notification-realtime.service';
 import { PushNotificationService } from '../shared/notifications/push-notification.service';
+import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { ThemeService } from '../shared/theme/theme.service';
 import { parseRouteSeoData } from './app-lib/app-seo-data.utils';
 import { SidebarComponent } from './sidebar/sidebar';
@@ -49,6 +50,7 @@ export class AppComponent {
     private readonly routeLoadingService = inject(RouteLoadingService);
     private readonly themeService = inject(ThemeService);
     private readonly document = inject(DOCUMENT);
+    private readonly browserWindow = inject(BrowserWindowService);
 
     protected isAuthenticated = this.authService.isAuthenticated;
     protected isImpersonating = this.authService.isImpersonating;
@@ -64,7 +66,7 @@ export class AppComponent {
     });
 
     public constructor() {
-        if (typeof window !== 'undefined') {
+        if (this.browserWindow.isAvailable()) {
             this.injector.get(NotificationRealtimeService);
             this.injector.get(PushNotificationService);
         }

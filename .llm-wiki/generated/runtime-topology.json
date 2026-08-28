@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "c347c45be976e734fbfb69f48718e298b7982cc2737c0ad9ea03444df2782d13",
+    "sourceFingerprint": "766c3ac36503fdeeff5ee10b7befbf025275c32cbff1558a3744c69a221a2c1b",
     "sourceFileCount": 3471
   },
   "summary": {
@@ -105,9 +105,9 @@
         "MailRelayClient__BaseUrl"
       ],
       "volumeMounts": [],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
+      "readOnlyRootFilesystem": true,
+      "dropsAllCapabilities": true,
+      "noNewPrivileges": true,
       "evidenceStatus": "declared-in-repository"
     },
     {
@@ -230,9 +230,9 @@
       "volumeMounts": [
         "mailinbox-postgres-client-ca:/run/mailinbox-postgres-ca:ro"
       ],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
+      "readOnlyRootFilesystem": true,
+      "dropsAllCapabilities": true,
+      "noNewPrivileges": true,
       "evidenceStatus": "declared-in-repository"
     },
     {
@@ -301,9 +301,9 @@
         "ConnectionStrings__DefaultConnection"
       ],
       "volumeMounts": [],
-      "readOnlyRootFilesystem": false,
-      "dropsAllCapabilities": false,
-      "noNewPrivileges": false,
+      "readOnlyRootFilesystem": true,
+      "dropsAllCapabilities": true,
+      "noNewPrivileges": true,
       "evidenceStatus": "declared-in-repository"
     },
     {

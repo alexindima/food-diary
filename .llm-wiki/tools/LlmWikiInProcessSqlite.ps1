@@ -2,7 +2,15 @@ $llmWikiInProcessSqliteCacheKey = 'FoodDiary.LlmWiki.InProcessSqlite.State'
 
 function Initialize-LlmWikiInProcessSqlite {
     [CmdletBinding()]
-    param()
+    param(
+        [ValidateSet('', 'architecture-health', 'domain', 'runtime')]
+        [string]$Projection = ''
+    )
+
+    if (-not [string]::IsNullOrWhiteSpace($Projection)) {
+        . (Join-Path $PSScriptRoot 'Ensure-LlmWikiSqliteProjection.ps1')
+        Ensure-LlmWikiSqliteProjection -Category $Projection
+    }
 
     if ($PSVersionTable.PSVersion.Major -lt 7) {
         throw 'In-process SQLite Wiki queries require PowerShell 7 (pwsh).'

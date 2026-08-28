@@ -15,6 +15,7 @@ import {
     type NutritionFormModel,
     type NutritionMacroState,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
+import { ChartColorsService } from '../../../../../shared/theme/chart-colors.service';
 import { MealDetailFacade } from '../../../lib/detail/meal-detail.facade';
 import type { Meal } from '../../../models/meal.data';
 import { MEAL_DETAIL_MACRO_SUMMARY_LIMIT } from '../meal-detail-lib/meal-detail.config';
@@ -75,7 +76,7 @@ export class MealDetailComponent {
 
     public constructor() {
         const meal = inject<Meal>(FD_UI_DIALOG_DATA);
-        const viewModel = buildMealDetailViewModel(meal, key => this.translate.instant(key));
+        const viewModel = buildMealDetailViewModel(meal, key => this.translate.instant(key), inject(ChartColorsService).palette);
 
         this.meal = meal;
         this.calories = viewModel.calories;

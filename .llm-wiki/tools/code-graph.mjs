@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto';
+import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { basename, dirname, extname, resolve } from 'node:path';
@@ -7,13 +8,16 @@ import { DatabaseSync } from 'node:sqlite';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
-const parserVersion = '13-security-config-context-v1';
+const parserVersion = '14-backend-only-bootstrap-v1';
 const contextSearchSchemaVersion = '5';
 const compiledIndexSchemaVersion = '4';
 const queryDocumentSchemaVersion = '9';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
 const roslynDll = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll');
 const typescriptExtractor = resolve(repositoryRoot, '.llm-wiki/tools/typescript-extractor.mjs');
+const dependencyRoot = process.env.LLM_WIKI_READ_ONLY_SOURCE_ROOT
+  ? resolve(process.env.LLM_WIKI_READ_ONLY_SOURCE_ROOT)
+  : repositoryRoot;
 const contextSearchRankingPath = resolve(repositoryRoot, '.llm-wiki/policies/context-search-ranking.json');
 const contextSearchRankingText = readFileSync(contextSearchRankingPath, 'utf8');
 const contextSearchRanking = JSON.parse(contextSearchRankingText);
@@ -147,6 +151,17 @@ function extractTypeScript(candidates) {
   });
   if (child.status !== 0) throw new Error(`TypeScript extractor failed (${child.status}): ${child.stderr}`);
   return new Map(JSON.parse(child.stdout).map((result) => [result.path, result]));
+}
+
+function assertTypeScriptCompilerAvailable() {
+  try {
+    createRequire(resolve(dependencyRoot, 'FoodDiary.Web.Client/package.json')).resolve('typescript');
+  } catch {
+    throw new Error(
+      'TypeScript extraction prerequisite is missing. Run `npm ci` in FoodDiary.Web.Client for a full graph build, '
+      + 'or use a backend-only Wiki route / explicit `-CompiledIndexSource Json` for read-only diagnostics.',
+    );
+  }
 }
 
 let repositoryPathsCache;
@@ -1022,7 +1037,7 @@ function refreshContextSearch(database) {
   };
 }
 
-function build(database, force = false) {
+function build(database, force = false, skipTypeScript = false) {
   const started = performance.now();
   const startingChangeSet = changeSetSnapshot();
   const storedParserVersion = database.prepare("SELECT value FROM metadata WHERE key='parser_version'").get()?.value;
@@ -1045,6 +1060,7 @@ function build(database, force = false) {
   const candidates = [];
 
   for (const path of knownPaths) {
+    if (skipTypeScript && languageOf(path) === 'typescript') continue;
     const absolutePath = resolve(repositoryRoot, path);
     const stat = statSync(absolutePath);
     const prior = existing.get(path);
@@ -1062,8 +1078,10 @@ function build(database, force = false) {
     }
     candidates.push({ path, stat, prior, text, contentHash, metadataOnly: false });
   }
+  const typescriptCandidates = candidates.filter((item) => !item.metadataOnly && languageOf(item.path) === 'typescript');
+  if (!skipTypeScript && typescriptCandidates.length > 0) assertTypeScriptCompilerAvailable();
   const roslynResults = extractCSharp(database, candidates.filter((item) => !item.metadataOnly && languageOf(item.path) === 'csharp'), knownPaths);
-  const typescriptResults = extractTypeScript(candidates.filter((item) => !item.metadataOnly && languageOf(item.path) === 'typescript'));
+  const typescriptResults = skipTypeScript ? new Map() : extractTypeScript(typescriptCandidates);
 
   database.exec('BEGIN IMMEDIATE');
   try {
@@ -1090,6 +1108,7 @@ function build(database, force = false) {
     }
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('parser_version', parserVersion);
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('updated_at_utc', new Date().toISOString());
+    database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('typescript_projection_complete', skipTypeScript ? 'false' : 'true');
     queryCategoriesRefreshed = refreshQueryLayer(database);
     compiledIndexes = refreshCompiledIndexes(database);
     contextSearch = refreshContextSearch(database);
@@ -2278,6 +2297,25 @@ function searchContext(database, query, limit, filters = {}) {
     const searchablePath = expandSearchText(path).toLowerCase();
     const searchableIdentity = `${searchablePath} ${normalizedTitle}`;
     const searchableFileIdentity = expandSearchText(basename(path)).toLowerCase();
+    const topLevelModuleIdentity = normalizedPath.split('/')[0]
+      .replace(/^fooddiary\.application\./, '')
+      .replace(/^fooddiary\./, '')
+      .replace(/^mail(?:inbox|relay)\/fooddiary\.mail(?:inbox|relay)\./, '')
+      .replaceAll(/[^\p{L}\p{N}]/gu, '');
+    const normalizedDirectTerms = directTerms.map((term) => term.replaceAll(/[^\p{L}\p{N}]/gu, ''));
+    const moduleIdentityMinimumLength = Number(contextSearchRanking.moduleIdentityMinimumLength ?? 8);
+    const moduleIdentityLeadingTermCount = Number(contextSearchRanking.moduleIdentityLeadingTermCount ?? 1);
+    const leadingDirectTerms = normalizedDirectTerms.slice(0, moduleIdentityLeadingTermCount);
+    if (topLevelModuleIdentity.length >= moduleIdentityMinimumLength && leadingDirectTerms.includes(topLevelModuleIdentity)) {
+      score += Number(contextSearchRanking.moduleIdentityScore ?? 0);
+      reasons.push(`exact module identity ${topLevelModuleIdentity}`);
+    }
+    const adminIntentTerms = contextSearchRanking.adminIntentTerms ?? ['admin', 'administration'];
+    const hasAdminIntent = boostTerms.some((term) => adminIntentTerms.some((intent) => term.startsWith(intent)));
+    if (normalizedPath.includes('admin') && !hasAdminIntent) {
+      score -= Number(contextSearchRanking.unrequestedAdminPenalty ?? 0);
+      reasons.push('admin candidate penalty without admin intent');
+    }
     let matchedRankingPolicy = false;
     const identityMatches = terms.filter((term) =>
       term.length >= Number(affinity.minimumTermLength ?? 3) && searchableIdentity.includes(term));
@@ -2633,7 +2671,7 @@ try {
       database = opened.database;
       try {
         const completeBuild = () => {
-          const buildResult = build(database, options.force === 'true');
+          const buildResult = build(database, options.force === 'true', options['skip-typescript'] === 'true');
           return {
             ...buildResult,
             graphDependencyFingerprint: publishGraphDependencyFingerprint(databasePath, buildResult),
@@ -2715,6 +2753,8 @@ try {
     tokens: database.prepare('SELECT COUNT(*) count FROM file_tokens').get().count,
     typedEdges: database.prepare('SELECT COUNT(*) count FROM typed_edges').get().count,
     searchDocuments: database.prepare('SELECT COUNT(*) count FROM context_search').get().count,
+    queryCategories: database.prepare('SELECT category, COUNT(*) count FROM query_documents GROUP BY category ORDER BY category').all(),
+    typescriptProjectionComplete: database.prepare("SELECT value FROM metadata WHERE key='typescript_projection_complete'").get()?.value === 'true',
     searchFingerprint: database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value ?? null,
     changeSetFingerprint: database.prepare("SELECT value FROM metadata WHERE key='change_set_fingerprint'").get()?.value ?? null,
     changeSetGitHead: database.prepare("SELECT value FROM metadata WHERE key='change_set_git_head'").get()?.value ?? null,

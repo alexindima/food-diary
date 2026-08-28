@@ -12,7 +12,9 @@ const CHART_COLOR_VARIABLES = {
     warning: '--fd-color-orange-500',
 } as const;
 
-const CHART_COLOR_FALLBACKS: Record<keyof typeof CHART_COLOR_VARIABLES, string> = {
+export type ChartColorPalette = Record<keyof typeof CHART_COLOR_VARIABLES, string>;
+
+const CHART_COLOR_FALLBACKS: ChartColorPalette = {
     proteins: '#2d9cdb',
     fats: '#f2c94c',
     carbs: '#27ae60',
@@ -26,51 +28,33 @@ const CHART_COLOR_FALLBACKS: Record<keyof typeof CHART_COLOR_VARIABLES, string> 
     warning: '#f97316',
 };
 
-function readCssColor(variable: string, fallback: string): string {
-    if (typeof window === 'undefined' || typeof document === 'undefined') {
+function readCssColor(ownerDocument: Document | null, variable: string, fallback: string): string {
+    const view = ownerDocument?.defaultView;
+    if (ownerDocument === null || view === null || view === undefined) {
         return fallback;
     }
 
-    const value = window.getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
+    const value = view.getComputedStyle(ownerDocument.documentElement).getPropertyValue(variable).trim();
     return value.length > 0 ? value : fallback;
 }
 
-function getChartColor(key: keyof typeof CHART_COLOR_VARIABLES): string {
-    return readCssColor(CHART_COLOR_VARIABLES[key], CHART_COLOR_FALLBACKS[key]);
+export function createChartColorPalette(ownerDocument: Document | null): ChartColorPalette {
+    const readColor = (key: keyof typeof CHART_COLOR_VARIABLES): string =>
+        readCssColor(ownerDocument, CHART_COLOR_VARIABLES[key], CHART_COLOR_FALLBACKS[key]);
+
+    return {
+        proteins: readColor('proteins'),
+        fats: readColor('fats'),
+        carbs: readColor('carbs'),
+        fiber: readColor('fiber'),
+        alcohol: readColor('alcohol'),
+        calories: readColor('calories'),
+        radarBackground: readColor('radarBackground'),
+        radarBorder: readColor('radarBorder'),
+        primaryLine: readColor('primaryLine'),
+        primaryFill: readColor('primaryFill'),
+        warning: readColor('warning'),
+    };
 }
 
-export const CHART_COLORS = {
-    get proteins(): string {
-        return getChartColor('proteins');
-    },
-    get fats(): string {
-        return getChartColor('fats');
-    },
-    get carbs(): string {
-        return getChartColor('carbs');
-    },
-    get fiber(): string {
-        return getChartColor('fiber');
-    },
-    get alcohol(): string {
-        return getChartColor('alcohol');
-    },
-    get calories(): string {
-        return getChartColor('calories');
-    },
-    get radarBackground(): string {
-        return getChartColor('radarBackground');
-    },
-    get radarBorder(): string {
-        return getChartColor('radarBorder');
-    },
-    get primaryLine(): string {
-        return getChartColor('primaryLine');
-    },
-    get primaryFill(): string {
-        return getChartColor('primaryFill');
-    },
-    get warning(): string {
-        return getChartColor('warning');
-    },
-};
+export const CHART_COLORS: ChartColorPalette = { ...CHART_COLOR_FALLBACKS };

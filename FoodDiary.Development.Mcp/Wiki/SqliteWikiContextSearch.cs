@@ -428,6 +428,25 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             string searchableIdentity = $"{searchablePath} {normalizedTitle}";
             string searchableFileIdentity =
                 ExpandSearchText(Path.GetFileName(candidate.Path)).ToLowerInvariant();
+            string topLevelModuleIdentity = normalizedPath.Split('/', 2)[0]
+                .Replace("fooddiary.application.", string.Empty, StringComparison.Ordinal)
+                .Replace("fooddiary.", string.Empty, StringComparison.Ordinal);
+            topLevelModuleIdentity = new string([.. topLevelModuleIdentity.Where(char.IsLetterOrDigit)]);
+            string[] normalizedDirectTerms = [.. directQueryTerms.Select(term =>
+                new string([.. term.Where(char.IsLetterOrDigit)]))];
+            if (topLevelModuleIdentity.Length >= policy.ModuleIdentityMinimumLength &&
+                normalizedDirectTerms.Take(policy.ModuleIdentityLeadingTermCount).Contains(
+                    topLevelModuleIdentity,
+                    StringComparer.Ordinal)) {
+                score += policy.ModuleIdentityScore;
+                reasons.Add($"exact module identity {topLevelModuleIdentity}");
+            }
+            bool hasAdminIntent = rankingTerms.Any(term => policy.AdminIntentTerms.Any(intent =>
+                term.StartsWith(intent, StringComparison.Ordinal)));
+            if (normalizedPath.Contains("admin", StringComparison.Ordinal) && !hasAdminIntent) {
+                score -= policy.UnrequestedAdminPenalty;
+                reasons.Add("admin candidate penalty without admin intent");
+            }
             bool matchedRankingPolicy = false;
             string[] identityMatches = [.. queryTerms
                 .Where(term =>
@@ -1029,6 +1048,9 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             policy.NegatedRolePenalty is null ||
             policy.QueryTermExpansions is null ||
             policy.QueryPrefixExpansions is null ||
+            policy.ModuleIdentityMinimumLength < 1 ||
+            policy.ModuleIdentityLeadingTermCount < 1 ||
+            policy.AdminIntentTerms is null ||
             policy.NegatedRoleAlternatives is null ||
             policy.PathBoosts is null ||
             policy.IdentityBoosts is null ||
@@ -1105,6 +1127,11 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         int AgentGuideBoost,
         int CompanionFilePenalty,
         int CrossLayerPenalty,
+        int ModuleIdentityMinimumLength,
+        int ModuleIdentityLeadingTermCount,
+        int ModuleIdentityScore,
+        string[] AdminIntentTerms,
+        int UnrequestedAdminPenalty,
         ConfidenceCalibration ConfidenceCalibration,
         Dictionary<string, string[]> QueryTermExpansions,
         Dictionary<string, string[]> QueryPrefixExpansions,

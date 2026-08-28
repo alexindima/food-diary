@@ -1,7 +1,7 @@
 import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale';
 
 import type { NutritionFormModel, NutritionMacroState } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
-import { CHART_COLORS } from '../../../../../constants/chart-colors';
+import { CHART_COLORS, type ChartColorPalette } from '../../../../../constants/chart-colors';
 import { normalizeMealType } from '../../../../../shared/lib/meal-type.util';
 import { PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { normalizeSatietyLevel } from '../../../../../shared/lib/satiety-level.utils';
@@ -25,7 +25,11 @@ export type MealDetailViewModel = {
     macroBarState: NutritionMacroState;
 };
 
-export function buildMealDetailViewModel(meal: Meal, translate: (key: string) => string): MealDetailViewModel {
+export function buildMealDetailViewModel(
+    meal: Meal,
+    translate: (key: string) => string,
+    colors: ChartColorPalette = CHART_COLORS,
+): MealDetailViewModel {
     const calories = meal.totalCalories;
     const proteins = meal.totalProteins;
     const fats = meal.totalFats;
@@ -45,7 +49,7 @@ export function buildMealDetailViewModel(meal: Meal, translate: (key: string) =>
         preMealSatietyMeta: buildSatietyMeta('before', meal.preMealSatietyLevel, translate),
         postMealSatietyMeta: buildSatietyMeta('after', meal.postMealSatietyLevel, translate),
         itemPreview: buildItemPreview(meal, translate),
-        macroBlocks: buildMacroBlocks({ proteins, fats, carbs, fiber, alcohol }, datasetValues),
+        macroBlocks: buildMacroBlocks({ proteins, fats, carbs, fiber, alcohol }, datasetValues, colors),
         nutritionModel: buildNutritionModel({ calories, proteins, fats, carbs, fiber, alcohol }),
         macroBarState: buildMacroBarState(datasetValues),
     };
@@ -90,41 +94,42 @@ function buildMacroBarState(values: number[]): NutritionMacroState {
 function buildMacroBlocks(
     values: { proteins: number; fats: number; carbs: number; fiber: number; alcohol: number },
     datasetValues: number[],
+    colors: ChartColorPalette,
 ): MealMacroBlock[] {
     return [
         {
             labelKey: 'GENERAL.NUTRIENTS.PROTEIN',
             value: values.proteins,
             unitKey: 'GENERAL.UNITS.G',
-            color: CHART_COLORS.proteins,
+            color: colors.proteins,
             percent: resolveMacroPercent(values.proteins, datasetValues),
         },
         {
             labelKey: 'GENERAL.NUTRIENTS.FAT',
             value: values.fats,
             unitKey: 'GENERAL.UNITS.G',
-            color: CHART_COLORS.fats,
+            color: colors.fats,
             percent: resolveMacroPercent(values.fats, datasetValues),
         },
         {
             labelKey: 'GENERAL.NUTRIENTS.CARB',
             value: values.carbs,
             unitKey: 'GENERAL.UNITS.G',
-            color: CHART_COLORS.carbs,
+            color: colors.carbs,
             percent: resolveMacroPercent(values.carbs, datasetValues),
         },
         {
             labelKey: 'GENERAL.NUTRIENTS.FIBER',
             value: values.fiber,
             unitKey: 'GENERAL.UNITS.G',
-            color: CHART_COLORS.fiber,
+            color: colors.fiber,
             percent: resolveMacroPercent(values.fiber, datasetValues),
         },
         {
             labelKey: 'GENERAL.NUTRIENTS.ALCOHOL',
             value: values.alcohol,
             unitKey: 'GENERAL.UNITS.G',
-            color: CHART_COLORS.alcohol,
+            color: colors.alcohol,
             percent: resolveMacroPercent(values.alcohol, datasetValues),
         },
     ];

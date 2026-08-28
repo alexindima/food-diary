@@ -10,6 +10,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { MS_PER_SECOND } from '../../../../shared/lib/time.constants';
 import { UserFacade } from '../../../../shared/lib/user.facade';
+import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
 import { EmailVerificationRealtimeService } from '../../lib/email-verification-realtime.service';
 
 @Component({
@@ -28,6 +29,7 @@ export class EmailVerificationPendingComponent {
     private readonly realtimeService = inject(EmailVerificationRealtimeService);
     private readonly route = inject(ActivatedRoute);
     private readonly resendCooldownSecondsDefault = inject(AUTH_EMAIL_RESEND_COOLDOWN_SECONDS);
+    private readonly browserWindow = inject(BrowserWindowService);
     private readonly shouldAutoResend = this.route.snapshot.queryParamMap.get('autoResend') === 'true';
     private autoResendAttempted = false;
 
@@ -107,18 +109,18 @@ export class EmailVerificationPendingComponent {
 
     private startResendCooldown(seconds = this.resendCooldownSecondsDefault): void {
         this.resendCooldownSeconds.set(seconds);
-        const intervalId = window.setInterval(() => {
+        const intervalId = this.browserWindow.setInterval(() => {
             const remaining = this.resendCooldownSeconds();
             if (remaining <= 1) {
                 this.resendCooldownSeconds.set(0);
-                window.clearInterval(intervalId);
+                this.browserWindow.clearInterval(intervalId);
                 return;
             }
             this.resendCooldownSeconds.set(remaining - 1);
         }, MS_PER_SECOND);
 
         this.destroyRef.onDestroy(() => {
-            window.clearInterval(intervalId);
+            this.browserWindow.clearInterval(intervalId);
         });
     }
 

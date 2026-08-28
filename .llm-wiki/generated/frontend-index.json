@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1574,
-    "symbols": 614,
+    "typescriptFiles": 1577,
+    "symbols": 615,
     "routes": 86,
     "features": 37,
-    "specs": 559,
+    "specs": 561,
     "localeFiles": 5,
     "roles": {
       "Component": 422,
@@ -20,7 +20,7 @@
       "Facade": 53,
       "Other": 17,
       "Pipe": 4,
-      "Service": 106
+      "Service": 107
     }
   },
   "features": [
@@ -292,7 +292,9 @@
         "FoodDiary.Web.Client/src/app/features/auth/lib/email-verification-realtime.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification-pending/email-verification-pending.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/email-verification.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.spec.ts"
+        "FoodDiary.Web.Client/src/app/features/auth/pages/mobile-login/mobile-login.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.spec.ts"
       ]
     },
     {
@@ -2221,7 +2223,7 @@
       "role": "Component",
       "selector": "fd-barcode-scanner",
       "path": "FoodDiary.Web.Client/src/app/components/shared/barcode-scanner/barcode-scanner.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "CardComponent",
@@ -2424,7 +2426,7 @@
       "role": "Component",
       "selector": "fd-nutrients-summary",
       "path": "FoodDiary.Web.Client/src/app/components/shared/nutrients-summary/nutrients-summary.ts",
-      "line": 21
+      "line": 20
     },
     {
       "name": "NutritionEditorMessagesComponent",
@@ -2592,7 +2594,7 @@
       "role": "Component",
       "selector": "fd-auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
-      "line": 46
+      "line": 47
     },
     {
       "name": "AuthDialogComponent",
@@ -2613,7 +2615,7 @@
       "role": "Component",
       "selector": "fd-email-verification-pending",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification-pending/email-verification-pending.ts",
-      "line": 22
+      "line": 23
     },
     {
       "name": "EmailVerificationComponent",
@@ -3656,7 +3658,7 @@
       "role": "Component",
       "selector": "fd-meal-detail",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.ts",
-      "line": 43
+      "line": 44
     },
     {
       "name": "MealAiSessionsComponent",
@@ -3978,7 +3980,7 @@
       "role": "Component",
       "selector": "fd-product-detail",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.ts",
-      "line": 43
+      "line": 44
     },
     {
       "name": "ProductListBaseComponent",
@@ -4335,7 +4337,7 @@
       "role": "Component",
       "selector": "fd-landing-preview-tour",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/landing-preview-tour/landing-preview-tour.ts",
-      "line": 35
+      "line": 36
     },
     {
       "name": "LandingStepsComponent",
@@ -4447,7 +4449,7 @@
       "role": "Component",
       "selector": "fd-recipe-detail",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.ts",
-      "line": 43
+      "line": 44
     },
     {
       "name": "RecipeListFiltersDialogComponent",
@@ -5413,7 +5415,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/platform/browser-storage.service.ts",
-      "line": 6
+      "line": 7
     },
     {
       "name": "BrowserWindowService",
@@ -5449,6 +5451,13 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/state/nutrition-data-invalidation.service.ts",
       "line": 4
+    },
+    {
+      "name": "ChartColorsService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/theme/chart-colors.service.ts",
+      "line": 7
     },
     {
       "name": "ThemeService",
@@ -5490,7 +5499,7 @@
       "role": "Component",
       "selector": "fd-root",
       "path": "FoodDiary.Web.Client/src/app/shell/app.ts",
-      "line": 40
+      "line": 41
     },
     {
       "name": "AdminPanelLauncherService",

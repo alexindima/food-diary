@@ -16,7 +16,7 @@ describe('startSecondsCountdown', () => {
         const target = signal(0);
         const destroyRef = { destroyed: false, onDestroy: vi.fn() };
 
-        startSecondsCountdown(target, 2, destroyRef);
+        startSecondsCountdown(target, 2, destroyRef, createTimerAdapter());
 
         expect(target()).toBe(2);
         vi.advanceTimersByTime(MS_PER_SECOND);
@@ -30,10 +30,19 @@ describe('startSecondsCountdown', () => {
         const target = signal(0);
         const destroyRef = { destroyed: false, onDestroy: vi.fn() };
 
-        const stop = startSecondsCountdown(target, STOP_TEST_SECONDS, destroyRef);
+        const stop = startSecondsCountdown(target, STOP_TEST_SECONDS, destroyRef, createTimerAdapter());
         stop();
         vi.advanceTimersByTime(MS_PER_SECOND);
 
         expect(target()).toBe(STOP_TEST_SECONDS);
     });
 });
+
+function createTimerAdapter(): { setInterval: (callback: () => void, delayMs: number) => number; clearInterval: (id: number) => void } {
+    return {
+        setInterval: (callback, delayMs) => window.setInterval(callback, delayMs),
+        clearInterval: (id): void => {
+            window.clearInterval(id);
+        },
+    };
+}

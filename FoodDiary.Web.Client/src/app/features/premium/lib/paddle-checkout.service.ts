@@ -61,11 +61,12 @@ export class PaddleCheckoutService {
 
         await this.initializeAsync(options);
 
-        if (window.Paddle?.Checkout === undefined) {
+        const paddle = this.document.defaultView?.Paddle;
+        if (paddle?.Checkout === undefined) {
             throw new Error('Paddle Checkout is unavailable');
         }
 
-        window.Paddle.Checkout.open({
+        paddle.Checkout.open({
             transactionId,
             settings: {
                 displayMode: 'overlay',
@@ -88,15 +89,16 @@ export class PaddleCheckoutService {
 
         await this.loadScriptAsync();
 
-        if (window.Paddle === undefined) {
+        const paddle = this.document.defaultView?.Paddle;
+        if (paddle === undefined) {
             throw new Error('Paddle.js did not initialize');
         }
 
         if (options.environment === 'sandbox') {
-            window.Paddle.Environment.set('sandbox');
+            paddle.Environment.set('sandbox');
         }
 
-        window.Paddle.Initialize({
+        paddle.Initialize({
             token: options.token,
             pwCustomer: {},
             checkout: {
@@ -125,7 +127,7 @@ export class PaddleCheckoutService {
         this.scriptLoadPromise = new Promise<void>((resolve, reject) => {
             const existingScript = this.document.querySelector<HTMLScriptElement>(`script[src="${this.scriptUrl}"]`);
             if (existingScript !== null) {
-                if (window.Paddle !== undefined) {
+                if (this.document.defaultView?.Paddle !== undefined) {
                     resolve();
                     return;
                 }

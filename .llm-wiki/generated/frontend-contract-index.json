@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "summary": {
     "components": 427,
-    "componentsWithoutDirectSpecs": 130,
+    "componentsWithoutDirectSpecs": 128,
     "inputs": 1336,
     "outputs": 418,
     "apiCalls": 231,
@@ -829,7 +829,7 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/mobile-login/mobile-login.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/auth/pages/mobile-login/mobile-login.spec.ts"
     },
     {
       "class": "PasswordResetComponent",
@@ -849,7 +849,7 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.spec.ts"
     },
     {
       "class": "CycleCalendarCardComponent",

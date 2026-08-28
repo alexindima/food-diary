@@ -14,7 +14,7 @@ $cases = @(
     [pscustomobject]@{ View = 'consumers'; Query = 'User'; Minimum = 30 }
     [pscustomobject]@{ View = 'production'; Query = 'User'; Minimum = 30 }
     [pscustomobject]@{ View = 'tests'; Query = 'User'; Minimum = 30 }
-    [pscustomobject]@{ View = 'ambiguous'; Query = ''; Minimum = 1 }
+    [pscustomobject]@{ View = 'ambiguous'; Query = ''; Minimum = 0; Expected = 0 }
     [pscustomobject]@{ View = 'unconsumed'; Query = ''; Minimum = 0; Expected = 0 }
 )
 $sqlDurations = [Collections.Generic.List[double]]::new()

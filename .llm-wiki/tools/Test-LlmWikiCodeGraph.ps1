@@ -232,13 +232,31 @@ $broadFrontendPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') 
 if (@($broadFrontendPlan.scopeTooBroad).Count -ne 1 -or $broadFrontendPlan.confidence -ne 'low') {
     throw 'Graph-only test plan did not diagnose an overly broad frontend scope.'
 }
+$auditRankingCases = @(
+    @{ Query = 'OpenFoodFacts barcode lookup'; ChangeType = 'Backend'; ExpectedPrefix = 'FoodDiary.Application.OpenFoodFacts/'; ExpectedPattern = '' }
+    @{ Query = 'create meal command'; ChangeType = 'Backend'; ExpectedPrefix = 'FoodDiary.Application.Meals/'; ExpectedPattern = '' }
+    @{ Query = 'dashboard query'; ChangeType = 'Backend'; ExpectedPrefix = 'FoodDiary.Application.Dashboard/'; ExpectedPattern = '' }
+    @{ Query = 'Telegram notification sender'; ChangeType = 'Backend'; ExpectedPrefix = ''; ExpectedPattern = '^(?:FoodDiary\.Telegram\.Bot|FoodDiary\.Application\.Notifications|FoodDiary\.Integrations)/' }
+)
+foreach ($case in $auditRankingCases) {
+    $ranking = & $manager search -Query $case.Query -ChangeType $case.ChangeType -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
+    $topPath = [string]@($ranking.records)[0].path
+    $matches = if ($case.ExpectedPrefix) { $topPath.StartsWith($case.ExpectedPrefix, [StringComparison]::Ordinal) } else { $topPath -match $case.ExpectedPattern }
+    if (-not $matches) { throw "Audit ranking regression for '$($case.Query)': top path was '$topPath'." }
+}
 $graphArtifactDirectory = Join-Path $repositoryRoot '.artifacts/llm-wiki/code-graph'
 $corruptDatabaseName = "corruption-recovery-$([Guid]::NewGuid().ToString('N')).sqlite"
 $corruptDatabasePath = Join-Path $graphArtifactDirectory $corruptDatabaseName
 $corruptFingerprintPath = "$corruptDatabasePath.fingerprint"
+$dependencyFixturePath = Join-Path $graphArtifactDirectory "missing-typescript-$([Guid]::NewGuid().ToString('N'))"
+$originalReadOnlySourceRoot = $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT
 try {
+    $fixtureFrontendPath = Join-Path $dependencyFixturePath 'FoodDiary.Web.Client'
+    New-Item -ItemType Directory -Path $fixtureFrontendPath -Force | Out-Null
+    [IO.File]::WriteAllText((Join-Path $fixtureFrontendPath 'package.json'), '{"private":true}', [Text.UTF8Encoding]::new($false))
+    $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT = $dependencyFixturePath
     [IO.File]::WriteAllText($corruptDatabasePath, 'this is not a SQLite database', [Text.Encoding]::UTF8)
-    $recoveredBuild = & node (Join-Path $PSScriptRoot 'code-graph.mjs') build "--database=$corruptDatabasePath" | ConvertFrom-Json
+    $recoveredBuild = & node (Join-Path $PSScriptRoot 'code-graph.mjs') build "--database=$corruptDatabasePath" '--skip-typescript=true' | ConvertFrom-Json
     if ($LASTEXITCODE -ne 0) { throw 'Code graph build did not recover a corrupt derived database.' }
     if (-not $recoveredBuild.recoveredFromCorruption -or @($recoveredBuild.quarantinedPaths).Count -ne 1) {
         throw 'Code graph build did not report the quarantined corrupt database.'
@@ -248,7 +266,16 @@ try {
         [int]$recoveredBuild.files -lt 100) {
         throw 'Code graph corruption recovery did not publish a rebuilt graph and isolated dependency fingerprint.'
     }
+    $backendOnlyStatus = & node (Join-Path $PSScriptRoot 'code-graph.mjs') status "--database=$corruptDatabasePath" | ConvertFrom-Json
+    if ([bool]$backendOnlyStatus.typescriptProjectionComplete -or @($backendOnlyStatus.queryCategories).Count -lt 7) {
+        throw 'Backend-only cold bootstrap did not publish query documents with an explicitly incomplete TypeScript projection.'
+    }
+    $fullBuildFailure = @(& node (Join-Path $PSScriptRoot 'code-graph.mjs') build "--database=$corruptDatabasePath" 2>&1 | ForEach-Object { [string]$_ })
+    if ($LASTEXITCODE -eq 0 -or ($fullBuildFailure -join "`n") -notmatch 'TypeScript extraction prerequisite is missing') {
+        throw 'A full graph build without frontend dependencies did not fail fast with the recovery instruction.'
+    }
 } finally {
+    $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT = $originalReadOnlySourceRoot
     $cleanupPaths = @(
         $corruptDatabasePath
         "$corruptDatabasePath-wal"
@@ -262,5 +289,10 @@ try {
         }
         Remove-Item -LiteralPath $resolvedCleanupPath -Force -ErrorAction SilentlyContinue
     }
+    $resolvedFixturePath = [IO.Path]::GetFullPath($dependencyFixturePath)
+    if (-not [string]::Equals([IO.Path]::GetDirectoryName($resolvedFixturePath), $graphArtifactDirectory, [StringComparison]::OrdinalIgnoreCase)) {
+        throw "Refusing to clean a dependency fixture outside the graph directory: $resolvedFixturePath"
+    }
+    Remove-Item -LiteralPath $resolvedFixturePath -Recurse -Force -ErrorAction SilentlyContinue
 }
 Write-Host "LLM Wiki code graph regression passed: $($warm.files) files, $($warm.symbols) symbols, incremental no-op and Recipes queries are valid."

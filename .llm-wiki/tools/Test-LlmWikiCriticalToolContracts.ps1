@@ -17,6 +17,7 @@ foreach ($contract in @(
     @{ file = 'Clear-LlmWikiReadOnlySnapshotCache.ps1'; marker = 'fooddiary-llm-wiki-read-only' }
     @{ file = 'Complete-LlmWikiUnseenContextCorpus.ps1'; marker = 'frozen-independent-query-corpus' }
     @{ file = 'Complete-LlmWikiAnswerEvaluationCorpus.ps1'; marker = 'frozen-independent-answer-corpus' }
+    @{ file = 'Ensure-LlmWikiSqliteProjection.ps1'; marker = 'BackendOnlyRefresh' }
     @{ file = 'Get-LlmWikiConcurrentDrift.ps1'; marker = 'concurrentOrPreExistingPaths' }
     @{ file = 'Get-LlmWikiPhaseStatus.ps1'; marker = "ValidateSet('status', 'next', 'complete')" }
     @{ file = 'Invoke-LlmWikiMcpCommand.ps1'; marker = "'test-plan'" }

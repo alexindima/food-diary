@@ -23,6 +23,7 @@ import { environment } from '../../../../../environments/environment';
 import { AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS, AUTH_PASSWORD_RESET_COOLDOWN_SECONDS } from '../../../../config/runtime-ui.tokens';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
 import type { GoogleLoginRequest } from '../../models/google-auth.data';
 import { buildAdminUnauthorizedUrl, normalizeAdminReturnUrl } from './auth-lib/auth-admin-return-url.utils';
 import { startSecondsCountdown } from './auth-lib/auth-countdown.utils';
@@ -66,6 +67,7 @@ export class AuthComponent {
     private readonly formManager = inject(AuthFormManager);
     private readonly googleManager = inject(AuthGoogleManager);
     private readonly authFlowFacade = inject(AuthFlowFacade);
+    private readonly browserWindow = inject(BrowserWindowService);
 
     protected authMode: 'login' | 'register' = 'login';
 
@@ -366,7 +368,12 @@ export class AuthComponent {
 
     private startPasswordResetCooldown(seconds = this.passwordResetCooldownSecondsDefault): void {
         this.stopPasswordResetCooldown?.();
-        this.stopPasswordResetCooldown = startSecondsCountdown(this.passwordResetCooldownSeconds, seconds, this.destroyRef);
+        this.stopPasswordResetCooldown = startSecondsCountdown(
+            this.passwordResetCooldownSeconds,
+            seconds,
+            this.destroyRef,
+            this.browserWindow,
+        );
     }
 
     private closeDialogIfAny(): void {
@@ -486,15 +493,16 @@ export class AuthComponent {
         }
 
         this.updateLoginAutofillState();
-        this.loginAutofillCheckTimerIds = this.loginAutofillCheckDelaysMs.map(delay =>
-            window.setTimeout(() => {
+        this.loginAutofillCheckTimerIds = this.loginAutofillCheckDelaysMs.flatMap(delay => {
+            const timeoutId = this.browserWindow.setTimeout(() => {
                 this.updateLoginAutofillState();
-            }, delay),
-        );
+            }, delay);
+            return timeoutId === null ? [] : [timeoutId];
+        });
 
         this.destroyRef.onDestroy(() => {
             this.loginAutofillCheckTimerIds.forEach(timerId => {
-                window.clearTimeout(timerId);
+                this.browserWindow.clearTimeout(timerId);
             });
             this.loginAutofillCheckTimerIds = [];
         });

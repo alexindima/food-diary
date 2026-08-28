@@ -57,6 +57,8 @@ $queryTokens = @(
 )
 $diagnostics = $null
 if ($CompiledIndexSource -eq 'Sqlite') {
+    . (Join-Path $PSScriptRoot 'Ensure-LlmWikiSqliteProjection.ps1')
+    Ensure-LlmWikiSqliteProjection -Category sensitive
     $sqlResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
         -Action sensitive-data `
         -SensitiveDataView $Category `

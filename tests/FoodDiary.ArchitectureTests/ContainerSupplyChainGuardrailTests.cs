@@ -4,7 +4,9 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ContainerSupplyChainGuardrailTests {
-    private static readonly string[] HardenedRuntimeServices = ["api", "mail-relay", "telegram-bot", "job-manager", "client", "nginx"];
+    private static readonly string[] HardenedRuntimeServices = [
+        "db-init", "mailrelay-db-init", "mailinbox-db-init", "api", "mail-relay", "telegram-bot", "job-manager", "client", "nginx",
+    ];
     private static readonly string[] ExpectedProductionProjects = [
         "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
         "FoodDiary.JobManager/FoodDiary.JobManager.csproj",

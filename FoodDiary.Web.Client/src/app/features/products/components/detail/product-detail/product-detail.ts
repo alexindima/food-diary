@@ -14,6 +14,7 @@ import {
     type NutritionMacroState,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
+import { ChartColorsService } from '../../../../../shared/theme/chart-colors.service';
 import { ProductDetailFacade } from '../../../lib/detail/product-detail.facade';
 import { buildProductTypeTranslationKey } from '../../../lib/product-type.utils';
 import type { Product } from '../../../models/product.data';
@@ -91,7 +92,7 @@ export class ProductDetailComponent {
         this.qualityGrade = this.product.qualityGrade;
         this.calories = this.product.caloriesPerBase;
 
-        const nutritionViewModel = buildProductDetailNutritionViewModel(this.product);
+        const nutritionViewModel = buildProductDetailNutritionViewModel(this.product, inject(ChartColorsService).palette);
         this.nutritionForm = form(signal(nutritionViewModel.nutritionModel));
         this.macroBarState = nutritionViewModel.macroBarState;
         this.macroBlocks = nutritionViewModel.macroBlocks;

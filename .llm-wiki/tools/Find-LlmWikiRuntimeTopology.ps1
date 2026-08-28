@@ -22,7 +22,7 @@ $groups = [ordered]@{}
 $diagnostics = $null
 if ($CompiledIndexSource -eq 'Sqlite') {
     . (Join-Path $PSScriptRoot 'LlmWikiInProcessSqlite.ps1')
-    $reader = Initialize-LlmWikiInProcessSqlite
+    $reader = Initialize-LlmWikiInProcessSqlite -Projection runtime
     $resultJson = [LlmWiki.SqliteReader.CompiledIndexReader]::QueryRuntime(
         $repositoryRoot,
         $Query,

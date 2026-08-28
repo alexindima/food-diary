@@ -55,8 +55,64 @@ export class BrowserWindowService {
         return this.getWindow()?.open(url, target) ?? null;
     }
 
-    public setTimeout(callback: () => void, delayMs: number): void {
-        this.getWindow()?.setTimeout(callback, delayMs);
+    public setTimeout(callback: () => void, delayMs: number): number | null {
+        return this.getWindow()?.setTimeout(callback, delayMs) ?? null;
+    }
+
+    public clearTimeout(timeoutId: number | null): void {
+        if (timeoutId !== null) {
+            this.getWindow()?.clearTimeout(timeoutId);
+        }
+    }
+
+    public setInterval(callback: () => void, delayMs: number): number | null {
+        return this.getWindow()?.setInterval(callback, delayMs) ?? null;
+    }
+
+    public clearInterval(intervalId: number | null): void {
+        if (intervalId !== null) {
+            this.getWindow()?.clearInterval(intervalId);
+        }
+    }
+
+    public requestAnimationFrame(callback: FrameRequestCallback): number | null {
+        return this.getWindow()?.requestAnimationFrame(callback) ?? null;
+    }
+
+    public cancelAnimationFrame(animationFrameId: number | null): void {
+        if (animationFrameId !== null) {
+            this.getWindow()?.cancelAnimationFrame(animationFrameId);
+        }
+    }
+
+    public onResize(callback: () => void): () => void {
+        const windowRef = this.getWindow();
+        if (windowRef === null) {
+            return () => {};
+        }
+
+        windowRef.addEventListener('resize', callback);
+        return () => {
+            windowRef.removeEventListener('resize', callback);
+        };
+    }
+
+    public async getUserMediaAsync(constraints: MediaStreamConstraints): Promise<MediaStream> {
+        const mediaDevices = this.getWindow()?.navigator.mediaDevices;
+        if (mediaDevices === undefined) {
+            throw new Error('Browser media devices are unavailable');
+        }
+
+        return mediaDevices.getUserMedia(constraints);
+    }
+
+    public createBarcodeDetector(formats: string[]): BarcodeDetector | null {
+        const windowRef = this.getWindow();
+        if (windowRef === null || !('BarcodeDetector' in windowRef)) {
+            return null;
+        }
+
+        return new BarcodeDetector({ formats });
     }
 
     public getViewportWidth(): number {

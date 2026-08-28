@@ -1,5 +1,5 @@
 import type { NutritionFormModel, NutritionMacroState } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
-import { CHART_COLORS } from '../../../../../constants/chart-colors';
+import { CHART_COLORS, type ChartColorPalette } from '../../../../../constants/chart-colors';
 import { NUTRIENT_ROUNDING_FACTOR, PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { calculateMacroBarState } from '../../../../../shared/lib/nutrition-form.utils';
 import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
@@ -31,7 +31,11 @@ export type RecipeDetailViewModel = {
     ingredientCount: number;
 };
 
-export function buildRecipeDetailViewModel(recipe: Recipe, unknownIngredientName: string): RecipeDetailViewModel {
+export function buildRecipeDetailViewModel(
+    recipe: Recipe,
+    unknownIngredientName: string,
+    colors: ChartColorPalette = CHART_COLORS,
+): RecipeDetailViewModel {
     const calories = resolveNutrientValue(recipe.totalCalories, recipe.manualCalories);
     const proteins = resolveNutrientValue(recipe.totalProteins, recipe.manualProteins);
     const fats = resolveNutrientValue(recipe.totalFats, recipe.manualFats);
@@ -39,7 +43,7 @@ export function buildRecipeDetailViewModel(recipe: Recipe, unknownIngredientName
     const fiber = resolveFiberValue(recipe);
     const alcohol = resolveAlcoholValue(recipe);
     const macroReferenceValues = [proteins, fats, carbs];
-    const macroBlocks = buildMacroBlocks({ proteins, fats, carbs, fiber, alcohol }, macroReferenceValues);
+    const macroBlocks = buildMacroBlocks({ proteins, fats, carbs, fiber, alcohol }, macroReferenceValues, colors);
 
     return {
         calories,
@@ -63,13 +67,14 @@ export function buildRecipeDetailViewModel(recipe: Recipe, unknownIngredientName
 function buildMacroBlocks(
     values: { proteins: number; fats: number; carbs: number; fiber: number; alcohol: number },
     referenceValues: number[],
+    colors: ChartColorPalette,
 ): MacroBlock[] {
     return [
-        buildMacroBlock('GENERAL.NUTRIENTS.PROTEIN', values.proteins, CHART_COLORS.proteins, referenceValues),
-        buildMacroBlock('GENERAL.NUTRIENTS.FAT', values.fats, CHART_COLORS.fats, referenceValues),
-        buildMacroBlock('GENERAL.NUTRIENTS.CARB', values.carbs, CHART_COLORS.carbs, referenceValues),
-        buildMacroBlock('GENERAL.NUTRIENTS.FIBER', values.fiber, CHART_COLORS.fiber, referenceValues),
-        buildMacroBlock('GENERAL.NUTRIENTS.ALCOHOL', values.alcohol, CHART_COLORS.alcohol, referenceValues),
+        buildMacroBlock('GENERAL.NUTRIENTS.PROTEIN', values.proteins, colors.proteins, referenceValues),
+        buildMacroBlock('GENERAL.NUTRIENTS.FAT', values.fats, colors.fats, referenceValues),
+        buildMacroBlock('GENERAL.NUTRIENTS.CARB', values.carbs, colors.carbs, referenceValues),
+        buildMacroBlock('GENERAL.NUTRIENTS.FIBER', values.fiber, colors.fiber, referenceValues),
+        buildMacroBlock('GENERAL.NUTRIENTS.ALCOHOL', values.alcohol, colors.alcohol, referenceValues),
     ];
 }
 

@@ -43,18 +43,29 @@ $contractSymbols = @(
         } |
         Sort-Object name, path
 )
+function Get-CollisionClassification([string]$Name, [object[]]$Definitions) {
+    $definitionPaths = @($Definitions.path | Sort-Object -Unique)
+    if ($Definitions.Count -le 1) { return 'unique' }
+    if ($definitionPaths.Count -eq 1) { return 'same-file-overload-or-factory' }
+    if ($Name -eq 'InitializerCommand' -and @($definitionPaths | Where-Object { $_ -notmatch '(?:^|/)FoodDiary\.(?:MailInbox\.|MailRelay\.)?Initializer/InitializerCommand\.cs$' }).Count -eq 0) {
+        return 'service-local-initializer-contract'
+    }
+    return 'ambiguous'
+}
 $contracts = @(
     $contractSymbols |
         Group-Object name |
         ForEach-Object {
             $definitions = @($_.Group)
+            $collisionClassification = Get-CollisionClassification $_.Name $definitions
             [pscustomobject]@{
                 name = $_.Name
                 roles = @($definitions.role | Sort-Object -Unique)
                 kinds = @($definitions.kind | Sort-Object -Unique)
                 areas = @($definitions.path | ForEach-Object { Get-Area $_ } | Sort-Object -Unique)
                 definitionPaths = @($definitions.path | Sort-Object -Unique)
-                ambiguous = $definitions.Count -gt 1
+                ambiguous = $collisionClassification -eq 'ambiguous'
+                collisionClassification = $collisionClassification
             }
         } |
         Sort-Object name

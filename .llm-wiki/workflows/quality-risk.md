@@ -42,8 +42,10 @@ than proof that no behavioral coverage exists.
 
 Standalone quality queries already use the SQLite `query_documents` projection;
 the generated JSON is retained as its projection source, not as an automatic
-runtime fallback. The compiled-index migration report classifies this route as
-fully migrated alongside task-brief impact selection.
+runtime fallback. Callers can select `-CompiledIndexSource Json` explicitly for
+read-only diagnosis; that response is marked inconclusive because projection
+freshness was not verified. The compiled-index migration report classifies the
+SQLite route as fully migrated alongside task-brief impact selection.
 
 For account linking, cover the success path, provider validation failure, email
 mismatch, identity owned by another user, idempotent retry, and refusal to

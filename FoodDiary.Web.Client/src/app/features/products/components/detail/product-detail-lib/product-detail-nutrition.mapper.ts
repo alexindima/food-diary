@@ -1,5 +1,5 @@
 import type { NutritionFormModel, NutritionMacroState } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
-import { CHART_COLORS } from '../../../../../constants/chart-colors';
+import { CHART_COLORS, type ChartColorPalette } from '../../../../../constants/chart-colors';
 import { PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { calculateMacroBarState } from '../../../../../shared/lib/nutrition-form.utils';
 import type { Product } from '../../../models/product.data';
@@ -23,14 +23,17 @@ export type ProductDetailNutritionViewModel = {
     macroSummaryBlocks: ProductDetailMacroBlock[];
 };
 
-export function buildProductDetailNutritionViewModel(product: Product): ProductDetailNutritionViewModel {
+export function buildProductDetailNutritionViewModel(
+    product: Product,
+    colors: ChartColorPalette = CHART_COLORS,
+): ProductDetailNutritionViewModel {
     const macroReferenceValues = [product.proteinsPerBase, product.fatsPerBase, product.carbsPerBase];
     const macroBlocks: ProductDetailMacroBlock[] = [
-        buildMacroBlock('GENERAL.NUTRIENTS.PROTEIN', product.proteinsPerBase, CHART_COLORS.proteins, macroReferenceValues),
-        buildMacroBlock('GENERAL.NUTRIENTS.FAT', product.fatsPerBase, CHART_COLORS.fats, macroReferenceValues),
-        buildMacroBlock('GENERAL.NUTRIENTS.CARB', product.carbsPerBase, CHART_COLORS.carbs, macroReferenceValues),
-        buildMacroBlock('GENERAL.NUTRIENTS.FIBER', product.fiberPerBase, CHART_COLORS.fiber, macroReferenceValues),
-        buildMacroBlock('GENERAL.NUTRIENTS.ALCOHOL', product.alcoholPerBase, CHART_COLORS.alcohol, macroReferenceValues),
+        buildMacroBlock('GENERAL.NUTRIENTS.PROTEIN', product.proteinsPerBase, colors.proteins, macroReferenceValues),
+        buildMacroBlock('GENERAL.NUTRIENTS.FAT', product.fatsPerBase, colors.fats, macroReferenceValues),
+        buildMacroBlock('GENERAL.NUTRIENTS.CARB', product.carbsPerBase, colors.carbs, macroReferenceValues),
+        buildMacroBlock('GENERAL.NUTRIENTS.FIBER', product.fiberPerBase, colors.fiber, macroReferenceValues),
+        buildMacroBlock('GENERAL.NUTRIENTS.ALCOHOL', product.alcoholPerBase, colors.alcohol, macroReferenceValues),
     ];
 
     return {

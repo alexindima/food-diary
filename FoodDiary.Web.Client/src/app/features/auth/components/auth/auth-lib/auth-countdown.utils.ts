@@ -1,11 +1,17 @@
 import type { DestroyRef, WritableSignal } from '@angular/core';
 
 import { MS_PER_SECOND } from '../../../../../shared/lib/time.constants';
+import type { BrowserWindowService } from '../../../../../shared/platform/browser-window.service';
 
-export function startSecondsCountdown(target: WritableSignal<number>, seconds: number, destroyRef: DestroyRef): () => void {
+export function startSecondsCountdown(
+    target: WritableSignal<number>,
+    seconds: number,
+    destroyRef: DestroyRef,
+    browserWindow: Pick<BrowserWindowService, 'setInterval' | 'clearInterval'>,
+): () => void {
     target.set(seconds);
 
-    let intervalId: number | null = window.setInterval(() => {
+    let intervalId: number | null = browserWindow.setInterval(() => {
         const remaining = target();
         if (remaining <= 1) {
             target.set(0);
@@ -17,7 +23,7 @@ export function startSecondsCountdown(target: WritableSignal<number>, seconds: n
 
     const stop = (): void => {
         if (intervalId !== null) {
-            window.clearInterval(intervalId);
+            browserWindow.clearInterval(intervalId);
             intervalId = null;
         }
     };

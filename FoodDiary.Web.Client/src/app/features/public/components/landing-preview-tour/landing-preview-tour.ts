@@ -9,6 +9,7 @@ import { NutritionWeeklyTrendCardComponent } from '../../../../components/shared
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card';
 import { AuthService } from '../../../../services/auth.service';
+import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
 import { QuickMealDrawerComponent } from '../../../meals/components/quick-meal-drawer/quick-meal-drawer';
 import { type QuickMealItem, QuickMealService } from '../../../meals/lib/quick/quick-meal.service';
 import type { Product } from '../../../products/models/product.data';
@@ -39,6 +40,7 @@ export class LandingPreviewTourComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly draftBlock = viewChild<ElementRef<HTMLElement>>('draftBlock');
+    private readonly browserWindow = inject(BrowserWindowService);
 
     protected isAuthenticated = this.authService.isAuthenticated;
     protected heroSummaryCard: LandingPreviewContent['heroSummaryCard'] = buildLandingPreviewContent(key => key).heroSummaryCard;
@@ -97,11 +99,11 @@ export class LandingPreviewTourComponent {
             return;
         }
 
-        if (typeof window === 'undefined') {
+        const reducedMotionQuery = this.browserWindow.matchMedia('(prefers-reduced-motion: reduce)');
+        if (reducedMotionQuery === null) {
             return;
         }
-
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const prefersReducedMotion = reducedMotionQuery.matches;
         const scroll = (): void => {
             draftBlock.scrollIntoView({
                 behavior: prefersReducedMotion ? 'auto' : 'smooth',
@@ -110,6 +112,6 @@ export class LandingPreviewTourComponent {
             });
         };
 
-        window.requestAnimationFrame(scroll);
+        this.browserWindow.requestAnimationFrame(scroll);
     }
 }

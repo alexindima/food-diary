@@ -14,6 +14,7 @@ import {
     type NutritionFormModel,
     type NutritionMacroState,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
+import { ChartColorsService } from '../../../../../shared/theme/chart-colors.service';
 import { RecipeDetailFacade } from '../../../lib/detail/recipe-detail.facade';
 import type { Recipe } from '../../../models/recipe.data';
 import { RecipeCookModeComponent } from '../recipe-cook-mode/recipe-cook-mode';
@@ -82,7 +83,11 @@ export class RecipeDetailComponent {
     public constructor() {
         const recipe = inject<Recipe>(FD_UI_DIALOG_DATA);
         const translateService = inject(TranslateService);
-        const viewModel = buildRecipeDetailViewModel(recipe, translateService.instant('RECIPE_DETAIL.UNKNOWN_INGREDIENT'));
+        const viewModel = buildRecipeDetailViewModel(
+            recipe,
+            translateService.instant('RECIPE_DETAIL.UNKNOWN_INGREDIENT'),
+            inject(ChartColorsService).palette,
+        );
 
         this.recipe = recipe;
         this.calories = viewModel.calories;
