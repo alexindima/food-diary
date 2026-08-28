@@ -679,7 +679,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ProductQueryHandlers_DoNotUseFullProductRepository() {
         string root = GetRepositoryRoot();
-        string queryRoot = Path.Combine(root, "FoodDiary.Application.Products", "Products", "Queries");
+        string queryRoot = Path.Combine(root, "FoodDiary.Application.Products", "Queries");
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
@@ -693,7 +693,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ProductQueryHandlers_DoNotUseAggregateReadRepository() {
         string root = GetRepositoryRoot();
-        string queryRoot = Path.Combine(root, "FoodDiary.Application.Products", "Products", "Queries");
+        string queryRoot = Path.Combine(root, "FoodDiary.Application.Products", "Queries");
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
@@ -726,7 +726,6 @@ public sealed class ApplicationGuardrailTests {
         string handlerPath = Path.Combine(
             root,
             "FoodDiary.Application.Products",
-            "Products",
             "Queries",
             "GetProductsOverview",
             "GetProductsOverviewQueryHandler.cs");
@@ -743,7 +742,6 @@ public sealed class ApplicationGuardrailTests {
         string handlerPath = Path.Combine(
             root,
             "FoodDiary.Application.Products",
-            "Products",
             "Queries",
             "GetProducts",
             "GetProductsQueryHandler.cs");
@@ -760,7 +758,6 @@ public sealed class ApplicationGuardrailTests {
         string handlerPath = Path.Combine(
             root,
             "FoodDiary.Application.Products",
-            "Products",
             "Queries",
             "GetProductById",
             "GetProductByIdQueryHandler.cs");
@@ -777,7 +774,6 @@ public sealed class ApplicationGuardrailTests {
         string handlerPath = Path.Combine(
             root,
             "FoodDiary.Application.Products",
-            "Products",
             "Queries",
             "GetRecentProducts",
             "GetRecentProductsQueryHandler.cs");
@@ -796,7 +792,6 @@ public sealed class ApplicationGuardrailTests {
         string providerPath = Path.Combine(
             root,
             "FoodDiary.Application.Products",
-            "Products",
             "SearchSuggestions",
             "UsdaProductSearchSuggestionProvider.cs");
         string source = File.ReadAllText(providerPath);
@@ -809,7 +804,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ProductCommandHandlersAndValidators_DoNotUseFullProductRepository() {
         string root = GetRepositoryRoot();
-        string commandRoot = Path.Combine(root, "FoodDiary.Application.Products", "Products", "Commands");
+        string commandRoot = Path.Combine(root, "FoodDiary.Application.Products", "Commands");
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
@@ -837,7 +832,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void RecipeQueryHandlers_DoNotUseFullRecipeRepository() {
         string root = GetRepositoryRoot();
-        string queryRoot = Path.Combine(root, "FoodDiary.Application.Recipes", "Recipes", "Queries");
+        string queryRoot = Path.Combine(root, "FoodDiary.Application.Recipes", "Queries");
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
@@ -851,7 +846,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void RecipeQueryHandlers_DoNotUseAggregateReadRepository() {
         string root = GetRepositoryRoot();
-        string queryRoot = Path.Combine(root, "FoodDiary.Application.Recipes", "Recipes", "Queries");
+        string queryRoot = Path.Combine(root, "FoodDiary.Application.Recipes", "Queries");
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
@@ -885,7 +880,6 @@ public sealed class ApplicationGuardrailTests {
         string handlerPath = Path.Combine(
             root,
             "FoodDiary.Application.Recipes",
-            "Recipes",
             "Queries",
             "GetRecipesOverview",
             "GetRecipesOverviewQueryHandler.cs");
@@ -902,7 +896,6 @@ public sealed class ApplicationGuardrailTests {
         string handlerPath = Path.Combine(
             root,
             "FoodDiary.Application.Recipes",
-            "Recipes",
             "Queries",
             "GetRecipes",
             "GetRecipesQueryHandler.cs");
@@ -919,7 +912,6 @@ public sealed class ApplicationGuardrailTests {
         string handlerPath = Path.Combine(
             root,
             "FoodDiary.Application.Recipes",
-            "Recipes",
             "Queries",
             "GetRecipeById",
             "GetRecipeByIdQueryHandler.cs");
@@ -936,7 +928,6 @@ public sealed class ApplicationGuardrailTests {
         string handlerPath = Path.Combine(
             root,
             "FoodDiary.Application.Recipes",
-            "Recipes",
             "Queries",
             "GetRecentRecipes",
             "GetRecentRecipesQueryHandler.cs");
@@ -955,7 +946,6 @@ public sealed class ApplicationGuardrailTests {
         string handlerPath = Path.Combine(
             root,
             "FoodDiary.Application.Recipes",
-            "Recipes",
             "Queries",
             "ExploreRecipes",
             "ExploreRecipesQueryHandler.cs");
@@ -969,7 +959,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void RecipeNutritionUpdater_DoesNotUseFullRecipeRepository() {
         string root = GetRepositoryRoot();
-        string updaterPath = Path.Combine(root, "FoodDiary.Application.Recipes", "Recipes", "Services", "RecipeNutritionUpdater.cs");
+        string updaterPath = Path.Combine(root, "FoodDiary.Application.Recipes", "Services", "RecipeNutritionUpdater.cs");
 
         string[] violations = FindReferencesInFiles(root, [updaterPath], "IRecipeRepository");
 
@@ -981,8 +971,8 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] commandRoots = [
-            Path.Combine(root, "FoodDiary.Application.Products", "Products", "Commands"),
-            Path.Combine(root, "FoodDiary.Application.Recipes", "Recipes", "Commands"),
+            Path.Combine(root, "FoodDiary.Application.Products", "Commands"),
+            Path.Combine(root, "FoodDiary.Application.Recipes", "Commands"),
         ];
         string[] forbiddenPatterns = [
             "MealItems.Count",
@@ -1008,13 +998,13 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application.Recipes");
         string[] migratedFiles = [
-            Path.Combine(applicationRoot, "Recipes", "Commands", "CreateRecipe", "CreateRecipeCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Recipes", "Commands", "DeleteRecipe", "DeleteRecipeCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Recipes", "Commands", "DeleteRecipe", "DeleteRecipeCommandValidator.cs"),
-            Path.Combine(applicationRoot, "Recipes", "Commands", "DuplicateRecipe", "DuplicateRecipeCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Recipes", "Commands", "UpdateRecipe", "UpdateRecipeCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Recipes", "Commands", "UpdateRecipe", "UpdateRecipeCommandValidator.cs"),
-            Path.Combine(applicationRoot, "Recipes", "Commands", "UpdateRecipe", "UpdateRecipeValuePreparer.cs"),
+            Path.Combine(applicationRoot, "Commands", "CreateRecipe", "CreateRecipeCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Commands", "DeleteRecipe", "DeleteRecipeCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Commands", "DeleteRecipe", "DeleteRecipeCommandValidator.cs"),
+            Path.Combine(applicationRoot, "Commands", "DuplicateRecipe", "DuplicateRecipeCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Commands", "UpdateRecipe", "UpdateRecipeCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Commands", "UpdateRecipe", "UpdateRecipeCommandValidator.cs"),
+            Path.Combine(applicationRoot, "Commands", "UpdateRecipe", "UpdateRecipeValuePreparer.cs"),
         ];
 
         string[] violations = FindReferencesInFiles(root, migratedFiles, "IRecipeRepository");
@@ -1045,14 +1035,14 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application.Recipes");
         string[] migratedFiles = [
-            Path.Combine(root, "FoodDiary.Application.Products", "Products", "Commands", "CreateProduct", "CreateProductValuePreparer.cs"),
-            Path.Combine(root, "FoodDiary.Application.Products", "Products", "Commands", "DeleteProduct", "DeleteProductCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Products", "Products", "Commands", "DuplicateProduct", "DuplicateProductCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Products", "Products", "Commands", "UpdateProduct", "ProductUpdateValuePreparer.cs"),
-            Path.Combine(applicationRoot, "Recipes", "Commands", "CreateRecipe", "CreateRecipeValuePreparer.cs"),
-            Path.Combine(applicationRoot, "Recipes", "Commands", "DeleteRecipe", "DeleteRecipeCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Recipes", "Commands", "DuplicateRecipe", "DuplicateRecipeCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Recipes", "Commands", "UpdateRecipe", "UpdateRecipeValuePreparer.cs"),
+            Path.Combine(root, "FoodDiary.Application.Products", "Commands", "CreateProduct", "CreateProductValuePreparer.cs"),
+            Path.Combine(root, "FoodDiary.Application.Products", "Commands", "DeleteProduct", "DeleteProductCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Products", "Commands", "DuplicateProduct", "DuplicateProductCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Products", "Commands", "UpdateProduct", "ProductUpdateValuePreparer.cs"),
+            Path.Combine(applicationRoot, "Commands", "CreateRecipe", "CreateRecipeValuePreparer.cs"),
+            Path.Combine(applicationRoot, "Commands", "DeleteRecipe", "DeleteRecipeCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Commands", "DuplicateRecipe", "DuplicateRecipeCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Commands", "UpdateRecipe", "UpdateRecipeValuePreparer.cs"),
             Path.Combine(root, "FoodDiary.Application.Exercises", "Commands", "CreateExerciseEntry", "CreateExerciseEntryCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Exercises", "Commands", "DeleteExerciseEntry", "DeleteExerciseEntryCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Exercises", "Commands", "UpdateExerciseEntry", "UpdateExerciseEntryCommandHandler.cs"),
@@ -1085,12 +1075,12 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeComments", "Commands", "DeleteRecipeComment", "DeleteRecipeCommentCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeComments", "Commands", "UpdateRecipeComment", "UpdateRecipeCommentCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeComments", "Queries", "GetRecipeComments", "GetRecipeCommentsQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Commands", "ConnectWearable", "ConnectWearableCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Commands", "DisconnectWearable", "DisconnectWearableCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Commands", "SyncWearableData", "SyncWearableDataCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Queries", "GetWearableAuthUrl", "GetWearableAuthUrlQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Queries", "GetWearableConnections", "GetWearableConnectionsQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Queries", "GetWearableDailySummary", "GetWearableDailySummaryQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Wearables", "Commands", "ConnectWearable", "ConnectWearableCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Wearables", "Commands", "DisconnectWearable", "DisconnectWearableCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Wearables", "Commands", "SyncWearableData", "SyncWearableDataCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Wearables", "Queries", "GetWearableAuthUrl", "GetWearableAuthUrlQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Wearables", "Queries", "GetWearableConnections", "GetWearableConnectionsQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Wearables", "Queries", "GetWearableDailySummary", "GetWearableDailySummaryQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Users", "Commands", "AcceptAiConsent", "AcceptAiConsentCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Users", "Commands", "ChangePassword", "ChangePasswordCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Users", "Commands", "DeleteUser", "DeleteUserCommandHandler.cs"),
@@ -1133,8 +1123,8 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Notifications", "Queries", "GetNotificationPreferences", "GetNotificationPreferencesQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Notifications", "Queries", "GetNotifications", "GetNotificationsQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Notifications", "Queries", "GetUnreadCount", "GetUnreadCountQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Products", "Products", "Queries", "GetRecentProducts", "GetRecentProductsQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Recipes", "Queries", "GetRecentRecipes", "GetRecentRecipesQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Products", "Queries", "GetRecentProducts", "GetRecentProductsQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Queries", "GetRecentRecipes", "GetRecentRecipesQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Usda", "Commands", "LinkProductToUsdaFood", "LinkProductToUsdaFoodCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Usda", "Commands", "UnlinkProductFromUsdaFood", "UnlinkProductFromUsdaFoodCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Usda", "Queries", "GetDailyMicronutrients", "GetDailyMicronutrientsQueryHandler.cs"),
@@ -2159,7 +2149,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void WearableQueries_UseReadServicesInsteadOfWearableAggregates() {
         string root = GetRepositoryRoot();
-        string wearableQueriesRoot = Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Queries");
+        string wearableQueriesRoot = Path.Combine(root, "FoodDiary.Application.Wearables", "Queries");
         string[] wearableQueryFiles = [.. SourceScanner.SourceFiles(wearableQueriesRoot)];
 
         string[] violations = [
@@ -2177,7 +2167,6 @@ public sealed class ApplicationGuardrailTests {
         string servicePath = Path.Combine(
             root,
             "FoodDiary.Application.Wearables",
-            "Wearables",
             "Services",
             "WearableReadService.cs");
         string[] serviceFiles = [servicePath];

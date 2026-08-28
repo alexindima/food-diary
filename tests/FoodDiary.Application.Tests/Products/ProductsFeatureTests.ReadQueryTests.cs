@@ -1,15 +1,15 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Products.Products.Queries.GetProductById;
-using FoodDiary.Application.Products.Products.Queries.GetProducts;
-using FoodDiary.Application.Products.Products.Queries.GetProductsOverview;
-using FoodDiary.Application.Products.Products.Queries.GetRecentProducts;
+using FoodDiary.Application.Products.Queries.GetProductById;
+using FoodDiary.Application.Products.Queries.GetProducts;
+using FoodDiary.Application.Products.Queries.GetProductsOverview;
+using FoodDiary.Application.Products.Queries.GetRecentProducts;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Products.Products.Models;
+using FoodDiary.Application.Products.Models;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
 

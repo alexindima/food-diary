@@ -1,9 +1,9 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Recipes.Recipes.Common;
+using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Abstractions.Nutrition.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
-using FoodDiary.Application.Recipes.Recipes.Services;
+using FoodDiary.Application.Recipes.Services;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;

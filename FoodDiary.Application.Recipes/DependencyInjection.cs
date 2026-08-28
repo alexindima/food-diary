@@ -1,6 +1,6 @@
 using FluentValidation;
-using FoodDiary.Application.Recipes.Recipes.Common;
-using FoodDiary.Application.Recipes.Recipes.Services;
+using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Recipes.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 

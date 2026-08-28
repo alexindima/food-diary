@@ -1,6 +1,6 @@
 using FoodDiary.Application.Meals.Models;
-using FoodDiary.Application.Products.Products.Models;
-using FoodDiary.Application.Recipes.Recipes.Models;
+using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Presentation.Api.Features.Meals;
 using FoodDiary.Presentation.Api.Features.Meals.Requests;
 using FoodDiary.Presentation.Api.Features.Meals.Responses;

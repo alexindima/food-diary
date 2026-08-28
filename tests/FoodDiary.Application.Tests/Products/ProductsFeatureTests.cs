@@ -6,20 +6,20 @@ using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Products.Products.Commands.CreateProduct;
-using FoodDiary.Application.Products.Products.Commands.UpdateProduct;
+using FoodDiary.Application.Products.Commands.CreateProduct;
+using FoodDiary.Application.Products.Commands.UpdateProduct;
 using FoodDiary.Application.Favorites.FavoriteProducts.Services;
-using FoodDiary.Application.Products.Products.Mappings;
-using FoodDiary.Application.Products.Products.Queries.GetProductsOverview;
-using FoodDiary.Application.Products.Products.Queries.GetRecentProducts;
+using FoodDiary.Application.Products.Mappings;
+using FoodDiary.Application.Products.Queries.GetProductsOverview;
+using FoodDiary.Application.Products.Queries.GetRecentProducts;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
-using FoodDiary.Application.Products.Products.Services;
+using FoodDiary.Application.Products.Services;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Products.Products.Models;
+using FoodDiary.Application.Products.Models;
 
 namespace FoodDiary.Application.Tests.Products;
 

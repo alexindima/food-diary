@@ -6,11 +6,11 @@ using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Dashboard;
 using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Application.Notifications;
-using FoodDiary.Application.Products.Products.Common;
+using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products;
 using FoodDiary.Application.Recipes;
-using FoodDiary.Application.Recipes.Recipes.Common;
-using FoodDiary.Application.Recipes.Recipes.Services;
+using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Recipes.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Application.Tests.Common;

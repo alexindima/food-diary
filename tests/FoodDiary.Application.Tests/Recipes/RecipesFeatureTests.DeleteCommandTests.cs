@@ -1,5 +1,5 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Recipes.Recipes.Commands.DeleteRecipe;
+using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;

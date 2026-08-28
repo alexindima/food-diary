@@ -86,6 +86,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 ## Cross-Repo Rules
 
 - Keep architecture feature-first and move legacy flat areas incrementally.
+- Do not repeat an application module name as a root folder inside its own `FoodDiary.Application.<Module>` project. Add feature grouping folders only when a module owns multiple distinct areas, such as `BodyMetrics/WeightEntries` and `BodyMetrics/WaistEntries`.
 - Place every application command and query slice in its own feature folder under `Commands/` or `Queries/`; do not put C# files directly in those folders.
 - Keep .NET shared build settings in root `Directory.Build.props`.
 - Keep nullable enabled in C# projects and align namespaces with folders.

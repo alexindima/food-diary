@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Recipes.Models;
-using FoodDiary.Application.Recipes.Recipes.Mappings;
-using FoodDiary.Application.Recipes.Recipes.Models;
+using FoodDiary.Application.Recipes.Mappings;
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 

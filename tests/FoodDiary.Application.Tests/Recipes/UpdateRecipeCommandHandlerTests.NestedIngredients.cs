@@ -1,6 +1,6 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Recipes.Recipes.Commands.UpdateRecipe;
-using FoodDiary.Application.Recipes.Recipes.Models;
+using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;

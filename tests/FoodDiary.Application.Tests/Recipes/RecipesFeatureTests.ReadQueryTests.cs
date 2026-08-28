@@ -1,9 +1,9 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Recipes.Recipes.Queries.GetRecipeById;
-using FoodDiary.Application.Recipes.Recipes.Queries.ExploreRecipes;
-using FoodDiary.Application.Recipes.Recipes.Queries.GetRecentRecipes;
-using FoodDiary.Application.Recipes.Recipes.Queries.GetRecipes;
-using FoodDiary.Application.Recipes.Recipes.Queries.GetRecipesOverview;
+using FoodDiary.Application.Recipes.Queries.GetRecipeById;
+using FoodDiary.Application.Recipes.Queries.ExploreRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.Entities.Recipes;
@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
-using FoodDiary.Application.Recipes.Recipes.Models;
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 
 namespace FoodDiary.Application.Tests.Recipes;

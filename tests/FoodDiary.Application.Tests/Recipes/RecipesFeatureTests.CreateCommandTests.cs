@@ -1,12 +1,12 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Application.Recipes.Recipes.Commands.CreateRecipe;
-using FoodDiary.Application.Recipes.Recipes.Common;
+using FoodDiary.Application.Recipes.Commands.CreateRecipe;
+using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Recipes.Recipes.Models;
+using FoodDiary.Application.Recipes.Models;
 
 namespace FoodDiary.Application.Tests.Recipes;
 

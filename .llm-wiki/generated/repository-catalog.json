@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 282,
     "agentGuides": 76,
-    "documentationPages": 50
+    "documentationPages": 51
   },
   "dotnet": {
     "projects": [
@@ -5753,6 +5753,7 @@
       "docs/adr/0012-cycle-health-data-and-calendar-date-boundary.md",
       "docs/adr/0013-read-only-sqlite-context-search-in-development-mcp.md",
       "docs/adr/0014-sql-first-development-context-with-json-fallback.md",
+      "docs/adr/0015-application-module-root-folder-structure.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/CODE_REVIEW.md",

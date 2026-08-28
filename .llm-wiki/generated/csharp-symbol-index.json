@@ -11332,6 +11332,195 @@
       "line": 7
     },
     {
+      "name": "CreateProductCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateProductCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "CreateProductCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductCommandValidator.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateProductValuePreparer",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductValuePreparer.cs",
+      "line": 10
+    },
+    {
+      "name": "CreateProductValues",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductValues.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteProductCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Products/Commands/DeleteProduct/DeleteProductCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteProductCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "DeleteProductCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Products/Commands/DeleteProduct/DeleteProductCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "DuplicateProductCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Products/Commands/DuplicateProduct/DuplicateProductCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "DuplicateProductCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "DuplicateProductCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Products/Commands/DuplicateProduct/DuplicateProductCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "ProductUpdateApplier",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateApplier.cs",
+      "line": 5
+    },
+    {
+      "name": "ProductUpdateLimitValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
+      "line": 7
+    },
+    {
+      "name": "ProductUpdateValuePreparer",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
+      "line": 11
+    },
+    {
+      "name": "ProductUpdateValues",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateValues.cs",
+      "line": 5
+    },
+    {
+      "name": "UpdateProductCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/UpdateProductCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateProductCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "UpdateProductCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/UpdateProductCommandValidator.cs",
+      "line": 7
+    },
+    {
+      "name": "IProductSearchSuggestionProvider",
+      "kind": "interface",
+      "role": "Other",
+      "path": "FoodDiary.Application.Products/Common/IProductSearchSuggestionProvider.cs",
+      "line": 4
+    },
+    {
+      "name": "IRecentProductReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "FoodDiary.Application.Products/Common/IRecentProductReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "ProductCommandParsers",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Products/Common/ProductCommandParsers.cs",
+      "line": 7
+    },
+    {
+      "name": "ProductCommandValidation",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Products/Common/ProductCommandValidation.cs",
+      "line": 6
+    },
+    {
+      "name": "ProductEnumFilterParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Products/Common/ProductEnumFilterParser.cs",
+      "line": 4
+    },
+    {
+      "name": "ProductImageAssetResolution",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Products/Common/ProductImageAssetResolution.cs",
+      "line": 4
+    },
+    {
+      "name": "ProductImageAssetResolver",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Products/Common/ProductImageAssetResolver.cs",
+      "line": 7
+    },
+    {
+      "name": "ProductRequiredIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Products/Common/ProductRequiredIdParser.cs",
+      "line": 5
+    },
+    {
+      "name": "RecentProductOverviewLoader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Products/Common/RecentProductOverviewLoader.cs",
+      "line": 4
+    },
+    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
@@ -11339,360 +11528,171 @@
       "line": 10
     },
     {
-      "name": "CreateProductCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "CreateProductCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "CreateProductCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommandValidator.cs",
-      "line": 6
-    },
-    {
-      "name": "CreateProductValuePreparer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductValuePreparer.cs",
-      "line": 10
-    },
-    {
-      "name": "CreateProductValues",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductValues.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteProductCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteProductCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "DeleteProductCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "DuplicateProductCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "DuplicateProductCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "DuplicateProductCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "ProductUpdateApplier",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateApplier.cs",
-      "line": 5
-    },
-    {
-      "name": "ProductUpdateLimitValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
-      "line": 7
-    },
-    {
-      "name": "ProductUpdateValuePreparer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
-      "line": 11
-    },
-    {
-      "name": "ProductUpdateValues",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "line": 5
-    },
-    {
-      "name": "UpdateProductCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateProductCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "UpdateProductCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommandValidator.cs",
-      "line": 7
-    },
-    {
-      "name": "IProductSearchSuggestionProvider",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Common/IProductSearchSuggestionProvider.cs",
-      "line": 4
-    },
-    {
-      "name": "IRecentProductReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Products/Products/Common/IRecentProductReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "ProductCommandParsers",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Common/ProductCommandParsers.cs",
-      "line": 7
-    },
-    {
-      "name": "ProductCommandValidation",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Common/ProductCommandValidation.cs",
-      "line": 6
-    },
-    {
-      "name": "ProductEnumFilterParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Common/ProductEnumFilterParser.cs",
-      "line": 4
-    },
-    {
-      "name": "ProductImageAssetResolution",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Common/ProductImageAssetResolution.cs",
-      "line": 4
-    },
-    {
-      "name": "ProductImageAssetResolver",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Common/ProductImageAssetResolver.cs",
-      "line": 7
-    },
-    {
-      "name": "ProductRequiredIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Common/ProductRequiredIdParser.cs",
-      "line": 5
-    },
-    {
-      "name": "RecentProductOverviewLoader",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Common/RecentProductOverviewLoader.cs",
-      "line": 4
-    },
-    {
       "name": "ProductMappings",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Mappings/ProductMappings.cs",
+      "path": "FoodDiary.Application.Products/Mappings/ProductMappings.cs",
       "line": 6
     },
     {
       "name": "ProductOverviewReadMappings",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Mappings/ProductOverviewReadMappings.cs",
+      "path": "FoodDiary.Application.Products/Mappings/ProductOverviewReadMappings.cs",
       "line": 5
     },
     {
       "name": "ProductModel",
       "kind": "record",
       "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Models/ProductModel.cs",
+      "path": "FoodDiary.Application.Products/Models/ProductModel.cs",
       "line": 6
     },
     {
       "name": "ProductOverviewModel",
       "kind": "record",
       "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Models/ProductOverviewModel.cs",
+      "path": "FoodDiary.Application.Products/Models/ProductOverviewModel.cs",
       "line": 5
     },
     {
       "name": "ProductSearchSuggestionModel",
       "kind": "record",
       "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/Models/ProductSearchSuggestionModel.cs",
+      "path": "FoodDiary.Application.Products/Models/ProductSearchSuggestionModel.cs",
       "line": 2
     },
     {
       "name": "GetProductByIdQuery",
       "kind": "record",
       "role": "Query",
-      "path": "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQuery.cs",
+      "path": "FoodDiary.Application.Products/Queries/GetProductById/GetProductByIdQuery.cs",
       "line": 6
     },
     {
       "name": "GetProductByIdQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQueryHandler.cs",
+      "path": "FoodDiary.Application.Products/Queries/GetProductById/GetProductByIdQueryHandler.cs",
       "line": 13
     },
     {
       "name": "GetProductByIdQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQueryValidator.cs",
+      "path": "FoodDiary.Application.Products/Queries/GetProductById/GetProductByIdQueryValidator.cs",
       "line": 4
     },
     {
       "name": "GetProductsQuery",
       "kind": "record",
       "role": "Query",
-      "path": "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQuery.cs",
+      "path": "FoodDiary.Application.Products/Queries/GetProducts/GetProductsQuery.cs",
       "line": 7
     },
     {
       "name": "GetProductsQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQueryHandler.cs",
+      "path": "FoodDiary.Application.Products/Queries/GetProducts/GetProductsQueryHandler.cs",
       "line": 15
     },
     {
       "name": "GetProductsQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQueryValidator.cs",
+      "path": "FoodDiary.Application.Products/Queries/GetProducts/GetProductsQueryValidator.cs",
       "line": 5
     },
     {
       "name": "GetProductsOverviewQuery",
       "kind": "record",
       "role": "Query",
-      "path": "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs",
+      "path": "FoodDiary.Application.Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs",
       "line": 6
     },
     {
       "name": "GetProductsOverviewQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+      "path": "FoodDiary.Application.Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
       "line": 17
     },
     {
       "name": "GetProductsOverviewQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
+      "path": "FoodDiary.Application.Products/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
       "line": 5
     },
     {
       "name": "GetRecentProductsQuery",
       "kind": "record",
       "role": "Query",
-      "path": "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs",
+      "path": "FoodDiary.Application.Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs",
       "line": 6
     },
     {
       "name": "GetRecentProductsQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
+      "path": "FoodDiary.Application.Products/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
       "line": 9
     },
     {
       "name": "GetRecentProductsQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQueryValidator.cs",
+      "path": "FoodDiary.Application.Products/Queries/GetRecentProducts/GetRecentProductsQueryValidator.cs",
       "line": 4
     },
     {
       "name": "SearchProductSuggestionsQuery",
       "kind": "record",
       "role": "Query",
-      "path": "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs",
+      "path": "FoodDiary.Application.Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs",
       "line": 6
     },
     {
       "name": "SearchProductSuggestionsQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
+      "path": "FoodDiary.Application.Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
       "line": 7
     },
     {
       "name": "SearchProductSuggestionsQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryValidator.cs",
+      "path": "FoodDiary.Application.Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryValidator.cs",
       "line": 4
     },
     {
       "name": "OpenFoodFactsProductSearchSuggestionProvider",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/SearchSuggestions/OpenFoodFactsProductSearchSuggestionProvider.cs",
+      "path": "FoodDiary.Application.Products/SearchSuggestions/OpenFoodFactsProductSearchSuggestionProvider.cs",
       "line": 7
     },
     {
       "name": "UsdaProductSearchSuggestionProvider",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Products/Products/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
+      "path": "FoodDiary.Application.Products/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
       "line": 8
     },
     {
       "name": "ProductUsdaLinkService",
       "kind": "class",
       "role": "Service",
-      "path": "FoodDiary.Application.Products/Products/Services/ProductUsdaLinkService.cs",
+      "path": "FoodDiary.Application.Products/Services/ProductUsdaLinkService.cs",
       "line": 6
     },
     {
       "name": "RecentProductReadService",
       "kind": "class",
       "role": "Service",
-      "path": "FoodDiary.Application.Products/Products/Services/RecentProductReadService.cs",
+      "path": "FoodDiary.Application.Products/Services/RecentProductReadService.cs",
       "line": 10
     },
     {
@@ -11836,6 +11836,188 @@
       "line": 7
     },
     {
+      "name": "CreateRecipeCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "CreateRecipeCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "CreateRecipeCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/CreateRecipeCommandValidator.cs",
+      "line": 10
+    },
+    {
+      "name": "CreateRecipeValuePreparer",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/CreateRecipeValuePreparer.cs",
+      "line": 10
+    },
+    {
+      "name": "CreateRecipeValues",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/CreateRecipeValues.cs",
+      "line": 6
+    },
+    {
+      "name": "RecipeCreateFactory",
+      "kind": "class",
+      "role": "Factory",
+      "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/RecipeCreateFactory.cs",
+      "line": 4
+    },
+    {
+      "name": "DeleteRecipeCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteRecipeCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "DeleteRecipeCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Recipes/Commands/DeleteRecipe/DeleteRecipeCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "DuplicateRecipeCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "DuplicateRecipeCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
+      "line": 16
+    },
+    {
+      "name": "DuplicateRecipeCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "RecipeUpdateApplier",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/RecipeUpdateApplier.cs",
+      "line": 4
+    },
+    {
+      "name": "RecipeUpdateAssetCleanup",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/RecipeUpdateAssetCleanup.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateRecipeCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "UpdateRecipeCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "UpdateRecipeCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/UpdateRecipeCommandValidator.cs",
+      "line": 10
+    },
+    {
+      "name": "UpdateRecipeValuePreparer",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
+      "line": 16
+    },
+    {
+      "name": "UpdateRecipeValues",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/UpdateRecipeValues.cs",
+      "line": 8
+    },
+    {
+      "name": "IRecentRecipeReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "FoodDiary.Application.Recipes/Common/IRecentRecipeReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "RecipeIngredientInput",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Recipes/Common/RecipeIngredientInput.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeOptionalEntityIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Recipes/Common/RecipeOptionalEntityIdParser.cs",
+      "line": 5
+    },
+    {
+      "name": "RecipeRequiredIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Recipes/Common/RecipeRequiredIdParser.cs",
+      "line": 5
+    },
+    {
+      "name": "RecipeStepInput",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Recipes/Common/RecipeStepInput.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeIngredientInputValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Recipes/Common/Validators/RecipeIngredientInputValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "RecipeStepInputValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Recipes/Common/Validators/RecipeStepInputValidator.cs",
+      "line": 5
+    },
+    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
@@ -11843,388 +12025,206 @@
       "line": 8
     },
     {
-      "name": "CreateRecipeCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "CreateRecipeCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
-      "line": 15
-    },
-    {
-      "name": "CreateRecipeCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommandValidator.cs",
-      "line": 10
-    },
-    {
-      "name": "CreateRecipeValuePreparer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeValuePreparer.cs",
-      "line": 10
-    },
-    {
-      "name": "CreateRecipeValues",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeValues.cs",
-      "line": 6
-    },
-    {
-      "name": "RecipeCreateFactory",
-      "kind": "class",
-      "role": "Factory",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/RecipeCreateFactory.cs",
-      "line": 4
-    },
-    {
-      "name": "DeleteRecipeCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteRecipeCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "DeleteRecipeCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "DuplicateRecipeCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "DuplicateRecipeCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
-      "line": 16
-    },
-    {
-      "name": "DuplicateRecipeCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "RecipeUpdateApplier",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/RecipeUpdateApplier.cs",
-      "line": 4
-    },
-    {
-      "name": "RecipeUpdateAssetCleanup",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/RecipeUpdateAssetCleanup.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateRecipeCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "UpdateRecipeCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
-      "line": 15
-    },
-    {
-      "name": "UpdateRecipeCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandValidator.cs",
-      "line": 10
-    },
-    {
-      "name": "UpdateRecipeValuePreparer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
-      "line": 16
-    },
-    {
-      "name": "UpdateRecipeValues",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeValues.cs",
-      "line": 8
-    },
-    {
-      "name": "IRecentRecipeReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Recipes/Recipes/Common/IRecentRecipeReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "RecipeIngredientInput",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Common/RecipeIngredientInput.cs",
-      "line": 2
-    },
-    {
-      "name": "RecipeOptionalEntityIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Common/RecipeOptionalEntityIdParser.cs",
-      "line": 5
-    },
-    {
-      "name": "RecipeRequiredIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Common/RecipeRequiredIdParser.cs",
-      "line": 5
-    },
-    {
-      "name": "RecipeStepInput",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Common/RecipeStepInput.cs",
-      "line": 2
-    },
-    {
-      "name": "RecipeIngredientInputValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Common/Validators/RecipeIngredientInputValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "RecipeStepInputValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Common/Validators/RecipeStepInputValidator.cs",
-      "line": 5
-    },
-    {
       "name": "RecipeMappings",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Mappings/RecipeMappings.cs",
+      "path": "FoodDiary.Application.Recipes/Mappings/RecipeMappings.cs",
       "line": 7
     },
     {
       "name": "RecipeOverviewReadMappings",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Mappings/RecipeOverviewReadMappings.cs",
+      "path": "FoodDiary.Application.Recipes/Mappings/RecipeOverviewReadMappings.cs",
       "line": 5
     },
     {
       "name": "RecipeIngredientModel",
       "kind": "record",
       "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Models/RecipeIngredientModel.cs",
+      "path": "FoodDiary.Application.Recipes/Models/RecipeIngredientModel.cs",
       "line": 6
     },
     {
       "name": "RecipeModel",
       "kind": "record",
       "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Models/RecipeModel.cs",
+      "path": "FoodDiary.Application.Recipes/Models/RecipeModel.cs",
       "line": 6
     },
     {
       "name": "RecipeOverviewModel",
       "kind": "record",
       "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Models/RecipeOverviewModel.cs",
+      "path": "FoodDiary.Application.Recipes/Models/RecipeOverviewModel.cs",
       "line": 5
     },
     {
       "name": "RecipeStepModel",
       "kind": "record",
       "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Models/RecipeStepModel.cs",
+      "path": "FoodDiary.Application.Recipes/Models/RecipeStepModel.cs",
       "line": 2
     },
     {
       "name": "ExploreRecipesQuery",
       "kind": "record",
       "role": "Query",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs",
       "line": 7
     },
     {
       "name": "ExploreRecipesQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
       "line": 13
     },
     {
       "name": "ExploreRecipesQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQueryValidator.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/ExploreRecipes/ExploreRecipesQueryValidator.cs",
       "line": 5
     },
     {
       "name": "GetRecentRecipesQuery",
       "kind": "record",
       "role": "Query",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs",
       "line": 6
     },
     {
       "name": "GetRecentRecipesQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
       "line": 9
     },
     {
       "name": "GetRecentRecipesQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryValidator.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryValidator.cs",
       "line": 4
     },
     {
       "name": "GetRecipeByIdQuery",
       "kind": "record",
       "role": "Query",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs",
       "line": 6
     },
     {
       "name": "GetRecipeByIdQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
       "line": 13
     },
     {
       "name": "GetRecipeByIdQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQueryValidator.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/GetRecipeById/GetRecipeByIdQueryValidator.cs",
       "line": 4
     },
     {
       "name": "GetRecipesQuery",
       "kind": "record",
       "role": "Query",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQuery.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/GetRecipes/GetRecipesQuery.cs",
       "line": 7
     },
     {
       "name": "GetRecipesQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
       "line": 13
     },
     {
       "name": "GetRecipesQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQueryValidator.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/GetRecipes/GetRecipesQueryValidator.cs",
       "line": 5
     },
     {
       "name": "GetRecipesOverviewQuery",
       "kind": "record",
       "role": "Query",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs",
       "line": 6
     },
     {
       "name": "GetRecipesOverviewQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
       "line": 16
     },
     {
       "name": "GetRecipesOverviewQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryValidator.cs",
+      "path": "FoodDiary.Application.Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryValidator.cs",
       "line": 5
     },
     {
       "name": "RecentRecipeReadService",
       "kind": "class",
       "role": "Service",
-      "path": "FoodDiary.Application.Recipes/Recipes/Services/RecentRecipeReadService.cs",
+      "path": "FoodDiary.Application.Recipes/Services/RecentRecipeReadService.cs",
       "line": 10
     },
     {
       "name": "RecipeIngredientAccessValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Services/RecipeIngredientAccessValidator.cs",
+      "path": "FoodDiary.Application.Recipes/Services/RecipeIngredientAccessValidator.cs",
       "line": 11
     },
     {
       "name": "RecipeManualNutritionValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Services/RecipeManualNutritionValidator.cs",
+      "path": "FoodDiary.Application.Recipes/Services/RecipeManualNutritionValidator.cs",
       "line": 6
     },
     {
       "name": "RecipeNutritionApplier",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Services/RecipeNutritionApplier.cs",
+      "path": "FoodDiary.Application.Recipes/Services/RecipeNutritionApplier.cs",
       "line": 5
     },
     {
       "name": "RecipeNutritionCalculator",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Services/RecipeNutritionCalculator.cs",
+      "path": "FoodDiary.Application.Recipes/Services/RecipeNutritionCalculator.cs",
       "line": 4
     },
     {
       "name": "RecipeNutritionSummary",
       "kind": "record",
       "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Services/RecipeNutritionSummary.cs",
+      "path": "FoodDiary.Application.Recipes/Services/RecipeNutritionSummary.cs",
       "line": 2
     },
     {
       "name": "RecipeNutritionUpdater",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Services/RecipeNutritionUpdater.cs",
+      "path": "FoodDiary.Application.Recipes/Services/RecipeNutritionUpdater.cs",
       "line": 5
     },
     {
       "name": "RecipeStepAppender",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Recipes/Recipes/Services/RecipeStepAppender.cs",
+      "path": "FoodDiary.Application.Recipes/Services/RecipeStepAppender.cs",
       "line": 10
     },
     {
@@ -13019,6 +13019,90 @@
       "line": 10
     },
     {
+      "name": "ConnectWearableCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ConnectWearableCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "ConnectWearableCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Wearables/Commands/ConnectWearable/ConnectWearableCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "DisconnectWearableCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DisconnectWearableCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "DisconnectWearableCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Wearables/Commands/DisconnectWearable/DisconnectWearableCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "SyncWearableDataCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "SyncWearableDataCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "SyncWearableDataCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Wearables/Commands/SyncWearableData/SyncWearableDataCommandValidator.cs",
+      "line": 6
+    },
+    {
+      "name": "IWearableReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "FoodDiary.Application.Wearables/Common/IWearableReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "WearableDateRules",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Wearables/Common/WearableDateRules.cs",
+      "line": 2
+    },
+    {
+      "name": "WearableProviderParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Wearables/Common/WearableProviderParser.cs",
+      "line": 6
+    },
+    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
@@ -13026,150 +13110,66 @@
       "line": 8
     },
     {
-      "name": "ConnectWearableCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "ConnectWearableCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "ConnectWearableCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "DisconnectWearableCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DisconnectWearableCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "DisconnectWearableCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "SyncWearableDataCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "SyncWearableDataCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
-      "line": 15
-    },
-    {
-      "name": "SyncWearableDataCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandValidator.cs",
-      "line": 6
-    },
-    {
-      "name": "IWearableReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Wearables/Wearables/Common/IWearableReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "WearableDateRules",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Wearables/Wearables/Common/WearableDateRules.cs",
-      "line": 2
-    },
-    {
-      "name": "WearableProviderParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Wearables/Wearables/Common/WearableProviderParser.cs",
-      "line": 6
-    },
-    {
       "name": "GetWearableAuthUrlQuery",
       "kind": "record",
       "role": "Query",
-      "path": "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs",
+      "path": "FoodDiary.Application.Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs",
       "line": 5
     },
     {
       "name": "GetWearableAuthUrlQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
+      "path": "FoodDiary.Application.Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
       "line": 11
     },
     {
       "name": "GetWearableAuthUrlQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryValidator.cs",
+      "path": "FoodDiary.Application.Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryValidator.cs",
       "line": 5
     },
     {
       "name": "GetWearableConnectionsQuery",
       "kind": "record",
       "role": "Query",
-      "path": "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs",
+      "path": "FoodDiary.Application.Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs",
       "line": 6
     },
     {
       "name": "GetWearableConnectionsQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
+      "path": "FoodDiary.Application.Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
       "line": 9
     },
     {
       "name": "GetWearableDailySummaryQuery",
       "kind": "record",
       "role": "Query",
-      "path": "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs",
+      "path": "FoodDiary.Application.Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs",
       "line": 6
     },
     {
       "name": "GetWearableDailySummaryQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
+      "path": "FoodDiary.Application.Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
       "line": 9
     },
     {
       "name": "GetWearableDailySummaryQueryValidator",
       "kind": "class",
       "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryValidator.cs",
+      "path": "FoodDiary.Application.Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryValidator.cs",
       "line": 5
     },
     {
       "name": "WearableReadService",
       "kind": "class",
       "role": "Service",
-      "path": "FoodDiary.Application.Wearables/Wearables/Services/WearableReadService.cs",
+      "path": "FoodDiary.Application.Wearables/Services/WearableReadService.cs",
       "line": 8
     },
     {
@@ -25540,7 +25540,7 @@
       "interface": "IProductUsdaLinkService",
       "interfacePath": "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs",
       "implementation": "ProductUsdaLinkService",
-      "implementationPath": "FoodDiary.Application.Products/Products/Services/ProductUsdaLinkService.cs",
+      "implementationPath": "FoodDiary.Application.Products/Services/ProductUsdaLinkService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25559,16 +25559,16 @@
     },
     {
       "interface": "IRecentProductReadService",
-      "interfacePath": "FoodDiary.Application.Products/Products/Common/IRecentProductReadService.cs",
+      "interfacePath": "FoodDiary.Application.Products/Common/IRecentProductReadService.cs",
       "implementation": "RecentProductReadService",
-      "implementationPath": "FoodDiary.Application.Products/Products/Services/RecentProductReadService.cs",
+      "implementationPath": "FoodDiary.Application.Products/Services/RecentProductReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IRecentRecipeReadService",
-      "interfacePath": "FoodDiary.Application.Recipes/Recipes/Common/IRecentRecipeReadService.cs",
+      "interfacePath": "FoodDiary.Application.Recipes/Common/IRecentRecipeReadService.cs",
       "implementation": "RecentRecipeReadService",
-      "implementationPath": "FoodDiary.Application.Recipes/Recipes/Services/RecentRecipeReadService.cs",
+      "implementationPath": "FoodDiary.Application.Recipes/Services/RecentRecipeReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25930,9 +25930,9 @@
     },
     {
       "interface": "IWearableReadService",
-      "interfacePath": "FoodDiary.Application.Wearables/Wearables/Common/IWearableReadService.cs",
+      "interfacePath": "FoodDiary.Application.Wearables/Common/IWearableReadService.cs",
       "implementation": "WearableReadService",
-      "implementationPath": "FoodDiary.Application.Wearables/Wearables/Services/WearableReadService.cs",
+      "implementationPath": "FoodDiary.Application.Wearables/Services/WearableReadService.cs",
       "confidence": "naming-convention"
     },
     {

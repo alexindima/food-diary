@@ -1,0 +1,20 @@
+using FluentValidation;
+
+namespace FoodDiary.Application.Products.Commands.DuplicateProduct;
+
+public sealed class DuplicateProductCommandValidator : AbstractValidator<DuplicateProductCommand> {
+    public DuplicateProductCommandValidator() {
+        RuleFor(x => x.UserId)
+            .NotNull()
+            .WithErrorCode("Authentication.InvalidToken")
+            .WithMessage("Unable to identify user")
+            .Must(id => id is not null && id.Value != Guid.Empty)
+            .WithErrorCode("Authentication.InvalidToken")
+            .WithMessage("Unable to identify user");
+
+        RuleFor(x => x.ProductId)
+            .NotEqual(Guid.Empty)
+            .WithErrorCode("Validation.Required")
+            .WithMessage("ProductId is required");
+    }
+}

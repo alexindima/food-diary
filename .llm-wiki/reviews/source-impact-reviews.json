@@ -4,17 +4,17 @@
     {
       "pageId": "index",
       "pagePath": ".llm-wiki/index.md",
-      "pageSha256": "38036ef8e49f1556bdb83ed6c4a946a88c480c5aabf9e1e11b47f88f627674b0",
+      "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "708d716605e327e200ccf81416be587a78019109956eeec9859eec3541af6a69"
+          "sha256": "92d5d2689f960114d429b6ad430d24ba74cf342232b7c7147cf1f5d93420d9f3"
         }
       ],
-      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
+      "reason": "Reviewed root guidance, generated repository catalog, and ADR 0015 against the flattened Products, Recipes, and Wearables source layout; navigation and durable structure policy match current files.",
       "baseRef": "HEAD",
-      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
-      "reviewedAtUtc": "2026-08-26T18:45:53.6245241Z"
+      "gitHead": "9932579e2ea95b1f3036b56ff896bcdb443b418f",
+      "reviewedAtUtc": "2026-08-28T02:15:53.9164859Z"
     },
     {
       "pageId": "module.mail-services",
@@ -98,13 +98,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "708d716605e327e200ccf81416be587a78019109956eeec9859eec3541af6a69"
+          "sha256": "92d5d2689f960114d429b6ad430d24ba74cf342232b7c7147cf1f5d93420d9f3"
         }
       ],
-      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
+      "reason": "Reviewed root guidance, generated repository catalog, and ADR 0015 against the flattened Products, Recipes, and Wearables source layout; navigation and durable structure policy match current files.",
       "baseRef": "HEAD",
-      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
-      "reviewedAtUtc": "2026-08-26T18:45:56.2051330Z"
+      "gitHead": "9932579e2ea95b1f3036b56ff896bcdb443b418f",
+      "reviewedAtUtc": "2026-08-28T02:15:55.0972420Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -177,13 +177,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "66363da3f6bdd8239ee6f714cfb9162f870bdda6c6c416408a522abbc2d2af13"
+          "sha256": "985db808e97964963ce6638aa934bc8b40c9fc026dd09412bd6b65035ad0eae5"
         }
       ],
-      "reason": "Read-only snapshot routing, ranking policy, singleton quality results, runtime freshness, and JSON-SQLite parity were reviewed with retrieval contracts, frozen evaluations, and affected smoke tests.",
+      "reason": "Reviewed architecture, review, change-policy, and index-pipeline impacts; module tests passed Products 172, Recipes 166, Wearables 46, Architecture 723, Presentation API 810, and index-selection smoke passed with real lock ownership synchronization.",
       "baseRef": "HEAD",
-      "gitHead": "e757f3e07c6418b4e0ed3943896e18b17e1aa682",
-      "reviewedAtUtc": "2026-08-27T18:10:02.6141968Z"
+      "gitHead": "9932579e2ea95b1f3036b56ff896bcdb443b418f",
+      "reviewedAtUtc": "2026-08-28T02:15:56.0365886Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -192,17 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "722fa251f49cd671468dbdee2c1bbbd3d7876fc2c61c147153cdc4e7f71890bc"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiBackendContractSqlParity.ps1",
-          "sha256": "ecd2c3308973e79817ee8f7852fea23c280ee180e5b8d7db52140d14a68cadf7"
+          "sha256": "caf60d630a8d89ab0e6279de3f6a03efcb6ca88e5188dd35c582e4554c7f9f2a"
         }
       ],
-      "reason": "Reviewed generated backend contracts and provider controller behavior: no HTTP route or payload shape changed; Mailgun-disabled requests now fail closed with the existing unauthorized contract.",
+      "reason": "Reviewed backend contract impact: changes are source paths, namespaces, and using directives only; wiki api-compat reports zero structural breaking, additive, or behavioral changes, and Presentation API tests passed 810 of 810.",
       "baseRef": "HEAD",
-      "gitHead": "2f73f72743024094a150a8cdf864419d21bf926d",
-      "reviewedAtUtc": "2026-08-28T01:25:29.5695122Z"
+      "gitHead": "9932579e2ea95b1f3036b56ff896bcdb443b418f",
+      "reviewedAtUtc": "2026-08-28T02:15:57.3473330Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -609,22 +605,14 @@
       "pageSha256": "7cf34e384c94c0427431d4d5b600c1aa2b1cad26fa2eb72f02b0942e6e2240ca",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
-          "sha256": "c7379bb5b8df490bb3870974f5e501dc064babf5529159207ba4a19100783a2f"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiDomainDataSqlParity.ps1",
-          "sha256": "bff4c3f8f15fc489670cd5998bc9b1e7303166fc719fd94c49d41e0eaaebe084"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1",
-          "sha256": "03c887a02035847d6d5f643e67a4117eb60b76c5403ab7a663d4615361d88472"
+          "path": ".llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1",
+          "sha256": "eaa04f610e3c56f75002cc7878a606808825cb5b0c0acbd49550c07cf107d077"
         }
       ],
-      "reason": "Reviewed SQL parity and exhaustive verification changes: semantic output, source-hash, freshness, corruption, and payload-reduction assertions remain; only cross-backend latency assertions were removed, and standalone Full completed 347/347 assertions.",
+      "reason": "Reviewed architecture, review, change-policy, and index-pipeline impacts; module tests passed Products 172, Recipes 166, Wearables 46, Architecture 723, Presentation API 810, and index-selection smoke passed with real lock ownership synchronization.",
       "baseRef": "HEAD",
-      "gitHead": "2f73f72743024094a150a8cdf864419d21bf926d",
-      "reviewedAtUtc": "2026-08-28T01:25:34.1833343Z"
+      "gitHead": "9932579e2ea95b1f3036b56ff896bcdb443b418f",
+      "reviewedAtUtc": "2026-08-28T02:15:59.2548161Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -760,14 +748,14 @@
       "pageSha256": "fdb0f4d3895ff8cf31310bbd750c55f3ddc126de804c9665105650868a86fb6e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiSensitiveDataSqlParity.ps1",
-          "sha256": "23930f46b15b120029fe7037ac75fdb4c3a89b5d8caa5c6654d099a7e66cca69"
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "b355f7497724dced1af766032146c51dbde3db83e4b7fe307260febfd64739c0"
         }
       ],
-      "reason": "Reviewed runtime topology, privacy output, and webhook authorization: disabled Mailgun ingestion rejects requests before dispatch and introduces no new sensitive-data storage, logging, or provider sharing.",
+      "reason": "Reviewed sensitive-data and security workflow impact: no credentials, personal data handling, authorization boundary, provider sharing, persistence, or logging behavior changed; generated sensitive and quality indexes remain consistent.",
       "baseRef": "HEAD",
-      "gitHead": "2f73f72743024094a150a8cdf864419d21bf926d",
-      "reviewedAtUtc": "2026-08-28T01:25:35.0493429Z"
+      "gitHead": "9932579e2ea95b1f3036b56ff896bcdb443b418f",
+      "reviewedAtUtc": "2026-08-28T02:16:00.1282511Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -810,17 +798,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eb77ec42502c32eb0692195bfa27a3c3d535f996eb803fad3f27b7bf0b06bc21"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1",
-          "sha256": "e1ff71d0a9f04625ffdd714b6b1ec423d4e763c7e7536ae826023bd7b812f0e5"
+          "sha256": "c0a9b7a68e5e95de45270d4deb38ea968306ded09e17524274fc731e3569e883"
         }
       ],
-      "reason": "The final admin auth changes are covered by the complete admin test suite and workspace lint; regenerated quality data was reviewed.",
+      "reason": "Reviewed architecture, review, change-policy, and index-pipeline impacts; module tests passed Products 172, Recipes 166, Wearables 46, Architecture 723, Presentation API 810, and index-selection smoke passed with real lock ownership synchronization.",
       "baseRef": "HEAD",
-      "gitHead": "e757f3e07c6418b4e0ed3943896e18b17e1aa682",
-      "reviewedAtUtc": "2026-08-27T18:23:00.9689266Z"
+      "gitHead": "9932579e2ea95b1f3036b56ff896bcdb443b418f",
+      "reviewedAtUtc": "2026-08-28T02:16:01.2864403Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -907,14 +891,18 @@
       "pageSha256": "1ced048a0b4e3cf273e527e0c34fb0b59e493d68c49694495c125cc0d0aec28e",
       "sources": [
         {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "609f1f260fe149215531620a005ecca32d42d55aa849a19fadb89a2fe214ad40"
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "c0a9b7a68e5e95de45270d4deb38ea968306ded09e17524274fc731e3569e883"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "b355f7497724dced1af766032146c51dbde3db83e4b7fe307260febfd64739c0"
         }
       ],
-      "reason": "Reviewed runtime topology, privacy output, and webhook authorization: disabled Mailgun ingestion rejects requests before dispatch and introduces no new sensitive-data storage, logging, or provider sharing.",
+      "reason": "Reviewed sensitive-data and security workflow impact: no credentials, personal data handling, authorization boundary, provider sharing, persistence, or logging behavior changed; generated sensitive and quality indexes remain consistent.",
       "baseRef": "HEAD",
-      "gitHead": "2f73f72743024094a150a8cdf864419d21bf926d",
-      "reviewedAtUtc": "2026-08-28T01:25:37.2394481Z"
+      "gitHead": "9932579e2ea95b1f3036b56ff896bcdb443b418f",
+      "reviewedAtUtc": "2026-08-28T02:16:04.4238312Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1091,14 +1079,14 @@
       "pageSha256": "d09bef3a0319b7a8b848d8b35f4b8415ad8b349af18b18892057db2b6e63fca1",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "29551d758cb72c7a50889720bcd919ba23b9d8ce070f2f75044cf17809468b39"
+          "path": "AGENTS.md",
+          "sha256": "92d5d2689f960114d429b6ad430d24ba74cf342232b7c7147cf1f5d93420d9f3"
         }
       ],
-      "reason": "Reviewed dependency, rollout, runtime-impact, and change-policy guidance; the correction changes matching coverage, not the documented commands or evidence semantics.",
+      "reason": "Reviewed root guidance, generated repository catalog, and ADR 0015 against the flattened Products, Recipes, and Wearables source layout; navigation and durable structure policy match current files.",
       "baseRef": "HEAD",
-      "gitHead": "293f04ef2020709084024b2549f52f7c2e0b860d",
-      "reviewedAtUtc": "2026-08-27T15:54:06.0670535Z"
+      "gitHead": "9932579e2ea95b1f3036b56ff896bcdb443b418f",
+      "reviewedAtUtc": "2026-08-28T02:15:58.0674092Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1151,14 +1139,18 @@
       "pageSha256": "8a17a79b5919eb55ca3262bb48313e316a95af954ef50064dcb76f3246973a43",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1",
-          "sha256": "5248fd9d54b04b27a2e245547c9e5d56469b449a18e247dde0698adf5bd5fb4b"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "99aeb5b65f6f26413286ea54f67ef119a4340ed95b7e666430e4fadfc41f3259"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "92d5d2689f960114d429b6ad430d24ba74cf342232b7c7147cf1f5d93420d9f3"
         }
       ],
-      "reason": "Reviewed configuration, rollout, runtime-impact, trace, and dependency workflows against current sources: generated indexes are refreshed and the existing pages remain accurate; no ownership, dependency, migration, or public topology change requires prose edits.",
+      "reason": "Reviewed root guidance, generated repository catalog, and ADR 0015 against the flattened Products, Recipes, and Wearables source layout; navigation and durable structure policy match current files.",
       "baseRef": "HEAD",
-      "gitHead": "2f73f72743024094a150a8cdf864419d21bf926d",
-      "reviewedAtUtc": "2026-08-28T01:25:35.8155315Z"
+      "gitHead": "9932579e2ea95b1f3036b56ff896bcdb443b418f",
+      "reviewedAtUtc": "2026-08-28T02:16:02.3565100Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1166,14 +1158,14 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "02113c1917a4a2a3a784d9225bcd158563f4be5ab926a97099ff85a227e6b078"
+          "path": "AGENTS.md",
+          "sha256": "92d5d2689f960114d429b6ad430d24ba74cf342232b7c7147cf1f5d93420d9f3"
         }
       ],
-      "reason": "Read-only snapshot routing, ranking policy, singleton quality results, runtime freshness, and JSON-SQLite parity were reviewed with retrieval contracts, frozen evaluations, and affected smoke tests.",
+      "reason": "Reviewed architecture, review, change-policy, and index-pipeline impacts; module tests passed Products 172, Recipes 166, Wearables 46, Architecture 723, Presentation API 810, and index-selection smoke passed with real lock ownership synchronization.",
       "baseRef": "HEAD",
-      "gitHead": "e757f3e07c6418b4e0ed3943896e18b17e1aa682",
-      "reviewedAtUtc": "2026-08-27T18:10:08.2217573Z"
+      "gitHead": "9932579e2ea95b1f3036b56ff896bcdb443b418f",
+      "reviewedAtUtc": "2026-08-28T02:16:03.3454412Z"
     }
   ]
 }

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Products.Products.Queries.SearchProductSuggestions;
+using FoodDiary.Application.Products.Queries.SearchProductSuggestions;
 
 namespace FoodDiary.Presentation.Api.Features.Products;
 

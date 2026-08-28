@@ -1,7 +1,7 @@
-using FoodDiary.Application.Products.Products.Queries.GetProducts;
-using FoodDiary.Application.Products.Products.Queries.GetProductsOverview;
-using FoodDiary.Application.Products.Products.Queries.GetProductById;
-using FoodDiary.Application.Products.Products.Queries.GetRecentProducts;
+using FoodDiary.Application.Products.Queries.GetProducts;
+using FoodDiary.Application.Products.Queries.GetProductsOverview;
+using FoodDiary.Application.Products.Queries.GetProductById;
+using FoodDiary.Application.Products.Queries.GetRecentProducts;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Products.Mappings;

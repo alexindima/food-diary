@@ -5423,7 +5423,7 @@
     {
       "name": "ProductUpdateLimitValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
+      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
       "line": 7,
       "testReferenceCount": 0,
       "testReferences": []
@@ -5431,7 +5431,7 @@
     {
       "name": "RecipeIngredientInputValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Common/Validators/RecipeIngredientInputValidator.cs",
+      "path": "FoodDiary.Application.Recipes/Common/Validators/RecipeIngredientInputValidator.cs",
       "line": 5,
       "testReferenceCount": 0,
       "testReferences": []
@@ -5439,7 +5439,7 @@
     {
       "name": "RecipeStepInputValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Recipes/Common/Validators/RecipeStepInputValidator.cs",
+      "path": "FoodDiary.Application.Recipes/Common/Validators/RecipeStepInputValidator.cs",
       "line": 5,
       "testReferenceCount": 0,
       "testReferences": []

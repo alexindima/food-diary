@@ -1,6 +1,6 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Wearables.Wearables.Commands.SyncWearableData;
-using FoodDiary.Application.Wearables.Wearables.Queries.GetWearableDailySummary;
+using FoodDiary.Application.Wearables.Commands.SyncWearableData;
+using FoodDiary.Application.Wearables.Queries.GetWearableDailySummary;
 
 namespace FoodDiary.Application.Tests.Wearables;
 

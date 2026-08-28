@@ -1,11 +1,11 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Products.Products.Commands.DeleteProduct;
-using FoodDiary.Application.Products.Products.Commands.DuplicateProduct;
+using FoodDiary.Application.Products.Commands.DeleteProduct;
+using FoodDiary.Application.Products.Commands.DuplicateProduct;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Products.Products.Models;
+using FoodDiary.Application.Products.Models;
 
 namespace FoodDiary.Application.Tests.Products;
 

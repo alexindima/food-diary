@@ -1,0 +1,38 @@
+using System.Diagnostics.CodeAnalysis;
+
+namespace FoodDiary.Application.Recipes.Models;
+
+[ExcludeFromCodeCoverage]
+public sealed record RecipeModel(
+    Guid Id,
+    string Name,
+    string? Description,
+    string? Comment,
+    string? Category,
+    string? ImageUrl,
+    Guid? ImageAssetId,
+    int? PrepTime,
+    int? CookTime,
+    int Servings,
+    double? TotalCalories,
+    double? TotalProteins,
+    double? TotalFats,
+    double? TotalCarbs,
+    double? TotalFiber,
+    double? TotalAlcohol,
+    bool IsNutritionAutoCalculated,
+    double? ManualCalories,
+    double? ManualProteins,
+    double? ManualFats,
+    double? ManualCarbs,
+    double? ManualFiber,
+    double? ManualAlcohol,
+    string Visibility,
+    int UsageCount,
+    DateTime CreatedAt,
+    bool IsOwnedByCurrentUser,
+    int QualityScore,
+    string QualityGrade,
+    IReadOnlyList<RecipeStepModel> Steps,
+    bool IsFavorite,
+    Guid? FavoriteRecipeId);

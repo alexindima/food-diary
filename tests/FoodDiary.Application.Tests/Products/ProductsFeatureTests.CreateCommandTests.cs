@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Application.Products.Products.Commands.CreateProduct;
+using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Products.Products.Models;
+using FoodDiary.Application.Products.Models;
 
 namespace FoodDiary.Application.Tests.Products;
 

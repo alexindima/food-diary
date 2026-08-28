@@ -1,8 +1,8 @@
-using FoodDiary.Application.Recipes.Recipes.Queries.ExploreRecipes;
-using FoodDiary.Application.Recipes.Recipes.Queries.GetRecentRecipes;
-using FoodDiary.Application.Recipes.Recipes.Queries.GetRecipeById;
-using FoodDiary.Application.Recipes.Recipes.Queries.GetRecipes;
-using FoodDiary.Application.Recipes.Recipes.Queries.GetRecipesOverview;
+using FoodDiary.Application.Recipes.Queries.ExploreRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecipeById;
+using FoodDiary.Application.Recipes.Queries.GetRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 using FoodDiary.Presentation.Api.Features.Recipes.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Recipes.Mappings;

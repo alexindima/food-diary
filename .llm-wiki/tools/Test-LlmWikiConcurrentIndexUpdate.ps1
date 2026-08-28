@@ -8,6 +8,12 @@ $testRoot = Join-Path $artifactRoot "concurrent-index-test-$([guid]::NewGuid().T
 $null = New-Item -ItemType Directory -Path $testRoot -Force
 $shellPath = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $pipelinePath = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot 'Invoke-LlmWikiIndexPipeline.ps1'))
+$gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
+if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($gitDirectory)) {
+    throw 'Unable to resolve the Git directory for the concurrent index update test.'
+}
+$updateLockPath = Join-Path $gitDirectory 'llm-wiki/index-transactions/update.lock'
+$null = New-Item -ItemType Directory -Path (Split-Path -Parent $updateLockPath) -Force
 $arguments = @(
     '-NoLogo', '-NoProfile', '-File', $pipelinePath,
     '-AffectedOnly', '-ChangedPath', '.llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1',
@@ -33,16 +39,24 @@ try {
         -RedirectStandardError $firstErrorPath `
         -PassThru
 
+    $ownershipObserved = $false
     $ownershipDeadline = [DateTime]::UtcNow.AddSeconds(45)
     while ([DateTime]::UtcNow -lt $ownershipDeadline) {
-        if ((Test-Path -LiteralPath $firstOutputPath -PathType Leaf) -and
-            (Get-Content -LiteralPath $firstOutputPath -Raw) -match 'index transaction started') {
+        try {
+            $lockProbe = [IO.File]::Open(
+                $updateLockPath,
+                [IO.FileMode]::OpenOrCreate,
+                [IO.FileAccess]::ReadWrite,
+                [IO.FileShare]::None)
+            $lockProbe.Dispose()
+        } catch [IO.IOException] {
+            $ownershipObserved = $true
             break
         }
         if ($first.HasExited) { throw 'First concurrent refresh exited before the lock ownership was observed.' }
         Start-Sleep -Milliseconds 50
     }
-    if ([DateTime]::UtcNow -ge $ownershipDeadline) { throw 'Timed out waiting for the first concurrent refresh to acquire the update lock.' }
+    if (-not $ownershipObserved) { throw 'Timed out waiting for the first concurrent refresh to acquire the update lock.' }
 
     $second = Start-Process @windowParameters `
         -FilePath $shellPath `

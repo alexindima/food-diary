@@ -1,9 +1,9 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Recipes.Recipes.Commands.DuplicateRecipe;
-using FoodDiary.Application.Recipes.Recipes.Queries.GetRecipeById;
-using FoodDiary.Application.Recipes.Recipes.Queries.GetRecipes;
-using FoodDiary.Application.Recipes.Recipes.Queries.GetRecentRecipes;
-using FoodDiary.Application.Recipes.Recipes.Queries.GetRecipesOverview;
+using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
+using FoodDiary.Application.Recipes.Queries.GetRecipeById;
+using FoodDiary.Application.Recipes.Queries.GetRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 
 namespace FoodDiary.Application.Tests.Recipes;
 

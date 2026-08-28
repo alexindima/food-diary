@@ -1,8 +1,8 @@
-using FoodDiary.Application.Products.Products.Mappings;
+using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Products.Products.Models;
+using FoodDiary.Application.Products.Models;
 
 namespace FoodDiary.Application.Tests.Products;
 
