@@ -45,6 +45,12 @@ try {
         [Text.UTF8Encoding]::new($false))
 
     $facade = Join-Path $checkoutWikiRoot 'wiki.ps1'
+    $defaultBrief = Invoke-JsonFacade -Facade $facade -FacadeCommand brief -FacadeParameters @{
+        Objective = 'audit wearable synchronization'; ProposedPath = @('FoodDiary.Application.Wearables')
+        Compact = $true; Format = 'Json'; Limit = 3
+    }
+    Assert-ColdCheckout ([string]$defaultBrief.analysis.mode -eq 'planned-paths') 'Cold-checkout default brief did not fall back to the JSON baseline.'
+
     $research = Invoke-JsonFacade -Facade $facade -FacadeCommand research -FacadeParameters @{
         Objective = 'audit wearable synchronization'; ProposedPath = @('FoodDiary.Application.Wearables')
         Compact = $true; SkipHistory = $true; CompiledIndexSource = 'Json'; Format = 'Json'; Limit = 3

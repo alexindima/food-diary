@@ -119,7 +119,29 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
             [corruptResponse]).WaitAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task CompleteAsync(
+    public async Task<bool> RenewAsync(
+        string key,
+        string requestHash,
+        string ownerToken,
+        TimeSpan processingTtl,
+        CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
+        const string script = """
+            if redis.call('GET', KEYS[1]) ~= ARGV[1] then return 0 end
+            return redis.call('PEXPIRE', KEYS[1], ARGV[2])
+            """;
+        RedisResult result = await connectionMultiplexer.GetDatabase().ScriptEvaluateAsync(
+            script,
+            [BuildLockKey(key)],
+            [
+                BuildLockValue(requestHash, ownerToken),
+                Math.Max(1L, (long)processingTtl.TotalMilliseconds)
+                    .ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ]).WaitAsync(cancellationToken).ConfigureAwait(false);
+        return (int)result == 1;
+    }
+
+    public async Task<bool> CompleteAsync(
         string key,
         string requestHash,
         string ownerToken,
@@ -138,7 +160,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
             redis.call('DEL', KEYS[1])
             return 1
             """;
-        await database.ScriptEvaluateAsync(
+        RedisResult result = await database.ScriptEvaluateAsync(
             script,
             [BuildLockKey(key), BuildResponseKey(key)],
             [
@@ -146,6 +168,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
                 JsonSerializer.Serialize(entry, JsonOptions),
                 ((long)responseTtl.TotalMilliseconds).ToString(System.Globalization.CultureInfo.InvariantCulture),
             ]).WaitAsync(cancellationToken).ConfigureAwait(false);
+        return (int)result == 1;
     }
 
     public async Task ReleaseAsync(

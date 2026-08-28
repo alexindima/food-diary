@@ -8,7 +8,14 @@ public interface IIdempotencyStore {
         TimeSpan processingTtl,
         CancellationToken cancellationToken = default);
 
-    Task CompleteAsync(
+    Task<bool> RenewAsync(
+        string key,
+        string requestHash,
+        string ownerToken,
+        TimeSpan processingTtl,
+        CancellationToken cancellationToken = default);
+
+    Task<bool> CompleteAsync(
         string key,
         string requestHash,
         string ownerToken,

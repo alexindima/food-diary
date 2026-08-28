@@ -82,7 +82,6 @@ param(
     [string]$SmokeGroup = 'portable',
     [ValidateSet('Focused', 'Core', 'Full')]
     [string]$VerificationProfile = 'Focused',
-    [ValidateRange(1, 50)]
     [int]$Limit = 12,
     [string]$BaseRef = 'HEAD',
     [string]$HeadRef,
@@ -181,6 +180,7 @@ param(
     [string]$ImportPath,
     [string]$PolicyPath = '.llm-wiki/policies/workspace-policies.json',
     [switch]$Detailed,
+    [switch]$Help,
     [switch]$IncludeSealed,
     [Nullable[int]]$StaleAfterDays,
     [Nullable[int]]$EvidenceMaxAgeDays,
@@ -280,6 +280,11 @@ if (-not [string]::IsNullOrWhiteSpace($RequestFile)) {
         $PSBoundParameters[$parameterName] = $value
     }
 }
+$global:LASTEXITCODE = 0
+if ($Limit -lt 1 -or $Limit -gt 50) {
+    $global:LASTEXITCODE = 2
+    throw "Limit must be between 1 and 50; received $Limit."
+}
 $gitConfigCount = 0
 if (-not [string]::IsNullOrWhiteSpace($env:GIT_CONFIG_COUNT)) {
     $parsedGitConfigCount = 0
@@ -291,6 +296,10 @@ Set-Item -LiteralPath "Env:GIT_CONFIG_KEY_$gitConfigCount" -Value 'core.safecrlf
 Set-Item -LiteralPath "Env:GIT_CONFIG_VALUE_$gitConfigCount" -Value 'false'
 $env:GIT_CONFIG_COUNT = [string]($gitConfigCount + 1)
 $toolsRoot = Join-Path $PSScriptRoot 'tools'
+if ($Help) {
+    & (Join-Path $toolsRoot 'Show-LlmWikiCommandHelp.ps1') -Command $Command
+    return
+}
 $explicitChangedPathInput = $PSBoundParameters.ContainsKey('ChangedPath') -or $PSBoundParameters.ContainsKey('ChangedPathList')
 if (-not [string]::IsNullOrWhiteSpace($ChangedPathList)) {
     $ChangedPath = [string[]]@(
@@ -370,6 +379,15 @@ $compiledIndexReadOnlyCommands = @(
     'rollout', 'topology', 'privacy', 'security', 'ui', 'contracts', 'diff',
     'ownership', 'api-compat'
 )
+$automaticJsonFallbackCommands = @('brief', 'research')
+$compiledIndexSourceWasExplicit = $PSBoundParameters.ContainsKey('CompiledIndexSource')
+if (-not $compiledIndexSourceWasExplicit -and
+    $CompiledIndexSource -eq 'Sqlite' -and
+    $Command -in $automaticJsonFallbackCommands -and
+    -not (Test-Path -LiteralPath (Join-Path $PSScriptRoot '../FoodDiary.Web.Client/node_modules/typescript/package.json') -PathType Leaf)) {
+    $CompiledIndexSource = 'Json'
+    Write-Warning "TypeScript prerequisites are unavailable; '$Command' is using the read-only JSON baseline. Pass explicit -CompiledIndexSource Sqlite to require the full compiled graph."
+}
 $wikiToolingPlanningIntent = $Command -in $explicitScopePlanningCommands -and
     -not [string]::IsNullOrWhiteSpace([string]$Objective) -and
     ([string]$Objective) -match '(?i)\b(llm[- ]?wiki|wiki\.ps1|wiki tooling|development mcp)\b'

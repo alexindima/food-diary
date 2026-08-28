@@ -1,5 +1,6 @@
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Web.Api.Services;
+using Microsoft.AspNetCore.Http;
 using StackExchange.Redis;
 
 namespace FoodDiary.Web.Api.Tests.Services;
@@ -157,9 +158,15 @@ public sealed class RedisIdempotencyStoreTests {
     [Fact]
     public async Task CompleteAsync_WritesCompletedResponseAndReleasesLock() {
         IDatabase database = Substitute.For<IDatabase>();
+        database.ScriptEvaluateAsync(
+                Arg.Any<string>(),
+                Arg.Any<RedisKey[]>(),
+                Arg.Any<RedisValue[]>(),
+                CommandFlags.None)
+            .Returns(Task.FromResult(RedisResult.Create((RedisValue)1)));
         RedisIdempotencyStore store = CreateStore(database);
 
-        await store.CompleteAsync(
+        bool completed = await store.CompleteAsync(
             "request-7",
             "hash-7",
             "owner-7",
@@ -169,6 +176,7 @@ public sealed class RedisIdempotencyStoreTests {
             ResponseTtl,
             CancellationToken.None);
 
+        Assert.True(completed);
         await database.Received(1).ScriptEvaluateAsync(
             Arg.Any<string>(),
             Arg.Is<RedisKey[]>(keys => keys != null &&
@@ -179,6 +187,61 @@ public sealed class RedisIdempotencyStoreTests {
                 values[1].ToString().Contains("\"statusCode\":202", StringComparison.Ordinal) &&
                 values[1].ToString().Contains("\"location\":\"/api/v1/queued/7\"", StringComparison.Ordinal)),
             CommandFlags.None);
+    }
+
+    [Fact]
+    public async Task RenewAsync_ExtendsOnlyTheOwnedLock() {
+        IDatabase database = Substitute.For<IDatabase>();
+        database.ScriptEvaluateAsync(
+                Arg.Any<string>(),
+                Arg.Any<RedisKey[]>(),
+                Arg.Any<RedisValue[]>(),
+                CommandFlags.None)
+            .Returns(Task.FromResult(RedisResult.Create((RedisValue)1)));
+        RedisIdempotencyStore store = CreateStore(database);
+
+        bool renewed = await store.RenewAsync(
+            "request-renew",
+            "hash-renew",
+            "owner-renew",
+            ProcessingTtl,
+            CancellationToken.None);
+
+        Assert.True(renewed);
+        await database.Received(1).ScriptEvaluateAsync(
+            Arg.Is<string>(script =>
+                script.Contains("~= ARGV[1]", StringComparison.Ordinal) &&
+                script.Contains("PEXPIRE", StringComparison.Ordinal)),
+            Arg.Is<RedisKey[]>(keys => keys != null &&
+                Enumerable.SequenceEqual(keys, new[] { LockKey("request-renew") })),
+            Arg.Is<RedisValue[]>(values => values != null &&
+                values[0] == "hash-renew:owner-renew" &&
+                values[1] == ((long)ProcessingTtl.TotalMilliseconds).ToString(System.Globalization.CultureInfo.InvariantCulture)),
+            CommandFlags.None);
+    }
+
+    [Fact]
+    public async Task CompleteAsync_WhenOwnerCasFails_ReturnsFalse() {
+        IDatabase database = Substitute.For<IDatabase>();
+        database.ScriptEvaluateAsync(
+                Arg.Any<string>(),
+                Arg.Any<RedisKey[]>(),
+                Arg.Any<RedisValue[]>(),
+                CommandFlags.None)
+            .Returns(Task.FromResult(RedisResult.Create((RedisValue)0)));
+        RedisIdempotencyStore store = CreateStore(database);
+
+        bool completed = await store.CompleteAsync(
+            "request-stale",
+            "hash-stale",
+            "owner-stale",
+            StatusCodes.Status202Accepted,
+            body: null,
+            location: null,
+            ResponseTtl,
+            CancellationToken.None);
+
+        Assert.False(completed);
     }
 
     [Fact]

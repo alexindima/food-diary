@@ -24,4 +24,20 @@ public static class PresentationApiTelemetry {
         "fooddiary.presentation.security.decisions",
         unit: "{decision}",
         description: "Total number of presentation security decisions by operation and outcome.");
+    public static readonly Histogram<double> IdempotencyActionDuration = Meter.CreateHistogram<double>(
+        "fooddiary.idempotency.action.duration",
+        unit: "ms",
+        description: "Duration of actions protected by an acquired idempotency lease.");
+    public static readonly Counter<long> IdempotencyLeaseLostCounter = Meter.CreateCounter<long>(
+        "fooddiary.idempotency.lease.lost",
+        unit: "{lease}",
+        description: "Idempotency actions that could not prove lease ownership at finalization.");
+    public static readonly Counter<long> IdempotencyLeaseRenewalFailureCounter = Meter.CreateCounter<long>(
+        "fooddiary.idempotency.lease.renewal.failures",
+        unit: "{failure}",
+        description: "Failed idempotency lease renewal attempts by bounded reason.");
+    public static readonly Counter<long> IdempotencyCompletionCasFailureCounter = Meter.CreateCounter<long>(
+        "fooddiary.idempotency.completion.cas.failures",
+        unit: "{failure}",
+        description: "Completed actions whose idempotency response could not be persisted by the owning lease.");
 }

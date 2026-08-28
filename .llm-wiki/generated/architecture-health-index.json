@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 151,
     "componentsWithoutDirectSpecs": 128,
-    "criticalSymbolsWithoutTestReferences": 15,
+    "criticalSymbolsWithoutTestReferences": 16,
     "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
@@ -5370,6 +5370,16 @@
       "name": "Read-LlmWikiCompiledIndex",
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Read-LlmWikiCompiledIndex.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "Show-LlmWikiCommandHelp",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Show-LlmWikiCommandHelp.ps1",
       "line": 1,
       "testReferenceCount": 0,
       "testReferences": [],

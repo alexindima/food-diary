@@ -656,6 +656,13 @@ $topology = $topologyJson | ConvertFrom-Json
 Assert-Wiki ([bool]$topology._freshness.verified) 'Runtime topology query did not verify its projection against current sources.'
 Assert-Wiki (@($topology.httpClients).Count -gt 0) 'Runtime topology query did not resolve MailRelay clients.'
 Assert-Wiki (@($topology.hostedServices).Count -gt 0) 'Runtime topology query did not resolve MailRelay workers.'
+$emptyTopology = & (Join-Path $toolsRoot 'Find-LlmWikiRuntimeTopology.ps1') `
+    -Query 'definitely-no-runtime-topology-match' `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki ($emptyTopology._selection.status -eq 'abstained-empty-filter' -and
+    $emptyTopology._selection.recallConfidence -eq 'low' -and
+    -not [string]::IsNullOrWhiteSpace([string]$emptyTopology._selection.recommendation)) `
+    'Empty filtered topology result did not abstain with a recovery recommendation.'
 
 $sensitiveData = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/sensitive-data-index.json') -Raw | ConvertFrom-Json
 Assert-Wiki ($sensitiveData.summary.credential -gt 0) 'Sensitive data index did not extract credential candidates.'
@@ -677,6 +684,9 @@ Assert-Wiki (@($sensitiveData.fields | Where-Object {
 Assert-Wiki (@($sensitiveData.fields | Where-Object {
     $_.category -eq 'financial' -and $_.name -eq 'Amount' -and $_.path -match 'Billing'
 }).Count -gt 0) 'Sensitive data index lost monetary Billing Amount fields.'
+Assert-Wiki (@($sensitiveData.fields | Where-Object {
+    $_.name -eq 'InsertEmailSql' -or ($_.type -eq 'string' -and $_.name -match '(Sql|SqlTemplate|QueryText|CommandText|Statement)$')
+}).Count -eq 0) 'Sensitive data index still classifies SQL/query text constants as runtime sensitive values.'
 
 $privacyJson = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') `
     -Category credential `

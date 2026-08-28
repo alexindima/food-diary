@@ -86,6 +86,15 @@ $inferredPaths = @()
 $intentCompiledResult = $null
 $intentIndexDiagnostics = $null
 $normalizedIntent = ([string]$Intent).ToLowerInvariant()
+$broadAssessmentDimensionCount = @(
+    [regex]::Matches(
+        $normalizedIntent,
+        '\b(correctness|reliability|concurrency|architecture|privacy|security|ci|operations|operational|project|repository|cross-layer|system-wide)\b') |
+        ForEach-Object Value |
+        Sort-Object -Unique
+).Count
+$broadAssessmentIntent = $normalizedIntent -match '\b(audit|assessment|evaluate|review)\b|аудит|оцен' -and
+    $broadAssessmentDimensionCount -ge 3
 $wikiInternalIntent = $normalizedIntent -match '\b(llm[- ]?wiki|wiki\.ps1|wiki tooling|development mcp)\b'
 if ($effectivePaths.Count -eq 0 -and $wikiInternalIntent) {
     # Tooling objectives use a dedicated Wiki code/workflow index instead of
@@ -96,7 +105,7 @@ if ($effectivePaths.Count -eq 0 -and $wikiInternalIntent) {
     if ($inferredPaths.Count -eq 0) { $inferredPaths = @('.llm-wiki/wiki.ps1', '.llm-wiki/README.md') }
     $effectivePaths = $inferredPaths
 }
-if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent)) {
+if ($effectivePaths.Count -eq 0 -and -not $broadAssessmentIntent -and -not [string]::IsNullOrWhiteSpace($Intent)) {
     $ignoredIntentTerms = @(
         'add', 'change', 'changing', 'create', 'feature', 'implement', 'improve', 'make', 'routing', 'support', 'update', 'visual', 'without'
     )
@@ -639,7 +648,9 @@ if ($inferredPaths.Count -gt 0 -and
     $riskCalibration = 'intent-inference-cap'
 }
 $riskLevel = if ($riskScore -ge 7) { 'high' } elseif ($riskScore -ge 3) { 'medium' } else { 'low' }
-$analysisMode = if ($inferredPaths.Count -gt 0) {
+$analysisMode = if ($broadAssessmentIntent -and @($ProposedPath).Count -eq 0 -and @($diff.changedPaths).Count -eq 0) {
+    'broad-assessment'
+} elseif ($inferredPaths.Count -gt 0) {
     'intent-inferred'
 } elseif (@($ProposedPath).Count -gt 0) {
     'planned-paths'
@@ -664,6 +675,8 @@ if ($analysisMode -eq 'unscoped') {
     }
 } elseif ($analysisMode -eq 'intent-inferred') {
     $briefWarnings.Add('Paths were inferred heuristically from intent. Confirm them with -PlannedPath before treating risk and test output as authoritative.')
+} elseif ($analysisMode -eq 'broad-assessment') {
+    $briefWarnings.Add('Broad assessment intent was not reduced to a coincidental feature owner. Use repository-wide topology, privacy, health, hotspots, and test-gaps views, then confirm findings in source.')
 }
 
 $brief = [pscustomobject]@{
@@ -674,6 +687,7 @@ $brief = [pscustomobject]@{
             if ($analysisMode -eq 'git-diff') { 'git-diff' }
             if ($analysisMode -eq 'planned-paths') { 'caller-planned-paths' }
             if ($analysisMode -eq 'intent-inferred') { 'intent-keywords'; 'csharp-symbol-index'; 'frontend-index' }
+            if ($analysisMode -eq 'broad-assessment') { 'broad-assessment-abstention' }
             'compiled-indexes'
             'change-policy'
         )
@@ -725,7 +739,14 @@ $brief = [pscustomobject]@{
     architectureHealthImpact = [pscustomobject]$architectureHealthImpact
     warnings = @($briefWarnings)
     nextSteps = @(
-        if ($analysisMode -eq 'unscoped') {
+        if ($analysisMode -eq 'broad-assessment') {
+            [pscustomobject]@{
+                id = 'run-broad-assessment-readers'
+                reason = 'A repository-wide assessment requires complementary evidence views instead of a single inferred module.'
+                recommendedCommand = './.llm-wiki/wiki.ps1 topology; ./.llm-wiki/wiki.ps1 privacy -PrivacyCategory all; ./.llm-wiki/wiki.ps1 health -HealthView all; ./.llm-wiki/wiki.ps1 hotspots; ./.llm-wiki/wiki.ps1 test-gaps'
+                alternatives = @("./.llm-wiki/wiki.ps1 brief -Intent '<bounded task>' -PlannedPath @('path/one','path/two')")
+            }
+        } elseif ($analysisMode -eq 'unscoped') {
             [pscustomobject]@{
                 id = 'supply-task-scope'
                 reason = if ([string]::IsNullOrWhiteSpace($Intent)) { 'A pre-diff brief needs an objective, candidate paths, or both to rank repository evidence.' } else { 'The supplied intent did not match a grounded repository path; do not substitute unrelated working-tree changes.' }

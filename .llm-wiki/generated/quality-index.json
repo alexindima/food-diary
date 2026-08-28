@@ -5,22 +5,22 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4687,
-    "wikiToolFiles": 200,
-    "wikiToolsWithoutTestReferences": 3,
-    "criticalSymbols": 776,
+    "productionFiles": 4689,
+    "wikiToolFiles": 201,
+    "wikiToolsWithoutTestReferences": 4,
+    "criticalSymbols": 777,
     "criticalSymbolsWithTestReferences": 761,
-    "criticalSymbolsWithoutTestReferences": 15,
+    "criticalSymbolsWithoutTestReferences": 16,
     "debtMarkers": 10
   },
   "hotspots": [
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 2829,
-      "decisionPoints": 364,
+      "nonBlankLines": 2847,
+      "decisionPoints": 368,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 604.58
+      "structuralRiskScore": 610.94
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
@@ -64,11 +64,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-      "nonBlankLines": 793,
-      "decisionPoints": 122,
+      "nonBlankLines": 814,
+      "decisionPoints": 123,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 200.86
+      "structuralRiskScore": 202.78
     },
     {
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
@@ -77,6 +77,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 196.92
+    },
+    {
+      "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+      "nonBlankLines": 615,
+      "decisionPoints": 121,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 195.8
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
@@ -93,14 +101,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 186.7
-    },
-    {
-      "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-      "nonBlankLines": 587,
-      "decisionPoints": 115,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 186.24
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
@@ -583,6 +583,14 @@
       "structuralRiskScore": 89.08
     },
     {
+      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
+      "nonBlankLines": 484,
+      "decisionPoints": 52,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 87.68
+    },
+    {
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
       "nonBlankLines": 766,
       "decisionPoints": 48,
@@ -805,14 +813,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 72.1
-    },
-    {
-      "path": "FoodDiary.Application.Fasting/Mappings/FastingMappings.cs",
-      "nonBlankLines": 208,
-      "decisionPoints": 45,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 71.66
     }
   ],
   "files": [
@@ -914,11 +914,11 @@
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiSensitiveDataIndex.ps1",
-      "nonBlankLines": 164,
-      "decisionPoints": 20,
+      "nonBlankLines": 167,
+      "decisionPoints": 21,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 35.28
+      "structuralRiskScore": 36.84
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1",
@@ -1050,19 +1050,19 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1",
-      "nonBlankLines": 144,
-      "decisionPoints": 26,
+      "nonBlankLines": 153,
+      "decisionPoints": 27,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 43.88
+      "structuralRiskScore": 45.56
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiRuntimeTopology.ps1",
-      "nonBlankLines": 90,
-      "decisionPoints": 12,
+      "nonBlankLines": 116,
+      "decisionPoints": 19,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.8
+      "structuralRiskScore": 32.82
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiSecurityReview.ps1",
@@ -1338,11 +1338,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-      "nonBlankLines": 587,
-      "decisionPoints": 115,
+      "nonBlankLines": 615,
+      "decisionPoints": 121,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 186.24
+      "structuralRiskScore": 195.8
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
@@ -1386,11 +1386,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-      "nonBlankLines": 793,
-      "decisionPoints": 122,
+      "nonBlankLines": 814,
+      "decisionPoints": 123,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 200.86
+      "structuralRiskScore": 202.78
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskGraph.ps1",
@@ -2321,6 +2321,14 @@
       "structuralRiskScore": 46.46
     },
     {
+      "path": ".llm-wiki/tools/Show-LlmWikiCommandHelp.ps1",
+      "nonBlankLines": 24,
+      "decisionPoints": 4,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 13.48
+    },
+    {
       "path": ".llm-wiki/tools/Show-LlmWikiHelp.ps1",
       "nonBlankLines": 34,
       "decisionPoints": 6,
@@ -2410,11 +2418,11 @@
     },
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 2829,
-      "decisionPoints": 364,
+      "nonBlankLines": 2847,
+      "decisionPoints": 368,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 604.58
+      "structuralRiskScore": 610.94
     },
     {
       "path": "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
@@ -23354,11 +23362,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationApiTelemetry.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 40,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.48
+      "structuralRiskScore": 0.8
     },
     {
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationApplicationBuilderExtensions.cs",
@@ -27202,19 +27210,27 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IIdempotencyStore.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 29,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
+      "structuralRiskScore": 0.58
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
-      "nonBlankLines": 325,
-      "decisionPoints": 40,
+      "nonBlankLines": 484,
+      "decisionPoints": 52,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 66.5
+      "structuralRiskScore": 87.68
+    },
+    {
+      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilterOptions.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.78
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyRequestContext.cs",
@@ -27242,11 +27258,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/InMemoryIdempotencyStore.cs",
-      "nonBlankLines": 132,
-      "decisionPoints": 19,
+      "nonBlankLines": 157,
+      "decisionPoints": 23,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 31.14
+      "structuralRiskScore": 37.64
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/RejectOversizedRequestAttribute.cs",
@@ -27850,11 +27866,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Services/RedisIdempotencyStore.cs",
-      "nonBlankLines": 161,
-      "decisionPoints": 14,
+      "nonBlankLines": 183,
+      "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.22
+      "structuralRiskScore": 26.16
     },
     {
       "path": "FoodDiary.Web.Api/Swagger/PresentationContractOperationFilter.cs",
@@ -48042,6 +48058,16 @@
         ".llm-wiki/tools/Test-LlmWikiSessionResolution.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "Show-LlmWikiCommandHelp",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Show-LlmWikiCommandHelp.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
       "coveredThrough": []
     },
     {

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "optionTypes": 57,
+    "optionTypes": 58,
     "configurationFiles": 7,
     "configurationKeys": 263,
     "environmentVariables": 188
@@ -207,6 +207,17 @@
         "ClientId"
       ],
       "path": "FoodDiary.Integrations/Options/GoogleAuthOptions.cs"
+    },
+    {
+      "type": "IdempotencyFilterOptions",
+      "section": null,
+      "properties": [
+        "LeaseRenewalInterval",
+        "ProcessingTtl",
+        "ResponseTtl",
+        "StoreOperationTimeout"
+      ],
+      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilterOptions.cs"
     },
     {
       "type": "ImageCleanupOptions",

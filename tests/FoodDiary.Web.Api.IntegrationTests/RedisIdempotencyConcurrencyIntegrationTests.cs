@@ -31,7 +31,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             reservations.Where(reservation => !ReferenceEquals(reservation, owner)),
             static reservation => Assert.Equal(IdempotencyReservationStatus.InProgress, reservation.Status));
 
-        await store.CompleteAsync(
+        bool completed = await store.CompleteAsync(
             "atomic-reservation",
             "same-hash",
             owner.OwnerToken!,
@@ -39,6 +39,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             """{"id":1}""",
             "/api/v1/items/1",
             responseTtl).ConfigureAwait(false);
+        Assert.True(completed);
 
         IdempotencyReservation[] replays = await Task.WhenAll(Enumerable.Range(0, 16).Select(_ =>
             store.ReserveAsync("atomic-reservation", "same-hash", responseTtl, processingTtl))).ConfigureAwait(false);
@@ -82,7 +83,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             "concurrent-request",
             "same-hash",
             staleOwner.OwnerToken!).ConfigureAwait(false);
-        await store.CompleteAsync(
+        bool staleCompleted = await store.CompleteAsync(
             "concurrent-request",
             "same-hash",
             staleOwner.OwnerToken!,
@@ -98,8 +99,9 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
 
         Assert.Equal(IdempotencyReservationStatus.Acquired, currentOwner.Status);
         Assert.Equal(IdempotencyReservationStatus.InProgress, whileCurrentOwnerActive.Status);
+        Assert.False(staleCompleted);
 
-        await store.CompleteAsync(
+        bool currentCompleted = await store.CompleteAsync(
             "concurrent-request",
             "same-hash",
             currentOwner.OwnerToken!,
@@ -107,6 +109,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             """{"owner":"current"}""",
             "/api/v1/items/current",
             responseTtl).ConfigureAwait(false);
+        Assert.True(currentCompleted);
         IdempotencyReservation replay = await store.ReserveAsync(
             "concurrent-request",
             "same-hash",
@@ -136,6 +139,49 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             currentOwnerProcessingTtl).ConfigureAwait(false);
 
         Assert.Equal(IdempotencyReservationStatus.Acquired, reacquiredOwner.Status);
+    }
+
+    [RequiresDockerFact]
+    public async Task RenewAsync_KeepsDuplicateInProgressBeyondOriginalLease() {
+        await using RedisContainer container = CreateRedisContainer();
+        await container.StartAsync().ConfigureAwait(false);
+        ConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(
+            $"{container.GetConnectionString()},abortConnect=false").ConfigureAwait(false);
+        await using ConfiguredAsyncDisposable connectionDisposal = connection.ConfigureAwait(false);
+        var store = new RedisIdempotencyStore(connection);
+        var originalProcessingTtl = TimeSpan.FromMilliseconds(200);
+        var renewedProcessingTtl = TimeSpan.FromSeconds(2);
+        var responseTtl = TimeSpan.FromMinutes(1);
+        var elapsed = System.Diagnostics.Stopwatch.StartNew();
+        IdempotencyReservation owner = await store.ReserveAsync(
+            "renewed-request",
+            "same-hash",
+            responseTtl,
+            originalProcessingTtl).ConfigureAwait(false);
+
+        bool staleRenewed = await store.RenewAsync(
+            "renewed-request",
+            "same-hash",
+            "stale-owner",
+            renewedProcessingTtl).ConfigureAwait(false);
+        bool ownerRenewed = await store.RenewAsync(
+            "renewed-request",
+            "same-hash",
+            owner.OwnerToken!,
+            renewedProcessingTtl).ConfigureAwait(false);
+        await WaitUntilAsync(
+            () => Task.FromResult(elapsed.Elapsed >= TimeSpan.FromMilliseconds(350)),
+            TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+        IdempotencyReservation duplicate = await store.ReserveAsync(
+            "renewed-request",
+            "same-hash",
+            responseTtl,
+            originalProcessingTtl).ConfigureAwait(false);
+
+        Assert.Multiple(
+            () => Assert.False(staleRenewed),
+            () => Assert.True(ownerRenewed),
+            () => Assert.Equal(IdempotencyReservationStatus.InProgress, duplicate.Status));
     }
 
     private static async Task WaitUntilAsync(Func<Task<bool>> condition, TimeSpan timeout) {

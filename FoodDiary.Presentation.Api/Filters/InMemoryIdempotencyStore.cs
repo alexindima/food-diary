@@ -54,7 +54,33 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
         }
     }
 
-    public Task CompleteAsync(
+    public Task<bool> RenewAsync(
+        string key,
+        string requestHash,
+        string ownerToken,
+        TimeSpan processingTtl,
+        CancellationToken cancellationToken = default) {
+        cancellationToken.ThrowIfCancellationRequested();
+        DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
+
+        lock (_syncRoot) {
+            RemoveExpiredEntries(nowUtc);
+            if (!_entries.TryGetValue(key, out Entry? entry) ||
+                entry.Completed ||
+                !string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal) ||
+                !string.Equals(entry.OwnerToken, ownerToken, StringComparison.Ordinal)) {
+                return Task.FromResult(false);
+            }
+
+            DateTime expiresAtUtc = nowUtc.Add(processingTtl);
+            _entries[key] = entry with { ExpiresAtUtc = expiresAtUtc };
+            _expirations.Enqueue(new Expiration(key, expiresAtUtc), expiresAtUtc);
+            CompactExpirationQueueIfNeeded();
+            return Task.FromResult(true);
+        }
+    }
+
+    public Task<bool> CompleteAsync(
         string key,
         string requestHash,
         string ownerToken,
@@ -67,6 +93,7 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
 
         lock (_syncRoot) {
+            RemoveExpiredEntries(nowUtc);
             if (_entries.TryGetValue(key, out Entry? entry) &&
                 !entry.Completed &&
                 string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal) &&
@@ -80,10 +107,11 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
                     expiresAtUtc);
                 _expirations.Enqueue(new Expiration(key, expiresAtUtc), expiresAtUtc);
                 CompactExpirationQueueIfNeeded();
+                return Task.FromResult(true);
             }
         }
 
-        return Task.CompletedTask;
+        return Task.FromResult(false);
     }
 
     public Task ReleaseAsync(

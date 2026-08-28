@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -387,6 +388,51 @@ public sealed class IdempotencyFilterTests {
     }
 
     [Fact]
+    public async Task StoreRenewAsync_WhenOwnerMatches_ExtendsProcessingLease() {
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 7, 8, 10, 0, 0, DateTimeKind.Utc));
+        var store = new InMemoryIdempotencyStore(timeProvider);
+        IdempotencyReservation owner = await store.ReserveAsync(
+            "key-renewal",
+            "hash",
+            responseTtl: TimeSpan.FromMinutes(10),
+            processingTtl: TimeSpan.FromMinutes(1));
+        timeProvider.Advance(TimeSpan.FromSeconds(30));
+
+        bool staleRenewed = await store.RenewAsync(
+            "key-renewal", "hash", "stale-owner", TimeSpan.FromMinutes(1));
+        bool ownerRenewed = await store.RenewAsync(
+            "key-renewal", "hash", owner.OwnerToken!, TimeSpan.FromMinutes(1));
+        timeProvider.Advance(TimeSpan.FromSeconds(45));
+        IdempotencyReservation afterOriginalExpiry = await store.ReserveAsync(
+            "key-renewal", "hash", TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(1));
+
+        Assert.Multiple(
+            () => Assert.False(staleRenewed),
+            () => Assert.True(ownerRenewed),
+            () => Assert.Equal(IdempotencyReservationStatus.InProgress, afterOriginalExpiry.Status));
+    }
+
+    [Fact]
+    public async Task StoreCompleteAsync_WhenProcessingLeaseExpired_ReportsOwnershipLoss() {
+        var timeProvider = new MutableTimeProvider(new DateTime(2026, 7, 8, 10, 0, 0, DateTimeKind.Utc));
+        var store = new InMemoryIdempotencyStore(timeProvider);
+        IdempotencyReservation owner = await store.ReserveAsync(
+            "key-expired-completion", "hash", TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(1));
+        timeProvider.Advance(TimeSpan.FromMinutes(2));
+
+        bool completed = await store.CompleteAsync(
+            "key-expired-completion",
+            "hash",
+            owner.OwnerToken!,
+            StatusCodes.Status201Created,
+            body: null,
+            location: null,
+            responseTtl: TimeSpan.FromMinutes(10));
+
+        Assert.False(completed);
+    }
+
+    [Fact]
     public async Task StoreReleaseAsync_DeletesOnlyTheOwnedIncompleteReservation() {
         var store = new InMemoryIdempotencyStore(TimeProvider.System);
         IdempotencyReservation first = await store.ReserveAsync(
@@ -490,6 +536,12 @@ public sealed class IdempotencyFilterTests {
             body: null,
             location: null,
             responseTtl: TimeSpan.FromMinutes(10),
+            cancellationToken: cancellationSource.Token));
+        await Assert.ThrowsAsync<OperationCanceledException>(() => store.RenewAsync(
+            "cancelled-key",
+            "hash",
+            "owner-token",
+            processingTtl: TimeSpan.FromMinutes(1),
             cancellationToken: cancellationSource.Token));
         await Assert.ThrowsAsync<OperationCanceledException>(() => store.ReleaseAsync(
             "cancelled-key",
@@ -607,19 +659,122 @@ public sealed class IdempotencyFilterTests {
     }
 
     [Fact]
-    public async Task OnActionExecutionAsync_WhenCompletionFails_LeavesReservationLockedAndReturnsActionResult() {
+    public async Task OnActionExecutionAsync_WhenCompletionFails_ReturnsOutcomeUnknownConflict() {
         var store = new RecordingIdempotencyStore(throwOnComplete: true);
         var filter = new IdempotencyFilter(store);
         DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-completion-failure", "throw-user");
         ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
-
-        await filter.OnActionExecutionAsync(context, () => Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+        var executedContext = new ActionExecutedContext(context, [], new object()) {
             Result = new StatusCodeResult(StatusCodes.Status202Accepted),
-        }));
+        };
 
+        await filter.OnActionExecutionAsync(context, () => Task.FromResult(executedContext));
+
+        ObjectResult result = Assert.IsType<ObjectResult>(executedContext.Result);
+        ApiErrorHttpResponse error = Assert.IsType<ApiErrorHttpResponse>(result.Value);
         Assert.Multiple(
             () => Assert.Equal(1, store.CompleteCalls),
-            () => Assert.Equal(0, store.ReleaseCalls));
+            () => Assert.Equal(0, store.ReleaseCalls),
+            () => Assert.Equal(StatusCodes.Status409Conflict, result.StatusCode),
+            () => Assert.Equal("Idempotency.LeaseLost", error.Error));
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WhenActionOutlivesFirstRenewal_RenewsBeforeCompleting() {
+        var store = new RecordingIdempotencyStore();
+        IdempotencyFilter filter = CreateFastRenewalFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-renewed", "renew-user");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        await filter.OnActionExecutionAsync(context, async () => {
+            await store.FirstRenewal.WaitAsync(TimeSpan.FromSeconds(2));
+            return new ActionExecutedContext(context, [], new object()) {
+                Result = new StatusCodeResult(StatusCodes.Status202Accepted),
+            };
+        });
+
+        Assert.Multiple(
+            () => Assert.True(store.RenewCalls >= 2, "Expected one heartbeat renewal and one finalization renewal."),
+            () => Assert.Equal(1, store.CompleteCalls),
+            () => Assert.Null(context.Result));
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WhenFirstHeartbeatThrows_RetriesAndCompletes() {
+        var store = new RecordingIdempotencyStore(throwOnFirstRenew: true);
+        IdempotencyFilter filter = CreateFastRenewalFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-renew-retry", "renew-retry-user");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        await filter.OnActionExecutionAsync(context, async () => {
+            await store.SecondRenewal.WaitAsync(TimeSpan.FromSeconds(2));
+            return new ActionExecutedContext(context, [], new object()) {
+                Result = new StatusCodeResult(StatusCodes.Status202Accepted),
+            };
+        });
+
+        Assert.Multiple(
+            () => Assert.True(store.RenewCalls >= 3, "Expected a failed heartbeat, a successful retry, and finalization renewal."),
+            () => Assert.Equal(1, store.CompleteCalls),
+            () => Assert.Null(context.Result));
+    }
+
+    [Fact]
+    public void Constructor_WhenRenewalAndTimeoutConsumeProcessingTtl_RejectsOptions() {
+        Microsoft.Extensions.Options.IOptions<IdempotencyFilterOptions> options = Microsoft.Extensions.Options.Options.Create(
+            new IdempotencyFilterOptions {
+                ProcessingTtl = TimeSpan.FromSeconds(5),
+                LeaseRenewalInterval = TimeSpan.FromSeconds(4),
+                StoreOperationTimeout = TimeSpan.FromSeconds(2),
+            });
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
+            new IdempotencyFilter(new RecordingIdempotencyStore(), idempotencyOptions: options));
+
+        Assert.Contains("headroom", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WhenHeartbeatLosesOwnership_DoesNotCompleteAndReturnsConflict() {
+        var store = new RecordingIdempotencyStore(renewResult: false);
+        IdempotencyFilter filter = CreateFastRenewalFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-lost", "lost-user");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+        var executedContext = new ActionExecutedContext(context, [], new object()) {
+            Result = new StatusCodeResult(StatusCodes.Status202Accepted),
+        };
+
+        await filter.OnActionExecutionAsync(context, async () => {
+            await store.FirstRenewal.WaitAsync(TimeSpan.FromSeconds(2));
+            return executedContext;
+        });
+
+        ObjectResult result = Assert.IsType<ObjectResult>(executedContext.Result);
+        ApiErrorHttpResponse error = Assert.IsType<ApiErrorHttpResponse>(result.Value);
+        Assert.Multiple(
+            () => Assert.Equal(StatusCodes.Status409Conflict, result.StatusCode),
+            () => Assert.Equal("Idempotency.LeaseLost", error.Error),
+            () => Assert.Equal(0, store.CompleteCalls));
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WhenCompletionCasRejectsOwner_ReturnsConflict() {
+        var store = new RecordingIdempotencyStore(completeResult: false);
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-stale-completion", "stale-user");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+        var executedContext = new ActionExecutedContext(context, [], new object()) {
+            Result = new StatusCodeResult(StatusCodes.Status202Accepted),
+        };
+
+        await filter.OnActionExecutionAsync(context, () => Task.FromResult(executedContext));
+
+        ObjectResult result = Assert.IsType<ObjectResult>(executedContext.Result);
+        ApiErrorHttpResponse error = Assert.IsType<ApiErrorHttpResponse>(result.Value);
+        Assert.Multiple(
+            () => Assert.Equal(StatusCodes.Status409Conflict, result.StatusCode),
+            () => Assert.Equal("Idempotency.LeaseLost", error.Error),
+            () => Assert.Equal(1, store.CompleteCalls));
     }
 
     [Fact]
@@ -838,6 +993,15 @@ public sealed class IdempotencyFilterTests {
         Assert.Equal(expectedLocation, store.LastLocation);
     }
 
+    private static IdempotencyFilter CreateFastRenewalFilter(IIdempotencyStore store) =>
+        new(
+            store,
+            idempotencyOptions: Microsoft.Extensions.Options.Options.Create(new IdempotencyFilterOptions {
+                ProcessingTtl = TimeSpan.FromMilliseconds(200),
+                LeaseRenewalInterval = TimeSpan.FromMilliseconds(10),
+                StoreOperationTimeout = TimeSpan.FromMilliseconds(50),
+            }));
+
     private static ActionExecutingContext CreateActionExecutingContext(HttpContext httpContext, params IFilterMetadata[] filters) =>
         CreateActionExecutingContext(httpContext, new Dictionary<string, object?>(StringComparer.Ordinal), filters);
 
@@ -867,7 +1031,15 @@ public sealed class IdempotencyFilterTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult(reservation);
 
-        public Task CompleteAsync(
+        public Task<bool> RenewAsync(
+            string key,
+            string requestHash,
+            string ownerToken,
+            TimeSpan processingTtl,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(true);
+
+        public Task<bool> CompleteAsync(
             string key,
             string requestHash,
             string ownerToken,
@@ -876,7 +1048,7 @@ public sealed class IdempotencyFilterTests {
             string? location,
             TimeSpan responseTtl,
             CancellationToken cancellationToken = default) =>
-            Task.CompletedTask;
+            Task.FromResult(true);
 
         public Task ReleaseAsync(
             string key,
@@ -889,14 +1061,22 @@ public sealed class IdempotencyFilterTests {
     [ExcludeFromCodeCoverage]
     private sealed class RecordingIdempotencyStore(
         bool throwOnComplete = false,
-        bool throwOnRelease = false) : IIdempotencyStore {
+        bool throwOnRelease = false,
+        bool renewResult = true,
+        bool completeResult = true,
+        bool throwOnFirstRenew = false) : IIdempotencyStore {
         public int ReserveCalls { get; private set; }
+        public int RenewCalls { get; private set; }
         public int CompleteCalls { get; private set; }
         public int ReleaseCalls { get; private set; }
         public string? LastReservedKey { get; private set; }
         public string? LastBody { get; private set; }
         public string? LastLocation { get; private set; }
         public bool CompletionTokenWasCanceled { get; private set; }
+        public Task FirstRenewal => _firstRenewal.Task;
+        public Task SecondRenewal => _secondRenewal.Task;
+        private readonly TaskCompletionSource _firstRenewal = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _secondRenewal = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
         public Task<IdempotencyReservation> ReserveAsync(
             string key,
@@ -911,7 +1091,26 @@ public sealed class IdempotencyFilterTests {
                 OwnerToken: "owner-token"));
         }
 
-        public Task CompleteAsync(
+        public Task<bool> RenewAsync(
+            string key,
+            string requestHash,
+            string ownerToken,
+            TimeSpan processingTtl,
+            CancellationToken cancellationToken = default) {
+            RenewCalls++;
+            _firstRenewal.TrySetResult();
+            if (RenewCalls >= 2) {
+                _secondRenewal.TrySetResult();
+            }
+
+            if (throwOnFirstRenew && RenewCalls == 1) {
+                throw new InvalidOperationException("transient renewal failure");
+            }
+
+            return Task.FromResult(renewResult);
+        }
+
+        public Task<bool> CompleteAsync(
             string key,
             string requestHash,
             string ownerToken,
@@ -928,7 +1127,7 @@ public sealed class IdempotencyFilterTests {
                 throw new InvalidOperationException("completion failed");
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(completeResult);
         }
 
         public Task ReleaseAsync(

@@ -47,6 +47,9 @@ foreach ($file in $sourceFiles) {
             $name -match '(Handler|Controller|Validator|Repository|Service|Provider|Client|Gateway|Options|Async)$') {
             continue
         }
+        if ($declaredType -eq 'string' -and $name -match '(Sql|SqlTemplate|QueryText|CommandText|Statement)$') {
+            continue
+        }
         $category = $null
         foreach ($entry in $categories.GetEnumerator()) {
             if ($name -match $entry.Value) { $category = $entry.Key; break }
@@ -139,7 +142,7 @@ $uniqueExternalTransfers = @($externalTransfers | Sort-Object path, line, provid
 $result = [ordered]@{
     schemaVersion = 1
     semantics = [ordered]@{
-        inventory = 'Name-and-context-based candidate sensitive fields. Generic quantity Amount fields are not financial without billing or monetary context. Confirm semantics in source before making privacy claims.'
+        inventory = 'Name-and-context-based candidate sensitive fields. Generic quantity Amount fields are not financial without billing or monetary context, and SQL/query text constants are not runtime identity values. Confirm semantics in source before making privacy claims.'
         potentialLogging = 'A logging call near a candidate field name. This is a review lead, not proof that a runtime value is logged.'
         externalTransfers = 'An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload.'
     }

@@ -20,6 +20,7 @@ $currentFreshness = Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $repos
 $stopwatch = [Diagnostics.Stopwatch]::StartNew()
 $groups = [ordered]@{}
 $diagnostics = $null
+$querySupplied = -not [string]::IsNullOrWhiteSpace($Query)
 if ($CompiledIndexSource -eq 'Sqlite') {
     . (Join-Path $PSScriptRoot 'LlmWikiInProcessSqlite.ps1')
     $reader = Initialize-LlmWikiInProcessSqlite -Projection runtime
@@ -27,7 +28,7 @@ if ($CompiledIndexSource -eq 'Sqlite') {
         $repositoryRoot,
         $Query,
         $Limit,
-        [bool]$IncludeDiagnostics,
+        [bool]($IncludeDiagnostics -or $querySupplied),
         [double]$reader.loadDurationMs)
     $result = $resultJson | ConvertFrom-Json
     foreach ($property in $result.PSObject.Properties) {
@@ -63,6 +64,28 @@ if ($CompiledIndexSource -eq 'Sqlite') {
         sourceBytesVerified = $sourceBytes; sourceBytesMaterialized = $sourceBytes
     }
 }
+$returnedRecords = 0
+foreach ($key in @($groups.Keys)) { $returnedRecords += @($groups[$key]).Count }
+$candidateRecords = if ($null -ne $diagnostics) { [int]$diagnostics.candidateRecords } else { $returnedRecords }
+$selectionStatus = if (-not $querySupplied) {
+    'unfiltered'
+} elseif ($returnedRecords -gt 0) {
+    'matched'
+} elseif ($candidateRecords -gt 0) {
+    'abstained-empty-filter'
+} else {
+    'empty-index'
+}
+if ($querySupplied) {
+    $groups['_selection'] = [pscustomobject][ordered]@{
+        status = $selectionStatus
+        query = $Query
+        candidateRecords = $candidateRecords
+        returnedRecords = $returnedRecords
+        recallConfidence = $(if ($selectionStatus -eq 'abstained-empty-filter') { 'low' } elseif ($selectionStatus -eq 'matched') { 'bounded' } else { 'not-rated' })
+        recommendation = $(if ($selectionStatus -eq 'abstained-empty-filter') { 'Repeat topology without -Query, then inspect the relevant category with a narrower term.' } else { $null })
+    }
+}
 $groups['_freshness'] = [pscustomobject][ordered]@{
     verified = [string]$storedTopology.freshness.sourceFingerprint -eq [string]$currentFreshness.sourceFingerprint
     storedSourceFingerprint = [string]$storedTopology.freshness.sourceFingerprint
@@ -81,8 +104,11 @@ if ($Format -eq 'Json') {
 if ($IncludeDiagnostics -and $null -ne $diagnostics) {
     Write-Host "Source: $($diagnostics.source), reader=$($diagnostics.reader), returned=$($diagnostics.returnedRecords)/$($diagnostics.candidateRecords), load=$($diagnostics.readerLoadDurationMs)ms, query=$($diagnostics.sqlDurationMs)ms."
 }
+if ($selectionStatus -eq 'abstained-empty-filter') {
+    Write-Host "Abstained: topology query '$Query' matched no records although the full index contains $candidateRecords. $($groups['_selection'].recommendation)"
+}
 Write-Host 'Evidence boundary: repository declarations and inferred code signals do not prove effective production exposure, IAM, grants, DNS behavior, or webhook idempotency.'
-foreach ($key in $groups.Keys) {
+foreach ($key in @($groups.Keys | Where-Object { $_ -notmatch '^_' })) {
     Write-Host "$key ($(@($groups[$key]).Count)):"
     foreach ($item in @($groups[$key] | Select-Object -First $Limit)) {
         Write-Host " - $(($item | ConvertTo-Json -Compress))"

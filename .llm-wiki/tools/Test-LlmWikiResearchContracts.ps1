@@ -20,6 +20,12 @@ $research = & (Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1') `
 
 $explicitPaths = @($research.discovery.implementationFiles | Where-Object provenance -eq 'explicit-planned-path' | Select-Object -ExpandProperty path)
 Assert-ResearchContract (@($plannedPaths | Where-Object { $_ -notin $explicitPaths }).Count -eq 0) 'Research did not prioritize every explicit planned path.'
+Assert-ResearchContract (@($research.discovery.rankedPaths).Count -gt 0 -and
+    @($research.discovery.rankedPaths | Where-Object {
+        [string]::IsNullOrWhiteSpace([string]$_.path) -or
+        [string]::IsNullOrWhiteSpace([string]$_.source) -or
+        [string]::IsNullOrWhiteSpace([string]$_.reason)
+    }).Count -eq 0) 'Research did not expose ranked paths with source-backed ranking reasons.'
 Assert-ResearchContract (@($research.discovery.groundedPaths | Where-Object { $_ -notmatch '^\.llm-wiki/' }).Count -eq 0) 'Planned Wiki research leaked unrelated product paths.'
 Assert-ResearchContract (@($research.researchLanes | Where-Object { [int]$_.evidenceCount -eq 0 -and @($_.sources).Count -eq 0 }).Count -eq 0) 'Research emitted an empty lane.'
 Assert-ResearchContract (@($research.researchLanes.sources | ForEach-Object { @($_) } | Where-Object { $null -eq $_ -or [string]::IsNullOrWhiteSpace([string]$_) }).Count -eq 0) 'Research emitted a null or blank source reference.'

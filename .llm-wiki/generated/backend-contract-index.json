@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1065,
     "ambiguousContracts": 0,
-    "consumerEdges": 7501,
+    "consumerEdges": 7502,
     "productionConsumerEdges": 4535,
-    "testConsumerEdges": 2966,
+    "testConsumerEdges": 2967,
     "consumedContracts": 1065,
     "unconsumedContracts": 0
   },
@@ -21526,7 +21526,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
       "isTest": false,
-      "referenceCount": 5
+      "referenceCount": 6
     },
     {
       "contract": "ApiErrorHttpResponse",
@@ -21683,6 +21683,19 @@
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "ApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/IdempotencyFilterTests.cs",
+      "isTest": true,
+      "referenceCount": 6
     },
     {
       "contract": "ApiErrorHttpResponse",
@@ -65375,7 +65388,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/IdempotencyFilterTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "IImageAssetAccessService",

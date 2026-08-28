@@ -16,6 +16,23 @@ param(
 $ErrorActionPreference = 'Stop'
 $recordKind = switch ($View) { 'test-gaps' { 'criticalSymbol' } 'debt' { 'debtMarker' } default { 'hotspot' } }
 $wikiRoot = Split-Path -Parent $PSScriptRoot
+function ConvertTo-TestGapEvidence([object[]]$InputItems) {
+    return @($InputItems | ForEach-Object {
+        [pscustomobject][ordered]@{
+            name = $_.name; role = $_.role; path = $_.path; line = $_.line
+            coverageClassification = 'direct-test-reference-absent'
+            confidence = 'medium'
+            evidenceType = 'static-symbol-name-reference'
+            coverageEvidence = [pscustomobject][ordered]@{
+                directReference = 'absent'
+                indirectCoverage = 'unknown'
+                measuredExecutionCoverage = 'not-measured'
+            }
+            caveat = 'No direct symbol-name reference was discovered in indexed tests; integration, dynamic, reflection-based, or differently named coverage may still exist.'
+        }
+    })
+}
+
 if ($CompiledIndexSource -eq 'Json') {
     $index = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/quality-index.json') -Raw | ConvertFrom-Json
     $items = switch ($View) {
@@ -29,6 +46,7 @@ if ($CompiledIndexSource -eq 'Json') {
         $queryMatches = [string]::IsNullOrWhiteSpace($Query) -or (($_ | ConvertTo-Json -Depth 6 -Compress) -match [regex]::Escape($Query))
         $areaMatches -and $queryMatches
     } | Select-Object -First $Limit)
+    if ($View -eq 'test-gaps') { $items = @(ConvertTo-TestGapEvidence $items) }
     $result = [pscustomobject][ordered]@{ schemaVersion = 1; view = $View; area = $Area; query = $Query; count = $items.Count; conclusive = $false; abstained = $true; abstentionReason = 'Explicit JSON baseline selected; freshness and SQLite parity were not verified.'; scope = [pscustomobject]@{ source = 'json-baseline'; fresh = $false }; items = $items }
     if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 8; exit 0 }
     Write-Host "Quality view '$View' ($Area), explicit JSON baseline: $($items.Count) result(s)."
@@ -95,15 +113,7 @@ if ($Area -eq 'Product' -and [string]::IsNullOrWhiteSpace($Query) -and $items.Co
     $items = @($items | Select-Object -First $Limit)
 }
 if ($View -eq 'test-gaps') {
-    $items = @($items | ForEach-Object {
-        [pscustomobject][ordered]@{
-            name = $_.name; role = $_.role; path = $_.path; line = $_.line
-            coverageClassification = 'direct-test-reference-absent'
-            confidence = 'medium'
-            evidenceType = 'static-symbol-name-reference'
-            caveat = 'No direct symbol-name reference was discovered in indexed tests; integration, dynamic, reflection-based, or differently named coverage may still exist.'
-        }
-    })
+    $items = @(ConvertTo-TestGapEvidence $items)
 }
 $indexFresh = [bool]$graphStatus.changeSetFresh
 $conclusive = $indexFresh -and $items.Count -gt 0

@@ -14,6 +14,7 @@ $cases = @(
     [pscustomobject]@{ Intent = 'Change the meals dashboard component and backend API endpoint'; ProposedPath = @(); Compact = $true }
     [pscustomobject]@{ Intent = 'Review the hydration service and progress component'; ProposedPath = @(); Compact = $true }
     [pscustomobject]@{ Intent = 'Review repository architecture documentation'; ProposedPath = @(); Compact = $false }
+    [pscustomobject]@{ Intent = 'Audit repository correctness reliability concurrency architecture privacy CI operations'; ProposedPath = @(); Compact = $true }
     [pscustomobject]@{
         Intent = 'Update user application behavior'
         ProposedPath = @('FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs')
@@ -74,6 +75,10 @@ foreach ($case in $cases) {
 
     if ((ConvertTo-FunctionalJson $sqlite) -cne (ConvertTo-FunctionalJson $json)) {
         throw "$($case.Intent): SQLite/JSON task-brief parity failed."
+    }
+    if ($case.Intent -match '^Audit repository' -and
+        ([string]$sqlite.analysis.mode -ne 'broad-assessment' -or @($sqlite.change.directModules).Count -ne 0)) {
+        throw "$($case.Intent): broad assessment was incorrectly reduced to a feature module."
     }
     if ([string]$sqlite.analysis.impactIndex.source -ne 'sqlite-task-brief-impact' -or
         [string]$sqlite.analysis.impactIndex.selectionMode -ne 'exact-changed-paths' -or

@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3470,
-    "symbols": 3477,
+    "sourceFiles": 3471,
+    "symbols": 3478,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 243,
     "kinds": {
-      "class": 1810,
+      "class": 1811,
       "enum": 62,
       "interface": 423,
       "record": 1062,
@@ -31,7 +31,7 @@
       "LookupRepository": 3,
       "Mapper": 8,
       "Mapping": 4,
-      "Options": 63,
+      "Options": 64,
       "Other": 1342,
       "Query": 161,
       "QueryHandler": 123,
@@ -21766,7 +21766,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
-      "line": 18
+      "line": 19
+    },
+    {
+      "name": "IdempotencyFilterOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilterOptions.cs",
+      "line": 2
     },
     {
       "name": "IdempotencyRequestContext",

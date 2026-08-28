@@ -52,6 +52,17 @@ Assert-CriticalTool (
 
 $helpOutput = @(& (Join-Path $PSScriptRoot 'Show-LlmWikiHelp.ps1') -Tier core 6>&1 | ForEach-Object { [string]$_ })
 Assert-CriticalTool ($helpOutput -contains 'Command stability tiers: core, governed, experimental.') 'Registry-backed compact help omitted stability tiers.'
+$commandHelp = @(& (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') topology -Help 6>&1 | ForEach-Object { [string]$_ })
+Assert-CriticalTool (@($commandHelp | Where-Object { $_ -match 'topology.*Query.*CompiledIndexSource' }).Count -gt 0) 'Command-specific facade help omitted topology parameters.'
+$limitValidationRejected = $false
+try {
+    & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') privacy -Limit 100 2>&1 | Out-Null
+} catch {
+    $limitValidationRejected = $global:LASTEXITCODE -ne 0 -and $_.Exception.Message -match 'between 1 and 50'
+} finally {
+    $global:LASTEXITCODE = 0
+}
+Assert-CriticalTool $limitValidationRejected 'Facade validation failure did not publish a non-zero LASTEXITCODE.'
 
 # Get-LlmWikiOwnershipImpact: synthetic input must stay bounded to the supplied
 # path and resolve its nearest scoped guide without consulting the worktree diff.

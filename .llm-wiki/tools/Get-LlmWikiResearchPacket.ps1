@@ -53,7 +53,14 @@ if ($null -ne $cachedResearch) {
     if ($Format -eq 'Json') { Write-Output $cachedResearch } else {
         $cached = $cachedResearch | ConvertFrom-Json
         Write-Host "Research cache hit: $($cached.workflow.profile), confidence=$($cached.workflow.confidence), grounded=$(@($cached.discovery.groundedPaths).Count)."
-        foreach ($item in @($cached.discovery.implementationFiles | Select-Object -First 5)) { Write-Host "  Source: $($item.path) (score=$($item.score), $($item.provenance))" }
+        $cachedRankedPaths = if ($cached.discovery.PSObject.Properties['rankedPaths']) {
+            @($cached.discovery.rankedPaths)
+        } else {
+            @($cached.discovery.implementationFiles)
+        }
+        foreach ($item in @($cachedRankedPaths | Select-Object -First 5)) {
+            Write-Host "  Ranked: $($item.path) (score=$($item.score), source=$($item.source), reason=$($item.reason))"
+        }
         Write-Host "Next: $($cached.nextAction)"
     }
     exit 0
@@ -226,7 +233,7 @@ $explicitPlannedFiles = @($ProposedPath | ForEach-Object {
     if ([string]::IsNullOrWhiteSpace([string]$_)) { return }
     $normalized = ([string]$_).Replace('\', '/').TrimEnd('/')
     if (-not (Test-Path -LiteralPath (Join-Path $repositoryRoot $normalized) -PathType Leaf)) { return }
-    [pscustomobject][ordered]@{ path = $normalized; score = 1000; provenance = 'explicit-planned-path' }
+    [pscustomobject][ordered]@{ path = $normalized; score = 1000; provenance = 'explicit-planned-path'; reason = 'Caller supplied this exact file as a planned path.' }
 })
 $implementationFiles = @(@($explicitPlannedFiles) + @($context.implementationFiles | ForEach-Object {
     if (-not $_.PSObject.Properties['path']) { return }
@@ -234,15 +241,16 @@ $implementationFiles = @(@($explicitPlannedFiles) + @($context.implementationFil
         path = $_.path
         score = $(if ($_.PSObject.Properties['score']) { $_.score } else { 0 })
         provenance = $(if ($_.PSObject.Properties['provenance'] -and $_.provenance) { $_.provenance } else { 'compiled-index' })
+        reason = $(if ($_.PSObject.Properties['reason'] -and $_.reason) { $_.reason } else { "Current-source context ranking score $($(if ($_.PSObject.Properties['score']) { $_.score } else { 0 }))." })
     }
 }) | Group-Object path | ForEach-Object { $_.Group | Sort-Object score -Descending | Select-Object -First 1 } | Select-Object -First $Limit)
 $symbolFiles = @($context.symbols | Select-Object -First $Limit | ForEach-Object {
     if (-not $_.PSObject.Properties['path']) { return }
-    [pscustomobject][ordered]@{ path = $_.path; symbol = $(if ($_.PSObject.Properties['name']) { $_.name } else { '' }); line = $(if ($_.PSObject.Properties['line']) { $_.line } else { $null }); provenance = 'compiled-symbol-index' }
+    [pscustomobject][ordered]@{ path = $_.path; symbol = $(if ($_.PSObject.Properties['name']) { $_.name } else { '' }); line = $(if ($_.PSObject.Properties['line']) { $_.line } else { $null }); score = $(if ($_.PSObject.Properties['score']) { $_.score } else { 0 }); provenance = 'compiled-symbol-index'; reason = 'Backend symbol name/path matched the expanded research query.' }
 })
 $frontendFiles = @($context.frontendSymbols | Select-Object -First $Limit | ForEach-Object {
     if (-not $_.PSObject.Properties['path']) { return }
-    [pscustomobject][ordered]@{ path = $_.path; symbol = $(if ($_.PSObject.Properties['name']) { $_.name } else { '' }); line = $(if ($_.PSObject.Properties['line']) { $_.line } else { $null }); provenance = 'compiled-frontend-index' }
+    [pscustomobject][ordered]@{ path = $_.path; symbol = $(if ($_.PSObject.Properties['name']) { $_.name } else { '' }); line = $(if ($_.PSObject.Properties['line']) { $_.line } else { $null }); score = $(if ($_.PSObject.Properties['score']) { $_.score } else { 0 }); provenance = 'compiled-frontend-index'; reason = 'Frontend symbol name/path matched the expanded research query.' }
 })
 $runtimeFlowEvidence = [pscustomobject][ordered]@{
     status = 'not-requested'
@@ -338,6 +346,21 @@ if (@($ProposedPath).Count -gt 0) {
         $_.PSObject.Properties['path'] -and (Test-ScopedResearchPath ([string]$_.path) -AllowAncestor)
     })
 }
+$rankedPaths = @(
+    @($implementationFiles | ForEach-Object {
+        [pscustomobject][ordered]@{ path = $_.path; score = $_.score; source = $_.provenance; reason = $_.reason }
+    }) +
+    @($symbolFiles | ForEach-Object {
+        [pscustomobject][ordered]@{ path = $_.path; score = $_.score; source = $_.provenance; reason = $_.reason }
+    }) +
+    @($frontendFiles | ForEach-Object {
+        [pscustomobject][ordered]@{ path = $_.path; score = $_.score; source = $_.provenance; reason = $_.reason }
+    }) |
+        Group-Object path |
+        ForEach-Object { $_.Group | Sort-Object score -Descending | Select-Object -First 1 } |
+        Sort-Object @{ Expression = 'score'; Descending = $true }, path |
+        Select-Object -First $Limit
+)
 $groundedPaths = @(Get-NormalizedResearchPaths @(
     $scopePaths +
     (Get-ObjectPropertyValues $implementationFiles 'path') +
@@ -479,6 +502,7 @@ $result = [pscustomobject][ordered]@{
     }
     discovery = [pscustomobject][ordered]@{
         groundedPaths = $groundedPaths
+        rankedPaths = $rankedPaths
         implementationFiles = $implementationFiles
         backendSymbols = $symbolFiles
         frontendSymbols = $frontendFiles
@@ -545,6 +569,7 @@ if ($Compact -and $resultJson.Length -gt 30000) {
     $result.discovery.focusedTests = @($result.discovery.focusedTests | Select-Object -First $compactLimit)
     $result.discovery.guides = @($result.discovery.guides | Select-Object -First $compactLimit)
     $result.discovery.wikiPages = @($result.discovery.wikiPages | Select-Object -First $compactLimit)
+    $result.discovery.rankedPaths = @($result.discovery.rankedPaths | Select-Object -First $compactLimit)
     $result.precedents = @($result.precedents | Select-Object -First $compactLimit)
     $result.knownFailures = @($result.knownFailures | Select-Object -First $compactLimit)
     foreach ($lane in $result.researchLanes) { $lane.sources = @($lane.sources | Select-Object -First $compactLimit) }
@@ -575,6 +600,9 @@ Write-Host "Purpose: $($result.workflow.purpose); assessment complete: $($result
 Write-Host "Assessment status: $($result.readiness.assessmentStatus); design checkpoint: $($result.readiness.designCheckpoint); implementation readiness: $($result.readiness.implementationStatus)"
 Write-Host "Objective: $Objective"
 Write-Host "Grounded paths: $($result.discovery.groundedPaths.Count)"
+foreach ($rankedPath in @($result.discovery.rankedPaths | Select-Object -First 5)) {
+    Write-Host "  Ranked: $($rankedPath.path) (score=$($rankedPath.score), source=$($rankedPath.source), reason=$($rankedPath.reason))"
+}
 if ($result.discovery.runtimeFlow.status -ne 'not-requested') {
     Write-Host "Runtime flow: $($result.discovery.runtimeFlow.status), confidence=$($result.discovery.runtimeFlow.confidence), downstream=$(@($result.discovery.runtimeFlow.downstreamConsumers).Count), dependencies=$(@($result.discovery.runtimeFlow.dependencies).Count)"
 }

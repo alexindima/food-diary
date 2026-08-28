@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using FoodDiary.Presentation.Api.Controllers;
@@ -19,14 +20,14 @@ namespace FoodDiary.Presentation.Api.Filters;
 public sealed class IdempotencyFilter(
     IIdempotencyStore idempotencyStore,
     ILogger<IdempotencyFilter>? logger = null,
-    IOptions<MvcJsonOptions>? mvcJsonOptions = null) : IAsyncActionFilter {
+    IOptions<MvcJsonOptions>? mvcJsonOptions = null,
+    IOptions<IdempotencyFilterOptions>? idempotencyOptions = null) : IAsyncActionFilter {
     private const string IdempotencyKeyHeader = "Idempotency-Key";
     private const int MaximumIdempotencyKeyLength = 128;
-    private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(24);
-    private static readonly TimeSpan ProcessingDuration = TimeSpan.FromMinutes(5);
-    private static readonly TimeSpan CompletionTimeout = TimeSpan.FromSeconds(5);
     private static readonly JsonSerializerOptions RequestHashJsonOptions = new(JsonSerializerDefaults.Web);
     private readonly ILogger<IdempotencyFilter> _logger = logger ?? NullLogger<IdempotencyFilter>.Instance;
+    private readonly IdempotencyFilterOptions _options = ValidateOptions(
+        idempotencyOptions?.Value ?? new IdempotencyFilterOptions());
     private readonly JsonSerializerOptions _responseJsonOptions = mvcJsonOptions?.Value.JsonSerializerOptions
         ?? new JsonSerializerOptions(JsonSerializerDefaults.Web);
 
@@ -64,7 +65,12 @@ public sealed class IdempotencyFilter(
         string requestHash = ComputeRequestHash(context);
         IdempotencyRequestContext.SetRequest(context.HttpContext, cacheKey, requestHash);
         IdempotencyReservation reservation = await idempotencyStore
-            .ReserveAsync(cacheKey, requestHash, CacheDuration, ProcessingDuration, context.HttpContext.RequestAborted)
+            .ReserveAsync(
+                cacheKey,
+                requestHash,
+                _options.ResponseTtl,
+                _options.ProcessingTtl,
+                context.HttpContext.RequestAborted)
             .ConfigureAwait(false);
 
         if (TryApplyReservation(context, reservation)) {
@@ -86,13 +92,23 @@ public sealed class IdempotencyFilter(
         string cacheKey,
         string requestHash,
         string ownerToken) {
+        using var leaseMaintenanceCancellation = new CancellationTokenSource();
+        Task<LeaseMaintenanceStatus> leaseMaintenance = MaintainLeaseAsync(
+            cacheKey,
+            requestHash,
+            ownerToken,
+            leaseMaintenanceCancellation.Token);
+        var actionStopwatch = Stopwatch.StartNew();
         ActionExecutedContext executedContext;
         try {
             executedContext = await next().ConfigureAwait(false);
         } catch {
+            RecordActionDuration(actionStopwatch);
+            await StopLeaseMaintenanceAsync(leaseMaintenanceCancellation, leaseMaintenance).ConfigureAwait(false);
             await TryReleaseReservationAsync(cacheKey, requestHash, ownerToken).ConfigureAwait(false);
             throw;
         }
+        RecordActionDuration(actionStopwatch);
 
         if (executedContext.Exception is not null ||
             !TrySerializeResult(
@@ -102,30 +118,165 @@ public sealed class IdempotencyFilter(
                 out string? body,
                 out string? location) ||
             !IsSuccessfulStatusCode(statusCode)) {
+            await StopLeaseMaintenanceAsync(leaseMaintenanceCancellation, leaseMaintenance).ConfigureAwait(false);
             await TryReleaseReservationAsync(cacheKey, requestHash, ownerToken).ConfigureAwait(false);
             return;
         }
 
+        await FinalizeSuccessfulResultAsync(
+            context,
+            executedContext,
+            cacheKey,
+            requestHash,
+            ownerToken,
+            statusCode,
+            body,
+            location,
+            leaseMaintenanceCancellation,
+            leaseMaintenance).ConfigureAwait(false);
+    }
+
+    private async Task FinalizeSuccessfulResultAsync(
+        ActionExecutingContext context,
+        ActionExecutedContext executedContext,
+        string cacheKey,
+        string requestHash,
+        string ownerToken,
+        int statusCode,
+        string? body,
+        string? location,
+        CancellationTokenSource leaseMaintenanceCancellation,
+        Task<LeaseMaintenanceStatus> leaseMaintenance) {
         if (location is not null) {
             executedContext.Result = NormalizeLocationResult(executedContext.Result, location);
         }
 
+        LeaseMaintenanceStatus maintenanceStatus = await StopLeaseMaintenanceAsync(
+            leaseMaintenanceCancellation,
+            leaseMaintenance).ConfigureAwait(false);
+        if (maintenanceStatus != LeaseMaintenanceStatus.Stopped ||
+            !await TryRenewLeaseForFinalizationAsync(cacheKey, requestHash, ownerToken).ConfigureAwait(false)) {
+            ApplyLeaseLostResult(context, executedContext, "renewal");
+            return;
+        }
+
         try {
-            using var completionTimeout = new CancellationTokenSource(CompletionTimeout);
-            await idempotencyStore.CompleteAsync(
+            using var completionTimeout = new CancellationTokenSource(_options.StoreOperationTimeout);
+            bool completed = await idempotencyStore.CompleteAsync(
                 cacheKey,
                 requestHash,
                 ownerToken,
                 statusCode,
                 body,
                 location,
-                CacheDuration,
+                _options.ResponseTtl,
                 completionTimeout.Token).ConfigureAwait(false);
+            if (!completed) {
+                PresentationApiTelemetry.IdempotencyCompletionCasFailureCounter.Add(1);
+                _logger.LogError(
+                    "Failed to persist a completed idempotent response because lease ownership was lost");
+                ApplyLeaseLostResult(context, executedContext, "completion-cas");
+            }
         } catch (Exception exception) {
             _logger.LogError(
                 exception,
                 "Failed to persist a completed idempotent response; the reservation will remain locked until it expires");
+            ApplyLeaseLostResult(context, executedContext, "completion-store");
         }
+    }
+
+    private async Task<LeaseMaintenanceStatus> MaintainLeaseAsync(
+        string cacheKey,
+        string requestHash,
+        string ownerToken,
+        CancellationToken cancellationToken) {
+        TimeSpan delay = _options.LeaseRenewalInterval;
+        while (true) {
+            try {
+                await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
+                using var renewalTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                renewalTimeout.CancelAfter(_options.StoreOperationTimeout);
+                bool renewed = await idempotencyStore.RenewAsync(
+                    cacheKey,
+                    requestHash,
+                    ownerToken,
+                    _options.ProcessingTtl,
+                    renewalTimeout.Token).ConfigureAwait(false);
+                if (!renewed) {
+                    PresentationApiTelemetry.IdempotencyLeaseRenewalFailureCounter.Add(
+                        1,
+                        new KeyValuePair<string, object?>("reason", "ownership-lost"));
+                    _logger.LogError("Failed to renew an idempotency lease because ownership was lost");
+                    return LeaseMaintenanceStatus.OwnershipLost;
+                }
+
+                delay = _options.LeaseRenewalInterval;
+            } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+                return LeaseMaintenanceStatus.Stopped;
+            } catch (Exception exception) {
+                PresentationApiTelemetry.IdempotencyLeaseRenewalFailureCounter.Add(
+                    1,
+                    new KeyValuePair<string, object?>("reason", "store-error-retrying"));
+                _logger.LogWarning(exception, "Failed to renew an idempotency lease; retrying before the current lease expires");
+                delay = GetLeaseRenewalRetryDelay();
+            }
+        }
+    }
+
+    private TimeSpan GetLeaseRenewalRetryDelay() =>
+        _options.StoreOperationTimeout < _options.LeaseRenewalInterval
+            ? _options.StoreOperationTimeout
+            : _options.LeaseRenewalInterval;
+
+    private async Task<bool> TryRenewLeaseForFinalizationAsync(
+        string cacheKey,
+        string requestHash,
+        string ownerToken) {
+        try {
+            using var renewalTimeout = new CancellationTokenSource(_options.StoreOperationTimeout);
+            bool renewed = await idempotencyStore.RenewAsync(
+                cacheKey,
+                requestHash,
+                ownerToken,
+                _options.ProcessingTtl,
+                renewalTimeout.Token).ConfigureAwait(false);
+            if (!renewed) {
+                PresentationApiTelemetry.IdempotencyLeaseRenewalFailureCounter.Add(
+                    1,
+                    new KeyValuePair<string, object?>("reason", "finalization-ownership-lost"));
+                _logger.LogError("Failed to renew an idempotency lease before finalization because ownership was lost");
+            }
+
+            return renewed;
+        } catch (Exception exception) {
+            PresentationApiTelemetry.IdempotencyLeaseRenewalFailureCounter.Add(
+                1,
+                new KeyValuePair<string, object?>("reason", "finalization-store-error"));
+            _logger.LogError(exception, "Failed to renew an idempotency lease before finalization");
+            return false;
+        }
+    }
+
+    private static async Task<LeaseMaintenanceStatus> StopLeaseMaintenanceAsync(
+        CancellationTokenSource cancellation,
+        Task<LeaseMaintenanceStatus> maintenance) {
+        await cancellation.CancelAsync().ConfigureAwait(false);
+        return await maintenance.ConfigureAwait(false);
+    }
+
+    private static void RecordActionDuration(Stopwatch stopwatch) {
+        stopwatch.Stop();
+        PresentationApiTelemetry.IdempotencyActionDuration.Record(stopwatch.Elapsed.TotalMilliseconds);
+    }
+
+    private static void ApplyLeaseLostResult(
+        ActionExecutingContext context,
+        ActionExecutedContext executedContext,
+        string stage) {
+        PresentationApiTelemetry.IdempotencyLeaseLostCounter.Add(
+            1,
+            new KeyValuePair<string, object?>("stage", stage));
+        executedContext.Result = CreateIdempotencyLeaseLost(context);
     }
 
     private static bool TryApplyReservation(ActionExecutingContext context, IdempotencyReservation reservation) {
@@ -165,7 +316,7 @@ public sealed class IdempotencyFilter(
 
     private async Task TryReleaseReservationAsync(string cacheKey, string requestHash, string ownerToken) {
         try {
-            using var releaseTimeout = new CancellationTokenSource(CompletionTimeout);
+            using var releaseTimeout = new CancellationTokenSource(_options.StoreOperationTimeout);
             await idempotencyStore.ReleaseAsync(
                 cacheKey,
                 requestHash,
@@ -308,6 +459,14 @@ public sealed class IdempotencyFilter(
             StatusCode = StatusCodes.Status503ServiceUnavailable,
         };
 
+    private static ObjectResult CreateIdempotencyLeaseLost(ActionExecutingContext context) =>
+        new(new ApiErrorHttpResponse(
+            "Idempotency.LeaseLost",
+            "The request outcome could not be recorded because its idempotency lease was lost. Verify the outcome before retrying.",
+            context.HttpContext.TraceIdentifier)) {
+            StatusCode = StatusCodes.Status409Conflict,
+        };
+
     private static ObjectResult CreateIdempotencyRequired(ActionExecutingContext context) =>
         new(new ApiErrorHttpResponse(
             "Idempotency.Required",
@@ -364,5 +523,19 @@ public sealed class IdempotencyFilter(
         }, RequestHashJsonOptions);
         byte[] hash = SHA256.HashData(Encoding.UTF8.GetBytes(serialized));
         return Convert.ToHexString(hash);
+    }
+
+    private static IdempotencyFilterOptions ValidateOptions(IdempotencyFilterOptions options) {
+        if (!IdempotencyFilterOptions.IsValid(options)) {
+            throw new InvalidOperationException(
+                "Idempotency filter options require positive TTLs/timeouts and enough processing-TTL headroom for one renewal interval plus one store timeout.");
+        }
+
+        return options;
+    }
+
+    private enum LeaseMaintenanceStatus {
+        Stopped = 0,
+        OwnershipLost = 1,
     }
 }
