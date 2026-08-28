@@ -22,7 +22,7 @@
       "name": "SqliteConnectionStringBuilder",
       "type": "new",
       "path": ".llm-wiki/tools/LlmWiki.SqliteReader/CompiledIndexReader.cs",
-      "line": 95
+      "line": 107
     },
     {
       "category": "credential",

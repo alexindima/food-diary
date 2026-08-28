@@ -412,6 +412,12 @@ function Invoke-WikiTool {
     )
 
     $toolPath = Join-Path $toolsRoot $Name
+    $ToolArguments = @{} + $ToolArguments
+    $toolCommand = Get-Command -Name $toolPath -ErrorAction Stop
+    if ($toolCommand.Parameters.ContainsKey('CompiledIndexSource') -and
+        -not $ToolArguments.ContainsKey('CompiledIndexSource')) {
+        $ToolArguments.CompiledIndexSource = $CompiledIndexSource
+    }
     $global:LASTEXITCODE = 0
     $pureIndexedReaders = @(
         'Find-LlmWikiContext.ps1'
@@ -424,7 +430,7 @@ function Invoke-WikiTool {
         & (Join-Path $toolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
             -ToolPath $toolPath `
             -ToolArguments $ToolArguments `
-            -PrepareCodeGraph:($Command -in $compiledIndexReadOnlyCommands)
+            -PrepareCodeGraph:($Command -in $compiledIndexReadOnlyCommands -and $CompiledIndexSource -eq 'Sqlite')
     } else {
         & $toolPath @ToolArguments
     }
@@ -771,12 +777,13 @@ switch ($Command) {
             $parallelSmokeArguments = @{} + $affectedSmokeArguments
             $effectiveSmokeConcurrency = if ($null -eq $MaxConcurrency) { 4 } else { [int]$MaxConcurrency }
             $parallelSmokeArguments.MaxConcurrency = $effectiveSmokeConcurrency
-            $script:verifyStageExpectedSeconds['affected smoke'] = 360
+            $includesColdCheckoutGuard = $smokeGroups -contains 'read-only-guard'
+            $script:verifyStageExpectedSeconds['affected smoke'] = $(if ($includesColdCheckoutGuard) { 450 } else { 360 })
             $smokeStages = @([pscustomobject]@{
                 Name = 'affected smoke'
                 Tool = 'Invoke-LlmWikiParallelSmoke.ps1'
                 Arguments = $parallelSmokeArguments
-                Timeout = 600
+                Timeout = $(if ($includesColdCheckoutGuard) { 720 } else { 600 })
                 Standalone = './.llm-wiki/wiki.ps1 verify -Stage ''affected smoke'''
             })
         }
@@ -1009,7 +1016,8 @@ switch ($Command) {
             break
         }
         $backendIntent = $Query -match '(?i)\b(smtp|persistence|repository|readiness|telemetry|outbox|hosted service|background service|worker|database|infrastructure)\b'
-        $filteredGraphTrace = $Fast -or $TraceView -eq 'Backend' -or $backendIntent -or $SymbolKind -ne 'Any' -or -not [string]::IsNullOrWhiteSpace($PathPrefix)
+        $filteredGraphTrace = $CompiledIndexSource -eq 'Sqlite' -and
+            ($Fast -or $TraceView -eq 'Backend' -or $backendIntent -or $SymbolKind -ne 'Any' -or -not [string]::IsNullOrWhiteSpace($PathPrefix))
         if ($filteredGraphTrace) {
             $graphArguments = @{
                 Action = 'trace'; Query = $Query; Limit = [Math]::Min($Limit, 30); Format = 'Json'
@@ -1065,7 +1073,7 @@ switch ($Command) {
         } else {
             $backendSemanticHint = -not [string]::IsNullOrWhiteSpace($Module) -and
                 $Query -match '(?i)\b(commands?|queries?|handlers?|repositories?|dependency injection|application module|infrastructure|domain)\b'
-            if ($backendSemanticHint) {
+            if ($backendSemanticHint -and $CompiledIndexSource -eq 'Sqlite') {
                 Write-Host "Semantic trace classified as backend from module '$Module' and backend-specific query terms; using bounded graph module impact and skipping the optional frontend probe."
                 Invoke-WikiTool 'Get-LlmWikiGraphResearch.ps1' @{
                     Objective = $Query; Module = $Module; Limit = [Math]::Min($Limit, 30); Format = $Format
@@ -1074,7 +1082,7 @@ switch ($Command) {
             }
             $frontendProbe = $null
             try {
-                $frontendProbe = & (Join-Path $toolsRoot 'Find-LlmWikiFrontendTrace.ps1') -Query $Query -Format Json -Limit ([Math]::Min($Limit, 30)) | ConvertFrom-Json
+                $frontendProbe = & (Join-Path $toolsRoot 'Find-LlmWikiFrontendTrace.ps1') -Query $Query -CompiledIndexSource $CompiledIndexSource -Format Json -Limit ([Math]::Min($Limit, 30)) | ConvertFrom-Json
             } catch {
                 Write-Warning "Frontend trace fragment is unavailable and will be skipped: $($_.Exception.Message)"
             }

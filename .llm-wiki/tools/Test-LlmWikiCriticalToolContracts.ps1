@@ -43,6 +43,12 @@ Assert-CriticalTool $eagerGraphCommands.Success 'Unable to inspect the eager com
 Assert-CriticalTool (
     $eagerGraphCommands.Groups['commands'].Value -notmatch "(?m)^\s*'context'\s*,?") `
     'The context facade must let Find-LlmWikiContext choose backend-only or full projection refresh from ChangeType.'
+Assert-CriticalTool (
+    $facadeSource.Contains("-PrepareCodeGraph:(`$Command -in `$compiledIndexReadOnlyCommands -and `$CompiledIndexSource -eq 'Sqlite')")) `
+    'Explicit JSON facades must not prepare the SQLite code graph.'
+Assert-CriticalTool (
+    $facadeSource -match "Parameters\.ContainsKey\('CompiledIndexSource'\)") `
+    'Facade dispatch no longer propagates the selected compiled-index source to compatible tools.'
 
 $helpOutput = @(& (Join-Path $PSScriptRoot 'Show-LlmWikiHelp.ps1') -Tier core 6>&1 | ForEach-Object { [string]$_ })
 Assert-CriticalTool ($helpOutput -contains 'Command stability tiers: core, governed, experimental.') 'Registry-backed compact help omitted stability tiers.'

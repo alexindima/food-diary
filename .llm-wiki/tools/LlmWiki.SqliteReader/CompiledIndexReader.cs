@@ -43,7 +43,19 @@ public static class CompiledIndexReader {
         bool includeDiagnostics,
         double readerLoadDurationMilliseconds = 0) {
         GroupSpec[] groups = view switch {
-            "all" or "drift" => [new("dependencyViolations", "dependencyViolation")],
+            "all" => [
+                new("dependencyViolations", "dependencyViolation"),
+                new("unusedAllowances", "unusedProjectAllowance"),
+                new("untrackedProjects", "untrackedProject"),
+                new("moduleCycleNodes", "moduleCycle"),
+                new("ambiguousContracts", "ambiguousContract"),
+                new("unconsumedBackendContracts", "unconsumedBackendContract"),
+                new("selectorUnreferencedComponents", "selectorUnreferenced"),
+                new("componentsWithoutSpecs", "componentWithoutSpec"),
+                new("criticalSymbolsWithoutTests", "criticalSymbolWithoutTest"),
+                new("debtMarkers", "debtMarker"),
+            ],
+            "drift" => [new("dependencyViolations", "dependencyViolation")],
             "allowances" => [new("unusedAllowances", "unusedProjectAllowance")],
             "untracked" => [new("untrackedProjects", "untrackedProject")],
             "cycles" => [new("moduleCycleNodes", "moduleCycle")],

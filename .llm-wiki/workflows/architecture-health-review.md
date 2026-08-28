@@ -39,3 +39,8 @@ the exact in-process SQLite route. The projection includes allowances, ambiguous
 contracts, and unconsumed contracts. Generated JSON remains only as the source
 projection and explicit parity baseline; the migration report therefore marks
 the query layer fully migrated without claiming the source artifact is removable.
+
+`./.llm-wiki/wiki.ps1 health -HealthView all` returns every health category in
+one response. Use a narrower view when only dependency drift, allowances,
+untracked projects, cycles, ambiguous contracts, dead candidates, specification
+gaps, test gaps, or debt markers are relevant.

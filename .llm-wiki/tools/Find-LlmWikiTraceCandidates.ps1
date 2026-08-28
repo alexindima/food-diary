@@ -5,7 +5,9 @@ param(
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 30)]
-    [int]$Limit = 10
+    [int]$Limit = 10,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -14,7 +16,7 @@ $searchQuery = [regex]::Replace(
     '(?is)^\s*trace\s+(?:the\s+)?(?:primary\s+)?user\s+(?:scenario|journey|flow)(?:\s+end(?:\s+|-)to(?:\s+|-)end)?(?:\s+from\s+endpoint\s+or\s+event\s+through\s+command/query\s+to\s+persistence/provider)?(?:\s+for)?\s+',
     '')
 $context = & (Join-Path $PSScriptRoot 'Find-LlmWikiContext.ps1') `
-    -Query $searchQuery -CompiledIndexSource Sqlite -SkipQueryCache -Limit $Limit -Format Json | ConvertFrom-Json
+    -Query $searchQuery -CompiledIndexSource $CompiledIndexSource -SkipQueryCache -Limit $Limit -Format Json | ConvertFrom-Json
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     query = $Query

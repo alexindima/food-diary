@@ -840,6 +840,43 @@ $recommendedChecks = switch ($ChangeType) {
     }
 }
 
+$jsonCandidatePool = @(
+    @($frontendSymbolResults) +
+    @($frontendRouteResults) +
+    @($implementationFileResults) +
+    @($controllerResults) +
+    @($symbolResults) +
+    @($registrationResults) +
+    @($testResults)
+)
+$jsonCandidates = @(
+    $jsonCandidatePool |
+        Where-Object { $_.PSObject.Properties['path'] -and -not [string]::IsNullOrWhiteSpace([string]$_.path) } |
+        Group-Object path |
+        ForEach-Object { $_.Group | Sort-Object @{ Expression = { [double]$_.score }; Descending = $true } | Select-Object -First 1 } |
+        Sort-Object @{ Expression = { [double]$_.score }; Descending = $true }, path |
+        Select-Object -First $Limit |
+        ForEach-Object -Begin { $rank = 0 } -Process {
+            $rank++
+            $candidatePath = ([string]$_.path).Replace('\', '/')
+            $candidateModule = if ($candidatePath -match '^FoodDiary\.Application\.([^/]+)/') { $Matches[1] }
+                elseif ($candidatePath -match '^FoodDiary\.Web\.Client/') { 'Frontend' }
+                elseif ($candidatePath -match '^tests/') { 'Tests' }
+                else { $null }
+            $candidateScore = [double]$_.score
+            [pscustomobject][ordered]@{
+                path = $candidatePath
+                score = $candidateScore
+                rank = $rank
+                confidence = $(if ($candidateScore -ge 20) { 'high' } elseif ($candidateScore -ge 8) { 'medium' } else { 'low' })
+                module = $candidateModule
+                reasons = @('legacy-json-ranking')
+            }
+        }
+)
+$jsonTopConfidence = if ($jsonCandidates.Count -eq 0) { 'low' } else { [string]$jsonCandidates[0].confidence }
+$jsonConclusive = $jsonCandidates.Count -gt 0 -and $jsonTopConfidence -in @('high', 'medium')
+
 $context = [ordered]@{
     query = [ordered]@{
         module = $Module
@@ -848,6 +885,11 @@ $context = [ordered]@{
         scopePaths = $scopePaths
     }
     module = $moduleContext
+    confidence = $jsonTopConfidence
+    conclusive = $jsonConclusive
+    abstained = -not $jsonConclusive
+    ambiguityReason = $(if ($jsonCandidates.Count -eq 0) { 'no-indexed-candidates' } elseif (-not $jsonConclusive) { 'low-confidence' } else { $null })
+    candidates = $jsonCandidates
     wikiPages = @($wikiResults | ForEach-Object { [ordered]@{ path = $_.path; score = $_.score } })
     agentGuides = @($guideResults | ForEach-Object { [ordered]@{ path = $_.path; score = $_.score } })
     projects = @($projectResults | ForEach-Object {

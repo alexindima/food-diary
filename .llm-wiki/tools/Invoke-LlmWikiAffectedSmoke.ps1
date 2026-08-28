@@ -164,6 +164,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiReadOnlyRetrievalContracts.ps1')
             if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiJsonColdCheckout.ps1')
+            if (-not $?) { exit 1 }
         }
         'trace-output' {
             & (Join-Path $toolsRoot 'Test-LlmWikiTraceOutput.ps1')

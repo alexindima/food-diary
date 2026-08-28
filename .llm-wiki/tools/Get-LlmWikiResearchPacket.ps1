@@ -15,6 +15,8 @@ param(
     [ValidateRange(1, 30)]
     [int]$Limit = 10,
     [string]$Module,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [switch]$Compact,
     [switch]$SkipHistory
 )
@@ -40,11 +42,11 @@ Write-Host "Research [1/3]: classify and scan current sources$(if ($Module) { " 
 $queryCacheEntry = $null
 $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'research' -Arguments @{
     Objective = $Objective; BaseRef = $BaseRef; HeadRef = $HeadRef
-    ChangedPath = @($ChangedPath); ProposedPath = @($ProposedPath); Purpose = $Purpose; Limit = $Limit; Module = $Module; Compact = [bool]$Compact; SkipHistory = [bool]$SkipHistory
+    ChangedPath = @($ChangedPath); ProposedPath = @($ProposedPath); Purpose = $Purpose; Limit = $Limit; Module = $Module; CompiledIndexSource = $CompiledIndexSource; Compact = [bool]$Compact; SkipHistory = [bool]$SkipHistory
 } -RelevantPath @($(if (@($ProposedPath).Count -gt 0) { $ProposedPath } else { $ChangedPath })) -DependencyPath @(
     '.llm-wiki/policies/query-indexes.json'
     '.llm-wiki/policies/workspace-policies.json'
-    '.artifacts/llm-wiki/code-graph/code-graph.fingerprint'
+    $(if ($CompiledIndexSource -eq 'Sqlite') { '.artifacts/llm-wiki/code-graph/code-graph.fingerprint' } else { '.llm-wiki/generated/repository-catalog.json' })
 )
 $cachedResearch = Read-LlmWikiQueryCache -Entry $queryCacheEntry
 if ($null -ne $cachedResearch) {
@@ -57,7 +59,7 @@ if ($null -ne $cachedResearch) {
     exit 0
 }
 Write-Host "Research cache miss: $($queryCacheEntry.missReason); relevant-workspace-paths=$($queryCacheEntry.workspacePathCount)."
-$common = @{ Objective = $Objective; BaseRef = $BaseRef; Format = 'Json'; Limit = $Limit }
+$common = @{ Objective = $Objective; BaseRef = $BaseRef; CompiledIndexSource = $CompiledIndexSource; Format = 'Json'; Limit = $Limit }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
 if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $ChangedPath }
 if ($PSBoundParameters.ContainsKey('ProposedPath')) { $common.ProposedPath = $ProposedPath }
@@ -164,7 +166,7 @@ $foodDiaryIntentAliases = @(
 )
 $expandedTerms = @($foodDiaryIntentAliases | Where-Object { $Objective.ToLowerInvariant().Contains($_.source) } | Select-Object -ExpandProperty target)
 $contextQuery = @($Objective; $expandedTerms) -join ' '
-$contextArguments = @{ Query = $contextQuery; Format = 'Json'; Limit = $Limit }
+$contextArguments = @{ Query = $contextQuery; CompiledIndexSource = $CompiledIndexSource; Format = 'Json'; Limit = $Limit }
 if ($scopePaths.Count -gt 0) { $contextArguments.ScopePath = $scopePaths }
 $context = & (Join-Path $PSScriptRoot 'Find-LlmWikiContext.ps1') @contextArguments | ConvertFrom-Json
 Write-Host 'Research [2/3]: current-source context ready.'
@@ -249,7 +251,7 @@ $runtimeFlowEvidence = [pscustomobject][ordered]@{
     dependencies = @()
     confidence = 'not-rated'
 }
-if (@($ProposedPath).Count -gt 0) {
+if (@($ProposedPath).Count -gt 0 -and $CompiledIndexSource -eq 'Sqlite') {
     try {
         $graphResearch = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphResearch.ps1') `
             -Objective $Objective `
@@ -273,6 +275,15 @@ if (@($ProposedPath).Count -gt 0) {
             diagnostic = $_.Exception.Message
             recoveryCommand = './.llm-wiki/wiki.ps1 graph-build; rerun research with the same -PlannedPath'
         }
+    }
+} elseif (@($ProposedPath).Count -gt 0) {
+    $runtimeFlowEvidence = [pscustomobject][ordered]@{
+        status = 'not-requested-json-baseline'
+        sourcePaths = @($ProposedPath)
+        downstreamConsumers = @()
+        dependencies = @()
+        confidence = 'not-rated'
+        diagnostic = 'Runtime graph expansion is intentionally skipped for the explicit JSON baseline.'
     }
 }
 

@@ -514,8 +514,9 @@ public class WearablesFeatureTests {
                 new WearableDataPoint(WearableDataType.CaloriesBurned, 250),
             ],
         };
+        var transactionRunner = new SerializedWearableTransactionRunner();
         var handler = new SyncWearableDataCommandHandler(
-            [client], connectionRepository, syncRepository, CreateCurrentUserAccessService(), CreateTokenProtector(), CreateUnitOfWork());
+            [client], connectionRepository, syncRepository, transactionRunner, CreateCurrentUserAccessService(), CreateTokenProtector(), CreateUnitOfWork());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(userId.Value, "Fitbit", date),
@@ -526,6 +527,7 @@ public class WearablesFeatureTests {
         Assert.Equal(250, result.Value.CaloriesBurned);
         Assert.Equal(2, syncRepository.AddedCount);
         Assert.True(connectionRepository.UpdateCalled);
+        Assert.Equal($"wearable-sync:{userId.Value:N}:Fitbit:2026-05-06", transactionRunner.LastSerializationKey);
     }
 
     [Fact]
@@ -540,7 +542,7 @@ public class WearablesFeatureTests {
             DataError = WearableErrors.SyncFailed("Fitbit"),
         };
         var handler = new SyncWearableDataCommandHandler(
-            [client], connectionRepository, syncRepository, CreateCurrentUserAccessService(), CreateTokenProtector(), CreateUnitOfWork());
+            [client], connectionRepository, syncRepository, new SerializedWearableTransactionRunner(), CreateCurrentUserAccessService(), CreateTokenProtector(), CreateUnitOfWork());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date),
@@ -562,6 +564,7 @@ public class WearablesFeatureTests {
             [],
             new InMemoryWearableConnectionRepository(),
             new InMemoryWearableSyncRepository(),
+            new SerializedWearableTransactionRunner(),
             CreateCurrentUserAccessService(),
             CreateTokenProtector(),
             CreateUnitOfWork());
@@ -580,6 +583,7 @@ public class WearablesFeatureTests {
             [],
             new InMemoryWearableConnectionRepository(),
             new InMemoryWearableSyncRepository(),
+            new SerializedWearableTransactionRunner(),
             CreateCurrentUserAccessService(),
             CreateTokenProtector(),
             CreateUnitOfWork());
@@ -598,6 +602,7 @@ public class WearablesFeatureTests {
             [new StubWearableClient(WearableProvider.Fitbit, tokenResult: null)],
             new InMemoryWearableConnectionRepository(),
             new InMemoryWearableSyncRepository(),
+            new SerializedWearableTransactionRunner(),
             CreateCurrentUserAccessService(),
             CreateTokenProtector(),
             CreateUnitOfWork());
@@ -622,6 +627,7 @@ public class WearablesFeatureTests {
             [new StubWearableClient(WearableProvider.Fitbit, tokenResult: null)],
             connectionRepository,
             new InMemoryWearableSyncRepository(),
+            new SerializedWearableTransactionRunner(),
             CreateCurrentUserAccessService(),
             CreateTokenProtector(),
             CreateUnitOfWork());
@@ -645,6 +651,7 @@ public class WearablesFeatureTests {
             [],
             connectionRepository,
             new InMemoryWearableSyncRepository(),
+            new SerializedWearableTransactionRunner(),
             CreateCurrentUserAccessService(),
             CreateTokenProtector(),
             CreateUnitOfWork());
@@ -670,7 +677,7 @@ public class WearablesFeatureTests {
         };
         IUnitOfWork unitOfWork = CreateUnitOfWork();
         var handler = new SyncWearableDataCommandHandler(
-            [client], connectionRepository, new InMemoryWearableSyncRepository(), CreateCurrentUserAccessService(), CreateTokenProtector(), unitOfWork);
+            [client], connectionRepository, new InMemoryWearableSyncRepository(), new SerializedWearableTransactionRunner(), CreateCurrentUserAccessService(), CreateTokenProtector(), unitOfWork);
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date),
@@ -701,7 +708,7 @@ public class WearablesFeatureTests {
             ],
         };
         var handler = new SyncWearableDataCommandHandler(
-            [client], connectionRepository, syncRepository, CreateCurrentUserAccessService(), CreateTokenProtector(), CreateUnitOfWork());
+            [client], connectionRepository, syncRepository, new SerializedWearableTransactionRunner(), CreateCurrentUserAccessService(), CreateTokenProtector(), CreateUnitOfWork());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(userId.Value, "Fitbit", date),
@@ -727,7 +734,7 @@ public class WearablesFeatureTests {
         };
         IUnitOfWork unitOfWork = CreateUnitOfWork();
         var handler = new SyncWearableDataCommandHandler(
-            [client], connectionRepository, new InMemoryWearableSyncRepository(), CreateCurrentUserAccessService(), CreateTokenProtector(), unitOfWork);
+            [client], connectionRepository, new InMemoryWearableSyncRepository(), new SerializedWearableTransactionRunner(), CreateCurrentUserAccessService(), CreateTokenProtector(), unitOfWork);
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date),
@@ -760,6 +767,7 @@ public class WearablesFeatureTests {
             [client],
             connectionRepository,
             new InMemoryWearableSyncRepository(),
+            new SerializedWearableTransactionRunner(),
             CreateCurrentUserAccessService(),
             CreateTokenProtector(),
             unitOfWork);
@@ -891,11 +899,13 @@ public class WearablesFeatureTests {
         private int _concurrentOperations;
 
         public int MaxConcurrentOperations { get; private set; }
+        public string? LastSerializationKey { get; private set; }
 
         public async Task<TResult> ExecuteSerializedAsync<TResult>(
             string serializationKey,
             Func<CancellationToken, Task<TResult>> operation,
             CancellationToken cancellationToken = default) {
+            LastSerializationKey = serializationKey;
             await _gate.WaitAsync(cancellationToken);
             try {
                 int concurrentOperations = Interlocked.Increment(ref _concurrentOperations);

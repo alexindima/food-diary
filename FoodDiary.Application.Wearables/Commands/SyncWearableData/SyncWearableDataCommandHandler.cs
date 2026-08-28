@@ -17,6 +17,7 @@ public sealed class SyncWearableDataCommandHandler(
     IEnumerable<IWearableClient> wearableClients,
     IWearableConnectionWriteRepository connectionRepository,
     IWearableSyncWriteRepository syncRepository,
+    IWearableTransactionRunner transactionRunner,
     ICurrentUserAccessService currentUserAccessService,
     IWearableTokenProtector tokenProtector,
     IUnitOfWork unitOfWork)
@@ -39,14 +40,34 @@ public sealed class SyncWearableDataCommandHandler(
 
         WearableProvider provider = providerResult.Value;
 
-        WearableConnection? connection = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken).ConfigureAwait(false);
-        if (connection?.IsActive != true) {
-            return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.NotConnected(command.Provider));
-        }
-
         IWearableClient? client = wearableClients.FirstOrDefault(c => c.Provider == provider);
         if (client is null) {
             return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.ProviderNotConfigured(command.Provider));
+        }
+
+        string serializationKey = FormattableString.Invariant(
+            $"wearable-sync:{userIdResult.Value.Value:N}:{provider}:{command.Date.Date:yyyy-MM-dd}");
+        Result<bool> syncResult = await transactionRunner.ExecuteSerializedAsync(
+            serializationKey,
+            token => SynchronizeAsync(command, userIdResult.Value, provider, client, token),
+            cancellationToken).ConfigureAwait(false);
+        if (syncResult.IsFailure) {
+            return Result.Failure<WearableDailySummaryModel>(syncResult.Error);
+        }
+
+        WearableDailySummaryModel summary = await BuildSummaryAsync(userIdResult.Value, command.Date, cancellationToken).ConfigureAwait(false);
+        return Result.Success(summary);
+    }
+
+    private async Task<Result<bool>> SynchronizeAsync(
+        SyncWearableDataCommand command,
+        UserId userId,
+        WearableProvider provider,
+        IWearableClient client,
+        CancellationToken cancellationToken) {
+        WearableConnection? connection = await connectionRepository.GetAsync(userId, provider, cancellationToken).ConfigureAwait(false);
+        if (connection?.IsActive != true) {
+            return Result.Failure<bool>(Errors.Wearable.NotConnected(command.Provider));
         }
 
         // Refresh token if expired
@@ -56,7 +77,7 @@ public sealed class SyncWearableDataCommandHandler(
             if (refreshResult is null) {
                 connection.Deactivate();
                 await PersistConnectionAsync(connection, cancellationToken).ConfigureAwait(false);
-                return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.AuthFailed(command.Provider));
+                return Result.Failure<bool>(Errors.Wearable.AuthFailed(command.Provider));
             }
             ProtectedWearableToken protectedAccessToken = tokenProtector.Protect(refreshResult.AccessToken);
             ProtectedWearableToken? protectedRefreshToken = refreshResult.RefreshToken is null ? null : tokenProtector.Protect(refreshResult.RefreshToken);
@@ -69,18 +90,17 @@ public sealed class SyncWearableDataCommandHandler(
             .FetchDailyDataAsync(accessToken, command.Date, cancellationToken)
             .ConfigureAwait(false);
         if (dataResult.IsFailure) {
-            return Result.Failure<WearableDailySummaryModel>(dataResult.Error);
+            return Result.Failure<bool>(dataResult.Error);
         }
 
         ProtectLegacyTokens(connection, accessToken);
 
-        await StoreDataPointsAsync(userIdResult.Value, provider, command.Date, dataResult.Value, cancellationToken).ConfigureAwait(false);
+        await StoreDataPointsAsync(userId, provider, command.Date, dataResult.Value, cancellationToken).ConfigureAwait(false);
 
         connection.MarkSynced();
         await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
 
-        WearableDailySummaryModel summary = await BuildSummaryAsync(userIdResult.Value, command.Date, cancellationToken).ConfigureAwait(false);
-        return Result.Success(summary);
+        return Result.Success(value: true);
     }
 
     private async Task PersistConnectionAsync(

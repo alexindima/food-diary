@@ -8,6 +8,8 @@ param(
     [string]$Format = 'Text',
     [ValidateRange(1, 50)]
     [int]$Limit = 12,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [string]$OutputPath
 )
 
@@ -25,7 +27,7 @@ if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $Chan
 $diffArguments = @{} + $common
 $diffArguments.Limit = [Math]::Min($Limit, 20)
 $diffArguments.IncludeFrontendFeatures = $true
-$diff = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') @diffArguments | ConvertFrom-Json
+$diff = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') @diffArguments -CompiledIndexSource $CompiledIndexSource | ConvertFrom-Json
 $diffArguments.Remove('IncludeFrontendFeatures')
 $policy = & (Join-Path $toolsRoot 'Test-LlmWikiChangePolicy.ps1') @common | ConvertFrom-Json
 $ownership = & (Join-Path $toolsRoot 'Get-LlmWikiOwnershipImpact.ps1') @common -DiffInput $diff | ConvertFrom-Json
@@ -39,7 +41,8 @@ $brief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') @diffArguments `
     -OwnershipInput $ownership `
     -TestPlanInput $testPlan `
     -RolloutInput $rollout `
-    -DecisionInput $decision | ConvertFrom-Json
+    -DecisionInput $decision `
+    -CompiledIndexSource $CompiledIndexSource | ConvertFrom-Json
 $implementationPlan = & (Join-Path $toolsRoot 'Get-LlmWikiImplementationPlan.ps1') @diffArguments `
     -Objective $Objective `
     -BriefInput $brief | ConvertFrom-Json

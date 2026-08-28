@@ -8,6 +8,8 @@ param(
     [string[]]$ChangedPath,
     [Alias('PlannedPath')]
     [string[]]$ProposedPath,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 50)]
@@ -20,6 +22,7 @@ $briefArguments = @{
     Intent = $Objective
     Format = 'Json'
     Limit = [Math]::Min($Limit, 20)
+    CompiledIndexSource = $CompiledIndexSource
     # Routing consumes risk, scope, ownership, rollout, privacy, and decision
     # evidence from the brief, but never its focused tests or scenarios.
     SkipTestPlan = $true

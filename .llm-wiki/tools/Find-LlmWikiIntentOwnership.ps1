@@ -5,17 +5,28 @@ param(
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 50)]
-    [int]$Limit = 12
+    [int]$Limit = 12,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite'
 )
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$search = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
-    -Action search -Query $Query -Limit ([Math]::Min(50, [Math]::Max(20, $Limit * 3))) -SkipRefresh -Format Json | ConvertFrom-Json
-$records = @($search.records)
-$ranking = $search.rankingSummary
-$confidence = if ($null -eq $ranking) { 'low' } else { [string]$ranking.confidence }
-$ambiguous = if ($null -eq $ranking) { $true } else { [bool]$ranking.ambiguous }
+$search = if ($CompiledIndexSource -eq 'Sqlite') {
+    & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
+        -Action search -Query $Query -Limit ([Math]::Min(50, [Math]::Max(20, $Limit * 3))) -SkipRefresh -Format Json | ConvertFrom-Json
+} else {
+    & (Join-Path $PSScriptRoot 'Find-LlmWikiContext.ps1') `
+        -Query $Query -CompiledIndexSource Json -SkipQueryCache -Limit ([Math]::Min(50, [Math]::Max(20, $Limit * 3))) -Format Json | ConvertFrom-Json
+}
+$records = if ($CompiledIndexSource -eq 'Sqlite') { @($search.records) } else { @($search.candidates) }
+$ranking = if ($CompiledIndexSource -eq 'Sqlite') { $search.rankingSummary } else { $null }
+$confidence = if ($CompiledIndexSource -eq 'Sqlite') {
+    if ($null -eq $ranking) { 'low' } else { [string]$ranking.confidence }
+} else { [string]$search.confidence }
+$ambiguous = if ($CompiledIndexSource -eq 'Sqlite') {
+    if ($null -eq $ranking) { $true } else { [bool]$ranking.ambiguous }
+} else { -not [bool]$search.conclusive }
 $conclusive = $records.Count -gt 0 -and $confidence -in @('high', 'medium') -and -not $ambiguous
 $selected = if ($conclusive) {
     @($records | Where-Object { [string]$_.confidence -in @('high', 'medium') } | Select-Object -First $Limit)
@@ -46,13 +57,17 @@ $result = [pscustomobject][ordered]@{
     confidence = $confidence
     conclusive = $conclusive
     abstained = -not $conclusive
-    abstentionReason = $(if ($records.Count -eq 0) { 'no-indexed-candidates' } elseif ($ambiguous) { [string]$ranking.ambiguityReason } elseif (-not $conclusive) { 'low-confidence' } else { $null })
+    abstentionReason = $(if ($records.Count -eq 0) { 'no-indexed-candidates' } elseif ($ambiguous) { $(if ($CompiledIndexSource -eq 'Sqlite') { [string]$ranking.ambiguityReason } else { [string]$search.ambiguityReason }) } elseif (-not $conclusive) { 'low-confidence' } else { $null })
     directModules = @($owners.module | Where-Object { $_ } | Sort-Object -Unique)
     transitivelyImpactedModules = @()
     downstreamModules = @()
     ownershipGuides = @($owners)
     candidates = @($records | Select-Object -First $Limit)
-    index = [pscustomobject][ordered]@{ fingerprint = $search.fingerprint; updatedAtUtc = $search.updatedAtUtc; durationMs = $search.durationMs }
+    index = $(if ($CompiledIndexSource -eq 'Sqlite') {
+        [pscustomobject][ordered]@{ source = 'sqlite'; fingerprint = $search.fingerprint; updatedAtUtc = $search.updatedAtUtc; durationMs = $search.durationMs }
+    } else {
+        [pscustomobject][ordered]@{ source = 'json-baseline'; compiledIndex = $search.compiledIndex }
+    })
 }
 
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 12; return }

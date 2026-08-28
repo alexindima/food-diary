@@ -4,7 +4,9 @@ param(
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 50)]
-    [int]$Limit = 12
+    [int]$Limit = 12,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -35,6 +37,7 @@ $queryAssessments = [System.Collections.Generic.List[object]]::new()
 foreach ($reviewQuery in $reviewQueries) {
     $context = & (Join-Path $PSScriptRoot 'Find-LlmWikiContext.ps1') `
         -Query $reviewQuery `
+        -CompiledIndexSource $CompiledIndexSource `
         -Limit ([Math]::Min(12, $Limit)) `
         -Format Json | ConvertFrom-Json
     $queryAssessments.Add([pscustomobject][ordered]@{

@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 151,
     "componentsWithoutDirectSpecs": 128,
-    "criticalSymbolsWithoutTestReferences": 17,
+    "criticalSymbolsWithoutTestReferences": 15,
     "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
@@ -5341,26 +5341,6 @@
       "role": "Validator",
       "path": "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "Find-LlmWikiIntentOwnership",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/Find-LlmWikiIntentOwnership.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "Find-LlmWikiTraceCandidates",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/Find-LlmWikiTraceCandidates.ps1",
-      "line": 1,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

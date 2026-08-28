@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1065,
     "ambiguousContracts": 0,
-    "consumerEdges": 7500,
-    "productionConsumerEdges": 4534,
+    "consumerEdges": 7501,
+    "productionConsumerEdges": 4535,
     "testConsumerEdges": 2966,
     "consumedContracts": 1065,
     "unconsumedContracts": 0
@@ -95482,7 +95482,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "IWearableClient",
@@ -96313,6 +96313,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWearableTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Wearables/Common/IWearableTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -108508,7 +108521,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "SyncWearableDataCommand",
