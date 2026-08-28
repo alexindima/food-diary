@@ -58,6 +58,15 @@ decision, or compiled-index analysis. With no task evidence to rank, avoiding
 those repository-wide dependencies keeps the result fast and deterministic
 across shells and CI environments.
 
+A broad repository audit is a separate mode, not an unscoped feature request.
+When intent names a repository-wide assessment across multiple risk dimensions,
+the brief returns `analysis.mode=broad-assessment`, eight assessment lanes, the
+33 application modules as assessment coverage, a representative cross-layer test
+sample, and a high review-exposure score. That score expresses required audit
+breadth rather than a confirmed defect or changed-code severity. Its next step
+links topology, privacy, security, architecture health, quality, dependencies,
+journeys, and the repository-assessment test plan.
+
 C# and frontend intent candidates use one refreshed SQLite compiled-context
 selection by default. After the established PowerShell scoring infers paths,
 the nested diff filters that same safe candidate superset to exact C# and

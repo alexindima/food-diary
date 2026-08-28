@@ -61,6 +61,12 @@ try {
     }
     Assert-ColdCheckout ([string]$defaultBrief.analysis.mode -eq 'planned-paths') 'Cold-checkout default brief did not fall back to the JSON baseline.'
 
+    $develop = Invoke-JsonFacade -Facade $facade -FacadeCommand develop -FacadeParameters @{
+        Objective = 'audit wearable synchronization'; ProposedPath = @('FoodDiary.Application.Wearables')
+        Format = 'Json'; Limit = 3; TaskSessionId = "json-cold-develop-$([Guid]::NewGuid().ToString('N'))"
+    }
+    Assert-ColdCheckout (-not [string]::IsNullOrWhiteSpace([string]$develop.profile)) 'Cold-checkout develop did not complete through the automatic JSON baseline.'
+
     $research = Invoke-JsonFacade -Facade $facade -FacadeCommand research -FacadeParameters @{
         Objective = 'audit wearable synchronization'; ProposedPath = @('FoodDiary.Application.Wearables')
         Compact = $true; SkipHistory = $true; CompiledIndexSource = 'Json'; Format = 'Json'; Limit = 3
@@ -99,7 +105,7 @@ try {
     $healthGroups = @($health.PSObject.Properties.Name)
     Assert-ColdCheckout ($healthGroups.Count -eq 10) "Cold-checkout health all returned $($healthGroups.Count) groups instead of 10."
 
-    Write-Host 'LLM Wiki JSON cold-checkout facades passed without node_modules or code-graph preparation.'
+    Write-Host 'LLM Wiki JSON cold-checkout start/brief/develop/research facades passed without node_modules or code-graph preparation.'
 } finally {
     if (Test-Path -LiteralPath $sandboxRoot) {
         Remove-Item -LiteralPath $sandboxRoot -Recurse -Force

@@ -22,6 +22,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$researchStopwatch = [Diagnostics.Stopwatch]::StartNew()
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $workspacePolicy = Get-Content -LiteralPath (Join-Path $wikiRoot 'policies/workspace-policies.json') -Raw | ConvertFrom-Json
@@ -71,6 +72,7 @@ if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
 if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $ChangedPath }
 if ($PSBoundParameters.ContainsKey('ProposedPath')) { $common.ProposedPath = $ProposedPath }
 $workflow = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') @common | ConvertFrom-Json
+$classificationDurationMs = [Math]::Round($researchStopwatch.Elapsed.TotalMilliseconds, 2)
 $assessmentIntent = $Objective -match '(?i)\b(assess|assessment|audit|evaluate|evaluation|review|remaining blockers?|readiness|status)\b|\u043e\u0446\u0435\u043d|\u0430\u0443\u0434\u0438\u0442|\u0433\u043e\u0442\u043e\u0432\u043d|\u043e\u0441\u0442\u0430\u0432\u0448'
 $effectivePurpose = if ($Purpose -eq 'Auto') { $(if ($assessmentIntent) { 'Assessment' } else { 'Implementation' }) } else { $Purpose }
 
@@ -176,6 +178,7 @@ $contextQuery = @($Objective; $expandedTerms) -join ' '
 $contextArguments = @{ Query = $contextQuery; CompiledIndexSource = $CompiledIndexSource; Format = 'Json'; Limit = $Limit }
 if ($scopePaths.Count -gt 0) { $contextArguments.ScopePath = $scopePaths }
 $context = & (Join-Path $PSScriptRoot 'Find-LlmWikiContext.ps1') @contextArguments | ConvertFrom-Json
+$contextReadyDurationMs = [Math]::Round($researchStopwatch.Elapsed.TotalMilliseconds, 2)
 Write-Host 'Research [2/3]: current-source context ready.'
 $contextHttpClients = @(if ($context.PSObject.Properties['httpClients']) { @($context.httpClients) } else { @() })
 $contextHostedServices = @(if ($context.PSObject.Properties['hostedServices']) { @($context.hostedServices) } else { @() })
@@ -190,9 +193,12 @@ $precedentScopeCandidates = $scopePaths +
     @(Get-ObjectPropertyValues @($context.symbols) 'path' | Select-Object -First $Limit) +
     @(Get-ObjectPropertyValues @($context.frontendSymbols) 'path' | Select-Object -First $Limit)
 $precedentScopePaths = @($precedentScopeCandidates | Where-Object { $_ } | Sort-Object -Unique)
-$historyDeferred = $Compact -or $SkipHistory -or [string]$workflow.profile -eq 'test-only'
+$repositoryAssessmentResearch = [string]$workflow.profile -eq 'repository-assessment'
+$wikiInternalResearch = $Objective -match '(?i)\b(llm[- ]?wiki|wiki\.ps1|wiki tooling|development mcp)\b' -or
+    (@($ProposedPath).Count -gt 0 -and @($ProposedPath | Where-Object { ([string]$_).Replace('\', '/') -notmatch '^\.llm-wiki/' }).Count -eq 0)
+$historyDeferred = $Compact -or $SkipHistory -or [string]$workflow.profile -eq 'test-only' -or $repositoryAssessmentResearch -or $wikiInternalResearch
 $precedents = if ($historyDeferred) {
-    $deferredReason = if ($SkipHistory) { 'the explicit -SkipHistory option' } elseif ([string]$workflow.profile -eq 'test-only') { 'the test-only fast path' } else { 'compact research' }
+    $deferredReason = if ($SkipHistory) { 'the explicit -SkipHistory option' } elseif ([string]$workflow.profile -eq 'test-only') { 'the test-only fast path' } elseif ($repositoryAssessmentResearch) { 'the repository-assessment fast path' } elseif ($wikiInternalResearch) { 'the Wiki-tooling fast path' } else { 'compact research' }
     Write-Host "Research [3/3]: Git precedents deferred by $deferredReason."
     [pscustomobject]@{ precedents = @(); confidence = 'deferred'; authority = "Historical precedent analysis was deferred by $deferredReason; use wiki.ps1 precedents when history is materially useful." }
 } else {
@@ -259,7 +265,16 @@ $runtimeFlowEvidence = [pscustomobject][ordered]@{
     dependencies = @()
     confidence = 'not-rated'
 }
-if (@($ProposedPath).Count -gt 0 -and $CompiledIndexSource -eq 'Sqlite') {
+if (($repositoryAssessmentResearch -or $wikiInternalResearch) -and @($ProposedPath).Count -gt 0) {
+    $runtimeFlowEvidence = [pscustomobject][ordered]@{
+        status = $(if ($repositoryAssessmentResearch) { 'deferred-repository-assessment' } else { 'deferred-wiki-tooling' })
+        sourcePaths = @($ProposedPath)
+        downstreamConsumers = @()
+        dependencies = @()
+        confidence = 'not-rated'
+        diagnostic = 'Generic runtime graph expansion was skipped because it is not a reliable evidence source for repository-assessment or Wiki-tooling objectives.'
+    }
+} elseif (@($ProposedPath).Count -gt 0 -and $CompiledIndexSource -eq 'Sqlite') {
     try {
         $graphResearch = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphResearch.ps1') `
             -Objective $Objective `
@@ -443,7 +458,7 @@ if ($workflow.requiresDecisionCheckpoint) {
         -Anchor (Get-QuestionAnchor -AllowMissing) `
         -ResolutionCommand "./.llm-wiki/wiki.ps1 design -Intent '$escapedObjective'$plannedArgument -Decision '<selected boundary; rejected alternative; affected consumers>'"))
 }
-if ($groundedPaths.Count -eq 0) {
+if ($groundedPaths.Count -eq 0 -and -not $repositoryAssessmentResearch) {
     $openQuestions.Add((New-GroundedQuestion `
         -Id 'locate-implementation' `
         -Blocking $true `
@@ -454,12 +469,13 @@ if ($groundedPaths.Count -eq 0) {
         -ResolutionCommand "./.llm-wiki/wiki.ps1 trace -Query '<exact symbol or route>'"))
 }
 $nextQuestion = @($openQuestions | Sort-Object @{ Expression = { if ($_.blocking) { 0 } else { 1 } } }, id | Select-Object -First 1)
-$researchDiscoveryConfidence = if ($groundedPaths.Count -gt 0) { 'high' } else { 'low' }
+$researchDiscoveryConfidence = if ($repositoryAssessmentResearch) { 'medium' } elseif ($groundedPaths.Count -gt 0) { 'high' } else { 'low' }
 $researchBlockerConfidence = if ($groundedPaths.Count -gt 0 -and $extractionDelta) { 'high' } elseif ($groundedPaths.Count -gt 0) { 'medium' } else { 'low' }
 $researchImplementationScopeConfidence = if ($effectivePurpose -eq 'Assessment') { 'not-required' } elseif ($workflow.scopeKnown) { 'high' } elseif ($groundedPaths.Count -gt 0) { 'medium' } else { 'low' }
 $researchConfidence = if ($effectivePurpose -eq 'Assessment') { $researchDiscoveryConfidence } elseif ($researchImplementationScopeConfidence -eq 'high') { 'high' } elseif ($groundedPaths.Count -gt 0) { 'medium' } else { 'low' }
 $researchConfidenceReasons = [Collections.Generic.List[string]]::new()
-if ($researchDiscoveryConfidence -eq 'high') { $researchConfidenceReasons.Add("Discovery is grounded in $($groundedPaths.Count) current repository path(s).") }
+if ($repositoryAssessmentResearch) { $researchConfidenceReasons.Add('Repository assessment intentionally preserves multiple evidence lanes instead of inventing one feature edit boundary.') }
+elseif ($researchDiscoveryConfidence -eq 'high') { $researchConfidenceReasons.Add("Discovery is grounded in $($groundedPaths.Count) current repository path(s).") }
 else { $researchConfidenceReasons.Add('Discovery is low because no current repository path was grounded.') }
 if ($researchBlockerConfidence -eq 'high') { $researchConfidenceReasons.Add('Blocker count is backed by contract extraction analysis plus grounded source paths.') }
 elseif ($researchBlockerConfidence -eq 'medium') { $researchConfidenceReasons.Add('Blocker count is provisional because research found the flow but did not run a boundary-specific blocker analyzer.') }
@@ -528,12 +544,12 @@ $result = [pscustomobject][ordered]@{
     openQuestions = @($openQuestions)
     nextQuestion = $(if ($nextQuestion.Count -gt 0) { $nextQuestion[0] } else { $null })
     readiness = [pscustomobject][ordered]@{
-        assessmentStatus = $(if ($groundedPaths.Count -gt 0) { 'complete' } else { 'incomplete' })
+        assessmentStatus = $(if ($repositoryAssessmentResearch -or $groundedPaths.Count -gt 0) { 'complete' } else { 'incomplete' })
         designCheckpoint = $(if ($effectivePurpose -eq 'Assessment') { 'not-required' } elseif ($workflow.requiresDecisionCheckpoint) { 'required' } else { 'not-required' })
-        implementationStatus = $(if ($groundedPaths.Count -gt 0 -and ($effectivePurpose -eq 'Assessment' -or -not $workflow.requiresDecisionCheckpoint)) { 'ready' } else { 'blocked' })
-        assessmentComplete = $groundedPaths.Count -gt 0
+        implementationStatus = $(if ($effectivePurpose -eq 'Assessment') { 'not-applicable' } elseif ($groundedPaths.Count -gt 0 -and -not $workflow.requiresDecisionCheckpoint) { 'ready' } else { 'blocked' })
+        assessmentComplete = $repositoryAssessmentResearch -or $groundedPaths.Count -gt 0
         readyToDesign = $effectivePurpose -eq 'Assessment' -or ($groundedPaths.Count -gt 0 -and @($openQuestions | Where-Object blocking).Count -eq 0)
-        readyToImplement = $groundedPaths.Count -gt 0 -and ($effectivePurpose -eq 'Assessment' -or -not $workflow.requiresDecisionCheckpoint)
+        readyToImplement = $effectivePurpose -ne 'Assessment' -and $groundedPaths.Count -gt 0 -and -not $workflow.requiresDecisionCheckpoint
         blockers = @($openQuestions | Where-Object blocking | Select-Object -ExpandProperty id)
     }
     authority = @(
@@ -541,7 +557,17 @@ $result = [pscustomobject][ordered]@{
         'Compiled indexes and Git history are navigation evidence and must be verified before implementation.'
         'Open questions are intentionally not answered by heuristics.'
     )
-    nextAction = if ($groundedPaths.Count -eq 0) {
+    diagnostics = [pscustomobject][ordered]@{
+        classificationDurationMs = $classificationDurationMs
+        contextReadyDurationMs = $contextReadyDurationMs
+        totalDurationMs = [Math]::Round($researchStopwatch.Elapsed.TotalMilliseconds, 2)
+        historyDeferred = $historyDeferred
+        runtimeGraphDeferred = $runtimeFlowEvidence.status -like 'deferred-*'
+        progressContract = 'Text progress milestones are emitted after classification/context and before optional Git history; JSON is emitted atomically when the packet is complete.'
+    }
+    nextAction = if ($repositoryAssessmentResearch) {
+        'Continue the repository assessment with topology, privacy, security, health, quality, dependency, journey, and test-plan readers; validate every reportable lead in current source and tests.'
+    } elseif ($groundedPaths.Count -eq 0) {
         "Run ./.llm-wiki/wiki.ps1 trace -Query '<exact command, handler, route, or component symbol>', then rerun research with -PlannedPath."
     } elseif ($effectivePurpose -eq 'Assessment') {
         'Assessment is complete. Use the blocker and boundary summary to choose the next package; no design checkpoint is required until implementation planning starts.'

@@ -25,4 +25,12 @@ $singleton = & (Join-Path $PSScriptRoot 'Find-LlmWikiQualityRisk.ps1') -View hot
 if ($singleton.count -ne 1 -or @($singleton.items).Count -ne 1) {
     throw 'Quality-risk query did not preserve a singleton result as an array.'
 }
+$product = & (Join-Path $PSScriptRoot 'Find-LlmWikiQualityRisk.ps1') -View hotspots -Area Product -Limit 100 -Format Json | ConvertFrom-Json
+if (@($product.items | Where-Object path -match '^\.llm-wiki/|^FoodDiary\.Development\.Mcp/|^tests/FoodDiary\.Development\.Mcp\.Tests/').Count -gt 0) {
+    throw 'Product quality view included Wiki/MCP implementation noise.'
+}
+$wiki = & (Join-Path $PSScriptRoot 'Find-LlmWikiQualityRisk.ps1') -View hotspots -Area Wiki -Query 'FoodDiary.Development.Mcp' -Limit 100 -Format Json | ConvertFrom-Json
+if (@($wiki.items | Where-Object path -match '^FoodDiary\.Development\.Mcp/').Count -eq 0) {
+    throw 'Wiki quality view omitted the Development MCP implementation surface.'
+}
 Write-Host 'LLM Wiki quality-risk regression passed: test gaps are typed, confidence-calibrated investigation leads.'

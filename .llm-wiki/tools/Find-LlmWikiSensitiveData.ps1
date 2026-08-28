@@ -33,6 +33,13 @@ if ($RepositoryWide -and $scopePaths.Count -gt 0) {
     throw 'RepositoryWide cannot be combined with ScopePath.'
 }
 $scopeMode = if ($RepositoryWide) { 'repository' } elseif ($scopePaths.Count -gt 0) { 'explicit' } else { 'none' }
+$normalizedQuery = ([string]$Query).ToLowerInvariant()
+$privacyAssessmentDimensionCount = @(
+    [regex]::Matches($normalizedQuery, '\b(privacy|security|vulnerability|vulnerabilities|credential|identity|health|financial|logging|provider|project|repository|system-wide)\b|приватност|конфиденциальност|безопасност|уязвимост|уч[её]тн|идентичност|здоров|финанс|логир|провайдер|проект|репозитор') |
+        ForEach-Object Value | Sort-Object -Unique
+).Count
+$repositoryAssessment = $normalizedQuery -match '\b(audit|assessment|evaluate|review)\b|аудит|оцен|провер' -and $privacyAssessmentDimensionCount -ge 2
+if ($repositoryAssessment -and $scopePaths.Count -eq 0) { $scopeMode = 'repository-assessment' }
 if (-not $RepositoryWide -and -not $NoImplicitScope -and $scopePaths.Count -eq 0 -and [string]::IsNullOrWhiteSpace($Query) -and $Category -eq 'all') {
     $gitPaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('diff', '--name-only', 'HEAD', '--') -FailureMessage 'Unable to enumerate changed paths for sensitive-data scope.')
     $gitPaths += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to enumerate untracked paths for sensitive-data scope.')
@@ -44,7 +51,7 @@ if (-not $RepositoryWide -and -not $NoImplicitScope -and $scopePaths.Count -eq 0
     )
     if ($scopePaths.Count -gt 0) { $scopeMode = 'git-diff' }
 }
-$searchInput = (@($Query) + @($scopePaths)) -join ' '
+$searchInput = if ($repositoryAssessment) { @($scopePaths) -join ' ' } else { (@($Query) + @($scopePaths)) -join ' ' }
 $aliases = @{ photo = 'image'; picture = 'image'; ai = 'openai'; credential = 'token' }
 $queryTokens = @(
     [regex]::Matches($searchInput.ToLowerInvariant(), '[\p{L}\p{Nd}]+') |
@@ -143,6 +150,9 @@ if ($CompiledIndexSource -eq 'Sqlite') {
     }
 }
 $guidance = @()
+if ($repositoryAssessment) {
+    $guidance += 'Broad privacy/security assessment intent was expanded to a bounded repository inventory instead of filtering on generic audit words.'
+}
 if ($scopeMode -eq 'none' -and [string]::IsNullOrWhiteSpace($Query) -and $Category -eq 'all') {
     $items = @()
     $guidance = @(
@@ -152,13 +162,20 @@ if ($scopeMode -eq 'none' -and [string]::IsNullOrWhiteSpace($Query) -and $Catego
     )
 }
 $items = @($items | Select-Object -First $Limit)
+$selectionStatus = if ($items.Count -gt 0) { 'evidence-returned' } elseif (-not [string]::IsNullOrWhiteSpace($searchInput)) { 'abstained-empty-filter' } else { 'summary-only' }
+if ($selectionStatus -eq 'abstained-empty-filter') {
+    $guidance += 'No candidate matched the focused filter. This is not proof of absence; remove -Query, use -RepositoryWide, or provide a narrower -PlannedPath.'
+}
 $stopwatch.Stop()
 $diagnostics['roundTripDurationMs'] = [Math]::Round($stopwatch.Elapsed.TotalMilliseconds, 2)
 if ($Format -eq 'Json') {
     $output = [ordered]@{
         category = $Category
+        query = $Query
+        queryMode = $(if ($repositoryAssessment) { 'repository-assessment-inventory' } elseif ([string]::IsNullOrWhiteSpace($Query)) { 'unfiltered' } else { 'focused-query' })
         count = $items.Count
         scope = [pscustomobject]@{ mode = $scopeMode; paths = $scopePaths }
+        selection = [pscustomobject]@{ status = $selectionStatus; conclusive = $items.Count -gt 0; candidateRecords = [int]$diagnostics.candidateRecords; returnedRecords = $items.Count }
         guidance = $guidance
         summary = $summary
         items = $items

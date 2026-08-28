@@ -16,6 +16,11 @@ param(
 $ErrorActionPreference = 'Stop'
 $recordKind = switch ($View) { 'test-gaps' { 'criticalSymbol' } 'debt' { 'debtMarker' } default { 'hotspot' } }
 $wikiRoot = Split-Path -Parent $PSScriptRoot
+function Test-WikiToolingPath([string]$Path) {
+    return $Path -match '^\.llm-wiki/' -or
+        $Path -match '^FoodDiary\.Development\.Mcp/' -or
+        $Path -match '^tests/FoodDiary\.Development\.Mcp\.Tests/'
+}
 function ConvertTo-TestGapEvidence([object[]]$InputItems) {
     return @($InputItems | ForEach-Object {
         [pscustomobject][ordered]@{
@@ -42,7 +47,8 @@ if ($CompiledIndexSource -eq 'Json') {
     }
     $items = @($items | Where-Object {
         $path = [string]$_.path
-        $areaMatches = $Area -eq 'All' -or ($Area -eq 'Wiki') -eq ($path -match '^\.llm-wiki/')
+        $isWikiTooling = Test-WikiToolingPath $path
+        $areaMatches = $Area -eq 'All' -or ($Area -eq 'Wiki') -eq $isWikiTooling
         $queryMatches = [string]::IsNullOrWhiteSpace($Query) -or (($_ | ConvertTo-Json -Depth 6 -Compress) -match [regex]::Escape($Query))
         $areaMatches -and $queryMatches
     } | Select-Object -First $Limit)
@@ -55,7 +61,7 @@ if ($CompiledIndexSource -eq 'Json') {
 }
 . (Join-Path $PSScriptRoot 'Ensure-LlmWikiSqliteProjection.ps1')
 Ensure-LlmWikiSqliteProjection -Category risks
-$queryLimit = if ($Area -eq 'Product' -and [string]::IsNullOrWhiteSpace($Query)) { 100 } else { $Limit }
+$queryLimit = if ($Area -ne 'All' -and [string]::IsNullOrWhiteSpace($Query)) { 100 } else { $Limit }
 $queryArguments = @{
     Action = 'query'
     Category = 'risks'
@@ -66,7 +72,6 @@ $queryArguments = @{
     Format = 'Json'
 }
 if ($Area -eq 'Product') { $queryArguments.ExcludePathPrefix = '.llm-wiki/' }
-elseif ($Area -eq 'Wiki') { $queryArguments.PathPrefix = '.llm-wiki/' }
 if ($View -eq 'test-gaps') { $queryArguments.OnlyUnreferenced = $true }
 $queryResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') @queryArguments | ConvertFrom-Json
 $graphStatus = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
@@ -76,7 +81,7 @@ $graphStatus = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
 $riskRecords = @($queryResult.records)
 $riskRecords = @($riskRecords | Where-Object {
     $path = [string]$_.payload.path
-    $isWiki = $path -eq '.llm-wiki/wiki.ps1' -or $path -match '^\.llm-wiki/'
+    $isWiki = Test-WikiToolingPath $path
     switch ($Area) {
         'Product' { -not $isWiki }
         'Wiki' { $isWiki }

@@ -21,10 +21,16 @@ foreach ($requiredPath in @($qualityPath, $sensitiveDataPath, $runtimeTopologyPa
     }
 }
 
-$reviewQueries = if ([string]::IsNullOrWhiteSpace($Query)) {
+$normalizedQuery = ([string]$Query).ToLowerInvariant()
+$assessmentDimensionCount = @(
+    [regex]::Matches($normalizedQuery, '\b(correctness|reliability|concurrency|architecture|privacy|security|ci|operations|operational|project|repository|cross-layer|system-wide|vulnerability|vulnerabilities)\b|корректност|над[её]жност|конкурент|архитектур|приватност|конфиденциальност|безопасност|уязвимост|операц|проект|репозитор') |
+        ForEach-Object Value | Sort-Object -Unique
+).Count
+$repositoryAssessment = $normalizedQuery -match '\b(audit|assessment|evaluate|review)\b|аудит|оцен|провер' -and $assessmentDimensionCount -ge 2
+$reviewQueries = if ([string]::IsNullOrWhiteSpace($Query) -or $repositoryAssessment) {
     @(
         'WebPush connect-time DNS address control SocketsHttpHandlerFactory'
-        'Mailgun webhook replay idempotency signature timestamp'
+        'Mailgun ProviderWebhookAuthorizer webhook replay idempotency signature timestamp'
         'browser refresh token localStorage CSP XSS'
         'nginx TLS SSL proxy transport security'
     )
@@ -67,17 +73,19 @@ foreach ($reviewQuery in $reviewQueries) {
 $contextLeads = @($contextLeadsByPath.Values | Sort-Object rank, @{ Expression = 'score'; Descending = $true }, path | Select-Object -First $Limit)
 
 $quality = Get-Content -LiteralPath $qualityPath -Raw | ConvertFrom-Json
-$securitySymbolPattern = '(?i)(auth|authoriz|token|secret|webhook|security|validat|policy|guard|idempot|deduplic|csp|cors|ssrf|upload|dmarc|smtp|endpoint)'
+$securitySymbolPattern = '(?i)(authenticat|authoriz|access.?token|refresh.?token|tokenhash|secret|apikey|signingkey|password|webhook|securityheader|idempot|deduplic|replay|signature|hmac|csp|cors|ssrf|webpush|upload|dmarc|smtp|ratelimit|rate.?limit|permission|access.?guard)'
 $securityTestSignals = @($quality.criticalSymbols | Where-Object {
     $_.path -notmatch '^\.llm-wiki/' -and "$($_.name) $($_.path) $($_.role)" -match $securitySymbolPattern
 } | ForEach-Object {
     $classificationText = "$($_.name) $($_.path)".ToLowerInvariant()
-    $controlFamily = if ($classificationText -match 'webhook|mailgun|idempot|deduplic') { 'webhook-authenticity-replay' }
-        elseif ($classificationText -match 'webpush|ssrf|endpoint') { 'outbound-endpoint-validation' }
+    $controlFamily = if ($classificationText -match 'webhook|mailgun|idempot|deduplic|replay|signature|hmac') { 'webhook-authenticity-replay' }
+        elseif ($classificationText -match 'webpush|ssrf') { 'outbound-endpoint-validation' }
         elseif ($classificationText -match 'csp|cors|xss|securityheader') { 'browser-boundary' }
         elseif ($classificationText -match 'upload|image') { 'untrusted-content' }
         elseif ($classificationText -match 'smtp|dmarc') { 'mail-ingress' }
-        elseif ($classificationText -match 'auth|authoriz|token|secret') { 'authentication-token' }
+        elseif ($classificationText -match 'ratelimit|rate.?limit') { 'resource-abuse-control' }
+        elseif ($classificationText -match 'authoriz|permission|access.?guard') { 'authorization' }
+        elseif ($classificationText -match 'authenticat|token|secret|apikey|signingkey|password') { 'authentication-token' }
         else { 'security-control' }
     [pscustomobject][ordered]@{
         controlFamily = $controlFamily
@@ -112,6 +120,7 @@ $privacyEvidence = [pscustomobject][ordered]@{
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     query = $Query
+    queryMode = $(if ($repositoryAssessment) { 'repository-assessment-expanded' } elseif ([string]::IsNullOrWhiteSpace($Query)) { 'curated-default' } else { 'focused-query' })
     queryAssessments = @($queryAssessments)
     contextLeads = $contextLeads
     securityTestSignals = $securityTestSignals

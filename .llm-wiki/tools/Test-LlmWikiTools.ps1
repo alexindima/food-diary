@@ -616,7 +616,7 @@ $hotspotView = $hotspotJson | ConvertFrom-Json
 Assert-Wiki ($hotspotView.count -le 3 -and $hotspotView.count -eq @($hotspotView.items).Count) 'Hotspot query exceeded its result limit or reported an inconsistent count.'
 Assert-Wiki (@($hotspotView.items | Where-Object path -match '^\.llm-wiki/').Count -eq 0) 'Default hotspot query included Wiki implementation records instead of product code.'
 $wikiHotspots = & (Join-Path $toolsRoot 'Find-LlmWikiQualityRisk.ps1') -View hotspots -Area Wiki -Limit 3 -Format Json | ConvertFrom-Json
-Assert-Wiki ($wikiHotspots.count -gt 0 -and @($wikiHotspots.items | Where-Object path -notmatch '^\.llm-wiki/').Count -eq 0) 'Wiki-only hotspot query did not isolate Wiki implementation records.'
+Assert-Wiki ($wikiHotspots.count -gt 0 -and @($wikiHotspots.items | Where-Object path -notmatch '^\.llm-wiki/|^FoodDiary\.Development\.Mcp/|^tests/FoodDiary\.Development\.Mcp\.Tests/').Count -eq 0) 'Wiki-only hotspot query did not isolate Wiki/MCP implementation records.'
 
 . (Join-Path $toolsRoot 'LlmWikiRuntimeTopologyFingerprint.ps1')
 $runtimeFingerprintFixtureRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/runtime-fingerprint-$([guid]::NewGuid().ToString('N'))"
@@ -645,6 +645,7 @@ Assert-Wiki ($runtime.summary.hostedServices -gt 0) 'Runtime topology did not ex
 Assert-Wiki ($runtime.summary.httpClients -gt 0) 'Runtime topology did not extract HTTP clients.'
 Assert-Wiki ($runtime.summary.recurringJobRegistrations -gt 0) 'Runtime topology did not extract recurring jobs.'
 Assert-Wiki ($runtime.summary.networkPolicies -gt 0) 'Runtime topology did not extract outbound network policy evidence.'
+Assert-Wiki (@($runtime.hostedServices + $runtime.httpClients + $runtime.webhooks + $runtime.recurringJobRegistrations + $runtime.networkPolicies | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.behaviorSignalScope) }).Count -eq 0) 'Runtime topology omitted the local evidence scope for inferred behavior signals.'
 $mailInboxCompose = @($runtime.composeServices | Where-Object name -eq 'mail-inbox')
 Assert-Wiki ($mailInboxCompose.Count -eq 1) 'Runtime topology did not extract the mail-inbox Compose service exactly once.'
 Assert-Wiki (@($mailInboxCompose[0].dependsOn) -contains 'mailinbox-db-init') 'Runtime topology omitted the mail-inbox dependency.'
@@ -663,6 +664,8 @@ Assert-Wiki ($emptyTopology._selection.status -eq 'abstained-empty-filter' -and
     $emptyTopology._selection.recallConfidence -eq 'low' -and
     -not [string]::IsNullOrWhiteSpace([string]$emptyTopology._selection.recommendation)) `
     'Empty filtered topology result did not abstain with a recovery recommendation.'
+$idempotencyTopology = & (Join-Path $toolsRoot 'Find-LlmWikiRuntimeTopology.ps1') -Query idempotency -Format Json | ConvertFrom-Json
+Assert-Wiki (@($idempotencyTopology.webhooks | Where-Object { @($_.behaviorSignals) -contains 'idempotency-review-candidate' }).Count -gt 0) 'Topology idempotency query omitted webhook replay/duplicate-control candidates.'
 
 $sensitiveData = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/sensitive-data-index.json') -Raw | ConvertFrom-Json
 Assert-Wiki ($sensitiveData.summary.credential -gt 0) 'Sensitive data index did not extract credential candidates.'
@@ -670,10 +673,7 @@ Assert-Wiki ($sensitiveData.summary.identity -gt 0) 'Sensitive data index did no
 Assert-Wiki ($sensitiveData.summary.health -gt 0) 'Sensitive data index did not extract health candidates.'
 Assert-Wiki ($sensitiveData.summary.boundaryFiles -gt 0) 'Sensitive data index did not identify boundary files.'
 Assert-Wiki ($sensitiveData.summary.externalTransferLeads -gt 0) 'Sensitive data index did not identify external-provider transfer leads.'
-Assert-Wiki (@($sensitiveData.fields | Where-Object {
-    $_.path -eq '.llm-wiki/tools/LlmWiki.SqliteReader/CompiledIndexReader.cs' -and
-    $_.name -eq 'SqliteConnectionStringBuilder'
-}).Count -gt 0) 'Sensitive data index did not scan C# sources under the cross-platform hidden .llm-wiki directory.'
+Assert-Wiki (@($sensitiveData.fields | Where-Object { $_.name -in @('SqliteConnectionStringBuilder', 'CancellationToken', 'CancellationTokenSource') -or $_.name -match 'Syntax$' }).Count -eq 0) 'Sensitive data index still treats constructors, cancellation primitives, or Roslyn syntax nodes as sensitive fields.'
 Assert-Wiki (@($sensitiveData.externalTransfers | Where-Object {
     $_.providerHost -eq 'api.openai.com' -and
     @($_.dataNames) -contains 'imageUrl'
@@ -705,6 +705,8 @@ Assert-Wiki ($unscopedPrivacy.scope.mode -eq 'none') 'Unscoped privacy query une
 Assert-Wiki ($unscopedPrivacy.count -eq 0 -and @($unscopedPrivacy.guidance).Count -gt 0) 'Unscoped privacy query returned a noisy repository-wide candidate list.'
 $repositoryPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') -Category credential -RepositoryWide -Limit 5 -Format Json | ConvertFrom-Json
 Assert-Wiki ($repositoryPrivacy.scope.mode -eq 'repository' -and $repositoryPrivacy.count -gt 0) 'Explicit repository-wide privacy review did not return bounded credential candidates.'
+$broadPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') -Query 'Независимый аудит всего проекта на уязвимости и проблемы.' -RepositoryWide -Limit 5 -Format Json | ConvertFrom-Json
+Assert-Wiki ($broadPrivacy.queryMode -eq 'repository-assessment-inventory' -and $broadPrivacy.selection.status -eq 'evidence-returned') 'Broad natural-language privacy intent collapsed to an empty generic-word filter.'
 $scopedPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') `
     -Category all `
     -ScopePath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result' `
@@ -717,6 +719,9 @@ Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -eq 'MailRe
 Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -eq 'FoodDiary.Web.Client/src/app/services/token-storage.service.ts' -and [int]$_.rank -le 3 }).Count -gt 0) 'Security review did not rank browser token persistence in the top three.'
 Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -in @('nginx.conf', 'nginx/sites-enabled/fooddiary.club') -and [int]$_.rank -le 4 }).Count -gt 0) 'Security review did not rank nginx transport configuration in the top four.'
 Assert-Wiki (@($securityReview.securityTestSignals).Count -gt 0 -and @($securityReview.limitations).Count -ge 3) 'Security review omitted test signals or evidence limitations.'
+$broadSecurityReview = & (Join-Path $toolsRoot 'Find-LlmWikiSecurityReview.ps1') -Query 'Repository-wide audit security vulnerabilities project review.' -Limit 20 -Format Json | ConvertFrom-Json
+Assert-Wiki ($broadSecurityReview.queryMode -eq 'repository-assessment-expanded' -and @($broadSecurityReview.contextLeads).Count -gt 0) 'Broad security intent was not expanded to curated repository evidence.'
+Assert-Wiki (@($broadSecurityReview.securityTestSignals | Where-Object { $_.controlFamily -eq 'security-control' }).Count -eq 0) 'Broad security review still classifies generic validators as security controls.'
 
 $multiPathBrief = & (Join-Path $wikiRoot 'wiki.ps1') brief `
     -PlannedPath 'FoodDiary.Web.Client/src/app/features/dashboard;FoodDiary.Web.Client/src/app/components/shared/ai-input-bar' `
@@ -733,6 +738,8 @@ Assert-Wiki (@($impactHelp.impacts.id) -contains 'workflow-impact-simulation') '
 $dependencyJson = & (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -BaseRef HEAD -Format Json
 $dependencyChanges = $dependencyJson | ConvertFrom-Json
 Assert-Wiki ($dependencyChanges.changeCount -eq 0) 'Unchanged dependency manifests produced dependency changes.'
+$dependencyInventory = & (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -BaseRef HEAD -RepositoryWide -Format Json | ConvertFrom-Json
+Assert-Wiki ($dependencyInventory.selectionMode -eq 'repository-inventory' -and $dependencyInventory.inventory.manifestCount -gt 0 -and $dependencyInventory.inventory.packageReferenceCount -gt 0) 'Repository-wide dependency analysis did not return a manifest inventory.'
 Push-Location (Join-Path $repositoryRoot 'FoodDiary.Web.Client')
 try {
     $dependencyFromFrontend = & (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -BaseRef HEAD -Format Json | ConvertFrom-Json
@@ -1002,6 +1009,8 @@ Assert-Wiki ($architectureHealth.summary.productionProjectEdges -gt 0) 'Architec
 Assert-Wiki ($architectureHealth.summary.dependencyViolations -eq 0) 'Architecture health index found forbidden project dependencies.'
 Assert-Wiki ($architectureHealth.summary.untrackedProductionProjects -eq 0) 'Architecture health index found ungoverned production projects.'
 Assert-Wiki ($architectureHealth.summary.moduleCycleNodes -eq 0) 'Architecture health index found module cycle nodes.'
+Assert-Wiki ($architectureHealth.summary.routedStandaloneComponents -gt 0) 'Architecture health index did not recognize standalone route components.'
+Assert-Wiki (@($architectureHealth.selectorUnreferencedComponents | Where-Object class -eq 'AdminAchievementsComponent').Count -eq 0) 'Architecture health still labels a routed standalone component as selector-unreferenced.'
 $deadCandidateJson = & (Join-Path $toolsRoot 'Find-LlmWikiArchitectureHealth.ps1') -View dead-candidates -Format Json
 $deadCandidates = $deadCandidateJson | ConvertFrom-Json
 Assert-Wiki (@($deadCandidates.selectorUnreferencedComponents).Count -gt 0) 'Architecture health query did not expose labelled frontend removal candidates.'

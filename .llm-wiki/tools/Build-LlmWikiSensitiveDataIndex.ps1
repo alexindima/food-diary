@@ -42,12 +42,14 @@ foreach ($file in $sourceFiles) {
         '(?m)(?:public\s+)?(?:required\s+)?(?<type>[A-Za-z_][A-Za-z0-9_?<>,.\[\]]*)\s+(?<name>[A-Z][A-Za-z0-9_]*)\s*(?:\{|[,;)])')) {
         $name = $match.Groups['name'].Value
         $declaredType = $match.Groups['type'].Value
-        if ($declaredType -in @('class', 'interface', 'record', 'struct', 'enum') -or
+        if ($declaredType -in @('class', 'interface', 'record', 'struct', 'enum', 'new', 'as', 'is') -or
+            $name -in @('CancellationToken', 'CancellationTokenSource') -or
+            $name -match 'Syntax$' -or
             $name -match '^(I[A-Z].*(Repository|Service|Provider|Client|Gateway))$' -or
             $name -match '(Handler|Controller|Validator|Repository|Service|Provider|Client|Gateway|Options|Async)$') {
             continue
         }
-        if ($declaredType -eq 'string' -and $name -match '(Sql|SqlTemplate|QueryText|CommandText|Statement)$') {
+        if ($name -match '(Sql|SqlTemplate|QueryText|CommandText|Statement)$') {
             continue
         }
         $category = $null
@@ -142,7 +144,7 @@ $uniqueExternalTransfers = @($externalTransfers | Sort-Object path, line, provid
 $result = [ordered]@{
     schemaVersion = 1
     semantics = [ordered]@{
-        inventory = 'Name-and-context-based candidate sensitive fields. Generic quantity Amount fields are not financial without billing or monetary context, and SQL/query text constants are not runtime identity values. Confirm semantics in source before making privacy claims.'
+        inventory = 'Name-and-context-based candidate sensitive fields. Constructors and cancellation primitives are excluded; generic quantity Amount fields are not financial without billing or monetary context, and SQL/query text constants are not runtime identity values. Confirm semantics in source before making privacy claims.'
         potentialLogging = 'A logging call near a candidate field name. This is a review lead, not proof that a runtime value is logged.'
         externalTransfers = 'An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload.'
     }

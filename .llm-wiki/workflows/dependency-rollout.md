@@ -22,6 +22,7 @@ task brief or change packet, so deployment flags and obligations stay aligned.
 
 ```powershell
 ./.llm-wiki/wiki.ps1 dependencies -BaseRef origin/master
+./.llm-wiki/wiki.ps1 dependencies -RepositoryWide
 ./.llm-wiki/wiki.ps1 rollout
 ```
 
@@ -29,6 +30,10 @@ Dependency review reports added, removed, and version-changed direct NuGet/npm
 references and changed npm lockfile graphs. Manifest discovery and Git baseline
 reads are anchored to the repository root, so invoking the command from
 `FoodDiary.Web.Client` produces the same result as invoking it from the root.
+`-RepositoryWide` switches from diff-only output to a local manifest inventory:
+manifest and lockfile counts, NuGet/npm package-reference counts, unique packages,
+and per-manifest versions. The inventory does not contact advisory services and
+therefore cannot establish whether a version is vulnerable or licensed safely.
 The rollout plan detects migrations, configuration, dependencies,
 jobs, external integrations, API, and frontend impact and generates pre-deploy,
 deployment, post-deploy, and rollback prompts.

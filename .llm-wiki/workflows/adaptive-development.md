@@ -267,6 +267,14 @@ payload changed. Compact research enforces the public item limit on every lane,
 filters generic graph symbols and weak failure matches, and caps structured output
 at 30,000 characters.
 
+Repository-assessment and Wiki-tooling research use bounded fast paths. They
+defer Git precedent scanning and generic runtime-graph expansion, emit stage and
+total timing diagnostics, and preserve progress milestones before final atomic
+JSON output. A repository assessment is complete without inventing one feature
+edit boundary: it asks no "locate implementation" question, remains explicitly
+not implementation-ready, and directs the caller to the complementary broad
+evidence readers.
+
 When `-PlannedPath` is present, existing planned files are the highest-priority
 implementation evidence and unrelated semantic symbols, tests, and integration
 surfaces are removed unless graph evidence connects them to that scope. The

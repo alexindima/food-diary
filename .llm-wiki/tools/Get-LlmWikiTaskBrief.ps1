@@ -314,6 +314,7 @@ $ownership = if ($null -ne $OwnershipInput) { $OwnershipInput } else {
 }
 $testPlanArguments = @{} + $common
 $testPlanArguments.Limit = $Limit
+if (-not [string]::IsNullOrWhiteSpace($Intent)) { $testPlanArguments.Intent = $Intent }
 $testPlan = if ($null -ne $TestPlanInput) { $TestPlanInput } elseif ($SkipTestPlan) {
     [pscustomobject]@{ focusedTestFiles = @(); scenarios = @() }
 } else {
@@ -503,6 +504,21 @@ Write-Verbose "Quality match: changed=$(@($diff.changedPaths).Count), indexed=$(
 
 $riskScore = 0
 $riskReasons = [System.Collections.Generic.List[string]]::new()
+$broadAssessmentScopes = @('Api', 'Backend', 'Frontend', 'Database', 'Configuration', 'Deployment', 'Tests', 'Contracts')
+$isBroadAssessment = $broadAssessmentIntent -and $proposedPathCount -eq 0 -and @($diff.changedPaths).Count -eq 0
+$broadAssessmentModules = @()
+if ($isBroadAssessment) {
+    $repositoryCatalog = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/repository-catalog.json') -Raw | ConvertFrom-Json
+    $broadAssessmentModules = @(
+        @($repositoryCatalog.applicationModules) + @($repositoryCatalog.extractedApplicationModules) |
+            Select-Object name, project |
+            Sort-Object name -Unique
+    )
+    $riskScore = 7
+    $riskReasons.Add('repository-wide assessment breadth')
+    $riskReasons.Add('security and privacy evidence required')
+    $riskReasons.Add('runtime, deployment, and operational evidence required')
+}
 if (@($diff.scopes) -contains 'Api') { $riskScore += 2; $riskReasons.Add('public API surface') }
 if (@($diff.scopes) -contains 'Database') { $riskScore += 3; $riskReasons.Add('database or migration') }
 if (@($diff.scopes) -contains 'Localization') { $riskScore += 1; $riskReasons.Add('paired localization') }
@@ -650,7 +666,7 @@ if ($inferredPaths.Count -gt 0 -and
     $riskCalibration = 'intent-inference-cap'
 }
 $riskLevel = if ($riskScore -ge 7) { 'high' } elseif ($riskScore -ge 3) { 'medium' } else { 'low' }
-$analysisMode = if ($broadAssessmentIntent -and $proposedPathCount -eq 0 -and @($diff.changedPaths).Count -eq 0) {
+$analysisMode = if ($isBroadAssessment) {
     'broad-assessment'
 } elseif ($inferredPaths.Count -gt 0) {
     'intent-inferred'
@@ -665,6 +681,7 @@ $analysisConfidence = switch ($analysisMode) {
     'git-diff' { 'high' }
     'planned-paths' { 'medium' }
     'intent-inferred' { 'low' }
+    'broad-assessment' { 'medium' }
     default { 'low' }
 }
 $briefWarnings = [System.Collections.Generic.List[string]]::new()
@@ -694,6 +711,8 @@ $brief = [pscustomobject]@{
             'change-policy'
         )
         inferredPaths = @($inferredPaths)
+        assessmentLanes = $(if ($analysisMode -eq 'broad-assessment') { $broadAssessmentScopes } else { @() })
+        assessmentModules = $broadAssessmentModules
         compiledIndex = $(if ($null -eq $intentIndexDiagnostics) { $null } else { [pscustomobject]$intentIndexDiagnostics })
         impactIndex = [pscustomobject]$impactIndexDiagnostics
     }
@@ -704,14 +723,16 @@ $brief = [pscustomobject]@{
         profile = if ($frontendPresentationOnly) { 'frontend-presentation-only' } else { 'general' }
         calibration = $riskCalibration
         reasons = @($riskReasons)
+        interpretation = $(if ($analysisMode -eq 'broad-assessment') { 'Assessment exposure: the score expresses required review breadth, not a confirmed defect or changed-code risk.' } else { 'Change risk inferred from scoped repository evidence.' })
     }
     change = [pscustomobject]@{
         intent = $Intent
         paths = @($diff.changedPaths)
         proposedPaths = @($ProposedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
-        scopes = @($diff.scopes)
+        scopes = $(if ($analysisMode -eq 'broad-assessment') { $broadAssessmentScopes } else { @($diff.scopes) })
         directModules = @($ownership.directModules)
         downstreamModules = @($ownership.downstreamModules)
+        assessmentModules = $broadAssessmentModules
     }
     instructions = @($ownership.ownershipGuides |
         Select-Object -ExpandProperty guide -Unique |
@@ -745,7 +766,7 @@ $brief = [pscustomobject]@{
             [pscustomobject]@{
                 id = 'run-broad-assessment-readers'
                 reason = 'A repository-wide assessment requires complementary evidence views instead of a single inferred module.'
-                recommendedCommand = './.llm-wiki/wiki.ps1 topology; ./.llm-wiki/wiki.ps1 privacy -PrivacyCategory all; ./.llm-wiki/wiki.ps1 health -HealthView all; ./.llm-wiki/wiki.ps1 hotspots; ./.llm-wiki/wiki.ps1 test-gaps'
+                recommendedCommand = './.llm-wiki/wiki.ps1 topology; ./.llm-wiki/wiki.ps1 privacy -PrivacyCategory all -RepositoryWide; ./.llm-wiki/wiki.ps1 security; ./.llm-wiki/wiki.ps1 health -HealthView all; ./.llm-wiki/wiki.ps1 hotspots; ./.llm-wiki/wiki.ps1 test-gaps; ./.llm-wiki/wiki.ps1 dependencies -RepositoryWide; ./.llm-wiki/wiki.ps1 journeys -Intent <audit>; ./.llm-wiki/wiki.ps1 test-plan -Intent <audit>'
                 alternatives = @("./.llm-wiki/wiki.ps1 brief -Intent '<bounded task>' -PlannedPath @('path/one','path/two')")
             }
         } elseif ($analysisMode -eq 'unscoped') {

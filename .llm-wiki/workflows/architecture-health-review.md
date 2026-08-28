@@ -29,6 +29,12 @@ the role of each hotspot, so read composers are not judged like aggregate owners
 
 Unreferenced selectors and contracts are investigation candidates only. Before removal, search routes, dynamic imports, dependency injection, reflection, serializers, message type names, external client packages, templates, tests, and documentation. Remove a candidate only with focused compilation/tests and observable behavior evidence.
 
+Angular standalone components referenced by `component` or `loadComponent` in
+`*.routes.ts` are counted as routed components and excluded from the
+selector-unreferenced list. The remaining list can still contain dynamic dialog,
+portal, registry, or reflective consumers and therefore remains a removal lead,
+never an automatic deletion list.
+
 Adding an in-process authentication command that reuses existing application
 services should not require new project edges. Confirm this through the
 architecture-health index and architecture tests rather than treating a clean

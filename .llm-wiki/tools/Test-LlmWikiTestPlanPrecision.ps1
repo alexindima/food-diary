@@ -79,7 +79,11 @@ $assessmentPlan = & $tool `
 if ($assessmentPlan.selectionMode -ne 'repository-assessment') {
     throw 'Repository audit test plan did not activate assessment selection.'
 }
-if (@($assessmentPlan.scenarios.id | Where-Object { $_ -like 'assessment-*' }).Count -ne 5) {
+if (@($assessmentPlan.scenarios.id | Where-Object { $_ -like 'assessment-*' }).Count -lt 9 -or
+    @($assessmentPlan.scenarios.id) -notcontains 'assessment-webhook-authenticity' -or
+    @($assessmentPlan.scenarios.id) -notcontains 'assessment-migration-safety' -or
+    @($assessmentPlan.scenarios.id) -notcontains 'assessment-deployment-supply-chain' -or
+    @($assessmentPlan.scenarios.id) -notcontains 'assessment-dependency-inventory') {
     throw 'Repository audit test plan omitted one or more risk-lane scenarios.'
 }
 if (@($assessmentPlan.focusedTestFiles | Where-Object { $_ -match 'RedisIdempotencyConcurrency|SideEffectReliability|auth\.service\.spec' }).Count -lt 3) {

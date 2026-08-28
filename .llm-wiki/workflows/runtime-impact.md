@@ -28,6 +28,15 @@ For matched clients, workers, jobs, and webhooks, review cancellation, timeout,
 retry/backoff, idempotency/replay, duplicate delivery, ordering, partial failure,
 dead-letter/recovery, shutdown behavior, health/readiness, and telemetry.
 
+Every inferred `behaviorSignals` list identifies its `behaviorSignalScope`.
+Class and registration windows prevent one type or recurring-job registration
+from inheriting retry, cancellation, outbox, or concurrency words from the whole
+file. Recurring-job records intentionally leave target behavior unexpanded and
+say to inspect the registered job implementation. Cancellation distinguishes a
+propagation candidate from explicit `CancellationToken.None`; webhook replay or
+duplicate controls are searchable as idempotency review candidates without
+claiming that end-to-end idempotency was proved.
+
 Task-brief impact selection and the standalone command use the exact SQLite
 projection. The generated JSON is only an explicit parity oracle and projection
 source, not an automatic fallback. Runtime accepts the measured fresh-process

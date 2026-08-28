@@ -126,7 +126,16 @@ $moduleHotspots = @(
     }
 )
 
-$referencedFrontendComponents = @($frontendContracts.consumerEdges.component | Sort-Object -Unique)
+$routedFrontendComponents = @(
+    Get-ChildItem -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Web.Client') -Recurse -File -Filter '*.routes.ts' -ErrorAction SilentlyContinue |
+        ForEach-Object {
+            $routeSource = [IO.File]::ReadAllText($_.FullName)
+            [regex]::Matches($routeSource, '(?:loadComponent\s*:|component\s*:)[\s\S]{0,240}?\b(?<class>[A-Z][A-Za-z0-9_]*Component)\b') |
+                ForEach-Object { $_.Groups['class'].Value }
+        } |
+        Sort-Object -Unique
+)
+$referencedFrontendComponents = @($frontendContracts.consumerEdges.component + $routedFrontendComponents | Sort-Object -Unique)
 $selectorUnreferenced = @(
     $frontendContracts.components |
         Where-Object { $_.class -notin $referencedFrontendComponents } |
@@ -145,6 +154,7 @@ $result = [ordered]@{
         ambiguousBackendContracts = @($backendContracts.contracts | Where-Object ambiguous).Count
         unconsumedBackendContracts = @($backendContracts.contracts | Where-Object { $_.name -notin @($backendContracts.consumerEdges.contract) }).Count
         selectorUnreferencedComponents = $selectorUnreferenced.Count
+        routedStandaloneComponents = $routedFrontendComponents.Count
         componentsWithoutDirectSpecs = @($frontendContracts.components | Where-Object { $null -eq $_.specPath }).Count
         criticalSymbolsWithoutTestReferences = @($quality.criticalSymbols | Where-Object testReferenceCount -eq 0).Count
         explicitDebtMarkers = @($quality.debtMarkers).Count

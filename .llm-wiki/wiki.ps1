@@ -375,11 +375,11 @@ $readOnlyFacadeCommands = @('research', 'research-next-question', 'context', 'tr
 $compiledIndexReadOnlyCommands = @(
     'research', 'research-next-question', 'trace', 'packet', 'brief',
     'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace',
-    'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies',
+    'implementation-plan', 'plan', 'test-plan', 'decision',
     'rollout', 'topology', 'privacy', 'security', 'ui', 'contracts', 'diff',
     'ownership', 'api-compat'
 )
-$automaticJsonFallbackCommands = @('start', 'brief', 'research')
+$automaticJsonFallbackCommands = @('start', 'brief', 'develop', 'research')
 $compiledIndexSourceWasExplicit = $PSBoundParameters.ContainsKey('CompiledIndexSource')
 if (-not $compiledIndexSourceWasExplicit -and
     $CompiledIndexSource -eq 'Sqlite' -and
@@ -1436,7 +1436,7 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiDecisionContext.ps1' $decisionArguments
     }
     'dependencies' {
-        Invoke-WikiTool 'Get-LlmWikiDependencyChanges.ps1' @{ BaseRef = $BaseRef; Format = $Format }
+        Invoke-WikiTool 'Get-LlmWikiDependencyChanges.ps1' @{ BaseRef = $BaseRef; RepositoryWide = $RepositoryWide; Format = $Format }
     }
     'rollout' {
         $rolloutArguments = @{ BaseRef = $BaseRef; Format = $Format }

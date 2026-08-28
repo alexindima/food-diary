@@ -256,8 +256,12 @@ if ($repositoryAssessment) {
         'tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs'
         'tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs'
         'tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs'
+        'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs'
+        'tests/FoodDiary.Infrastructure.Tests/Services/BillingGatewayTests.cs'
         'tests/FoodDiary.Web.Api.Tests/Extensions/RateLimiterOptionsSetupTests.cs'
+        'tests/FoodDiary.ArchitectureTests/ContainerSupplyChainGuardrailTests.cs'
         'MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayMessageProcessorTests.cs'
+        'MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs'
         'MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/NpgsqlInboundMailStoreIntegrationTests.cs'
         'FoodDiary.Web.Client/src/app/services/auth.service.spec.ts'
         'FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard.service.spec.ts'
@@ -308,6 +312,13 @@ $affineDirectTests = @($directTests | Where-Object {
 } | Sort-Object)
 Add-RankedTests $affineDirectTests 90 'references-changed-symbol-in-feature-boundary'
 Add-RankedTests @($behavioralIntentTests | Sort-Object) 85 'behavioral-intent-and-scope-affinity'
+if ($repositoryAssessment) {
+    Add-RankedTests @(
+        'tests/FoodDiary.ArchitectureTests/SideEffectReliabilityGuardrailTests.cs'
+        'tests/FoodDiary.Web.Api.IntegrationTests/RedisIdempotencyConcurrencyIntegrationTests.cs'
+        'FoodDiary.Web.Client/src/app/services/auth.service.spec.ts'
+    ) 90 'repository-assessment-core-representative'
+}
 Add-RankedTests @($repositoryAssessmentTests | Sort-Object) 85 'repository-assessment-risk-lane'
 Add-RankedTests @($neighborTests | Sort-Object) 70 'neighboring-test-class'
 $scopeAffinityTokens = @($effectivePaths | ForEach-Object {
@@ -429,6 +440,10 @@ if ($repositoryAssessment) {
     Add-Scenario 'assessment-reliability-concurrency' 'Check retries, cancellation, idempotency, duplicate delivery, concurrency, outbox recovery, and graceful shutdown.' 'Focused integration and delivery tests'
     Add-Scenario 'assessment-contracts-data' 'Check API compatibility, persistence invariants, migrations, serialization, and realistic query behavior.' 'Contract, domain, and provider-backed tests'
     Add-Scenario 'assessment-client-ci-operations' 'Check frontend auth/data flows, builds, deterministic CI gates, startup configuration, and operational readiness.' 'Frontend verification, build, and configuration tests'
+    Add-Scenario 'assessment-webhook-authenticity' 'Check provider signature validation, timestamp freshness, replay handling, malformed payloads, and duplicate delivery.' 'MailRelay and billing webhook tests plus current provider configuration review'
+    Add-Scenario 'assessment-migration-safety' 'Apply migrations against the supported provider and inspect locks, defaults, backfills, rollback/roll-forward, and generated-file completeness.' 'Migration safety integration test and migration source review'
+    Add-Scenario 'assessment-deployment-supply-chain' 'Validate Compose syntax, Docker build inputs, pinned dependencies, secret-free manifests, and startup/readiness ordering.' 'docker compose config plus container supply-chain guardrails'
+    Add-Scenario 'assessment-dependency-inventory' 'Inventory NuGet/npm manifests and lockfiles, then run current ecosystem advisory audits before concluding vulnerability status.' 'Wiki dependency inventory plus external advisory data'
 }
 
 $commands = @(@(
@@ -449,16 +464,28 @@ $commands = @(@(
 ) | Sort-Object command -Unique)
 if ($repositoryAssessment) {
     $commands += [pscustomobject]@{
-        id = 'assessment-architecture'; command = 'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore'
+        id = 'assessment-architecture'; command = 'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj'
         source = 'repository-assessment'; priority = 'required'; reason = 'repository-wide-architecture-lane'; commandEvidence = 'tests/FoodDiary.ArchitectureTests'
     }
     $commands += [pscustomobject]@{
-        id = 'assessment-backend'; command = 'dotnet test FoodDiary.slnx --no-restore'
+        id = 'assessment-backend'; command = 'dotnet test FoodDiary.slnx'
         source = 'repository-assessment'; priority = 'recommended'; reason = 'repository-wide-backend-regression'; commandEvidence = 'FoodDiary.slnx'
     }
     $commands += [pscustomobject]@{
         id = 'assessment-frontend'; command = 'cd FoodDiary.Web.Client && npm run verify'
         source = 'repository-assessment'; priority = 'recommended'; reason = 'repository-wide-frontend-regression'; commandEvidence = 'FoodDiary.Web.Client/package.json'
+    }
+    $commands += [pscustomobject]@{
+        id = 'assessment-migrations'; command = 'dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj'
+        source = 'repository-assessment'; priority = 'required'; reason = 'repository-wide-migration-safety-lane'; commandEvidence = 'MigrationSafetyIntegrationTests.cs'
+    }
+    $commands += [pscustomobject]@{
+        id = 'assessment-compose'; command = 'docker compose config --quiet'
+        source = 'repository-assessment'; priority = 'recommended'; reason = 'repository-wide-deployment-declaration-lane'; commandEvidence = 'docker-compose.yml'
+    }
+    $commands += [pscustomobject]@{
+        id = 'assessment-dependencies'; command = './.llm-wiki/wiki.ps1 dependencies -RepositoryWide'
+        source = 'repository-assessment'; priority = 'required'; reason = 'repository-wide-dependency-inventory'; commandEvidence = 'tracked NuGet/npm manifests and lockfiles'
     }
 }
 
@@ -662,6 +689,12 @@ $result = [pscustomobject]@{
     focusedTestFiles = @($selectedFocusedTests | ForEach-Object { if ($_.PSObject.Properties['path']) { $_.path } } | Where-Object { $_ })
     focusedTestDetails = $selectedFocusedTests
     commands = @($commands)
+    prerequisites = [pscustomobject][ordered]@{
+        dotnetSdk = [pscustomobject]@{ required = $true; detected = [bool](Get-Command dotnet -ErrorAction SilentlyContinue); recovery = 'Install the repository-supported .NET SDK, then rerun commands without --no-restore on a cold checkout.' }
+        nodeDependencies = [pscustomobject]@{ required = $repositoryAssessment; detected = [bool](Test-Path -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Web.Client/node_modules') -PathType Container); recovery = 'Run npm ci in FoodDiary.Web.Client before frontend verification.' }
+        dockerCompose = [pscustomobject]@{ required = $false; detected = [bool](Get-Command docker -ErrorAction SilentlyContinue); recovery = 'Install/start Docker when Compose declaration validation is part of the assessment.' }
+        providerBackedTests = [pscustomobject]@{ required = $false; detected = $null; recovery = 'Provider-backed integration tests may require Docker/testcontainers and network access; report a skipped prerequisite separately from a passing test.' }
+    }
     commandGroups = [pscustomobject][ordered]@{
         required = @($commands | Where-Object { $_.priority -eq 'required' -and $_.status -eq 'pending' })
         recommended = @($commands | Where-Object { $_.priority -eq 'recommended' -and $_.status -eq 'pending' })
@@ -685,6 +718,7 @@ $resultOutput = if ($Compact) {
         modules = $result.modules
         focusedTests = $result.focusedTestDetails
         commands = $result.commands
+        prerequisites = $result.prerequisites
         scenarios = @($result.scenarios | Select-Object id, description)
         repositoryAntipatterns = $result.repositoryAntipatterns
         reviewObligationIds = @($result.reviewObligations | ForEach-Object { if ($_.PSObject.Properties['id']) { $_.id } } | Where-Object { $_ })

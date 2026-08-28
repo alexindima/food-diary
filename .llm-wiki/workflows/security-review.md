@@ -32,6 +32,14 @@ one concern. Results combine ranked current-source context, security-oriented
 critical-symbol test references, repository runtime declarations, and privacy
 inventory leads.
 
+Broad repository-audit wording expands to the curated discovery set and reports
+`queryMode=repository-assessment-expanded`; it does not use the generic audit
+sentence as a literal source filter. Security-oriented test signals use explicit
+control families (authentication, authorization, webhook authenticity/replay,
+outbound endpoint policy, browser boundary, abuse control, untrusted content,
+and mail ingress). Generic validators and ordinary endpoints are not labelled as
+security controls solely because their names contain `Validator` or `Endpoint`.
+
 This command is not a vulnerability scanner. A context candidate is a place to
 inspect, not a finding. A direct test-name reference is not proof that a
 security property is executed or asserted. Compose and source declarations do

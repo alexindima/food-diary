@@ -10,7 +10,8 @@
     "moduleHotspotReviewCandidates": 0,
     "ambiguousBackendContracts": 0,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 151,
+    "selectorUnreferencedComponents": 96,
+    "routedStandaloneComponents": 55,
     "componentsWithoutDirectSpecs": 128,
     "criticalSymbolsWithoutTestReferences": 16,
     "explicitDebtMarkers": 10
@@ -242,60 +243,12 @@
   "unconsumedBackendContracts": [],
   "selectorUnreferencedComponents": [
     {
-      "class": "AdminAchievementsComponent",
-      "selector": "fd-admin-achievements",
-      "feature": "admin-achievements",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.html",
-      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.spec.ts"
-    },
-    {
-      "class": "AdminAcquisitionComponent",
-      "selector": "fd-admin-acquisition",
-      "feature": "admin-acquisition",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/pages/admin-acquisition.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/pages/admin-acquisition.html",
-      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/pages/admin-acquisition.spec.ts"
-    },
-    {
-      "class": "AdminAiUsageComponent",
-      "selector": "fd-admin-ai-usage",
-      "feature": "admin-ai-usage",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-usage/pages/admin-ai-usage.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-usage/pages/admin-ai-usage.html",
-      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-usage/pages/admin-ai-usage.spec.ts"
-    },
-    {
-      "class": "AdminBillingComponent",
-      "selector": "fd-admin-billing",
-      "feature": "admin-billing",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
-      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.spec.ts"
-    },
-    {
-      "class": "AdminDashboardComponent",
-      "selector": "fd-admin-dashboard",
-      "feature": "admin-dashboard",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/pages/admin-dashboard.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/pages/admin-dashboard.html",
-      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/pages/admin-dashboard.spec.ts"
-    },
-    {
       "class": "AdminEmailTemplateEditDialogComponent",
       "selector": "fd-admin-email-template-edit-dialog",
       "feature": "admin-email-templates",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/dialogs/admin-email-template-edit-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/dialogs/admin-email-template-edit-dialog.html",
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/dialogs/admin-email-template-edit-dialog.spec.ts"
-    },
-    {
-      "class": "AdminEmailTemplatesComponent",
-      "selector": "fd-admin-email-templates",
-      "feature": "admin-email-templates",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/pages/admin-email-templates.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/pages/admin-email-templates.html",
-      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/pages/admin-email-templates.spec.ts"
     },
     {
       "class": "AdminLessonEditDialogComponent",
@@ -306,60 +259,12 @@
       "specPath": null
     },
     {
-      "class": "AdminLessonsComponent",
-      "selector": "fd-admin-lessons",
-      "feature": "admin-lessons",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.html",
-      "specPath": null
-    },
-    {
-      "class": "AdminMailInboxComponent",
-      "selector": "fd-admin-mail-inbox",
-      "feature": "admin-mail-inbox",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.html",
-      "specPath": null
-    },
-    {
       "class": "AdminModerationActionDialogComponent",
       "selector": "fd-admin-moderation-action-dialog",
       "feature": "admin-moderation",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.html",
       "specPath": null
-    },
-    {
-      "class": "AdminModerationComponent",
-      "selector": "fd-admin-moderation",
-      "feature": "admin-moderation",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.html",
-      "specPath": null
-    },
-    {
-      "class": "UnauthorizedComponent",
-      "selector": "fd-admin-unauthorized",
-      "feature": "admin-public",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-public/pages/unauthorized.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-public/pages/unauthorized.html",
-      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-public/pages/unauthorized.spec.ts"
-    },
-    {
-      "class": "AdminImpersonationSessionsPageComponent",
-      "selector": "fd-admin-impersonation-sessions-page",
-      "feature": "admin-users",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-impersonation-sessions-page.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-impersonation-sessions-page.html",
-      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-impersonation-sessions-page.spec.ts"
-    },
-    {
-      "class": "AdminLoginActivityPageComponent",
-      "selector": "fd-admin-login-activity-page",
-      "feature": "admin-users",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-page.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-page.html",
-      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-page.spec.ts"
     },
     {
       "class": "AdminUserCreateDialogComponent",
@@ -402,14 +307,6 @@
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-set-password-dialog.spec.ts"
     },
     {
-      "class": "AdminUsersComponent",
-      "selector": "fd-admin-users",
-      "feature": "admin-users",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.html",
-      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.spec.ts"
-    },
-    {
       "class": "AuthDialogComponent",
       "selector": "fd-auth-dialog",
       "feature": "auth",
@@ -418,60 +315,12 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/auth/dialogs/auth-dialog/auth-dialog.spec.ts"
     },
     {
-      "class": "EmailVerificationComponent",
-      "selector": "fd-email-verification",
-      "feature": "auth",
-      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/email-verification.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/email-verification.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/email-verification.spec.ts"
-    },
-    {
-      "class": "EmailVerificationPendingComponent",
-      "selector": "fd-email-verification-pending",
-      "feature": "auth",
-      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification-pending/email-verification-pending.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification-pending/email-verification-pending.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification-pending/email-verification-pending.spec.ts"
-    },
-    {
-      "class": "MobileLoginComponent",
-      "selector": "fd-mobile-login",
-      "feature": "auth",
-      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/mobile-login/mobile-login.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/mobile-login/mobile-login.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/auth/pages/mobile-login/mobile-login.spec.ts"
-    },
-    {
-      "class": "PasswordResetComponent",
-      "selector": "fd-password-reset",
-      "feature": "auth",
-      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.spec.ts"
-    },
-    {
-      "class": "RequiredPasswordChangeComponent",
-      "selector": "fd-required-password-change",
-      "feature": "auth",
-      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.spec.ts"
-    },
-    {
       "class": "CycleCurrentCardComponent",
       "selector": "fd-cycle-current-card",
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-current-card/cycle-current-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-current-card/cycle-current-card.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-current-card/cycle-current-card.spec.ts"
-    },
-    {
-      "class": "CycleTrackingPageComponent",
-      "selector": "fd-cycle-tracking-page",
-      "feature": "cycle-tracking",
-      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
-      "specPath": null
     },
     {
       "class": "SensitiveCycleExportDialogComponent",
@@ -490,14 +339,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-appearance-dialog/dashboard-appearance-dialog.spec.ts"
     },
     {
-      "class": "DashboardComponent",
-      "selector": "fd-dashboard",
-      "feature": "dashboard",
-      "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
-      "specPath": null
-    },
-    {
       "class": "DashboardNotificationSettingsDialogComponent",
       "selector": "fd-dashboard-notification-settings-dialog",
       "feature": "dashboard",
@@ -512,38 +353,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.spec.ts"
-    },
-    {
-      "class": "ClientDashboardComponent",
-      "selector": "fd-client-dashboard",
-      "feature": "dietologist",
-      "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.spec.ts"
-    },
-    {
-      "class": "DietologistClientsPageComponent",
-      "selector": "fd-dietologist-clients-page",
-      "feature": "dietologist",
-      "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-clients-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-clients-page.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-clients-page.spec.ts"
-    },
-    {
-      "class": "DietologistInvitationPageComponent",
-      "selector": "fd-dietologist-invitation-page",
-      "feature": "dietologist",
-      "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/invitation/dietologist-invitation-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/invitation/dietologist-invitation-page.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/invitation/dietologist-invitation-page.spec.ts"
-    },
-    {
-      "class": "ExplorePageComponent",
-      "selector": "fd-explore-page",
-      "feature": "explore",
-      "path": "FoodDiary.Web.Client/src/app/features/explore/pages/explore/explore-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/explore/pages/explore/explore-page.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/explore/pages/explore/explore-page.spec.ts"
     },
     {
       "class": "LikeButtonComponent",
@@ -624,14 +433,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-insights-section/fasting-insights-section.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-insights-section/fasting-insights-section.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-insights-section/fasting-insights-section.spec.ts"
-    },
-    {
-      "class": "FastingPageComponent",
-      "selector": "fd-fasting-page",
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page/fasting-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page/fasting-page.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page/fasting-page.spec.ts"
     },
     {
       "class": "FastingProtocolDialogComponent",
@@ -778,14 +579,6 @@
       "specPath": null
     },
     {
-      "class": "GamificationPageComponent",
-      "selector": "fd-gamification-page",
-      "feature": "gamification",
-      "path": "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.spec.ts"
-    },
-    {
       "class": "CalorieGoalDialogComponent",
       "selector": "fd-calorie-goal-dialog",
       "feature": "goals",
@@ -794,84 +587,12 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.spec.ts"
     },
     {
-      "class": "GoalsPageComponent",
-      "selector": "fd-goals-page",
-      "feature": "goals",
-      "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.spec.ts"
-    },
-    {
-      "class": "LessonDetailPageComponent",
-      "selector": "fd-lesson-detail-page",
-      "feature": "lessons",
-      "path": "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-page.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-page.spec.ts"
-    },
-    {
-      "class": "LessonsListPageComponent",
-      "selector": "fd-lessons-list-page",
-      "feature": "lessons",
-      "path": "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.spec.ts"
-    },
-    {
-      "class": "MealPlanDetailPageComponent",
-      "selector": "fd-meal-plan-detail-page",
-      "feature": "meal-plans",
-      "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-page.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-page.spec.ts"
-    },
-    {
-      "class": "MealPlansListPageComponent",
-      "selector": "fd-meal-plans-list-page",
-      "feature": "meal-plans",
-      "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plans-list-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plans-list-page.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plans-list-page.spec.ts"
-    },
-    {
-      "class": "MealAddComponent",
-      "selector": "fd-meal-add",
-      "feature": "meals",
-      "path": "FoodDiary.Web.Client/src/app/features/meals/pages/manage/meal-add/meal-add.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/meals/pages/manage/meal-add/meal-add.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/meals/pages/manage/meal-add/meal-add.spec.ts"
-    },
-    {
-      "class": "MealContainerComponent",
-      "selector": "fd-meal-container",
-      "feature": "meals",
-      "path": "FoodDiary.Web.Client/src/app/features/meals/pages/container/meal-container.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/meals/pages/container/meal-container.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/meals/pages/container/meal-container.spec.ts"
-    },
-    {
       "class": "MealDetailComponent",
       "selector": "fd-meal-detail",
       "feature": "meals",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.spec.ts"
-    },
-    {
-      "class": "MealEditComponent",
-      "selector": "fd-meal-edit",
-      "feature": "meals",
-      "path": "FoodDiary.Web.Client/src/app/features/meals/pages/manage/meal-edit/meal-edit.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/meals/pages/manage/meal-edit/meal-edit.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/meals/pages/manage/meal-edit/meal-edit.spec.ts"
-    },
-    {
-      "class": "MealListComponent",
-      "selector": "fd-meal-list",
-      "feature": "meals",
-      "path": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list.spec.ts"
     },
     {
       "class": "MealListFiltersDialogComponent",
@@ -906,22 +627,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.spec.ts"
     },
     {
-      "class": "PremiumAccessPageComponent",
-      "selector": "fd-premium-access-page",
-      "feature": "premium",
-      "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.spec.ts"
-    },
-    {
-      "class": "ProductAddComponent",
-      "selector": "fd-product-add",
-      "feature": "products",
-      "path": "FoodDiary.Web.Client/src/app/features/products/pages/manage/product-add/product-add.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/products/pages/manage/product-add/product-add.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/products/pages/manage/product-add/product-add.spec.ts"
-    },
-    {
       "class": "ProductAddDialogComponent",
       "selector": "fd-product-add-dialog",
       "feature": "products",
@@ -938,28 +643,12 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.spec.ts"
     },
     {
-      "class": "ProductContainerComponent",
-      "selector": "fd-product-container",
-      "feature": "products",
-      "path": "FoodDiary.Web.Client/src/app/features/products/pages/container/product-container.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/products/pages/container/product-container.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/products/pages/container/product-container.spec.ts"
-    },
-    {
       "class": "ProductDetailComponent",
       "selector": "fd-product-detail",
       "feature": "products",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.spec.ts"
-    },
-    {
-      "class": "ProductEditComponent",
-      "selector": "fd-product-edit",
-      "feature": "products",
-      "path": "FoodDiary.Web.Client/src/app/features/products/pages/manage/product-edit/product-edit.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/products/pages/manage/product-edit/product-edit.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/products/pages/manage/product-edit/product-edit.spec.ts"
     },
     {
       "class": "ProductListBaseComponent",
@@ -976,14 +665,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-filters-dialog/product-list-filters-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-filters-dialog/product-list-filters-dialog.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-filters-dialog/product-list-filters-dialog.spec.ts"
-    },
-    {
-      "class": "ProductListPageComponent",
-      "selector": "fd-product-list-page",
-      "feature": "products",
-      "path": "FoodDiary.Web.Client/src/app/features/products/pages/list/product-list-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/products/pages/list/product-list-page.spec.ts"
     },
     {
       "class": "ChangePasswordDialogComponent",
@@ -1010,68 +691,12 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/profile/dialogs/update-success-dialog/update-success-dialog.spec.ts"
     },
     {
-      "class": "UserManageComponent",
-      "selector": "fd-user-manage",
-      "feature": "profile",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.spec.ts"
-    },
-    {
       "class": "LandingCtaComponent",
       "selector": "fd-landing-cta",
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.html",
       "specPath": null
-    },
-    {
-      "class": "MainComponent",
-      "selector": "fd-main",
-      "feature": "public",
-      "path": "FoodDiary.Web.Client/src/app/features/public/pages/landing/main.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/landing/main.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/public/pages/landing/main.spec.ts"
-    },
-    {
-      "class": "NotFoundComponent",
-      "selector": "fd-not-found",
-      "feature": "public",
-      "path": "FoodDiary.Web.Client/src/app/features/public/pages/not-found/not-found.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/not-found/not-found.html",
-      "specPath": null
-    },
-    {
-      "class": "PrivacyPolicyComponent",
-      "selector": "fd-privacy-policy",
-      "feature": "public",
-      "path": "FoodDiary.Web.Client/src/app/features/public/pages/privacy-policy/privacy-policy.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/privacy-policy/privacy-policy.html",
-      "specPath": null
-    },
-    {
-      "class": "SeoLandingPageComponent",
-      "selector": "fd-seo-landing-page",
-      "feature": "public",
-      "path": "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.html",
-      "specPath": null
-    },
-    {
-      "class": "RecipeAddComponent",
-      "selector": "app-recipe-add",
-      "feature": "recipes",
-      "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/manage/recipe-add/recipe-add.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/pages/manage/recipe-add/recipe-add.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/manage/recipe-add/recipe-add.spec.ts"
-    },
-    {
-      "class": "RecipeContainerComponent",
-      "selector": "fd-recipe-container",
-      "feature": "recipes",
-      "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/container/recipe-container.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/pages/container/recipe-container.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/container/recipe-container.spec.ts"
     },
     {
       "class": "RecipeDetailComponent",
@@ -1082,36 +707,12 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.spec.ts"
     },
     {
-      "class": "RecipeEditComponent",
-      "selector": "fd-recipe-edit",
-      "feature": "recipes",
-      "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/manage/recipe-edit/recipe-edit.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/pages/manage/recipe-edit/recipe-edit.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/manage/recipe-edit/recipe-edit.spec.ts"
-    },
-    {
-      "class": "RecipeListComponent",
-      "selector": "fd-recipe-list",
-      "feature": "recipes",
-      "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.spec.ts"
-    },
-    {
       "class": "RecipeListFiltersDialogComponent",
       "selector": "fd-recipe-list-filters-dialog",
       "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.spec.ts"
-    },
-    {
-      "class": "RecommendationsPageComponent",
-      "selector": "fd-recommendations-page",
-      "feature": "recommendations",
-      "path": "FoodDiary.Web.Client/src/app/features/recommendations/pages/recommendations-page/recommendations-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/recommendations/pages/recommendations-page/recommendations-page.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/recommendations/pages/recommendations-page/recommendations-page.spec.ts"
     },
     {
       "class": "AiConsentDialogComponent",
@@ -1234,22 +835,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.spec.ts"
     },
     {
-      "class": "ShoppingListPageComponent",
-      "selector": "fd-shopping-list-page",
-      "feature": "shopping-lists",
-      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.spec.ts"
-    },
-    {
-      "class": "StatisticsComponent",
-      "selector": "fd-statistics",
-      "feature": "statistics",
-      "path": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.spec.ts"
-    },
-    {
       "class": "StatisticsNutrientBalanceCardComponent",
       "selector": "fd-statistics-nutrient-balance-card",
       "feature": "statistics",
@@ -1322,14 +907,6 @@
       "specPath": null
     },
     {
-      "class": "WaistHistoryPageComponent",
-      "selector": "fd-waist-history-page",
-      "feature": "waist-history",
-      "path": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
-      "specPath": null
-    },
-    {
       "class": "WaistHistoryWhtCardComponent",
       "selector": "fd-waist-history-wht-card",
       "feature": "waist-history",
@@ -1352,14 +929,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/wearables/components/wearable-daily-card/wearable-daily-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/wearables/components/wearable-daily-card/wearable-daily-card.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/wearables/components/wearable-daily-card/wearable-daily-card.spec.ts"
-    },
-    {
-      "class": "WeeklyCheckInPageComponent",
-      "selector": "fd-weekly-check-in-page",
-      "feature": "weekly-check-in",
-      "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
-      "specPath": null
     },
     {
       "class": "WeeklyCheckInStatsCardComponent",
@@ -1439,14 +1008,6 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.html",
-      "specPath": null
-    },
-    {
-      "class": "WeightHistoryPageComponent",
-      "selector": "fd-weight-history-page",
-      "feature": "weight-history",
-      "path": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
       "specPath": null
     }
   ],

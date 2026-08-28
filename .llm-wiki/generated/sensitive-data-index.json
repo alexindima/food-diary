@@ -1,36 +1,22 @@
 {
   "schemaVersion": 1,
   "semantics": {
-    "inventory": "Name-and-context-based candidate sensitive fields. Generic quantity Amount fields are not financial without billing or monetary context, and SQL/query text constants are not runtime identity values. Confirm semantics in source before making privacy claims.",
+    "inventory": "Name-and-context-based candidate sensitive fields. Constructors and cancellation primitives are excluded; generic quantity Amount fields are not financial without billing or monetary context, and SQL/query text constants are not runtime identity values. Confirm semantics in source before making privacy claims.",
     "potentialLogging": "A logging call near a candidate field name. This is a review lead, not proof that a runtime value is logged.",
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1425,
-    "credential": 161,
-    "identity": 156,
-    "health": 672,
-    "financial": 132,
-    "privateContent": 304,
-    "boundaryFiles": 175,
+    "candidateFields": 1379,
+    "credential": 145,
+    "identity": 153,
+    "health": 660,
+    "financial": 120,
+    "privateContent": 301,
+    "boundaryFiles": 172,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
   "fields": [
-    {
-      "category": "credential",
-      "name": "SqliteConnectionStringBuilder",
-      "type": "new",
-      "path": ".llm-wiki/tools/LlmWiki.SqliteReader/CompiledIndexReader.cs",
-      "line": 107
-    },
-    {
-      "category": "credential",
-      "name": "SqliteConnectionStringBuilder",
-      "type": "new",
-      "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
-      "line": 48
-    },
     {
       "category": "credential",
       "name": "TemporaryPassword",
@@ -327,13 +313,6 @@
     },
     {
       "category": "credential",
-      "name": "CancellationToken",
-      "type": "int,",
-      "path": "FoodDiary.Application.Products/Common/RecentProductOverviewLoader.cs",
-      "line": 9
-    },
-    {
-      "category": "credential",
       "name": "CurrentPassword",
       "type": "string",
       "path": "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommand.cs",
@@ -352,13 +331,6 @@
       "type": "string",
       "path": "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommand.cs",
       "line": 8
-    },
-    {
-      "category": "credential",
-      "name": "SqliteConnectionStringBuilder",
-      "type": "new",
-      "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "line": 107
     },
     {
       "category": "credential",
@@ -474,13 +446,6 @@
     },
     {
       "category": "credential",
-      "name": "UserRefreshTokenSession",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 41
-    },
-    {
-      "category": "credential",
       "name": "AccessToken",
       "type": "ProtectedWearableToken",
       "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
@@ -551,20 +516,6 @@
     },
     {
       "category": "credential",
-      "name": "CancellationToken",
-      "type": "Func<string,",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
-      "line": 10
-    },
-    {
-      "category": "credential",
-      "name": "CancellationToken",
-      "type": "int,",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
-      "line": 13
-    },
-    {
-      "category": "credential",
       "name": "SecretKey",
       "type": "string",
       "path": "FoodDiary.Infrastructure/Options/JwtOptions.cs",
@@ -583,41 +534,6 @@
       "type": "int",
       "path": "FoodDiary.Infrastructure/Options/JwtOptions.cs",
       "line": 25
-    },
-    {
-      "category": "credential",
-      "name": "CancellationToken",
-      "type": "Func<FoodDiaryDbContext,",
-      "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
-      "line": 146
-    },
-    {
-      "category": "credential",
-      "name": "CancellationToken",
-      "type": "Func<FoodDiaryDbContext,",
-      "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
-      "line": 166
-    },
-    {
-      "category": "credential",
-      "name": "CancellationToken",
-      "type": "Func<TMessage,",
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
-      "line": 18
-    },
-    {
-      "category": "credential",
-      "name": "CancellationToken",
-      "type": "Func<TMessage,",
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
-      "line": 91
-    },
-    {
-      "category": "credential",
-      "name": "CancellationToken",
-      "type": "Func<string,",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
-      "line": 9
     },
     {
       "category": "credential",
@@ -716,13 +632,6 @@
       "type": "string",
       "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
       "line": 7
-    },
-    {
-      "category": "credential",
-      "name": "CancellationToken",
-      "type": "Func<IPEndPoint,",
-      "path": "FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs",
-      "line": 96
     },
     {
       "category": "credential",
@@ -1034,13 +943,6 @@
     },
     {
       "category": "credential",
-      "name": "DbConnectionStringBuilder",
-      "type": "new",
-      "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "line": 90
-    },
-    {
-      "category": "credential",
       "name": "DatabasePasswordKeys",
       "type": "in",
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
@@ -1097,20 +999,6 @@
     },
     {
       "category": "credential",
-      "name": "CancellationToken",
-      "type": "Func<NpgsqlDataReader,",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
-      "line": 11
-    },
-    {
-      "category": "credential",
-      "name": "CancellationToken",
-      "type": "Func<NpgsqlDataReader,",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
-      "line": 79
-    },
-    {
-      "category": "credential",
       "name": "ConnectionString",
       "type": "string?",
       "path": "MailRelay/FoodDiary.MailRelay.Initializer/InitializerCommand.cs",
@@ -1143,55 +1031,6 @@
       "type": "string",
       "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunSignatureHttpRequest.cs",
       "line": 5
-    },
-    {
-      "category": "financial",
-      "name": "LiteralExpressionSyntax",
-      "type": "as",
-      "path": ".llm-wiki/tools/roslyn-extractor/Program.cs",
-      "line": 142
-    },
-    {
-      "category": "financial",
-      "name": "RecordDeclarationSyntax",
-      "type": "is",
-      "path": ".llm-wiki/tools/roslyn-extractor/Program.cs",
-      "line": 207
-    },
-    {
-      "category": "financial",
-      "name": "LiteralExpressionSyntax",
-      "type": "as",
-      "path": ".llm-wiki/tools/roslyn-extractor/Program.cs",
-      "line": 272
-    },
-    {
-      "category": "financial",
-      "name": "LiteralExpressionSyntax",
-      "type": "as",
-      "path": ".llm-wiki/tools/roslyn-extractor/Program.cs",
-      "line": 277
-    },
-    {
-      "category": "financial",
-      "name": "RecordDeclarationSyntax",
-      "type": "is",
-      "path": "FoodDiary.Analyzers/ParameterNamingAnalyzer.cs",
-      "line": 33
-    },
-    {
-      "category": "financial",
-      "name": "ClassDeclarationSyntax",
-      "type": "not",
-      "path": "FoodDiary.Analyzers/PrimaryConstructorBackingFieldAnalyzer.cs",
-      "line": 35
-    },
-    {
-      "category": "financial",
-      "name": "ArgumentSyntax",
-      "type": "is",
-      "path": "FoodDiary.Analyzers/ProjectConventionAnalyzer.cs",
-      "line": 138
     },
     {
       "category": "financial",
@@ -1636,13 +1475,6 @@
     },
     {
       "category": "financial",
-      "name": "BillingPayment",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 78
-    },
-    {
-      "category": "financial",
       "name": "Amount",
       "type": "decimal?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
@@ -1703,34 +1535,6 @@
       "type": "bool",
       "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
       "line": 34
-    },
-    {
-      "category": "financial",
-      "name": "BillingSubscription",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 49
-    },
-    {
-      "category": "financial",
-      "name": "BillingWebhookEvent",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 41
-    },
-    {
-      "category": "financial",
-      "name": "BillingWebhookEvent",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 63
-    },
-    {
-      "category": "financial",
-      "name": "WebPushSubscription",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 37
     },
     {
       "category": "financial",
@@ -4429,13 +4233,6 @@
     },
     {
       "category": "health",
-      "name": "NutritionLesson",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Content/NutritionLesson.cs",
-      "line": 40
-    },
-    {
-      "category": "health",
       "name": "ShareWeight",
       "type": "bool",
       "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
@@ -4716,69 +4513,6 @@
     },
     {
       "category": "health",
-      "name": "ExerciseEntry",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 42
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckIn",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingCheckIn.cs",
-      "line": 42
-    },
-    {
-      "category": "health",
-      "name": "FastingOccurrence",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "line": 58
-    },
-    {
-      "category": "health",
-      "name": "FastingOccurrence",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "line": 92
-    },
-    {
-      "category": "health",
-      "name": "FastingPlan",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 50
-    },
-    {
-      "category": "health",
-      "name": "FastingPlan",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 76
-    },
-    {
-      "category": "health",
-      "name": "FastingPlan",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 106
-    },
-    {
-      "category": "health",
-      "name": "FastingSession",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingSession.cs",
-      "line": 43
-    },
-    {
-      "category": "health",
-      "name": "FastingTelemetryEvent",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
-      "line": 59
-    },
-    {
-      "category": "health",
       "name": "CycleProfileId",
       "type": "CycleProfileId",
       "path": "FoodDiary.Domain/Entities/Tracking/FertilitySignal.cs",
@@ -4828,13 +4562,6 @@
     },
     {
       "category": "health",
-      "name": "WaistGoal",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Tracking/WaistGoal.cs",
-      "line": 27
-    },
-    {
-      "category": "health",
       "name": "WeightKg",
       "type": "double",
       "path": "FoodDiary.Domain/Entities/Tracking/WeightEntry.cs",
@@ -4860,13 +4587,6 @@
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/Tracking/WeightGoal.cs",
       "line": 15
-    },
-    {
-      "category": "health",
-      "name": "WeightGoal",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Tracking/WeightGoal.cs",
-      "line": 27
     },
     {
       "category": "health",
@@ -7327,13 +7047,6 @@
     },
     {
       "category": "identity",
-      "name": "EmailTemplate",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Content/EmailTemplate.cs",
-      "line": 35
-    },
-    {
-      "category": "identity",
       "name": "DietologistEmail",
       "type": "string",
       "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
@@ -7492,13 +7205,6 @@
       "type": "DateTime?",
       "path": "FoodDiary.Domain/ValueObjects/UserSecurityState.cs",
       "line": 10
-    },
-    {
-      "category": "identity",
-      "name": "EmailOutboxMessage",
-      "type": "new",
-      "path": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxMessage.cs",
-      "line": 46
     },
     {
       "category": "identity",
@@ -7814,13 +7520,6 @@
       "type": "string",
       "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/MailRelaySuppressionEntry.cs",
       "line": 4
-    },
-    {
-      "category": "identity",
-      "name": "InsertEmailSql",
-      "type": "transaction,",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Queue.cs",
-      "line": 153
     },
     {
       "category": "identity",
@@ -8832,13 +8531,6 @@
     },
     {
       "category": "privateContent",
-      "name": "AiPromptTemplate",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Ai/AiPromptTemplate.cs",
-      "line": 26
-    },
-    {
-      "category": "privateContent",
       "name": "PromptTextMaxLength",
       "type": "promptText,",
       "path": "FoodDiary.Domain/Entities/Ai/AiPromptTemplate.cs",
@@ -8850,13 +8542,6 @@
       "type": "promptText,",
       "path": "FoodDiary.Domain/Entities/Ai/AiPromptTemplate.cs",
       "line": 39
-    },
-    {
-      "category": "privateContent",
-      "name": "RecommendationComment",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationComment.cs",
-      "line": 33
     },
     {
       "category": "privateContent",
@@ -9102,13 +8787,6 @@
       "type": "ImageUrl,",
       "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
       "line": 475
-    },
-    {
-      "category": "privateContent",
-      "name": "RecipeComment",
-      "type": "new",
-      "path": "FoodDiary.Domain/Entities/Recipes/RecipeComment.cs",
-      "line": 29
     },
     {
       "category": "privateContent",
@@ -10010,13 +9688,6 @@
       "fieldCount": 1
     },
     {
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 2
-    },
-    {
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
       "categories": [
         "financial",
@@ -10115,13 +9786,6 @@
       "path": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
       "categories": [
         "financial"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs",
-      "categories": [
-        "credential"
       ],
       "fieldCount": 1
     },
@@ -11096,7 +10760,7 @@
       "categories": [
         "credential"
       ],
-      "fieldCount": 3
+      "fieldCount": 2
     },
     {
       "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
@@ -11186,15 +10850,7 @@
     {
       "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
       "categories": [
-        "credential",
         "financial"
-      ],
-      "fieldCount": 3
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Queue.cs",
-      "categories": [
-        "identity"
       ],
       "fieldCount": 1
     },

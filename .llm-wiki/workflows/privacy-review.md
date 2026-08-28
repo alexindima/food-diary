@@ -39,6 +39,10 @@ Use `-NoImplicitScope` for deterministic automation that must ignore unrelated
 working-tree changes and require an explicit query or planned path.
 Use `-RepositoryWide` when the broad inventory is intentional; it cannot be
 combined with `-PlannedPath`/`-ScopePath`.
+Broad natural-language audit intent is expanded to this bounded inventory rather
+than filtered by generic words such as "audit", "project", or "vulnerability".
+The JSON result reports `queryMode`, selection status, candidate/returned counts,
+and an abstention/recovery hint when a focused filter is empty.
 
 The privacy query reads the refreshed SQLite sensitive-data projection by
 default. SQLite selects the requested category and evaluates query/scope
@@ -61,6 +65,9 @@ field's semantics in source.
 Plain `Amount` names require an explicit monetary name or a billing/payment
 path context, so food quantities and unrelated measurements do not create
 financial-review noise.
+Constructors, `CancellationToken` primitives, Roslyn syntax nodes, and SQL/query
+text constants are excluded before classification; these are parser artifacts,
+not credential, identity, or financial fields.
 
 External identity credentials used to bridge an anonymous login attempt into an
 authenticated linking request should remain in memory only. Do not place them

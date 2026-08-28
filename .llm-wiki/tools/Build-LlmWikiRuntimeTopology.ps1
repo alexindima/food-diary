@@ -33,12 +33,20 @@ function Get-BehaviorSignals {
     return @(
         if ($Content -match '(?i)retry|resilien(?:ce|cy)|Polly|AutomaticRetry') { 'retry-or-resilience' }
         if ($Content -match '(?i)timeout|TimeSpan\.From(?:Milliseconds|Seconds|Minutes)') { 'timeout-or-delay' }
-        if ($Content -match '(?i)CancellationToken|stoppingToken') { 'cancellation' }
+        if ($Content -match '(?i)CancellationToken\.None') { 'cancellation-suppressed' }
+        if ($Content -match '(?i)\b(?:cancellationToken|stoppingToken)\b' -and $Content -notmatch '(?i)CancellationToken\.None') { 'cancellation-propagation-candidate' }
         if ($Content -match '(?i)idempoten') { 'idempotency' }
         if ($Content -match '(?i)deduplic|duplicate|replay|alreadyprocessed') { 'duplicate-or-replay-control' }
         if ($Content -match '(?i)outbox') { 'outbox-delivery' }
         if ($Content -match '(?i)concurren|SemaphoreSlim|Interlocked|lock\s*\(') { 'concurrency-control' }
     ) | Sort-Object -Unique
+}
+
+function Get-SourceWindow {
+    param([string]$Content, [int]$Index, [int]$Length, [int]$Radius = 1600)
+    $start = [Math]::Max(0, $Index - $Radius)
+    $end = [Math]::Min($Content.Length, $Index + $Length + $Radius)
+    return $Content.Substring($start, $end - $start)
 }
 
 $sourceFiles = @(
@@ -58,27 +66,30 @@ $networkPolicies = [System.Collections.Generic.List[object]]::new()
 foreach ($file in $sourceFiles) {
     $content = [System.IO.File]::ReadAllText($file.FullName)
     $path = ConvertTo-RepositoryPath $file.FullName
-    $behaviorSignals = @(Get-BehaviorSignals -Content $content)
     foreach ($match in [regex]::Matches(
         $content,
         '(?ms)(?:class|sealed\s+class)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*).{0,1500}?\)\s*:\s*(?<base>BackgroundService|IHostedService)\b|(?:class|sealed\s+class)\s+(?<name2>[A-Za-z_][A-Za-z0-9_]*)\s*:\s*(?<base2>BackgroundService|IHostedService)\b')) {
         $serviceName = if ($match.Groups['name'].Success) { $match.Groups['name'].Value } else { $match.Groups['name2'].Value }
         $baseType = if ($match.Groups['base'].Success) { $match.Groups['base'].Value } else { $match.Groups['base2'].Value }
+        $behaviorSignals = @(Get-BehaviorSignals -Content (Get-SourceWindow -Content $content -Index $match.Index -Length $match.Length))
         $hostedServices.Add([pscustomobject]@{
             name = $serviceName
             baseType = $baseType
             path = $path
             behaviorSignals = $behaviorSignals
+            behaviorSignalScope = 'class-window'
         })
     }
     foreach ($match in [regex]::Matches(
         $content,
         'AddHttpClient\s*<\s*(?<contract>[A-Za-z_][A-Za-z0-9_]*)\s*,\s*(?<implementation>[A-Za-z_][A-Za-z0-9_]*)')) {
+        $behaviorSignals = @(Get-BehaviorSignals -Content (Get-SourceWindow -Content $content -Index $match.Index -Length $match.Length -Radius 500))
         $httpClients.Add([pscustomobject]@{
             contract = $match.Groups['contract'].Value
             implementation = $match.Groups['implementation'].Value
             registrationPath = $path
             behaviorSignals = $behaviorSignals
+            behaviorSignalScope = 'registration-window'
         })
     }
     foreach ($match in [regex]::Matches(
@@ -86,11 +97,13 @@ foreach ($file in $sourceFiles) {
         '(?m)(?:class|sealed\s+class)\s+(?<implementation>[A-Za-z_][A-Za-z0-9_]*(?:Client|Gateway|Provider|Transport))\s*\([^)]*\bHttpClient\s+')) {
         $implementation = $match.Groups['implementation'].Value
         if (@($httpClients | Where-Object implementation -eq $implementation).Count -eq 0) {
+            $behaviorSignals = @(Get-BehaviorSignals -Content (Get-SourceWindow -Content $content -Index $match.Index -Length $match.Length))
             $httpClients.Add([pscustomobject]@{
                 contract = $null
                 implementation = $implementation
                 registrationPath = $path
                 behaviorSignals = $behaviorSignals
+                behaviorSignalScope = 'class-window'
             })
         }
     }
@@ -98,17 +111,22 @@ foreach ($file in $sourceFiles) {
         foreach ($match in [regex]::Matches(
             $content,
             '(?m)(?:class|sealed\s+class)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*(?:Webhook|WebhookController|WebhookAuthorizer)[A-Za-z0-9_]*)')) {
+            $classWindow = Get-SourceWindow -Content $content -Index $match.Index -Length $match.Length
             $signals = @(
-                if ($content -match '(?i)HMAC|signature|CryptographicOperations') { 'signature-validation' }
-                if ($content -match '(?i)timestamp|tolerance|freshness') { 'freshness-validation' }
-                if ($content -match '(?i)ApiKey|Authorization') { 'request-authentication' }
-                if ($content -match '(?i)idempoten|deduplicat|alreadyprocessed|unique') { 'replay-or-duplicate-control' }
+                if ($classWindow -match '(?i)HMAC|signature|CryptographicOperations') { 'signature-validation' }
+                if ($classWindow -match '(?i)timestamp|tolerance|freshness') { 'freshness-validation' }
+                if ($classWindow -match '(?i)ApiKey|Authorization') { 'request-authentication' }
+                if ($classWindow -match '(?i)idempoten|deduplicat|alreadyprocessed|unique') { 'replay-or-duplicate-control' }
             ) | Sort-Object -Unique
             $webhooks.Add([pscustomobject]@{
                 name = $match.Groups['name'].Value
                 path = $path
                 securitySignals = @($signals)
-                behaviorSignals = $behaviorSignals
+                behaviorSignals = @(
+                    @(Get-BehaviorSignals -Content $classWindow)
+                    if ('replay-or-duplicate-control' -in $signals) { 'idempotency-review-candidate' }
+                ) | Sort-Object -Unique
+                behaviorSignalScope = 'class-window'
                 evidenceStatus = 'inferred-from-code'
             })
         }
@@ -129,7 +147,8 @@ foreach ($file in $sourceFiles) {
             name = [IO.Path]::GetFileNameWithoutExtension($path)
             path = $path
             securitySignals = @($signals)
-            behaviorSignals = $behaviorSignals
+            behaviorSignals = @(Get-BehaviorSignals -Content $content)
+            behaviorSignalScope = 'policy-file'
             evidenceStatus = 'inferred-from-code'
             runtimeEvidenceRequired = @('effective DNS result at connection time', 'effective proxy and redirect behavior')
         })
@@ -141,7 +160,9 @@ foreach ($file in $sourceFiles) {
             api = $match.Groups['api'].Value
             detail = $match.Groups['detail'].Value.Trim()
             path = $path
-            behaviorSignals = $behaviorSignals
+            behaviorSignals = @(Get-BehaviorSignals -Content $match.Value)
+            behaviorSignalScope = 'registration-expression'
+            targetBehaviorEvidence = 'not-expanded; inspect the registered job implementation before making retry, cancellation, or idempotency claims'
         })
     }
 }

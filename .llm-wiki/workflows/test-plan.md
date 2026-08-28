@@ -51,6 +51,16 @@ frontend states, localization, security, and observability. Scenario prompts
 still require the implementer to choose concrete inputs and assertions from the
 changed behavior.
 
+Repository-wide audit intent selects a representative assessment plan instead
+of pretending the current Git diff is the audit scope. It includes architecture,
+authentication, webhook signature/freshness and replay, idempotency/concurrency,
+outbox/recovery, provider-backed persistence and migration safety, container
+supply-chain, MailRelay/MailInbox, and frontend auth/data-flow tests. Explicit
+scenarios cover architecture, security/privacy, reliability, contracts/data,
+client/CI/operations, webhook authenticity, migrations, deployment, and
+dependency inventory. Commands omit `--no-restore` where a cold checkout must be
+usable and publish detected .NET, npm, Docker, and provider-test prerequisites.
+
 Focused tests are ranked by evidence: explicitly changed tests first, then a
 changed production file's sibling spec, specs belonging to direct selector
 consumers, tests that directly reference changed declared types before common

@@ -282,6 +282,22 @@ $assessmentJourneys = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($assessmentJourneys.selectionMode -eq 'repository-assessment-sample') 'Repository assessment did not activate representative journey sampling.'
 Assert-Adaptive (@($assessmentJourneys.journeys | Where-Object risk -eq 'critical').Count -ge 5) 'Repository assessment omitted critical product journeys.'
+
+$assessmentIntent = 'Repository-wide audit correctness reliability concurrency architecture privacy security CI operations project.'
+$assessmentBrief = & (Join-Path $PSScriptRoot 'Get-LlmWikiTaskBrief.ps1') `
+    -Intent $assessmentIntent -SkipQueryCache -Limit 20 -Format Json | ConvertFrom-Json
+Assert-Adaptive ($assessmentBrief.analysis.mode -eq 'broad-assessment' -and $assessmentBrief.risk.level -eq 'high' -and $assessmentBrief.risk.score -ge 7) 'Broad assessment brief collapsed to an empty low-risk change brief.'
+Assert-Adaptive (@($assessmentBrief.change.scopes).Count -ge 8 -and @($assessmentBrief.change.assessmentModules).Count -ge 30 -and @($assessmentBrief.focusedTests).Count -ge 12) 'Broad assessment brief omitted assessment lanes, modules, or representative tests.'
+$assessmentTestPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1') `
+    -Intent $assessmentIntent -Limit 30 -Format Json | ConvertFrom-Json
+Assert-Adaptive ($assessmentTestPlan.selectionMode -eq 'repository-assessment' -and @($assessmentTestPlan.focusedTestFiles).Count -ge 16) 'Repository assessment test plan omitted representative risk-lane tests.'
+Assert-Adaptive (@($assessmentTestPlan.scenarios.id) -contains 'assessment-webhook-authenticity' -and @($assessmentTestPlan.scenarios.id) -contains 'assessment-migration-safety') 'Repository assessment omitted webhook or migration scenarios.'
+Assert-Adaptive (@($assessmentTestPlan.commands.id) -contains 'assessment-dependencies' -and $null -ne $assessmentTestPlan.prerequisites) 'Repository assessment omitted dependency inventory or cold-checkout prerequisites.'
+$assessmentResearch = & (Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1') `
+    -Objective $assessmentIntent -Purpose Assessment -Limit 10 -Format Json | ConvertFrom-Json
+Assert-Adaptive ($assessmentResearch.workflow.profile -eq 'repository-assessment' -and $assessmentResearch.readiness.assessmentComplete) 'Repository assessment research incorrectly required a feature edit boundary.'
+Assert-Adaptive ($assessmentResearch.diagnostics.historyDeferred -and @($assessmentResearch.openQuestions | Where-Object blocking).Count -eq 0) 'Repository assessment research did not use its bounded fast path or invented a feature-scope question.'
+Assert-Adaptive (-not $assessmentResearch.readiness.readyToImplement -and $assessmentResearch.readiness.implementationStatus -eq 'not-applicable') 'Read-only repository assessment was mislabeled as implementation-ready.'
 }
 if ($Group -in @('All', 'Experience')) {
 $workspaceReuseName = ".workspace-reuse-$([Guid]::NewGuid().ToString('N'))"
