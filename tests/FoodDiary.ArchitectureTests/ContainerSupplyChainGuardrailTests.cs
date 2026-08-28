@@ -92,6 +92,26 @@ public sealed class ContainerSupplyChainGuardrailTests {
     }
 
     [Fact]
+    public void DeployWorkflow_PreparesNginxLogsAndVerifiesReadinessAfterRecreate() {
+        string workflow = ReadDeployWorkflow();
+
+        int logOwnership = workflow.IndexOf(
+            "find /var/log/nginx -maxdepth 1 -type f -exec chown root {} +",
+            StringComparison.Ordinal);
+        int recreate = workflow.IndexOf(
+            "docker compose --profile full up -d --force-recreate --no-deps nginx",
+            StringComparison.Ordinal);
+        int readiness = workflow.IndexOf("Waiting for Nginx readiness", StringComparison.Ordinal);
+
+        Assert.Multiple(
+            () => Assert.True(logOwnership >= 0, "Nginx host-log ownership preparation is missing."),
+            () => Assert.True(recreate > logOwnership, "Nginx log permissions must be prepared before the container is recreated."),
+            () => Assert.True(readiness > recreate, "Nginx readiness must be checked after the container is recreated."),
+            () => Assert.Contains("--resolve fooddiary.club:443:127.0.0.1", workflow, StringComparison.Ordinal),
+            () => Assert.Contains("docker compose logs --tail=100 --timestamps nginx", workflow, StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void Workflows_PinEveryExternalActionToACommitSha() {
         string workflowsRoot = ArchitectureTestPaths.FromRoot(".github", "workflows");
         string[] violations = [.. Directory

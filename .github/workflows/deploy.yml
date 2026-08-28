@@ -623,7 +623,28 @@ jobs:
           docker cp $id:/usr/share/nginx/html-storybook/. /var/www/storybook.fooddiary.club/
           chmod -R a+rX /var/www/storybook.fooddiary.club
           docker rm $id
+
+          # The hardened container drops DAC_OVERRIDE. Keep existing host log
+          # files owned by root so nginx can open them after every recreate.
+          install -d -m 0755 /var/log/nginx
+          find /var/log/nginx -maxdepth 1 -type f -exec chown root {} +
+          find /var/log/nginx -maxdepth 1 -type f -exec chmod 0640 {} +
           docker compose --profile full up -d --force-recreate --no-deps nginx
+
+          echo "Waiting for Nginx readiness..."
+          nginx_ready=false
+          for _ in $(seq 1 20); do
+            if curl -fsS --resolve fooddiary.club:443:127.0.0.1 https://fooddiary.club/ >/dev/null; then
+              nginx_ready=true
+              break
+            fi
+            sleep 2
+          done
+          if [ "$nginx_ready" != "true" ]; then
+            docker compose ps nginx
+            docker compose logs --tail=100 --timestamps nginx
+            exit 1
+          fi
 
           docker image prune -a --force --filter "until=24h"
 
