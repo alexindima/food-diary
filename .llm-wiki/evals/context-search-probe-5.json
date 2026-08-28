@@ -48,7 +48,7 @@
       "id": "wearable-read-service-probe-5",
       "query": "read wearable connections and synchronization state",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Wearables/Wearables/Services/WearableReadService.cs"]
+      "expectedPaths": ["FoodDiary.Application.Wearables/Services/WearableReadService.cs"]
     },
     {
       "id": "favorite-product-read-service-probe-5",
@@ -102,7 +102,7 @@
       "id": "recipe-nutrition-applier-probe-5",
       "query": "apply calculated nutrition values to a recipe",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Recipes/Recipes/Services/RecipeNutritionApplier.cs"]
+      "expectedPaths": ["FoodDiary.Application.Recipes/Services/RecipeNutritionApplier.cs"]
     },
     {
       "id": "page-container-directive-probe-5",

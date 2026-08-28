@@ -25,6 +25,14 @@ $evalGroups = @(Get-Groups '.llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.p
 if ($evalGroups -notcontains 'adaptive-evals' -or $evalGroups -contains 'adaptive-routing') {
     throw 'Adaptive eval orchestration must not replay the workflow-routing regression group.'
 }
+$contextEvalGroups = @(Get-Groups '.llm-wiki/evals/context-search-unseen-20260826.json')
+if ($contextEvalGroups -notcontains 'adaptive-evals' -or $contextEvalGroups -notcontains 'context-bundle') {
+    throw 'Context-search corpora must run both adaptive evals and the SQL context regression suite.'
+}
+$contextRankingGroups = @(Get-Groups '.llm-wiki/policies/context-search-ranking.json')
+if ($contextRankingGroups -notcontains 'context-bundle') {
+    throw 'Context-search ranking policy changes must invalidate the SQL context regression suite.'
+}
 $combinedAdaptiveGroups = @(Get-Groups @(
     '.llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.ps1'
     '.llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1'

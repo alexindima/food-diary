@@ -20,7 +20,15 @@ foreach ($queryDocumentSafetyFragment in @('backend-contract-projection-stale', 
     if (-not $graphToolText.Contains($queryDocumentSafetyFragment)) { throw "Query-document projection safety is missing: $queryDocumentSafetyFragment" }
 }
 $recipesBoundary = if (Test-Path -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Application.Recipes') -PathType Container) { 'FoodDiary.Application.Recipes' } else { 'FoodDiary.Application/Recipes' }
-$recipesSourcePrefix = if ($recipesBoundary -eq 'FoodDiary.Application.Recipes') { 'FoodDiary.Application.Recipes/Recipes' } else { $recipesBoundary }
+$flattenedRecipeUpdater = "$recipesBoundary/Services/RecipeNutritionUpdater.cs"
+$nestedRecipeUpdater = "$recipesBoundary/Recipes/Services/RecipeNutritionUpdater.cs"
+$recipesSourcePrefix = if (Test-Path -LiteralPath (Join-Path $repositoryRoot $flattenedRecipeUpdater) -PathType Leaf) {
+    $recipesBoundary
+} elseif (Test-Path -LiteralPath (Join-Path $repositoryRoot $nestedRecipeUpdater) -PathType Leaf) {
+    "$recipesBoundary/Recipes"
+} else {
+    throw 'Unable to locate RecipeNutritionUpdater for the code-graph regression.'
+}
 $russianServerQuery = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('0L/QvtC00LrQu9GO0YfQuNGB0Ywg0YHQtdGA0LLQtdGA0YM='))
 $build = & $manager build -Format Json | ConvertFrom-Json
 if ([int]$build.files -lt 100 -or [int]$build.symbols -lt 100) { throw 'Code graph build produced an implausibly small repository graph.' }

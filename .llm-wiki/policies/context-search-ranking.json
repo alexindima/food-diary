@@ -704,6 +704,7 @@
     {
       "id": "read-service-intent",
       "queryTerms": ["read"],
+      "excludedQueryTerms": ["readonly"],
       "minimumMatches": 1,
       "identityTerms": ["readservice", "reader"],
       "score": 70,

@@ -44,5 +44,7 @@
     )
     AdditionalMatches = @(
         @{ Pattern = '^\.llm-wiki/tools/LlmWikiQueryCache\.ps1$'; Groups = @('context-bundle') }
+        @{ Pattern = '^\.llm-wiki/evals/context-search[^/]*\.json$'; Groups = @('context-bundle') }
+        @{ Pattern = '^\.llm-wiki/policies/context-search-ranking\.json$'; Groups = @('context-bundle') }
     )
 }

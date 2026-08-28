@@ -217,7 +217,7 @@
       "query": "implementation contract for product update applier",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateApplier.cs"
+        "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateApplier.cs"
       ]
     },
     {

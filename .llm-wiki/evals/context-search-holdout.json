@@ -42,7 +42,7 @@
       "id": "ru-recipe-nutrition-recalculation",
       "query": "где пересчитывается пищевая ценность рецепта после изменения ингредиента",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Recipes/Recipes/Services/RecipeNutritionUpdater.cs"]
+      "expectedPaths": ["FoodDiary.Application.Recipes/Services/RecipeNutritionUpdater.cs"]
     },
     {
       "id": "ru-cycle-prediction-revision",

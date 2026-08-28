@@ -66,7 +66,7 @@
       "id": "product-usda-link-service-probe-4",
       "query": "link a product to its USDA food record",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Products/Products/Services/ProductUsdaLinkService.cs"]
+      "expectedPaths": ["FoodDiary.Application.Products/Services/ProductUsdaLinkService.cs"]
     },
     {
       "id": "dashboard-snapshot-builder-probe-4",

@@ -312,6 +312,9 @@ if ($AffectedOnly) {
         if ($productionCSharpPaths.Count -gt 0 -or $hasCSharpProjectChange) {
             Add-IndexToolWithDependents 'Build-LlmWikiCatalog.ps1'
             Add-IndexToolWithDependents 'Build-LlmWikiSymbolIndex.ps1'
+            # Runtime topology fingerprints every production C# source path and
+            # content, so even a namespace-only move can invalidate the index.
+            Add-IndexTool 'Build-LlmWikiRuntimeTopology.ps1'
             Add-IndexTool 'Build-LlmWikiSensitiveDataIndex.ps1'
         }
         if (@($normalizedChangedPaths | Where-Object { $_ -in @(

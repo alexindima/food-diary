@@ -71,6 +71,7 @@ Assert-Plan ([string]::IsNullOrWhiteSpace($bookkeepingOnlyPlan)) 'Bookkeeping-on
 
 $productionCSharpPlan = Get-IndexPlan 'FoodDiary.Infrastructure/Persistence/EmailOutbox.cs'
 Assert-Plan ($productionCSharpPlan -match 'Build-LlmWikiCatalog.ps1' -and $productionCSharpPlan -match 'Build-LlmWikiSymbolIndex.ps1') 'Production C# changes lost conservative index coverage.'
+Assert-Plan ($productionCSharpPlan -match 'Build-LlmWikiRuntimeTopology.ps1') 'Production C# changes must refresh runtime topology because its fingerprint covers every production C# source.'
 $requiredProductionPlan = Get-IndexPlan 'FoodDiary.Infrastructure/Persistence/EmailOutbox.cs' -RequiredOnly
 Assert-Plan ($requiredProductionPlan -match 'Build-LlmWikiCatalog.ps1' -and $requiredProductionPlan -match 'Build-LlmWikiBackendContractIndex.ps1') 'Required-only mode lost contract/navigation generators.'
 foreach ($deferredTool in @('Build-LlmWikiQualityIndex.ps1', 'Build-LlmWikiModulePages.ps1', 'Build-LlmWikiArchitectureHealthIndex.ps1')) {

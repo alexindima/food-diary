@@ -236,26 +236,42 @@
       "pageSha256": "76318dd5b9f47b43cd79cd8a8ce56a0c6f4a37059e0df5a6d5ca849ca86af91d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiBackendContractSqlParity.ps1",
-          "sha256": "ecd2c3308973e79817ee8f7852fea23c280ee180e5b8d7db52140d14a68cadf7"
+          "path": ".llm-wiki/evals/context-search-holdout.json",
+          "sha256": "880c331137280fe32ef1aa92174ad2759ecb567f7a1b0522de9181b00ddf8cbd"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1",
-          "sha256": "5248fd9d54b04b27a2e245547c9e5d56469b449a18e247dde0698adf5bd5fb4b"
+          "path": ".llm-wiki/evals/context-search-probe-4.json",
+          "sha256": "a62c3979fad164a31432d0cdd748ef748305f1b349f87b526d5db0cf9025b0bb"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiDomainDataSqlParity.ps1",
-          "sha256": "bff4c3f8f15fc489670cd5998bc9b1e7303166fc719fd94c49d41e0eaaebe084"
+          "path": ".llm-wiki/evals/context-search-probe-5.json",
+          "sha256": "b24afbfd8a5afd2332e337bf5c769734ce90215a72af54b3609fc4d5cf2cff2b"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1",
-          "sha256": "03c887a02035847d6d5f643e67a4117eb60b76c5403ab7a663d4615361d88472"
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "7b50b184dd38bfcf5b17e8089a6148c8e37015b693828afbbac1023050b76f16"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search.json",
+          "sha256": "61dd980bd1159c764ec5a9a4d6daad7eb309d60efed1c5cfddaa85912b4c9fc2"
+        },
+        {
+          "path": ".llm-wiki/evals/development-context-bundles.json",
+          "sha256": "66ec5a09cd3d04bfc8ee0cda846e40a63e6c4d8d3233a860929fa62511b48a1c"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "99250a7b00b37e7864f0f006149de23c57b8ef922bbee153241950d1b47fb74b"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
+          "sha256": "9268a64cb870be804aee8d58b36a976a940e0814fadbe348bdf6b57dd06574c2"
         }
       ],
-      "reason": "Reviewed SQL parity and exhaustive verification changes: semantic output, source-hash, freshness, corruption, and payload-reduction assertions remain; only cross-backend latency assertions were removed, and standalone Full completed 347/347 assertions.",
+      "reason": "Reviewed code-graph, index-pipeline, affected-smoke routing, eval corpus paths, and receipts; CI-equivalent verify-full passed all 33 focused groups and the monolithic Full audit, SQL context evaluation passed 490/490 top-10 with Node/.NET parity, and change policy reported zero violations.",
       "baseRef": "HEAD",
-      "gitHead": "2f73f72743024094a150a8cdf864419d21bf926d",
-      "reviewedAtUtc": "2026-08-28T01:25:30.7984222Z"
+      "gitHead": "1f631ccbefcf7a027be04919fb2e4e82f4133522",
+      "reviewedAtUtc": "2026-08-28T03:34:08.9706093Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -605,14 +621,26 @@
       "pageSha256": "7cf34e384c94c0427431d4d5b600c1aa2b1cad26fa2eb72f02b0942e6e2240ca",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1",
-          "sha256": "eaa04f610e3c56f75002cc7878a606808825cb5b0c0acbd49550c07cf107d077"
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "9d539ef6262bc1a8d3c83aabafbe8b3a9056320d35e210243b88d3a4274f04a0"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+          "sha256": "80f23259508326d13f214bedf771febef2d8f10ae5ad17a79f99c73186f1a88f"
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
+          "sha256": "0e491b91cdd236b978333275aadd2c63d1b92dbc53f053fef483e1c4fac8b345"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+          "sha256": "8666159bc263aed5bc79e8f0d2cc0ec6fd96132de483bd4cf0f3b2652115727b"
         }
       ],
-      "reason": "Reviewed architecture, review, change-policy, and index-pipeline impacts; module tests passed Products 172, Recipes 166, Wearables 46, Architecture 723, Presentation API 810, and index-selection smoke passed with real lock ownership synchronization.",
+      "reason": "Reviewed code-graph, index-pipeline, affected-smoke routing, eval corpus paths, and receipts; CI-equivalent verify-full passed all 33 focused groups and the monolithic Full audit, SQL context evaluation passed 490/490 top-10 with Node/.NET parity, and change policy reported zero violations.",
       "baseRef": "HEAD",
-      "gitHead": "9932579e2ea95b1f3036b56ff896bcdb443b418f",
-      "reviewedAtUtc": "2026-08-28T02:15:59.2548161Z"
+      "gitHead": "1f631ccbefcf7a027be04919fb2e4e82f4133522",
+      "reviewedAtUtc": "2026-08-28T03:34:09.4908417Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -798,13 +826,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c0a9b7a68e5e95de45270d4deb38ea968306ded09e17524274fc731e3569e883"
+          "sha256": "e997a1feb94fa4c0e45b9913fcdf73c1a42bdb9b9990ff9e0b640bcc4d7f1a28"
         }
       ],
-      "reason": "Reviewed architecture, review, change-policy, and index-pipeline impacts; module tests passed Products 172, Recipes 166, Wearables 46, Architecture 723, Presentation API 810, and index-selection smoke passed with real lock ownership synchronization.",
+      "reason": "Reviewed code-graph, index-pipeline, affected-smoke routing, eval corpus paths, and receipts; CI-equivalent verify-full passed all 33 focused groups and the monolithic Full audit, SQL context evaluation passed 490/490 top-10 with Node/.NET parity, and change policy reported zero violations.",
       "baseRef": "HEAD",
-      "gitHead": "9932579e2ea95b1f3036b56ff896bcdb443b418f",
-      "reviewedAtUtc": "2026-08-28T02:16:01.2864403Z"
+      "gitHead": "1f631ccbefcf7a027be04919fb2e4e82f4133522",
+      "reviewedAtUtc": "2026-08-28T03:34:10.1749747Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -877,13 +905,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "609f1f260fe149215531620a005ecca32d42d55aa849a19fadb89a2fe214ad40"
+          "sha256": "951eecdef1cf033da14612f748cd81c3b7fe2b47996fd5c937d8b095ffa995d0"
         }
       ],
-      "reason": "Reviewed configuration, rollout, runtime-impact, trace, and dependency workflows against current sources: generated indexes are refreshed and the existing pages remain accurate; no ownership, dependency, migration, or public topology change requires prose edits.",
+      "reason": "Reviewed regenerated runtime topology against the flattened application layout; full verification reports the index current with 17 services, 10 hosted workers, and 12 HTTP clients.",
       "baseRef": "HEAD",
-      "gitHead": "2f73f72743024094a150a8cdf864419d21bf926d",
-      "reviewedAtUtc": "2026-08-28T01:25:36.5277832Z"
+      "gitHead": "1f631ccbefcf7a027be04919fb2e4e82f4133522",
+      "reviewedAtUtc": "2026-08-28T03:34:10.7237911Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -892,17 +920,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c0a9b7a68e5e95de45270d4deb38ea968306ded09e17524274fc731e3569e883"
+          "sha256": "e997a1feb94fa4c0e45b9913fcdf73c1a42bdb9b9990ff9e0b640bcc4d7f1a28"
         },
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "b355f7497724dced1af766032146c51dbde3db83e4b7fe307260febfd64739c0"
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "951eecdef1cf033da14612f748cd81c3b7fe2b47996fd5c937d8b095ffa995d0"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "99250a7b00b37e7864f0f006149de23c57b8ef922bbee153241950d1b47fb74b"
         }
       ],
-      "reason": "Reviewed sensitive-data and security workflow impact: no credentials, personal data handling, authorization boundary, provider sharing, persistence, or logging behavior changed; generated sensitive and quality indexes remain consistent.",
+      "reason": "Reviewed the readonly-intent ranking change and generated quality/runtime inputs: it changes retrieval ranking only, does not alter authorization, credentials, personal-data handling, provider sharing, persistence, or logging; Full security-related Wiki regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "9932579e2ea95b1f3036b56ff896bcdb443b418f",
-      "reviewedAtUtc": "2026-08-28T02:16:04.4238312Z"
+      "gitHead": "1f631ccbefcf7a027be04919fb2e4e82f4133522",
+      "reviewedAtUtc": "2026-08-28T03:34:11.5977055Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

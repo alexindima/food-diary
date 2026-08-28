@@ -153,7 +153,7 @@
       "id": "recipe-nutrition-update",
       "query": "recalculate recipe nutrition after an ingredient changes",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Recipes/Recipes/Services/RecipeNutritionUpdater.cs"]
+      "expectedPaths": ["FoodDiary.Application.Recipes/Services/RecipeNutritionUpdater.cs"]
     },
     {
       "id": "frontend-localization-check",
