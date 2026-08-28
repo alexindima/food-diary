@@ -44430,9 +44430,8 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 1,
       "testReferences": [
-        ".llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ]
     },
@@ -44498,8 +44497,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Build-LlmWikiRuntimeTopology.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1",
         ".llm-wiki/tools/Test-LlmWikiIndexSelection.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ]

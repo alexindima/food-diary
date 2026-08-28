@@ -42,6 +42,18 @@
       "verification": [
         "dotnet format whitespace FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj --verify-no-changes"
       ]
+    },
+    {
+      "id": "wiki-concurrent-index-scheduler-race",
+      "symptom": "LLM Wiki CI intermittently fails the index-selection smoke after a successful concurrent index refresh; the waiter reruns or misses the lock overlap window.",
+      "cause": "The concurrency regression used a roughly three-second domain-data generator. Under parallel Linux runner load, the parent can observe lock ownership near process completion and start the waiter after the owner releases the lock.",
+      "fix": "Use the slower single-generator runtime-topology refresh and retry up to three times only when lock ownership or the overlap window was lost; every successful attempt must still observe the exclusive lock and concurrent receipt reuse.",
+      "pathPatterns": [
+        ".llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1"
+      ],
+      "verification": [
+        "Run Test-LlmWikiConcurrentIndexUpdate.ps1 on Windows and Linux, then run Invoke-LlmWikiAffectedSmoke.ps1 -Group index-selection."
+      ]
     }
   ]
 }

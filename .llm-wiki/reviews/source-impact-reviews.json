@@ -512,14 +512,14 @@
       "pageSha256": "35bfa8131be82949fafdf792276d7187342b85a0a926275e51379c9c7e80e233",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiFailures.ps1",
-          "sha256": "58c0e4d1253b6de9189b0dc3618ceb0297f3b8c7e884d94c6a70f6d36c43ee8c"
+          "path": ".llm-wiki/knowledge/failures.json",
+          "sha256": "bb12bee960e6968870db38b303ff903e6136159efe5f2cc55d21fe18ee42f896"
         }
       ],
-      "reason": "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
+      "reason": "Failure-knowledge workflow remains current; the new entry follows the existing verified symptom/cause/fix/verification schema.",
       "baseRef": "HEAD",
-      "gitHead": "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
-      "reviewedAtUtc": "2026-08-14T02:46:30.2788656Z"
+      "gitHead": "c05f99edfa00eb4e1b8396fa8e599481ddc6adae",
+      "reviewedAtUtc": "2026-08-28T05:26:31.1198271Z"
     },
     {
       "pageId": "workflow-failure-prediction",
@@ -621,26 +621,14 @@
       "pageSha256": "7cf34e384c94c0427431d4d5b600c1aa2b1cad26fa2eb72f02b0942e6e2240ca",
       "sources": [
         {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "9d539ef6262bc1a8d3c83aabafbe8b3a9056320d35e210243b88d3a4274f04a0"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-          "sha256": "80f23259508326d13f214bedf771febef2d8f10ae5ad17a79f99c73186f1a88f"
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-          "sha256": "0e491b91cdd236b978333275aadd2c63d1b92dbc53f053fef483e1c4fac8b345"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
-          "sha256": "8666159bc263aed5bc79e8f0d2cc0ec6fd96132de483bd4cf0f3b2652115727b"
+          "path": ".llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1",
+          "sha256": "331f88e39c9d62eed75f3a18f45ad8d9a49a9f3e1048e2999f013d946457c0ec"
         }
       ],
-      "reason": "Reviewed code-graph, index-pipeline, affected-smoke routing, eval corpus paths, and receipts; CI-equivalent verify-full passed all 33 focused groups and the monolithic Full audit, SQL context evaluation passed 490/490 top-10 with Node/.NET parity, and change policy reported zero violations.",
+      "reason": "Index-pipeline locking and quality-risk guidance remain accurate; only the concurrency harness gained scheduler headroom and quality references moved from domain-data to runtime-topology.",
       "baseRef": "HEAD",
-      "gitHead": "1f631ccbefcf7a027be04919fb2e4e82f4133522",
-      "reviewedAtUtc": "2026-08-28T03:34:09.4908417Z"
+      "gitHead": "c05f99edfa00eb4e1b8396fa8e599481ddc6adae",
+      "reviewedAtUtc": "2026-08-28T05:26:31.7137636Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -826,13 +814,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e997a1feb94fa4c0e45b9913fcdf73c1a42bdb9b9990ff9e0b640bcc4d7f1a28"
+          "sha256": "b986da4ef688474dca7d99495db0d3a1d76a45b4ed901c8254c81aa10fc92353"
         }
       ],
-      "reason": "Reviewed code-graph, index-pipeline, affected-smoke routing, eval corpus paths, and receipts; CI-equivalent verify-full passed all 33 focused groups and the monolithic Full audit, SQL context evaluation passed 490/490 top-10 with Node/.NET parity, and change policy reported zero violations.",
+      "reason": "Index-pipeline locking and quality-risk guidance remain accurate; only the concurrency harness gained scheduler headroom and quality references moved from domain-data to runtime-topology.",
       "baseRef": "HEAD",
-      "gitHead": "1f631ccbefcf7a027be04919fb2e4e82f4133522",
-      "reviewedAtUtc": "2026-08-28T03:34:10.1749747Z"
+      "gitHead": "c05f99edfa00eb4e1b8396fa8e599481ddc6adae",
+      "reviewedAtUtc": "2026-08-28T05:26:32.6217935Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -920,21 +908,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e997a1feb94fa4c0e45b9913fcdf73c1a42bdb9b9990ff9e0b640bcc4d7f1a28"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "951eecdef1cf033da14612f748cd81c3b7fe2b47996fd5c937d8b095ffa995d0"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "99250a7b00b37e7864f0f006149de23c57b8ef922bbee153241950d1b47fb74b"
+          "sha256": "b986da4ef688474dca7d99495db0d3a1d76a45b4ed901c8254c81aa10fc92353"
         }
       ],
-      "reason": "Reviewed the readonly-intent ranking change and generated quality/runtime inputs: it changes retrieval ranking only, does not alter authorization, credentials, personal-data handling, provider sharing, persistence, or logging; Full security-related Wiki regressions passed.",
+      "reason": "Security-review guidance is unchanged because the quality-index delta only reassigns one Wiki test reference and changes no security boundary or risk.",
       "baseRef": "HEAD",
-      "gitHead": "1f631ccbefcf7a027be04919fb2e4e82f4133522",
-      "reviewedAtUtc": "2026-08-28T03:34:11.5977055Z"
+      "gitHead": "c05f99edfa00eb4e1b8396fa8e599481ddc6adae",
+      "reviewedAtUtc": "2026-08-28T05:26:33.3980857Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
