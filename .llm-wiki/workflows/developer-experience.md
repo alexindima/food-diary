@@ -105,13 +105,15 @@ turning an already-successful query into a failure.
 Reads parse the cached payload as JSON before reuse. A truncated or otherwise
 invalid entry is deleted and treated as a miss, preventing derived-command
 success with missing structured data after a crash or interrupted write.
-Read-only facade commands consume the already published SQLite projection and
-its dependency fingerprint. They never refresh or regenerate indexes as an
-implicit side effect. Missing or stale projections stop with an explicit
+Read-only facade commands consume the published SQLite projection and its
+dependency fingerprint. The `context` resolver is the bounded exception: inside
+its isolated read-only snapshot it refreshes a stale graph, using a backend-only
+projection for backend requests and the full TypeScript graph for frontend or
+unscoped requests. Other missing or stale projections stop with an explicit
 recovery action; `graph-build`, `update`, and `verify` remain the deliberate
-writer/verification paths. Isolated snapshots use Git status to detect tracked
-or untracked mutations without re-hashing every multi-megabyte compiled index on
-each query.
+general writer/verification paths. Isolated snapshots use Git status to detect
+tracked or untracked mutations without re-hashing every multi-megabyte compiled
+index on each query.
 
 The table-driven `catalog`, `symbols`, `frontend`, contract, topology, quality,
 configuration, sensitive-data, architecture-health, and module commands are

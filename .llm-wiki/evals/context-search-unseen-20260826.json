@@ -24,28 +24,28 @@
     }
   },
   "thresholds": {
-    "minimumTop1Rate": 0.5,
-    "minimumTop10Rate": 0.8,
-    "minimumMeanReciprocalRank": 0.6
+    "minimumTop1Rate": 0.68,
+    "minimumTop10Rate": 0.94,
+    "minimumMeanReciprocalRank": 0.77
   },
   "switchCriteria": {
     "minimumCaseCount": 100,
-    "minimumTop1Rate": 0.5,
-    "minimumTop10Rate": 0.8,
-    "minimumMeanReciprocalRank": 0.6
+    "minimumTop1Rate": 0.68,
+    "minimumTop10Rate": 0.94,
+    "minimumMeanReciprocalRank": 0.77
   },
   "liveRegressionGate": {
-    "minimumTop1Count": 51,
-    "minimumTop10Count": 83,
-    "minimumMeanReciprocalRank": 0.6069,
+    "minimumTop1Count": 68,
+    "minimumTop10Count": 94,
+    "minimumMeanReciprocalRank": 0.77,
     "maximumP95SqlDurationMs": 0,
     "minimumCohortTop1Counts": {
       "application-api": 9,
       "behavior-to-test": 10,
-      "domain-invariants": 4,
+      "domain-invariants": 12,
       "frontend": 15,
-      "integrations-persistence": 2,
-      "wiki-tooling": 11
+      "integrations-persistence": 8,
+      "wiki-tooling": 13
     }
   },
   "cases": [

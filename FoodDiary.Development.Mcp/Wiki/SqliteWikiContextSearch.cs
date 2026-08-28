@@ -443,7 +443,12 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             }
             bool hasAdminIntent = rankingTerms.Any(term => policy.AdminIntentTerms.Any(intent =>
                 term.StartsWith(intent, StringComparison.Ordinal)));
-            if (normalizedPath.Contains("admin", StringComparison.Ordinal) && !hasAdminIntent) {
+            string[] adminIdentityEvidence = [.. queryTerms.Where(term =>
+                term.Length >= policy.PathTermAffinity.MinimumTermLength &&
+                searchableIdentity.Contains(term, StringComparison.Ordinal))];
+            if (normalizedPath.Contains("admin", StringComparison.Ordinal) &&
+                !hasAdminIntent &&
+                adminIdentityEvidence.Length < policy.UnrequestedAdminPenaltyExemptionMatches) {
                 score -= policy.UnrequestedAdminPenalty;
                 reasons.Add("admin candidate penalty without admin intent");
             }
@@ -459,6 +464,16 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             if (identityScore > 0) {
                 score += identityScore;
                 reasons.Add($"path/title affinity {string.Join(", ", identityMatches)}");
+            }
+            string[] directFileNameMatches = [.. directTerms.Where(term =>
+                term.Length >= policy.DirectFileNameAffinity.MinimumTermLength &&
+                searchableFileIdentity.Contains(term, StringComparison.Ordinal))];
+            int directFileNameScore = Math.Min(
+                directFileNameMatches.Length * policy.DirectFileNameAffinity.ScorePerMatch,
+                policy.DirectFileNameAffinity.MaximumScore);
+            if (directFileNameScore > 0) {
+                score += directFileNameScore;
+                reasons.Add($"direct file-name affinity {string.Join(", ", directFileNameMatches)}");
             }
             GenericAffinities genericAffinity = policy.GenericAffinities;
             string[] explicitRoleMatches = [.. genericAffinity.RoleTerms.Where(term => {
@@ -485,8 +500,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 IReadOnlyList<string> intentTerms,
                 IReadOnlyList<string> pathValues,
                 int value,
-                bool suffix = false) {
-                bool intentMatched = intentTerms.Any(term => terms.Contains(term.ToLowerInvariant()));
+                bool suffix = false,
+                int minimumMatches = 1) {
+                int intentMatchCount = intentTerms.Count(term => terms.Contains(term.ToLowerInvariant()));
+                bool intentMatched = intentMatchCount >= minimumMatches;
                 bool pathMatched = pathValues.Any(pathValue => suffix
                     ? normalizedPath.EndsWith(pathValue.ToLowerInvariant(), StringComparison.Ordinal)
                     : normalizedPath.Contains(
@@ -549,6 +566,16 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 genericAffinity.IntegrationIntentTerms,
                 genericAffinity.IntegrationPathPrefixes,
                 genericAffinity.IntegrationScore);
+            bool excludesInfrastructureAffinity = genericAffinity.InfrastructureExcludedIntentTerms
+                .Any(term => terms.Contains(term.ToLowerInvariant()));
+            if (!excludesInfrastructureAffinity) {
+                ApplyGenericPathAffinity(
+                    "infrastructure-layer",
+                    genericAffinity.InfrastructureIntentTerms,
+                    genericAffinity.InfrastructurePathFragments,
+                    genericAffinity.InfrastructureScore,
+                    minimumMatches: genericAffinity.InfrastructureMinimumMatches);
+            }
             ApplyGenericPathAffinity(
                 "node-runtime",
                 genericAffinity.NodeIntentTerms,
@@ -743,6 +770,23 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 score -= policy.CrossLayerPenalty;
                 reasons.Add("frontend candidate penalty for backend intent");
             }
+            bool requestsDocumentation = policy.DocumentationImplementationPenalty.RequestTerms
+                .Any(term => terms.Contains(term.ToLowerInvariant()));
+            bool isDocumentationCandidate =
+                string.Equals(candidate.RecordType, "agent-guide", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(candidate.RecordType, "documentation", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(candidate.RecordType, "wiki-page", StringComparison.OrdinalIgnoreCase) ||
+                normalizedPath.EndsWith("/agents.md", StringComparison.Ordinal) ||
+                string.Equals(normalizedPath, "agents.md", StringComparison.Ordinal) ||
+                (normalizedPath.StartsWith("docs/", StringComparison.Ordinal) &&
+                    normalizedPath.EndsWith(".md", StringComparison.Ordinal));
+            if (isDocumentationCandidate &&
+                policy.DocumentationImplementationPenalty.ChangeTypes.Any(candidateChangeType =>
+                    string.Equals(candidateChangeType, changeType, StringComparison.OrdinalIgnoreCase)) &&
+                !requestsDocumentation) {
+                score -= policy.DocumentationImplementationPenalty.Score;
+                reasons.Add("documentation candidate penalty for implementation intent");
+            }
             bool requestsAbstraction = terms.Overlaps(["interface", "contract", "abstraction"]);
             if (!requestsAbstraction && normalizedPath.StartsWith(
                 "fooddiary.application.abstractions/",
@@ -753,7 +797,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 score -= policy.InterfacePathPenalty;
             }
             if (!string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase) &&
-                CompanionPath.IsMatch(candidate.Path)) {
+                CompanionPath.IsMatch(candidate.Path) &&
+                directFileNameMatches.Length < policy.DirectFileNameAffinity.CompanionPenaltyExemptionMatches) {
                 score -= policy.CompanionFilePenalty;
                 reasons.Add("companion file ranked after primary declaration");
             }
@@ -1043,6 +1088,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             policy.IdentityCandidatePoolLimit < 1 ||
             policy.StopTerms is null ||
             policy.PathTermAffinity is null ||
+            policy.DirectFileNameAffinity is null ||
+            policy.DirectFileNameAffinity.CompanionPenaltyExemptionMatches < 1 ||
             policy.MatchedPolicyFileNameAffinity is null ||
             policy.ExplicitTestAffinity is null ||
             policy.NegatedRolePenalty is null ||
@@ -1051,9 +1098,18 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             policy.ModuleIdentityMinimumLength < 1 ||
             policy.ModuleIdentityLeadingTermCount < 1 ||
             policy.AdminIntentTerms is null ||
+            policy.UnrequestedAdminPenaltyExemptionMatches < 1 ||
+            policy.DocumentationImplementationPenalty is null ||
+            policy.DocumentationImplementationPenalty.ChangeTypes is null ||
+            policy.DocumentationImplementationPenalty.RequestTerms is null ||
             policy.NegatedRoleAlternatives is null ||
             policy.PathBoosts is null ||
             policy.IdentityBoosts is null ||
+            policy.GenericAffinities is null ||
+            policy.GenericAffinities.InfrastructureIntentTerms is null ||
+            policy.GenericAffinities.InfrastructureMinimumMatches < 1 ||
+            policy.GenericAffinities.InfrastructureExcludedIntentTerms is null ||
+            policy.GenericAffinities.InfrastructurePathFragments is null ||
             policy.IdentityBoosts?.Any(boost =>
                 !string.IsNullOrWhiteSpace(boost.IdentityScope) &&
                 !string.Equals(boost.IdentityScope, "path", StringComparison.OrdinalIgnoreCase) &&
@@ -1118,6 +1174,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         int IdentityCandidatePoolLimit,
         string[] StopTerms,
         PathTermAffinity PathTermAffinity,
+        DirectFileNameAffinity DirectFileNameAffinity,
         PathTermAffinity MatchedPolicyFileNameAffinity,
         ScoreCap ExplicitTestAffinity,
         NegatedRolePenalty NegatedRolePenalty,
@@ -1132,6 +1189,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         int ModuleIdentityScore,
         string[] AdminIntentTerms,
         int UnrequestedAdminPenalty,
+        int UnrequestedAdminPenaltyExemptionMatches,
+        DocumentationImplementationPenalty DocumentationImplementationPenalty,
         ConfidenceCalibration ConfidenceCalibration,
         Dictionary<string, string[]> QueryTermExpansions,
         Dictionary<string, string[]> QueryPrefixExpansions,
@@ -1167,6 +1226,11 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         string[] IntegrationIntentTerms,
         string[] IntegrationPathPrefixes,
         int IntegrationScore,
+        string[] InfrastructureIntentTerms,
+        int InfrastructureMinimumMatches,
+        string[] InfrastructureExcludedIntentTerms,
+        string[] InfrastructurePathFragments,
+        int InfrastructureScore,
         string[] NodeIntentTerms,
         string[] NodePathSuffixes,
         int NodeScore,
@@ -1182,6 +1246,17 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         int MinimumTermLength,
         int ScorePerMatch,
         int MaximumScore);
+
+    private sealed record DirectFileNameAffinity(
+        int MinimumTermLength,
+        int ScorePerMatch,
+        int MaximumScore,
+        int CompanionPenaltyExemptionMatches);
+
+    private sealed record DocumentationImplementationPenalty(
+        int Score,
+        string[] ChangeTypes,
+        string[] RequestTerms);
 
     private sealed record ScoreCap(
         int ScorePerMatch,

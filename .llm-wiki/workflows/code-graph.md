@@ -102,6 +102,11 @@ reports SQLite query time separately from the PowerShell/Node round trip. The De
 fresh SQL result as its primary code-scope selection; policy, checks, reviewed
 knowledge, and source claims remain Git-backed.
 
+The public `context` facade delegates graph preparation to the resolver rather
+than eagerly forcing a full graph build. A backend request can therefore create
+a C#-only projection on a clean checkout without frontend dependencies; an
+`Any` or `Frontend` request subsequently completes the TypeScript projection.
+
 Context and diff queries retrieve a safe frontend candidate superset in their
 existing compiled-context round trip, then keep the established PowerShell
 scoring and output shape. Changed frontend paths use exact symbol-path selection.
@@ -300,13 +305,12 @@ Cases without a cohort remain compatible and are reported as `unclassified`.
 Each corpus keeps lower regression thresholds
 separate from stricter `switchCriteria`. The combined gate requires at least
 100 committed cases, both corpora to meet switch criteria, and no top-10 miss.
-The current Node result is 60/60 top-1 on the regression corpus, 40/40 top-1 on
-the challenge corpus, 70/70 top-1 on the generalization corpus, 50/50 top-1 on
-the validation corpus, 30/30 top-1 on each of the first four promoted probes,
-40/40 on probe-5, 30/30 on probe-6, and 40/40 on probe-7. All 450 strict cases
-are top-1. Probe-4, probe-5, probe-6, and probe-7 preserve their blind baselines in their committed
-descriptions. Timing is diagnostic rather than a correctness gate because
-workstation load varies.
+The current promoted aggregate is 485/490 top-1 and 490/490 top-10: 60/60 on
+the regression corpus, 40/40 on the challenge corpus, 68/70 on generalization,
+48/50 on validation, 229/230 across the seven probes, and 40/40 on the earlier
+holdout. Probe-4, probe-5, probe-6, and probe-7 preserve their blind baselines in
+their committed descriptions. Timing is diagnostic rather than a correctness
+gate because workstation load varies.
 
 The separate 100-case fallback-retirement holdout is not a tuned promotion
 corpus and is not included in the 450-case strict total. Its queries and unique
@@ -321,7 +325,7 @@ same frozen diagnostic corpus to 96/100 top-1, 100/100 top-10, and 0.9783 MRR
 while preserving the promoted and control gates. The original blind result
 remains immutable; later results are regression evidence, not new blind
 baselines. The current fresh-graph regression result is 99/100 top-1, 100/100
-top-10, and 0.9914 MRR; the live gate builds the current .NET reader and requires
+top-10, and 0.995 MRR; the live gate builds the current .NET reader and requires
 exact rank and ordered top-five path/score parity with Node. Use a new unseen
 holdout for any later generalization claim.
 
@@ -332,7 +336,9 @@ Node/.NET parity, not as proof of real-user query quality. For a genuinely
 independently authored corpus, collect every query manually before search, leave
 target-derived placeholders unresolved until then, and use
 `context-unseen-freeze`; the freeze tool preserves supplied text verbatim and
-rejects missing queries.
+rejects missing queries. Its current diagnostic result is 71/100 top-1,
+95/100 top-10, and 0.8017 MRR; the live gate requires at least 68/100, 94/100,
+and 0.77 respectively, plus cohort minima.
 
 Runtime search data belongs in SQLite: FTS5 owns lexical candidate retrieval,
 compiled records and reconstructable indexes are projected into relational

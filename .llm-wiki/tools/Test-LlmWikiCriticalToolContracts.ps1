@@ -35,6 +35,15 @@ foreach ($contract in @(
     Assert-CriticalTool ($contractSource.Contains($contract.marker)) "Critical tool contract marker is missing: $($contract.file)"
 }
 
+$facadeSource = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') -Raw
+$eagerGraphCommands = [regex]::Match(
+    $facadeSource,
+    '(?s)\$compiledIndexReadOnlyCommands\s*=\s*@\((?<commands>.*?)\)')
+Assert-CriticalTool $eagerGraphCommands.Success 'Unable to inspect the eager compiled-index facade command contract.'
+Assert-CriticalTool (
+    $eagerGraphCommands.Groups['commands'].Value -notmatch "(?m)^\s*'context'\s*,?") `
+    'The context facade must let Find-LlmWikiContext choose backend-only or full projection refresh from ChangeType.'
+
 $helpOutput = @(& (Join-Path $PSScriptRoot 'Show-LlmWikiHelp.ps1') -Tier core 6>&1 | ForEach-Object { [string]$_ })
 Assert-CriticalTool ($helpOutput -contains 'Command stability tiers: core, governed, experimental.') 'Registry-backed compact help omitted stability tiers.'
 

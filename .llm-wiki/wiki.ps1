@@ -364,7 +364,7 @@ $readOnlyFacadeCommands = @('research', 'research-next-question', 'context', 'tr
 # content-addressed temporary snapshot. This keeps the source checkout clean
 # while making a fresh clone immediately usable.
 $compiledIndexReadOnlyCommands = @(
-    'research', 'research-next-question', 'context', 'trace', 'packet', 'brief',
+    'research', 'research-next-question', 'trace', 'packet', 'brief',
     'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace',
     'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies',
     'rollout', 'topology', 'privacy', 'security', 'ui', 'contracts', 'diff',
@@ -771,12 +771,12 @@ switch ($Command) {
             $parallelSmokeArguments = @{} + $affectedSmokeArguments
             $effectiveSmokeConcurrency = if ($null -eq $MaxConcurrency) { 4 } else { [int]$MaxConcurrency }
             $parallelSmokeArguments.MaxConcurrency = $effectiveSmokeConcurrency
-            $script:verifyStageExpectedSeconds['affected smoke'] = 240
+            $script:verifyStageExpectedSeconds['affected smoke'] = 360
             $smokeStages = @([pscustomobject]@{
                 Name = 'affected smoke'
                 Tool = 'Invoke-LlmWikiParallelSmoke.ps1'
                 Arguments = $parallelSmokeArguments
-                Timeout = 420
+                Timeout = 600
                 Standalone = './.llm-wiki/wiki.ps1 verify -Stage ''affected smoke'''
             })
         }

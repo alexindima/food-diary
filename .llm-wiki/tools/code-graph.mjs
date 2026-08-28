@@ -2312,7 +2312,12 @@ function searchContext(database, query, limit, filters = {}) {
     }
     const adminIntentTerms = contextSearchRanking.adminIntentTerms ?? ['admin', 'administration'];
     const hasAdminIntent = boostTerms.some((term) => adminIntentTerms.some((intent) => term.startsWith(intent)));
-    if (normalizedPath.includes('admin') && !hasAdminIntent) {
+    const adminIdentityEvidence = terms.filter((term) =>
+      term.length >= Number(affinity.minimumTermLength ?? 3) && searchableIdentity.includes(term));
+    const adminPenaltyExemptionMatches = Number(
+      contextSearchRanking.unrequestedAdminPenaltyExemptionMatches ?? Number.MAX_SAFE_INTEGER);
+    if (normalizedPath.includes('admin') && !hasAdminIntent
+      && adminIdentityEvidence.length < adminPenaltyExemptionMatches) {
       score -= Number(contextSearchRanking.unrequestedAdminPenalty ?? 0);
       reasons.push('admin candidate penalty without admin intent');
     }
@@ -2325,6 +2330,17 @@ function searchContext(database, query, limit, filters = {}) {
     if (identityScore > 0) {
       score += identityScore;
       reasons.push(`path/title affinity ${identityMatches.join(', ')}`);
+    }
+    const directFileNameAffinity = contextSearchRanking.directFileNameAffinity ?? {};
+    const directFileNameMatches = directTerms.filter((term) =>
+      term.length >= Number(directFileNameAffinity.minimumTermLength ?? 3)
+      && searchableFileIdentity.includes(term));
+    const directFileNameScore = Math.min(
+      directFileNameMatches.length * Number(directFileNameAffinity.scorePerMatch ?? 0),
+      Number(directFileNameAffinity.maximumScore ?? 0));
+    if (directFileNameScore > 0) {
+      score += directFileNameScore;
+      reasons.push(`direct file-name affinity ${directFileNameMatches.join(', ')}`);
     }
     const genericAffinity = contextSearchRanking.genericAffinities ?? {};
     const explicitRoleMatches = (genericAffinity.roleTerms ?? []).filter((term) => {
@@ -2340,8 +2356,10 @@ function searchContext(database, query, limit, filters = {}) {
       score += explicitRoleScore;
       reasons.push(`generic file-role affinity ${explicitRoleMatches.join(', ')}`);
     }
-    const applyGenericPathAffinity = (id, intentTerms, pathValues, value, suffix = false) => {
-      const intentMatched = (intentTerms ?? []).some((term) => boostTerms.includes(String(term).toLowerCase()));
+    const applyGenericPathAffinity = (id, intentTerms, pathValues, value, suffix = false, minimumMatches = 1) => {
+      const intentMatchCount = (intentTerms ?? [])
+        .filter((term) => boostTerms.includes(String(term).toLowerCase())).length;
+      const intentMatched = intentMatchCount >= Number(minimumMatches ?? 1);
       const pathMatched = (pathValues ?? []).some((candidate) => suffix
         ? normalizedPath.endsWith(String(candidate).toLowerCase())
         : normalizedPath.includes(String(candidate).replaceAll('\\', '/').toLowerCase()));
@@ -2369,6 +2387,13 @@ function searchContext(database, query, limit, filters = {}) {
       genericAffinity.adminPathFragments, genericAffinity.adminScore);
     applyGenericPathAffinity('integration-layer', genericAffinity.integrationIntentTerms,
       genericAffinity.integrationPathPrefixes, genericAffinity.integrationScore);
+    const excludesInfrastructureAffinity = (genericAffinity.infrastructureExcludedIntentTerms ?? [])
+      .some((term) => boostTerms.includes(String(term).toLowerCase()));
+    if (!excludesInfrastructureAffinity) {
+      applyGenericPathAffinity('infrastructure-layer', genericAffinity.infrastructureIntentTerms,
+        genericAffinity.infrastructurePathFragments, genericAffinity.infrastructureScore, false,
+        genericAffinity.infrastructureMinimumMatches);
+    }
     applyGenericPathAffinity('node-runtime', genericAffinity.nodeIntentTerms,
       genericAffinity.nodePathSuffixes, genericAffinity.nodeScore, true);
     if (!explicitlyRequestsMcp) {
@@ -2484,6 +2509,19 @@ function searchContext(database, query, limit, filters = {}) {
       score -= Number(contextSearchRanking.crossLayerPenalty ?? 0);
       reasons.push('frontend candidate penalty for backend intent');
     }
+    const documentationPenalty = contextSearchRanking.documentationImplementationPenalty ?? {};
+    const implementationChangeTypes = (documentationPenalty.changeTypes ?? [])
+      .map((value) => String(value).toLowerCase());
+    const requestsDocumentation = (documentationPenalty.requestTerms ?? [])
+      .some((term) => boostTerms.includes(String(term).toLowerCase()));
+    const isDocumentationCandidate = ['agent-guide', 'documentation', 'wiki-page'].includes(
+      String(item.recordType ?? '').toLowerCase())
+      || /(^|\/)AGENTS\.md$/i.test(path)
+      || /^docs\/.+\.md$/i.test(path);
+    if (isDocumentationCandidate && implementationChangeTypes.includes(changeType) && !requestsDocumentation) {
+      score -= Number(documentationPenalty.score ?? 0);
+      reasons.push('documentation candidate penalty for implementation intent');
+    }
     const requestsAbstraction = terms.some((term) => ['interface', 'contract', 'abstraction'].includes(term));
     if (!requestsAbstraction && normalizedPath.startsWith('fooddiary.application.abstractions/')) {
       score -= Number(contextSearchRanking.applicationAbstractionPenalty ?? 0);
@@ -2491,7 +2529,10 @@ function searchContext(database, query, limit, filters = {}) {
     if (!requestsAbstraction && /\/I[A-Z][^/]*\.cs$/.test(path)) {
       score -= Number(contextSearchRanking.interfacePathPenalty ?? 0);
     }
-    if (changeType !== 'tests' && /\.[^./]+\.cs$/i.test(path)) {
+    const companionPenaltyExemptionMatches = Number(
+      directFileNameAffinity.companionPenaltyExemptionMatches ?? Number.MAX_SAFE_INTEGER);
+    if (changeType !== 'tests' && /\.[^./]+\.cs$/i.test(path)
+      && directFileNameMatches.length < companionPenaltyExemptionMatches) {
       score -= Number(contextSearchRanking.companionFilePenalty ?? 0);
       reasons.push('companion file ranked after primary declaration');
     }

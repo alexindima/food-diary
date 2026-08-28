@@ -210,26 +210,14 @@
       "pageSha256": "ab1e4ba6f832f69547b9b819096039b1837170c84a9a84ce5c47c7f28a485568",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "762c6f78e8ed6ae7020f855c5500da613d81322d9d135977405dd3756e73286a"
-        },
-        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "7abc2e4d93e1a45546b9c0f6fdec0f61175d11d0f2c80b7b5c18158e532d7752"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiBackendContract.ps1",
-          "sha256": "36b336d9749f304e68b4c60ee36def091fda7472f7e6fda3ed0911e2718871f2"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiBackendContractSqlParity.ps1",
-          "sha256": "8a099abffe4732ab62571b6a03061173d61e91997b9c5a07ce5b35987f119ca9"
+          "sha256": "9d1aeca5cbeb129bb783fbbad56e4294a8d4d7e0055038485087ce9b15628ae9"
         }
       ],
-      "reason": "Backend contract and API-facing Wiki pages were checked against the regenerated contract projection, safe collision classification, SQLite query route, and unchanged HTTP surface; their guidance remains accurate.",
+      "reason": "Context-search ranking and facade routing do not alter contract extraction, serialization, or API surface; backend-contract and parity smoke passed.",
       "baseRef": "HEAD",
-      "gitHead": "59dae42662bdbd9701dd6fdad61dbdc4e72ae5e4",
-      "reviewedAtUtc": "2026-08-28T10:38:06.7536848Z"
+      "gitHead": "8e17da552b0a609c85f7e9eb40c943cc2816d306",
+      "reviewedAtUtc": "2026-08-28T13:15:33.4863930Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -608,13 +596,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "7abc2e4d93e1a45546b9c0f6fdec0f61175d11d0f2c80b7b5c18158e532d7752"
+          "sha256": "9d1aeca5cbeb129bb783fbbad56e4294a8d4d7e0055038485087ce9b15628ae9"
         }
       ],
-      "reason": "Module and frontend documentation was checked against the platform-service refactor, fd-tour architecture entry, generated frontend/runtime indexes, and current source layout; existing navigation and ownership guidance remains accurate.",
+      "reason": "Impact-simulation semantics are unchanged, and runtime topology changed only its source fingerprint while service, worker, and HTTP-client counts stayed identical.",
       "baseRef": "HEAD",
-      "gitHead": "59dae42662bdbd9701dd6fdad61dbdc4e72ae5e4",
-      "reviewedAtUtc": "2026-08-28T10:38:09.2594979Z"
+      "gitHead": "8e17da552b0a609c85f7e9eb40c943cc2816d306",
+      "reviewedAtUtc": "2026-08-28T13:15:34.2478628Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -812,17 +800,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "7abc2e4d93e1a45546b9c0f6fdec0f61175d11d0f2c80b7b5c18158e532d7752"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiSensitiveData.ps1",
-          "sha256": "b853c94afd8fdfdf6597ba1e1b823753e243306d9fddb7505b0291889c6e8bb4"
+          "sha256": "9d1aeca5cbeb129bb783fbbad56e4294a8d4d7e0055038485087ce9b15628ae9"
         }
       ],
-      "reason": "Privacy and security pages were checked against the sensitive/runtime projections, explicit no-fallback behavior, ranking calibration, and initializer container hardening; no documented data boundary or authority changed.",
+      "reason": "Only navigation scores and generated freshness fingerprints changed; sensitive-data categories, privacy boundaries, runtime declarations, and security guidance remain unchanged and generated indexes are current.",
       "baseRef": "HEAD",
-      "gitHead": "59dae42662bdbd9701dd6fdad61dbdc4e72ae5e4",
-      "reviewedAtUtc": "2026-08-28T10:38:10.2306179Z"
+      "gitHead": "8e17da552b0a609c85f7e9eb40c943cc2816d306",
+      "reviewedAtUtc": "2026-08-28T13:15:34.8842255Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -861,17 +845,17 @@
     {
       "pageId": "workflow-quality-risk",
       "pagePath": ".llm-wiki/workflows/quality-risk.md",
-      "pageSha256": "1cba5c16db54c7442aa930be273c48ac93b41160dfd58b363246d87618ac3d4b",
+      "pageSha256": "8b137046034f8df511332cf41dfd2b96a888804b14e546cee7cc5f9213ab68d0",
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b986da4ef688474dca7d99495db0d3a1d76a45b4ed901c8254c81aa10fc92353"
+          "sha256": "57e4ebcc491c0c7f890b1b3941db9eb1152fca30854f07aae430f5ad6a887137"
         }
       ],
-      "reason": "Index-pipeline locking and quality-risk guidance remain accurate; only the concurrency harness gained scheduler headroom and quality references moved from domain-data to runtime-topology.",
+      "reason": "The quality delta is the measured complexity of the synchronized MCP ranker and timeout guard; 202 MCP tests, the 490-case evaluation, exact Node/.NET parity, and all affected smoke groups passed.",
       "baseRef": "HEAD",
-      "gitHead": "c05f99edfa00eb4e1b8396fa8e599481ddc6adae",
-      "reviewedAtUtc": "2026-08-28T05:26:32.6217935Z"
+      "gitHead": "8e17da552b0a609c85f7e9eb40c943cc2816d306",
+      "reviewedAtUtc": "2026-08-28T13:15:35.5897593Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -944,17 +928,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "b914b7fafc935ff5c5da29129d2ca8abfcde88b9632415e4ee38c4c28b667cf6"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiRuntimeTopology.ps1",
-          "sha256": "c819f11b1fc3a27c54e063318620198ebcd6286f77a8659c583c7e5d06665614"
+          "sha256": "944a5bfab4af6128aff8d45eaff8a74fe54b49d864d9ad27aeeb27c7dd1dd795"
         }
       ],
-      "reason": "Module and frontend documentation was checked against the platform-service refactor, fd-tour architecture entry, generated frontend/runtime indexes, and current source layout; existing navigation and ownership guidance remains accurate.",
+      "reason": "Impact-simulation semantics are unchanged, and runtime topology changed only its source fingerprint while service, worker, and HTTP-client counts stayed identical.",
       "baseRef": "HEAD",
-      "gitHead": "59dae42662bdbd9701dd6fdad61dbdc4e72ae5e4",
-      "reviewedAtUtc": "2026-08-28T10:38:11.2245156Z"
+      "gitHead": "8e17da552b0a609c85f7e9eb40c943cc2816d306",
+      "reviewedAtUtc": "2026-08-28T13:15:36.7976306Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -963,21 +943,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c82a6e063655f3a5102ffa84f8e33e8d0fcfca52cca61a16d04f0220043005ad"
+          "sha256": "57e4ebcc491c0c7f890b1b3941db9eb1152fca30854f07aae430f5ad6a887137"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "b914b7fafc935ff5c5da29129d2ca8abfcde88b9632415e4ee38c4c28b667cf6"
+          "sha256": "944a5bfab4af6128aff8d45eaff8a74fe54b49d864d9ad27aeeb27c7dd1dd795"
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "a7923975b8b45362a549fe1ba4fd90fdde5368acf538c437a3f4c3e48b33d158"
+          "sha256": "2456f61064e8cfcbb9c1ccdb1fd4941dc6d1d47e4fa54532f1af19cc166df581"
         }
       ],
-      "reason": "Privacy and security pages were checked against the sensitive/runtime projections, explicit no-fallback behavior, ranking calibration, and initializer container hardening; no documented data boundary or authority changed.",
+      "reason": "Only navigation scores and generated freshness fingerprints changed; sensitive-data categories, privacy boundaries, runtime declarations, and security guidance remain unchanged and generated indexes are current.",
       "baseRef": "HEAD",
-      "gitHead": "59dae42662bdbd9701dd6fdad61dbdc4e72ae5e4",
-      "reviewedAtUtc": "2026-08-28T10:38:11.8272282Z"
+      "gitHead": "8e17da552b0a609c85f7e9eb40c943cc2816d306",
+      "reviewedAtUtc": "2026-08-28T13:15:37.4612831Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1050,13 +1030,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "ea41b5a1ff88b1d691be879bfac62910b5d7f93b8e0dcfc433343dffaa6b5b6b"
+          "sha256": "e8bdb80fed02bf1fd4d24020405daa0f5d5713c2bf52d1c54c0244698ce34feb"
         }
       ],
-      "reason": "Workflow pages were checked against SQL-first facade routing, backend-only cold bootstrap, explicit JSON diagnostics, freshness metadata, ranking parity, and consumer-attributed quality semantics; updated pages capture the new contracts and the remaining guidance stays current.",
+      "reason": "The quality delta is the measured complexity of the synchronized MCP ranker and timeout guard; 202 MCP tests, the 490-case evaluation, exact Node/.NET parity, and all affected smoke groups passed.",
       "baseRef": "HEAD",
-      "gitHead": "59dae42662bdbd9701dd6fdad61dbdc4e72ae5e4",
-      "reviewedAtUtc": "2026-08-28T10:38:12.3486222Z"
+      "gitHead": "8e17da552b0a609c85f7e9eb40c943cc2816d306",
+      "reviewedAtUtc": "2026-08-28T13:15:38.0444182Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1242,13 +1222,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "ea41b5a1ff88b1d691be879bfac62910b5d7f93b8e0dcfc433343dffaa6b5b6b"
+          "sha256": "e8bdb80fed02bf1fd4d24020405daa0f5d5713c2bf52d1c54c0244698ce34feb"
         }
       ],
-      "reason": "Workflow pages were checked against SQL-first facade routing, backend-only cold bootstrap, explicit JSON diagnostics, freshness metadata, ranking parity, and consumer-attributed quality semantics; updated pages capture the new contracts and the remaining guidance stays current.",
+      "reason": "The quality delta is the measured complexity of the synchronized MCP ranker and timeout guard; 202 MCP tests, the 490-case evaluation, exact Node/.NET parity, and all affected smoke groups passed.",
       "baseRef": "HEAD",
-      "gitHead": "59dae42662bdbd9701dd6fdad61dbdc4e72ae5e4",
-      "reviewedAtUtc": "2026-08-28T10:38:10.7230008Z"
+      "gitHead": "8e17da552b0a609c85f7e9eb40c943cc2816d306",
+      "reviewedAtUtc": "2026-08-28T13:15:36.2004581Z"
     }
   ]
 }

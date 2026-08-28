@@ -12,6 +12,8 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1
   - .llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1
   - .llm-wiki/tools/Build-LlmWikiCatalog.ps1
+  - .llm-wiki/evals/context-search-holdout-100.json
+  - .llm-wiki/evals/context-search-unseen-20260826.json
   - .llm-wiki/generated/repository-catalog.json
   - AGENTS.md
 ---
@@ -28,8 +30,8 @@ contract.
 
 The resolver reads repository-catalog, C# symbol, and frontend feature/symbol/
 route/localization candidates from the local SQLite compiled-index projection
-by default. The graph is refreshed before the
-read-only facade snapshot is created, and the reader verifies normalized source
+by default. The graph is refreshed by the resolver inside the
+read-only facade snapshot, and the reader verifies normalized source
 hashes before returning data. A missing or stale projection fails explicitly;
 `-CompiledIndexSource Json` is reserved for parity tests and diagnostics rather
 than automatic fallback.
@@ -123,6 +125,11 @@ Scores rank navigation candidates; they do not establish authority or prove
 that a file must change. Read the returned wiki pages and applicable
 `AGENTS.md`, then verify the result against code, tests, manifests, and contract
 snapshots.
+
+Use the independently authored holdout corpus as the primary retrieval-quality
+signal. The frozen target-aware synthetic unseen corpus is a deterministic
+diagnostic for ranking regressions and cohort balance; because its expected
+paths informed its construction, it is not evidence of real-user query quality.
 
 Context discovery is advisory. Run `wiki.ps1 policy` for deterministic
 repository obligations and use an evidence bundle when those obligations need

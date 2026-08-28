@@ -9,6 +9,12 @@
     "scorePerMatch": 22,
     "maximumScore": 110
   },
+  "directFileNameAffinity": {
+    "minimumTermLength": 3,
+    "scorePerMatch": 35,
+    "maximumScore": 175,
+    "companionPenaltyExemptionMatches": 2
+  },
   "matchedPolicyFileNameAffinity": {
     "minimumTermLength": 3,
     "scorePerMatch": 35,
@@ -36,11 +42,17 @@
   "agentGuideBoost": 120,
   "companionFilePenalty": 100,
   "crossLayerPenalty": 250,
+  "documentationImplementationPenalty": {
+    "score": 240,
+    "changeTypes": ["Api", "Backend", "Database", "Frontend", "Tests"],
+    "requestTerms": ["adr", "docs", "documentation", "guide", "guidance", "instruction", "workflow"]
+  },
   "moduleIdentityMinimumLength": 8,
   "moduleIdentityLeadingTermCount": 1,
   "moduleIdentityScore": 400,
   "adminIntentTerms": ["admin", "administration", "achievement", "definitions", "moderation", "moderator", "complaint", "report", "модерац", "жалоб"],
   "unrequestedAdminPenalty": 180,
+  "unrequestedAdminPenaltyExemptionMatches": 5,
   "confidenceCalibration": {
     "ambiguityMaximumMargin": 15,
     "highMinimumMargin": 100,
@@ -68,15 +80,20 @@
     "integrationIntentTerms": ["adapter", "client", "external", "gateway", "integration", "provider"],
     "integrationPathPrefixes": ["FoodDiary.Integrations/", "MailInbox/FoodDiary.MailInbox.Client/", "MailRelay/FoodDiary.MailRelay.Client/"],
     "integrationScore": 180,
+    "infrastructureIntentTerms": ["implementation", "persistence", "provider", "storage", "store"],
+    "infrastructureMinimumMatches": 2,
+    "infrastructureExcludedIntentTerms": ["health", "healthcheck", "localized", "localization", "resource", "text", "translation"],
+    "infrastructurePathFragments": ["FoodDiary.Infrastructure/", ".Infrastructure/", "/Infrastructure/"],
+    "infrastructureScore": 280,
     "nodeIntentTerms": ["node", "javascript", "mjs"],
     "nodePathSuffixes": [".mjs", ".js", ".cjs"],
     "nodeScore": 520,
     "powershellIntentTerms": ["powershell", "pwsh", "ps1"],
     "powershellPathSuffixes": [".ps1"],
     "powershellScore": 220,
-    "wikiToolIntentTerms": ["wiki", "powershell", "frontend"],
+    "wikiToolIntentTerms": ["wiki", "powershell", "frontend", "tool", "tooling"],
     "wikiToolPathPrefixes": [".llm-wiki/tools/"],
-    "wikiToolScore": 180
+    "wikiToolScore": 420
   },
   "queryTermExpansions": {
     "create": ["factory"],
@@ -157,6 +174,10 @@
     "tests": ["test"],
     "scenarios": ["scenario"],
     "authentication": ["auth"],
+    "token": ["jwt"],
+    "artificial|intelligence": ["ai"],
+    "addresses": ["address"],
+    "impersonate|impersonates|impersonated": ["impersonation"],
     "retrying": ["retry"],
     "ranked": ["context"],
     "sections": ["section"],
@@ -535,7 +556,14 @@
       "queryTerms": ["cache", "cached", "prefer"],
       "minimumMatches": 2,
       "pathPrefixes": ["FoodDiary.Application.OpenFoodFacts/"],
-      "score": 180
+      "score": 300
+    },
+    {
+      "id": "presigned-image-upload-command",
+      "queryTerms": ["image", "presigned", "upload", "url"],
+      "minimumMatches": 3,
+      "pathPrefixes": ["FoodDiary.Application.Images/Commands/GetUploadUrl/"],
+      "score": 360
     },
     {
       "id": "transactional-email-outbox",
@@ -626,7 +654,7 @@
       "pathPrefixes": [".llm-wiki/tools/"],
       "score": 230,
       "directOnly": true,
-      "excludedQueryTerms": ["workflow"]
+      "excludedQueryTerms": ["how", "workflow"]
     },
     {
       "id": "wiki-dispatch-lease-metrics-intent",
@@ -667,6 +695,13 @@
       "directOnly": true
     },
     {
+      "id": "grafana-readonly-guidance-intent",
+      "queryTerms": ["access", "grafana", "production", "readonly", "rule"],
+      "minimumMatches": 3,
+      "pathPrefixes": ["AGENTS.md"],
+      "score": 600
+    },
+    {
       "id": "wiki-learning-intent",
       "queryTerms": ["revision", "outcome", "cohort", "sequential", "regression", "eval", "telemetry", "flaky"],
       "minimumMatches": 2,
@@ -690,7 +725,7 @@
       "minimumMatches": 2,
       "identityTerms": ["recovery", "job"],
       "minimumIdentityMatches": 2,
-      "score": 90
+      "score": 280
     },
     {
       "id": "http-controller-intent",
@@ -819,7 +854,7 @@
       "queryTerms": ["rate", "limit", "suspicious", "smtp", "sender"],
       "minimumMatches": 2,
       "identityTerms": ["mailboxfilter"],
-      "score": 70
+      "score": 180
     },
     {
       "id": "nutrition-updater-intent",
@@ -833,7 +868,7 @@
       "queryTerms": ["breaking", "openapi", "contract", "snapshot"],
       "minimumMatches": 2,
       "identityTerms": ["apicompatibility"],
-      "score": 100
+      "score": 420
     },
     {
       "id": "explicit-controller-role",
@@ -902,6 +937,36 @@
       "changeTypes": ["Any", "Api", "Backend", "Database", "Frontend"]
     },
     {
+      "id": "remote-image-address-policy-intent",
+      "queryTerms": ["address", "image", "remote", "unsafe"],
+      "minimumMatches": 2,
+      "identityTerms": ["address", "image", "policy", "remote"],
+      "minimumIdentityMatches": 3,
+      "score": 440,
+      "identityScope": "file",
+      "changeTypes": ["Any", "Backend"]
+    },
+    {
+      "id": "wiki-readonly-invocation-intent",
+      "queryTerms": ["command", "git", "isolate", "readonly", "snapshot", "wiki"],
+      "minimumMatches": 3,
+      "identityTerms": ["invoke", "readonly", "tool", "wiki"],
+      "minimumIdentityMatches": 3,
+      "score": 360,
+      "identityScope": "file",
+      "changeTypes": ["Any", "Tests"]
+    },
+    {
+      "id": "impersonation-access-guard-intent",
+      "queryTerms": ["block", "forbidden", "impersonate", "impersonation"],
+      "minimumMatches": 2,
+      "identityTerms": ["access", "guard", "impersonation", "middleware"],
+      "minimumIdentityMatches": 3,
+      "score": 440,
+      "identityScope": "file",
+      "changeTypes": ["Api", "Backend"]
+    },
+    {
       "id": "ef-configuration-role",
       "queryTerms": ["ef", "mapping", "configuration"],
       "minimumMatches": 2,
@@ -941,6 +1006,16 @@
       "minimumMatches": 1,
       "identityTerms": ["analyzer"],
       "score": 700,
+      "identityScope": "file",
+      "changeTypes": ["Tests"]
+    },
+    {
+      "id": "parameter-naming-analyzer-test-intent",
+      "queryTerms": ["analyzer", "diagnostic", "naming", "parameter", "test", "uppercase"],
+      "minimumMatches": 4,
+      "identityTerms": ["analyzer", "naming", "parameter", "tests"],
+      "minimumIdentityMatches": 4,
+      "score": 320,
       "identityScope": "file",
       "changeTypes": ["Tests"]
     },
