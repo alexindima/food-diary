@@ -49,7 +49,7 @@ This map covers the governed business owners and composed read modules in the pr
 | Dietologist Relationships | invitations, permissions and recommendations | relationship/recommendation commands and read services | Users directory/roles, Notifications writer/refresh, Email |
 | RecipeCommunity | recipe comments and likes | comment commands/read service and like toggle/status grouped in `FoodDiary.Application.RecipeCommunity` | Recipes access API, Users, Notifications writer |
 | Body Metrics | `WeightEntry` and `WaistEntry` measurements | measurement commands, `IWeightEntryReadService`, `IWaistEntryReadService` | Users access; Dashboard, Weekly Check-In and TDEE as read-only projection consumers |
-| Hydration | `HydrationEntry` and hydration totals | hydration commands, `IHydrationEntryReadService`, and hydration-goal capability in `FoodDiary.Application.Hydration` | Users access; Dashboard and Weekly Check-In as read-only projection consumers |
+| Hydration | `HydrationEntry` and hydration totals; entity/id remain in central Domain as a documented `User.HydrationEntries` compatibility seam | hydration commands and goal capability in `Modules/Hydration/Application`; stable `IHydrationEntryReadService` in Contracts | Users access; Dashboard and Weekly Check-In as read-only projection consumers |
 | Exercises | `ExerciseEntry` and burned-calorie measurements | exercise commands and `IExerciseEntryReadService` in `FoodDiary.Application.Exercises` | Users access; Dashboard and TDEE as read-only projection consumers |
 | Cycles | cycle profile, factors, symptoms, bleeding entries and fertility signals | cycle commands and `ICycleReadService` in `FoodDiary.Application.Cycles` | Users access; Dashboard as a read-only query consumer |
 | MealPlanning | meal plans plus shopping lists, items and provenance | MealPlans and ShoppingLists use cases grouped in `FoodDiary.Application.MealPlanning`; `IMealPlanReadService`, `IShoppingListCreationService`, `IShoppingListReadService` | Users access, Recipes/Product projections |
@@ -291,7 +291,7 @@ Dashboard is a composed read model. Its production infrastructure adapter may qu
 
 The Dashboard application fallback now consumes `IWeightEntryReadService`, `IWaistEntryReadService`, `IHydrationEntryReadService` and `IExerciseEntryReadService`; it no longer acquires even read repositories from Health Tracking. Health repository isolation is therefore complete for all foreign Application modules.
 
-Body Metrics configurations live in `Configurations/BodyMetrics`, while Hydration, Exercises and Cycles use their corresponding owned configuration folders. Architecture tests protect both application repository boundaries and configuration placement.
+Body Metrics configurations live in central `Configurations/BodyMetrics`; Hydration configuration lives in `Modules/Hydration/Infrastructure/Model`, while Exercises and Cycles retain their corresponding central owned folders. Architecture tests protect both application repository boundaries and configuration placement.
 
 ## Planning, Wearables and Marketing boundaries
 

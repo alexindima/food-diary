@@ -3,9 +3,10 @@ using FoodDiary.Application.Abstractions.Hydration.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Tracking;
+namespace FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 
 public sealed class HydrationEntryRepository(FoodDiaryDbContext context)
     : IHydrationEntryReadModelRepository, IHydrationEntryWriteRepository {

@@ -1048,11 +1048,11 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Exercises", "Commands", "UpdateExerciseEntry", "UpdateExerciseEntryCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.MealPlanning", "MealPlans", "Commands", "AdoptMealPlan", "AdoptMealPlanCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.MealPlanning", "MealPlans", "Commands", "GenerateShoppingList", "GenerateShoppingListCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Hydration", "Commands", "CreateHydrationEntry", "CreateHydrationEntryCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Hydration", "Commands", "DeleteHydrationEntry", "DeleteHydrationEntryCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Hydration", "Commands", "UpdateHydrationEntry", "UpdateHydrationEntryCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Hydration", "Queries", "GetHydrationDailyTotal", "GetHydrationDailyTotalQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Hydration", "Queries", "GetHydrationEntries", "GetHydrationEntriesQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Hydration", "Application", "Commands", "CreateHydrationEntry", "CreateHydrationEntryCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Hydration", "Application", "Commands", "DeleteHydrationEntry", "DeleteHydrationEntryCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Hydration", "Application", "Commands", "UpdateHydrationEntry", "UpdateHydrationEntryCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Hydration", "Application", "Queries", "GetHydrationDailyTotal", "GetHydrationDailyTotalQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Hydration", "Application", "Queries", "GetHydrationEntries", "GetHydrationEntriesQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.BodyMetrics", "WeightEntries", "Commands", "CreateWeightEntry", "CreateWeightEntryCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.BodyMetrics", "WeightEntries", "Commands", "DeleteWeightEntry", "DeleteWeightEntryCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.BodyMetrics", "WeightEntries", "Commands", "UpdateWeightEntry", "UpdateWeightEntryCommandHandler.cs"),
@@ -2250,7 +2250,7 @@ public sealed class ApplicationGuardrailTests {
         string[] serviceFiles = [
             Path.Combine(root, "FoodDiary.Application.BodyMetrics", "WeightEntries", "Services", "WeightEntryReadService.cs"),
             Path.Combine(root, "FoodDiary.Application.BodyMetrics", "WaistEntries", "Services", "WaistEntryReadService.cs"),
-            Path.Combine(root, "FoodDiary.Application.Hydration", "Services", "HydrationEntryReadService.cs"),
+            Path.Combine(root, "Modules", "Hydration", "Application", "Services", "HydrationEntryReadService.cs"),
         ];
 
         string[] violations = [
@@ -2999,7 +2999,7 @@ public sealed class ApplicationGuardrailTests {
             (Path.Combine(root, "FoodDiary.Application.Ai"), Path.Combine("Services", "AiUserContextService.cs")),
             (Path.Combine(root, "FoodDiary.Application.Dashboard"), Path.Combine("Services", "DashboardUserContextService.cs")),
             (Path.Combine(root, "FoodDiary.Application.Gamification"), Path.Combine("Services", "GamificationUserProfileService.cs")),
-            (Path.Combine(root, "FoodDiary.Application.Hydration"), Path.Combine("Services", "HydrationGoalService.cs")),
+            (Path.Combine(root, "Modules", "Hydration", "Application"), Path.Combine("Services", "HydrationGoalService.cs")),
             (Path.Combine(root, "FoodDiary.Application.Tdee"), Path.Combine("Services", "TdeeUserProfileService.cs")),
             (Path.Combine(root, "FoodDiary.Application.WeeklyCheckIn"), Path.Combine("Services", "WeeklyCheckInUserProfileService.cs")),
         ];

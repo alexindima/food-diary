@@ -76,7 +76,6 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Application.Export",
             "FoodDiary.Application.Favorites",
             "FoodDiary.Application.Gamification",
-            "FoodDiary.Application.Hydration",
             "FoodDiary.Application.Identity",
             "FoodDiary.Application.Images",
             "FoodDiary.Application.Lessons",

@@ -758,6 +758,9 @@ Assert-Wiki (@($impactHelp.impacts.id) -contains 'workflow-impact-simulation') '
 $dependencyJson = & (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -BaseRef HEAD -Format Json
 $dependencyChanges = $dependencyJson | ConvertFrom-Json
 Assert-Wiki ($dependencyChanges.changeCount -eq 0) 'Unchanged dependency manifests produced dependency changes.'
+$dependencyToolSource = Get-Content -LiteralPath (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -Raw
+Assert-Wiki ($dependencyToolSource -match '\$exists = Test-Path' -and $dependencyToolSource -match "'<Project />'") `
+    'Dependency analysis is no longer delete-aware for removed or renamed project manifests.'
 $dependencyInventory = & (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -BaseRef HEAD -RepositoryWide -Format Json | ConvertFrom-Json
 Assert-Wiki ($dependencyInventory.selectionMode -eq 'repository-inventory' -and $dependencyInventory.inventory.manifestCount -gt 0 -and $dependencyInventory.inventory.packageReferenceCount -gt 0) 'Repository-wide dependency analysis did not return a manifest inventory.'
 Push-Location (Join-Path $repositoryRoot 'FoodDiary.Web.Client')
@@ -848,6 +851,7 @@ $qualityBuilderText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Build-LlmW
 $indexPipelineText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') -Raw
 $wikiFacadeText = Get-Content -LiteralPath (Join-Path $wikiRoot 'wiki.ps1') -Raw
 $taskBaselineText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Raw
+Assert-Wiki ($wikiFacadeText -match '\$exactModuleName\.Count -gt 0 -or \$Query -match') 'Trace facade no longer routes exact backend module names before probing unrelated frontend symbols.'
 Assert-Wiki ($qualityBuilderText -match 'inputFingerprint' -and $qualityBuilderText -match 'outputFingerprint') 'Quality-index cache does not bind both inputs and generated output.'
 Assert-Wiki ($qualityBuilderText -match 'Build-LlmWikiQualityIndex\.ps1' -and $qualityBuilderText -match 'LlmWikiJson\.ps1') 'Quality-index cache fingerprint omits generator implementation inputs.'
 Assert-Wiki ($indexPipelineText -match "cacheableTools = @\('Build-LlmWikiQualityIndex\.ps1', 'Build-LlmWikiBackendContractIndex\.ps1', 'Build-LlmWikiFrontendIndex\.ps1', 'Build-LlmWikiFrontendContractIndex\.ps1', 'Build-LlmWikiArchitectureHealthIndex\.ps1'\)" -and

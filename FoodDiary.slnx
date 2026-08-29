@@ -23,7 +23,11 @@
     <Project Path="Modules/Fasting/FoodDiary.Modules.Fasting.csproj" />
     <Project Path="Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj" />
     <Project Path="Modules/Fasting/Infrastructure/Model/FoodDiary.Modules.Fasting.PersistenceModel.csproj" />
-    <Project Path="FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj" />
+    <Project Path="Modules/Hydration/Application/Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj" />
+    <Project Path="Modules/Hydration/Contracts/FoodDiary.Modules.Hydration.Contracts.csproj" />
+    <Project Path="Modules/Hydration/FoodDiary.Modules.Hydration.csproj" />
+    <Project Path="Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj" />
+    <Project Path="Modules/Hydration/Infrastructure/Model/FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
     <Project Path="FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj" />
     <Project Path="FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj" />
     <Project Path="FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj" />

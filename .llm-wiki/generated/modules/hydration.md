@@ -15,19 +15,17 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj`
+- Extracted project: `Modules/Hydration/FoodDiary.Modules.Hydration.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Application.Dashboard, FoodDiary.Application.WeeklyCheckIn, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Hydration`
-- `FoodDiary.Application.Hydration`
-- `FoodDiary.Infrastructure/Persistence/Configurations/Hydration`
 - `FoodDiary.Presentation.Api/Features/Hydration`
+- `Modules/Hydration/Application`
 
 ## HTTP Surface
 
@@ -47,23 +45,19 @@ Source: `FoodDiary.Presentation.Api/Features/Hydration/HydrationEntriesControlle
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: HydrationEntry
-- Public contract files: 5
-- Observed external consumer groups: 6
+- Public contract files: 0
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 5
-- Interfaces: 3
-- DTO/read-model/projection types: 1
+- Public contract types: 0
+- Interfaces: 0
+- DTO/read-model/projection types: 0
 - Enums: 0
-- Exported repository-shaped contracts: 2
-- Contracts referencing domain entities: 1
-- `class HydrationEntryErrors`
-- `interface IHydrationEntryReadModelRepository`
-- `interface IHydrationEntryWriteRepository`
-- `interface IHydrationGoalService`
-- `record HydrationEntryReadModel`
+- Exported repository-shaped contracts: 0
+- Contracts referencing domain entities: 0
+- No public declaration was found in the mapped abstraction areas.
 
 ## Focused Tests
 

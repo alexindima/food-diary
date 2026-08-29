@@ -67,20 +67,9 @@ if ($isModuleExtraction) {
 } else {
     $criteria.Add('The primary requested outcome is implemented and observable.')
 }
-if ('Api' -in $scopes -or 'Contracts' -in $scopes) {
-    $criteria.Add('HTTP routes, payloads, and status codes match the intended behavior.')
-    $criteria.Add('Existing API consumers remain compatible with the implemented contract change.')
-    $criteria.Add('The OpenAPI snapshot matches the implemented HTTP contract.')
+foreach ($criterion in @(Get-LlmWikiSupplementalAcceptanceCriteria $Objective $scopes $paths)) {
+    $criteria.Add([string]$criterion)
 }
-if ('Database' -in $scopes) { $criteria.Add('Persistence mappings and schema changes are verified; every migration includes its Designer and model snapshot updates when applicable.') }
-if ($Objective -match '(?i)\b(notification|notify|email|mail|message delivery|push)\b' -and
-    @($paths | Where-Object { $_ -match '(?i)Notification|MailRelay|MailInbox|Email' }).Count -gt 0) {
-    $criteria.Add('Notification delivery is correctly targeted, idempotent, retry-safe, and covered by focused tests.')
-}
-if (@($paths | Where-Object { $_ -match '(?i)JobManager|HostedService|Recurring' }).Count -gt 0) { $criteria.Add('The background job is registered, configured, cancellable, retry-safe, and its direct constructor/configuration consumers compile.') }
-if ('Frontend' -in $scopes) { $criteria.Add('Frontend loading, success, empty, validation, and error states behave correctly through the actual runtime owner.') }
-if ('Localization' -in $scopes) { $criteria.Add('English and Russian localization keys remain synchronized and Russian text renders without corruption.') }
-if (@($scopes | Where-Object { $_ -in @('Backend', 'Api', 'Database', 'Frontend') }).Count -gt 1) { $criteria.Add('Cross-module and project dependencies remain allowed, acyclic, and covered by architecture checks.') }
 $workspaceCreated = $false
 $workspaceMessage = 'not required by adaptive route'
 if ([bool]$workflow.requiresWorkspace) {

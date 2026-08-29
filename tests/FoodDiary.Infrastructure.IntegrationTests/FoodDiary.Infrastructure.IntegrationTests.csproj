@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Hydration\Infrastructure\FoodDiary.Modules.Hydration.Infrastructure.csproj" />
     <PackageReference Include="SSH.NET" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />

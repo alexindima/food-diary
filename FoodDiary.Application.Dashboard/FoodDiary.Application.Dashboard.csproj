@@ -5,7 +5,7 @@
     <ProjectReference Include="..\FoodDiary.Application.Cycles\FoodDiary.Application.Cycles.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.DailyAdvices\FoodDiary.Application.DailyAdvices.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Exercises\FoodDiary.Application.Exercises.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Hydration\FoodDiary.Application.Hydration.csproj" />
+    <ProjectReference Include="..\Modules\Hydration\Contracts\FoodDiary.Modules.Hydration.Contracts.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Statistics\FoodDiary.Application.Statistics.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Tdee\FoodDiary.Application.Tdee.csproj" />

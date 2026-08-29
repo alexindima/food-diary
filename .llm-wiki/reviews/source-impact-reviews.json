@@ -8,21 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "17393551bd8e464614f55e88d05c4870784a9ea941703d0fdf6478121d4f919a"
+          "sha256": "01b01249162090e9ce270afe46d54999cf1b06d79e868ca34f202c4c86de5e31"
         },
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "c217eb125726d59e923eb4ae26197cca798a7ba2cd7381d408f13e023161fe4a"
+          "sha256": "39105475cbf26e3f79c910cc3343cd6211b6e822b50668dbb1b155753dcf0d44"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7c2cd29a4f9665ceb4aee3f9f6cf0ba1cdc833e26d0920a6496a68b3fdd8de30"
+          "sha256": "cf62d6324cdffa38bf9215499bc3ce75f7f1b23997e0ef6917c9b13273086c77"
         }
       ],
-      "reason": "Reviewed the Fasting vertical-module ownership, root/scoped guidance, architecture map, and canonical source mappings; durable pages remain accurate with shared DbContext, migrations, and HTTP transport documented as intentional horizontal composition concerns.",
+      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:52:14.7678589Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:41.6879749Z"
     },
     {
       "pageId": "module.frontend",
@@ -46,17 +46,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "c217eb125726d59e923eb4ae26197cca798a7ba2cd7381d408f13e023161fe4a"
+          "sha256": "39105475cbf26e3f79c910cc3343cd6211b6e822b50668dbb1b155753dcf0d44"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7c2cd29a4f9665ceb4aee3f9f6cf0ba1cdc833e26d0920a6496a68b3fdd8de30"
+          "sha256": "cf62d6324cdffa38bf9215499bc3ce75f7f1b23997e0ef6917c9b13273086c77"
         }
       ],
-      "reason": "Reviewed the Fasting vertical-module ownership, root/scoped guidance, architecture map, and canonical source mappings; durable pages remain accurate with shared DbContext, migrations, and HTTP transport documented as intentional horizontal composition concerns.",
+      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:52:14.9586565Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:42.9172806Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -65,21 +65,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "fdd7029f8661a1e85e7e07339491731f3042576e65cd9141dd80d69a6e168491"
+          "sha256": "6431a46b9f1cbcf1c3546332251eb84bb53ac6b2d1fdb57f0ac668328578cf60"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7c2cd29a4f9665ceb4aee3f9f6cf0ba1cdc833e26d0920a6496a68b3fdd8de30"
+          "sha256": "cf62d6324cdffa38bf9215499bc3ce75f7f1b23997e0ef6917c9b13273086c77"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "763c47a634e1438ee9690eaf519c42c385cc96ee2ee1b923f1643f35ba7569a8"
+          "sha256": "1502aa646117a0ed29fde651e86528036e49d308a34718b0c6ca937e98c0926f"
         }
       ],
-      "reason": "Reviewed Fasting Contracts, presentation consumers, and regenerated backend contract evidence; no HTTP routes, request/response payloads, status codes, or public serialization contracts changed.",
+      "reason": "Hydration transport source and snapshots are unchanged; 8 focused presentation tests and 2 API integration tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:52:15.1506952Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:43.8605933Z"
     },
     {
       "pageId": "system.architecture",
@@ -88,25 +88,25 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "c217eb125726d59e923eb4ae26197cca798a7ba2cd7381d408f13e023161fe4a"
+          "sha256": "39105475cbf26e3f79c910cc3343cd6211b6e822b50668dbb1b155753dcf0d44"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "fdd7029f8661a1e85e7e07339491731f3042576e65cd9141dd80d69a6e168491"
+          "sha256": "6431a46b9f1cbcf1c3546332251eb84bb53ac6b2d1fdb57f0ac668328578cf60"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7c2cd29a4f9665ceb4aee3f9f6cf0ba1cdc833e26d0920a6496a68b3fdd8de30"
+          "sha256": "cf62d6324cdffa38bf9215499bc3ce75f7f1b23997e0ef6917c9b13273086c77"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "d210456beebef6f17cf85203472c4fa0943a0d71e2b28346dc44cfc8adb3b5cd"
+          "sha256": "3f665b0987014b737383815462317039047ca5d8d2619d9bd89ad0ee0300ac2b"
         }
       ],
-      "reason": "Reviewed the Fasting vertical-module ownership, root/scoped guidance, architecture map, and canonical source mappings; durable pages remain accurate with shared DbContext, migrations, and HTTP transport documented as intentional horizontal composition concerns.",
+      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:52:15.3350080Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:44.6714828Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -145,13 +145,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "17393551bd8e464614f55e88d05c4870784a9ea941703d0fdf6478121d4f919a"
+          "sha256": "01b01249162090e9ce270afe46d54999cf1b06d79e868ca34f202c4c86de5e31"
+        },
+        {
+          "path": "docs/adr/README.md",
+          "sha256": "1e6eb66de63c5984b7dd7b7b9984ac08de5931705d19b94e7db1eaeb88737a95"
         }
       ],
-      "reason": "Reviewed the Fasting vertical-module ownership, root/scoped guidance, architecture map, and canonical source mappings; durable pages remain accurate with shared DbContext, migrations, and HTTP transport documented as intentional horizontal composition concerns.",
+      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:52:15.5200867Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:45.4394476Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -160,13 +164,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "fdd7029f8661a1e85e7e07339491731f3042576e65cd9141dd80d69a6e168491"
+          "sha256": "6431a46b9f1cbcf1c3546332251eb84bb53ac6b2d1fdb57f0ac668328578cf60"
         }
       ],
-      "reason": "Reviewed the Fasting vertical-module ownership, root/scoped guidance, architecture map, and canonical source mappings; durable pages remain accurate with shared DbContext, migrations, and HTTP transport documented as intentional horizontal composition concerns.",
+      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:52:15.7046455Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:46.2506620Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -189,18 +193,18 @@
       "pageSha256": "5b35dfc2deefb9f97e68732d4d4253f9dae73fbf2be012a58aa3974a57257f6d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1",
-          "sha256": "b3bd51344a222d48256dd601b2f9496f97f474dd3356e800ede9825629a30027"
+          "path": ".llm-wiki/tools/Find-LlmWikiProductJourney.ps1",
+          "sha256": "bee7296a7f43abc971975a4d754b5adeaca49c72917349c2a66f5e18222a4e54"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b1386e1d8c063bba53baa2edcddd6004773977989ca17e24e18a4e4cab3bc3a4"
+          "path": ".llm-wiki/tools/Start-LlmWikiDevelopment.ps1",
+          "sha256": "4f04cfce5bd9e7f41bdf9d0242215ea904fcc64fa832f50f52c832f50fc762cb"
         }
       ],
-      "reason": "Explicit ChangedPath and ProposedPath remain the implementation boundary; database and identity grounding is now inference-only when callers provide no paths.",
+      "reason": "Architecture 728/728 and focused Wiki extraction regressions pass; generated indexes were rebuilt from current sources.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:52:14.2653403Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:47.1096464Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -224,21 +228,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "a6c0129bf89e6fcf5f41a31326958d2864c8e63dd5d8fe3d4a6f0d27f63d79ec"
+          "sha256": "b7306d565b5f4c3f6f5817928efd02844b619412f358112dc00868b2cf7372fc"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "fdd7029f8661a1e85e7e07339491731f3042576e65cd9141dd80d69a6e168491"
+          "sha256": "6431a46b9f1cbcf1c3546332251eb84bb53ac6b2d1fdb57f0ac668328578cf60"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "d210456beebef6f17cf85203472c4fa0943a0d71e2b28346dc44cfc8adb3b5cd"
+          "sha256": "3f665b0987014b737383815462317039047ca5d8d2619d9bd89ad0ee0300ac2b"
         }
       ],
-      "reason": "Reviewed regenerated architecture/quality artifacts and enforced the new graph with 726 architecture tests plus focused Domain, Application, Infrastructure, JobManager, Presentation, PostgreSQL integration, and EF pending-model checks.",
+      "reason": "Architecture 728/728 and focused Wiki extraction regressions pass; generated indexes were rebuilt from current sources.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:52:15.9355223Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:47.9855400Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -247,13 +251,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "e5acdef8ddd7eb16866ac0d233040a30e7853f7253da9106913c1f08426d5138"
+          "sha256": "330b5d389367fbca25913302f5376f4d181fe79019a6667aa7ab813a26d9fab7"
         }
       ],
-      "reason": "Reviewed Fasting Contracts, presentation consumers, and regenerated backend contract evidence; no HTTP routes, request/response payloads, status codes, or public serialization contracts changed.",
+      "reason": "Hydration transport source and snapshots are unchanged; 8 focused presentation tests and 2 API integration tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:52:16.3959680Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:49.3267272Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -291,18 +295,22 @@
       "pageSha256": "4e6f774f1817d334504316d5d64c5a4bf62bc3a1234600d3293d028f8cbb731a",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "c2be9febc04b3e0cd220c6230f9d86bba1770d668e86760b9222fcb9bb0b6d47"
+          "path": ".llm-wiki/evals/context-search-probe.json",
+          "sha256": "df1f90a54f9493228ef12d655efbeca247a7a14353d62a26918d4b701d2023c0"
         },
         {
-          "path": ".llm-wiki/evals/development-context-bundles.json",
-          "sha256": "9f3b91c50165f8ce1747aa5daee1de0c081a4a7412aeb8d60e4922d481144f22"
+          "path": ".llm-wiki/evals/context-search.json",
+          "sha256": "786c62ef00a67b35cdba2ef0c870ba3427d94628c23509ddab377aaf56c2dff0"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "52cfcc385680dd4f2049422cb9656b2d424399dbd6904312f836cef199dca3fa"
         }
       ],
-      "reason": "Reviewed final Fasting module compatibility notes and updated Wiki evaluation fixtures to the new module-owned Domain and Infrastructure paths; generated indexes, contracts, runtime boundaries, and durable guidance remain consistent with the verified extraction.",
+      "reason": "Reviewed Hydration vertical extraction against current projects, architecture tests, ADR 0017, generated indexes, API compatibility, EF model, and Wiki tooling regressions.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:57:06.3225046Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T17:43:29.6034912Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -469,13 +477,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "0f7ca195880e6b48aad65c2cc6be4fdd5854a67f04b4802ead0fbe39f199aaf8"
+          "sha256": "1e6eb66de63c5984b7dd7b7b9984ac08de5931705d19b94e7db1eaeb88737a95"
         }
       ],
-      "reason": "Reviewed architecture and repository navigation for the Fasting logical-module pilot; sources now point to Modules/Fasting while central Domain, Infrastructure, and Presentation ownership remains explicit.",
+      "reason": "Reviewed Hydration vertical extraction against current projects, architecture tests, ADR 0017, generated indexes, API compatibility, EF model, and Wiki tooling regressions.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:18:29.3736880Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T17:43:30.2322713Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -483,14 +491,14 @@
       "pageSha256": "b8326a8fc44d9de804aa9a021771d97014a2ead8b3db08959f38add670525ba4",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "13465b985d7050bd59ecdf5157c312b7151ce10ff0cc3304090209480e4a2090"
+          "path": ".llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1",
+          "sha256": "446b6e92731d53fc2d26c717e322c5311358f15651f72710e3da255771aa8e11"
         }
       ],
-      "reason": "Reviewed architecture and repository navigation for the Fasting logical-module pilot; sources now point to Modules/Fasting while central Domain, Infrastructure, and Presentation ownership remains explicit.",
+      "reason": "Reviewed Hydration vertical extraction against current projects, architecture tests, ADR 0017, generated indexes, API compatibility, EF model, and Wiki tooling regressions.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:18:29.8482769Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T17:43:30.8203182Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -498,14 +506,14 @@
       "pageSha256": "9f6bae95818d903f73f64f0e716692d7ed0c9cab0f4ded06be4253df021bb5ba",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "8f1d56fb22a3195493245ea2f35229fc0b0c3ca3dc3f063c7f4616b99c8d07f1"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "52cfcc385680dd4f2049422cb9656b2d424399dbd6904312f836cef199dca3fa"
         }
       ],
-      "reason": "Reviewed adaptive research, task brief, code graph, index pipeline and test-plan behavior; the identity-session regression selects FD-AUTH, Identity/Users cross-layer paths and 11 focused tests without fasting/meal leakage, and the precision suite passes.",
+      "reason": "Reviewed Hydration vertical extraction against current projects, architecture tests, ADR 0017, generated indexes, API compatibility, EF model, and Wiki tooling regressions.",
       "baseRef": "HEAD",
-      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
-      "reviewedAtUtc": "2026-08-29T03:56:41.2108264Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T17:43:31.4399636Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -514,13 +522,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "d8efd5cebe7a8431c4575131137eb629e4c54a038ebb6c621101883da6aa5dd9"
+          "sha256": "3eea289f60345878b7760fe3acfd8682b19a90ecab852b4d8d030a97bc572f06"
         }
       ],
-      "reason": "Reviewed regenerated architecture/quality artifacts and enforced the new graph with 726 architecture tests plus focused Domain, Application, Infrastructure, JobManager, Presentation, PostgreSQL integration, and EF pending-model checks.",
+      "reason": "Architecture 728/728 and focused Wiki extraction regressions pass; generated indexes were rebuilt from current sources.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:52:16.8542063Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:51.1225833Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -656,14 +664,14 @@
       "pageSha256": "ca4122ad45c7918953e4e7acf1974a72586f53a72a9d3f06fe574edb9a5f8533",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-          "sha256": "562cfad7c8364b6e1cb5df904a35f18af0b7f0717547d2416694324903b83084"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "52cfcc385680dd4f2049422cb9656b2d424399dbd6904312f836cef199dca3fa"
         }
       ],
-      "reason": "Reviewed the governed extraction parser fix: module names are now captured case-sensitively from extraction intents, logical module source mappings drive criteria, and the governed extraction regression covers the exact Fasting phrasing that previously produced by-based criteria.",
+      "reason": "Reviewed Hydration vertical extraction against current projects, architecture tests, ADR 0017, generated indexes, API compatibility, EF model, and Wiki tooling regressions.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T13:09:01.6327797Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T17:43:32.6862597Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -800,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "be4012691e4a496ad9aee0aabdd37d33cd557bbd572114fce03be8d49f4151e8"
+          "sha256": "45221582e11b7a2cf94f40f547638f4ac78ff5ab0407ea0685f27762c35a86d6"
         }
       ],
-      "reason": "Reviewed regenerated sensitive-data, runtime-topology, and quality evidence; this physical project extraction does not change credential handling, health-data access, logging, external sharing, or runtime trust boundaries.",
+      "reason": "No authorization secret logging or data-sharing boundary changed; the existing user-scoped Hydration relationship is preserved.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:52:17.1250064Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:51.9912497Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -814,14 +822,14 @@
       "pageSha256": "a9831185cd84a2852b0d427375c97e941a27016fe0769f11665bfb0f5fee8146",
       "sources": [
         {
-          "path": ".llm-wiki/knowledge/product-journeys.json",
-          "sha256": "282076c4049179700dcbc0bf5df3bb91875efd4d3c8597e9d1e826fd619a8a0b"
+          "path": ".llm-wiki/tools/Find-LlmWikiProductJourney.ps1",
+          "sha256": "bee7296a7f43abc971975a4d754b5adeaca49c72917349c2a66f5e18222a4e54"
         }
       ],
-      "reason": "Reviewed the affected workflow navigation against the updated generators and session journey; existing workflow guidance remains accurate and generated module/workflow pages passed lint and source generator validation.",
+      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
       "baseRef": "HEAD",
-      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
-      "reviewedAtUtc": "2026-08-29T03:56:45.3338514Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:52.8987066Z"
     },
     {
       "pageId": "workflow-proof-of-change",
@@ -849,13 +857,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6f50bc48e0b599ce448737ad77a7a3e40674deccf9d9aa9c8ca2a2bb859131fe"
+          "sha256": "bc1d34bc08727e7e630b6c8d916119bbd1033113f159ccf15dc0675a1f689648"
         }
       ],
-      "reason": "Reviewed the governed extraction parser fix: module names are captured case-sensitively, canonical logical-module source mappings drive acceptance criteria, and the exact Fasting phrasing that previously produced by-based criteria is covered by regression.",
+      "reason": "Architecture 728/728 and focused Wiki extraction regressions pass; generated indexes were rebuilt from current sources.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T13:09:18.1095856Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:54.0282150Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -878,18 +886,14 @@
       "pageSha256": "d6032fccda979d114e265f30e4f14d9593ded53c6b79d85a2dfc467b07fa3a61",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
+          "path": ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
+          "sha256": "75b7952d7cb7009ba0d44349682435e08d7f110902b7a139cd802c5d043751c9"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:05.3647922Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:56.1527463Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -928,13 +932,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a060b05d574f9e2dc84a326f210ed91f4badcebcf5c8edd04b40d4306ab3f873"
+          "sha256": "fef67864882c8ce7dc60eb74b0498d3ad83866f4dc1a99a5f90b4f8de0989d19"
         }
       ],
-      "reason": "Reviewed the Fasting vertical-module ownership, root/scoped guidance, architecture map, and canonical source mappings; durable pages remain accurate with shared DbContext, migrations, and HTTP transport documented as intentional horizontal composition concerns.",
+      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:52:18.1981499Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:58.3992142Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -943,21 +947,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6f50bc48e0b599ce448737ad77a7a3e40674deccf9d9aa9c8ca2a2bb859131fe"
+          "sha256": "bc1d34bc08727e7e630b6c8d916119bbd1033113f159ccf15dc0675a1f689648"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a060b05d574f9e2dc84a326f210ed91f4badcebcf5c8edd04b40d4306ab3f873"
+          "sha256": "fef67864882c8ce7dc60eb74b0498d3ad83866f4dc1a99a5f90b4f8de0989d19"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "be4012691e4a496ad9aee0aabdd37d33cd557bbd572114fce03be8d49f4151e8"
+          "sha256": "45221582e11b7a2cf94f40f547638f4ac78ff5ab0407ea0685f27762c35a86d6"
         }
       ],
-      "reason": "Reviewed the governed extraction parser fix: module names are captured case-sensitively, canonical logical-module source mappings drive acceptance criteria, and the exact Fasting phrasing that previously produced by-based criteria is covered by regression.",
+      "reason": "No authorization secret logging or data-sharing boundary changed; the existing user-scoped Hydration relationship is preserved.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T13:09:18.7024587Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:59.5858518Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1026,13 +1030,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "dd70db1a9c53850cc0d4e884bc5d7c2e5b16da98e54bd017bc5b58169c2bfe94"
+          "sha256": "52cfcc385680dd4f2049422cb9656b2d424399dbd6904312f836cef199dca3fa"
         }
       ],
-      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
+      "reason": "Reviewed Hydration vertical extraction against current projects, architecture tests, ADR 0017, generated indexes, API compatibility, EF model, and Wiki tooling regressions.",
       "baseRef": "HEAD",
-      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
-      "reviewedAtUtc": "2026-08-28T20:48:31.5323807Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T17:43:37.5809327Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1135,13 +1139,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "17393551bd8e464614f55e88d05c4870784a9ea941703d0fdf6478121d4f919a"
+          "sha256": "01b01249162090e9ce270afe46d54999cf1b06d79e868ca34f202c4c86de5e31"
         }
       ],
-      "reason": "Reviewed the Fasting vertical-module ownership, root/scoped guidance, architecture map, and canonical source mappings; durable pages remain accurate with shared DbContext, migrations, and HTTP transport documented as intentional horizontal composition concerns.",
+      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:52:16.5941566Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:50.2018157Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1194,22 +1198,18 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "c2be9febc04b3e0cd220c6230f9d86bba1770d668e86760b9222fcb9bb0b6d47"
-        },
-        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "291e5a0795f2cf6ddecaaa31f4d16ca3ee6e730a43bfe3c80a47c8ee5bda7cf4"
+          "sha256": "6502ee90e5b5dcc3fe00becc85b031b5efe33b763398a71a8faea65e0e3840a0"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "17393551bd8e464614f55e88d05c4870784a9ea941703d0fdf6478121d4f919a"
+          "sha256": "01b01249162090e9ce270afe46d54999cf1b06d79e868ca34f202c4c86de5e31"
         }
       ],
-      "reason": "Reviewed final Fasting module compatibility notes and updated Wiki evaluation fixtures to the new module-owned Domain and Infrastructure paths; generated indexes, contracts, runtime boundaries, and durable guidance remain consistent with the verified extraction.",
+      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:57:06.5249478Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:55.1504830Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1217,14 +1217,18 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "52cfcc385680dd4f2049422cb9656b2d424399dbd6904312f836cef199dca3fa"
+        },
+        {
           "path": "AGENTS.md",
-          "sha256": "17393551bd8e464614f55e88d05c4870784a9ea941703d0fdf6478121d4f919a"
+          "sha256": "01b01249162090e9ce270afe46d54999cf1b06d79e868ca34f202c4c86de5e31"
         }
       ],
-      "reason": "Reviewed regenerated architecture/quality artifacts and enforced the new graph with 726 architecture tests plus focused Domain, Application, Infrastructure, JobManager, Presentation, PostgreSQL integration, and EF pending-model checks.",
+      "reason": "Architecture 728/728 and focused Wiki extraction regressions pass; generated indexes were rebuilt from current sources.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T12:52:17.9851489Z"
+      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
+      "reviewedAtUtc": "2026-08-29T18:41:57.1672460Z"
     }
   ]
 }

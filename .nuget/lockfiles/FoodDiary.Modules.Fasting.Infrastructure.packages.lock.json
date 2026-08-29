@@ -338,6 +338,7 @@
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.PersistenceModel": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.PersistenceModel": "[1.0.0, )",
           "Microsoft.AspNetCore.DataProtection": "[10.0.11, )",
           "Microsoft.CodeAnalysis.CSharp.Workspaces": "[5.9.0, )",
           "Microsoft.CodeAnalysis.Common": "[5.9.0, )",
@@ -385,6 +386,14 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Modules.Fasting.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.hydration.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }

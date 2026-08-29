@@ -219,7 +219,7 @@
       "id": "hydration-goal-service",
       "query": "calculate the user's daily hydration goal",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Hydration/Services/HydrationGoalService.cs"]
+      "expectedPaths": ["Modules/Hydration/Application/Services/HydrationGoalService.cs"]
     },
     {
       "id": "recipe-comment-read-service",
@@ -339,7 +339,7 @@
       "id": "hydration-entry-read-service",
       "query": "read hydration entries for a date range",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Hydration/Services/HydrationEntryReadService.cs"]
+      "expectedPaths": ["Modules/Hydration/Application/Services/HydrationEntryReadService.cs"]
     },
     {
       "id": "achievement-definition-admin-service",

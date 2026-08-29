@@ -1036,7 +1036,10 @@ switch ($Command) {
             Invoke-WikiTool 'Find-LlmWikiTraceCandidates.ps1' @{ Query = $Query; Format = $Format; Limit = [Math]::Min($Limit, 30) }
             break
         }
-        $backendIntent = $Query -match '(?i)\b(smtp|persistence|repository|readiness|telemetry|outbox|hosted service|background service|worker|database|infrastructure)\b'
+        $moduleManifest = Get-Content -LiteralPath (Join-Path $toolsRoot '../../docs/architecture/backend-modules.json') -Raw | ConvertFrom-Json
+        $exactModuleName = @($moduleManifest.modules.PSObject.Properties.Name | Where-Object { $_ -eq $Query.Trim() } | Select-Object -First 1)
+        if ($exactModuleName.Count -gt 0 -and [string]::IsNullOrWhiteSpace($Module)) { $Module = [string]$exactModuleName[0] }
+        $backendIntent = $exactModuleName.Count -gt 0 -or $Query -match '(?i)\b(smtp|persistence|repository|readiness|telemetry|outbox|hosted service|background service|worker|database|infrastructure)\b'
         $filteredGraphTrace = $CompiledIndexSource -eq 'Sqlite' -and
             ($Fast -or $TraceView -eq 'Backend' -or $backendIntent -or $SymbolKind -ne 'Any' -or -not [string]::IsNullOrWhiteSpace($PathPrefix))
         if ($filteredGraphTrace) {

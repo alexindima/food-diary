@@ -69,6 +69,30 @@ function Get-RequirementType([string]$Text) {
 }
 function Split-CompoundCriterion([string]$Text) {
     $normalized = $Text.Trim()
+    switch ($normalized) {
+        'HTTP routes, payloads, and status codes match the intended behavior.' {
+            return @(
+                'HTTP routes match the intended behavior.'
+                'HTTP payloads match the intended behavior.'
+                'HTTP status codes match the intended behavior.'
+            )
+        }
+        'Persistence mappings and schema changes are verified; every migration includes its Designer and model snapshot updates when applicable.' {
+            return @(
+                'Persistence mappings match the intended model.'
+                'The database schema matches the intended model.'
+                'Each added EF migration includes its matching Designer file.'
+                'The EF model snapshot includes applicable migration changes.'
+            )
+        }
+        'Cross-module and project dependencies remain allowed, acyclic, and covered by architecture checks.' {
+            return @(
+                'Cross-module dependencies comply with the declared dependency policy.'
+                'The project dependency graph remains acyclic.'
+                'Architecture checks cover the dependency changes.'
+            )
+        }
+    }
     $suffix = ''
     if ($normalized -match '^(?<main>.+?)(?<suffix>\s+without\s+.+?)(?<period>\.)?$') {
         $normalized = $Matches.main.Trim()

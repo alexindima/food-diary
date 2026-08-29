@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Modules.Hydration.Contracts</AssemblyName>
+    <RootNamespace>FoodDiary.Application.Hydration</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

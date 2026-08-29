@@ -7,6 +7,8 @@ function Get-LlmWikiExtractionModule([string]$Objective) {
     if ($Objective -cmatch '(?i:\bextract(?:ion)?\s+(?:of\s+)?)(?<module>[A-Z][A-Za-z0-9_]+)') { return [string]$Matches.module }
     if ($Objective -cmatch '\b(?<module>[A-Z][A-Za-z0-9_]+)\s+(?i:(?:modular-monolith\s+)?extract(?:ion)?)\b') { return [string]$Matches.module }
     if ($Objective -cmatch '\b(?<module>[A-Z][A-Za-z0-9_]+)\s+(?i:(?:into|as)\s+an?\s+isolated\s+application\s+module)') { return [string]$Matches.module }
+    if ($Objective -cmatch '(?i:\u043f\u0435\u0440\u0435\u043d\u043e\u0441|\u043f\u0435\u0440\u0435\u043d\u0435\u0441\u0442\u0438).{0,40}\b(?<module>[A-Z][A-Za-z0-9_]+)\b') { return [string]$Matches.module }
+    if ($Objective -cmatch '\b(?<module>[A-Z][A-Za-z0-9_]+)\b.{0,40}(?i:\u043f\u0435\u0440\u0435\u043d\u043e\u0441|\u043f\u0435\u0440\u0435\u043d\u0435\u0441\u0442\u0438)') { return [string]$Matches.module }
     return ''
 }
 
@@ -77,4 +79,50 @@ function Get-LlmWikiExtractionPlan([string]$Objective, [string]$RepositoryRoot) 
             "The legacy FoodDiary.Application.$module folder contains no source files."
         )
     }
+}
+
+function Get-LlmWikiSupplementalAcceptanceCriteria([string]$Objective, [string[]]$Scopes, [string[]]$Paths) {
+    $criteria = [Collections.Generic.List[string]]::new()
+    if ('Api' -in $Scopes -or 'Contracts' -in $Scopes) {
+        $criteria.Add('HTTP routes match the intended behavior.')
+        $criteria.Add('HTTP payloads match the intended behavior.')
+        $criteria.Add('HTTP status codes match the intended behavior.')
+        $criteria.Add('Existing API consumers remain compatible with the implemented contract change.')
+        $criteria.Add('The OpenAPI snapshot matches the implemented HTTP contract.')
+    }
+    if ('Database' -in $Scopes) {
+        $criteria.Add('Persistence mappings match the intended model.')
+        $criteria.Add('The database schema matches the intended model.')
+        $criteria.Add('Each added EF migration includes its matching Designer file.')
+        $criteria.Add('The EF model snapshot includes applicable migration changes.')
+    }
+    if ($Objective -match '(?i)\b(notification|notify|email|mail|message delivery|push)\b' -and
+        @($Paths | Where-Object { $_ -match '(?i)Notification|MailRelay|MailInbox|Email' }).Count -gt 0) {
+        $criteria.Add('Notification delivery targets the intended recipient.')
+        $criteria.Add('Notification delivery remains idempotent.')
+        $criteria.Add('Notification delivery remains retry-safe.')
+        $criteria.Add('Focused tests cover notification delivery.')
+    }
+    if (@($Paths | Where-Object { $_ -match '(?i)JobManager|HostedService|Recurring' }).Count -gt 0) {
+        $criteria.Add('The background job is registered.')
+        $criteria.Add('The background job is configured.')
+        $criteria.Add('The background job supports cancellation.')
+        $criteria.Add('The background job remains retry-safe.')
+        $criteria.Add('Direct background-job consumers compile.')
+    }
+    if ('Frontend' -in $Scopes) {
+        foreach ($state in @('loading', 'success', 'empty', 'validation', 'error')) {
+            $criteria.Add("The frontend $state state behaves correctly through the runtime owner.")
+        }
+    }
+    if ('Localization' -in $Scopes) {
+        $criteria.Add('English localization keys remain synchronized with Russian localization keys.')
+        $criteria.Add('Russian text renders without corruption.')
+    }
+    if (@($Scopes | Where-Object { $_ -in @('Backend', 'Api', 'Database', 'Frontend') }).Count -gt 1) {
+        $criteria.Add('Cross-module dependencies comply with the declared dependency policy.')
+        $criteria.Add('The project dependency graph remains acyclic.')
+        $criteria.Add('Architecture checks cover the dependency changes.')
+    }
+    return @($criteria)
 }

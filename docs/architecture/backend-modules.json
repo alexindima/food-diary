@@ -345,9 +345,18 @@
         "HydrationEntry"
       ],
       "sourceMappings": {
+        "logicalRoot": "Modules/Hydration",
         "applicationProjects": [
-          "FoodDiary.Application.Hydration"
-        ]
+          "Modules/Hydration/Application"
+        ],
+        "abstractionAreas": ["Modules/Hydration/Application/Abstractions"],
+        "contractAreas": ["Modules/Hydration/Contracts"],
+        "domainAreas": [
+          "FoodDiary.Domain/Entities/Tracking",
+          "FoodDiary.Domain/ValueObjects/Ids",
+          "FoodDiary.Domain/Entities/Users"
+        ],
+        "persistenceAreas": ["Modules/Hydration/Infrastructure"]
       }
     },
     "Images": {

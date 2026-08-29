@@ -16,10 +16,10 @@ public sealed class WeeklyCheckInModuleExtractionTests {
             "FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
-            "FoodDiary.Application.Hydration",
             "FoodDiary.Application.Meals",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.Hydration.Contracts",
         ], references);
     }
 

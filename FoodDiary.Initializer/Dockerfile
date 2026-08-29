@@ -48,7 +48,11 @@ COPY FoodDiary.Application.DailyAdvices/*.csproj FoodDiary.Application.DailyAdvi
 COPY FoodDiary.Application.ContentReports/*.csproj FoodDiary.Application.ContentReports/
 COPY FoodDiary.Application.Gamification/*.csproj FoodDiary.Application.Gamification/
 COPY FoodDiary.Application.Export/*.csproj FoodDiary.Application.Export/
-COPY FoodDiary.Application.Hydration/*.csproj FoodDiary.Application.Hydration/
+COPY Modules/Hydration/*.csproj Modules/Hydration/
+COPY Modules/Hydration/Application/Abstractions/*.csproj Modules/Hydration/Application/Abstractions/
+COPY Modules/Hydration/Contracts/*.csproj Modules/Hydration/Contracts/
+COPY Modules/Hydration/Infrastructure/*.csproj Modules/Hydration/Infrastructure/
+COPY Modules/Hydration/Infrastructure/Model/*.csproj Modules/Hydration/Infrastructure/Model/
 COPY MailInbox/FoodDiary.MailInbox.Client/*.csproj MailInbox/FoodDiary.MailInbox.Client/
 COPY MailRelay/FoodDiary.MailRelay.Client/*.csproj MailRelay/FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/*.csproj FoodDiary.Infrastructure/
@@ -101,7 +105,11 @@ COPY FoodDiary.Application.DailyAdvices/ FoodDiary.Application.DailyAdvices/
 COPY FoodDiary.Application.ContentReports/ FoodDiary.Application.ContentReports/
 COPY FoodDiary.Application.Gamification/ FoodDiary.Application.Gamification/
 COPY FoodDiary.Application.Export/ FoodDiary.Application.Export/
-COPY FoodDiary.Application.Hydration/ FoodDiary.Application.Hydration/
+COPY Modules/Hydration/ Modules/Hydration/
+COPY Modules/Hydration/Application/Abstractions/ Modules/Hydration/Application/Abstractions/
+COPY Modules/Hydration/Contracts/ Modules/Hydration/Contracts/
+COPY Modules/Hydration/Infrastructure/ Modules/Hydration/Infrastructure/
+COPY Modules/Hydration/Infrastructure/Model/ Modules/Hydration/Infrastructure/Model/
 COPY MailInbox/FoodDiary.MailInbox.Client/ MailInbox/FoodDiary.MailInbox.Client/
 COPY MailRelay/FoodDiary.MailRelay.Client/ MailRelay/FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/ FoodDiary.Infrastructure/

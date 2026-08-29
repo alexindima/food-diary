@@ -32,7 +32,7 @@ are reported separately; `none observed` never means proven isolation.
 | [Fasting](fasting.md) | aggregate-owner | 0 | 2 | 0 | 4 | project-reference-matrix |
 | [Favorites](favorites.md) | aggregate-owner | 0 | 7 | 0 | 4 | project-reference-matrix |
 | [Gamification](gamification.md) | read-composer | 0 | 3 | 0 | 5 | project-reference-matrix |
-| [Hydration](hydration.md) | aggregate-owner | 0 | 1 | 0 | 6 | project-reference-matrix |
+| [Hydration](hydration.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix |
 | [Identity](identity.md) | aggregate-owner | 0 | 5 | 0 | 4 | assembly-isolated |
 | [Images](images.md) | aggregate-owner | 0 | 0 | 0 | 8 | project-reference-matrix |
 | [Lessons](lessons.md) | aggregate-owner | 0 | 2 | 0 | 5 | project-reference-matrix |

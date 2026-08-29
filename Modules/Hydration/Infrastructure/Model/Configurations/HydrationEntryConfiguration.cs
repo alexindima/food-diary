@@ -3,7 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Infrastructure.Persistence.Configurations.Hydration;
+namespace FoodDiary.Modules.Hydration.Infrastructure.Persistence.Configurations;
 
 internal sealed class HydrationEntryConfiguration : IEntityTypeConfiguration<HydrationEntry> {
     public void Configure(EntityTypeBuilder<HydrationEntry> builder) {

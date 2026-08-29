@@ -942,7 +942,7 @@ public sealed class BusinessModuleBoundaryTests {
     [Theory]
     [InlineData("WeightEntryConfiguration.cs", "Configurations/BodyMetrics")]
     [InlineData("WaistEntryConfiguration.cs", "Configurations/BodyMetrics")]
-    [InlineData("HydrationEntryConfiguration.cs", "Configurations/Hydration")]
+    [InlineData("HydrationEntryConfiguration.cs", "Modules/Hydration/Infrastructure/Model/Configurations")]
     [InlineData("ExerciseEntryConfiguration.cs", "Configurations/Exercises")]
     [InlineData("CycleProfileConfiguration.cs", "Configurations/Cycles")]
     [InlineData("CycleFactorConfiguration.cs", "Configurations/Cycles")]
@@ -952,12 +952,17 @@ public sealed class BusinessModuleBoundaryTests {
     public void HealthTrackingConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {
-        string expectedPath = Path.Combine(
-            ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Infrastructure",
-            "Persistence",
-            expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar),
-            fileName);
+        string expectedPath = expectedRelativeDirectory.StartsWith("Modules/", StringComparison.Ordinal)
+            ? Path.Combine(
+                ArchitectureTestPaths.RepositoryRoot,
+                expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar),
+                fileName)
+            : Path.Combine(
+                ArchitectureTestPaths.RepositoryRoot,
+                "FoodDiary.Infrastructure",
+                "Persistence",
+                expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar),
+                fileName);
 
         Assert.True(File.Exists(expectedPath), $"{fileName} should stay in {expectedRelativeDirectory}.");
     }

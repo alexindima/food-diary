@@ -869,13 +869,13 @@
           "FoodDiary.Application.Cycles": "[1.0.0, )",
           "FoodDiary.Application.DailyAdvices": "[1.0.0, )",
           "FoodDiary.Application.Exercises": "[1.0.0, )",
-          "FoodDiary.Application.Hydration": "[1.0.0, )",
           "FoodDiary.Application.Meals": "[1.0.0, )",
           "FoodDiary.Application.Statistics": "[1.0.0, )",
           "FoodDiary.Application.Tdee": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
         }
@@ -953,7 +953,7 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
-      "fooddiary.application.hydration": {
+      "FoodDiary.Application.Hydration": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
@@ -961,6 +961,8 @@
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
@@ -1161,10 +1163,10 @@
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Application.Hydration": "[1.0.0, )",
           "FoodDiary.Application.Meals": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
@@ -1198,6 +1200,7 @@
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.PersistenceModel": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.PersistenceModel": "[1.0.0, )",
           "Microsoft.AspNetCore.DataProtection": "[10.0.11, )",
           "Microsoft.CodeAnalysis.CSharp.Workspaces": "[5.9.0, )",
           "Microsoft.CodeAnalysis.Common": "[5.9.0, )",
@@ -1231,7 +1234,6 @@
           "FoodDiary.Application.Export": "[1.0.0, )",
           "FoodDiary.Application.Favorites": "[1.0.0, )",
           "FoodDiary.Application.Gamification": "[1.0.0, )",
-          "FoodDiary.Application.Hydration": "[1.0.0, )",
           "FoodDiary.Application.Identity": "[1.0.0, )",
           "FoodDiary.Application.Images": "[1.0.0, )",
           "FoodDiary.Application.Lessons": "[1.0.0, )",
@@ -1253,6 +1255,7 @@
           "FoodDiary.Application.WeeklyGoals": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Infrastructure": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
           "Microsoft.Extensions.Hosting": "[10.0.11, )"
@@ -1333,6 +1336,37 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Modules.Fasting.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.hydration.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.hydration.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.hydration.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Hydration": "[1.0.0, )",
+          "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.PersistenceModel": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.hydration.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }

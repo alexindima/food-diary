@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3485,
-    "symbols": 3492,
+    "sourceFiles": 3487,
+    "symbols": 3494,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 238,
     "kinds": {
-      "class": 1819,
+      "class": 1821,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1346,
+      "Other": 1348,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -2461,34 +2461,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Hydration/Common/HydrationEntryErrors.cs",
       "line": 4
-    },
-    {
-      "name": "IHydrationEntryReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IHydrationEntryWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IHydrationGoalService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationGoalService.cs",
-      "line": 5
-    },
-    {
-      "name": "HydrationEntryReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Hydration/Models/HydrationEntryReadModel.cs",
-      "line": 2
     },
     {
       "name": "DeleteImageAssetResult",
@@ -8320,181 +8292,6 @@
       "role": "Service",
       "path": "FoodDiary.Application.Gamification/Services/GamificationUserProfileService.cs",
       "line": 9
-    },
-    {
-      "name": "CreateHydrationEntryCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "CreateHydrationEntryCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "CreateHydrationEntryCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteHydrationEntryCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteHydrationEntryCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "DeleteHydrationEntryCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "UpdateHydrationEntryCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateHydrationEntryCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
-      "line": 15
-    },
-    {
-      "name": "UpdateHydrationEntryCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "IHydrationEntryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Hydration/DependencyInjection.cs",
-      "line": 9
-    },
-    {
-      "name": "RequiredIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Hydration/Internal/RequiredIdParser.cs",
-      "line": 5
-    },
-    {
-      "name": "UtcDateNormalizer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Hydration/Internal/UtcDateNormalizer.cs",
-      "line": 2
-    },
-    {
-      "name": "HydrationMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Hydration/Mappings/HydrationMappings.cs",
-      "line": 6
-    },
-    {
-      "name": "HydrationDailyModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Hydration/Models/HydrationDailyModel.cs",
-      "line": 2
-    },
-    {
-      "name": "HydrationEntryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Hydration/Models/HydrationEntryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetHydrationDailyTotalQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetHydrationDailyTotalQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "GetHydrationDailyTotalQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetHydrationEntriesQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetHydrationEntriesQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "GetHydrationEntriesQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "HydrationEntryReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Hydration/Services/HydrationEntryReadService.cs",
-      "line": 9
-    },
-    {
-      "name": "HydrationGoalService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Hydration/Services/HydrationGoalService.cs",
-      "line": 8
-    },
-    {
-      "name": "HydrationValidators",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Hydration/Validators/HydrationValidators.cs",
-      "line": 6
     },
     {
       "name": "AdminSsoExchangeCommand",
@@ -14892,7 +14689,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "DependencyInjection",
@@ -15424,13 +15221,6 @@
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Favorites/FavoriteRecipeConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "HydrationEntryConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Hydration/HydrationEntryConfiguration.cs",
       "line": 7
     },
     {
@@ -16005,7 +15795,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "FoodDiaryDbContext",
@@ -16370,13 +16160,6 @@
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Tracking/ExerciseEntryRepository.cs",
       "line": 8
-    },
-    {
-      "name": "HydrationEntryRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Tracking/HydrationEntryRepository.cs",
-      "line": 9
     },
     {
       "name": "MarketingAttributionEventRepository",
@@ -24303,6 +24086,237 @@
       "line": 8
     },
     {
+      "name": "IHydrationEntryReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IHydrationEntryWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IHydrationGoalService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Hydration/Application/Abstractions/Common/IHydrationGoalService.cs",
+      "line": 5
+    },
+    {
+      "name": "HydrationEntryReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Hydration/Application/Abstractions/Models/HydrationEntryReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "CreateHydrationEntryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateHydrationEntryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "CreateHydrationEntryCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteHydrationEntryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteHydrationEntryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "DeleteHydrationEntryCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "UpdateHydrationEntryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateHydrationEntryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "UpdateHydrationEntryCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Hydration/Application/DependencyInjection.cs",
+      "line": 9
+    },
+    {
+      "name": "RequiredIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Hydration/Application/Internal/RequiredIdParser.cs",
+      "line": 5
+    },
+    {
+      "name": "UtcDateNormalizer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Hydration/Application/Internal/UtcDateNormalizer.cs",
+      "line": 2
+    },
+    {
+      "name": "HydrationMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Hydration/Application/Mappings/HydrationMappings.cs",
+      "line": 6
+    },
+    {
+      "name": "GetHydrationDailyTotalQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Hydration/Application/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetHydrationDailyTotalQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Hydration/Application/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "GetHydrationDailyTotalQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Hydration/Application/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetHydrationEntriesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetHydrationEntriesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "GetHydrationEntriesQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "HydrationEntryReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Hydration/Application/Services/HydrationEntryReadService.cs",
+      "line": 9
+    },
+    {
+      "name": "HydrationGoalService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Hydration/Application/Services/HydrationGoalService.cs",
+      "line": 8
+    },
+    {
+      "name": "HydrationValidators",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Hydration/Application/Validators/HydrationValidators.cs",
+      "line": 6
+    },
+    {
+      "name": "IHydrationEntryReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Hydration/Contracts/Common/IHydrationEntryReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "HydrationDailyModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Hydration/Contracts/Models/HydrationDailyModel.cs",
+      "line": 2
+    },
+    {
+      "name": "HydrationEntryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Hydration/Contracts/Models/HydrationEntryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "HydrationEntryConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Hydration/Infrastructure/Model/Configurations/HydrationEntryConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "HydrationPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Hydration/Infrastructure/Model/HydrationPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Hydration/Infrastructure/ModuleRegistration.cs",
+      "line": 7
+    },
+    {
+      "name": "HydrationEntryRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs",
+      "line": 10
+    },
+    {
       "name": "AggregateRoot",
       "kind": "class",
       "role": "Other",
@@ -25237,16 +25251,16 @@
     },
     {
       "interface": "IHydrationEntryReadService",
-      "interfacePath": "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs",
+      "interfacePath": "Modules/Hydration/Contracts/Common/IHydrationEntryReadService.cs",
       "implementation": "HydrationEntryReadService",
-      "implementationPath": "FoodDiary.Application.Hydration/Services/HydrationEntryReadService.cs",
+      "implementationPath": "Modules/Hydration/Application/Services/HydrationEntryReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IHydrationGoalService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationGoalService.cs",
+      "interfacePath": "Modules/Hydration/Application/Abstractions/Common/IHydrationGoalService.cs",
       "implementation": "HydrationGoalService",
-      "implementationPath": "FoodDiary.Application.Hydration/Services/HydrationGoalService.cs",
+      "implementationPath": "Modules/Hydration/Application/Services/HydrationGoalService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26463,20 +26477,6 @@
       "line": 19
     },
     {
-      "service": "IHydrationEntryReadService",
-      "implementation": "HydrationEntryReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Hydration/DependencyInjection.cs",
-      "line": 15
-    },
-    {
-      "service": "IHydrationGoalService",
-      "implementation": "HydrationGoalService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Hydration/DependencyInjection.cs",
-      "line": 16
-    },
-    {
       "service": "IAuthenticationLoginEventCleanupService",
       "implementation": "AuthenticationLoginEventCleanupService",
       "lifetime": "Scoped",
@@ -27363,35 +27363,35 @@
       "implementation": "WeightEntryRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 14
+      "line": 13
     },
     {
       "service": "IWaistEntryRepository",
       "implementation": "WaistEntryRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 18
+      "line": 17
     },
     {
       "service": "IDailyAdviceReadModelRepository",
       "implementation": "DailyAdviceRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 25
+      "line": 21
     },
     {
       "service": "ICycleRepository",
       "implementation": "CycleRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 26
+      "line": 22
     },
     {
       "service": "IExerciseEntryRepository",
       "implementation": "ExerciseEntryRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 30
+      "line": 26
     },
     {
       "service": "IUsdaFoodRepository",
@@ -27791,6 +27791,20 @@
       "lifetime": "Scoped",
       "path": "Modules/Fasting/Application/DependencyInjection.cs",
       "line": 18
+    },
+    {
+      "service": "IHydrationEntryReadService",
+      "implementation": "HydrationEntryReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Hydration/Application/DependencyInjection.cs",
+      "line": 15
+    },
+    {
+      "service": "IHydrationGoalService",
+      "implementation": "HydrationGoalService",
+      "lifetime": "Scoped",
+      "path": "Modules/Hydration/Application/DependencyInjection.cs",
+      "line": 16
     },
     {
       "service": "IMediator",

@@ -48,16 +48,24 @@ $manifestPaths = @(
 )
 $inventory = [System.Collections.Generic.List[object]]::new()
 foreach ($path in $manifestPaths) {
-    $file = Get-Item -LiteralPath (Join-Path $repositoryRoot $path)
+    $absolutePath = Join-Path $repositoryRoot $path
+    $exists = Test-Path -LiteralPath $absolutePath -PathType Leaf
+    $extension = [IO.Path]::GetExtension($path)
     $beforeText = Get-BaseText $path
     if ($null -eq $beforeText) {
-        $beforeText = if ($file.Extension -in @('.csproj', '.props')) { '<Project />' } else { '{}' }
+        $beforeText = if ($extension -in @('.csproj', '.props')) { '<Project />' } else { '{}' }
     }
-    $afterText = Get-Content -LiteralPath $file.FullName -Raw
+    $afterText = if ($exists) {
+        Get-Content -LiteralPath $absolutePath -Raw
+    } elseif ($extension -in @('.csproj', '.props')) {
+        '<Project />'
+    } else {
+        '{}'
+    }
 
     $beforePackages = @{}
     $afterPackages = @{}
-    if ($file.Extension -in @('.csproj', '.props')) {
+    if ($extension -in @('.csproj', '.props')) {
         foreach ($item in @(Get-LlmWikiPackageReferences -XmlText $beforeText)) {
             if ($item.Include) { $beforePackages[[string]$item.Include] = [string]$item.Version }
         }
@@ -81,7 +89,7 @@ foreach ($path in $manifestPaths) {
         $ecosystem = 'npm'
     }
 
-    if ($RepositoryWide) {
+    if ($RepositoryWide -and $exists) {
         $inventory.Add([pscustomobject][ordered]@{
             ecosystem = $ecosystem
             manifest = $path

@@ -341,6 +341,7 @@ dotnet_diagnostic.MA0051.severity = warning
 dotnet_diagnostic.IDE0130.severity = error
 dotnet_diagnostic.FD0005.severity = error
 dotnet_diagnostic.FD0010.severity = error
+
 dotnet_diagnostic.FD0011.severity = error
 dotnet_diagnostic.FD0013.severity = error
 dotnet_diagnostic.FD0014.severity = error
@@ -378,6 +379,11 @@ dotnet_naming_style.underscore_camel_case.required_prefix = _
 dotnet_naming_style.underscore_camel_case.capitalization = camel_case
 
 dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+# Hydration deliberately keeps legacy CLR namespaces during physical extraction.
+[Modules/Hydration/**/*.cs]
+dotnet_diagnostic.IDE0130.severity = none
+dotnet_diagnostic.RCS1170.severity = none
 
 [FoodDiary.{Application,Application.Abstractions,Domain,Infrastructure,Integrations,JobManager,Presentation.Api,Telegram.Bot,Web.Api}/**/*.cs]
 dotnet_diagnostic.FD0002.severity = error

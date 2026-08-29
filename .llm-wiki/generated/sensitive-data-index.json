@@ -3533,20 +3533,6 @@
     },
     {
       "category": "health",
-      "name": "HydrationEntryId",
-      "type": "Guid",
-      "path": "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
-      "line": 8
-    },
-    {
-      "category": "health",
-      "name": "HydrationEntryId",
-      "type": "Guid",
-      "path": "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
       "name": "Calories",
       "type": "double?",
       "path": "FoodDiary.Application.MealPlanning/MealPlans/Models/MealPlanMealModel.cs",
@@ -6498,6 +6484,20 @@
       "type": "int",
       "path": "Modules/Fasting/Application/Services/FastingCyclicTransitionPlanner.cs",
       "line": 103
+    },
+    {
+      "category": "health",
+      "name": "HydrationEntryId",
+      "type": "Guid",
+      "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "HydrationEntryId",
+      "type": "Guid",
+      "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
+      "line": 9
     },
     {
       "category": "identity",

@@ -16,6 +16,12 @@ Use this file when deciding where backend code belongs.
 | Fasting use cases | `Modules/Fasting/Application` | Fasting commands, queries, handlers, validators, application services and registration | Persistence implementations, HTTP transport, foreign module internals |
 | Fasting persistence model | `Modules/Fasting/Infrastructure/Model` | Fasting EF configurations and the model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
 | Fasting infrastructure | `Modules/Fasting/Infrastructure` | Fasting repository implementations and full module registration | HTTP transport, jobs, central migrations |
+| Hydration contracts | `Modules/Hydration/Contracts` | Stable hydration read service and projection models used by Dashboard and Weekly Check-In | Repositories, handlers, EF, HTTP transport |
+| Hydration domain compatibility seam | `FoodDiary.Domain/Entities/Tracking`, `FoodDiary.Domain/ValueObjects/Ids`, `FoodDiary.Domain/Entities/Users` | `HydrationEntry`, its identifier, invariants, and `User.HydrationEntries` | Application orchestration, EF mappings, transport |
+| Hydration application ports | `Modules/Hydration/Application/Abstractions` | Hydration repository ports and persistence projections | Stable cross-module contracts and EF implementations |
+| Hydration use cases | `Modules/Hydration/Application` | Hydration commands, queries, handlers, validators, services, and registration | Persistence implementations and HTTP transport |
+| Hydration persistence model | `Modules/Hydration/Infrastructure/Model` | Hydration EF configuration and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
+| Hydration infrastructure | `Modules/Hydration/Infrastructure` | Hydration repository implementation and complete module registration | HTTP transport and central migrations |
 | Billing use cases | `FoodDiary.Application.Billing` | Billing commands, queries, validators, renewal and webhook orchestration | Core Application dependencies, persistence, HTTP DTOs |
 | Marketing use cases | `FoodDiary.Application.Marketing` | Attribution commands, queries and conversion recording | Core Application dependencies, persistence, HTTP DTOs |
 | Notification use cases | `FoodDiary.Application.Notifications` | Notification feed, preferences, web-push subscription and delivery orchestration | Core Application dependencies, persistence implementations, HTTP DTOs |

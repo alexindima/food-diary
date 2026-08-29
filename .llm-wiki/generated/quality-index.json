@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4706,
+    "productionFiles": 4708,
     "wikiToolFiles": 201,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 781,
@@ -16,11 +16,11 @@
   "hotspots": [
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 2857,
-      "decisionPoints": 368,
+      "nonBlankLines": 2860,
+      "decisionPoints": 369,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 611.14
+      "structuralRiskScore": 612.7
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
@@ -264,11 +264,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
-      "nonBlankLines": 330,
-      "decisionPoints": 73,
+      "nonBlankLines": 354,
+      "decisionPoints": 74,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 118.1
+      "structuralRiskScore": 120.08
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
@@ -1042,11 +1042,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiProductJourney.ps1",
-      "nonBlankLines": 105,
-      "decisionPoints": 16,
+      "nonBlankLines": 119,
+      "decisionPoints": 18,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 28.1
+      "structuralRiskScore": 31.38
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1",
@@ -1194,11 +1194,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1",
-      "nonBlankLines": 137,
-      "decisionPoints": 32,
+      "nonBlankLines": 145,
+      "decisionPoints": 33,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 52.74
+      "structuralRiskScore": 54.4
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1",
@@ -1658,11 +1658,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiExtractionPlanning.ps1",
-      "nonBlankLines": 78,
-      "decisionPoints": 14,
+      "nonBlankLines": 125,
+      "decisionPoints": 24,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.56
+      "structuralRiskScore": 40.5
     },
     {
       "path": ".llm-wiki/tools/LlmWikiGeneratedArtifacts.ps1",
@@ -2090,11 +2090,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
-      "nonBlankLines": 330,
-      "decisionPoints": 73,
+      "nonBlankLines": 354,
+      "decisionPoints": 74,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 118.1
+      "structuralRiskScore": 120.08
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
@@ -2338,11 +2338,11 @@
     },
     {
       "path": ".llm-wiki/tools/Start-LlmWikiDevelopment.ps1",
-      "nonBlankLines": 114,
-      "decisionPoints": 21,
+      "nonBlankLines": 103,
+      "decisionPoints": 15,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 35.78
+      "structuralRiskScore": 26.56
     },
     {
       "path": ".llm-wiki/tools/Start-LlmWikiVerifyWorker.ps1",
@@ -2418,11 +2418,11 @@
     },
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 2857,
-      "decisionPoints": 368,
+      "nonBlankLines": 2860,
+      "decisionPoints": 369,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 611.14
+      "structuralRiskScore": 612.7
     },
     {
       "path": "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
@@ -4951,38 +4951,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadModelRepository.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryWriteRepository.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationGoalService.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Hydration/Models/HydrationEntryReadModel.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
     },
     {
       "path": "FoodDiary.Application.Abstractions/Images/Common/DeleteImageAssetResult.cs",
@@ -11751,214 +11719,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.92
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/AssemblyInfo.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
-      "nonBlankLines": 36,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.72
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.9
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
-      "nonBlankLines": 40,
-      "decisionPoints": 4,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.8
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandValidator.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.86
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
-      "nonBlankLines": 56,
-      "decisionPoints": 6,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.12
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.58
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/DependencyInjection.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Internal/RequiredIdParser.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Internal/UtcDateNormalizer.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.76
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Mappings/HydrationMappings.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Models/HydrationDailyModel.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Models/HydrationEntryModel.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
-      "nonBlankLines": 35,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.7
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryValidator.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.78
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
-      "nonBlankLines": 30,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.1
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryValidator.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.78
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Services/HydrationEntryReadService.cs",
-      "nonBlankLines": 30,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.6
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Services/HydrationGoalService.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.84
-    },
-    {
-      "path": "FoodDiary.Application.Hydration/Validators/HydrationValidators.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.8
     },
     {
       "path": "FoodDiary.Application.Identity/AssemblyInfo.cs",
@@ -19410,11 +19170,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "nonBlankLines": 33,
+      "nonBlankLines": 29,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
+      "structuralRiskScore": 0.58
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Usda.cs",
@@ -20033,14 +19793,6 @@
       "structuralRiskScore": 0.7
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Hydration/HydrationEntryConfiguration.cs",
-      "nonBlankLines": 30,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.6
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Images/ImageAssetConfiguration.cs",
       "nonBlankLines": 22,
       "decisionPoints": 0,
@@ -20642,11 +20394,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.28
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
@@ -21007,14 +20759,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 10.38
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Tracking/HydrationEntryRepository.cs",
-      "nonBlankLines": 73,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.46
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Tracking/MarketingAttributionEventRepository.cs",
@@ -38257,6 +38001,278 @@
       "structuralRiskScore": 4.56
     },
     {
+      "path": "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryReadModelRepository.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryWriteRepository.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Hydration/Application/Abstractions/Common/IHydrationGoalService.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Hydration/Application/Abstractions/Models/HydrationEntryReadModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Hydration/Application/AssemblyInfo.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
+      "nonBlankLines": 36,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.72
+    },
+    {
+      "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.9
+    },
+    {
+      "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
+      "nonBlankLines": 40,
+      "decisionPoints": 4,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.8
+    },
+    {
+      "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandValidator.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.86
+    },
+    {
+      "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
+      "nonBlankLines": 56,
+      "decisionPoints": 6,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.12
+    },
+    {
+      "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.58
+    },
+    {
+      "path": "Modules/Hydration/Application/DependencyInjection.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
+    },
+    {
+      "path": "Modules/Hydration/Application/Internal/RequiredIdParser.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Hydration/Application/Internal/UtcDateNormalizer.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.76
+    },
+    {
+      "path": "Modules/Hydration/Application/Mappings/HydrationMappings.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Hydration/Application/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Hydration/Application/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
+      "nonBlankLines": 35,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.7
+    },
+    {
+      "path": "Modules/Hydration/Application/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryValidator.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.78
+    },
+    {
+      "path": "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
+      "nonBlankLines": 30,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.1
+    },
+    {
+      "path": "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQueryValidator.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.78
+    },
+    {
+      "path": "Modules/Hydration/Application/Services/HydrationEntryReadService.cs",
+      "nonBlankLines": 30,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.6
+    },
+    {
+      "path": "Modules/Hydration/Application/Services/HydrationGoalService.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.84
+    },
+    {
+      "path": "Modules/Hydration/Application/Validators/HydrationValidators.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.8
+    },
+    {
+      "path": "Modules/Hydration/Contracts/Common/IHydrationEntryReadService.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Modules/Hydration/Contracts/Models/HydrationDailyModel.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Hydration/Contracts/Models/HydrationEntryModel.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Hydration/Infrastructure/Model/Configurations/HydrationEntryConfiguration.cs",
+      "nonBlankLines": 30,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.6
+    },
+    {
+      "path": "Modules/Hydration/Infrastructure/Model/HydrationPersistenceModelRegistration.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Hydration/Infrastructure/ModuleRegistration.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs",
+      "nonBlankLines": 74,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.48
+    },
+    {
       "path": "Shared/FoodDiary.Domain.Primitives/AggregateRoot.cs",
       "nonBlankLines": 17,
       "decisionPoints": 0,
@@ -38845,7 +38861,7 @@
     {
       "name": "CreateHydrationEntryCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
+      "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
       "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
@@ -39074,7 +39090,7 @@
     {
       "name": "DeleteHydrationEntryCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
+      "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
       "line": 12,
       "testReferenceCount": 2,
       "testReferences": [
@@ -40209,7 +40225,7 @@
     {
       "name": "UpdateHydrationEntryCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
+      "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
       "line": 15,
       "testReferenceCount": 2,
       "testReferences": [
@@ -42350,7 +42366,7 @@
     {
       "name": "GetHydrationDailyTotalQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
+      "path": "Modules/Hydration/Application/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
       "line": 11,
       "testReferenceCount": 2,
       "testReferences": [
@@ -42363,7 +42379,7 @@
     {
       "name": "GetHydrationEntriesQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
+      "path": "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
       "line": 10,
       "testReferenceCount": 2,
       "testReferences": [
@@ -43625,7 +43641,7 @@
     {
       "name": "CreateHydrationEntryCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
+      "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
@@ -43796,7 +43812,7 @@
     {
       "name": "DeleteHydrationEntryCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandValidator.cs",
+      "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
@@ -44208,7 +44224,7 @@
     {
       "name": "GetHydrationDailyTotalQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryValidator.cs",
+      "path": "Modules/Hydration/Application/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
@@ -44221,7 +44237,7 @@
     {
       "name": "GetHydrationEntriesQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryValidator.cs",
+      "path": "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
@@ -45622,7 +45638,7 @@
     {
       "name": "UpdateHydrationEntryCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
+      "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
@@ -46210,9 +46226,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Find-LlmWikiProductJourney.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
+        ".llm-wiki/tools/Test-LlmWikiGovernedExtraction.ps1",
         ".llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -47897,8 +47914,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiGovernedExtraction.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",

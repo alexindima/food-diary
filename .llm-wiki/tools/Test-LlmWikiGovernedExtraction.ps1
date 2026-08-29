@@ -19,6 +19,44 @@ $fastingPlan = Get-LlmWikiExtractionPlan $fastingObjective $repositoryRoot
 if ($null -eq $fastingPlan -or $fastingPlan.module -ne 'Fasting') {
     throw 'Extraction planning mistook prose after the word extraction for a module name.'
 }
+
+$hydrationObjective = 'Выполнить перенос Hydration в Modules/Hydration с сохранением контрактов'
+$hydrationPlan = Get-LlmWikiExtractionPlan $hydrationObjective $repositoryRoot
+if ($null -eq $hydrationPlan -or $hydrationPlan.module -ne 'Hydration') {
+    throw 'Russian module-transfer intent did not resolve Hydration extraction planning.'
+}
+if (@($hydrationPlan.paths) -notcontains 'Modules/Hydration') {
+    throw 'Hydration extraction planning omitted the canonical Modules/Hydration logical root.'
+}
+$hydrationJourneys = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') `
+    -Query $hydrationObjective `
+    -ChangedPath @(
+        'Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs'
+        'FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj'
+    ) `
+    -Format Json | ConvertFrom-Json
+if (@($hydrationJourneys.journeys | Where-Object id -eq 'FD-MEAL').Count -gt 0) {
+    throw 'Hydration extraction inherited the Meal journey from a changed projection consumer.'
+}
+$supplementalCriteria = @(Get-LlmWikiSupplementalAcceptanceCriteria `
+    $hydrationObjective `
+    @('Backend', 'Api', 'Contracts', 'Database', 'Frontend', 'Localization') `
+    @('FoodDiary.JobManager/HydrationRecurringJob.cs', 'Modules/Hydration/Application/NotificationService.cs'))
+if (@($supplementalCriteria | Where-Object { -not (Test-LlmWikiCriterionAtomic ([string]$_) $requirementPolicy) }).Count -gt 0) {
+    throw 'Development start generated a compound supplemental acceptance criterion.'
+}
+foreach ($expectedCriterion in @(
+    'HTTP routes match the intended behavior.'
+    'HTTP payloads match the intended behavior.'
+    'HTTP status codes match the intended behavior.'
+    'Persistence mappings match the intended model.'
+    'The project dependency graph remains acyclic.'
+    'Russian text renders without corruption.'
+)) {
+    if ($expectedCriterion -notin $supplementalCriteria) {
+        throw "Development start omitted atomic criterion: $expectedCriterion"
+    }
+}
 if (@($fastingPlan.criteria | Where-Object { $_ -match '(?i)\bby\b' }).Count -gt 0 -or
     $fastingPlan.criteria[0] -notmatch '^Fasting application source lives in Modules/Fasting/Application\.$') {
     throw 'Logical-root extraction criteria do not use the canonical Fasting application source mapping.'
@@ -40,6 +78,31 @@ foreach ($requiredPath in @(
 }
 
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$criteriaWorkspace = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'governed-generated-criteria'
+$criteriaWorkspaceAbsolute = Join-Path $repositoryRoot $criteriaWorkspace
+try {
+    $legacyGeneratedCriteria = @(
+        'HTTP routes, payloads, and status codes match the intended behavior.'
+        'Persistence mappings and schema changes are verified; every migration includes its Designer and model snapshot updates when applicable.'
+        'Cross-module and project dependencies remain allowed, acyclic, and covered by architecture checks.'
+    )
+    & (Join-Path $PSScriptRoot 'Initialize-LlmWikiTaskWorkspace.ps1') `
+        -Objective 'Verify generated acceptance expansion' `
+        -Criterion $legacyGeneratedCriteria `
+        -WorkspacePath $criteriaWorkspace `
+        -ChangedPath 'FoodDiary.slnx' `
+        -PlannedPath 'FoodDiary.slnx' | Out-Null
+    $expanded = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRequirementModel.ps1') expand `
+        -WorkspacePath $criteriaWorkspace `
+        -Reason 'Regression coverage for legacy generated criteria.' `
+        -Format Json | ConvertFrom-Json
+    if (-not $expanded.valid -or $expanded.addedCount -ne 7) {
+        throw 'Legacy generated criteria did not expand into ten atomic outcomes.'
+    }
+} finally {
+    if (Test-Path -LiteralPath $criteriaWorkspaceAbsolute) { Remove-Item -LiteralPath $criteriaWorkspaceAbsolute -Recurse -Force }
+}
+
 $workspace = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'governed-extraction'
 $absoluteWorkspace = Join-Path $repositoryRoot $workspace
 $changedPath = 'FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj'

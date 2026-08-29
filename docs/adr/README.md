@@ -31,6 +31,7 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 | [0014](0014-sql-first-development-context-with-json-fallback.md) | SQL-first development context with JSON fallback | Accepted | 2026-08-21 |
 | [0015](0015-application-module-root-folder-structure.md) | Application module root folder structure | Accepted | 2026-08-28 |
 | [0016](0016-logical-module-folders-and-fasting-extraction.md) | Logical module folders and incremental Fasting extraction | Accepted | 2026-08-29 |
+| [0017](0017-hydration-logical-module-extraction.md) | Reproduce the logical-module extraction for Hydration | Accepted | 2026-08-29 |
 
 ## Creating A Record
 

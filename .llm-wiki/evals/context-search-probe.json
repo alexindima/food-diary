@@ -96,7 +96,7 @@
       "id": "hydration-entry-repository-probe",
       "query": "persist hydration tracking entries",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Tracking/HydrationEntryRepository.cs"]
+      "expectedPaths": ["Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs"]
     },
     {
       "id": "cycle-repository-probe",

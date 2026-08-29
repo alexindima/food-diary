@@ -5,6 +5,7 @@
     <ProjectReference Include="..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
     <ProjectReference Include="..\Modules\Fasting\Domain\FoodDiary.Modules.Fasting.Domain.csproj" />
     <ProjectReference Include="..\Modules\Fasting\Infrastructure\Model\FoodDiary.Modules.Fasting.PersistenceModel.csproj" />
+    <ProjectReference Include="..\Modules\Hydration\Infrastructure\Model\FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
   </ItemGroup>
 

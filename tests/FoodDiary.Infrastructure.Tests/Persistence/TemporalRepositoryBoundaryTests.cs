@@ -3,7 +3,7 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Meals;
-using FoodDiary.Infrastructure.Persistence.Tracking;
+using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Tests.Persistence;

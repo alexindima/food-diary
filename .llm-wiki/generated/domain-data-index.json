@@ -5348,7 +5348,7 @@
           "expression": "e => e.User)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Hydration/HydrationEntryConfiguration.cs"
+      "path": "Modules/Hydration/Infrastructure/Model/Configurations/HydrationEntryConfiguration.cs"
     },
     {
       "area": "FoodDiary",

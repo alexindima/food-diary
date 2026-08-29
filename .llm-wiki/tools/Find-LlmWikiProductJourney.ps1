@@ -35,6 +35,14 @@ function Test-QueryPhrase([string]$Text, [string]$Phrase) {
     $pattern = '(?<![\p{L}\p{Nd}])' + [regex]::Escape($Phrase) + '(?![\p{L}\p{Nd}])'
     return [regex]::IsMatch($Text, $pattern, [Text.RegularExpressions.RegexOptions]::IgnoreCase)
 }
+$moduleManifestPath = Join-Path $wikiRoot '../docs/architecture/backend-modules.json'
+$explicitModules = @()
+if (Test-Path -LiteralPath $moduleManifestPath -PathType Leaf) {
+    $moduleManifest = Get-Content -LiteralPath $moduleManifestPath -Raw | ConvertFrom-Json
+    $explicitModules = @($moduleManifest.modules.PSObject.Properties.Name | Where-Object {
+        Test-QueryPhrase $queryText ([string]$_)
+    })
+}
 foreach ($journey in @($catalog.journeys)) {
     $matchedAliases = @($journey.aliases | Where-Object {
         Test-QueryPhrase $queryText ([string]$_)
@@ -45,6 +53,12 @@ foreach ($journey in @($catalog.journeys)) {
     })
     $idMatch = (Test-QueryPhrase $queryText ([string]$journey.id)) -or
         (Test-QueryPhrase $queryText ([string]$journey.title))
+    if ($explicitModules.Count -gt 0 -and $matchedAliases.Count -eq 0 -and -not $idMatch) {
+        $matchedPaths = @($matchedPaths | Where-Object {
+            $matchedPath = [string]$_
+            @($explicitModules | Where-Object { $matchedPath.Contains([string]$_, [StringComparison]::OrdinalIgnoreCase) }).Count -gt 0
+        })
+    }
     $score = ($matchedAliases.Count * 20) + ($matchedPaths.Count * 15) + $(if ($idMatch) { 40 } else { 0 })
     if ($score -gt 0) {
         $journeyMatches.Add([pscustomobject][ordered]@{
