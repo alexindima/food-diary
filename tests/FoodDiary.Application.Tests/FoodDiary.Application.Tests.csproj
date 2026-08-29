@@ -28,7 +28,6 @@
     <ProjectReference Include="..\..\FoodDiary.Application.Recipes\FoodDiary.Application.Recipes.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Dietologist\FoodDiary.Application.Dietologist.csproj" />
     <ProjectReference Include="..\..\Modules\Fasting\Contracts\FoodDiary.Modules.Fasting.Contracts.csproj" />
-    <ProjectReference Include="..\..\Modules\Fasting\Application\FoodDiary.Modules.Fasting.Application.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Favorites\FoodDiary.Application.Favorites.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Identity\FoodDiary.Application.Identity.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.MealPlanning\FoodDiary.Application.MealPlanning.csproj" />
@@ -52,7 +51,6 @@
     <ProjectReference Include="..\..\FoodDiary.Application.Lessons\FoodDiary.Application.Lessons.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Statistics\FoodDiary.Application.Statistics.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
-    <ProjectReference Include="..\..\Modules\WeeklyGoals\Application\FoodDiary.Modules.WeeklyGoals.Application.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Usda\FoodDiary.Application.Usda.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.WeeklyCheckIn\FoodDiary.Application.WeeklyCheckIn.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.DailyAdvices\FoodDiary.Application.DailyAdvices.csproj" />

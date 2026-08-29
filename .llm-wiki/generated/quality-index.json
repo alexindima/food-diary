@@ -272,11 +272,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-      "nonBlankLines": 310,
+      "nonBlankLines": 313,
       "decisionPoints": 73,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 117.7
+      "structuralRiskScore": 117.76
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskSchedule.ps1",
@@ -600,11 +600,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-      "nonBlankLines": 398,
+      "nonBlankLines": 400,
       "decisionPoints": 51,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 86.46
+      "structuralRiskScore": 86.5
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationTelemetry.ps1",
@@ -792,11 +792,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-      "nonBlankLines": 256,
-      "decisionPoints": 44,
+      "nonBlankLines": 262,
+      "decisionPoints": 45,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 73.12
+      "structuralRiskScore": 74.74
     },
     {
       "path": "FoodDiary.Initializer/UsdaDataSeeder.cs",
@@ -1490,11 +1490,11 @@
     },
     {
       "path": ".llm-wiki/tools/Initialize-LlmWikiTaskWorkspace.ps1",
-      "nonBlankLines": 221,
+      "nonBlankLines": 226,
       "decisionPoints": 30,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 51.42
+      "structuralRiskScore": 51.52
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.ps1",
@@ -1794,11 +1794,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-      "nonBlankLines": 310,
+      "nonBlankLines": 313,
       "decisionPoints": 73,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 117.7
+      "structuralRiskScore": 117.76
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiAdaptiveSession.ps1",
@@ -1826,11 +1826,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-      "nonBlankLines": 221,
-      "decisionPoints": 38,
+      "nonBlankLines": 227,
+      "decisionPoints": 39,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 63.42
+      "structuralRiskScore": 65.04
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
@@ -1938,11 +1938,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-      "nonBlankLines": 398,
+      "nonBlankLines": 400,
       "decisionPoints": 51,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 86.46
+      "structuralRiskScore": 86.5
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiEvidenceCache.ps1",
@@ -2050,11 +2050,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-      "nonBlankLines": 256,
-      "decisionPoints": 44,
+      "nonBlankLines": 262,
+      "decisionPoints": 45,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 73.12
+      "structuralRiskScore": 74.74
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiProofOfChange.ps1",
@@ -36922,11 +36922,11 @@
     },
     {
       "path": "Modules/Fasting/Application/AssemblyInfo.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.06
     },
     {
       "path": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs",
@@ -37866,11 +37866,11 @@
     },
     {
       "path": "Modules/Hydration/Application/AssemblyInfo.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.06
     },
     {
       "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
@@ -38122,11 +38122,11 @@
     },
     {
       "path": "Modules/WeeklyGoals/Application/AssemblyInfo.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.06
     },
     {
       "path": "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs",
@@ -38873,7 +38873,7 @@
       "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -39102,7 +39102,7 @@
       "line": 12,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -39321,7 +39321,7 @@
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.End.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.End.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39355,7 +39355,7 @@
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39610,7 +39610,7 @@
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39672,7 +39672,7 @@
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39957,7 +39957,7 @@
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39982,7 +39982,7 @@
       "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Start.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Start.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -40123,7 +40123,7 @@
       "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -40237,7 +40237,7 @@
       "line": 15,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -40469,7 +40469,7 @@
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs"
+        "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42140,7 +42140,7 @@
       "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Queries.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42269,7 +42269,7 @@
       "line": 11,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Queries.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42281,7 +42281,7 @@
       "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Queries.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42293,7 +42293,7 @@
       "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Queries.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42305,7 +42305,7 @@
       "line": 9,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Queries.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42378,7 +42378,7 @@
       "line": 11,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42391,7 +42391,7 @@
       "line": 10,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43153,7 +43153,7 @@
       "line": 9,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs"
+        "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43653,8 +43653,8 @@
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs"
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43824,8 +43824,8 @@
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs"
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43958,7 +43958,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44027,7 +44027,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44088,7 +44088,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44188,7 +44188,7 @@
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44200,7 +44200,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44212,7 +44212,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44224,7 +44224,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44236,8 +44236,8 @@
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs"
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44249,8 +44249,8 @@
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs"
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44656,7 +44656,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs"
+        "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45008,7 +45008,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45107,7 +45107,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45374,7 +45374,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45398,7 +45398,7 @@
       "line": 6,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45556,7 +45556,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45650,8 +45650,8 @@
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs"
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45847,7 +45847,7 @@
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs"
+        "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -48299,9 +48299,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Start-LlmWikiDevelopment.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1"
+        ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
+        ".llm-wiki/tools/Test-LlmWikiTaskScope.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

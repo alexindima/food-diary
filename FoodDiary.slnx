@@ -48,6 +48,9 @@
     <Project Path="Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj" />
     <Project Path="Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj" />
     <Project Path="Modules/Fasting/Infrastructure/Model/FoodDiary.Modules.Fasting.PersistenceModel.csproj" />
+    <Project Path="Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FoodDiary.Modules.Fasting.Application.Tests.csproj" />
+    <Project Path="Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FoodDiary.Modules.Fasting.Domain.Tests.csproj" />
+    <Project Path="Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/FoodDiary.Modules.Fasting.Infrastructure.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Hydration/">
     <Project Path="Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj" />
@@ -55,6 +58,8 @@
     <Project Path="Modules/Hydration/Contracts/FoodDiary.Modules.Hydration.Contracts.csproj" />
     <Project Path="Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj" />
     <Project Path="Modules/Hydration/Infrastructure/Model/FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
+    <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/FoodDiary.Modules.Hydration.Application.Tests.csproj" />
+    <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/FoodDiary.Modules.Hydration.Infrastructure.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/WeeklyGoals/">
     <Project Path="Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj" />
@@ -62,6 +67,8 @@
     <Project Path="Modules/WeeklyGoals/Contracts/FoodDiary.Modules.WeeklyGoals.Contracts.csproj" />
     <Project Path="Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj" />
     <Project Path="Modules/WeeklyGoals/Infrastructure/Model/FoodDiary.Modules.WeeklyGoals.PersistenceModel.csproj" />
+    <Project Path="Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/FoodDiary.Modules.WeeklyGoals.Application.Tests.csproj" />
+    <Project Path="Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.csproj" />
   </Folder>
   <Folder Name="/Platform/">
     <Project Path="FoodDiary.Domain/FoodDiary.Domain.csproj" />

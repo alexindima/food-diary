@@ -35,6 +35,10 @@ The manifest snapshots risk, modules, implementation phases, required checks, re
 Manifest initialization compiles the task brief once and passes that exact
 snapshot into implementation planning, keeping its fingerprint and obligations
 internally consistent.
+The manifest records `compiledIndexSource` and reuses that source for later
+validation. Pass `-CompiledIndexSource Json` when the governed baseline must be
+compiled without the SQLite projection; the manifest must not silently switch
+back to the default source.
 When explicit allowed/excluded patterns are supplied, planned paths are limited
 to the current product delta accepted by that boundary. Generated Wiki indexes,
 review receipts, and out-of-scope dirty files do not become planned work.

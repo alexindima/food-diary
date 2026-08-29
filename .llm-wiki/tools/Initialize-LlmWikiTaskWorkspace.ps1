@@ -6,6 +6,8 @@ param(
     [string[]]$Criterion,
     [string]$WorkspacePath = '.artifacts/llm-wiki/tasks/current',
     [string]$BaseRef = 'HEAD',
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [string]$HeadRef,
     [string[]]$ChangedPath,
     [Alias('ProposedPath')]
@@ -64,6 +66,7 @@ try {
     $packetArguments = @{
         BaseRef = $BaseRef
         Objective = $Objective
+        CompiledIndexSource = $CompiledIndexSource
         Format = 'Json'
         OutputPath = (Get-TemporaryArtifactPath 'change-packet.json')
     }
@@ -101,6 +104,7 @@ try {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeManifest.ps1') init `
         @changeArguments `
         -Path (Get-TemporaryArtifactPath 'change-manifest.json') `
+        -CompiledIndexSource $CompiledIndexSource `
         -PlannedPath $scopeRoots `
         -AllowedPath $allowedPatterns `
         -ExcludedPath $ExcludedPath `
@@ -109,10 +113,11 @@ try {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiAcceptanceMatrix.ps1') init `
         @changeArguments `
         -Path (Get-TemporaryArtifactPath 'acceptance-matrix.json') `
+        -CompiledIndexSource $CompiledIndexSource `
         -Criterion $criteria `
         -EvidencePath "$normalizedWorkspacePath/evidence.json" | Out-Null
 
-    $evidenceArguments = @{ BaseRef = $BaseRef; Path = (Get-TemporaryArtifactPath 'evidence.json') }
+    $evidenceArguments = @{ BaseRef = $BaseRef; CompiledIndexSource = $CompiledIndexSource; Path = (Get-TemporaryArtifactPath 'evidence.json') }
     if ($PSBoundParameters.ContainsKey('HeadRef')) { $evidenceArguments.HeadRef = $HeadRef }
     if ($PSBoundParameters.ContainsKey('ChangedPath')) { $evidenceArguments.ChangedPath = $ChangedPath }
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiEvidence.ps1') init @evidenceArguments | Out-Null

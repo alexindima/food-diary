@@ -6,6 +6,8 @@ param(
     [string]$Path = '.artifacts/llm-wiki/change-manifest.json',
     [string]$Objective,
     [string]$BaseRef = 'HEAD',
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [string]$HeadRef,
     [string[]]$ChangedPath,
     [string[]]$PlannedPath = @(),
@@ -58,8 +60,8 @@ function Get-Fingerprint([object]$Value) {
 }
 
 function Get-ChangeInputs([string]$SelectedBaseRef) {
-    $briefArguments = @{ BaseRef = $SelectedBaseRef; Format = 'Json'; Intent = $Objective }
-    $planArguments = @{ BaseRef = $SelectedBaseRef; Format = 'Json'; Objective = $Objective }
+    $briefArguments = @{ BaseRef = $SelectedBaseRef; CompiledIndexSource = $CompiledIndexSource; Format = 'Json'; Intent = $Objective }
+    $planArguments = @{ BaseRef = $SelectedBaseRef; CompiledIndexSource = $CompiledIndexSource; Format = 'Json'; Objective = $Objective }
     if ($hasHeadRef) {
         $briefArguments.HeadRef = $HeadRef
         $planArguments.HeadRef = $HeadRef
@@ -129,6 +131,7 @@ switch ($Action) {
         $manifest = [ordered]@{
             schemaVersion = 1
             objective = $Objective
+            compiledIndexSource = $CompiledIndexSource
             createdAtUtc = [DateTimeOffset]::UtcNow.ToString('O')
             git = [ordered]@{ base = ([string]$resolvedBase).Trim(); requestedBase = $BaseRef; headAtInit = ([string]$head).Trim() }
             scope = [ordered]@{
@@ -152,6 +155,9 @@ switch ($Action) {
             $normalizedManifestEvidence -cne "$manifestDirectory/evidence.json"
         $Objective = $manifest.objective
         $BaseRef = $manifest.git.base
+        if ($manifest.PSObject.Properties['compiledIndexSource']) {
+            $CompiledIndexSource = [string]$manifest.compiledIndexSource
+        }
         $inputs = Get-ChangeInputs $BaseRef
         $actualPaths = @($inputs.brief.change.paths)
         $outOfScope = @($actualPaths | Where-Object {

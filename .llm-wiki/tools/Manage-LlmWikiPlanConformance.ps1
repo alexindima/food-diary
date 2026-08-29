@@ -199,10 +199,16 @@ if ($Action -eq 'replan') {
         }
     )
     try {
+        $manifestCompiledIndexSource = if ($manifest.PSObject.Properties['compiledIndexSource']) {
+            [string]$manifest.compiledIndexSource
+        } else {
+            'Sqlite'
+        }
         & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeManifest.ps1') init `
             -Path "$normalizedWorkspace/change-manifest.json" `
             -Objective ([string]$manifest.objective) `
             -BaseRef ([string]$manifest.git.base) `
+            -CompiledIndexSource $manifestCompiledIndexSource `
             -ChangedPath @($packet.diff.changedPaths) `
             -AllowedPath @($taskContract.scope.allowedPathPatterns) `
             -ExcludedPath @($taskContract.scope.excludedPathPatterns) | Out-Null

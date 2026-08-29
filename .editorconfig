@@ -216,6 +216,11 @@ dotnet_diagnostic.MA0048.severity = error
 # xUnit1030 requires test awaits to preserve its synchronization context.
 dotnet_diagnostic.MA0004.severity = none
 
+[Modules/*/tests/**/*.cs]
+dotnet_diagnostic.MA0048.severity = error
+# xUnit1030 requires test awaits to preserve its synchronization context.
+dotnet_diagnostic.MA0004.severity = none
+
 [**/Migrations/**/*.cs]
 dotnet_diagnostic.MA0048.severity = none
 dotnet_diagnostic.MA0051.severity = suggestion

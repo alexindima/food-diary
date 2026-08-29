@@ -49,6 +49,11 @@ each criterion to the changed test bundle, focused test paths, and required
 checks. This removes repetitive bookkeeping but does not resolve a criterion:
 current execution evidence or an explicit evidence note is still required.
 
+Acceptance initialization accepts the same `-CompiledIndexSource Sqlite|Json`
+selection as the task workspace and records it with the packet fingerprint.
+Atomic task initialization always forwards the selected source, so acceptance
+discovery cannot require a different compiled-index backend than the manifest.
+
 Resolve only after observing evidence:
 
 ```powershell

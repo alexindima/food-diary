@@ -16,6 +16,8 @@ param(
     [string]$Reason,
     [string]$EvidenceNote,
     [string]$BaseRef = 'HEAD',
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [string]$HeadRef,
     [string[]]$ChangedPath,
     [string]$EvidencePath = '.artifacts/llm-wiki/evidence.json',
@@ -100,7 +102,7 @@ switch ($Action) {
         $criteriaText = @($Criterion | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
         if ($criteriaText.Count -eq 0) { throw 'acceptance init requires at least one -Criterion.' }
         if (@($criteriaText | Sort-Object -Unique).Count -ne $criteriaText.Count) { throw 'Acceptance criteria must be unique.' }
-        $packetArguments = @{ BaseRef = $BaseRef; Objective = $Objective; Format = 'Json' }
+        $packetArguments = @{ BaseRef = $BaseRef; Objective = $Objective; CompiledIndexSource = $CompiledIndexSource; Format = 'Json' }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $packetArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $packetArguments.ChangedPath = $ChangedPath }
         $packet = & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') @packetArguments | ConvertFrom-Json
@@ -154,6 +156,7 @@ switch ($Action) {
         $matrix = [ordered]@{
             schemaVersion = 1
             objective = $Objective
+            compiledIndexSource = $CompiledIndexSource
             createdAtUtc = [DateTimeOffset]::UtcNow.ToString('O')
             packetFingerprint = $packet.fingerprint
             git = [ordered]@{ base = $BaseRef; headAtInit = $packet.inputs.gitHead }

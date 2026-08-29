@@ -22,3 +22,8 @@ Rules for `Modules/Fasting/`.
 - Repository ports and internal persistence read models belong in `Application/Abstractions`; repository implementations belong in `Infrastructure/Persistence`; EF mappings belong in `Infrastructure/Model`.
 - Preserve existing Fasting domain CLR namespaces until a separately planned EF migration changes snapshot identity safely.
 - The application project's legacy assembly name `FoodDiary.Application.Fasting` is a temporary binary-compatibility detail; its semantic MSBuild project name is `FoodDiary.Modules.Fasting.Application`. Use `Fasting` as the module identity and `FoodDiary.Modules.Fasting.*` for new implementation namespaces.
+
+## Tests
+
+- Keep Fasting-owned application, domain, and infrastructure adapter tests under `tests/FoodDiary.Modules.Fasting.*.Tests` in this module.
+- Keep shared DbContext, migration, HTTP, host, JobManager, architecture, and cross-module scenarios in their central test projects.

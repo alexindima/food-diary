@@ -80,6 +80,11 @@ files plus one or more `-AllowedPath` regular expressions for the wider intended
 scope. Task initialization forwards planned paths into initial packet
 compilation, while the manifest continues to distinguish planned work from the
 actual Git delta.
+`-CompiledIndexSource Sqlite|Json` applies to the whole atomic initialization,
+not only to the first change packet. The initializer forwards the selected
+source to the manifest, acceptance matrix, and evidence bundle, and each
+artifact records it. This keeps a deliberately JSON-backed governed start from
+requiring a SQLite projection partway through workspace creation.
 One `-AllowedPath` value is normalized exactly like multiple values throughout
 the facade, initializer, and manifest. The governed Authentication regression
 executes `design`, `task-start`, and `task-requirements-assess` against a clean

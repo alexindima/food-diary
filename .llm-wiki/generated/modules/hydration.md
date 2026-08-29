@@ -63,12 +63,15 @@ Source: `FoodDiary.Presentation.Api/Features/Hydration/HydrationEntriesControlle
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Hydration/HydrationEntryReadModelTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationEntryReadModelTests.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Support/ResultAssert.cs`
+- [integration] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/HydrationEntryRepositoryIntegrationTests.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/PostgresDatabaseCollection.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/PostgresDatabaseFixture.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/HydrationModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/HydrationEntryInvariantTests.cs`
-- [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/HydrationEntryRepositoryIntegrationTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/HydrationHttpMappingsTests.cs`
 
 ## Working Rule

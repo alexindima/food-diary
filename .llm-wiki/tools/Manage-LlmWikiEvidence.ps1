@@ -6,6 +6,8 @@ param(
 
     [string]$Path = '.artifacts/llm-wiki/evidence.json',
     [string]$BaseRef = 'HEAD',
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [string]$HeadRef,
     [string[]]$ChangedPath,
     [string]$Id,
@@ -124,7 +126,7 @@ function Get-EvidenceMarkdown {
 
 switch ($Action) {
     'init' {
-        $diffArguments = @{ BaseRef = $BaseRef; Format = 'Json' }
+        $diffArguments = @{ BaseRef = $BaseRef; CompiledIndexSource = $CompiledIndexSource; Format = 'Json' }
         $policyArguments = @{ BaseRef = $BaseRef; Format = 'Json' }
         if ($PSBoundParameters.ContainsKey('HeadRef')) {
             $diffArguments.HeadRef = $HeadRef

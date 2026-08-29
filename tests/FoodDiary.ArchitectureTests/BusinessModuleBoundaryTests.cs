@@ -7,6 +7,35 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class BusinessModuleBoundaryTests {
     [Fact]
+    public void ExtractedModuleOwnedTests_DoNotReturnToHorizontalDonorProjects() {
+        string[] forbiddenApplicationDirectories = ["Fasting", "Hydration", "WeeklyGoals"];
+        string applicationTestsRoot = ArchitectureTestPaths.FromRoot("tests", "FoodDiary.Application.Tests");
+        string domainTestsRoot = ArchitectureTestPaths.FromRoot("tests", "FoodDiary.Domain.Tests");
+        string[] infrastructureTestRoots = [
+            ArchitectureTestPaths.FromRoot("tests", "FoodDiary.Infrastructure.Tests"),
+            ArchitectureTestPaths.FromRoot("tests", "FoodDiary.Infrastructure.IntegrationTests"),
+        ];
+
+        string[] violations = [
+            .. forbiddenApplicationDirectories
+                .Select(name => Path.Combine(applicationTestsRoot, name))
+                .Where(Directory.Exists)
+                .Select(path => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path)} is a module-owned application test directory"),
+            .. SourceScanner.SourceFiles(domainTestsRoot)
+                .Where(path => Path.GetFileName(path).StartsWith("Fasting", StringComparison.Ordinal))
+                .Select(path => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path)} is a Fasting-owned domain test"),
+            .. infrastructureTestRoots
+                .SelectMany(SourceScanner.SourceFiles)
+                .Where(path => Path.GetFileName(path).StartsWith("Fasting", StringComparison.Ordinal) ||
+                    Path.GetFileName(path).StartsWith("Hydration", StringComparison.Ordinal) ||
+                    Path.GetFileName(path).StartsWith("WeeklyGoal", StringComparison.Ordinal))
+                .Select(path => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path)} is an extracted-module infrastructure test"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationRuntimeDependencyInjection_StaysFreeOfFeatureModuleRegistration() {
         string dependencyInjectionPath = ArchitectureTestPaths.FromRoot(
             "FoodDiary.Application.Runtime",

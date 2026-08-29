@@ -4,8 +4,15 @@ param()
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+
+function Assert-TaskScope([bool]$Condition, [string]$Message) {
+    if (-not $Condition) { throw $Message }
+}
+
 $workspacePath = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'task-scope'
 $absoluteWorkspacePath = Join-Path $repositoryRoot $workspacePath
+$jsonWorkspacePath = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'task-scope-json'
+$absoluteJsonWorkspacePath = Join-Path $repositoryRoot $jsonWorkspacePath
 $plannedPaths = @('FoodDiary.Application/Users', 'tests/FoodDiary.Application.Tests/Users')
 $changedPaths = @(
     'FoodDiary.Application\Users\Common\UserContextService.cs',
@@ -17,6 +24,7 @@ try {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeManifest.ps1') init `
         -Path "$workspacePath/change-manifest.json" `
         -Objective 'Verify task-local scope and evidence references.' `
+        -CompiledIndexSource Json `
         -ChangedPath $changedPaths `
         -PlannedPath $plannedPaths `
         -AllowedPath @('^FoodDiary\.Application/Users(?:/.*)?$', '^tests/FoodDiary\.Application\.Tests/Users(?:/.*)?$') `
@@ -24,6 +32,7 @@ try {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiAcceptanceMatrix.ps1') init `
         -Path "$workspacePath/acceptance-matrix.json" `
         -Objective 'Verify task-local scope and evidence references.' `
+        -CompiledIndexSource Json `
         -ChangedPath $changedPaths `
         -Criterion 'Task paths remain normalized and workspace-local.' `
         -EvidencePath "$workspacePath/evidence.json" | Out-Null
@@ -47,12 +56,30 @@ try {
     }
 
     $initializerSource = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'Initialize-LlmWikiTaskWorkspace.ps1') -Raw
+    Assert-TaskScope ($initializerSource -match "CompiledIndexSource = 'Sqlite'") 'Task workspace initializer does not expose compiled-index source selection.'
+    Assert-TaskScope ($initializerSource -match 'CompiledIndexSource = \$CompiledIndexSource') 'Task workspace initializer does not propagate compiled-index source selection to its change packet.'
+    $developmentSource = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'Start-LlmWikiDevelopment.ps1') -Raw
+    Assert-TaskScope ($developmentSource -match '-CompiledIndexSource \$CompiledIndexSource') 'Governed development start does not propagate compiled-index source selection to workspace initialization.'
     foreach ($requiredWiring in @('-PlannedPath $scopeRoots', '-EvidencePath "$normalizedWorkspacePath/evidence.json"')) {
         if (-not $initializerSource.Contains($requiredWiring)) { throw "Task initializer wiring is absent: $requiredWiring" }
     }
+
+    & (Join-Path $PSScriptRoot 'Initialize-LlmWikiTaskWorkspace.ps1') `
+        -Objective 'Verify JSON-backed governed task initialization.' `
+        -Criterion 'The governed manifest preserves the selected compiled-index source.' `
+        -WorkspacePath $jsonWorkspacePath `
+        -BaseRef HEAD `
+        -CompiledIndexSource Json `
+        -PlannedPath @('Modules/Fasting/tests') `
+        -AllowedPath @('^Modules/Fasting/tests(?:/.*)?$') | Out-Null
+    $jsonManifest = Get-Content -LiteralPath (Join-Path $absoluteJsonWorkspacePath 'change-manifest.json') -Raw | ConvertFrom-Json
+    Assert-TaskScope ([string]$jsonManifest.compiledIndexSource -ceq 'Json') 'Governed task manifest did not preserve the JSON compiled-index source.'
 } finally {
     if (Test-Path -LiteralPath $absoluteWorkspacePath) {
         Remove-Item -LiteralPath $absoluteWorkspacePath -Recurse -Force -ErrorAction SilentlyContinue
+    }
+    if (Test-Path -LiteralPath $absoluteJsonWorkspacePath) {
+        Remove-Item -LiteralPath $absoluteJsonWorkspacePath -Recurse -Force -ErrorAction SilentlyContinue
     }
 }
 

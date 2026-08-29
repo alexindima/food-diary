@@ -79,22 +79,14 @@
       "pageSha256": "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "4f415866f12d2e913139e6332bbe0f42f66c12182ad05068a206a377d896fcf5"
-        },
-        {
-          "path": "tests/FoodDiary.ArchitectureTests/BackendModuleManifestTests.cs",
-          "sha256": "87999527fdc946b1a3efb32d1381ed9717bc69ff2e0a0cb071e180938b2c3c2d"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "4413010163f7ea402b026da9b7d153390cc1bc889c4d81041f3e57b42199708e"
+          "sha256": "3fc961934132c9cd2ba71821a56d1ba89b01785dc9b4f2d22adb94db7962cc99"
         }
       ],
-      "reason": "Reviewed project graph and architecture guardrails: three Application project nodes moved under Application with legacy assemblies and dependency directions preserved",
+      "reason": "Generated indexes were refreshed after test project ownership and dependency-matrix changes; durable workflow semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0bcb6666c448b93af5dfb9559657e5e5e7fd1c89",
-      "reviewedAtUtc": "2026-08-29T21:11:38.4038306Z"
+      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
+      "reviewedAtUtc": "2026-08-29T22:09:19.6002799Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -219,18 +211,14 @@
       "pageSha256": "b7914894ce3f6dda55057a93baf55364c9aa9c5e4c127a3fc9bddaa89743e4aa",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "4f415866f12d2e913139e6332bbe0f42f66c12182ad05068a206a377d896fcf5"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "4413010163f7ea402b026da9b7d153390cc1bc889c4d81041f3e57b42199708e"
+          "sha256": "3fc961934132c9cd2ba71821a56d1ba89b01785dc9b4f2d22adb94db7962cc99"
         }
       ],
-      "reason": "Reviewed dependency matrix rename and new anti-regression project-location guardrail; no dependency direction changed",
+      "reason": "Generated indexes were refreshed after test project ownership and dependency-matrix changes; durable workflow semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0bcb6666c448b93af5dfb9559657e5e5e7fd1c89",
-      "reviewedAtUtc": "2026-08-29T21:11:38.9395133Z"
+      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
+      "reviewedAtUtc": "2026-08-29T22:09:19.8900865Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -239,13 +227,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "50291fef9182902adf5b17b40a34259dd00d6f80f7d83df50b9b88467870f3c0"
+          "sha256": "29d31428a1f28cfb6ba091cc0d74d5f7510ef6dffc442085bfc474b4f25f18b3"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "Generated indexes were refreshed after test project ownership and dependency-matrix changes; durable workflow semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:08.6664521Z"
+      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
+      "reviewedAtUtc": "2026-08-29T22:09:20.5405174Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -825,18 +813,14 @@
       "pageSha256": "7622935ab3aa92e0641117a4b5afc2b8faada090a2a8a83e9ea27a575f549281",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "51c1fa76def0a2f635f54e613e1dc70d21907b2615aed02183ba25bc8fede3a5"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Reviewed proof-of-change and requirement-intelligence consumers; adding explicit compiled-index source provenance does not change their mapping, resolution, or proof rules.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:04.195485Z"
+      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
+      "reviewedAtUtc": "2026-08-29T22:35:36.8448089Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -845,13 +829,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d34492bb1a2e4c85514e0b71ba01ea7a17715cd478145019851660608889e76a"
+          "sha256": "423d072b8e6a945028b1bfee4014b4d34606eda3478a5b1cbde107359b97564a"
         }
       ],
-      "reason": "Reviewed regenerated quality index; only Wiki generator/test structural metrics changed and no production quality risk was introduced.",
+      "reason": "Reviewed the governed-workspace source propagation, generated quality delta, and downstream workflow contracts; the selected source is now documented and no additional release or quality semantics changed.",
       "baseRef": "HEAD",
-      "gitHead": "0bcb6666c448b93af5dfb9559657e5e5e7fd1c89",
-      "reviewedAtUtc": "2026-08-29T21:20:06.6876580Z"
+      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
+      "reviewedAtUtc": "2026-08-29T22:35:37.6534463Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -859,14 +843,22 @@
       "pageSha256": "1684cbe2c98211ca7fd946264d33e15af96696e64ee7ab094b94fc1086af0b85",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "e376094eb6b3a27464d6c3d72ec59c254d02de2332afc029a860845a278b881b"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "51c1fa76def0a2f635f54e613e1dc70d21907b2615aed02183ba25bc8fede3a5"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+          "sha256": "50b93d6bbb311b68637edffdc19b0347250856038350a6fdc9b6b925b0c44b64"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "9bf38ef74635cf6f8e984da17ad3e9b116070edb5614839a165ac061fc9bbf86"
         }
       ],
-      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
+      "reason": "Reviewed the governed-workspace source propagation, generated quality delta, and downstream workflow contracts; the selected source is now documented and no additional release or quality semantics changed.",
       "baseRef": "HEAD",
-      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
-      "reviewedAtUtc": "2026-08-28T20:48:29.7663418Z"
+      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
+      "reviewedAtUtc": "2026-08-29T22:35:38.3268713Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -874,14 +866,14 @@
       "pageSha256": "d6032fccda979d114e265f30e4f14d9593ded53c6b79d85a2dfc467b07fa3a61",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
-          "sha256": "75b7952d7cb7009ba0d44349682435e08d7f110902b7a139cd802c5d043751c9"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "51c1fa76def0a2f635f54e613e1dc70d21907b2615aed02183ba25bc8fede3a5"
         }
       ],
-      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
+      "reason": "Reviewed proof-of-change and requirement-intelligence consumers; adding explicit compiled-index source provenance does not change their mapping, resolution, or proof rules.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:56.1527463Z"
+      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
+      "reviewedAtUtc": "2026-08-29T22:35:38.9731324Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -920,13 +912,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3bfbd1dd3b979c44d220e8f8d60d1e04b77b849f72607d941be9ca4021616485"
+          "sha256": "dc47c3ac0fa43717fc1d85937d33f1197840951a74e8ef8b7db6f774e02af8ef"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "Generated indexes were refreshed after test project ownership and dependency-matrix changes; durable workflow semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:11.2355657Z"
+      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
+      "reviewedAtUtc": "2026-08-29T22:09:21.8212799Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -935,13 +927,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d34492bb1a2e4c85514e0b71ba01ea7a17715cd478145019851660608889e76a"
+          "sha256": "423d072b8e6a945028b1bfee4014b4d34606eda3478a5b1cbde107359b97564a"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "dc47c3ac0fa43717fc1d85937d33f1197840951a74e8ef8b7db6f774e02af8ef"
         }
       ],
-      "reason": "Reviewed regenerated quality-derived security input; no security-sensitive production source, trust boundary or package version changed.",
+      "reason": "Reviewed the generated quality and runtime metadata changes; this test ownership and Wiki source-selection change does not alter security, privacy, credential, or data-sharing boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "0bcb6666c448b93af5dfb9559657e5e5e7fd1c89",
-      "reviewedAtUtc": "2026-08-29T21:20:07.6564911Z"
+      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
+      "reviewedAtUtc": "2026-08-29T22:35:39.8015848Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1179,17 +1175,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "cb867b70cb2773fbf9599fc340695102838f6cb42eec0674a7366b5e7c36415a"
-        },
-        {
-          "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
-          "sha256": "da1f1d3ebb86b94cf7d63a9c0dc86c02b64cfa0db047b6efb2bbd19b16669059"
+          "sha256": "9d49b42dcf8317aa57d2ce2bb38a1753d20b86268b78077213a3cc47a4f43d3d"
         }
       ],
-      "reason": "Reviewed query-context inputs after catalog fix; module retrieval now retains extracted-project origin and exact Application csproj paths.",
+      "reason": "Generated indexes were refreshed after test project ownership and dependency-matrix changes; durable workflow semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0bcb6666c448b93af5dfb9559657e5e5e7fd1c89",
-      "reviewedAtUtc": "2026-08-29T21:20:07.0721779Z"
+      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
+      "reviewedAtUtc": "2026-08-29T22:09:21.4661722Z"
     },
     {
       "pageId": "workflow.review-diff",

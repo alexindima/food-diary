@@ -51,6 +51,8 @@ When the additional work is intentional, explicitly rebaseline it:
 Replanning preserves the task's allowed and excluded scope, rebuilds the
 manifest and implementation-plan snapshot from the live diff, invalidates any
 old conformance receipt, and records the rationale in the task journal.
+It also preserves the manifest's `compiledIndexSource`; a JSON-backed workspace
+does not acquire a new SQLite dependency merely because its plan was rebaselined.
 The task contract is the boundary authority: a stale manifest cannot retain a
 narrower or divergent copy of that boundary. Generated Wiki indexes and the
 source-impact receipt registry are reported separately and never count as

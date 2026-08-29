@@ -48,8 +48,13 @@ are not committed.
 ./.llm-wiki/wiki.ps1 task-lineage `
   -WorkspacePath .artifacts/llm-wiki/tasks/my-task `
   -FailOnInvalid
+
 ./.llm-wiki/wiki.ps1 handoff
 ```
+
+`evidence-init` also accepts `-CompiledIndexSource Sqlite|Json`. A governed task
+passes through the source selected at workspace creation so diff and policy
+discovery remain available in a JSON-only checkout.
 
 `not-applicable` always requires a reason. Use
 `passed-with-known-baseline-failures` only when the check ran and its reason names

@@ -18,6 +18,7 @@ Rules for `tests/`.
 - `FoodDiary.Domain.Primitives.Tests`: shared domain primitive behavior.
 - `FoodDiary.Infrastructure.Tests`: infrastructure unit behavior that does not require external services.
 - `FoodDiary.Infrastructure.IntegrationTests`: PostgreSQL/Testcontainers infrastructure behavior.
+- Extracted-module tests: module-owned Application, Domain (when owned), and Infrastructure adapter behavior lives under `Modules/<Module>/tests/`; central projects retain HTTP, host, shared DbContext/migration, architecture, orchestration, and cross-module coverage.
 - `FoodDiary.Testing`: shared test-only helpers reused by multiple test projects, such as Docker availability attributes.
 - `FoodDiary.Results.Tests`: shared result and error primitive behavior.
 - Mail relay/inbox tests: split by domain, application, client, infrastructure, initializer, presentation, and integration behavior.

@@ -25522,7 +25522,7 @@
         "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -25535,7 +25535,7 @@
         "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationValidatorTests.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -29201,7 +29201,7 @@
         "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 7
     },
@@ -29214,7 +29214,7 @@
         "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationValidatorTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -31008,7 +31008,7 @@
         "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.End.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.End.cs",
       "isTest": true,
       "referenceCount": 9
     },
@@ -31021,7 +31021,7 @@
         "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -31866,7 +31866,7 @@
         "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs",
       "isTest": true,
       "referenceCount": 9
     },
@@ -31879,7 +31879,7 @@
         "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs",
       "isTest": true,
       "referenceCount": 6
     },
@@ -32295,9 +32295,9 @@
         "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainHardeningInvariantTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/Domain/FastingTelemetryEventTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 8
     },
     {
       "contract": "FastingTelemetryEvent",
@@ -32308,9 +32308,9 @@
         "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/FastingTelemetryEventTests.cs",
+      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainHardeningInvariantTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 1
     },
     {
       "contract": "FastingTelemetryEvent",
@@ -35441,7 +35441,7 @@
         "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -35454,7 +35454,7 @@
         "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -36429,7 +36429,7 @@
         "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
       "isTest": true,
       "referenceCount": 6
     },
@@ -36442,7 +36442,7 @@
         "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs",
       "isTest": true,
       "referenceCount": 6
     },
@@ -36507,7 +36507,7 @@
         "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -36520,7 +36520,7 @@
         "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -36598,7 +36598,7 @@
         "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
       "isTest": true,
       "referenceCount": 3
     },
@@ -36611,7 +36611,7 @@
         "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -36676,7 +36676,7 @@
         "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -36689,7 +36689,7 @@
         "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -37118,7 +37118,7 @@
         "Modules/Hydration/Application/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 6
     },
@@ -37131,7 +37131,7 @@
         "Modules/Hydration/Application/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationValidatorTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -37261,7 +37261,7 @@
         "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -37274,7 +37274,7 @@
         "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationValidatorTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -42435,7 +42435,7 @@
         "Modules/WeeklyGoals/Application/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
       "isTest": true,
       "referenceCount": 5
     },
@@ -55708,6 +55708,58 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -55838,45 +55890,6 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
-      "isTest": true,
-      "referenceCount": 3
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -55917,19 +55930,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 3
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
     },
@@ -62169,7 +62169,7 @@
         "Modules/Fasting/Application/Services/IFastingAnalyticsService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -62234,7 +62234,7 @@
         "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -62351,7 +62351,7 @@
         "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -62546,7 +62546,7 @@
         "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -62663,7 +62663,7 @@
         "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -62910,7 +62910,7 @@
         "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -63638,7 +63638,7 @@
         "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingTelemetryCleanupServiceTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingTelemetryCleanupServiceTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -65237,6 +65237,19 @@
         "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IHydrationEntryReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -65253,19 +65266,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 3
-    },
-    {
-      "contract": "IHydrationEntryReadModelRepository",
-      "roles": [
-        "ReadModelRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryReadModelRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 4
     },
     {
       "contract": "IHydrationEntryReadModelRepository",
@@ -65406,7 +65406,7 @@
         "Modules/Hydration/Contracts/Common/IHydrationEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -65497,9 +65497,9 @@
         "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IHydrationEntryWriteRepository",
@@ -65510,9 +65510,9 @@
         "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "IHydrationEntryWriteRepository",
@@ -65588,7 +65588,7 @@
         "Modules/Hydration/Application/Abstractions/Common/IHydrationGoalService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -69059,9 +69059,9 @@
         "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 13
     },
     {
       "contract": "IMealActivityReadService",
@@ -69072,9 +69072,9 @@
         "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 13
+      "referenceCount": 2
     },
     {
       "contract": "IMealExportReadService",
@@ -71723,7 +71723,7 @@
         "FoodDiary.Application.Abstractions/Notifications/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -72191,9 +72191,9 @@
         "FoodDiary.Application.Abstractions/Notifications/Common/INotificationPusher.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 1
     },
     {
       "contract": "INotificationPusher",
@@ -72204,9 +72204,9 @@
         "FoodDiary.Application.Abstractions/Notifications/Common/INotificationPusher.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 6
     },
     {
       "contract": "INotificationPusher",
@@ -72438,9 +72438,9 @@
         "FoodDiary.Application.Abstractions/Notifications/Common/INotificationRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
       "isTest": true,
-      "referenceCount": 12
+      "referenceCount": 1
     },
     {
       "contract": "INotificationRepository",
@@ -72451,9 +72451,9 @@
         "FoodDiary.Application.Abstractions/Notifications/Common/INotificationRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 12
     },
     {
       "contract": "INotificationRepository",
@@ -73153,6 +73153,32 @@
         "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationWriter",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs",
+      "isTest": true,
+      "referenceCount": 8
+    },
+    {
+      "contract": "INotificationWriter",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -73218,19 +73244,6 @@
         "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "INotificationWriter",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -73247,19 +73260,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/RecipeComments/RecipeCommentsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 6
-    },
-    {
-      "contract": "INotificationWriter",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs",
-      "isTest": true,
-      "referenceCount": 8
     },
     {
       "contract": "INotificationWriter",
@@ -75493,6 +75493,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IPostCommitActionQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -75535,19 +75548,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "IPostCommitActionQueue",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "IPostCommitActionQueue",
@@ -88740,6 +88740,45 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs",
+      "isTest": true,
+      "referenceCount": 8
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalRepositoryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/Services/InitialAdminBootstrapServiceTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -88795,19 +88834,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
       "isTest": true,
       "referenceCount": 4
-    },
-    {
-      "contract": "IUnitOfWork",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 3
     },
     {
       "contract": "IUnitOfWork",
@@ -88909,19 +88935,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs",
-      "isTest": true,
-      "referenceCount": 8
-    },
-    {
-      "contract": "IUnitOfWork",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/JobManagerGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -88938,19 +88951,6 @@
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeRepositoryIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
-    },
-    {
-      "contract": "IUnitOfWork",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/WeeklyGoalRepositoryIntegrationTests.cs",
-      "isTest": true,
-      "referenceCount": 1
     },
     {
       "contract": "IUnitOfWork",
@@ -90612,6 +90612,19 @@
         "FoodDiary.Application.Users/Common/IUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 7
+    },
+    {
+      "contract": "IUserContextService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Users/Common/IUserContextService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -90758,19 +90771,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
-    },
-    {
-      "contract": "IUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Users/Common/IUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 7
     },
     {
       "contract": "IUserContextService",
@@ -91314,7 +91314,7 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserHydrationProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -97034,9 +97034,9 @@
         "FoodDiary.Application.Abstractions/Notifications/Common/IWebPushNotificationSender.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 1
     },
     {
       "contract": "IWebPushNotificationSender",
@@ -97047,9 +97047,9 @@
         "FoodDiary.Application.Abstractions/Notifications/Common/IWebPushNotificationSender.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 6
     },
     {
       "contract": "IWebPushNotificationSender",
@@ -97671,7 +97671,7 @@
         "Modules/WeeklyGoals/Contracts/Common/IWeeklyGoalReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -97749,7 +97749,7 @@
         "Modules/WeeklyGoals/Application/Abstractions/Common/IWeeklyGoalRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
       "isTest": true,
       "referenceCount": 15
     },
@@ -97762,7 +97762,7 @@
         "Modules/WeeklyGoals/Application/Abstractions/Common/IWeeklyGoalRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -97827,7 +97827,7 @@
         "Modules/WeeklyGoals/Application/Abstractions/Common/IWeeklyGoalTransactionRunner.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
     },
@@ -102962,6 +102962,32 @@
         "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -103030,32 +103056,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 3
-    },
-    {
-      "contract": "PagedResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "PagedResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
-      "isTest": true,
-      "referenceCount": 6
     },
     {
       "contract": "PagedResponse",
@@ -103443,7 +103443,7 @@
         "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs",
       "isTest": true,
       "referenceCount": 11
     },
@@ -103456,7 +103456,7 @@
         "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -104756,7 +104756,7 @@
         "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs",
       "isTest": true,
       "referenceCount": 9
     },
@@ -104769,7 +104769,7 @@
         "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -108734,7 +108734,7 @@
         "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -108747,7 +108747,7 @@
         "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -108916,7 +108916,7 @@
         "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Start.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Start.cs",
       "isTest": true,
       "referenceCount": 17
     },
@@ -108929,7 +108929,7 @@
         "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs",
       "isTest": true,
       "referenceCount": 10
     },
@@ -110281,7 +110281,7 @@
         "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs",
       "isTest": true,
       "referenceCount": 5
     },
@@ -110294,7 +110294,7 @@
         "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -111568,7 +111568,7 @@
         "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 10
     },
@@ -111581,7 +111581,7 @@
         "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationValidatorTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -114181,7 +114181,7 @@
         "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
       "isTest": true,
       "referenceCount": 9
     },

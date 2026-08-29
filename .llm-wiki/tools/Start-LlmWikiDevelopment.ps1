@@ -82,7 +82,7 @@ if ([bool]$workflow.requiresWorkspace) {
             $candidate = Join-Path $repositoryRoot ([string]$_)
             '^' + [regex]::Escape([string]$_) + $(if (Test-Path -LiteralPath $candidate -PathType Container) { '(?:/.*)?$' } else { '$' })
         })
-        & (Join-Path $PSScriptRoot 'Initialize-LlmWikiTaskWorkspace.ps1') -Objective $Objective -Criterion @($criteria) -WorkspacePath $WorkspacePath -BaseRef $BaseRef -AllowedPath $allowedPaths -PlannedPath $paths | Out-Null
+        & (Join-Path $PSScriptRoot 'Initialize-LlmWikiTaskWorkspace.ps1') -Objective $Objective -Criterion @($criteria) -WorkspacePath $WorkspacePath -BaseRef $BaseRef -CompiledIndexSource $CompiledIndexSource -AllowedPath $allowedPaths -PlannedPath $paths | Out-Null
         $workspaceCreated = $true
         $workspaceMessage = "created: $WorkspacePath"
     }

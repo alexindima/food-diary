@@ -514,7 +514,6 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Application.Export",
                 "FoodDiary.Application.Gamification",
-                "FoodDiary.Modules.Fasting.Application",
                 "FoodDiary.Modules.Fasting.Contracts",
                 "FoodDiary.Application.Favorites",
                 "FoodDiary.Modules.Hydration.Application",
@@ -525,7 +524,6 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Marketing",
                 "FoodDiary.Application.MealPlanning",
                 "FoodDiary.Application.Meals",
-                "FoodDiary.Modules.WeeklyGoals.Application",
                 "FoodDiary.Application.Usda",
                 "FoodDiary.Application.WeeklyCheckIn",
                 "FoodDiary.Application.Notifications",
@@ -549,6 +547,35 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Domain.Tests"] = [
                 "FoodDiary.Domain",
                 "FoodDiary.Modules.Fasting.Domain",
+            ],
+            ["FoodDiary.Modules.Fasting.Application.Tests"] = [
+                "FoodDiary.Application.Notifications",
+                "FoodDiary.Modules.Fasting.Application",
+            ],
+            ["FoodDiary.Modules.Fasting.Domain.Tests"] = [
+                "FoodDiary.Modules.Fasting.Domain",
+            ],
+            ["FoodDiary.Modules.Fasting.Infrastructure.Tests"] = [
+                "FoodDiary.Initializer",
+                "FoodDiary.Modules.Fasting.Infrastructure",
+                "FoodDiary.Testing",
+            ],
+            ["FoodDiary.Modules.Hydration.Application.Tests"] = [
+                "FoodDiary.Modules.Hydration.Application",
+            ],
+            ["FoodDiary.Modules.Hydration.Infrastructure.Tests"] = [
+                "FoodDiary.Initializer",
+                "FoodDiary.Modules.Hydration.Infrastructure",
+                "FoodDiary.Testing",
+            ],
+            ["FoodDiary.Modules.WeeklyGoals.Application.Tests"] = [
+                "FoodDiary.Application.Users",
+                "FoodDiary.Modules.WeeklyGoals.Application",
+            ],
+            ["FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests"] = [
+                "FoodDiary.Initializer",
+                "FoodDiary.Modules.WeeklyGoals.Infrastructure",
+                "FoodDiary.Testing",
             ],
             ["FoodDiary.Infrastructure.IntegrationTests"] = [
                 "FoodDiary.Infrastructure",

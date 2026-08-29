@@ -20,5 +20,11 @@ Rules for `Modules/WeeklyGoals/`.
 ## Verification
 
 - Build: `dotnet build Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj`
-- Focused application tests: `dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --filter FullyQualifiedName~WeeklyGoals`
+- Focused application tests: `dotnet test Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/FoodDiary.Modules.WeeklyGoals.Application.Tests.csproj`
+- Focused infrastructure tests: `dotnet test Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.csproj`
 - Architecture: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+
+## Tests
+
+- Do not create a WeeklyGoals Domain test project while its domain types remain centrally owned.
+- Keep shared DbContext, migration, HTTP, host, JobManager, architecture, and cross-module scenarios in their central test projects.

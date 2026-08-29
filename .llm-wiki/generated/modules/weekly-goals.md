@@ -60,8 +60,12 @@ Source: `FoodDiary.Presentation.Api/Features/WeeklyGoals/WeeklyGoalsController.c
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/PostgresDatabaseCollection.cs`
+- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/PostgresDatabaseFixture.cs`
+- [integration] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalRepositoryIntegrationTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WeeklyGoalsModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/WeeklyGoals/WeeklyGoalTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/WeeklyGoalsControllerTests.cs`
