@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 306,
+    "productionProjectEdges": 323,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
     "moduleCycleNodes": 0,
     "backendBusinessModules": 33,
-    "moduleHotspotReviewCandidates": 0,
+    "moduleHotspotReviewCandidates": 1,
     "ambiguousBackendContracts": 0,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 96,
@@ -24,8 +24,8 @@
     {
       "module": "Dashboard",
       "fanIn": 0,
-      "fanOut": 7,
-      "level": "informational",
+      "fanOut": 8,
+      "level": "review-candidate",
       "role": "read-composer"
     },
     {
@@ -134,6 +134,13 @@
       "role": "read-composer"
     },
     {
+      "module": "Fasting",
+      "fanIn": 1,
+      "fanOut": 0,
+      "level": "informational",
+      "role": "aggregate-owner"
+    },
+    {
       "module": "Lessons",
       "fanIn": 1,
       "fanOut": 0,
@@ -177,13 +184,6 @@
     },
     {
       "module": "Dietologist",
-      "fanIn": 0,
-      "fanOut": 0,
-      "level": "informational",
-      "role": "aggregate-owner"
-    },
-    {
-      "module": "Fasting",
       "fanIn": 0,
       "fanOut": 0,
       "level": "informational",

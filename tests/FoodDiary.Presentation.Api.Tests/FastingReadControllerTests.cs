@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Fasting.Models;
-using FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
+using FoodDiary.Modules.Fasting.Contracts.Read.Models;
+using FoodDiary.Modules.Fasting.Application.Queries.GetCurrentFasting;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Fasting;
 using FoodDiary.Results;

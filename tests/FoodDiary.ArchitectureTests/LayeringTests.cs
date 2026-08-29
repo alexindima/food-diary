@@ -364,7 +364,6 @@ public class LayeringTests {
             "services.AddDietologistPersistence();",
             "services.AddNotificationPersistence();",
             "services.AddProviderCachePersistence();",
-            "services.AddFastingPersistence();",
             "services.AddMarketingPersistence();",
             "services.AddFavoritesPersistence();",
             "services.AddLearningPersistence();",

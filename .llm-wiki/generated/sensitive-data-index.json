@@ -3533,62 +3533,6 @@
     },
     {
       "category": "health",
-      "name": "FastingOccurrence",
-      "type": "FastingPlan,",
-      "path": "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
-      "line": 17
-    },
-    {
-      "category": "health",
-      "name": "FastingOccurrence",
-      "type": "FastingPlan,",
-      "path": "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
-      "line": 25
-    },
-    {
-      "category": "health",
-      "name": "FastingOccurrence",
-      "type": "FastingPlan,",
-      "path": "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
-      "line": 28
-    },
-    {
-      "category": "health",
-      "name": "FastingOccurrence",
-      "type": "FastingPlan,",
-      "path": "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
-      "line": 56
-    },
-    {
-      "category": "health",
-      "name": "FastingOccurrence",
-      "type": "FastingPlan,",
-      "path": "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
-      "line": 62
-    },
-    {
-      "category": "health",
-      "name": "FastingOccurrence",
-      "type": "FastingPlan,",
-      "path": "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
-      "line": 84
-    },
-    {
-      "category": "health",
-      "name": "CycleStartSequence",
-      "type": "int",
-      "path": "FoodDiary.Application.Fasting/Services/FastingCyclicTransitionPlanner.cs",
-      "line": 103
-    },
-    {
-      "category": "health",
-      "name": "TotalCycleDays",
-      "type": "int",
-      "path": "FoodDiary.Application.Fasting/Services/FastingCyclicTransitionPlanner.cs",
-      "line": 103
-    },
-    {
-      "category": "health",
       "name": "HydrationEntryId",
       "type": "Guid",
       "path": "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
@@ -6500,6 +6444,62 @@
       "line": 8
     },
     {
+      "category": "health",
+      "name": "FastingOccurrence",
+      "type": "FastingPlan,",
+      "path": "Modules/Fasting/Application/Commands/StartFasting/FastingStartFactory.cs",
+      "line": 17
+    },
+    {
+      "category": "health",
+      "name": "FastingOccurrence",
+      "type": "FastingPlan,",
+      "path": "Modules/Fasting/Application/Commands/StartFasting/FastingStartFactory.cs",
+      "line": 25
+    },
+    {
+      "category": "health",
+      "name": "FastingOccurrence",
+      "type": "FastingPlan,",
+      "path": "Modules/Fasting/Application/Commands/StartFasting/FastingStartFactory.cs",
+      "line": 28
+    },
+    {
+      "category": "health",
+      "name": "FastingOccurrence",
+      "type": "FastingPlan,",
+      "path": "Modules/Fasting/Application/Commands/StartFasting/FastingStartFactory.cs",
+      "line": 56
+    },
+    {
+      "category": "health",
+      "name": "FastingOccurrence",
+      "type": "FastingPlan,",
+      "path": "Modules/Fasting/Application/Commands/StartFasting/FastingStartFactory.cs",
+      "line": 62
+    },
+    {
+      "category": "health",
+      "name": "FastingOccurrence",
+      "type": "FastingPlan,",
+      "path": "Modules/Fasting/Application/Commands/StartFasting/FastingStartFactory.cs",
+      "line": 84
+    },
+    {
+      "category": "health",
+      "name": "CycleStartSequence",
+      "type": "int",
+      "path": "Modules/Fasting/Application/Services/FastingCyclicTransitionPlanner.cs",
+      "line": 103
+    },
+    {
+      "category": "health",
+      "name": "TotalCycleDays",
+      "type": "int",
+      "path": "Modules/Fasting/Application/Services/FastingCyclicTransitionPlanner.cs",
+      "line": 103
+    },
+    {
       "category": "identity",
       "name": "UserEmail",
       "type": "string",
@@ -7677,55 +7677,6 @@
     },
     {
       "category": "privateContent",
-      "name": "HadNotes",
-      "type": "bool?",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/FastingTelemetryEventRecord.cs",
-      "line": 21
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingCheckInModel.cs",
-      "line": 10
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingCheckInReadModel.cs",
-      "line": 13
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingOccurrenceReadModel.cs",
-      "line": 19
-    },
-    {
-      "category": "privateContent",
-      "name": "CheckInNotes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingOccurrenceReadModel.cs",
-      "line": 25
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingSessionModel.cs",
-      "line": 21
-    },
-    {
-      "category": "privateContent",
-      "name": "CheckInNotes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingSessionModel.cs",
-      "line": 27
-    },
-    {
-      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
@@ -8038,27 +7989,6 @@
       "type": "string?",
       "path": "FoodDiary.Application.Exercises/Models/ExerciseEntryModel.cs",
       "line": 10
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs",
-      "line": 16
-    },
-    {
-      "category": "privateContent",
-      "name": "CheckInNotes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs",
-      "line": 13
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Fasting/Services/FastingCheckInSnapshot.cs",
-      "line": 9
     },
     {
       "category": "privateContent",
@@ -8876,41 +8806,6 @@
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingCheckIn.cs",
-      "line": 20
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "line": 29
-    },
-    {
-      "category": "privateContent",
-      "name": "CheckInNotes",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "line": 35
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingSession.cs",
-      "line": 23
-    },
-    {
-      "category": "privateContent",
-      "name": "HadNotes",
-      "type": "bool?",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
-      "line": 35
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
       "path": "FoodDiary.Domain/Entities/Tracking/FertilitySignal.cs",
       "line": 14
     },
@@ -9676,6 +9571,111 @@
       "type": "Guid?",
       "path": "FoodDiary.Presentation.Api/Features/Users/Responses/UserHttpResponse.cs",
       "line": 36
+    },
+    {
+      "category": "privateContent",
+      "name": "HadNotes",
+      "type": "bool?",
+      "path": "Modules/Fasting/Application/Abstractions/Common/FastingTelemetryEventRecord.cs",
+      "line": 21
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Fasting/Application/Abstractions/Models/FastingCheckInReadModel.cs",
+      "line": 13
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Fasting/Application/Abstractions/Models/FastingOccurrenceReadModel.cs",
+      "line": 19
+    },
+    {
+      "category": "privateContent",
+      "name": "CheckInNotes",
+      "type": "string?",
+      "path": "Modules/Fasting/Application/Abstractions/Models/FastingOccurrenceReadModel.cs",
+      "line": 25
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs",
+      "line": 16
+    },
+    {
+      "category": "privateContent",
+      "name": "CheckInNotes",
+      "type": "string?",
+      "path": "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs",
+      "line": 13
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Fasting/Application/Services/FastingCheckInSnapshot.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Fasting/Contracts/Read/Models/FastingCheckInModel.cs",
+      "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Fasting/Contracts/Read/Models/FastingSessionModel.cs",
+      "line": 21
+    },
+    {
+      "category": "privateContent",
+      "name": "CheckInNotes",
+      "type": "string?",
+      "path": "Modules/Fasting/Contracts/Read/Models/FastingSessionModel.cs",
+      "line": 27
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingCheckIn.cs",
+      "line": 20
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
+      "line": 28
+    },
+    {
+      "category": "privateContent",
+      "name": "CheckInNotes",
+      "type": "string?",
+      "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
+      "line": 34
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingSession.cs",
+      "line": 22
+    },
+    {
+      "category": "privateContent",
+      "name": "HadNotes",
+      "type": "bool?",
+      "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
+      "line": 34
     }
   ],
   "boundaryFiles": [

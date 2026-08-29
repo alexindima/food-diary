@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3483,
-    "symbols": 3490,
+    "sourceFiles": 3485,
+    "symbols": 3492,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 243,
+    "dependencyInjectionRegistrations": 238,
     "kinds": {
-      "class": 1817,
+      "class": 1819,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -24,7 +24,7 @@
       "CommandHandler": 159,
       "Configuration": 90,
       "Controller": 92,
-      "Entity": 84,
+      "Entity": 85,
       "Event": 19,
       "Factory": 11,
       "Handler": 9,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1345,
+      "Other": 1346,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -2272,223 +2272,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Fasting/Common/FastingErrors.cs",
       "line": 4
-    },
-    {
-      "name": "FastingTelemetryEventRecord",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/FastingTelemetryEventRecord.cs",
-      "line": 2
-    },
-    {
-      "name": "IFastingCheckInReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IFastingCheckInReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IFastingCheckInRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IFastingCheckInWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInWriteRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IFastingOccurrenceReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadModelRepository.cs",
-      "line": 6
-    },
-    {
-      "name": "IFastingOccurrenceReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadRepository.cs",
-      "line": 6
-    },
-    {
-      "name": "IFastingOccurrenceRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IFastingOccurrenceWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IFastingPlanReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanReadRepository.cs",
-      "line": 6
-    },
-    {
-      "name": "IFastingPlanRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IFastingPlanWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IFastingReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IFastingSessionReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IFastingSessionRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IFastingSessionWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IFastingTelemetryEventReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventReadRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IFastingTelemetryEventRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IFastingTelemetryEventWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventWriteRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IFastingTelemetrySummaryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetrySummaryReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "FastingCheckInModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingCheckInModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingCheckInReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingCheckInReadModel.cs",
-      "line": 4
-    },
-    {
-      "name": "FastingInsightsModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingInsightsModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingMessageModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingMessageModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingOccurrenceReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingOccurrenceReadModel.cs",
-      "line": 5
-    },
-    {
-      "name": "FastingOverviewModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingOverviewModel.cs",
-      "line": 4
-    },
-    {
-      "name": "FastingPlanReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingPlanReadModel.cs",
-      "line": 5
-    },
-    {
-      "name": "FastingSessionModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingSessionModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingStatsModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingStatsModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingTelemetryPresetSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingTelemetryPresetSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingTelemetrySummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Models/FastingTelemetrySummaryModel.cs",
-      "line": 2
     },
     {
       "name": "FavoriteMealErrors",
@@ -8133,538 +7916,6 @@
       "line": 8
     },
     {
-      "name": "EndFastingCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "EndFastingCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "EndFastingCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "ExtendActiveFastingCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "ExtendActiveFastingCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "ExtendActiveFastingCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "PostponeCyclicDayCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "PostponeCyclicDayCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "PostponeCyclicDayCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "RecordFastingTelemetryCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "RecordFastingTelemetryCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "ReduceActiveFastingTargetCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "ReduceActiveFastingTargetCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "ReduceActiveFastingTargetCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "SkipCyclicDayCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "SkipCyclicDayCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "SkipCyclicDayCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "FastingStartFactory",
-      "kind": "class",
-      "role": "Factory",
-      "path": "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
-      "line": 9
-    },
-    {
-      "name": "StartFastingCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "StartFastingCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "StartFastingCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandValidator.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateCurrentFastingCheckInCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateCurrentFastingCheckInCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "UpdateCurrentFastingCheckInCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "EnumFilterParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Common/EnumFilterParser.cs",
-      "line": 2
-    },
-    {
-      "name": "EnumValueParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Common/EnumValueParser.cs",
-      "line": 4
-    },
-    {
-      "name": "FastingCurrentUserResolver",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Common/FastingCurrentUserResolver.cs",
-      "line": 8
-    },
-    {
-      "name": "FastingTelemetryEventNames",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Common/FastingTelemetryEventNames.cs",
-      "line": 2
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/DependencyInjection.cs",
-      "line": 7
-    },
-    {
-      "name": "FastingMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Mappings/FastingMappings.cs",
-      "line": 6
-    },
-    {
-      "name": "GetCurrentFastingQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetCurrentFastingQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetCurrentFastingQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetFastingHistoryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs",
-      "line": 7
-    },
-    {
-      "name": "GetFastingHistoryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "GetFastingHistoryQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "GetFastingInsightsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetFastingInsightsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetFastingInsightsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetFastingOverviewQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetFastingOverviewQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetFastingOverviewQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetFastingStatsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetFastingStatsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetFastingStatsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetFastingTelemetrySummaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetFastingTelemetrySummaryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
-      "line": 6
-    },
-    {
-      "name": "FastingAlertBuilder",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingAlertBuilder.cs",
-      "line": 4
-    },
-    {
-      "name": "FastingAnalyticsService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Fasting/Services/FastingAnalyticsService.cs",
-      "line": 6
-    },
-    {
-      "name": "FastingCheckInLookup",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingCheckInLookup.cs",
-      "line": 6
-    },
-    {
-      "name": "FastingCheckInReminderPlanner",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingCheckInReminderPlanner.cs",
-      "line": 5
-    },
-    {
-      "name": "FastingCheckInSnapshot",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingCheckInSnapshot.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingCheckInTimelineBuilder",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingCheckInTimelineBuilder.cs",
-      "line": 5
-    },
-    {
-      "name": "FastingCyclicTransitionPlanner",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingCyclicTransitionPlanner.cs",
-      "line": 6
-    },
-    {
-      "name": "FastingEndPolicy",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingEndPolicy.cs",
-      "line": 5
-    },
-    {
-      "name": "FastingHistoricalInsightBuilder",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingHistoricalInsightBuilder.cs",
-      "line": 4
-    },
-    {
-      "name": "FastingHistoryResponseBuilder",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingHistoryResponseBuilder.cs",
-      "line": 7
-    },
-    {
-      "name": "FastingInsightBuilder",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingInsightBuilder.cs",
-      "line": 4
-    },
-    {
-      "name": "FastingIntermittentNotificationPlanner",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingIntermittentNotificationPlanner.cs",
-      "line": 6
-    },
-    {
-      "name": "FastingNotificationCandidate",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingNotificationCandidate.cs",
-      "line": 5
-    },
-    {
-      "name": "FastingNotificationCandidatePlanner",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingNotificationCandidatePlanner.cs",
-      "line": 6
-    },
-    {
-      "name": "FastingNotificationCreationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Fasting/Services/FastingNotificationCreationService.cs",
-      "line": 5
-    },
-    {
-      "name": "FastingNotificationFactory",
-      "kind": "class",
-      "role": "Factory",
-      "path": "FoodDiary.Application.Fasting/Services/FastingNotificationFactory.cs",
-      "line": 5
-    },
-    {
-      "name": "FastingNotificationPushDispatcher",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingNotificationPushDispatcher.cs",
-      "line": 5
-    },
-    {
-      "name": "FastingNotificationScheduler",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingNotificationScheduler.cs",
-      "line": 9
-    },
-    {
-      "name": "FastingOccurrenceAnalysis",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingOccurrenceAnalysis.cs",
-      "line": 4
-    },
-    {
-      "name": "FastingOccurrenceAnalysisBuilder",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingOccurrenceAnalysisBuilder.cs",
-      "line": 5
-    },
-    {
-      "name": "FastingReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Fasting/Services/FastingReadService.cs",
-      "line": 7
-    },
-    {
-      "name": "FastingStatsCalculator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingStatsCalculator.cs",
-      "line": 5
-    },
-    {
-      "name": "FastingSymptomCatalog",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingSymptomCatalog.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingTelemetryCleanupService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Fasting/Services/FastingTelemetryCleanupService.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingTelemetrySummaryReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Fasting/Services/FastingTelemetrySummaryReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "FastingWindowNotificationPlan",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/FastingWindowNotificationPlan.cs",
-      "line": 2
-    },
-    {
-      "name": "IFastingAnalyticsService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Fasting/Services/IFastingAnalyticsService.cs",
-      "line": 6
-    },
-    {
-      "name": "IFastingNotificationScheduler",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Fasting/Services/IFastingNotificationScheduler.cs",
-      "line": 2
-    },
-    {
-      "name": "IFastingTelemetryCleanupService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Fasting/Services/IFastingTelemetryCleanupService.cs",
-      "line": 2
-    },
-    {
       "name": "RequiredIdParser",
       "kind": "class",
       "role": "Other",
@@ -14118,41 +13369,6 @@
       "line": 9
     },
     {
-      "name": "FastingCheckIn",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingCheckIn.cs",
-      "line": 5
-    },
-    {
-      "name": "FastingOccurrence",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "line": 8
-    },
-    {
-      "name": "FastingPlan",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 7
-    },
-    {
-      "name": "FastingSession",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingSession.cs",
-      "line": 9
-    },
-    {
-      "name": "FastingTelemetryEvent",
-      "kind": "class",
-      "role": "Event",
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
-      "line": 7
-    },
-    {
       "name": "FertilitySignal",
       "kind": "class",
       "role": "Entity",
@@ -14458,48 +13674,6 @@
       "kind": "enum",
       "role": "Other",
       "path": "FoodDiary.Domain/Enums/ExerciseType.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingOccurrenceKind",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/FastingOccurrenceKind.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingOccurrenceStatus",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/FastingOccurrenceStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingPlanStatus",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/FastingPlanStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingPlanType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/FastingPlanType.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingProtocol",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/FastingProtocol.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingSessionStatus",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/FastingSessionStatus.cs",
       "line": 2
     },
     {
@@ -14906,41 +14080,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/ExerciseEntryId.cs",
-      "line": 4
-    },
-    {
-      "name": "FastingCheckInId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/FastingCheckInId.cs",
-      "line": 4
-    },
-    {
-      "name": "FastingOccurrenceId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/FastingOccurrenceId.cs",
-      "line": 4
-    },
-    {
-      "name": "FastingPlanId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/FastingPlanId.cs",
-      "line": 4
-    },
-    {
-      "name": "FastingSessionId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/FastingSessionId.cs",
-      "line": 4
-    },
-    {
-      "name": "FastingTelemetryEventId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/FastingTelemetryEventId.cs",
       "line": 4
     },
     {
@@ -15628,13 +14767,6 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
       "line": 8
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
-      "line": 6
     },
     {
       "name": "DependencyInjection",
@@ -16498,41 +15630,6 @@
       "line": 7
     },
     {
-      "name": "FastingCheckInConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Tracking/FastingCheckInConfiguration.cs",
-      "line": 8
-    },
-    {
-      "name": "FastingOccurrenceConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Tracking/FastingOccurrenceConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "FastingPlanConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Tracking/FastingPlanConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "FastingSessionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Tracking/FastingSessionConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "FastingTelemetryEventConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Tracking/FastingTelemetryEventConfiguration.cs",
-      "line": 7
-    },
-    {
       "name": "UsdaFoodConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -16908,7 +16005,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "FoodDiaryDbContext",
@@ -17273,41 +16370,6 @@
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Tracking/ExerciseEntryRepository.cs",
       "line": 8
-    },
-    {
-      "name": "FastingCheckInRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Tracking/FastingCheckInRepository.cs",
-      "line": 8
-    },
-    {
-      "name": "FastingOccurrenceRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Tracking/FastingOccurrenceRepository.cs",
-      "line": 12
-    },
-    {
-      "name": "FastingPlanRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Tracking/FastingPlanRepository.cs",
-      "line": 8
-    },
-    {
-      "name": "FastingSessionRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Tracking/FastingSessionRepository.cs",
-      "line": 7
-    },
-    {
-      "name": "FastingTelemetryEventRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Tracking/FastingTelemetryEventRepository.cs",
-      "line": 7
     },
     {
       "name": "HydrationEntryRepository",
@@ -19232,7 +18294,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
-      "line": 27
+      "line": 23
     },
     {
       "name": "AuthTelegramController",
@@ -19246,7 +18308,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpMappings.cs",
-      "line": 23
+      "line": 27
     },
     {
       "name": "AuthHttpResponseMappings",
@@ -24289,6 +23351,958 @@
       "line": 28
     },
     {
+      "name": "FastingTelemetryEventRecord",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Abstractions/Common/FastingTelemetryEventRecord.cs",
+      "line": 2
+    },
+    {
+      "name": "IFastingCheckInReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IFastingCheckInReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IFastingCheckInRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IFastingCheckInWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInWriteRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IFastingOccurrenceReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadModelRepository.cs",
+      "line": 6
+    },
+    {
+      "name": "IFastingOccurrenceReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadRepository.cs",
+      "line": 6
+    },
+    {
+      "name": "IFastingOccurrenceRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IFastingOccurrenceWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IFastingPlanReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingPlanReadRepository.cs",
+      "line": 6
+    },
+    {
+      "name": "IFastingPlanRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IFastingPlanWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingPlanWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IFastingSessionReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingSessionReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IFastingSessionRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingSessionRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IFastingSessionWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingSessionWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IFastingTelemetryEventReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventReadRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IFastingTelemetryEventRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IFastingTelemetryEventWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventWriteRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IFastingTelemetrySummaryReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetrySummaryReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingCheckInReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Abstractions/Models/FastingCheckInReadModel.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingOccurrenceReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Abstractions/Models/FastingOccurrenceReadModel.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingPlanReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Abstractions/Models/FastingPlanReadModel.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingTelemetryPresetSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Abstractions/Models/FastingTelemetryPresetSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingTelemetrySummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Abstractions/Models/FastingTelemetrySummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "EndFastingCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "EndFastingCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "EndFastingCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "ExtendActiveFastingCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ExtendActiveFastingCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "ExtendActiveFastingCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "PostponeCyclicDayCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "PostponeCyclicDayCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "PostponeCyclicDayCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "RecordFastingTelemetryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Fasting/Application/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "RecordFastingTelemetryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Fasting/Application/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "ReduceActiveFastingTargetCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ReduceActiveFastingTargetCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "ReduceActiveFastingTargetCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "SkipCyclicDayCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "SkipCyclicDayCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "SkipCyclicDayCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingStartFactory",
+      "kind": "class",
+      "role": "Factory",
+      "path": "Modules/Fasting/Application/Commands/StartFasting/FastingStartFactory.cs",
+      "line": 9
+    },
+    {
+      "name": "StartFastingCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "StartFastingCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "StartFastingCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandValidator.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateCurrentFastingCheckInCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateCurrentFastingCheckInCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "UpdateCurrentFastingCheckInCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "EnumFilterParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Common/EnumFilterParser.cs",
+      "line": 2
+    },
+    {
+      "name": "EnumValueParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Common/EnumValueParser.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingCurrentUserResolver",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Common/FastingCurrentUserResolver.cs",
+      "line": 8
+    },
+    {
+      "name": "FastingTelemetryEventNames",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Common/FastingTelemetryEventNames.cs",
+      "line": 2
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/DependencyInjection.cs",
+      "line": 7
+    },
+    {
+      "name": "FastingMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Mappings/FastingMappings.cs",
+      "line": 6
+    },
+    {
+      "name": "GetCurrentFastingQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetCurrentFastingQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetCurrentFastingQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetFastingHistoryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetFastingHistoryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "GetFastingHistoryQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "GetFastingInsightsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetFastingInsightsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetFastingInsightsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetFastingOverviewQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetFastingOverviewQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetFastingOverviewQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetFastingStatsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetFastingStatsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetFastingStatsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetFastingTelemetrySummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetFastingTelemetrySummaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingAlertBuilder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingAlertBuilder.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingAnalyticsService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Fasting/Application/Services/FastingAnalyticsService.cs",
+      "line": 6
+    },
+    {
+      "name": "FastingCheckInLookup",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingCheckInLookup.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingCheckInReminderPlanner",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingCheckInReminderPlanner.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingCheckInSnapshot",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingCheckInSnapshot.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingCheckInTimelineBuilder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingCheckInTimelineBuilder.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingCyclicTransitionPlanner",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingCyclicTransitionPlanner.cs",
+      "line": 6
+    },
+    {
+      "name": "FastingEndPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingEndPolicy.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingHistoricalInsightBuilder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingHistoricalInsightBuilder.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingHistoryResponseBuilder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingHistoryResponseBuilder.cs",
+      "line": 7
+    },
+    {
+      "name": "FastingInsightBuilder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingInsightBuilder.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingIntermittentNotificationPlanner",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingIntermittentNotificationPlanner.cs",
+      "line": 6
+    },
+    {
+      "name": "FastingNotificationCandidate",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingNotificationCandidate.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingNotificationCandidatePlanner",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingNotificationCandidatePlanner.cs",
+      "line": 6
+    },
+    {
+      "name": "FastingNotificationCreationService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Fasting/Application/Services/FastingNotificationCreationService.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingNotificationFactory",
+      "kind": "class",
+      "role": "Factory",
+      "path": "Modules/Fasting/Application/Services/FastingNotificationFactory.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingNotificationPushDispatcher",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingNotificationPushDispatcher.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingNotificationScheduler",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
+      "line": 9
+    },
+    {
+      "name": "FastingOccurrenceAnalysis",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingOccurrenceAnalysis.cs",
+      "line": 3
+    },
+    {
+      "name": "FastingOccurrenceAnalysisBuilder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingOccurrenceAnalysisBuilder.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Fasting/Application/Services/FastingReadService.cs",
+      "line": 7
+    },
+    {
+      "name": "FastingStatsCalculator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingStatsCalculator.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingSymptomCatalog",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingSymptomCatalog.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingTelemetryCleanupService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Fasting/Application/Services/FastingTelemetryCleanupService.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingTelemetrySummaryReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Fasting/Application/Services/FastingTelemetrySummaryReadService.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingWindowNotificationPlan",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Services/FastingWindowNotificationPlan.cs",
+      "line": 2
+    },
+    {
+      "name": "IFastingAnalyticsService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Fasting/Application/Services/IFastingAnalyticsService.cs",
+      "line": 6
+    },
+    {
+      "name": "IFastingNotificationScheduler",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Fasting/Contracts/Jobs/IFastingNotificationScheduler.cs",
+      "line": 2
+    },
+    {
+      "name": "IFastingTelemetryCleanupService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Fasting/Contracts/Jobs/IFastingTelemetryCleanupService.cs",
+      "line": 2
+    },
+    {
+      "name": "IFastingReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Fasting/Contracts/Read/IFastingReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingCheckInModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Contracts/Read/Models/FastingCheckInModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingInsightsModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Contracts/Read/Models/FastingInsightsModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingMessageModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Contracts/Read/Models/FastingMessageModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingOverviewModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Contracts/Read/Models/FastingOverviewModel.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingSessionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Contracts/Read/Models/FastingSessionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingStatsModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Contracts/Read/Models/FastingStatsModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingCheckIn",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingCheckIn.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingDomainGuard",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingDomainGuard.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingOccurrence",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
+      "line": 7
+    },
+    {
+      "name": "FastingPlan",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
+      "line": 7
+    },
+    {
+      "name": "FastingSession",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingSession.cs",
+      "line": 8
+    },
+    {
+      "name": "FastingTelemetryEvent",
+      "kind": "class",
+      "role": "Event",
+      "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
+      "line": 6
+    },
+    {
+      "name": "FastingOccurrenceKind",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Fasting/Domain/Enums/FastingOccurrenceKind.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingOccurrenceStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Fasting/Domain/Enums/FastingOccurrenceStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingPlanStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Fasting/Domain/Enums/FastingPlanStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingPlanType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Fasting/Domain/Enums/FastingPlanType.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingProtocol",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Fasting/Domain/Enums/FastingProtocol.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingSessionStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Fasting/Domain/Enums/FastingSessionStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingCheckInId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Fasting/Domain/ValueObjects/Ids/FastingCheckInId.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingOccurrenceId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Fasting/Domain/ValueObjects/Ids/FastingOccurrenceId.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingPlanId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Fasting/Domain/ValueObjects/Ids/FastingPlanId.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingSessionId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Fasting/Domain/ValueObjects/Ids/FastingSessionId.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingTelemetryEventId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Fasting/Domain/ValueObjects/Ids/FastingTelemetryEventId.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingCheckInConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingCheckInConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "FastingOccurrenceConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingOccurrenceConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "FastingPlanConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingPlanConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "FastingSessionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingSessionConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "FastingTelemetryEventConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingTelemetryEventConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "FastingPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Infrastructure/Model/FastingPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
+      "line": 7
+    },
+    {
+      "name": "FastingCheckInRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Fasting/Infrastructure/Persistence/FastingCheckInRepository.cs",
+      "line": 9
+    },
+    {
+      "name": "FastingOccurrenceRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Fasting/Infrastructure/Persistence/FastingOccurrenceRepository.cs",
+      "line": 13
+    },
+    {
+      "name": "FastingPlanRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Fasting/Infrastructure/Persistence/FastingPlanRepository.cs",
+      "line": 9
+    },
+    {
+      "name": "FastingSessionRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Fasting/Infrastructure/Persistence/FastingSessionRepository.cs",
+      "line": 8
+    },
+    {
+      "name": "FastingTelemetryEventRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Fasting/Infrastructure/Persistence/FastingTelemetryEventRepository.cs",
+      "line": 8
+    },
+    {
       "name": "AggregateRoot",
       "kind": "class",
       "role": "Other",
@@ -25090,72 +25104,72 @@
     },
     {
       "interface": "IFastingAnalyticsService",
-      "interfacePath": "FoodDiary.Application.Fasting/Services/IFastingAnalyticsService.cs",
+      "interfacePath": "Modules/Fasting/Application/Services/IFastingAnalyticsService.cs",
       "implementation": "FastingAnalyticsService",
-      "implementationPath": "FoodDiary.Application.Fasting/Services/FastingAnalyticsService.cs",
+      "implementationPath": "Modules/Fasting/Application/Services/FastingAnalyticsService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFastingCheckInRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInRepository.cs",
+      "interfacePath": "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs",
       "implementation": "FastingCheckInRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Tracking/FastingCheckInRepository.cs",
+      "implementationPath": "Modules/Fasting/Infrastructure/Persistence/FastingCheckInRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFastingNotificationScheduler",
-      "interfacePath": "FoodDiary.Application.Fasting/Services/IFastingNotificationScheduler.cs",
+      "interfacePath": "Modules/Fasting/Contracts/Jobs/IFastingNotificationScheduler.cs",
       "implementation": "FastingNotificationScheduler",
-      "implementationPath": "FoodDiary.Application.Fasting/Services/FastingNotificationScheduler.cs",
+      "implementationPath": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFastingOccurrenceRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceRepository.cs",
+      "interfacePath": "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs",
       "implementation": "FastingOccurrenceRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Tracking/FastingOccurrenceRepository.cs",
+      "implementationPath": "Modules/Fasting/Infrastructure/Persistence/FastingOccurrenceRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFastingPlanRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanRepository.cs",
+      "interfacePath": "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs",
       "implementation": "FastingPlanRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Tracking/FastingPlanRepository.cs",
+      "implementationPath": "Modules/Fasting/Infrastructure/Persistence/FastingPlanRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFastingReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingReadService.cs",
+      "interfacePath": "Modules/Fasting/Contracts/Read/IFastingReadService.cs",
       "implementation": "FastingReadService",
-      "implementationPath": "FoodDiary.Application.Fasting/Services/FastingReadService.cs",
+      "implementationPath": "Modules/Fasting/Application/Services/FastingReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFastingSessionRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionRepository.cs",
+      "interfacePath": "Modules/Fasting/Application/Abstractions/Common/IFastingSessionRepository.cs",
       "implementation": "FastingSessionRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Tracking/FastingSessionRepository.cs",
+      "implementationPath": "Modules/Fasting/Infrastructure/Persistence/FastingSessionRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFastingTelemetryCleanupService",
-      "interfacePath": "FoodDiary.Application.Fasting/Services/IFastingTelemetryCleanupService.cs",
+      "interfacePath": "Modules/Fasting/Contracts/Jobs/IFastingTelemetryCleanupService.cs",
       "implementation": "FastingTelemetryCleanupService",
-      "implementationPath": "FoodDiary.Application.Fasting/Services/FastingTelemetryCleanupService.cs",
+      "implementationPath": "Modules/Fasting/Application/Services/FastingTelemetryCleanupService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFastingTelemetryEventRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventRepository.cs",
+      "interfacePath": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs",
       "implementation": "FastingTelemetryEventRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Tracking/FastingTelemetryEventRepository.cs",
+      "implementationPath": "Modules/Fasting/Infrastructure/Persistence/FastingTelemetryEventRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFastingTelemetrySummaryReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetrySummaryReadService.cs",
+      "interfacePath": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetrySummaryReadService.cs",
       "implementation": "FastingTelemetrySummaryReadService",
-      "implementationPath": "FoodDiary.Application.Fasting/Services/FastingTelemetrySummaryReadService.cs",
+      "implementationPath": "Modules/Fasting/Application/Services/FastingTelemetrySummaryReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26393,41 +26407,6 @@
       "line": 14
     },
     {
-      "service": "IFastingAnalyticsService",
-      "implementation": "FastingAnalyticsService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Fasting/DependencyInjection.cs",
-      "line": 14
-    },
-    {
-      "service": "IFastingReadService",
-      "implementation": "FastingReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Fasting/DependencyInjection.cs",
-      "line": 15
-    },
-    {
-      "service": "IFastingTelemetrySummaryReadService",
-      "implementation": "FastingTelemetrySummaryReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Fasting/DependencyInjection.cs",
-      "line": 16
-    },
-    {
-      "service": "IFastingTelemetryCleanupService",
-      "implementation": "FastingTelemetryCleanupService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Fasting/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IFastingNotificationScheduler",
-      "implementation": "FastingNotificationScheduler",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Fasting/DependencyInjection.cs",
-      "line": 18
-    },
-    {
       "service": "IFavoriteMealReadService",
       "implementation": "FavoriteMealReadService",
       "lifetime": "Scoped",
@@ -27142,41 +27121,6 @@
       "line": 32
     },
     {
-      "service": "IFastingPlanRepository",
-      "implementation": "FastingPlanRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
-      "line": 9
-    },
-    {
-      "service": "IFastingOccurrenceRepository",
-      "implementation": "FastingOccurrenceRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
-      "line": 12
-    },
-    {
-      "service": "IFastingCheckInRepository",
-      "implementation": "FastingCheckInRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
-      "line": 16
-    },
-    {
-      "service": "IFastingSessionRepository",
-      "implementation": "FastingSessionRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
-      "line": 20
-    },
-    {
-      "service": "IFastingTelemetryEventRepository",
-      "implementation": "FastingTelemetryEventRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
-      "line": 23
-    },
-    {
       "service": "IFavoriteMealRepository",
       "implementation": "FavoriteMealRepository",
       "lifetime": "Scoped",
@@ -27812,6 +27756,41 @@
       "lifetime": "Singleton",
       "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
       "line": 76
+    },
+    {
+      "service": "IFastingAnalyticsService",
+      "implementation": "FastingAnalyticsService",
+      "lifetime": "Scoped",
+      "path": "Modules/Fasting/Application/DependencyInjection.cs",
+      "line": 14
+    },
+    {
+      "service": "IFastingReadService",
+      "implementation": "FastingReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Fasting/Application/DependencyInjection.cs",
+      "line": 15
+    },
+    {
+      "service": "IFastingTelemetrySummaryReadService",
+      "implementation": "FastingTelemetrySummaryReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Fasting/Application/DependencyInjection.cs",
+      "line": 16
+    },
+    {
+      "service": "IFastingTelemetryCleanupService",
+      "implementation": "FastingTelemetryCleanupService",
+      "lifetime": "Scoped",
+      "path": "Modules/Fasting/Application/DependencyInjection.cs",
+      "line": 17
+    },
+    {
+      "service": "IFastingNotificationScheduler",
+      "implementation": "FastingNotificationScheduler",
+      "lifetime": "Scoped",
+      "path": "Modules/Fasting/Application/DependencyInjection.cs",
+      "line": 18
     },
     {
       "service": "IMediator",

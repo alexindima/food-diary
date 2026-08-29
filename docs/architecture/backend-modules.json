@@ -274,17 +274,27 @@
         "FastingTelemetryEvent"
       ],
       "sourceMappings": {
+        "logicalRoot": "Modules/Fasting",
         "applicationProjects": [
-          "FoodDiary.Application.Fasting"
+          "Modules/Fasting/Application"
+        ],
+        "applicationAbstractionProjects": [
+          "Modules/Fasting/Application/Abstractions"
+        ],
+        "contractProjects": [
+          "Modules/Fasting/Contracts"
+        ],
+        "domainProjects": [
+          "Modules/Fasting/Domain"
+        ],
+        "infrastructureProjects": [
+          "Modules/Fasting/Infrastructure"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Fasting/Infrastructure/Model"
         ],
         "abstractionAreas": [
           "Fasting"
-        ],
-        "domainAreas": [
-          "Tracking/Fasting"
-        ],
-        "persistenceAreas": [
-          "Tracking"
         ]
       }
     },

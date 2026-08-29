@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text.Json;
-using FoodDiary.Application.Fasting.Common;
+using FoodDiary.Modules.Fasting.Application.Common;
 
 namespace FoodDiary.Presentation.Api.Features.Logs.Requests;
 

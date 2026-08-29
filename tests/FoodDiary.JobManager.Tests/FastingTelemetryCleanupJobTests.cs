@@ -1,4 +1,3 @@
-using FoodDiary.Application.Fasting.Services;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;

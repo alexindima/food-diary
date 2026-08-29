@@ -25,6 +25,7 @@ public sealed class DashboardModuleExtractionTests {
             "FoodDiary.Application.Tdee",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.Fasting.Contracts",
         ], references);
     }
 

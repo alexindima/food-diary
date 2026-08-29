@@ -9,7 +9,7 @@
     "ContentReports": [],
     "Cycles": [],
     "DailyAdvices": [],
-    "Dashboard": ["Meals", "Cycles", "DailyAdvices", "Exercises", "Hydration", "Statistics", "Tdee"],
+    "Dashboard": ["Meals", "Cycles", "DailyAdvices", "Exercises", "Fasting", "Hydration", "Statistics", "Tdee"],
     "Dietologist": [],
     "Exercises": [],
     "Export": ["Meals", "Cycles"],

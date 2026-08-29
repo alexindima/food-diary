@@ -227,7 +227,10 @@ if ($databaseIntent) {
         'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs'
         'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs'
     ) | Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) }
-    $effectivePaths = @($effectivePaths + $databaseGroundingPaths | Sort-Object -Unique)
+    if ($callerPathCount -eq 0) {
+        $effectivePaths = @($effectivePaths + $databaseGroundingPaths | Sort-Object -Unique)
+        $inferredPaths = @($effectivePaths)
+    }
 }
 if ($identitySessionIntent) {
     $identitySessionGroundingPaths = @(
@@ -252,8 +255,6 @@ if ($identitySessionIntent) {
         # do not mix in coincidental symbol matches from unrelated modules.
         $effectivePaths = @($identitySessionGroundingPaths)
         $inferredPaths = @($identitySessionGroundingPaths)
-    } else {
-        $effectivePaths = @($effectivePaths + $identitySessionGroundingPaths | Sort-Object -Unique)
     }
 }
 if ($effectivePaths.Count -gt 0) {

@@ -1,5 +1,5 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Fasting.Commands.RecordFastingTelemetry;
+using FoodDiary.Modules.Fasting.Application.Commands.RecordFastingTelemetry;
 using FoodDiary.Presentation.Api.Features.Logs;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
 using FoodDiary.Mediator;

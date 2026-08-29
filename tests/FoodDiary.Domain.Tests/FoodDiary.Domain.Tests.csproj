@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
+    <ProjectReference Include="..\..\Modules\Fasting\Domain\FoodDiary.Modules.Fasting.Domain.csproj" />
   </ItemGroup>
 
 </Project>

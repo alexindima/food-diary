@@ -820,7 +820,7 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
                 ('code', 'authentication-validators', 'tests/FoodDiary.Application.Tests/Authentication/AuthenticationValidatorsTests.cs', 'authentication-validators', 'csharp', 'AuthenticationValidatorsTests', 'tests confirm start missing invalid user validator failures'),
                 ('code', 'admin-lesson-parser', 'FoodDiary.Application.Admin/Common/AdminLessonValueParser.cs', 'admin-lesson-parser', 'csharp', 'AdminLessonValueParser', 'parser category difficulty enum field lesson'),
                 ('code', 'admin-lesson-validator', 'FoodDiary.Application.Admin/Commands/CreateAdminLesson/CreateAdminLessonCommandValidator.cs', 'admin-lesson-validator', 'csharp', 'CreateAdminLessonCommandValidator', 'validator command lesson category difficulty enum field'),
-                ('code', 'generic-enum-parser', 'FoodDiary.Application.Fasting/Common/EnumValueParser.cs', 'generic-enum-parser', 'csharp', 'EnumValueParser', 'parser category difficulty enum field'),
+                ('code', 'generic-enum-parser', 'Modules/Fasting/Application/Common/EnumValueParser.cs', 'generic-enum-parser', 'csharp', 'EnumValueParser', 'parser category difficulty enum field'),
                 ('code', 'coverage-exact', 'FoodDiary.Infrastructure/Services/CoverageBranch.cs', 'coverage-exact', 'csharp', 'coveragebranch', 'coveragebranch'),
                 ('code', 'coverage-frontend', 'FoodDiary.Web.Client/src/app/coveragebranch.ts', 'coverage-frontend', 'typescript', 'CoverageBranch', 'coveragebranch'),
                 ('code', 'scope-a-one', 'FoodDiary.Web.Client/src/app/scope-a/first.ts', 'scope-a-one', 'typescript', 'Scope Diversity First', 'scopediversity'),

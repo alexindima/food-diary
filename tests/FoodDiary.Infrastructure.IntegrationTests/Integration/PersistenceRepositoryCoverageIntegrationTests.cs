@@ -52,6 +52,7 @@ using FoodDiary.Infrastructure.Persistence.Recipes;
 using FoodDiary.Infrastructure.Persistence.ShoppingLists;
 using FoodDiary.Infrastructure.Persistence.Tracking;
 using FoodDiary.Infrastructure.Persistence.Users;
+using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Caching.Memory;

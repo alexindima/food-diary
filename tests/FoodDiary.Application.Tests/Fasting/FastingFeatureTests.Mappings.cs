@@ -1,6 +1,6 @@
-using FoodDiary.Application.Fasting.Mappings;
-using FoodDiary.Application.Abstractions.Fasting.Models;
-using FoodDiary.Application.Fasting.Services;
+using FoodDiary.Modules.Fasting.Application.Mappings;
+using FoodDiary.Modules.Fasting.Contracts.Read.Models;
+using FoodDiary.Modules.Fasting.Application.Services;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

@@ -1,7 +1,7 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
-using FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
-using FoodDiary.Application.Abstractions.Fasting.Models;
+using FoodDiary.Modules.Fasting.Application.Commands.PostponeCyclicDay;
+using FoodDiary.Modules.Fasting.Application.Commands.SkipCyclicDay;
+using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;

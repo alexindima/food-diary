@@ -1,4 +1,4 @@
-using FoodDiary.Application.Fasting.Common;
+using FoodDiary.Modules.Fasting.Application.Common;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
 using FoodDiary.Presentation.Api.Features.Logs.Mappings;
 using FoodDiary.Mediator;

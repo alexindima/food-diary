@@ -4,8 +4,8 @@
     {
       "id": "fasting-api",
       "changedPaths": [
-        "FoodDiary.Application/Fasting/Commands/Start/StartFastingCommandHandler.cs",
-        "FoodDiary.Presentation.Api/Features/Fasting/FastingController.cs"
+        "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandHandler.cs",
+        "FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs"
       ],
       "expectedModules": ["Fasting"],
       "expectedScopes": ["Backend", "Api", "Contracts"],
@@ -196,7 +196,7 @@
     {
       "id": "backend-command-consumer-change",
       "changedPaths": [
-        "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs"
       ],
       "expectedModules": ["Fasting"],
       "expectedScopes": ["Backend"],

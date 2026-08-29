@@ -8,7 +8,7 @@ using FoodDiary.Application.Dashboard;
 using FoodDiary.Application.Hydration;
 using FoodDiary.Application.Dietologist;
 using FoodDiary.Application.Exercises;
-using FoodDiary.Application.Fasting;
+using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Application.Favorites;
 using FoodDiary.Application.Identity;
 using FoodDiary.Application.Images;

@@ -652,6 +652,9 @@ foreach ($frontendProjectResult in $frontendProjectResults) {
 $guideCandidates = [System.Collections.Generic.List[object]]::new()
 foreach ($guidePath in $catalog.knowledgeSources.agentGuides) {
     $absolutePath = Join-Path $repositoryRoot $guidePath
+    if (-not (Test-Path -LiteralPath $absolutePath -PathType Leaf)) {
+        continue
+    }
     $content = Get-Content -LiteralPath $absolutePath -Raw
     $pathScore = Get-SearchScore $guidePath $tokens 10 20
     $contentScore = Get-SearchScore $content $tokens 1 4

@@ -28,7 +28,7 @@ Use one compiled packet when several change-aware views are needed:
 ```powershell
 ./.llm-wiki/wiki.ps1 packet `
   -Objective "Safely evolve fasting start" `
-  -ChangedPath FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommand.cs `
+  -ChangedPath Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs `
   -OutputPath .artifacts/llm-wiki/change-packet.json
 ```
 

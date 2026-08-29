@@ -162,6 +162,9 @@ dotnet_diagnostic.MA0008.severity = suggestion
 [FoodDiary.Domain/Entities/**/*.cs]
 dotnet_diagnostic.RCS1170.severity = none
 
+[Modules/Fasting/Domain/Entities/**/*.cs]
+dotnet_diagnostic.RCS1170.severity = none
+
 [FoodDiary.Domain/Common/Entity.cs]
 dotnet_diagnostic.IDE0032.severity = none
 

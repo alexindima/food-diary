@@ -28,7 +28,7 @@ Create a plan from an explicit path set or the current diff:
 ```powershell
 ./.llm-wiki/wiki.ps1 plan `
   -Objective "Add an optional fasting start note safely" `
-  -ChangedPath FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommand.cs
+  -ChangedPath Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs
 ```
 
 The plan orders context discovery, contract migration, domain/data work, implementation, focused verification, deterministic artifact refresh, and release readiness. Phases include concrete files, expected evidence, and stop conditions.

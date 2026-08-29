@@ -9,7 +9,7 @@ import { DatabaseSync } from 'node:sqlite';
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
 const parserVersion = '14-backend-only-bootstrap-v1';
-const contextSearchSchemaVersion = '5';
+const contextSearchSchemaVersion = '7';
 const compiledIndexSchemaVersion = '4';
 const queryDocumentSchemaVersion = '9';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
@@ -925,15 +925,16 @@ function contextSearchFeatures(path, recordType) {
   const fileName = basename(lower);
   const extension = extname(lower);
   const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(normalized);
+  const moduleFolderMatch = /^Modules\/([^/]+)\/(?:Application|Contracts)(?:\/|$)/i.exec(normalized);
   const layer = lower.startsWith('.llm-wiki/') ? 'wiki'
     : lower.startsWith('docs/') ? 'documentation'
       : isTest ? 'tests'
         : lower.includes('presentation') || lower.includes('web.api') ? 'api'
           : lower.includes('infrastructure') || lower.includes('integrations') || lower.includes('jobmanager') ? 'infrastructure'
-            : lower.includes('application') ? 'application'
+            : moduleFolderMatch || lower.includes('application') ? 'application'
               : lower.includes('domain') ? 'domain'
                 : lower.includes('web.client') ? 'frontend' : 'other';
-  const module = normalized.split('/')[0] || recordType || 'other';
+  const module = moduleFolderMatch?.[1] ?? (normalized.split('/')[0] || recordType || 'other');
   const rolePatterns = [
     ['handler', /handler\.[^.]+$/], ['validator', /validator(?:tests?)?\.[^.]+$/],
     ['repository', /repository(?:tests?)?\.[^.]+$/], ['controller', /controller(?:tests?)?\.[^.]+$/],
@@ -954,9 +955,11 @@ function refreshContextSearch(database) {
     SELECT category, record_key recordKey, path, source_path sourcePath, record_kind recordKind, payload_json payloadJson
     FROM query_documents ORDER BY category, record_key, path
   `).all();
-  const documentation = contextDocumentPaths().map((path) => {
-    const text = readFileSync(resolve(repositoryRoot, path), 'utf8');
-    return { path, text, contentHash: sha256(text) };
+  const documentation = contextDocumentPaths().flatMap((path) => {
+    const absolutePath = resolve(repositoryRoot, path);
+    if (!existsSync(absolutePath)) return [];
+    const text = readFileSync(absolutePath, 'utf8');
+    return [{ path, text, contentHash: sha256(text) }];
   });
   const fingerprint = sha256(JSON.stringify({
     schema: contextSearchSchemaVersion,

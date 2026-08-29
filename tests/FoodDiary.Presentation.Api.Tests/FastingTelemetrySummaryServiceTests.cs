@@ -1,10 +1,10 @@
 using System.Text.Json;
 using FoodDiary.Results;
-using FoodDiary.Application.Fasting.Commands.RecordFastingTelemetry;
+using FoodDiary.Modules.Fasting.Application.Commands.RecordFastingTelemetry;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Abstractions.Fasting.Models;
-using FoodDiary.Application.Fasting.Queries.GetFastingTelemetrySummary;
-using FoodDiary.Application.Fasting.Services;
+using FoodDiary.Modules.Fasting.Application.Queries.GetFastingTelemetrySummary;
+using FoodDiary.Modules.Fasting.Application.Services;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;

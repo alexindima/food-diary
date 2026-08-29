@@ -77,9 +77,9 @@ Fasting exclusively owns mutation of:
 - `FastingSession`;
 - `FastingTelemetryEvent`.
 
-Its repository and cross-module read contracts live under `FoodDiary.Application.Abstractions/Fasting`, domain behavior under `FoodDiary.Domain/Entities/Tracking/Fasting`, application behavior under `FoodDiary.Application.Fasting`, and EF implementations/configuration under Fasting-specific infrastructure folders.
+The logical module root is `Modules/Fasting`. Stable cross-module reads and operational job contracts live in `Contracts`; implementation slices live in `Application`; repository ports and internal persistence projections live in `Application/Abstractions`; aggregates, enums, and identifiers live in `Domain`; repositories live in `Infrastructure/Persistence`; and EF configurations live in `Infrastructure/Model`. Existing Fasting domain CLR namespaces are intentionally preserved while files move, preventing an accidental EF model-identity or schema change.
 
-Other application modules must not acquire Fasting repositories. Infrastructure implementations live under `Persistence/Tracking`, and their EF configurations under `Persistence/Configurations/Tracking`; this placement is enforced by architecture tests.
+Other application modules must not acquire Fasting repositories. The shared `FoodDiaryDbContext`, migrations, and model snapshot remain in central `FoodDiary.Infrastructure`; it references only the module's Domain and persistence-model projects. Module Infrastructure references the shared context, while central Infrastructure must not reference the module Infrastructure project, keeping the project graph acyclic.
 
 ### Approved dependencies
 
@@ -89,6 +89,8 @@ Fasting Application may depend on:
 - Users application/application-abstraction `Common` contracts, including `ICurrentUserAccessService`, to establish the acting user boundary;
 - Notifications application/application-abstraction `Common` contracts to create, deduplicate and deliver fasting notifications, including `INotificationClientRefreshService` for post-commit client refresh;
 - its own contracts, models and domain types.
+
+Composition roots may reference the implementation project to call `AddFastingModule`. Runtime consumers such as Dashboard and job implementations reference `FoodDiary.Modules.Fasting.Contracts`; a job host may additionally reference the implementation project solely because it is also a composition root.
 
 It must not acquire repositories or application services from other features without updating this document and the architecture guardrail intentionally.
 

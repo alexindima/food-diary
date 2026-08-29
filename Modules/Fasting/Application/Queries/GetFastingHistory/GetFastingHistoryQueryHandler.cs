@@ -1,0 +1,40 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Modules.Fasting.Contracts.Read.Models;
+using FoodDiary.Modules.Fasting.Application.Services;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Modules.Fasting.Application.Queries.GetFastingHistory;
+
+public sealed class GetFastingHistoryQueryHandler(
+    IFastingAnalyticsService fastingAnalyticsService,
+    ICurrentUserAccessService currentUserAccessService)
+    : IQueryHandler<GetFastingHistoryQuery, Result<PagedResponse<FastingSessionModel>>> {
+    public async Task<Result<PagedResponse<FastingSessionModel>>> Handle(
+        GetFastingHistoryQuery query, CancellationToken cancellationToken) {
+        Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
+            query.UserId,
+            currentUserAccessService,
+            cancellationToken).ConfigureAwait(false);
+        if (userIdResult.IsFailure) {
+            return CurrentUserAccessResolver.ToFailure<PagedResponse<FastingSessionModel>>(userIdResult);
+        }
+
+        UserId userId = userIdResult.Value;
+        return Result.Success(await fastingAnalyticsService.GetHistoryAsync(
+            userId,
+            PaginationPolicy.NormalizePage(query.Page),
+            PaginationPolicy.NormalizePageSize(query.Limit, defaultPageSize: 1, maxPageSize: 50),
+            NormalizeUtc(query.From),
+            NormalizeUtc(query.To),
+            cancellationToken).ConfigureAwait(false));
+    }
+
+    private static DateTime NormalizeUtc(DateTime value) =>
+        value.Kind == DateTimeKind.Unspecified
+            ? DateTime.SpecifyKind(value, DateTimeKind.Utc)
+            : value.ToUniversalTime();
+}

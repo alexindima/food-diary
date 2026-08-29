@@ -19,7 +19,6 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Application.Dietologist",
             "FoodDiary.Application.Exercises",
             "FoodDiary.Application.Export",
-            "FoodDiary.Application.Fasting",
             "FoodDiary.Application.Favorites",
             "FoodDiary.Application.Gamification",
             "FoodDiary.Application.Hydration",
@@ -43,6 +42,7 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Application.WeeklyCheckIn",
             "FoodDiary.Application.WeeklyGoals",
             "FoodDiary.Infrastructure",
+            "FoodDiary.Modules.Fasting.Infrastructure",
         ];
         string[] expectedPackageReferences = [
             "Microsoft.EntityFrameworkCore",

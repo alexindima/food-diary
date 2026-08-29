@@ -1,16 +1,16 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Fasting.Commands.EndFasting;
-using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
-using FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
-using FoodDiary.Application.Fasting.Commands.ReduceActiveFastingTarget;
-using FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
-using FoodDiary.Application.Fasting.Commands.StartFasting;
-using FoodDiary.Application.Fasting.Commands.UpdateCurrentFastingCheckIn;
-using FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
-using FoodDiary.Application.Fasting.Queries.GetFastingHistory;
-using FoodDiary.Application.Fasting.Queries.GetFastingInsights;
-using FoodDiary.Application.Fasting.Queries.GetFastingOverview;
-using FoodDiary.Application.Fasting.Queries.GetFastingStats;
+using FoodDiary.Modules.Fasting.Application.Commands.EndFasting;
+using FoodDiary.Modules.Fasting.Application.Commands.ExtendActiveFasting;
+using FoodDiary.Modules.Fasting.Application.Commands.PostponeCyclicDay;
+using FoodDiary.Modules.Fasting.Application.Commands.ReduceActiveFastingTarget;
+using FoodDiary.Modules.Fasting.Application.Commands.SkipCyclicDay;
+using FoodDiary.Modules.Fasting.Application.Commands.StartFasting;
+using FoodDiary.Modules.Fasting.Application.Commands.UpdateCurrentFastingCheckIn;
+using FoodDiary.Modules.Fasting.Application.Queries.GetCurrentFasting;
+using FoodDiary.Modules.Fasting.Application.Queries.GetFastingHistory;
+using FoodDiary.Modules.Fasting.Application.Queries.GetFastingInsights;
+using FoodDiary.Modules.Fasting.Application.Queries.GetFastingOverview;
+using FoodDiary.Modules.Fasting.Application.Queries.GetFastingStats;
 
 namespace FoodDiary.Application.Tests.Fasting;
 

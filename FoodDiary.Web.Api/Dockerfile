@@ -16,7 +16,12 @@ COPY FoodDiary.Application.Billing/*.csproj FoodDiary.Application.Billing/
 COPY FoodDiary.Application.Marketing/*.csproj FoodDiary.Application.Marketing/
 COPY FoodDiary.Application.Users/*.csproj FoodDiary.Application.Users/
 COPY FoodDiary.Application.Dietologist/*.csproj FoodDiary.Application.Dietologist/
-COPY FoodDiary.Application.Fasting/*.csproj FoodDiary.Application.Fasting/
+COPY Modules/Fasting/*.csproj Modules/Fasting/
+COPY Modules/Fasting/Application/Abstractions/*.csproj Modules/Fasting/Application/Abstractions/
+COPY Modules/Fasting/Contracts/*.csproj Modules/Fasting/Contracts/
+COPY Modules/Fasting/Domain/*.csproj Modules/Fasting/Domain/
+COPY Modules/Fasting/Infrastructure/*.csproj Modules/Fasting/Infrastructure/
+COPY Modules/Fasting/Infrastructure/Model/*.csproj Modules/Fasting/Infrastructure/Model/
 COPY FoodDiary.Application.Favorites/*.csproj FoodDiary.Application.Favorites/
 COPY FoodDiary.Application.Identity/*.csproj FoodDiary.Application.Identity/
 COPY FoodDiary.Application.MealPlanning/*.csproj FoodDiary.Application.MealPlanning/
@@ -66,7 +71,12 @@ COPY FoodDiary.Application.Billing/ FoodDiary.Application.Billing/
 COPY FoodDiary.Application.Marketing/ FoodDiary.Application.Marketing/
 COPY FoodDiary.Application.Users/ FoodDiary.Application.Users/
 COPY FoodDiary.Application.Dietologist/ FoodDiary.Application.Dietologist/
-COPY FoodDiary.Application.Fasting/ FoodDiary.Application.Fasting/
+COPY Modules/Fasting/ Modules/Fasting/
+COPY Modules/Fasting/Application/Abstractions/ Modules/Fasting/Application/Abstractions/
+COPY Modules/Fasting/Contracts/ Modules/Fasting/Contracts/
+COPY Modules/Fasting/Domain/ Modules/Fasting/Domain/
+COPY Modules/Fasting/Infrastructure/ Modules/Fasting/Infrastructure/
+COPY Modules/Fasting/Infrastructure/Model/ Modules/Fasting/Infrastructure/Model/
 COPY FoodDiary.Application.Favorites/ FoodDiary.Application.Favorites/
 COPY FoodDiary.Application.Identity/ FoodDiary.Application.Identity/
 COPY FoodDiary.Application.MealPlanning/ FoodDiary.Application.MealPlanning/

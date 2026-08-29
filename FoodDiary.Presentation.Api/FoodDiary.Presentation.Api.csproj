@@ -21,7 +21,8 @@
     <ProjectReference Include="..\FoodDiary.Application.Dietologist\FoodDiary.Application.Dietologist.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Exercises\FoodDiary.Application.Exercises.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Export\FoodDiary.Application.Export.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Fasting\FoodDiary.Application.Fasting.csproj" />
+    <ProjectReference Include="..\Modules\Fasting\Contracts\FoodDiary.Modules.Fasting.Contracts.csproj" />
+    <ProjectReference Include="..\Modules\Fasting\FoodDiary.Modules.Fasting.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Favorites\FoodDiary.Application.Favorites.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Gamification\FoodDiary.Application.Gamification.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Hydration\FoodDiary.Application.Hydration.csproj" />

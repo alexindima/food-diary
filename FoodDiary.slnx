@@ -17,7 +17,12 @@
     <Project Path="FoodDiary.Application.BodyMetrics/FoodDiary.Application.BodyMetrics.csproj" />
     <Project Path="FoodDiary.Application.Cycles/FoodDiary.Application.Cycles.csproj" />
     <Project Path="FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj" />
-    <Project Path="FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj" />
+    <Project Path="Modules/Fasting/Application/Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj" />
+    <Project Path="Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj" />
+    <Project Path="Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj" />
+    <Project Path="Modules/Fasting/FoodDiary.Modules.Fasting.csproj" />
+    <Project Path="Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj" />
+    <Project Path="Modules/Fasting/Infrastructure/Model/FoodDiary.Modules.Fasting.PersistenceModel.csproj" />
     <Project Path="FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj" />
     <Project Path="FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj" />
     <Project Path="FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj" />

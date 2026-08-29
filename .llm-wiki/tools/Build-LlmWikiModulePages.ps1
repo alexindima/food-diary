@@ -97,7 +97,7 @@ $sourceFiles = @(
     $repositoryFilePaths |
         Where-Object {
             $_ -match '\.cs$' -and
-            $_ -match '^(?:FoodDiary\.Application(?:\.|/)|FoodDiary\.Presentation\.Api/|FoodDiary\.JobManager/|FoodDiary\.Initializer/|FoodDiary\.Web\.Api/|FoodDiary\.Integrations/)' -and
+            $_ -match '^(?:Modules/|FoodDiary\.Application(?:\.|/)|FoodDiary\.Presentation\.Api/|FoodDiary\.JobManager/|FoodDiary\.Initializer/|FoodDiary\.Web\.Api/|FoodDiary\.Integrations/)' -and
             "/$_/" -notmatch '/(node_modules|obj|bin|dist[^/]*|coverage|\.artifacts|TestResults)/'
         } |
         Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) } |
@@ -147,6 +147,9 @@ foreach ($hostArea in @('FoodDiary.Presentation.Api', 'FoodDiary.JobManager', 'F
         foreach ($match in [regex]::Matches($file.content, 'FoodDiary\.Application(?:\.Abstractions)?\.(?<area>[A-Za-z0-9_]+)(?:\.|;)', [Text.RegularExpressions.RegexOptions]::IgnoreCase)) {
             [void]$referencedAreas.Add($match.Groups['area'].Value)
         }
+        foreach ($match in [regex]::Matches($file.content, 'FoodDiary\.Modules\.(?<area>[A-Za-z0-9_]+)(?:\.|;)', [Text.RegularExpressions.RegexOptions]::IgnoreCase)) {
+            [void]$referencedAreas.Add($match.Groups['area'].Value)
+        }
     }
     $hostSourceAreas[$hostArea] = $referencedAreas
 }
@@ -166,6 +169,21 @@ function Get-SourceAreaPaths {
 
     $candidatePaths = [Collections.Generic.List[string]]::new()
     foreach ($projectName in @(Get-BoundaryMappingValues $Boundary 'applicationProjects' @("FoodDiary.Application/$ModuleName"))) {
+        $candidatePaths.Add([string]$projectName)
+    }
+    foreach ($projectName in @(Get-BoundaryMappingValues $Boundary 'applicationAbstractionProjects' @())) {
+        $candidatePaths.Add([string]$projectName)
+    }
+    foreach ($projectName in @(Get-BoundaryMappingValues $Boundary 'contractProjects' @())) {
+        $candidatePaths.Add([string]$projectName)
+    }
+    foreach ($projectName in @(Get-BoundaryMappingValues $Boundary 'domainProjects' @())) {
+        $candidatePaths.Add([string]$projectName)
+    }
+    foreach ($projectName in @(Get-BoundaryMappingValues $Boundary 'infrastructureProjects' @())) {
+        $candidatePaths.Add([string]$projectName)
+    }
+    foreach ($projectName in @(Get-BoundaryMappingValues $Boundary 'persistenceModelProjects' @())) {
         $candidatePaths.Add([string]$projectName)
     }
     foreach ($area in @(Get-BoundaryMappingValues $Boundary 'abstractionAreas' @($ModuleName))) {
@@ -198,6 +216,10 @@ function Get-ReferencedContractAreas {
                 $area = $match.Groups['area'].Value
                 if ($area -notin @('Common', $OwningModule)) { [void]$areas.Add($area) }
             }
+            foreach ($match in [regex]::Matches($file.content, 'FoodDiary\.Modules\.(?<area>[A-Za-z0-9_]+)\.Contracts')) {
+                $area = $match.Groups['area'].Value
+                if ($area -ne $OwningModule) { [void]$areas.Add($area) }
+            }
         }
     }
     return @($areas | Sort-Object { Get-LlmWikiOrdinalSortKey $_ })
@@ -209,7 +231,12 @@ function Get-HostConsumers {
     $consumers = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
     if (-not [string]::IsNullOrWhiteSpace($ExtractedProject)) {
         foreach ($project in @($catalog.dotnet.projects)) {
-            if (-not [bool]$project.isTestProject -and @($project.projectReferences) -contains $ExtractedProject) {
+            $isInternalModuleProject = ([string]$project.name).StartsWith(
+                "FoodDiary.Modules.$ModuleName.",
+                [StringComparison]::Ordinal)
+            if (-not [bool]$project.isTestProject -and
+                -not $isInternalModuleProject -and
+                @($project.projectReferences) -contains $ExtractedProject) {
                 [void]$consumers.Add([string]$project.name)
             }
         }
@@ -263,14 +290,20 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
             Sort-Object { Get-LlmWikiOrdinalSortKey $_.path }
     )
     $sourceDirectories = @(Get-SourceAreaPaths $moduleName $boundary)
-    $applicationSourceAreas = @($sourceDirectories | Where-Object { $_ -match '^FoodDiary\.Application(?:\.|/)' })
+    $applicationSourceAreas = @($sourceDirectories | Where-Object { $_ -match '^(?:FoodDiary\.Application(?:\.|/)|Modules/[^/]+/Application(?:/|$))' })
     $contractAreas = @(Get-BoundaryMappingValues $boundary 'abstractionAreas' @($moduleName))
+    $contractProjectAreas = @(Get-BoundaryMappingValues $boundary 'contractProjects' @())
     $contractDependencies = @(Get-ReferencedContractAreas $applicationSourceAreas $moduleName)
     $hostConsumers = @(Get-HostConsumers $moduleName $contractAreas ([string]$module.project))
     $publicContractFiles = @(
         foreach ($area in $contractAreas) {
             $contractArea = "FoodDiary.Application.Abstractions/$area"
             Get-SourceFilesUnder $contractArea | Where-Object {
+                $_.content -match '\bpublic\s+(?:(?:sealed|abstract|partial|readonly|static)\s+)*(?:interface|record|class|struct|enum)\b'
+            }
+        }
+        foreach ($contractProjectArea in $contractProjectAreas) {
+            Get-SourceFilesUnder ([string]$contractProjectArea) | Where-Object {
                 $_.content -match '\bpublic\s+(?:(?:sealed|abstract|partial|readonly|static)\s+)*(?:interface|record|class|struct|enum)\b'
             }
         }

@@ -1,15 +1,15 @@
 using FoodDiary.Presentation.Api.Features.Fasting.Mappings;
 using FoodDiary.Presentation.Api.Features.Fasting.Requests;
-using FoodDiary.Application.Abstractions.Fasting.Models;
-using FoodDiary.Application.Fasting.Commands.StartFasting;
-using FoodDiary.Application.Fasting.Commands.EndFasting;
-using FoodDiary.Application.Fasting.Queries.GetFastingHistory;
-using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
-using FoodDiary.Application.Fasting.Commands.ReduceActiveFastingTarget;
-using FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
-using FoodDiary.Application.Fasting.Queries.GetFastingOverview;
-using FoodDiary.Application.Fasting.Queries.GetFastingStats;
-using FoodDiary.Application.Fasting.Queries.GetFastingInsights;
+using FoodDiary.Modules.Fasting.Contracts.Read.Models;
+using FoodDiary.Modules.Fasting.Application.Commands.StartFasting;
+using FoodDiary.Modules.Fasting.Application.Commands.EndFasting;
+using FoodDiary.Modules.Fasting.Application.Queries.GetFastingHistory;
+using FoodDiary.Modules.Fasting.Application.Commands.ExtendActiveFasting;
+using FoodDiary.Modules.Fasting.Application.Commands.ReduceActiveFastingTarget;
+using FoodDiary.Modules.Fasting.Application.Queries.GetCurrentFasting;
+using FoodDiary.Modules.Fasting.Application.Queries.GetFastingOverview;
+using FoodDiary.Modules.Fasting.Application.Queries.GetFastingStats;
+using FoodDiary.Modules.Fasting.Application.Queries.GetFastingInsights;
 using FoodDiary.Presentation.Api.Features.Fasting.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;

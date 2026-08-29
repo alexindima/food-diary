@@ -113,6 +113,12 @@
       },
       "fooddiary.domain.primitives": {
         "type": "Project"
+      },
+      "fooddiary.modules.fasting.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
       }
     }
   }

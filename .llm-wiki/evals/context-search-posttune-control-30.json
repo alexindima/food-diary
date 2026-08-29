@@ -69,7 +69,7 @@
 
     { "id": "posttune-back-001", "cohort": "backend-roles", "query": "read service текущего menstrual cycle", "changeType": "Backend", "expectedPaths": ["FoodDiary.Application.Cycles/Services/CycleReadService.cs"] },
     { "id": "posttune-back-002", "cohort": "backend-roles", "query": "admin read service уроков питания", "changeType": "Backend", "expectedPaths": ["FoodDiary.Application.Lessons/Services/LessonAdministrationReadService.cs"] },
-    { "id": "posttune-back-003", "cohort": "backend-roles", "query": "planner intermittent fasting notifications", "changeType": "Backend", "expectedPaths": ["FoodDiary.Application.Fasting/Services/FastingIntermittentNotificationPlanner.cs"] },
+    { "id": "posttune-back-003", "cohort": "backend-roles", "query": "planner intermittent fasting notifications", "changeType": "Backend", "expectedPaths": ["Modules/Fasting/Application/Services/FastingIntermittentNotificationPlanner.cs"] },
     { "id": "posttune-back-004", "cohort": "backend-roles", "query": "обязательный parser id упражнения", "changeType": "Backend", "expectedPaths": ["FoodDiary.Application.Exercises/Internal/RequiredIdParser.cs"] },
     { "id": "posttune-back-005", "cohort": "backend-roles", "query": "options USDA API integration", "changeType": "Backend", "expectedPaths": ["FoodDiary.Integrations/Options/UsdaApiOptions.cs"] },
 

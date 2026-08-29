@@ -199,7 +199,7 @@
       "query": "storage or provider implementation for tracking fasting session configuration",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Infrastructure/Persistence/Configurations/Tracking/FastingSessionConfiguration.cs"
+        "Modules/Fasting/Infrastructure/Model/Configurations/FastingSessionConfiguration.cs"
       ]
     },
     {
@@ -847,7 +847,7 @@
       "query": "storage or provider implementation for tracking fasting plan repository",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Infrastructure/Persistence/Tracking/FastingPlanRepository.cs"
+        "Modules/Fasting/Infrastructure/Persistence/FastingPlanRepository.cs"
       ]
     },
     {

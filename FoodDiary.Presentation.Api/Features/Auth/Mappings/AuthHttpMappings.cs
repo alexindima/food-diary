@@ -6,15 +6,19 @@ using FoodDiary.Application.Identity.Authentication.Commands.GoogleLogin;
 using FoodDiary.Application.Identity.Authentication.Commands.LinkGoogle;
 using FoodDiary.Application.Identity.Authentication.Commands.LinkTelegram;
 using FoodDiary.Application.Identity.Authentication.Commands.Login;
+using FoodDiary.Application.Identity.Authentication.Commands.Logout;
 using FoodDiary.Application.Identity.Authentication.Commands.RefreshToken;
 using FoodDiary.Application.Identity.Authentication.Commands.Register;
 using FoodDiary.Application.Identity.Authentication.Commands.RequestPasswordReset;
 using FoodDiary.Application.Identity.Authentication.Commands.ResendEmailVerification;
 using FoodDiary.Application.Identity.Authentication.Commands.RestoreAccount;
+using FoodDiary.Application.Identity.Authentication.Commands.RevokeOtherSessions;
+using FoodDiary.Application.Identity.Authentication.Commands.RevokeSession;
 using FoodDiary.Application.Identity.Authentication.Commands.TelegramBotAuth;
 using FoodDiary.Application.Identity.Authentication.Commands.TelegramLoginWidget;
 using FoodDiary.Application.Identity.Authentication.Commands.TelegramVerify;
 using FoodDiary.Application.Identity.Authentication.Commands.VerifyEmail;
+using FoodDiary.Application.Identity.Authentication.Queries.GetActiveSessions;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using Microsoft.AspNetCore.Http;
@@ -142,6 +146,15 @@ public static class AuthHttpMappings {
     }
 
     extension(Guid userId) {
+        public GetActiveSessionsQuery ToGetActiveSessionsQuery(Guid currentSessionId) =>
+            new(userId, currentSessionId);
+
+        public RevokeSessionCommand ToRevokeSessionCommand(Guid currentSessionId, Guid sessionId) =>
+            new(userId, currentSessionId, sessionId);
+
+        public RevokeOtherSessionsCommand ToRevokeOtherSessionsCommand(Guid currentSessionId) =>
+            new(userId, currentSessionId);
+
         public ResendEmailVerificationCommand ToResendVerificationCommand(string? clientOrigin = null) {
             return new ResendEmailVerificationCommand(
                 UserId: userId,
@@ -150,6 +163,10 @@ public static class AuthHttpMappings {
         public AdminSsoStartCommand ToAdminSsoStartCommand() {
             return new AdminSsoStartCommand(UserId: userId);
         }
+    }
+
+    extension(string? refreshToken) {
+        public LogoutCommand ToLogoutCommand() => new(refreshToken);
     }
 
     extension(VerifyEmailHttpRequest request) {

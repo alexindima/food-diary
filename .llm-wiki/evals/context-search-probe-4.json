@@ -54,7 +54,7 @@
       "id": "fasting-historical-insight-builder-probe-4",
       "query": "build historical insights from completed fasting occurrences",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Fasting/Services/FastingHistoricalInsightBuilder.cs"]
+      "expectedPaths": ["Modules/Fasting/Application/Services/FastingHistoricalInsightBuilder.cs"]
     },
     {
       "id": "initial-admin-bootstrap-service-probe-4",

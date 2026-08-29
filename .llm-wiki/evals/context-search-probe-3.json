@@ -42,7 +42,7 @@
       "id": "fasting-check-in-reminder-planner-probe-3",
       "query": "plan due reminders for missing fasting check-ins",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Fasting/Services/FastingCheckInReminderPlanner.cs"]
+      "expectedPaths": ["Modules/Fasting/Application/Services/FastingCheckInReminderPlanner.cs"]
     },
     {
       "id": "authentication-token-service-probe-3",

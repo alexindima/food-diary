@@ -60,7 +60,7 @@ flowchart LR
 
 Core rules:
 - `Domain` has no application, infrastructure, presentation, or host dependencies.
-- Each `Application.<Feature>` module owns its use cases and depends only on approved abstractions, domain types, and mediator contracts.
+- Each business module owns its use cases and depends only on approved abstractions, domain types, and mediator contracts. Most remain `Application.<Feature>` projects; incrementally extracted modules may use a canonical `Modules/<Feature>` root.
 - `Application.Runtime` owns mediator behaviors, transaction boundaries, and post-commit execution; it does not aggregate feature modules.
 - `Application.Abstractions` owns ports/models, not infrastructure or transport.
 - `Infrastructure` implements abstractions and owns EF Core/persistence; its composition root delegates to explicit technical modules.
@@ -75,9 +75,9 @@ Core rules:
 ## Application Read Boundaries
 Business-module ownership inside the primary backend is defined in `docs/backend/BACKEND_MODULE_OWNERSHIP.md`. Layer sharing and a shared `DbContext` do not imply shared write ownership: cross-module mutations go through the owning module, while composed reads use explicit projection/read-service contracts. Fasting introduced the executable vertical-boundary pattern; it is now applied across the governed modules, hosts/adapters and the explicit cross-module projection allowlist.
 
-Application service composition follows the same ownership model. `FoodDiary.Application.Runtime` registers mediator, validation, transaction, and post-commit behaviors. Each `FoodDiary.Application.<Feature>` project owns its feature registration, and executable composition roots register the required modules explicitly. Architecture tests prevent a feature-project aggregator from regrowing.
+Application service composition follows the same ownership model. `FoodDiary.Application.Runtime` registers mediator, validation, transaction, and post-commit behaviors. Each feature project owns its registration, and executable composition roots register the required modules explicitly. Fasting is the first complete `Modules/<Feature>` pilot: Domain, Application, Application Abstractions, Contracts, persistence model, and repository implementation projects share one logical identity. The shared `FoodDiaryDbContext`, migration history, and model snapshot remain in central Infrastructure so the application keeps one migration host and one database. Architecture tests prevent a feature-project aggregator from regrowing.
 
-Business use cases are physically extracted across the `FoodDiary.Application.<Feature>` projects listed in `docs/BACKEND_MODULE_MAP.md`. They reference application-facing abstractions, domain where required, and the shared mediator, never another application implementation as a shortcut. Shared command/query contracts and the `ITransactionalCommand` marker live in `FoodDiary.Application.Abstractions`, so the runtime mediator pipeline remains applicable without reversing project dependencies.
+Business use cases are physically extracted across the feature projects listed in `docs/BACKEND_MODULE_MAP.md`. They reference application-facing abstractions, domain where required, and the shared mediator, never another application implementation as a shortcut. Stable module-specific cross-module surfaces may live in `Modules/<Feature>/Contracts`; shared command/query contracts and the `ITransactionalCommand` marker remain in `FoodDiary.Application.Abstractions`, so the runtime mediator pipeline remains applicable without reversing project dependencies.
 
 Application read paths should use the narrowest contract that matches the behavior:
 - `*ReadModelRepository` for projection reads, counters, summaries, and API/UI read models.

@@ -197,8 +197,8 @@ Assert-Wiki (@($frontendContext.implementationFiles | Where-Object {
 
 $diffJson = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') `
     -ChangedPath @(
-        'FoodDiary.Presentation.Api/Features/Fasting/FastingController.cs'
-        'FoodDiary.Application/Fasting/Commands/StartFastingCommandHandler.cs'
+        'FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs'
+        'Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandHandler.cs'
         'FoodDiary.Web.Client/assets/i18n/en/common.json'
         'FoodDiary.Infrastructure/Persistence/Migrations/Example.cs'
         'FoodDiary.Web.Api/appsettings.Production.json'
@@ -338,6 +338,19 @@ $criticalBrief = $criticalBriefJson | ConvertFrom-Json
 Assert-Wiki ($criticalBrief.risk.level -eq 'high') 'Task brief did not elevate a security-sensitive API flow to high risk.'
 Assert-Wiki (@($criticalBrief.testScenarios.id) -contains 'security-abuse') 'Task brief did not include security abuse scenarios.'
 Assert-Wiki (@($criticalBrief.testScenarios.id) -contains 'privacy-lifecycle') 'Task brief did not include privacy lifecycle scenarios.'
+
+$explicitDatabasePath = 'Modules/Fasting/FoodDiary.Modules.Fasting.csproj'
+$explicitDatabaseBrief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
+    -ChangedPath $explicitDatabasePath `
+    -Intent 'Preserve the database schema while moving the Fasting project.' `
+    -SkipQueryCache `
+    -SkipTestPlan `
+    -Compact `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (
+    @($explicitDatabaseBrief.change.paths).Count -eq 1 -and
+    @($explicitDatabaseBrief.change.paths) -contains $explicitDatabasePath
+) 'Database intent expanded an explicit changed-path boundary with research-only persistence paths.'
 
 $qualityBriefJson = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
     -ChangedPath @('FoodDiary.Domain/Entities/Recipes/Recipe.cs') `
@@ -999,7 +1012,7 @@ Assert-Wiki ($backendContracts.summary.testConsumerEdges -gt 0) 'Backend contrac
 $contractJson = & (Join-Path $toolsRoot 'Find-LlmWikiBackendContract.ps1') -View consumers -Query StartFastingCommand -Format Json
 $contractQuery = $contractJson | ConvertFrom-Json
 Assert-Wiki (@($contractQuery.consumers | Where-Object contract -eq 'StartFastingCommand').Count -gt 0) 'Backend contract query did not resolve StartFastingCommand consumers.'
-$contractPath = 'FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs'
+$contractPath = 'Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs'
 $contractPacketJson = & (Join-Path $toolsRoot 'Get-LlmWikiChangePacket.ps1') -ChangedPath $contractPath -Objective 'Safely evolve the fasting command.' -Format Json
 $contractPacket = $contractPacketJson | ConvertFrom-Json
 $contractPlan = $contractPacket.testPlan

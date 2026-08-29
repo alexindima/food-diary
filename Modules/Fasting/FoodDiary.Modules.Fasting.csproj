@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Application.Fasting</AssemblyName>
+    <RootNamespace>FoodDiary.Modules.Fasting</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Contracts/**/*.cs" />
+    <Compile Remove="Domain/**/*.cs" />
+    <Compile Remove="Infrastructure/**/*.cs" />
+    <Compile Remove="Application/Abstractions/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="Contracts\FoodDiary.Modules.Fasting.Contracts.csproj" />
+    <ProjectReference Include="Domain\FoodDiary.Modules.Fasting.Domain.csproj" />
+    <ProjectReference Include="Application\Abstractions\FoodDiary.Modules.Fasting.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+
+</Project>

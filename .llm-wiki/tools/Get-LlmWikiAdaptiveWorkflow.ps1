@@ -35,12 +35,23 @@ $brief = & (Join-Path $PSScriptRoot 'Get-LlmWikiTaskBrief.ps1') @briefArguments 
 $normalized = $Objective.ToLowerInvariant()
 $repositoryAssessment = [string]$brief.analysis.mode -eq 'broad-assessment'
 $paths = @($brief.change.paths | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
+$callerGroundedPaths = @(
+    @(
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { @($ChangedPath) }
+        elseif ($PSBoundParameters.ContainsKey('ProposedPath')) { @($ProposedPath) }
+    ) | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) }
+)
 $routingPaths = @($paths | Where-Object {
     $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' -and
     $_ -notmatch '^\.artifacts/llm-wiki/'
 })
 $scopes = @($brief.change.scopes)
 $flags = $brief.rolloutFlags
+$databaseMigrationForRouting = if ($callerGroundedPaths.Count -gt 0) {
+    @($callerGroundedPaths | Where-Object { $_ -match '/Migrations/' -or $_ -match 'ModelSnapshot\.cs$' }).Count -gt 0
+} else {
+    [bool]$flags.databaseMigration
+}
 $privacyCount = @($brief.privacyImpact.fields).Count + @($brief.privacyImpact.boundaries).Count + @($brief.privacyImpact.externalTransfers).Count
 
 function ConvertFrom-UnicodeEscape([string]$Value) { ('"' + $Value + '"') | ConvertFrom-Json }
@@ -103,15 +114,15 @@ $visualTiny = $visualUiChange -and $paths.Count -gt 0 -and
     @($paths | Where-Object { $_ -notmatch '\.(?:scss|css)$' }).Count -eq 0
 $criticalIntentForRouting = $criticalIntent -and -not $boundedDataQueryBugIntent
 $sensitiveBoundaryChange = $privacyCount -gt 0 -and ($criticalIntentForRouting -or $boundaryChangeIntent)
-$hasCriticalEvidence = -not $visualUiChange -and -not $uiDiscovery -and -not $scopeDiscovery -and ($criticalIntentForRouting -or $sensitiveBoundaryChange -or $flags.databaseMigration -or $flags.externalIntegrations -or $flags.configuration)
+$hasCriticalEvidence = -not $visualUiChange -and -not $uiDiscovery -and -not $scopeDiscovery -and ($criticalIntentForRouting -or $sensitiveBoundaryChange -or $databaseMigrationForRouting -or $flags.externalIntegrations -or $flags.configuration)
 $hasArchitecturalEvidence = -not $visualUiChange -and ($architecturalIntent -or [bool]$brief.decisionContext.reviewRequired -or @($brief.architectureHealthImpact.dependencyViolations).Count -gt 0)
 $crossCutting = $productionScopes.Count -gt 1 -or @($brief.change.directModules + $brief.change.downstreamModules | Select-Object -Unique).Count -gt 2
 $directModuleCount = @($brief.change.directModules | Select-Object -Unique).Count
 $boundedBugScopes = @('Backend', 'Api', 'Frontend', 'Contracts')
-if ($boundedDataQueryBugIntent -and -not $flags.databaseMigration) { $boundedBugScopes += 'Database' }
+if ($boundedDataQueryBugIntent -and -not $databaseMigrationForRouting) { $boundedBugScopes += 'Database' }
 $boundedCrossLayerBug = $bugIntent -and $scopeKnown -and -not $hasCriticalEvidence -and -not $hasArchitecturalEvidence -and
     $directModuleCount -le 1 -and @($productionScopes | Where-Object { $_ -notin $boundedBugScopes }).Count -eq 0 -and
-    -not $flags.databaseMigration -and -not $flags.externalIntegrations -and -not $flags.configuration
+    -not $databaseMigrationForRouting -and -not $flags.externalIntegrations -and -not $flags.configuration
 $maintenanceChange = $scopeKnown -and ($ciMaintenanceIntent -or $dependencyMaintenanceIntent -or $deploymentBuildMaintenanceIntent) -and
     -not $explicitCriticalIncidentIntent -and -not $explicitCriticalMutationIntent -and -not $boundaryChangeIntent -and
     -not $flags.databaseMigration -and -not $flags.externalIntegrations

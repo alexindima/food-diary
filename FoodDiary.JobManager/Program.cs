@@ -1,7 +1,7 @@
 using FoodDiary.Application.Runtime;
 using FoodDiary.Application.Billing;
 using FoodDiary.Application.Dietologist;
-using FoodDiary.Application.Fasting;
+using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Application.Favorites;
 using FoodDiary.Application.Gamification;
 using FoodDiary.Application.Identity;

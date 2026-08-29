@@ -4,8 +4,9 @@ if (-not (Get-Command Invoke-LlmWikiGitPathList -ErrorAction SilentlyContinue)) 
 }
 
 function Get-LlmWikiExtractionModule([string]$Objective) {
-    if ($Objective -match '(?i)\bextract(?:ion)?\s+(?:of\s+)?(?<module>[A-Z][A-Za-z0-9_]+)') { return [string]$Matches.module }
-    if ($Objective -match '(?i)\b(?<module>[A-Z][A-Za-z0-9_]+)\s+(?:into|as)\s+an?\s+isolated\s+application\s+module') { return [string]$Matches.module }
+    if ($Objective -cmatch '(?i:\bextract(?:ion)?\s+(?:of\s+)?)(?<module>[A-Z][A-Za-z0-9_]+)') { return [string]$Matches.module }
+    if ($Objective -cmatch '\b(?<module>[A-Z][A-Za-z0-9_]+)\s+(?i:(?:modular-monolith\s+)?extract(?:ion)?)\b') { return [string]$Matches.module }
+    if ($Objective -cmatch '\b(?<module>[A-Z][A-Za-z0-9_]+)\s+(?i:(?:into|as)\s+an?\s+isolated\s+application\s+module)') { return [string]$Matches.module }
     return ''
 }
 
@@ -15,6 +16,22 @@ function Get-LlmWikiExtractionPlan([string]$Objective, [string]$RepositoryRoot) 
     $manifestPath = Join-Path $RepositoryRoot 'docs/architecture/backend-modules.json'
     $manifest = if (Test-Path -LiteralPath $manifestPath -PathType Leaf) { Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json } else { $null }
     $moduleEntry = if ($null -ne $manifest) { $manifest.modules.PSObject.Properties[$module] } else { $null }
+    $sourceMappings = if ($null -ne $moduleEntry -and $moduleEntry.Value.PSObject.Properties['sourceMappings']) {
+        $moduleEntry.Value.sourceMappings
+    } else { $null }
+    $applicationProjects = if ($null -ne $sourceMappings -and $sourceMappings.PSObject.Properties['applicationProjects']) {
+        @($sourceMappings.applicationProjects)
+    } else { @("FoodDiary.Application.$module") }
+    $logicalRoots = if ($null -ne $sourceMappings -and $sourceMappings.PSObject.Properties['logicalRoot']) {
+        @([string]$sourceMappings.logicalRoot)
+    } else { @() }
+    $mappedProjectPaths = @(
+        if ($null -ne $sourceMappings) {
+            foreach ($mappingProperty in @($sourceMappings.PSObject.Properties | Where-Object Name -like '*Projects')) {
+                @($mappingProperty.Value)
+            }
+        }
+    )
     $abstractionAreas = if ($null -ne $moduleEntry -and
         $moduleEntry.Value.PSObject.Properties['sourceMappings'] -and
         $moduleEntry.Value.sourceMappings.PSObject.Properties['abstractionAreas']) {
@@ -23,6 +40,8 @@ function Get-LlmWikiExtractionPlan([string]$Objective, [string]$RepositoryRoot) 
     $candidates = @(
         "FoodDiary.Application/$module"
         "FoodDiary.Application.$module"
+        $logicalRoots
+        $mappedProjectPaths
         @($abstractionAreas | ForEach-Object { "FoodDiary.Application.Abstractions/$_" })
         'FoodDiary.Application/DependencyInjection.cs'
         "FoodDiary.Application/DependencyInjection.$module.cs"
@@ -51,11 +70,11 @@ function Get-LlmWikiExtractionPlan([string]$Objective, [string]$RepositoryRoot) 
         module = $module
         paths = @($candidates + $referencePaths | Where-Object { Test-Path -LiteralPath (Join-Path $RepositoryRoot $_) } | Sort-Object -Unique)
         criteria = @(
-            "$module source lives in FoodDiary.Application.$module."
+            "$module application source lives in $([string](@($applicationProjects)[0]))."
             "The extracted $module project uses only declared module dependencies."
             "Executable composition roots register Add${module}Module."
             "Existing $module application tests pass."
-            "The legacy FoodDiary.Application/$module folder contains no source files."
+            "The legacy FoodDiary.Application.$module folder contains no source files."
         )
     }
 }

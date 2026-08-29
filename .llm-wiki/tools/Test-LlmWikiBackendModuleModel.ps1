@@ -42,6 +42,19 @@ if ('Meals' -notin @($manifest.modules.Meals.sourceMappings.domainAreas) -or
     'Meals' -notin @($manifest.modules.Meals.sourceMappings.persistenceAreas)) {
     throw 'Meals does not map its Meals domain/persistence vocabulary explicitly.'
 }
+$fastingMappings = $manifest.modules.Fasting.sourceMappings
+foreach ($requiredMapping in @('applicationProjects', 'applicationAbstractionProjects', 'contractProjects', 'domainProjects', 'infrastructureProjects', 'persistenceModelProjects')) {
+    if ($null -eq $fastingMappings.PSObject.Properties[$requiredMapping] -or
+        @($fastingMappings.$requiredMapping).Count -eq 0) {
+        throw "Fasting does not map its '$requiredMapping' source root explicitly."
+    }
+}
+$centralPersistenceMapping = $fastingMappings.PSObject.Properties['persistenceAreas']
+$centralDomainMapping = $fastingMappings.PSObject.Properties['domainAreas']
+if (($null -ne $centralPersistenceMapping -and @($centralPersistenceMapping.Value).Count -gt 0) -or
+    ($null -ne $centralDomainMapping -and @($centralDomainMapping.Value).Count -gt 0)) {
+    throw 'Fasting still declares central domain or persistence areas after physical extraction.'
+}
 $owners = @{}
 foreach ($property in @($manifest.modules.PSObject.Properties)) {
     foreach ($entity in @($property.Value.ownedEntities)) {

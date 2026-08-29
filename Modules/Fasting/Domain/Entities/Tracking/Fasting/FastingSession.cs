@@ -1,0 +1,152 @@
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
+using System.Diagnostics.CodeAnalysis;
+
+namespace FoodDiary.Domain.Entities.Tracking.Fasting;
+
+public sealed class FastingSession : AggregateRoot<FastingSessionId> {
+    private const int NotesMaxLength = 500;
+    private const int MinDurationHours = 1;
+    private const int MaxDurationHours = 168;
+
+    public UserId UserId { get; private set; }
+    public DateTime StartedAtUtc { get; private set; }
+    public DateTime? EndedAtUtc { get; private set; }
+    public int InitialPlannedDurationHours { get; private set; }
+    public int AddedDurationHours { get; private set; }
+    public int PlannedDurationHours => InitialPlannedDurationHours + AddedDurationHours;
+    public FastingProtocol Protocol { get; private set; }
+    public bool IsCompleted { get; private set; }
+    public string? Notes { get; private set; }
+    public FastingSessionStatus Status => GetStatus();
+    public bool IsSuccessfulCompletion => GetStatus() == FastingSessionStatus.Completed;
+
+    public User User { get; private set; } = null!;
+
+    [ExcludeFromCodeCoverage]
+    private FastingSession() {
+    }
+
+    public static FastingSession Create(
+        UserId userId,
+        FastingProtocol protocol,
+        int plannedDurationHours,
+        DateTime startedAtUtc,
+        string? notes = null) {
+        EnsureUserId(userId);
+        FastingDomainGuard.Defined(protocol, nameof(protocol));
+        EnsureDuration(plannedDurationHours);
+
+        var session = new FastingSession {
+            Id = FastingSessionId.New(),
+            UserId = userId,
+            StartedAtUtc = FastingDomainGuard.RequiredUtc(startedAtUtc, nameof(startedAtUtc)),
+            InitialPlannedDurationHours = plannedDurationHours,
+            AddedDurationHours = 0,
+            Protocol = protocol,
+            IsCompleted = false,
+            Notes = NormalizeNotes(notes),
+        };
+        session.SetCreated();
+        return session;
+    }
+
+    public void End(DateTime endedAtUtc) {
+        if (IsCompleted) {
+            return;
+        }
+
+        DateTime normalizedEndedAt = FastingDomainGuard.RequiredUtc(endedAtUtc, nameof(endedAtUtc));
+        if (normalizedEndedAt < StartedAtUtc) {
+            throw new ArgumentOutOfRangeException(nameof(endedAtUtc), "End timestamp cannot be before start timestamp.");
+        }
+
+        EndedAtUtc = normalizedEndedAt;
+        IsCompleted = true;
+        SetModified();
+    }
+
+    public void UpdateNotes(string? notes) {
+        string? normalized = NormalizeNotes(notes);
+        if (string.Equals(Notes, normalized, StringComparison.Ordinal)) {
+            return;
+        }
+
+        Notes = normalized;
+        SetModified();
+    }
+
+    public void Extend(int additionalHours) {
+        if (IsCompleted) {
+            throw new InvalidOperationException("Cannot extend a completed fasting session.");
+        }
+
+        if (additionalHours <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(additionalHours), "Additional duration must be greater than zero.");
+        }
+
+        EnsureDuration(PlannedDurationHours + additionalHours);
+        AddedDurationHours += additionalHours;
+        SetModified();
+    }
+
+    public FastingSessionStatus GetStatus() {
+        if (!EndedAtUtc.HasValue) {
+            return FastingSessionStatus.Active;
+        }
+
+        if (IsIntermittentProtocol(Protocol)) {
+            return FastingSessionStatus.Completed;
+        }
+
+        TimeSpan elapsed = EndedAtUtc.Value - StartedAtUtc;
+        return elapsed >= TimeSpan.FromHours(PlannedDurationHours)
+            ? FastingSessionStatus.Completed
+            : FastingSessionStatus.Interrupted;
+    }
+
+    public static int GetDefaultDuration(FastingProtocol protocol) {
+        return protocol switch {
+            FastingProtocol.Fast16Eat8 => 16,
+            FastingProtocol.Fast18Eat6 => 18,
+            FastingProtocol.Fast20Eat4 => 20,
+            FastingProtocol.Fast24 => 24,
+            FastingProtocol.Fast36 => 36,
+            FastingProtocol.Fast72 => 72,
+            _ => 16,
+        };
+    }
+
+    private static bool IsIntermittentProtocol(FastingProtocol protocol) => protocol switch {
+        FastingProtocol.Fast16Eat8 => true,
+        FastingProtocol.Fast18Eat6 => true,
+        FastingProtocol.Fast20Eat4 => true,
+        FastingProtocol.CustomIntermittent => true,
+        _ => false,
+    };
+
+    private static string? NormalizeNotes(string? value) {
+        if (string.IsNullOrWhiteSpace(value)) {
+            return null;
+        }
+
+        string trimmed = value.Trim();
+        return trimmed.Length > NotesMaxLength
+            ? throw new ArgumentOutOfRangeException(nameof(value), $"Notes must be at most {NotesMaxLength} characters.")
+            : trimmed;
+    }
+
+    private static void EnsureUserId(UserId userId) {
+        if (userId == UserId.Empty) {
+            throw new ArgumentException("UserId is required.", nameof(userId));
+        }
+    }
+
+    private static void EnsureDuration(int hours) {
+        if (hours is < MinDurationHours or > MaxDurationHours) {
+            throw new ArgumentOutOfRangeException(nameof(hours), $"Duration must be between {MinDurationHours} and {MaxDurationHours} hours.");
+        }
+    }
+}

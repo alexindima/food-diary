@@ -15,7 +15,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Cycles application module: `FoodDiary.Application.Cycles/AGENTS.md`
 - Dietologist application module: `FoodDiary.Application.Dietologist/AGENTS.md`
 - Exercises application module: `FoodDiary.Application.Exercises/AGENTS.md`
-- Fasting application module: `FoodDiary.Application.Fasting/AGENTS.md`
+- Fasting logical module: `Modules/Fasting/AGENTS.md`
+- Fasting application abstractions: `Modules/Fasting/Application/Abstractions/AGENTS.md`
+- Fasting contracts: `Modules/Fasting/Contracts/AGENTS.md`
+- Fasting domain: `Modules/Fasting/Domain/AGENTS.md`
+- Fasting infrastructure: `Modules/Fasting/Infrastructure/AGENTS.md`
+- Fasting persistence model: `Modules/Fasting/Infrastructure/Model/AGENTS.md`
 - Favorites application module: `FoodDiary.Application.Favorites/AGENTS.md`
 - Hydration application module: `FoodDiary.Application.Hydration/AGENTS.md`
 - Identity application module: `FoodDiary.Application.Identity/AGENTS.md`

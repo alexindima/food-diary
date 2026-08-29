@@ -159,6 +159,13 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.fasting.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
       "fooddiary.results": {
         "type": "Project"
       }

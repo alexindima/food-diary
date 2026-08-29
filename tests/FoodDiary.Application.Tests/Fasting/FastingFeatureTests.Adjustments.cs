@@ -1,8 +1,8 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
-using FoodDiary.Application.Fasting.Commands.ReduceActiveFastingTarget;
-using FoodDiary.Application.Fasting.Commands.UpdateCurrentFastingCheckIn;
-using FoodDiary.Application.Abstractions.Fasting.Models;
+using FoodDiary.Modules.Fasting.Application.Commands.ExtendActiveFasting;
+using FoodDiary.Modules.Fasting.Application.Commands.ReduceActiveFastingTarget;
+using FoodDiary.Modules.Fasting.Application.Commands.UpdateCurrentFastingCheckIn;
+using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;

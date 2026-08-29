@@ -1,6 +1,6 @@
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.Cycles.Models;
-using FoodDiary.Application.Abstractions.Fasting.Models;
+using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Abstractions.Users.Models;

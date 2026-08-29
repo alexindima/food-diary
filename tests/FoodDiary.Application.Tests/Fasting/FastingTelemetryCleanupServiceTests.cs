@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Fasting.Common;
-using FoodDiary.Application.Fasting.Services;
+using FoodDiary.Modules.Fasting.Application.Services;
 
 namespace FoodDiary.Application.Tests.Fasting;
 

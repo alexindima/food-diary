@@ -20,4 +20,17 @@ public static class AuthHttpResponseMappings {
             return new AdminSsoStartHttpResponse(model.Code, model.ExpiresAtUtc);
         }
     }
+
+    extension(ActiveSessionModel model) {
+        public ActiveSessionHttpResponse ToHttpResponse() =>
+            new(
+                model.Id,
+                model.IsCurrent,
+                model.AuthProvider,
+                model.Browser,
+                model.OperatingSystem,
+                model.DeviceType,
+                model.CreatedAtUtc,
+                model.LastActiveAtUtc);
+    }
 }

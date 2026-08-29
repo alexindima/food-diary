@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using FoodDiary.Application.Fasting.Services;
+using FoodDiary.Modules.Fasting.Contracts.Jobs;
 using Hangfire;
 using Microsoft.Extensions.Options;
 

@@ -78,7 +78,7 @@
       "intent": "Improve persistence of fasting plans without changing the domain contract",
       "query": "repository that persists tracking fasting plans",
       "plannedPath": null,
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Tracking/FastingPlanRepository.cs"],
+      "expectedPaths": ["Modules/Fasting/Infrastructure/Persistence/FastingPlanRepository.cs"],
       "expectedLayers": ["Infrastructure"]
     },
     {

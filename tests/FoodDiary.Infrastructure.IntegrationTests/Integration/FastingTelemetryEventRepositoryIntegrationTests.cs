@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Tracking;
+using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;

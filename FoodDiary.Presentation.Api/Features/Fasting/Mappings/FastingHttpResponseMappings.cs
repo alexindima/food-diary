@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Fasting.Models;
+using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Presentation.Api.Features.Fasting.Responses;
 using FoodDiary.Presentation.Api.Responses;

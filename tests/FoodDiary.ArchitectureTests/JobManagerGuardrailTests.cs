@@ -74,7 +74,6 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Application.Dietologist",
             "FoodDiary.Application.Exercises",
             "FoodDiary.Application.Export",
-            "FoodDiary.Application.Fasting",
             "FoodDiary.Application.Favorites",
             "FoodDiary.Application.Gamification",
             "FoodDiary.Application.Hydration",
@@ -99,6 +98,8 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Application.WeeklyGoals",
             "FoodDiary.Infrastructure",
             "FoodDiary.Integrations",
+            "FoodDiary.Modules.Fasting.Contracts",
+            "FoodDiary.Modules.Fasting.Infrastructure",
             "FoodDiary.Resources",
         ];
         string[] expectedPackageReferences = [

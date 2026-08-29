@@ -14,6 +14,15 @@ $requirementPolicy = (Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-
 if (@($plan.criteria | Where-Object { -not (Test-LlmWikiCriterionAtomic ([string]$_) $requirementPolicy) }).Count -gt 0) {
     throw 'Extraction planning generated a compound acceptance criterion.'
 }
+$fastingObjective = 'Continue the Fasting modular-monolith extraction by moving its domain model and persistence implementation'
+$fastingPlan = Get-LlmWikiExtractionPlan $fastingObjective $repositoryRoot
+if ($null -eq $fastingPlan -or $fastingPlan.module -ne 'Fasting') {
+    throw 'Extraction planning mistook prose after the word extraction for a module name.'
+}
+if (@($fastingPlan.criteria | Where-Object { $_ -match '(?i)\bby\b' }).Count -gt 0 -or
+    $fastingPlan.criteria[0] -notmatch '^Fasting application source lives in Modules/Fasting/Application\.$') {
+    throw 'Logical-root extraction criteria do not use the canonical Fasting application source mapping.'
+}
 foreach ($requiredPath in @(
     'FoodDiary.Application.Dashboard'
     'FoodDiary.Application.Abstractions/Dashboard'

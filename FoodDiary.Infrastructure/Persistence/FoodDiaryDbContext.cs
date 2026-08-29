@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Infrastructure.Persistence.Audit;
+using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
@@ -9,5 +10,6 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.HasPostgresExtension("pg_trgm");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(FoodDiaryDbContext).Assembly);
+        modelBuilder.ApplyFastingPersistenceModel();
     }
 }

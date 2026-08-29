@@ -53,18 +53,27 @@ public sealed class ModuleDependencyGraphTests {
 
     private static IReadOnlyDictionary<string, string[]> ReadActualGraph() {
         var declaredModules = LoadManifest().Modules.Keys.ToHashSet(StringComparer.Ordinal);
-        string[] modules = [.. Directory.GetDirectories(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application.*", SearchOption.TopDirectoryOnly)
+        var moduleRoots = Directory.GetDirectories(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application.*", SearchOption.TopDirectoryOnly)
             .SelectMany(directory => Directory.GetFiles(directory, "FoodDiary.Application.*.csproj", SearchOption.TopDirectoryOnly))
-            .Select(path => Path.GetFileNameWithoutExtension(path)["FoodDiary.Application.".Length..])
-            .Where(declaredModules.Contains)
-            .Order(StringComparer.Ordinal)];
-        HashSet<string> moduleSet = modules.ToHashSet(StringComparer.Ordinal);
+            .Select(path => new {
+                Name = Path.GetFileNameWithoutExtension(path)["FoodDiary.Application.".Length..],
+                Root = Path.GetDirectoryName(path)!,
+            })
+            .Concat(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules"))
+                ? Directory.GetDirectories(ArchitectureTestPaths.FromRoot("Modules"), "*", SearchOption.TopDirectoryOnly)
+                    .Where(directory => Directory.GetFiles(directory, "FoodDiary.Modules.*.csproj", SearchOption.TopDirectoryOnly).Length == 1)
+                    .Select(directory => new { Name = Path.GetFileName(directory), Root = directory })
+                : [])
+            .Where(module => declaredModules.Contains(module.Name))
+            .OrderBy(module => module.Name, StringComparer.Ordinal)
+            .ToArray();
+        var moduleSet = moduleRoots.Select(module => module.Name).ToHashSet(StringComparer.Ordinal);
 
-        return modules.ToDictionary(
-            static module => module,
-            module => SourceScanner.SourceFiles(Path.Combine(ArchitectureTestPaths.RepositoryRoot, $"FoodDiary.Application.{module}"))
+        return moduleRoots.ToDictionary(
+            static module => module.Name,
+            module => SourceScanner.SourceFiles(module.Root)
                 .SelectMany(ReadReferencedApplicationModules)
-                .Where(dependency => moduleSet.Contains(dependency) && !dependency.Equals(module, StringComparison.Ordinal))
+                .Where(dependency => moduleSet.Contains(dependency) && !dependency.Equals(module.Name, StringComparison.Ordinal))
                 .Distinct(StringComparer.Ordinal)
                 .Order(StringComparer.Ordinal)
                 .ToArray(),
@@ -80,7 +89,9 @@ public sealed class ModuleDependencyGraphTests {
                 .Select(name => name.ToString()));
 
         foreach (string name in names.OfType<string>()) {
-            const string prefix = "FoodDiary.Application.";
+            string prefix = name.StartsWith("FoodDiary.Modules.", StringComparison.Ordinal)
+                ? "FoodDiary.Modules."
+                : "FoodDiary.Application.";
             if (!name.StartsWith(prefix, StringComparison.Ordinal) ||
                 name.StartsWith("FoodDiary.Application.Abstractions.", StringComparison.Ordinal)) {
                 continue;

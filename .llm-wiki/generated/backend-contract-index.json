@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7540,
-    "productionConsumerEdges": 4558,
+    "consumerEdges": 7541,
+    "productionConsumerEdges": 4559,
     "testConsumerEdges": 2982,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
@@ -3320,7 +3320,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -3524,7 +3524,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -3660,7 +3660,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
+        "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4578,7 +4578,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
+        "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4799,7 +4799,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4816,7 +4816,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4833,7 +4833,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4850,7 +4850,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4884,7 +4884,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8811,7 +8811,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingAnalyticsService.cs"
+        "Modules/Fasting/Application/Services/IFastingAnalyticsService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8828,7 +8828,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadModelRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8845,7 +8845,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8862,7 +8862,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8879,7 +8879,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8896,7 +8896,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingNotificationScheduler.cs"
+        "Modules/Fasting/Contracts/Jobs/IFastingNotificationScheduler.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8913,7 +8913,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadModelRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8930,7 +8930,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8947,7 +8947,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8964,7 +8964,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8981,7 +8981,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8998,7 +8998,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9015,7 +9015,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9032,7 +9032,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingReadService.cs"
+        "Modules/Fasting/Contracts/Read/IFastingReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9049,7 +9049,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9066,7 +9066,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9083,7 +9083,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9100,7 +9100,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingTelemetryCleanupService.cs"
+        "Modules/Fasting/Contracts/Jobs/IFastingTelemetryCleanupService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9117,7 +9117,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9134,7 +9134,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9151,7 +9151,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9168,7 +9168,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetrySummaryReadService.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetrySummaryReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15089,7 +15089,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
+        "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15463,7 +15463,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs"
+        "Modules/Fasting/Application/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15497,7 +15497,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
+        "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -16381,7 +16381,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
+        "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -16415,7 +16415,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -16738,7 +16738,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
+        "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -18504,7 +18504,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
+    },
+    {
+      "contract": "ActiveSessionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Auth/Responses/ActiveSessionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "ActiveSessionHttpResponse",
@@ -30953,33 +30966,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "EndFastingCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "EndFastingCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Fasting/Mappings/FastingHttpMappings.cs",
@@ -30992,7 +30979,33 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "EndFastingCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "EndFastingCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.End.cs",
@@ -31005,7 +31018,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
@@ -31018,7 +31031,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -31031,7 +31044,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingHttpMappingsTests.cs",
@@ -31811,33 +31824,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "ExtendActiveFastingCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ExtendActiveFastingCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Fasting/Mappings/FastingHttpMappings.cs",
@@ -31850,7 +31837,33 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ExtendActiveFastingCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ExtendActiveFastingCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs",
@@ -31863,7 +31876,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
@@ -31876,7 +31889,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -31889,7 +31902,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingHttpMappingsTests.cs",
@@ -32240,20 +32253,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Configurations/Tracking/FastingTelemetryEventConfiguration.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "FastingTelemetryEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
+        "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Tracking.cs",
@@ -32266,10 +32266,23 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
+        "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Tracking/FastingTelemetryEventRepository.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/Model/Configurations/FastingTelemetryEventConfiguration.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "FastingTelemetryEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Infrastructure/Persistence/FastingTelemetryEventRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -32279,7 +32292,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
+        "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainHardeningInvariantTests.cs",
@@ -32292,7 +32305,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
+        "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/FastingTelemetryEventTests.cs",
@@ -32305,7 +32318,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
+        "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs",
@@ -33153,7 +33166,7 @@
         "FoodDiary.Application.Identity/Authentication/Queries/GetActiveSessions/GetActiveSessionsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -35386,33 +35399,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetCurrentFastingQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetCurrentFastingQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
+        "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Fasting/Mappings/FastingHttpMappings.cs",
@@ -35425,7 +35412,33 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
+        "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetCurrentFastingQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetCurrentFastingQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
@@ -35438,7 +35451,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
+        "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
@@ -35451,7 +35464,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
+        "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingHttpMappingsTests.cs",
@@ -35464,7 +35477,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
+        "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingReadControllerTests.cs",
@@ -36374,33 +36387,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetFastingHistoryQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetFastingHistoryQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Fasting/Mappings/FastingHttpMappings.cs",
@@ -36413,7 +36400,33 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetFastingHistoryQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetFastingHistoryQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
@@ -36426,7 +36439,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
@@ -36439,7 +36452,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingHttpMappingsTests.cs",
@@ -36452,33 +36465,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetFastingInsightsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetFastingInsightsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Fasting/Mappings/FastingHttpMappings.cs",
@@ -36491,7 +36478,33 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetFastingInsightsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetFastingInsightsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
@@ -36504,7 +36517,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
@@ -36517,7 +36530,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -36530,7 +36543,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingHttpMappingsTests.cs",
@@ -36543,33 +36556,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetFastingOverviewQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetFastingOverviewQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Fasting/Mappings/FastingHttpMappings.cs",
@@ -36582,7 +36569,33 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetFastingOverviewQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetFastingOverviewQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
@@ -36595,7 +36608,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
@@ -36608,7 +36621,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingHttpMappingsTests.cs",
@@ -36621,33 +36634,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetFastingStatsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQueryValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetFastingStatsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Fasting/Mappings/FastingHttpMappings.cs",
@@ -36660,7 +36647,33 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetFastingStatsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetFastingStatsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
@@ -36673,7 +36686,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
@@ -36686,7 +36699,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -36699,7 +36712,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingHttpMappingsTests.cs",
@@ -36751,20 +36764,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetFastingTelemetrySummaryQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
@@ -36777,7 +36777,20 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetFastingTelemetrySummaryQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs",
@@ -36790,7 +36803,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
+        "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingTelemetrySummaryServiceTests.cs",
@@ -49832,110 +49845,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -50950,6 +50859,110 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Behaviors/BehaviorTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -51744,110 +51757,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommandHandler",
-      "roles": [
-        "CommandHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommandHandler",
-      "roles": [
-        "CommandHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommandHandler",
-      "roles": [
-        "CommandHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommandHandler",
-      "roles": [
-        "CommandHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommandHandler",
-      "roles": [
-        "CommandHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommandHandler",
-      "roles": [
-        "CommandHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommandHandler",
-      "roles": [
-        "CommandHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommandHandler",
-      "roles": [
-        "CommandHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -52862,6 +52771,110 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -54175,175 +54188,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Common/FastingCurrentUserResolver.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -55683,6 +55527,175 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Common/FastingCurrentUserResolver.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -60921,71 +60934,6 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/FastingCheckInId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/FastingOccurrenceId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/FastingPlanId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/FastingSessionId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/FastingTelemetryEventId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/FavoriteMealId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61571,6 +61519,71 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Domain/ValueObjects/Ids/FastingCheckInId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Domain/ValueObjects/Ids/FastingOccurrenceId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Domain/ValueObjects/Ids/FastingPlanId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Domain/ValueObjects/Ids/FastingSessionId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Domain/ValueObjects/Ids/FastingTelemetryEventId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CSharpSyntaxReader.cs",
       "isTest": true,
       "referenceCount": 1
@@ -62088,10 +62101,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingAnalyticsService.cs"
+        "Modules/Fasting/Application/Services/IFastingAnalyticsService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/DependencyInjection.cs",
+      "consumerPath": "Modules/Fasting/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62101,10 +62114,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingAnalyticsService.cs"
+        "Modules/Fasting/Application/Services/IFastingAnalyticsService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62114,10 +62127,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingAnalyticsService.cs"
+        "Modules/Fasting/Application/Services/IFastingAnalyticsService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62127,10 +62140,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingAnalyticsService.cs"
+        "Modules/Fasting/Application/Services/IFastingAnalyticsService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingAnalyticsService.cs",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingAnalyticsService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62140,10 +62153,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingAnalyticsService.cs"
+        "Modules/Fasting/Application/Services/IFastingAnalyticsService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingReadService.cs",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62153,7 +62166,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingAnalyticsService.cs"
+        "Modules/Fasting/Application/Services/IFastingAnalyticsService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
@@ -62166,10 +62179,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadModelRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInRepository.cs",
+      "consumerPath": "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62179,10 +62192,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadModelRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingAnalyticsService.cs",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingAnalyticsService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62192,10 +62205,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadModelRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingReadService.cs",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62205,10 +62218,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadModelRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62218,7 +62231,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadModelRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
@@ -62231,7 +62244,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadModelRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -62244,10 +62257,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInRepository.cs",
+      "consumerPath": "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62257,10 +62270,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingNotificationScheduler.cs",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62270,10 +62283,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62283,7 +62296,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -62296,7 +62309,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -62309,10 +62322,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 4
     },
@@ -62322,10 +62335,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Tracking/FastingCheckInRepository.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/Persistence/FastingCheckInRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62335,7 +62348,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
@@ -62348,7 +62361,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -62361,7 +62374,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -62374,10 +62387,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInRepository.cs",
+      "consumerPath": "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62387,10 +62400,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62400,10 +62413,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62413,7 +62426,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingCheckInWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -62426,33 +62439,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingNotificationScheduler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/DependencyInjection.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IFastingNotificationScheduler",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingNotificationScheduler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingNotificationScheduler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IFastingNotificationScheduler",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingNotificationScheduler.cs"
+        "Modules/Fasting/Contracts/Jobs/IFastingNotificationScheduler.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.JobManager/Services/FastingNotificationJob.cs",
@@ -62465,7 +62452,33 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingNotificationScheduler.cs"
+        "Modules/Fasting/Contracts/Jobs/IFastingNotificationScheduler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingNotificationScheduler",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Contracts/Jobs/IFastingNotificationScheduler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingNotificationScheduler",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Contracts/Jobs/IFastingNotificationScheduler.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/FastingNotificationJobTests.cs",
@@ -62478,10 +62491,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadModelRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceRepository.cs",
+      "consumerPath": "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62491,10 +62504,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadModelRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingAnalyticsService.cs",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingAnalyticsService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62504,10 +62517,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadModelRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingReadService.cs",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62517,10 +62530,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadModelRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62530,7 +62543,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadModelRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs",
@@ -62543,7 +62556,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadModelRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -62556,10 +62569,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceRepository.cs",
+      "consumerPath": "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62569,10 +62582,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingNotificationScheduler.cs",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62582,10 +62595,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62595,7 +62608,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -62608,7 +62621,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -62621,10 +62634,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 4
     },
@@ -62634,10 +62647,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Tracking/FastingOccurrenceRepository.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/Persistence/FastingOccurrenceRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62647,7 +62660,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
@@ -62660,7 +62673,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -62673,7 +62686,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -62686,10 +62699,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceRepository.cs",
+      "consumerPath": "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62699,10 +62712,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62712,10 +62725,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62725,10 +62738,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62738,10 +62751,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62751,10 +62764,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62764,10 +62777,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62777,10 +62790,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62790,10 +62803,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62803,7 +62816,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingOccurrenceWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -62816,10 +62829,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanRepository.cs",
+      "consumerPath": "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62829,10 +62842,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62842,7 +62855,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -62855,7 +62868,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -62868,10 +62881,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 3
     },
@@ -62881,10 +62894,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Tracking/FastingPlanRepository.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/Persistence/FastingPlanRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62894,7 +62907,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
@@ -62907,7 +62920,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -62920,7 +62933,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -62933,7 +62946,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -62946,10 +62959,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanRepository.cs",
+      "consumerPath": "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62959,10 +62972,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62972,10 +62985,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62985,10 +62998,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62998,10 +63011,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63011,10 +63024,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63024,10 +63037,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63037,10 +63050,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63050,7 +63063,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -63063,7 +63076,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingPlanWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -63076,7 +63089,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingReadService.cs"
+        "Modules/Fasting/Contracts/Read/IFastingReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
@@ -63089,7 +63102,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingReadService.cs"
+        "Modules/Fasting/Contracts/Read/IFastingReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
@@ -63102,10 +63115,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingReadService.cs"
+        "Modules/Fasting/Contracts/Read/IFastingReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/DependencyInjection.cs",
+      "consumerPath": "Modules/Fasting/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63115,10 +63128,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingReadService.cs"
+        "Modules/Fasting/Contracts/Read/IFastingReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63128,10 +63141,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingReadService.cs"
+        "Modules/Fasting/Contracts/Read/IFastingReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63141,10 +63154,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingReadService.cs"
+        "Modules/Fasting/Contracts/Read/IFastingReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63154,10 +63167,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingReadService.cs"
+        "Modules/Fasting/Contracts/Read/IFastingReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingReadService.cs",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63167,7 +63180,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingReadService.cs"
+        "Modules/Fasting/Contracts/Read/IFastingReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
@@ -63180,10 +63193,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionRepository.cs",
+      "consumerPath": "Modules/Fasting/Application/Abstractions/Common/IFastingSessionRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63193,10 +63206,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63206,7 +63219,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -63219,7 +63232,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -63232,10 +63245,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 3
     },
@@ -63245,10 +63258,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Tracking/FastingSessionRepository.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/Persistence/FastingSessionRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63258,7 +63271,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -63271,7 +63284,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -63284,7 +63297,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -63297,10 +63310,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionRepository.cs",
+      "consumerPath": "Modules/Fasting/Application/Abstractions/Common/IFastingSessionRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63310,10 +63323,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63323,7 +63336,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -63336,7 +63349,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -63349,33 +63362,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingTelemetryCleanupService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/DependencyInjection.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IFastingTelemetryCleanupService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingTelemetryCleanupService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingTelemetryCleanupService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IFastingTelemetryCleanupService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingTelemetryCleanupService.cs"
+        "Modules/Fasting/Contracts/Jobs/IFastingTelemetryCleanupService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.JobManager/Services/FastingTelemetryCleanupJob.cs",
@@ -63388,7 +63375,33 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Services/IFastingTelemetryCleanupService.cs"
+        "Modules/Fasting/Contracts/Jobs/IFastingTelemetryCleanupService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingTelemetryCleanupService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Contracts/Jobs/IFastingTelemetryCleanupService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingTelemetryCleanupService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingTelemetryCleanupService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Contracts/Jobs/IFastingTelemetryCleanupService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/FastingTelemetryCleanupJobTests.cs",
@@ -63401,10 +63414,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventRepository.cs",
+      "consumerPath": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63414,10 +63427,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingTelemetrySummaryReadService.cs",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingTelemetrySummaryReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63427,10 +63440,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63440,7 +63453,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -63453,7 +63466,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -63466,7 +63479,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventReadRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -63479,10 +63492,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 3
     },
@@ -63492,10 +63505,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Tracking/FastingTelemetryEventRepository.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/Persistence/FastingTelemetryEventRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63505,7 +63518,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -63518,7 +63531,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -63531,7 +63544,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -63544,7 +63557,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingTelemetrySummaryServiceTests.cs",
@@ -63557,7 +63570,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/PresentationServiceCollectionExtensionsTests.cs",
@@ -63570,10 +63583,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventRepository.cs",
+      "consumerPath": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63583,10 +63596,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63596,10 +63609,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingTelemetryCleanupService.cs",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingTelemetryCleanupService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63609,10 +63622,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Fasting.cs",
+      "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63622,7 +63635,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingTelemetryCleanupServiceTests.cs",
@@ -63635,7 +63648,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -63648,7 +63661,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetryEventWriteRepository.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -63661,10 +63674,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetrySummaryReadService.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetrySummaryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/DependencyInjection.cs",
+      "consumerPath": "Modules/Fasting/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63674,10 +63687,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetrySummaryReadService.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetrySummaryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63687,10 +63700,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetrySummaryReadService.cs"
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetrySummaryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingTelemetrySummaryReadService.cs",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingTelemetrySummaryReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -71606,32 +71619,6 @@
         "FoodDiary.Application.Abstractions/Notifications/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingNotificationPushDispatcher.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "INotificationClientRefreshService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationClientRefreshService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingNotificationScheduler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "INotificationClientRefreshService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationClientRefreshService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -71710,6 +71697,32 @@
         "FoodDiary.Application.Abstractions/Notifications/Common/INotificationClientRefreshService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationPushDispatcher.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationClientRefreshService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationClientRefreshService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationClientRefreshService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationClientRefreshService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
       "isTest": true,
       "referenceCount": 1
@@ -71749,32 +71762,6 @@
         "FoodDiary.Application.Abstractions/Notifications/Common/INotificationDeduplicationService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingNotificationCreationService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "INotificationDeduplicationService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationDeduplicationService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingNotificationScheduler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "INotificationDeduplicationService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationDeduplicationService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
       "isTest": false,
       "referenceCount": 2
@@ -71789,6 +71776,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Notifications/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationDeduplicationService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationDeduplicationService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationCreationService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationDeduplicationService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationDeduplicationService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -73036,32 +73049,6 @@
         "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingNotificationCreationService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "INotificationWriter",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingNotificationScheduler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "INotificationWriter",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
       "isTest": false,
       "referenceCount": 2
@@ -73128,6 +73115,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationWriter",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationCreationService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationWriter",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -75350,19 +75363,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingNotificationScheduler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IPostCommitActionQueue",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -75468,6 +75468,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPostCommitActionQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -77378,84 +77391,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -78197,6 +78132,84 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Behaviors/BehaviorTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -78848,84 +78861,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -79667,6 +79602,84 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -88519,19 +88532,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingNotificationScheduler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUnitOfWork",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Identity/Authentication/Services/InitialAdminBootstrapService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -88715,6 +88715,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/WeeklyGoals/EfWeeklyGoalTransactionRunner.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingNotificationScheduler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -93264,136 +93277,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -94734,6 +94617,136 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingOverview/GetFastingOverviewQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingStats/GetFastingStatsQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -99192,7 +99205,7 @@
         "FoodDiary.Application.Identity/Authentication/Commands/Logout/LogoutCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -102195,19 +102208,6 @@
         "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Fasting/Models/FastingOverviewModel.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "PagedResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Common/IAdminAuditReadService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -102497,84 +102497,6 @@
       "consumerPath": "FoodDiary.Application.Dashboard/Services/MediatorDashboardMealsReadService.cs",
       "isTest": false,
       "referenceCount": 2
-    },
-    {
-      "contract": "PagedResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "PagedResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 3
-    },
-    {
-      "contract": "PagedResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingAnalyticsService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "PagedResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingHistoryResponseBuilder.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "PagedResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/FastingReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "PagedResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Services/IFastingAnalyticsService.cs",
-      "isTest": false,
-      "referenceCount": 1
     },
     {
       "contract": "PagedResponse",
@@ -102937,6 +102859,97 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Responses/PagedHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 3
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingAnalyticsService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingHistoryResponseBuilder.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/FastingReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Services/IFastingAnalyticsService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Contracts/Read/Models/FastingOverviewModel.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -103388,33 +103401,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "PostponeCyclicDayCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "PostponeCyclicDayCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
+        "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Fasting/Mappings/FastingHttpMappings.cs",
@@ -103427,7 +103414,33 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
+        "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "PostponeCyclicDayCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PostponeCyclicDayCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs",
@@ -103440,7 +103453,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
+        "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
@@ -103453,7 +103466,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
+        "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -104597,20 +104610,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "RecordFastingTelemetryCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs"
+        "Modules/Fasting/Application/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Logs/Mappings/LogsHttpMappings.cs",
@@ -104623,7 +104623,20 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs"
+        "Modules/Fasting/Application/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "RecordFastingTelemetryCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingTelemetrySummaryServiceTests.cs",
@@ -104636,7 +104649,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs"
+        "Modules/Fasting/Application/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/LogsControllerTests.cs",
@@ -104701,33 +104714,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "ReduceActiveFastingTargetCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ReduceActiveFastingTargetCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
+        "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Fasting/Mappings/FastingHttpMappings.cs",
@@ -104740,7 +104727,33 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
+        "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ReduceActiveFastingTargetCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ReduceActiveFastingTargetCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs",
@@ -104753,7 +104766,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
+        "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
@@ -104766,7 +104779,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
+        "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -104779,7 +104792,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
+        "Modules/Fasting/Application/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingHttpMappingsTests.cs",
@@ -104979,7 +104992,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "RefreshTokenHttpRequest",
@@ -106953,7 +106966,7 @@
         "FoodDiary.Application.Identity/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -106992,7 +107005,7 @@
         "FoodDiary.Application.Identity/Authentication/Commands/RevokeSession/RevokeSessionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -108679,33 +108692,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "SkipCyclicDayCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "SkipCyclicDayCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
+        "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Fasting/Mappings/FastingHttpMappings.cs",
@@ -108718,7 +108705,33 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
+        "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "SkipCyclicDayCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "SkipCyclicDayCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs",
@@ -108731,7 +108744,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
+        "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
@@ -108744,7 +108757,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
+        "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -108848,46 +108861,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
-      "isTest": false,
-      "referenceCount": 5
-    },
-    {
-      "contract": "StartFastingCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "StartFastingCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "StartFastingCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Fasting/Mappings/FastingHttpMappings.cs",
@@ -108900,7 +108874,46 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/StartFasting/FastingStartFactory.cs",
+      "isTest": false,
+      "referenceCount": 5
+    },
+    {
+      "contract": "StartFastingCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "StartFastingCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartFastingCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Start.cs",
@@ -108913,7 +108926,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
@@ -108926,7 +108939,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -108939,7 +108952,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs"
+        "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/FastingHttpMappingsTests.cs",
@@ -110226,33 +110239,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "UpdateCurrentFastingCheckInCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "UpdateCurrentFastingCheckInCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
+        "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Fasting/Mappings/FastingHttpMappings.cs",
@@ -110265,7 +110252,33 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
+        "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "UpdateCurrentFastingCheckInCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UpdateCurrentFastingCheckInCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs",
@@ -110278,7 +110291,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
+        "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs",
@@ -110291,7 +110304,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
+        "Modules/Fasting/Application/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",

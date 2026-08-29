@@ -29,6 +29,8 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 | [0012](0012-cycle-health-data-and-calendar-date-boundary.md) | Cycle health-data and calendar-date boundary | Proposed | 2026-08-17 |
 | [0013](0013-read-only-sqlite-context-search-in-development-mcp.md) | Read-only SQLite context search in the Development MCP | Superseded | 2026-08-21 |
 | [0014](0014-sql-first-development-context-with-json-fallback.md) | SQL-first development context with JSON fallback | Accepted | 2026-08-21 |
+| [0015](0015-application-module-root-folder-structure.md) | Application module root folder structure | Accepted | 2026-08-28 |
+| [0016](0016-logical-module-folders-and-fasting-extraction.md) | Logical module folders and incremental Fasting extraction | Accepted | 2026-08-29 |
 
 ## Creating A Record
 

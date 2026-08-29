@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj`
+- Extracted project: `Modules/Fasting/FoodDiary.Modules.Fasting.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Notifications, Users
 - Business-module consumers: none observed
@@ -25,11 +25,13 @@ sources:
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Fasting`
-- `FoodDiary.Application.Fasting`
-- `FoodDiary.Domain/Entities/Tracking/Fasting`
-- `FoodDiary.Infrastructure/Persistence/Configurations/Tracking`
-- `FoodDiary.Infrastructure/Persistence/Tracking`
 - `FoodDiary.Presentation.Api/Features/Fasting`
+- `Modules/Fasting/Application`
+- `Modules/Fasting/Application/Abstractions`
+- `Modules/Fasting/Contracts`
+- `Modules/Fasting/Domain`
+- `Modules/Fasting/Infrastructure`
+- `Modules/Fasting/Infrastructure/Model`
 
 ## HTTP Surface
 
@@ -66,49 +68,28 @@ Source: `FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: FastingPlan, FastingOccurrence, FastingCheckIn, FastingSession, FastingTelemetryEvent
-- Public contract files: 32
+- Public contract files: 10
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 32
-- Interfaces: 19
-- DTO/read-model/projection types: 11
+- Public contract types: 10
+- Interfaces: 3
+- DTO/read-model/projection types: 6
 - Enums: 0
-- Exported repository-shaped contracts: 17
-- Contracts referencing domain entities: 8
+- Exported repository-shaped contracts: 0
+- Contracts referencing domain entities: 0
 - `class FastingErrors`
-- `interface IFastingCheckInReadModelRepository`
-- `interface IFastingCheckInReadRepository`
-- `interface IFastingCheckInRepository`
-- `interface IFastingCheckInWriteRepository`
-- `interface IFastingOccurrenceReadModelRepository`
-- `interface IFastingOccurrenceReadRepository`
-- `interface IFastingOccurrenceRepository`
-- `interface IFastingOccurrenceWriteRepository`
-- `interface IFastingPlanReadRepository`
-- `interface IFastingPlanRepository`
-- `interface IFastingPlanWriteRepository`
+- `interface IFastingNotificationScheduler`
 - `interface IFastingReadService`
-- `interface IFastingSessionReadRepository`
-- `interface IFastingSessionRepository`
-- `interface IFastingSessionWriteRepository`
-- `interface IFastingTelemetryEventReadRepository`
-- `interface IFastingTelemetryEventRepository`
-- `interface IFastingTelemetryEventWriteRepository`
-- `interface IFastingTelemetrySummaryReadService`
+- `interface IFastingTelemetryCleanupService`
 - `record FastingCheckInModel`
-- `record FastingCheckInReadModel`
 - `record FastingInsightsModel`
 - `record FastingMessageModel`
-- `record FastingOccurrenceReadModel`
 - `record FastingOverviewModel`
-- `record FastingPlanReadModel`
 - `record FastingSessionModel`
 - `record FastingStatsModel`
-- `record FastingTelemetryEventRecord`
-- ... 2 more type(s)
 
 ## Focused Tests
 

@@ -12,11 +12,19 @@ public sealed class BackendModuleManifestTests {
     public void BoundaryManifest_CoversFolderAndExtractedApplicationModules() {
         BackendModuleManifest manifest = LoadManifest();
         string[] folderModules = [];
-        string[] extractedModules = [.. Directory.GetDirectories(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application.*", SearchOption.TopDirectoryOnly)
+        string[] legacyExtractedModules = [.. Directory.GetDirectories(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application.*", SearchOption.TopDirectoryOnly)
             .SelectMany(directory => Directory.GetFiles(directory, "FoodDiary.Application.*.csproj", SearchOption.TopDirectoryOnly))
             .Select(path => Path.GetFileNameWithoutExtension(path)["FoodDiary.Application.".Length..])
             .Where(name => name is not ("Abstractions" or "Runtime"))
             .Order(StringComparer.Ordinal)];
+        string modulesRoot = ArchitectureTestPaths.FromRoot("Modules");
+        string[] logicalFolderModules = Directory.Exists(modulesRoot)
+            ? [.. Directory.GetDirectories(modulesRoot, "*", SearchOption.TopDirectoryOnly)
+                .Where(directory => Directory.GetFiles(directory, "FoodDiary.Modules.*.csproj", SearchOption.TopDirectoryOnly).Length == 1)
+                .Select(directory => Path.GetFileName(directory))
+                .Order(StringComparer.Ordinal)]
+            : [];
+        string[] extractedModules = [.. legacyExtractedModules.Concat(logicalFolderModules).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal)];
         string[] actualModules = [.. folderModules.Concat(extractedModules).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal)];
 
         Assert.Equal(manifest.Inventory.FolderModules, folderModules.Length);

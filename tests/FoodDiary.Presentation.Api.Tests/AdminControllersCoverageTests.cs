@@ -34,7 +34,7 @@ using FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminUserRoleAudit;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Fasting.Models;
-using FoodDiary.Application.Fasting.Queries.GetFastingTelemetrySummary;
+using FoodDiary.Modules.Fasting.Application.Queries.GetFastingTelemetrySummary;
 using FoodDiary.Presentation.Api.Features.Admin;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;

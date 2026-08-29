@@ -31,6 +31,7 @@ using FoodDiary.Infrastructure.Persistence.Dashboard;
 using FoodDiary.Infrastructure.Persistence.Dietologist;
 using FoodDiary.Infrastructure.Persistence.Tracking;
 using FoodDiary.Infrastructure.Services;
+using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Integrations;
 using FoodDiary.Integrations.Billing;
 using FoodDiary.Integrations.Options;
@@ -556,7 +557,7 @@ public sealed class DependencyInjectionTests {
 
     [Theory]
     [MemberData(nameof(SplitRepositoryRegistrationCases))]
-    public void AddInfrastructure_SplitRepositoriesResolveThroughSameScopedInstance(string primaryTypeName, string[] aliasTypeNames) {
+    public void AddInfrastructureAndFastingModule_SplitRepositoriesResolveThroughSameScopedInstance(string primaryTypeName, string[] aliasTypeNames) {
         var services = new ServiceCollection();
         services.AddSingleton(Substitute.For<IPublisher>());
         IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
@@ -569,7 +570,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
 
-        services.AddInfrastructure(configuration);
+        services.AddInfrastructure(configuration).AddFastingModule();
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
 

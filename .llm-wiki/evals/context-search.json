@@ -207,13 +207,13 @@
       "id": "start-fasting-command",
       "query": "start a new fasting session for the current user",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandHandler.cs"]
+      "expectedPaths": ["Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandHandler.cs"]
     },
     {
       "id": "fasting-stats-calculator",
       "query": "calculate completed fasting duration statistics",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Fasting/Services/FastingStatsCalculator.cs"]
+      "expectedPaths": ["Modules/Fasting/Application/Services/FastingStatsCalculator.cs"]
     },
     {
       "id": "hydration-goal-service",
@@ -303,7 +303,7 @@
       "id": "fasting-push-dispatcher",
       "query": "dispatch fasting reminder notifications through web push",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Fasting/Services/FastingNotificationPushDispatcher.cs"]
+      "expectedPaths": ["Modules/Fasting/Application/Services/FastingNotificationPushDispatcher.cs"]
     },
     {
       "id": "smtp-inbound-store",
@@ -333,7 +333,7 @@
       "id": "fasting-insights-query",
       "query": "get personalized insights from fasting history",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs"]
+      "expectedPaths": ["Modules/Fasting/Application/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs"]
     },
     {
       "id": "hydration-entry-read-service",

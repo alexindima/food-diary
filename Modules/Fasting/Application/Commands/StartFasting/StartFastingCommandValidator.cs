@@ -1,0 +1,26 @@
+using FluentValidation;
+using FoodDiary.Modules.Fasting.Application.Common;
+using FoodDiary.Domain.Enums;
+
+namespace FoodDiary.Modules.Fasting.Application.Commands.StartFasting;
+
+public sealed class StartFastingCommandValidator : AbstractValidator<StartFastingCommand> {
+    public StartFastingCommandValidator() {
+        RuleFor(x => x.UserId)
+            .NotNull()
+            .WithErrorCode("Authentication.InvalidToken")
+            .Must(id => id is not null && id.Value != Guid.Empty)
+            .WithErrorCode("Authentication.InvalidToken");
+
+        RuleFor(x => x.Protocol)
+            .NotEmpty()
+            .When(x => !string.Equals(x.PlanType, "Cyclic", StringComparison.OrdinalIgnoreCase))
+            .WithErrorCode("Validation.Required")
+            .WithMessage("Fasting protocol is required");
+
+        RuleFor(x => x.PlanType)
+            .Must(EnumValueParser.CanParseOptional<FastingPlanType>)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Fasting plan type is invalid.");
+    }
+}

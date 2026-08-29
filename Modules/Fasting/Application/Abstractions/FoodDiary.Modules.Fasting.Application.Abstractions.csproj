@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Modules.Fasting.Application.Abstractions</AssemblyName>
+    <RootNamespace>FoodDiary.Application.Abstractions.Fasting</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\FoodDiary.Modules.Fasting.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Results\FoodDiary.Results.csproj" />
+  </ItemGroup>
+
+</Project>

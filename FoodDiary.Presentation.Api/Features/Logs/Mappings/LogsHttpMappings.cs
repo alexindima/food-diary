@@ -1,4 +1,4 @@
-using FoodDiary.Application.Fasting.Commands.RecordFastingTelemetry;
+using FoodDiary.Modules.Fasting.Application.Commands.RecordFastingTelemetry;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Logs.Mappings;

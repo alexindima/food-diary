@@ -1,6 +1,6 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Fasting.Commands.EndFasting;
-using FoodDiary.Application.Abstractions.Fasting.Models;
+using FoodDiary.Modules.Fasting.Application.Commands.EndFasting;
+using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;

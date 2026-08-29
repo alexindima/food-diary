@@ -57,7 +57,7 @@ Create the complete task workspace with one command:
   -Objective "Safely evolve the fasting command" `
   -Criterion "Existing consumers remain compatible" `
   -Criterion "Invalid input is rejected" `
-  -ChangedPath FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommand.cs `
+  -ChangedPath Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs `
   -WorkspacePath .artifacts/llm-wiki/tasks/fasting-command
 ```
 

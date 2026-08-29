@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Fasting.Services;
+using FoodDiary.Modules.Fasting.Application.Services;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
