@@ -10,7 +10,7 @@ using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Meals;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Application.Users;
-using FoodDiary.Application.WeeklyGoals;
+using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Infrastructure;
 using FoodDiary.Integrations;
 using FoodDiary.JobManager.Services;

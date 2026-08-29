@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Application.WeeklyGoals;
 
 public static class DependencyInjection {
-    public static IServiceCollection AddWeeklyGoalsModule(this IServiceCollection services) {
+    public static IServiceCollection AddWeeklyGoalsApplication(this IServiceCollection services) {
         services.AddFoodDiaryMediator(configuration =>
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);

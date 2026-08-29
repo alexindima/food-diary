@@ -8,21 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "01b01249162090e9ce270afe46d54999cf1b06d79e868ca34f202c4c86de5e31"
+          "sha256": "2d5cca73fa7af986b7925f3f9f15de11afd18197954dc1af7880db10fe914736"
         },
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "39105475cbf26e3f79c910cc3343cd6211b6e822b50668dbb1b155753dcf0d44"
+          "sha256": "688f81edad938267754d2514abfffa46c5b65092fc7857f138be7c4808603ffc"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "cf62d6324cdffa38bf9215499bc3ce75f7f1b23997e0ef6917c9b13273086c77"
+          "sha256": "2700f0a86de59c8d3dfdbd846c2dfc90a0fbfbf331d75e956d389b6ce15b7d8a"
         }
       ],
-      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:41.6879749Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:06.2082185Z"
     },
     {
       "pageId": "module.frontend",
@@ -46,17 +46,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "39105475cbf26e3f79c910cc3343cd6211b6e822b50668dbb1b155753dcf0d44"
+          "sha256": "688f81edad938267754d2514abfffa46c5b65092fc7857f138be7c4808603ffc"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "cf62d6324cdffa38bf9215499bc3ce75f7f1b23997e0ef6917c9b13273086c77"
+          "sha256": "2700f0a86de59c8d3dfdbd846c2dfc90a0fbfbf331d75e956d389b6ce15b7d8a"
         }
       ],
-      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:42.9172806Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:06.4913380Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -65,21 +65,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "6431a46b9f1cbcf1c3546332251eb84bb53ac6b2d1fdb57f0ac668328578cf60"
+          "sha256": "26c81adb5acaac59fa0ea32b3f89aa9d5684a11b52bf9ba490ce273edf98dd34"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "cf62d6324cdffa38bf9215499bc3ce75f7f1b23997e0ef6917c9b13273086c77"
+          "sha256": "2700f0a86de59c8d3dfdbd846c2dfc90a0fbfbf331d75e956d389b6ce15b7d8a"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "1502aa646117a0ed29fde651e86528036e49d308a34718b0c6ca937e98c0926f"
+          "sha256": "8dee15c6676f956276019680d6b1dc919c96417e62836622bf3ce0aafff5246a"
         }
       ],
-      "reason": "Hydration transport source and snapshots are unchanged; 8 focused presentation tests and 2 API integration tests pass.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:43.8605933Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:06.7546797Z"
     },
     {
       "pageId": "system.architecture",
@@ -88,25 +88,25 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "39105475cbf26e3f79c910cc3343cd6211b6e822b50668dbb1b155753dcf0d44"
+          "sha256": "688f81edad938267754d2514abfffa46c5b65092fc7857f138be7c4808603ffc"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "6431a46b9f1cbcf1c3546332251eb84bb53ac6b2d1fdb57f0ac668328578cf60"
+          "sha256": "26c81adb5acaac59fa0ea32b3f89aa9d5684a11b52bf9ba490ce273edf98dd34"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "cf62d6324cdffa38bf9215499bc3ce75f7f1b23997e0ef6917c9b13273086c77"
+          "sha256": "2700f0a86de59c8d3dfdbd846c2dfc90a0fbfbf331d75e956d389b6ce15b7d8a"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "3f665b0987014b737383815462317039047ca5d8d2619d9bd89ad0ee0300ac2b"
+          "sha256": "f31bccde896b6d5ddcac1eb0aaea838260b6b9d03fe5427fc466e39c818b800c"
         }
       ],
-      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:44.6714828Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:07.0254394Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -145,17 +145,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "01b01249162090e9ce270afe46d54999cf1b06d79e868ca34f202c4c86de5e31"
+          "sha256": "2d5cca73fa7af986b7925f3f9f15de11afd18197954dc1af7880db10fe914736"
         },
         {
           "path": "docs/adr/README.md",
-          "sha256": "1e6eb66de63c5984b7dd7b7b9984ac08de5931705d19b94e7db1eaeb88737a95"
+          "sha256": "34fba23be4983aa5773a09189d6c0d7fb770e9ea0ca3fcb72eb1bbc8cc82eee3"
         }
       ],
-      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:45.4394476Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:07.2722121Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -164,13 +164,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "6431a46b9f1cbcf1c3546332251eb84bb53ac6b2d1fdb57f0ac668328578cf60"
+          "sha256": "26c81adb5acaac59fa0ea32b3f89aa9d5684a11b52bf9ba490ce273edf98dd34"
         }
       ],
-      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:46.2506620Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:07.5256720Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -193,18 +193,18 @@
       "pageSha256": "5b35dfc2deefb9f97e68732d4d4253f9dae73fbf2be012a58aa3974a57257f6d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiProductJourney.ps1",
-          "sha256": "bee7296a7f43abc971975a4d754b5adeaca49c72917349c2a66f5e18222a4e54"
+          "path": ".llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1",
+          "sha256": "e5970d845f198b555a52c4aa438fd37a1e8cc2756fbe9a486a89ca9b618d43a4"
         },
         {
-          "path": ".llm-wiki/tools/Start-LlmWikiDevelopment.ps1",
-          "sha256": "4f04cfce5bd9e7f41bdf9d0242215ea904fcc64fa832f50f52c832f50fc762cb"
+          "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
+          "sha256": "8fb0cc6f1a9fd6937aca9149a63a1fe4d85aeee20b81e9d5f5ae8a16288bb65e"
         }
       ],
-      "reason": "Architecture 728/728 and focused Wiki extraction regressions pass; generated indexes were rebuilt from current sources.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:47.1096464Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:07.7835653Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -228,21 +228,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "b7306d565b5f4c3f6f5817928efd02844b619412f358112dc00868b2cf7372fc"
+          "sha256": "c800b3b62e5917fa84701434d0ee4ce0be7802ca981c50b9418f1df5349ee74f"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "6431a46b9f1cbcf1c3546332251eb84bb53ac6b2d1fdb57f0ac668328578cf60"
+          "sha256": "26c81adb5acaac59fa0ea32b3f89aa9d5684a11b52bf9ba490ce273edf98dd34"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "3f665b0987014b737383815462317039047ca5d8d2619d9bd89ad0ee0300ac2b"
+          "sha256": "f31bccde896b6d5ddcac1eb0aaea838260b6b9d03fe5427fc466e39c818b800c"
         }
       ],
-      "reason": "Architecture 728/728 and focused Wiki extraction regressions pass; generated indexes were rebuilt from current sources.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:47.9855400Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:08.0568544Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -251,13 +251,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "330b5d389367fbca25913302f5376f4d181fe79019a6667aa7ab813a26d9fab7"
+          "sha256": "50291fef9182902adf5b17b40a34259dd00d6f80f7d83df50b9b88467870f3c0"
         }
       ],
-      "reason": "Hydration transport source and snapshots are unchanged; 8 focused presentation tests and 2 API integration tests pass.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:49.3267272Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:08.6664521Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -477,13 +477,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "1e6eb66de63c5984b7dd7b7b9984ac08de5931705d19b94e7db1eaeb88737a95"
+          "sha256": "34fba23be4983aa5773a09189d6c0d7fb770e9ea0ca3fcb72eb1bbc8cc82eee3"
         }
       ],
-      "reason": "Reviewed Hydration vertical extraction against current projects, architecture tests, ADR 0017, generated indexes, API compatibility, EF model, and Wiki tooling regressions.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T17:43:30.2322713Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:09.3198343Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -522,13 +522,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "3eea289f60345878b7760fe3acfd8682b19a90ecab852b4d8d030a97bc572f06"
+          "sha256": "d22f83ab0db5642d0ef3bb8ef064d24ec614edc2fb3e587eb5fd7d4ebb76fb54"
         }
       ],
-      "reason": "Architecture 728/728 and focused Wiki extraction regressions pass; generated indexes were rebuilt from current sources.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:51.1225833Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:09.6698541Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -857,13 +857,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bc1d34bc08727e7e630b6c8d916119bbd1033113f159ccf15dc0675a1f689648"
+          "sha256": "354ff0f859420794fe8e5b6409912d04a6aea13151a7625a729008fba74b97ad"
         }
       ],
-      "reason": "Architecture 728/728 and focused Wiki extraction regressions pass; generated indexes were rebuilt from current sources.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:54.0282150Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:10.2273324Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -932,13 +932,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "fef67864882c8ce7dc60eb74b0498d3ad83866f4dc1a99a5f90b4f8de0989d19"
+          "sha256": "3bfbd1dd3b979c44d220e8f8d60d1e04b77b849f72607d941be9ca4021616485"
         }
       ],
-      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:58.3992142Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:11.2355657Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -947,21 +947,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bc1d34bc08727e7e630b6c8d916119bbd1033113f159ccf15dc0675a1f689648"
+          "sha256": "354ff0f859420794fe8e5b6409912d04a6aea13151a7625a729008fba74b97ad"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "fef67864882c8ce7dc60eb74b0498d3ad83866f4dc1a99a5f90b4f8de0989d19"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "45221582e11b7a2cf94f40f547638f4ac78ff5ab0407ea0685f27762c35a86d6"
+          "sha256": "3bfbd1dd3b979c44d220e8f8d60d1e04b77b849f72607d941be9ca4021616485"
         }
       ],
-      "reason": "No authorization secret logging or data-sharing boundary changed; the existing user-scoped Hydration relationship is preserved.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:59.5858518Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:11.7015778Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1139,13 +1135,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "01b01249162090e9ce270afe46d54999cf1b06d79e868ca34f202c4c86de5e31"
+          "sha256": "2d5cca73fa7af986b7925f3f9f15de11afd18197954dc1af7880db10fe914736"
         }
       ],
-      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:50.2018157Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:08.9894950Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1199,17 +1195,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "6502ee90e5b5dcc3fe00becc85b031b5efe33b763398a71a8faea65e0e3840a0"
+          "sha256": "29be8afab678172d1f75c886cdf3ad65fd44c9287f559fd3895463417921d945"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "01b01249162090e9ce270afe46d54999cf1b06d79e868ca34f202c4c86de5e31"
+          "sha256": "2d5cca73fa7af986b7925f3f9f15de11afd18197954dc1af7880db10fe914736"
         }
       ],
-      "reason": "ADR 0017 and backend architecture documents now describe the central Domain compatibility seam and the verified acyclic project graph.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:55.1504830Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:10.5551756Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1217,18 +1213,14 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "52cfcc385680dd4f2049422cb9656b2d424399dbd6904312f836cef199dca3fa"
-        },
-        {
           "path": "AGENTS.md",
-          "sha256": "01b01249162090e9ce270afe46d54999cf1b06d79e868ca34f202c4c86de5e31"
+          "sha256": "2d5cca73fa7af986b7925f3f9f15de11afd18197954dc1af7880db10fe914736"
         }
       ],
-      "reason": "Architecture 728/728 and focused Wiki extraction regressions pass; generated indexes were rebuilt from current sources.",
+      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:57.1672460Z"
+      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
+      "reviewedAtUtc": "2026-08-29T20:12:10.8873690Z"
     }
   ]
 }

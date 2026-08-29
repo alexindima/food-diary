@@ -612,19 +612,27 @@
       "role": "aggregate-owner",
       "physicalIsolation": "project",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": [],
+      "ownedEntities": [
+        "WeeklyGoal"
+      ],
       "sourceMappings": {
+        "logicalRoot": "Modules/WeeklyGoals",
         "applicationProjects": [
-          "FoodDiary.Application.WeeklyGoals"
+          "Modules/WeeklyGoals/Application"
         ],
         "abstractionAreas": [
-          "WeeklyGoals"
+          "Modules/WeeklyGoals/Application/Abstractions"
+        ],
+        "contractAreas": [
+          "Modules/WeeklyGoals/Contracts"
         ],
         "domainAreas": [
-          "WeeklyGoals"
+          "FoodDiary.Domain/Entities/WeeklyGoals",
+          "FoodDiary.Domain/Enums/WeeklyGoalType.cs",
+          "FoodDiary.Domain/ValueObjects/Ids/WeeklyGoalId.cs"
         ],
         "persistenceAreas": [
-          "WeeklyGoals"
+          "Modules/WeeklyGoals/Infrastructure"
         ]
       }
     }

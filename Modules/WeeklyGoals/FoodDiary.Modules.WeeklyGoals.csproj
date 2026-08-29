@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Application.WeeklyGoals</AssemblyName>
+    <RootNamespace>FoodDiary.Modules.WeeklyGoals</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Application/Abstractions/**/*.cs" />
+    <Compile Remove="Contracts/**/*.cs" />
+    <Compile Remove="Infrastructure/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="Application\Abstractions\FoodDiary.Modules.WeeklyGoals.Application.Abstractions.csproj" />
+    <ProjectReference Include="Contracts\FoodDiary.Modules.WeeklyGoals.Contracts.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+
+</Project>

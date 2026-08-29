@@ -34,7 +34,8 @@
     <ProjectReference Include="..\..\FoodDiary.Application.MealPlanning\FoodDiary.Application.MealPlanning.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.RecipeCommunity\FoodDiary.Application.RecipeCommunity.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Images\FoodDiary.Application.Images.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Application.WeeklyGoals\FoodDiary.Application.WeeklyGoals.csproj" />
+    <ProjectReference Include="..\..\Modules\WeeklyGoals\FoodDiary.Modules.WeeklyGoals.csproj" />
+    <ProjectReference Include="..\..\Modules\WeeklyGoals\Infrastructure\FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

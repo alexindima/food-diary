@@ -6212,7 +6212,7 @@
           "expression": ")"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/WeeklyGoals/WeeklyGoalConfiguration.cs"
+      "path": "Modules/WeeklyGoals/Infrastructure/Model/Configurations/WeeklyGoalConfiguration.cs"
     },
     {
       "area": "FoodDiary",

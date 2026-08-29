@@ -28,6 +28,17 @@ if ($null -eq $hydrationPlan -or $hydrationPlan.module -ne 'Hydration') {
 if (@($hydrationPlan.paths) -notcontains 'Modules/Hydration') {
     throw 'Hydration extraction planning omitted the canonical Modules/Hydration logical root.'
 }
+$weeklyGoalsObjective = 'Выполни полный Wiki-first перенос вертикального модуля WeeklyGoals в Modules/WeeklyGoals с сохранением CLR API'
+$weeklyGoalsPlan = Get-LlmWikiExtractionPlan $weeklyGoalsObjective $repositoryRoot
+if ($null -eq $weeklyGoalsPlan -or $weeklyGoalsPlan.module -ne 'WeeklyGoals') {
+    throw 'Russian vertical-module transfer intent mistook the Modules path segment for the module name.'
+}
+if (@($weeklyGoalsPlan.criteria | Where-Object { $_ -match 'FoodDiary\.Application\.Modules|AddModulesModule' }).Count -gt 0) {
+    throw 'WeeklyGoals extraction planning generated acceptance criteria for the generic Modules path segment.'
+}
+if ($weeklyGoalsPlan.criteria[0] -ne 'WeeklyGoals application source lives in Modules/WeeklyGoals/Application.') {
+    throw 'Explicit Modules/WeeklyGoals extraction intent retained the legacy application project as its target.'
+}
 $hydrationJourneys = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') `
     -Query $hydrationObjective `
     -ChangedPath @(

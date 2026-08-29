@@ -49,6 +49,7 @@ $decisionQuestions = @($research.openQuestions | ForEach-Object {
         id = $_.id
         question = $_.question
         blocking = [bool]$_.blocking -and -not $resolvedByInput
+        status = if ($resolvedByInput) { 'resolved' } else { 'open' }
         resolution = @(if ($resolvedByInput) { $decisionEvidence } else { @() })
         resolutionEvidence = $_.evidenceNeeded
         resolutionCommand = if ($resolvedByInput) { $null } elseif ($_.PSObject.Properties['resolutionCommand']) { [string]$_.resolutionCommand } else { $null }
@@ -142,7 +143,7 @@ $result = [pscustomobject][ordered]@{
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 14; exit 0 }
 Write-Host "Design checkpoint: $($result.profile), ready=$($result.ready)"
 Write-Host "Objective: $Objective"
-foreach ($question in $result.decisionQuestions) { Write-Host "OPEN [$($question.id)]: $($question.question)" }
+foreach ($question in $result.decisionQuestions) { Write-Host "$(([string]$question.status).ToUpperInvariant()) [$($question.id)]: $($question.question)" }
 foreach ($phase in $result.implementationPhases) { Write-Host "Phase $($phase.order): $($phase.title) - $($phase.outcome)" }
 if ($result.sliceStrategy.enabled) {
     foreach ($slice in $result.designSlices) { Write-Host "Vertical slice $($slice.id): $($slice.outcome)" }

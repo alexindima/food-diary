@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3487,
-    "symbols": 3494,
+    "sourceFiles": 3488,
+    "symbols": 3495,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 238,
+    "dependencyInjectionRegistrations": 236,
     "kinds": {
-      "class": 1821,
+      "class": 1822,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1348,
+      "Other": 1349,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -4267,20 +4267,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Wearables/Models/WearableTokenResult.cs",
       "line": 2
-    },
-    {
-      "name": "IWeeklyGoalRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IWeeklyGoalTransactionRunner",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalTransactionRunner.cs",
-      "line": 4
     },
     {
       "name": "IWeightEntryReadModelRepository",
@@ -12368,104 +12354,6 @@
       "line": 8
     },
     {
-      "name": "UpsertWeeklyGoalCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpsertWeeklyGoalCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "UpsertWeeklyGoalCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "IWeeklyGoalReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.WeeklyGoals/Common/IWeeklyGoalReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "WeeklyGoalMapping",
-      "kind": "class",
-      "role": "Mapping",
-      "path": "FoodDiary.Application.WeeklyGoals/Common/WeeklyGoalMapping.cs",
-      "line": 5
-    },
-    {
-      "name": "WeeklyGoalProgressReader",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.WeeklyGoals/Common/WeeklyGoalProgressReader.cs",
-      "line": 5
-    },
-    {
-      "name": "WeeklyGoalWeekPolicy",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.WeeklyGoals/Common/WeeklyGoalWeekPolicy.cs",
-      "line": 2
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.WeeklyGoals/DependencyInjection.cs",
-      "line": 8
-    },
-    {
-      "name": "WeeklyGoalModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.WeeklyGoals/Models/WeeklyGoalModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetWeeklyGoalQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetWeeklyGoalQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetWeeklyGoalQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "WeeklyGoalReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReadService.cs",
-      "line": 8
-    },
-    {
-      "name": "WeeklyGoalReminderProcessor",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
-      "line": 8
-    },
-    {
       "name": "ChangeSetSnapshot",
       "kind": "record",
       "role": "Other",
@@ -14713,13 +14601,6 @@
       "line": 7
     },
     {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.WeeklyGoals.cs",
-      "line": 6
-    },
-    {
       "name": "DomainEventNotification",
       "kind": "record",
       "role": "Other",
@@ -15490,13 +15371,6 @@
       "line": 7
     },
     {
-      "name": "WeeklyGoalConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/WeeklyGoals/WeeklyGoalConfiguration.cs",
-      "line": 8
-    },
-    {
       "name": "NutritionLessonRepository",
       "kind": "class",
       "role": "Repository",
@@ -15795,7 +15669,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "FoodDiaryDbContext",
@@ -16265,20 +16139,6 @@
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Wearables/WearableSyncRepository.cs",
       "line": 9
-    },
-    {
-      "name": "EfWeeklyGoalTransactionRunner",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/WeeklyGoals/EfWeeklyGoalTransactionRunner.cs",
-      "line": 9
-    },
-    {
-      "name": "WeeklyGoalRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/WeeklyGoals/WeeklyGoalRepository.cs",
-      "line": 7
     },
     {
       "name": "DatabaseCommandTelemetryInterceptor",
@@ -24317,6 +24177,153 @@
       "line": 10
     },
     {
+      "name": "IWeeklyGoalRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/WeeklyGoals/Application/Abstractions/Common/IWeeklyGoalRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IWeeklyGoalTransactionRunner",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/WeeklyGoals/Application/Abstractions/Common/IWeeklyGoalTransactionRunner.cs",
+      "line": 4
+    },
+    {
+      "name": "UpsertWeeklyGoalCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpsertWeeklyGoalCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "UpsertWeeklyGoalCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "WeeklyGoalMapping",
+      "kind": "class",
+      "role": "Mapping",
+      "path": "Modules/WeeklyGoals/Application/Common/WeeklyGoalMapping.cs",
+      "line": 5
+    },
+    {
+      "name": "WeeklyGoalProgressReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/WeeklyGoals/Application/Common/WeeklyGoalProgressReader.cs",
+      "line": 5
+    },
+    {
+      "name": "WeeklyGoalWeekPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/WeeklyGoals/Application/Common/WeeklyGoalWeekPolicy.cs",
+      "line": 2
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/WeeklyGoals/Application/DependencyInjection.cs",
+      "line": 8
+    },
+    {
+      "name": "GetWeeklyGoalQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/WeeklyGoals/Application/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWeeklyGoalQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/WeeklyGoals/Application/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetWeeklyGoalQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/WeeklyGoals/Application/Queries/GetWeeklyGoal/GetWeeklyGoalQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "WeeklyGoalReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/WeeklyGoals/Application/Services/WeeklyGoalReadService.cs",
+      "line": 8
+    },
+    {
+      "name": "WeeklyGoalReminderProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/WeeklyGoals/Application/Services/WeeklyGoalReminderProcessor.cs",
+      "line": 8
+    },
+    {
+      "name": "IWeeklyGoalReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/WeeklyGoals/Contracts/Common/IWeeklyGoalReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "WeeklyGoalModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/WeeklyGoals/Contracts/Models/WeeklyGoalModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WeeklyGoalConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/WeeklyGoals/Infrastructure/Model/Configurations/WeeklyGoalConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "WeeklyGoalsPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/WeeklyGoals/Infrastructure/Model/WeeklyGoalsPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/WeeklyGoals/Infrastructure/ModuleRegistration.cs",
+      "line": 7
+    },
+    {
+      "name": "EfWeeklyGoalTransactionRunner",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/WeeklyGoals/Infrastructure/Persistence/EfWeeklyGoalTransactionRunner.cs",
+      "line": 9
+    },
+    {
+      "name": "WeeklyGoalRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs",
+      "line": 7
+    },
+    {
       "name": "AggregateRoot",
       "kind": "class",
       "role": "Other",
@@ -26119,16 +26126,16 @@
     },
     {
       "interface": "IWeeklyGoalReadService",
-      "interfacePath": "FoodDiary.Application.WeeklyGoals/Common/IWeeklyGoalReadService.cs",
+      "interfacePath": "Modules/WeeklyGoals/Contracts/Common/IWeeklyGoalReadService.cs",
       "implementation": "WeeklyGoalReadService",
-      "implementationPath": "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReadService.cs",
+      "implementationPath": "Modules/WeeklyGoals/Application/Services/WeeklyGoalReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IWeeklyGoalRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalRepository.cs",
+      "interfacePath": "Modules/WeeklyGoals/Application/Abstractions/Common/IWeeklyGoalRepository.cs",
       "implementation": "WeeklyGoalRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/WeeklyGoals/WeeklyGoalRepository.cs",
+      "implementationPath": "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26869,13 +26876,6 @@
       "line": 15
     },
     {
-      "service": "IWeeklyGoalReadService",
-      "implementation": "WeeklyGoalReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.WeeklyGoals/DependencyInjection.cs",
-      "line": 15
-    },
-    {
       "service": "IWikiContextSearch",
       "implementation": "SqliteWikiContextSearch",
       "lifetime": "Singleton",
@@ -27499,20 +27499,6 @@
       "line": 18
     },
     {
-      "service": "IWeeklyGoalRepository",
-      "implementation": "WeeklyGoalRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.WeeklyGoals.cs",
-      "line": 9
-    },
-    {
-      "service": "IWeeklyGoalTransactionRunner",
-      "implementation": "EfWeeklyGoalTransactionRunner",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.WeeklyGoals.cs",
-      "line": 10
-    },
-    {
       "service": "IEmailVerificationNotifier",
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
@@ -27805,6 +27791,13 @@
       "lifetime": "Scoped",
       "path": "Modules/Hydration/Application/DependencyInjection.cs",
       "line": 16
+    },
+    {
+      "service": "IWeeklyGoalReadService",
+      "implementation": "WeeklyGoalReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/WeeklyGoals/Application/DependencyInjection.cs",
+      "line": 15
     },
     {
       "service": "IMediator",

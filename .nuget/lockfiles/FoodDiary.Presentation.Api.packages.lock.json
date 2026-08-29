@@ -389,7 +389,7 @@
           "FoodDiary.Modules.Hydration.Contracts": "[1.0.0, )"
         }
       },
-      "fooddiary.application.weeklygoals": {
+      "FoodDiary.Application.WeeklyGoals": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
@@ -397,7 +397,9 @@
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Application.Meals": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )"
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.WeeklyGoals.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.WeeklyGoals.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.domain": {
@@ -440,6 +442,18 @@
         }
       },
       "fooddiary.modules.hydration.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.weeklygoals.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.weeklygoals.contracts": {
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )"

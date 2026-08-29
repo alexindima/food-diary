@@ -94,11 +94,12 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Application.Users",
             "FoodDiary.Application.Wearables",
             "FoodDiary.Application.WeeklyCheckIn",
-            "FoodDiary.Application.WeeklyGoals",
             "FoodDiary.Infrastructure",
             "FoodDiary.Integrations",
             "FoodDiary.Modules.Fasting.Contracts",
             "FoodDiary.Modules.Fasting.Infrastructure",
+            "FoodDiary.Modules.WeeklyGoals",
+            "FoodDiary.Modules.WeeklyGoals.Infrastructure",
             "FoodDiary.Resources",
         ];
         string[] expectedPackageReferences = [

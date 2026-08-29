@@ -371,7 +371,6 @@ public class LayeringTests {
             "services.AddModerationPersistence();",
             "services.AddUsdaPersistence();",
             "services.AddAchievementPersistence();",
-            "services.AddWeeklyGoalPersistence();",
         ];
 
         string[] actualRegistrations = [.. File.ReadLines(dependencyInjectionPath)

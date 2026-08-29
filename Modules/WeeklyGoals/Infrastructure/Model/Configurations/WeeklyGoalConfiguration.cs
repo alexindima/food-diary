@@ -4,7 +4,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Infrastructure.Persistence.Configurations.WeeklyGoals;
+namespace FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence.Configurations;
 
 internal sealed class WeeklyGoalConfiguration : IEntityTypeConfiguration<WeeklyGoal> {
     public void Configure(EntityTypeBuilder<WeeklyGoal> builder) {

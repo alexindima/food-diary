@@ -377,6 +377,7 @@ $architecturalDesign = & (Join-Path $PSScriptRoot 'Get-LlmWikiDesignCheckpoint.p
     -Limit 4 `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($architecturalDesign.sliceStrategy.enabled -and $architecturalDesign.sliceStrategy.kind -eq 'vertical-outcome') 'Architectural design did not enable vertical outcome slices.'
+Assert-Adaptive (@($architecturalDesign.decisionQuestions | Where-Object { $_.status -eq 'resolved' -and -not $_.blocking }).Count -gt 0) 'Resolved design input remained presented as an open decision.'
 Assert-Adaptive (@($architecturalDesign.designSlices).Count -eq 3) 'Architectural design did not produce the bounded three-slice decomposition.'
 Assert-Adaptive (@(Get-AdaptiveIds $architecturalDesign.designSlices) -contains 'slice-minimum-behavior') 'Vertical decomposition omitted the minimum observable behavior slice.'
 

@@ -43,7 +43,11 @@ COPY FoodDiary.Application.Ai/*.csproj FoodDiary.Application.Ai/
 COPY FoodDiary.Application.Lessons/*.csproj FoodDiary.Application.Lessons/
 COPY FoodDiary.Application.Statistics/*.csproj FoodDiary.Application.Statistics/
 COPY FoodDiary.Application.Meals/*.csproj FoodDiary.Application.Meals/
-COPY FoodDiary.Application.WeeklyGoals/*.csproj FoodDiary.Application.WeeklyGoals/
+COPY Modules/WeeklyGoals/*.csproj Modules/WeeklyGoals/
+COPY Modules/WeeklyGoals/Application/Abstractions/*.csproj Modules/WeeklyGoals/Application/Abstractions/
+COPY Modules/WeeklyGoals/Contracts/*.csproj Modules/WeeklyGoals/Contracts/
+COPY Modules/WeeklyGoals/Infrastructure/*.csproj Modules/WeeklyGoals/Infrastructure/
+COPY Modules/WeeklyGoals/Infrastructure/Model/*.csproj Modules/WeeklyGoals/Infrastructure/Model/
 COPY FoodDiary.Application.Usda/*.csproj FoodDiary.Application.Usda/
 COPY FoodDiary.Application.WeeklyCheckIn/*.csproj FoodDiary.Application.WeeklyCheckIn/
 COPY FoodDiary.Application.DailyAdvices/*.csproj FoodDiary.Application.DailyAdvices/
@@ -98,7 +102,11 @@ COPY FoodDiary.Application.Ai/ FoodDiary.Application.Ai/
 COPY FoodDiary.Application.Lessons/ FoodDiary.Application.Lessons/
 COPY FoodDiary.Application.Statistics/ FoodDiary.Application.Statistics/
 COPY FoodDiary.Application.Meals/ FoodDiary.Application.Meals/
-COPY FoodDiary.Application.WeeklyGoals/ FoodDiary.Application.WeeklyGoals/
+COPY Modules/WeeklyGoals/ Modules/WeeklyGoals/
+COPY Modules/WeeklyGoals/Application/Abstractions/ Modules/WeeklyGoals/Application/Abstractions/
+COPY Modules/WeeklyGoals/Contracts/ Modules/WeeklyGoals/Contracts/
+COPY Modules/WeeklyGoals/Infrastructure/ Modules/WeeklyGoals/Infrastructure/
+COPY Modules/WeeklyGoals/Infrastructure/Model/ Modules/WeeklyGoals/Infrastructure/Model/
 COPY FoodDiary.Application.Usda/ FoodDiary.Application.Usda/
 COPY FoodDiary.Application.WeeklyCheckIn/ FoodDiary.Application.WeeklyCheckIn/
 COPY FoodDiary.Application.DailyAdvices/ FoodDiary.Application.DailyAdvices/

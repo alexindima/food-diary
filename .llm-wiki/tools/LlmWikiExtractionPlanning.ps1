@@ -4,6 +4,8 @@ if (-not (Get-Command Invoke-LlmWikiGitPathList -ErrorAction SilentlyContinue)) 
 }
 
 function Get-LlmWikiExtractionModule([string]$Objective) {
+    if ($Objective -cmatch '(?i:\bModules/)(?<module>[A-Z][A-Za-z0-9_]+)\b') { return [string]$Matches.module }
+    if ($Objective -cmatch '(?i:\bFoodDiary\.Application\.)(?<module>[A-Z][A-Za-z0-9_]+)\b') { return [string]$Matches.module }
     if ($Objective -cmatch '(?i:\bextract(?:ion)?\s+(?:of\s+)?)(?<module>[A-Z][A-Za-z0-9_]+)') { return [string]$Matches.module }
     if ($Objective -cmatch '\b(?<module>[A-Z][A-Za-z0-9_]+)\s+(?i:(?:modular-monolith\s+)?extract(?:ion)?)\b') { return [string]$Matches.module }
     if ($Objective -cmatch '\b(?<module>[A-Z][A-Za-z0-9_]+)\s+(?i:(?:into|as)\s+an?\s+isolated\s+application\s+module)') { return [string]$Matches.module }
@@ -15,13 +17,16 @@ function Get-LlmWikiExtractionModule([string]$Objective) {
 function Get-LlmWikiExtractionPlan([string]$Objective, [string]$RepositoryRoot) {
     $module = Get-LlmWikiExtractionModule $Objective
     if ([string]::IsNullOrWhiteSpace($module)) { return $null }
+    $explicitLogicalRootTarget = $Objective -cmatch "(?i:\bModules/$([regex]::Escape($module))\b)"
     $manifestPath = Join-Path $RepositoryRoot 'docs/architecture/backend-modules.json'
     $manifest = if (Test-Path -LiteralPath $manifestPath -PathType Leaf) { Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json } else { $null }
     $moduleEntry = if ($null -ne $manifest) { $manifest.modules.PSObject.Properties[$module] } else { $null }
     $sourceMappings = if ($null -ne $moduleEntry -and $moduleEntry.Value.PSObject.Properties['sourceMappings']) {
         $moduleEntry.Value.sourceMappings
     } else { $null }
-    $applicationProjects = if ($null -ne $sourceMappings -and $sourceMappings.PSObject.Properties['applicationProjects']) {
+    $applicationProjects = if ($explicitLogicalRootTarget) {
+        @("Modules/$module/Application")
+    } elseif ($null -ne $sourceMappings -and $sourceMappings.PSObject.Properties['applicationProjects']) {
         @($sourceMappings.applicationProjects)
     } else { @("FoodDiary.Application.$module") }
     $logicalRoots = if ($null -ne $sourceMappings -and $sourceMappings.PSObject.Properties['logicalRoot']) {
