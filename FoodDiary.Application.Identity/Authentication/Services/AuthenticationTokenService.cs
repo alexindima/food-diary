@@ -20,13 +20,14 @@ public sealed class AuthenticationTokenService(
         CancellationToken cancellationToken,
         AuthenticationClientContext? clientContext = null,
         bool rememberMe = false) {
+        var resolvedRefreshSessionId = Guid.NewGuid();
         string accessToken = jwtTokenGenerator.GenerateAccessToken(
             principal.UserId,
             principal.Email,
             principal.Roles,
             principal.AccessTokenCapUtc,
-            principal.SecurityVersion);
-        var resolvedRefreshSessionId = Guid.NewGuid();
+            principal.SecurityVersion,
+            resolvedRefreshSessionId);
         string refreshToken = jwtTokenGenerator.GenerateRefreshToken(
             principal.UserId,
             principal.Email,
@@ -57,7 +58,8 @@ public sealed class AuthenticationTokenService(
             principal.Email,
             principal.Roles,
             principal.AccessTokenCapUtc,
-            principal.SecurityVersion);
+            principal.SecurityVersion,
+            refreshSessionId);
         string refreshToken = jwtTokenGenerator.GenerateRefreshToken(
             principal.UserId,
             principal.Email,

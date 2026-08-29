@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3471,
-    "symbols": 3478,
+    "sourceFiles": 3483,
+    "symbols": 3490,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 243,
     "kinds": {
-      "class": 1811,
+      "class": 1817,
       "enum": 62,
       "interface": 423,
-      "record": 1062,
+      "record": 1068,
       "record struct": 120
     },
     "roles": {
-      "Command": 160,
-      "CommandHandler": 156,
+      "Command": 163,
+      "CommandHandler": 159,
       "Configuration": 90,
       "Controller": 92,
       "Entity": 84,
@@ -32,14 +32,14 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1342,
-      "Query": 161,
-      "QueryHandler": 123,
+      "Other": 1345,
+      "Query": 162,
+      "QueryHandler": 124,
       "ReadModelRepository": 29,
       "ReadRepository": 46,
       "Repository": 103,
       "Request": 135,
-      "Response": 180,
+      "Response": 181,
       "Service": 279,
       "Validator": 205,
       "ValueObject": 129,
@@ -9428,6 +9428,20 @@
       "line": 5
     },
     {
+      "name": "LogoutCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/Logout/LogoutCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "LogoutCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/Logout/LogoutCommandHandler.cs",
+      "line": 8
+    },
+    {
       "name": "RefreshTokenCommand",
       "kind": "record",
       "role": "Command",
@@ -9533,6 +9547,34 @@
       "line": 5
     },
     {
+      "name": "RevokeOtherSessionsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "RevokeOtherSessionsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommandHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "RevokeSessionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeSession/RevokeSessionCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "RevokeSessionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeSession/RevokeSessionCommandHandler.cs",
+      "line": 7
+    },
+    {
       "name": "TelegramBotAuthCommand",
       "kind": "record",
       "role": "Command",
@@ -9617,6 +9659,13 @@
       "line": 5
     },
     {
+      "name": "ActiveSessionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Identity/Authentication/Models/ActiveSessionModel.cs",
+      "line": 2
+    },
+    {
       "name": "AdminSsoStartModel",
       "kind": "record",
       "role": "Other",
@@ -9629,6 +9678,20 @@
       "role": "Other",
       "path": "FoodDiary.Application.Identity/Authentication/Models/AuthenticationModel.cs",
       "line": 4
+    },
+    {
+      "name": "GetActiveSessionsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "FoodDiary.Application.Identity/Authentication/Queries/GetActiveSessions/GetActiveSessionsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetActiveSessionsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "FoodDiary.Application.Identity/Authentication/Queries/GetActiveSessions/GetActiveSessionsQueryHandler.cs",
+      "line": 11
     },
     {
       "name": "AuthenticationLoginEventCleanupService",
@@ -18374,6 +18437,13 @@
       "line": 12
     },
     {
+      "name": "CurrentRefreshSessionIdModelBinder",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Controllers/CurrentRefreshSessionIdModelBinder.cs",
+      "line": 5
+    },
+    {
       "name": "CurrentUserIdModelBinder",
       "kind": "class",
       "role": "Other",
@@ -18386,6 +18456,13 @@
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Controllers/CurrentUserUnavailableException.cs",
       "line": 2
+    },
+    {
+      "name": "FromCurrentRefreshSessionAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Controllers/FromCurrentRefreshSessionAttribute.cs",
+      "line": 7
     },
     {
       "name": "FromCurrentUserAttribute",
@@ -19155,7 +19232,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
-      "line": 14
+      "line": 27
     },
     {
       "name": "AuthTelegramController",
@@ -19275,6 +19352,13 @@
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Auth/Requests/VerifyEmailHttpRequest.cs",
       "line": 4
+    },
+    {
+      "name": "ActiveSessionHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "FoodDiary.Presentation.Api/Features/Auth/Responses/ActiveSessionHttpResponse.cs",
+      "line": 2
     },
     {
       "name": "AdminSsoStartHttpResponse",

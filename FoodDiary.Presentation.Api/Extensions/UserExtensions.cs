@@ -21,5 +21,10 @@ public static class UserExtensions {
 
             return null;
         }
+
+        public Guid? GetRefreshSessionGuid() {
+            string? value = user.FindFirstValue("refresh_session_id");
+            return Guid.TryParse(value, out Guid sessionId) && sessionId != Guid.Empty ? sessionId : null;
+        }
     }
 }

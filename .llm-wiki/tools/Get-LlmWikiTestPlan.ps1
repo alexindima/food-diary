@@ -51,9 +51,11 @@ $effectivePaths = @(
         Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
         Sort-Object -Unique
 )
+$callerPathCount = $effectivePaths.Count
 $normalizedIntent = ([string]$Intent).ToLowerInvariant()
 $databaseIntent = $normalizedIntent -match '\b(database|migration|index|indexes|indices|postgres|postgresql|sql|schema|query plan)\b|\u0431\u0430\u0437(?:\u0430|\u044b|\u0435|\u0443|\u043e\u0439)\s+\u0434\u0430\u043d\u043d|\u043c\u0438\u0433\u0440\u0430\u0446|\u0438\u043d\u0434\u0435\u043a\u0441|\u0441\u0445\u0435\u043c(?:\u0430|\u044b)|\u043f\u043b\u0430\u043d\s+\u0437\u0430\u043f\u0440\u043e\u0441'
 $dashboardIntent = $normalizedIntent -match '\bdashboard\b|\u0434\u0430\u0448\u0431\u043e\u0440\u0434'
+$identitySessionIntent = $normalizedIntent -match '\b(active\s+sessions?|session\s+management|device\s+sessions?|refresh[- ]?tokens?|revoke\s+(?:a\s+)?session|logout\s+all\s+others)\b|\u0441\u0435\u0441\u0441\u0438|\u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432|\u043e\u0442\u0437\u044b\u0432.{0,24}\u0441\u0435\u0441\u0441|\u0437\u0430\u0432\u0435\u0440\u0448.{0,24}\u0441\u0435\u0441\u0441'
 $assessmentDimensionCount = @(
     [regex]::Matches($normalizedIntent, '\b(correctness|reliability|concurrency|architecture|privacy|security|ci|operations|operational|project|repository|cross-layer|system-wide)\b|корректност|над[её]жност|конкурент|архитектур|приватност|конфиденциальност|безопасност|уязвимост|операц|проект|репозитор') |
         ForEach-Object Value |
@@ -62,6 +64,22 @@ $assessmentDimensionCount = @(
 $explicitRepositoryWideIntent = $normalizedIntent -match '\b(entire|whole)\s+(project|repository|codebase)\b|\brepository-wide\b|всего\s+проекта|всей\s+кодовой\s+базы'
 $repositoryAssessment = $normalizedIntent -match '\b(audit|assessment|evaluate|review)\b|аудит|оцен' -and
     ($assessmentDimensionCount -ge 3 -or ($explicitRepositoryWideIntent -and $assessmentDimensionCount -ge 2))
+if ($identitySessionIntent) {
+    $identitySessionGroundingPaths = @(
+        'FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs'
+        'FoodDiary.Application.Identity/Authentication/Services/AuthenticationTokenService.cs'
+        'FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs'
+        'FoodDiary.Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs'
+        'FoodDiary.Infrastructure/Persistence/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs'
+        'FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs'
+        'FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs'
+        'FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.ts'
+        'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts'
+        'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
+        'tests/FoodDiary.Presentation.Api.Tests/AuthSessionLifecycleControllerTests.cs'
+    ) | Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) }
+    $effectivePaths = @($effectivePaths + $identitySessionGroundingPaths | Sort-Object -Unique)
+}
 if ($effectivePaths.Count -gt 0) {
     $common.ChangedPath = $effectivePaths
 } elseif ($repositoryAssessment) {
@@ -104,6 +122,25 @@ if ($databaseIntent) {
     if ($dashboardIntent) {
         $null = $behavioralIntentTests.Add('tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs')
         $null = $behavioralIntentTests.Add('tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardBodyReadServiceTests.cs')
+    }
+}
+if ($identitySessionIntent) {
+    foreach ($sessionTest in @(
+        'tests/FoodDiary.Application.Tests/Authentication/ActiveSessionManagementTests.cs'
+        'tests/FoodDiary.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs'
+        'tests/FoodDiary.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs'
+        'tests/FoodDiary.Infrastructure.Tests/Authentication/JwtTokenGeneratorTests.cs'
+        'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
+        'tests/FoodDiary.Presentation.Api.Tests/AuthSessionLifecycleControllerTests.cs'
+        'tests/FoodDiary.Presentation.Api.Tests/CurrentRefreshSessionIdModelBinderTests.cs'
+        'tests/FoodDiary.Web.Api.Tests/Extensions/SwaggerOperationFilterTests.cs'
+        'FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.spec.ts'
+        'FoodDiary.Web.Client/src/app/features/profile/lib/active-sessions.facade.spec.ts'
+        'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.spec.ts'
+    )) {
+        if (Test-Path -LiteralPath (Join-Path $repositoryRoot $sessionTest) -PathType Leaf) {
+            $null = $behavioralIntentTests.Add($sessionTest)
+        }
     }
 }
 
@@ -344,7 +381,14 @@ $affineDownstreamTests = @($diff.focusedTests | Where-Object {
     $scopeAffinityTokens.Count -eq 0 -or @($scopeAffinityTokens | Where-Object { $normalizedTestPath.Contains($_) }).Count -gt 0
 } | ForEach-Object { if ($_ -is [string]) { [string]$_ } else { [string]$_.path } })
 Add-RankedTests $affineDownstreamTests 40 'downstream-context-with-path-affinity'
-$selectedFocusedTests = @($rankedFocusedTests | Select-Object -First $Limit)
+$selectedFocusedTests = if ($identitySessionIntent -and $callerPathCount -eq 0) {
+    # Intent-only session planning uses the reviewed regression set. Generic
+    # symbol references (for example UserId or Session) otherwise displace the
+    # authentication tests with unrelated application modules.
+    @($rankedFocusedTests | Where-Object { $behavioralIntentTests.Contains([string]$_.path) } | Select-Object -First $Limit)
+} else {
+    @($rankedFocusedTests | Select-Object -First $Limit)
+}
 
 function Add-Scenario {
     param([string]$Id, [string]$Description, [string]$Evidence)
@@ -453,6 +497,15 @@ if ($databaseIntent) {
     Add-Scenario 'database-query-plan' 'Validate leading columns, ordering, partial predicates, and actual PostgreSQL index selection at realistic cardinality.' 'QueryPlanIntegrationTests with EXPLAIN ANALYZE'
     Add-Scenario 'database-production-consumer' 'Trace every proposed index back to a live production query and reject candidates supported only by unused or legacy repository abstractions.' 'Current-source consumer search plus production statistics when available'
 }
+if ($identitySessionIntent) {
+    Add-Scenario 'session-user-scope' 'Verify listing and mutation are strictly scoped to the authenticated user without exposing whether a foreign session id exists.' 'Application, presentation, and provider-backed tests'
+    Add-Scenario 'session-current-preservation' 'Require the claimed current session to be active and preserve it when revoking one or all other sessions.' 'Application guard plus PostgreSQL conditional-update test'
+    Add-Scenario 'session-idempotent-revoke' 'Repeat missing, foreign, current, and already-revoked targets and preserve stable no-content semantics.' 'Focused command and endpoint tests'
+    Add-Scenario 'session-concurrent-refresh-revoke' 'Race token rotation against logout and remote revoke; the final session must not remain refresh-capable.' 'Independent DbContext PostgreSQL concurrency test'
+    Add-Scenario 'session-secret-minimization' 'Ensure refresh tokens, hashes, raw IP addresses, and raw User-Agent values never appear in the active-session response or telemetry.' 'Contract snapshot plus privacy review'
+    Add-Scenario 'session-logout-server-revoke' 'Prove a copied refresh token cannot refresh after explicit logout while missing or invalid tokens remain idempotent.' 'Application and PostgreSQL integration tests'
+    Add-Scenario 'session-legacy-access-rollout' 'Verify a claimless legacy access token refreshes and retries through the first-party client without accepting caller-supplied session ids.' 'Binder and frontend interceptor regression tests'
+}
 if ($repositoryAssessment) {
     Add-Scenario 'assessment-architecture' 'Check dependency rules, module cycles, composition roots, and executable-host boundaries.' 'Architecture tests plus source validation'
     Add-Scenario 'assessment-security-privacy' 'Check authentication, authorization, abuse controls, secret handling, sensitive-data boundaries, and provider sharing.' 'Critical API tests plus privacy/security source review'
@@ -489,6 +542,20 @@ if ($databaseIntent) {
     $commands += [pscustomobject]@{
         id = 'database-provider-tests'; command = 'dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj --filter "FullyQualifiedName~MigrationSafetyIntegrationTests|FullyQualifiedName~QueryPlanIntegrationTests"'
         source = 'database-intent'; priority = 'required'; reason = 'postgresql-migration-and-query-plan'; commandEvidence = 'MigrationSafetyIntegrationTests.cs; QueryPlanIntegrationTests.cs'
+    }
+}
+if ($identitySessionIntent) {
+    $commands += [pscustomobject]@{
+        id = 'session-application-tests'; command = 'dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --filter "FullyQualifiedName~Authentication"'
+        source = 'identity-session-intent'; priority = 'required'; reason = 'session-lifecycle-use-cases'; commandEvidence = 'tests/FoodDiary.Application.Tests/Authentication'
+    }
+    $commands += [pscustomobject]@{
+        id = 'session-provider-tests'; command = 'dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj --filter "FullyQualifiedName~PersistenceRepositoryCoverageIntegrationTests"'
+        source = 'identity-session-intent'; priority = 'required'; reason = 'postgresql-session-races-and-scoping'; commandEvidence = 'PersistenceRepositoryCoverageIntegrationTests.cs'
+    }
+    $commands += [pscustomobject]@{
+        id = 'session-frontend-tests'; command = 'cd FoodDiary.Web.Client && npm run test:ci:app'
+        source = 'identity-session-intent'; priority = 'recommended'; reason = 'legacy-token-refresh-retry-and-session-ui'; commandEvidence = 'auth.interceptor.spec.ts; active-sessions.facade.spec.ts'
     }
 }
 if ($repositoryAssessment) {

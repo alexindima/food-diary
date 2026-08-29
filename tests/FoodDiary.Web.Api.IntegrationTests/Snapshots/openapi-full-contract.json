@@ -3110,9 +3110,32 @@
       "Operations": [
         {
           "Method": "post",
-          "HasRequestBody": false,
+          "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/RefreshTokenHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/RefreshTokenHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/RefreshTokenHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
           "ResponseCodes": [
             "204",
+            "400",
+            "413",
+            "429",
             "500"
           ],
           "PathParameters": [
@@ -3421,6 +3444,100 @@
             }
           ],
           "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/auth/sessions",
+      "Operations": [
+        {
+          "Method": "delete",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "403",
+            "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        },
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "403",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/ActiveSessionHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/ActiveSessionHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/ActiveSessionHttpResponse"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/auth/sessions/{sessionid}",
+      "Operations": [
+        {
+          "Method": "delete",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "403",
+            "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "sessionId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
             {
               "Name": "version",
               "Location": "path",
@@ -15082,6 +15199,62 @@
         },
         {
           "Name": "token",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "ActiveSessionHttpResponse",
+      "Properties": [
+        {
+          "Name": "authProvider",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "browser",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "createdAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "deviceType",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "isCurrent",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "lastActiveAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "operatingSystem",
           "Required": false,
           "Type": "string",
           "Nullable": true

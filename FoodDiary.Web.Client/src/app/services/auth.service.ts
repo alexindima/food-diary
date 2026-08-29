@@ -247,8 +247,10 @@ export class AuthService extends ApiService {
     }
 
     public async onLogoutAsync(redirectToAuth = false): Promise<void> {
-        if (!redirectToAuth && this.tokenStorage.hasRefreshSession()) {
-            await firstValueFrom(this.post<void>('logout', {}).pipe(catchError(() => of(undefined))));
+        if (this.tokenStorage.hasRefreshSession()) {
+            const legacyRefreshToken = this.tokenStorage.consumeLegacyRefreshToken();
+            const request = legacyRefreshToken === null ? {} : { refreshToken: legacyRefreshToken };
+            await firstValueFrom(this.post<void>('logout', request).pipe(catchError(() => of(undefined))));
         }
         this.sessionEvents.notifySessionEnded();
         this.authTokenSignal.set(null);

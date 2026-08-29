@@ -17,7 +17,7 @@ public sealed class PresentationTransportOperationFilter : IOperationFilter {
             return;
         }
 
-        RemoveCurrentUserParameters(operation, controllerAction);
+        RemoveCurrentContextParameters(operation, controllerAction);
 
         EnableIdempotencyAttribute? idempotency = controllerAction.MethodInfo
             .GetCustomAttributes(inherit: true)
@@ -49,21 +49,23 @@ public sealed class PresentationTransportOperationFilter : IOperationFilter {
         AddApiErrorResponse(operation, context, StatusCodes.Status503ServiceUnavailable);
     }
 
-    private static void RemoveCurrentUserParameters(
+    private static void RemoveCurrentContextParameters(
         OpenApiOperation operation,
         ControllerActionDescriptor controllerAction) {
         if (operation.Parameters is null) {
             return;
         }
 
-        HashSet<string> currentUserParameters = [.. controllerAction.MethodInfo
+        HashSet<string> currentContextParameters = [.. controllerAction.MethodInfo
             .GetParameters()
-            .Where(static parameter => parameter.GetCustomAttributes(typeof(FromCurrentUserAttribute), inherit: true).Length > 0)
+            .Where(static parameter =>
+                parameter.GetCustomAttributes(typeof(FromCurrentUserAttribute), inherit: true).Length > 0 ||
+                parameter.GetCustomAttributes(typeof(FromCurrentRefreshSessionAttribute), inherit: true).Length > 0)
             .Select(static parameter => parameter.Name)
             .OfType<string>()];
 
         operation.Parameters = [.. operation.Parameters.Where(parameter =>
-            parameter.Name is null || !currentUserParameters.Contains(parameter.Name))];
+            parameter.Name is null || !currentContextParameters.Contains(parameter.Name))];
     }
 
     private static void AddApiErrorResponse(

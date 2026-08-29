@@ -8,19 +8,19 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1577,
-    "symbols": 615,
+    "typescriptFiles": 1581,
+    "symbols": 617,
     "routes": 86,
     "features": 37,
-    "specs": 561,
+    "specs": 562,
     "localeFiles": 5,
     "roles": {
       "Component": 422,
       "Directive": 12,
-      "Facade": 53,
+      "Facade": 54,
       "Other": 17,
       "Pipe": 4,
-      "Service": 107
+      "Service": 108
     }
   },
   "features": [
@@ -878,6 +878,8 @@
       "name": "profile",
       "root": "FoodDiary.Web.Client/src/app/features/profile",
       "symbols": [
+        "ActiveSessionsFacade",
+        "ActiveSessionsService",
         "ChangePasswordDialogComponent",
         "PasswordSuccessDialogComponent",
         "ProfileManageFacade",
@@ -903,6 +905,7 @@
         "FoodDiary.Web.Client/src/app/features/profile/dialogs/change-password-dialog/change-password-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/dialogs/password-success-dialog/password-success-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/dialogs/update-success-dialog/update-success-dialog.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/profile/lib/active-sessions.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.spec.ts",
@@ -4179,6 +4182,13 @@
       "line": 13
     },
     {
+      "name": "ActiveSessionsService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/features/profile/api/active-sessions.service.ts",
+      "line": 9
+    },
+    {
       "name": "ProfileMeasurementsService",
       "role": "Service",
       "selector": null,
@@ -4205,6 +4215,13 @@
       "selector": "fd-user-manage-success-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/profile/dialogs/update-success-dialog/update-success-dialog.ts",
       "line": 14
+    },
+    {
+      "name": "ActiveSessionsFacade",
+      "role": "Facade",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/features/profile/lib/active-sessions.facade.ts",
+      "line": 8
     },
     {
       "name": "ProfileManageFacade",
@@ -4281,7 +4298,7 @@
       "role": "Component",
       "selector": "fd-user-manage-security-card",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts",
-      "line": 18
+      "line": 21
     },
     {
       "name": "UserManageNotificationsFacade",
@@ -5988,8 +6005,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3408,
-      "russianProperties": 3408,
+      "englishProperties": 3417,
+      "russianProperties": 3417,
       "countsMatch": true
     },
     {

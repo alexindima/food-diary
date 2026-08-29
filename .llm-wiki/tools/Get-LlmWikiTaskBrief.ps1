@@ -82,12 +82,14 @@ $effectivePaths = @(
         Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
         Sort-Object -Unique
 )
+$callerPathCount = $effectivePaths.Count
 $proposedPathCount = @($ProposedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) }).Count
 $inferredPaths = @()
 $intentCompiledResult = $null
 $intentIndexDiagnostics = $null
 $normalizedIntent = ([string]$Intent).ToLowerInvariant()
 $databaseIntent = $normalizedIntent -match '\b(database|migration|index|indexes|indices|postgres|postgresql|sql|schema|query plan)\b|\u0431\u0430\u0437(?:\u0430|\u044b|\u0435|\u0443|\u043e\u0439)\s+\u0434\u0430\u043d\u043d|\u043c\u0438\u0433\u0440\u0430\u0446|\u0438\u043d\u0434\u0435\u043a\u0441|\u0441\u0445\u0435\u043c(?:\u0430|\u044b)|\u043f\u043b\u0430\u043d\s+\u0437\u0430\u043f\u0440\u043e\u0441'
+$identitySessionIntent = $normalizedIntent -match '\b(active\s+sessions?|session\s+management|device\s+sessions?|refresh[- ]?tokens?|revoke\s+(?:a\s+)?session|logout\s+all\s+others)\b|\u0441\u0435\u0441\u0441\u0438|\u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432|\u043e\u0442\u0437\u044b\u0432.{0,24}\u0441\u0435\u0441\u0441|\u0437\u0430\u0432\u0435\u0440\u0448.{0,24}\u0441\u0435\u0441\u0441'
 $broadAssessmentDimensionCount = @(
     [regex]::Matches(
         $normalizedIntent,
@@ -121,8 +123,11 @@ if ($effectivePaths.Count -eq 0 -and -not $broadAssessmentIntent -and -not [stri
             Where-Object { $_ -notin $ignoredIntentTerms } |
             Sort-Object -Unique
     )
-    $frontendIntent = $normalizedIntent -match '\b(frontend|component|template|html|css|scss|svg|style|styling|visual|layout|responsive|viewport|icon|colour|color|animation|button|disabled|corner|radius|border)\b'
-    $backendIntent = $normalizedIntent -match '\b(backend|handler|command|query|controller|endpoint|database|migration|repository|service|domain|api)\b|\u0431\u044d\u043a\u0435\u043d\u0434|\u043e\u0431\u0440\u0430\u0431\u043e\u0442\u0447\u0438\u043a|\u043a\u043e\u043c\u0430\u043d\u0434|\u0437\u0430\u043f\u0440\u043e\u0441|\u043a\u043e\u043d\u0442\u0440\u043e\u043b\u043b\u0435\u0440|\u0440\u0435\u043f\u043e\u0437\u0438\u0442\u043e\u0440|\u0441\u0435\u0440\u0432\u0438\u0441|\u0434\u043e\u043c\u0435\u043d|\u0430\u043f\u0438'
+    if ($identitySessionIntent) {
+        $intentTokens = @($intentTokens + @('authentication', 'refresh', 'session', 'logout', 'profile', 'security') | Sort-Object -Unique)
+    }
+    $frontendIntent = $identitySessionIntent -or $normalizedIntent -match '\b(frontend|component|template|html|css|scss|svg|style|styling|visual|layout|responsive|viewport|icon|colour|color|animation|button|disabled|corner|radius|border)\b'
+    $backendIntent = $identitySessionIntent -or $normalizedIntent -match '\b(backend|handler|command|query|controller|endpoint|database|migration|repository|service|domain|api)\b|\u0431\u044d\u043a\u0435\u043d\u0434|\u043e\u0431\u0440\u0430\u0431\u043e\u0442\u0447\u0438\u043a|\u043a\u043e\u043c\u0430\u043d\u0434|\u0437\u0430\u043f\u0440\u043e\u0441|\u043a\u043e\u043d\u0442\u0440\u043e\u043b\u043b\u0435\u0440|\u0440\u0435\u043f\u043e\u0437\u0438\u0442\u043e\u0440|\u0441\u0435\u0440\u0432\u0438\u0441|\u0434\u043e\u043c\u0435\u043d|\u0430\u043f\u0438'
     $candidates = [System.Collections.Generic.List[object]]::new()
     $symbolIndex = $null
     $frontendIntentIndex = $null
@@ -223,6 +228,33 @@ if ($databaseIntent) {
         'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs'
     ) | Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) }
     $effectivePaths = @($effectivePaths + $databaseGroundingPaths | Sort-Object -Unique)
+}
+if ($identitySessionIntent) {
+    $identitySessionGroundingPaths = @(
+        'FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs'
+        'FoodDiary.Application.Identity/Authentication/Services/AuthenticationTokenService.cs'
+        'FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs'
+        'FoodDiary.Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs'
+        'FoodDiary.Infrastructure/Persistence/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs'
+        'FoodDiary.Infrastructure/Migrations/20260606024116_AddUserRefreshTokenSessions.cs'
+        'FoodDiary.Infrastructure/Migrations/20260612195402_AddPreviousRefreshTokenGrace.cs'
+        'FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs'
+        'FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs'
+        'FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.ts'
+        'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts'
+        'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.html'
+        'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
+        'tests/FoodDiary.Presentation.Api.Tests/AuthSessionLifecycleControllerTests.cs'
+    ) | Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) }
+    if ($callerPathCount -eq 0) {
+        # Generic words such as "session" also name fasting and AI concepts.
+        # For identity-session intent, prefer the reviewed cross-layer route and
+        # do not mix in coincidental symbol matches from unrelated modules.
+        $effectivePaths = @($identitySessionGroundingPaths)
+        $inferredPaths = @($identitySessionGroundingPaths)
+    } else {
+        $effectivePaths = @($effectivePaths + $identitySessionGroundingPaths | Sort-Object -Unique)
+    }
 }
 if ($effectivePaths.Count -gt 0) {
     $common.ChangedPath = $effectivePaths

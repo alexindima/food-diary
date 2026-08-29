@@ -69,6 +69,51 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     private static readonly TimeProvider FixedTime = new FixedDateTimeProvider(FixedNow);
 
     [RequiresDockerFact]
+    public async Task RefreshSession_ConcurrentRotationAndLogout_LeavesSessionRevoked() {
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        var user = User.Create($"session-race-{Guid.NewGuid():N}@example.com", "hash");
+        var session = UserRefreshTokenSession.Create(
+            id: Guid.NewGuid(),
+            userId: user.Id,
+            refreshTokenHash: "expected-hash",
+            rememberMe: false,
+            authProvider: "password",
+            ipAddress: null,
+            userAgent: null,
+            nowUtc: FixedNow);
+        await using (FoodDiaryDbContext setupContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true)) {
+            await setupContext.Database.MigrateAsync();
+            setupContext.Users.Add(user);
+            setupContext.UserRefreshTokenSessions.Add(session);
+            await setupContext.SaveChangesAsync();
+        }
+
+        await using FoodDiaryDbContext rotateContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
+        await using FoodDiaryDbContext revokeContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
+        var rotateRepository = new RefreshTokenSessionRepository(rotateContext);
+        var revokeRepository = new RefreshTokenSessionRepository(revokeContext);
+
+        Task<bool> rotate = rotateRepository.TryRotateAsync(
+            id: session.Id,
+            userId: user.Id,
+            expectedRefreshTokenHash: "expected-hash",
+            newRefreshTokenHash: "new-hash",
+            rememberMe: false,
+            rotatedAtUtc: FixedNow.AddMinutes(1));
+        Task revoke = revokeRepository.RevokeByIdAsync(
+            id: session.Id,
+            userId: user.Id,
+            revokedAtUtc: FixedNow.AddMinutes(1));
+        await Task.WhenAll(rotate, revoke);
+
+        await using FoodDiaryDbContext verifyContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
+        UserRefreshTokenSession persisted = Assert.IsType<UserRefreshTokenSession>(
+            await verifyContext.UserRefreshTokenSessions.SingleAsync(candidate => candidate.Id == session.Id));
+        Assert.False(persisted.IsActive);
+        Assert.Null(persisted.PreviousRefreshTokenHash);
+    }
+
+    [RequiresDockerFact]
     public async Task CachedProductRepository_WhenPublicProductBecomesPrivate_RevokesOtherUsersCachedAccess() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var owner = User.Create($"cache-owner-{Guid.NewGuid():N}@example.com", "hash");
@@ -1331,7 +1376,17 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             ipAddress: "127.0.0.1",
             userAgent: "agent",
             now);
+        var otherSession = UserRefreshTokenSession.Create(
+            Guid.NewGuid(),
+            userId,
+            "other-refresh-hash",
+            rememberMe: false,
+            authProvider: "google",
+            ipAddress: null,
+            userAgent: "Mozilla/5.0 Chrome/120.0 Windows",
+            now);
         await repository.AddAsync(session);
+        await repository.AddAsync(otherSession);
         await context.SaveChangesAsync();
         bool firstRotation = await repository.TryRotateAsync(
             session.Id,
@@ -1354,6 +1409,20 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Equal("refresh-hash-2", session.RefreshTokenHash);
 
         Assert.NotNull(await repository.GetByIdAsync(session.Id));
+        Assert.Equal(2, (await repository.GetActiveByUserIdAsync(userId)).Count);
+
+        await repository.RevokeOtherByIdAsync(otherSession.Id, userId, session.Id, now.AddMinutes(2));
+        await repository.RevokeOtherByIdAsync(otherSession.Id, userId, session.Id, now.AddMinutes(2));
+        Assert.Single(await repository.GetActiveByUserIdAsync(userId));
+        Assert.False(await repository.TryRotateAsync(
+            otherSession.Id,
+            userId,
+            "other-refresh-hash",
+            "rotated-after-revoke",
+            rememberMe: false,
+            now.AddMinutes(3)));
+
+        await repository.RevokeAllOtherAsync(userId, session.Id, now.AddMinutes(3));
         Assert.Single(await repository.GetActiveByUserIdAsync(userId));
 
         session.Revoke(now.AddMinutes(2));
@@ -1361,6 +1430,23 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         Assert.Empty(await repository.GetActiveByUserIdAsync(userId));
+
+        var survivingSession = UserRefreshTokenSession.Create(
+            Guid.NewGuid(),
+            userId,
+            "surviving-refresh-hash",
+            rememberMe: false,
+            authProvider: "password",
+            ipAddress: null,
+            userAgent: null,
+            now.AddMinutes(4));
+        await repository.AddAsync(survivingSession);
+        await context.SaveChangesAsync();
+
+        await repository.RevokeAllOtherAsync(userId, session.Id, now.AddMinutes(5));
+        await repository.RevokeOtherByIdAsync(survivingSession.Id, userId, session.Id, now.AddMinutes(5));
+
+        Assert.Equal(survivingSession.Id, Assert.Single(await repository.GetActiveByUserIdAsync(userId)).Id);
     }
 
     private static void AddCycleDetails(CycleProfile profile, DateOnly today) {

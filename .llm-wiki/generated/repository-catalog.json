@@ -20,7 +20,7 @@
     "extractedApplicationModules": 33,
     "backendBusinessModules": 33,
     "controllers": 89,
-    "endpoints": 282,
+    "endpoints": 285,
     "agentGuides": 76,
     "documentationPages": 51
   },
@@ -4047,9 +4047,24 @@
         "routePrefix": "api/v{version:apiVersion}/auth",
         "endpoints": [
           {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/auth/sessions",
+            "line": 30
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/auth/sessions/{sessionId:guid}",
+            "line": 42
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/auth/sessions",
+            "line": 53
+          },
+          {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/logout",
-            "line": 16
+            "line": 62
           }
         ]
       },

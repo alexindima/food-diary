@@ -59,6 +59,26 @@ public sealed class JwtTokenGeneratorTests {
     }
 
     [Fact]
+    public void GenerateAccessToken_ForRefreshSession_AddsSignedSessionClaim() {
+        var generator = new JwtTokenGenerator(CreateOptions(), new StubDateTimeProvider());
+        var userId = UserId.New();
+        var sessionId = Guid.NewGuid();
+
+        string token = generator.GenerateAccessToken(
+            userId,
+            "session@example.com",
+            ["User"],
+            expiresAtUtc: null,
+            securityVersion: 3,
+            refreshSessionId: sessionId);
+        JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+
+        Assert.Contains(jwt.Claims, claim =>
+            string.Equals(claim.Type, "refresh_session_id", StringComparison.Ordinal) &&
+            string.Equals(claim.Value, sessionId.ToString(), StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void GenerateRefreshToken_WithRememberMe_UsesPersistentLifetimeAndClaim() {
         var now = new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
         var generator = new JwtTokenGenerator(CreateOptions(refreshDays: 30, rememberMeRefreshDays: 90), new StubDateTimeProvider(now));

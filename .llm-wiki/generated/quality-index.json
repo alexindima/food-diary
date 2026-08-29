@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4689,
+    "productionFiles": 4704,
     "wikiToolFiles": 201,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 777,
-    "criticalSymbolsWithTestReferences": 761,
-    "criticalSymbolsWithoutTestReferences": 16,
+    "criticalSymbols": 781,
+    "criticalSymbolsWithTestReferences": 763,
+    "criticalSymbolsWithoutTestReferences": 18,
     "debtMarkers": 10
   },
   "hotspots": [
@@ -32,11 +32,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-      "nonBlankLines": 773,
-      "decisionPoints": 155,
+      "nonBlankLines": 840,
+      "decisionPoints": 165,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 249.96
+      "structuralRiskScore": 266.3
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
@@ -56,11 +56,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-      "nonBlankLines": 848,
-      "decisionPoints": 129,
+      "nonBlankLines": 880,
+      "decisionPoints": 132,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 212.46
+      "structuralRiskScore": 217.6
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
@@ -72,11 +72,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-      "nonBlankLines": 642,
+      "nonBlankLines": 646,
       "decisionPoints": 123,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 199.34
+      "structuralRiskScore": 199.42
     },
     {
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
@@ -1074,11 +1074,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiSensitiveData.ps1",
-      "nonBlankLines": 193,
-      "decisionPoints": 34,
+      "nonBlankLines": 220,
+      "decisionPoints": 39,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 56.86
+      "structuralRiskScore": 64.9
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
@@ -1338,11 +1338,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-      "nonBlankLines": 642,
+      "nonBlankLines": 646,
       "decisionPoints": 123,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 199.34
+      "structuralRiskScore": 199.42
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
@@ -1386,11 +1386,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-      "nonBlankLines": 848,
-      "decisionPoints": 129,
+      "nonBlankLines": 880,
+      "decisionPoints": 132,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 212.46
+      "structuralRiskScore": 217.6
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskGraph.ps1",
@@ -1426,11 +1426,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-      "nonBlankLines": 773,
-      "decisionPoints": 155,
+      "nonBlankLines": 840,
+      "decisionPoints": 165,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 249.96
+      "structuralRiskScore": 266.3
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiToolingContext.ps1",
@@ -3074,11 +3074,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
-      "nonBlankLines": 28,
+      "nonBlankLines": 36,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
+      "structuralRiskScore": 0.72
     },
     {
       "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs",
@@ -3234,11 +3234,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs",
-      "nonBlankLines": 17,
+      "nonBlankLines": 33,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.66
     },
     {
       "path": "FoodDiary.Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
@@ -13049,6 +13049,22 @@
       "structuralRiskScore": 2.42
     },
     {
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/Logout/LogoutCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/Logout/LogoutCommandHandler.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.56
+    },
+    {
       "path": "FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommand.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -13169,6 +13185,38 @@
       "structuralRiskScore": 2.48
     },
     {
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommandHandler.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.34
+    },
+    {
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeSession/RevokeSessionCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeSession/RevokeSessionCommandHandler.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.36
+    },
+    {
       "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -13265,6 +13313,14 @@
       "structuralRiskScore": 2.36
     },
     {
+      "path": "FoodDiary.Application.Identity/Authentication/Models/ActiveSessionModel.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
       "path": "FoodDiary.Application.Identity/Authentication/Models/AdminSsoStartModel.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
@@ -13279,6 +13335,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.12
+    },
+    {
+      "path": "FoodDiary.Application.Identity/Authentication/Queries/GetActiveSessions/GetActiveSessionsQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "FoodDiary.Application.Identity/Authentication/Queries/GetActiveSessions/GetActiveSessionsQueryHandler.cs",
+      "nonBlankLines": 35,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.2
     },
     {
       "path": "FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
@@ -13298,11 +13370,11 @@
     },
     {
       "path": "FoodDiary.Application.Identity/Authentication/Services/AuthenticationTokenService.cs",
-      "nonBlankLines": 108,
+      "nonBlankLines": 110,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.66
+      "structuralRiskScore": 3.7
     },
     {
       "path": "FoodDiary.Application.Identity/Authentication/Services/EmailSender.cs",
@@ -20130,11 +20202,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Authentication/JwtTokenGenerator.cs",
-      "nonBlankLines": 189,
+      "nonBlankLines": 206,
       "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.28
+      "structuralRiskScore": 20.62
     },
     {
       "path": "FoodDiary.Infrastructure/Authentication/WearableOAuthStateService.cs",
@@ -22066,11 +22138,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
-      "nonBlankLines": 73,
-      "decisionPoints": 11,
+      "nonBlankLines": 178,
+      "decisionPoints": 39,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.96
+      "structuralRiskScore": 62.06
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Users/UserCleanupService.cs",
@@ -23337,6 +23409,14 @@
       "structuralRiskScore": 3.24
     },
     {
+      "path": "FoodDiary.Presentation.Api/Controllers/CurrentRefreshSessionIdModelBinder.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.28
+    },
+    {
       "path": "FoodDiary.Presentation.Api/Controllers/CurrentUserIdModelBinder.cs",
       "nonBlankLines": 18,
       "decisionPoints": 3,
@@ -23351,6 +23431,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
+    },
+    {
+      "path": "FoodDiary.Presentation.Api/Controllers/FromCurrentRefreshSessionAttribute.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "FoodDiary.Presentation.Api/Controllers/FromCurrentUserAttribute.cs",
@@ -23394,11 +23482,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Extensions/UserExtensions.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 2,
+      "nonBlankLines": 24,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.4
+      "structuralRiskScore": 4.98
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Admin/AdminAchievementDefinitionsController.cs",
@@ -24226,11 +24314,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 0,
+      "nonBlankLines": 79,
+      "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.42
+      "structuralRiskScore": 5.08
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthTelegramController.cs",
@@ -24367,6 +24455,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.12
+    },
+    {
+      "path": "FoodDiary.Presentation.Api/Features/Auth/Responses/ActiveSessionHttpResponse.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Auth/Responses/AdminSsoStartHttpResponse.cs",
@@ -27882,11 +27978,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Swagger/PresentationTransportOperationFilter.cs",
-      "nonBlankLines": 81,
-      "decisionPoints": 10,
+      "nonBlankLines": 83,
+      "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.62
+      "structuralRiskScore": 18.16
     },
     {
       "path": "FoodDiary.Web.Api/Swagger/StandardErrorResponsesOperationFilter.cs",
@@ -33297,6 +33393,14 @@
       "structuralRiskScore": 8.06
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/profile/api/active-sessions.service.ts",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/profile/api/profile-measurements.service.ts",
       "nonBlankLines": 36,
       "decisionPoints": 2,
@@ -33329,12 +33433,28 @@
       "structuralRiskScore": 0.36
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/profile/lib/active-sessions.facade.ts",
+      "nonBlankLines": 73,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.46
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
       "nonBlankLines": 344,
       "decisionPoints": 28,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 48.88
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/profile/models/active-session.model.ts",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.ts",
@@ -33410,11 +33530,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts",
-      "nonBlankLines": 61,
+      "nonBlankLines": 66,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.22
+      "structuralRiskScore": 10.32
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-billing.mapper.ts",
@@ -35050,11 +35170,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 369,
-      "decisionPoints": 40,
+      "nonBlankLines": 371,
+      "decisionPoints": 39,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 67.38
+      "structuralRiskScore": 65.92
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/error-handler.service.ts",
@@ -39346,6 +39466,18 @@
       "coveredThrough": []
     },
     {
+      "name": "LogoutCommandHandler",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/Logout/LogoutCommandHandler.cs",
+      "line": 8,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Application.Tests/Authentication/ActiveSessionManagementTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "MarkAdminMailInboxMessageReadCommandHandler",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Admin/Commands/MarkAdminMailInboxMessageRead/MarkAdminMailInboxMessageReadCommandHandler.cs",
@@ -39682,6 +39814,26 @@
         "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RelationshipCommandTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "RevokeOtherSessionsCommandHandler",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommandHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "RevokeSessionCommandHandler",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeSession/RevokeSessionCommandHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
       "coveredThrough": []
     },
     {
@@ -40566,7 +40718,7 @@
       "name": "AuthSessionLifecycleController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
-      "line": 14,
+      "line": 27,
       "testReferenceCount": 2,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/AuthSessionLifecycleControllerTests.cs",
@@ -41619,6 +41771,18 @@
       "testReferenceCount": 1,
       "testReferences": [
         "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetActiveSessionsQueryHandler",
+      "role": "QueryHandler",
+      "path": "FoodDiary.Application.Identity/Authentication/Queries/GetActiveSessions/GetActiveSessionsQueryHandler.cs",
+      "line": 11,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Application.Tests/Authentication/ActiveSessionManagementTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46029,9 +46193,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Find-LlmWikiProductJourney.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1"
+        ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
+        ".llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46081,10 +46246,11 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Find-LlmWikiSensitiveData.ps1",
       "line": 1,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiJsonColdCheckout.ps1",
         ".llm-wiki/tools/Test-LlmWikiSensitiveDataSqlParity.ps1",
+        ".llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -46565,12 +46731,13 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
       "line": 1,
-      "testReferenceCount": 5,
+      "testReferenceCount": 6,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
         ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
         ".llm-wiki/tools/Test-LlmWikiResearchConfidence.ps1",
         ".llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1",
+        ".llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",

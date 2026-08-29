@@ -521,8 +521,8 @@ describe('logout', () => {
         expect(localStorage.getItem('emailConfirmed')).toBeNull();
     });
 
-    it('should navigate to login when redirectToAuth is true', async () => {
-        await service.onLogoutAsync(true);
+    it('should revoke the server session and navigate to login when redirectToAuth is true', async () => {
+        await completeLogoutAsync(true);
 
         expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
         expect(navigationServiceSpy.navigateToHomeAsync).not.toHaveBeenCalled();
@@ -559,10 +559,11 @@ describe('logout', () => {
     });
 });
 
-async function completeLogoutAsync(): Promise<void> {
-    const logoutPromise = service.onLogoutAsync(false);
+async function completeLogoutAsync(redirectToAuth = false): Promise<void> {
+    const logoutPromise = service.onLogoutAsync(redirectToAuth);
     const request = httpMock.expectOne(`${authBaseUrl}/logout`);
     expect(request.request.withCredentials).toBe(true);
+    expect(request.request.body).toEqual({ refreshToken: 'refresh' });
     request.flush(null);
     await logoutPromise;
 }

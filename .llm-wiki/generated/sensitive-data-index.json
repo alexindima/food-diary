@@ -6,8 +6,8 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1379,
-    "credential": 145,
+    "candidateFields": 1380,
+    "credential": 146,
     "identity": 153,
     "health": 660,
     "financial": 120,
@@ -261,6 +261,13 @@
       "type": "string",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommand.cs",
       "line": 10
+    },
+    {
+      "category": "credential",
+      "name": "RefreshToken",
+      "type": "string?",
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/Logout/LogoutCommand.cs",
+      "line": 6
     },
     {
       "category": "credential",

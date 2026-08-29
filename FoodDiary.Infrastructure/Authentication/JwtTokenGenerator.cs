@@ -68,6 +68,24 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
         string email,
         IReadOnlyCollection<string> roles,
         DateTime? expiresAtUtc,
+        long securityVersion,
+        Guid refreshSessionId) =>
+        GenerateToken(
+            userId,
+            email,
+            roles,
+            JwtTokenUseClaimNames.Access,
+            _accessTokenExpirationMinutes,
+            expiresAtUtc,
+            impersonation: null,
+            securityVersion,
+            refreshSessionId: refreshSessionId);
+
+    public string GenerateAccessToken(
+        UserId userId,
+        string email,
+        IReadOnlyCollection<string> roles,
+        DateTime? expiresAtUtc,
         long securityVersion = 0) =>
         GenerateToken(
             userId,

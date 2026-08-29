@@ -54,3 +54,66 @@
         </div>
     </div>
 </div>
+
+<section class="user-manage__sessions fd-stack fd-gap-sm" aria-labelledby="active-sessions-title">
+    <div class="fd-row fd-gap-sm">
+        <div class="fd-stack fd-gap-xxs">
+            <h3 id="active-sessions-title">{{ 'USER_MANAGE.ACTIVE_SESSIONS_TITLE' | translate }}</h3>
+            <p class="fd-ui-body-sm">{{ 'USER_MANAGE.ACTIVE_SESSIONS_DESCRIPTION' | translate }}</p>
+        </div>
+        @if (activeSessions.sessions().length > 1) {
+            <fd-ui-button
+                type="button"
+                size="sm"
+                variant="secondary"
+                fill="outline"
+                [loading]="activeSessions.revokingId() === 'all'"
+                [disabled]="activeSessions.revokingId() !== null"
+                [disabledReason]="activeSessions.revokingId() !== null ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                (click)="activeSessions.revokeOthers()"
+            >
+                {{ 'USER_MANAGE.REVOKE_OTHER_SESSIONS' | translate }}
+            </fd-ui-button>
+        }
+    </div>
+    @if (activeSessions.isLoading()) {
+        <p role="status">{{ 'USER_MANAGE.ACTIVE_SESSIONS_LOADING' | translate }}</p>
+    } @else if (activeSessions.error()) {
+        <p role="alert">{{ 'USER_MANAGE.ACTIVE_SESSIONS_ERROR' | translate }}</p>
+    } @else {
+        @for (session of activeSessions.sessions(); track session.id) {
+            <div class="user-manage__login-method fd-row fd-gap-sm">
+                <fd-ui-icon class="user-manage__login-method-icon" name="devices" />
+                <div class="user-manage__login-method-info fd-stack fd-gap-xxs">
+                    <div class="user-manage__login-method-title">
+                        {{ session.browser || ('USER_MANAGE.UNKNOWN_BROWSER' | translate) }} ·
+                        {{ session.operatingSystem || ('USER_MANAGE.UNKNOWN_DEVICE' | translate) }}
+                        @if (session.isCurrent) {
+                            <span class="user-manage__connection-status user-manage__connection-status--connected">
+                                {{ 'USER_MANAGE.CURRENT_SESSION' | translate }}
+                            </span>
+                        }
+                    </div>
+                    <div class="user-manage__login-method-description fd-ui-body-sm">
+                        {{ session.deviceType || ('USER_MANAGE.UNKNOWN_DEVICE' | translate) }} ·
+                        {{ session.lastActiveAtUtc | date: 'medium' }}
+                    </div>
+                </div>
+                @if (!session.isCurrent) {
+                    <fd-ui-button
+                        type="button"
+                        size="sm"
+                        variant="secondary"
+                        fill="outline"
+                        [loading]="activeSessions.revokingId() === session.id"
+                        [disabled]="activeSessions.revokingId() !== null"
+                        [disabledReason]="activeSessions.revokingId() !== null ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                        (click)="activeSessions.revoke(session.id)"
+                    >
+                        {{ 'USER_MANAGE.REVOKE_SESSION' | translate }}
+                    </fd-ui-button>
+                }
+            </div>
+        }
+    }
+</section>

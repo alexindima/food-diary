@@ -31,9 +31,12 @@ public class AuthenticationTokenServiceTests {
 
         Assert.Equal("access-token", result.AccessToken);
         Assert.Equal("refresh-token", result.RefreshToken);
-        Assert.Equal(user.Id, Assert.Single(sessions.Items).UserId);
+        UserRefreshTokenSession session = Assert.Single(sessions.Items);
+        Assert.Equal(user.Id, session.UserId);
         Assert.Empty(loginEvents.Items);
         Assert.Equal(["User"], jwt.LastAccessRoles);
+        Assert.Equal(session.Id, jwt.LastAccessRefreshSessionId);
+        Assert.Equal(session.Id, jwt.LastRefreshSessionId);
     }
 
     [Fact]
@@ -112,6 +115,8 @@ public class AuthenticationTokenServiceTests {
             $"sha256:{SecurityTokenGenerator.NormalizeForSecureHashing("refresh-token")}",
             rotatedSession.RefreshTokenHash);
         Assert.True(rotatedSession.RememberMe);
+        Assert.Equal(refreshSessionId, jwt.LastAccessRefreshSessionId);
+        Assert.Equal(refreshSessionId, jwt.LastRefreshSessionId);
     }
 
     private static User CreateUser(string email, params string[] roles) {
@@ -207,6 +212,46 @@ public class AuthenticationTokenServiceTests {
 
             return Task.CompletedTask;
         }
+
+        public Task RevokeByIdAsync(
+            Guid id,
+            UserId userId,
+            DateTime revokedAtUtc,
+            CancellationToken cancellationToken = default) {
+            Items.FirstOrDefault(session => session.Id == id && session.UserId == userId)?.Revoke(revokedAtUtc);
+            return Task.CompletedTask;
+        }
+
+        public Task RevokeOtherByIdAsync(
+            Guid id,
+            UserId userId,
+            Guid currentSessionId,
+            DateTime revokedAtUtc,
+            CancellationToken cancellationToken = default) {
+            bool currentIsActive = Items.Any(session =>
+                session.Id == currentSessionId && session.UserId == userId && session.IsActive);
+            if (currentIsActive) {
+                Items.FirstOrDefault(session =>
+                    session.Id == id && session.Id != currentSessionId && session.UserId == userId)?.Revoke(revokedAtUtc);
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task RevokeAllOtherAsync(
+            UserId userId,
+            Guid currentSessionId,
+            DateTime revokedAtUtc,
+            CancellationToken cancellationToken = default) {
+            bool currentIsActive = Items.Any(session =>
+                session.Id == currentSessionId && session.UserId == userId && session.IsActive);
+            if (currentIsActive) {
+                foreach (UserRefreshTokenSession session in Items.Where(session =>
+                    session.UserId == userId && session.Id != currentSessionId && session.IsActive)) {
+                    session.Revoke(revokedAtUtc);
+                }
+            }
+            return Task.CompletedTask;
+        }
     }
 
     [ExcludeFromCodeCoverage]
@@ -215,7 +260,9 @@ public class AuthenticationTokenServiceTests {
         public string LastAccessEmail { get; private set; } = string.Empty;
         public IReadOnlyCollection<string> LastAccessRoles { get; private set; } = [];
         public DateTime? LastAccessExpiresAtUtc { get; private set; }
+        public Guid? LastAccessRefreshSessionId { get; private set; }
         public bool LastRefreshRememberMe { get; private set; }
+        public Guid? LastRefreshSessionId { get; private set; }
 
         public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, long securityVersion = 0) {
             LastAccessUserId = userId;
@@ -242,6 +289,21 @@ public class AuthenticationTokenServiceTests {
             UserId userId,
             string email,
             IReadOnlyCollection<string> roles,
+            DateTime? expiresAtUtc,
+            long securityVersion,
+            Guid refreshSessionId) {
+            LastAccessUserId = userId;
+            LastAccessEmail = email;
+            LastAccessRoles = roles.ToArray();
+            LastAccessExpiresAtUtc = expiresAtUtc;
+            LastAccessRefreshSessionId = refreshSessionId;
+            return "access-token";
+        }
+
+        public string GenerateAccessToken(
+            UserId userId,
+            string email,
+            IReadOnlyCollection<string> roles,
             JwtImpersonationContext impersonation,
             long securityVersion = 0) {
             LastAccessUserId = userId;
@@ -257,6 +319,7 @@ public class AuthenticationTokenServiceTests {
             bool rememberMe = false,
             Guid? refreshSessionId = null) {
             LastRefreshRememberMe = rememberMe;
+            LastRefreshSessionId = refreshSessionId;
             return "refresh-token";
         }
 

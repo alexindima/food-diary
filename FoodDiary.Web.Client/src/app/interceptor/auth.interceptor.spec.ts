@@ -210,6 +210,21 @@ describe('AuthInterceptor error handling', () => {
         retryReq.flush({});
     });
 
+    it('should refresh and retry session management when a legacy access token lacks the session claim', () => {
+        authServiceSpy.getToken.mockReturnValue('legacy-access-token');
+        authServiceSpy.refreshToken.mockReturnValue(of('session-aware-token'));
+
+        http.get('/api/v1/auth/sessions').subscribe();
+
+        const req = httpTesting.expectOne('/api/v1/auth/sessions');
+        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+
+        expect(authServiceSpy.refreshToken).toHaveBeenCalledTimes(1);
+        const retryReq = httpTesting.expectOne('/api/v1/auth/sessions');
+        expect(retryReq.request.headers.get('Authorization')).toBe('Bearer session-aware-token');
+        retryReq.flush([]);
+    });
+
     it('should propagate non-401 errors without refresh attempt', () => {
         authServiceSpy.getToken.mockReturnValue('test-token');
 

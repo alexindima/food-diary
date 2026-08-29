@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, type ElementRef, inject, input, output, signal, viewChild } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -6,20 +7,23 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { environment } from '../../../../../../environments/environment';
 import { GoogleIdentityService } from '../../../../../shared/auth/google-identity.service';
 import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
+import { ActiveSessionsFacade } from '../../../lib/active-sessions.facade';
 import type { PasswordActionState } from '../../user-manage/user-manage-lib/user-manage.types';
 
 @Component({
     selector: 'fd-user-manage-security-card',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiIconComponent],
+    imports: [DatePipe, TranslatePipe, FdUiButtonComponent, FdUiIconComponent],
     templateUrl: './user-manage-security-card.html',
     styleUrl: '../../user-manage/user-manage.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [ActiveSessionsFacade],
 })
 export class UserManageSecurityCardComponent {
     private readonly googleIdentityService = inject(GoogleIdentityService);
     private readonly translateService = inject(TranslateService);
     private readonly googleButton = viewChild<ElementRef<HTMLDivElement>>('googleButton');
     private initializationStarted = false;
+    protected readonly activeSessions = inject(ActiveSessionsFacade);
 
     public readonly email = input.required<string>();
     public readonly hasGoogleIdentity = input.required<boolean>();
@@ -31,6 +35,7 @@ export class UserManageSecurityCardComponent {
     protected readonly isGoogleUnavailable = signal(false);
 
     public constructor() {
+        this.activeSessions.load();
         effect(() => {
             const target = this.googleButton()?.nativeElement;
             if (target === undefined || this.hasGoogleIdentity() || this.initializationStarted) {

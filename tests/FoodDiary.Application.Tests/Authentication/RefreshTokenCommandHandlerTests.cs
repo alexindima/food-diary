@@ -433,6 +433,46 @@ public sealed class RefreshTokenCommandHandlerTests {
 
             return Task.CompletedTask;
         }
+
+        public Task RevokeByIdAsync(
+            Guid id,
+            UserId userId,
+            DateTime revokedAtUtc,
+            CancellationToken cancellationToken = default) {
+            _sessions.FirstOrDefault(session => session.Id == id && session.UserId == userId)?.Revoke(revokedAtUtc);
+            return Task.CompletedTask;
+        }
+
+        public Task RevokeOtherByIdAsync(
+            Guid id,
+            UserId userId,
+            Guid currentSessionId,
+            DateTime revokedAtUtc,
+            CancellationToken cancellationToken = default) {
+            bool currentIsActive = _sessions.Any(session =>
+                session.Id == currentSessionId && session.UserId == userId && session.IsActive);
+            if (currentIsActive) {
+                _sessions.FirstOrDefault(session =>
+                    session.Id == id && session.Id != currentSessionId && session.UserId == userId)?.Revoke(revokedAtUtc);
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task RevokeAllOtherAsync(
+            UserId userId,
+            Guid currentSessionId,
+            DateTime revokedAtUtc,
+            CancellationToken cancellationToken = default) {
+            bool currentIsActive = _sessions.Any(session =>
+                session.Id == currentSessionId && session.UserId == userId && session.IsActive);
+            if (currentIsActive) {
+                foreach (UserRefreshTokenSession session in _sessions.Where(session =>
+                    session.UserId == userId && session.Id != currentSessionId && session.IsActive)) {
+                    session.Revoke(revokedAtUtc);
+                }
+            }
+            return Task.CompletedTask;
+        }
     }
 
     [ExcludeFromCodeCoverage]

@@ -108,3 +108,65 @@ if (@($databasePlan.scenarios.id) -notcontains 'database-production-consumer' -o
 if (@($databasePlan.commands | Where-Object source -eq 'database-intent').Count -lt 2) {
     throw 'Database/index intent omitted EF model-sync or provider-backed verification commands.'
 }
+
+$sessionIntent = 'Управление активными пользовательскими сессиями и отзыв refresh-токенов'
+$sessionJourney = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') `
+    -Query $sessionIntent `
+    -Format Json | ConvertFrom-Json
+if (@($sessionJourney.journeys.id) -notcontains 'FD-AUTH') {
+    throw 'Identity-session intent did not select the authentication product journey.'
+}
+
+$sessionBrief = & (Join-Path $PSScriptRoot 'Get-LlmWikiTaskBrief.ps1') `
+    -Intent $sessionIntent `
+    -CompiledIndexSource Json `
+    -SkipQueryCache `
+    -SkipTestPlan `
+    -Compact `
+    -Format Json | ConvertFrom-Json
+$requiredSessionScopes = @('Backend', 'Api', 'Frontend', 'Database', 'Tests')
+if (@($requiredSessionScopes | Where-Object { $_ -notin @($sessionBrief.change.scopes) }).Count -gt 0) {
+    throw 'Identity-session brief omitted one or more cross-layer scopes.'
+}
+if (@($sessionBrief.change.directModules | Where-Object { $_ -in @('Fasting', 'Meals') }).Count -gt 0) {
+    throw 'Identity-session brief leaked unrelated fasting or meal-session modules.'
+}
+if (@($sessionBrief.analysis.inferredPaths) -notcontains 'FoodDiary.Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs' -or
+    @($sessionBrief.analysis.inferredPaths) -notcontains 'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts') {
+    throw 'Identity-session brief omitted the reviewed persistence or frontend route.'
+}
+
+$sessionPlan = & $tool `
+    -Intent $sessionIntent `
+    -NoBaseline `
+    -CompiledIndexSource Json `
+    -Limit 30 `
+    -Format Json | ConvertFrom-Json
+$requiredSessionScenarios = @(
+    'session-user-scope'
+    'session-current-preservation'
+    'session-idempotent-revoke'
+    'session-concurrent-refresh-revoke'
+    'session-secret-minimization'
+    'session-logout-server-revoke'
+    'session-legacy-access-rollout'
+)
+if (@($requiredSessionScenarios | Where-Object { $_ -notin @($sessionPlan.scenarios.id) }).Count -gt 0) {
+    throw 'Identity-session test plan omitted one or more security or rollout scenarios.'
+}
+if (@($sessionPlan.focusedTestFiles).Count -eq 0 -or
+    @($sessionPlan.commands | Where-Object source -eq 'identity-session-intent').Count -lt 3) {
+    throw 'Identity-session test plan omitted focused tests or cross-layer verification commands.'
+}
+
+$sessionPrivacy = & (Join-Path $PSScriptRoot 'Find-LlmWikiSensitiveData.ps1') `
+    -Query 'refresh token session' `
+    -CompiledIndexSource Json `
+    -Format Json | ConvertFrom-Json
+if (@($sessionPrivacy.handlingGuidance.persistedEvidence).Count -eq 0 -or
+    @($sessionPrivacy.handlingGuidance.permissibleResponseMetadata).Count -eq 0 -or
+    @($sessionPrivacy.handlingGuidance.prohibitedResponseOrTelemetry).Count -eq 0) {
+    throw 'Session privacy guidance did not distinguish persisted, permissible, and prohibited data.'
+}
+
+Write-Host 'LLM Wiki identity-session routing passed: journey, scoped brief, test plan, and privacy guidance are grounded.'

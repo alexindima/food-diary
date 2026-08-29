@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 96,
     "routedStandaloneComponents": 55,
     "componentsWithoutDirectSpecs": 128,
-    "criticalSymbolsWithoutTestReferences": 16,
+    "criticalSymbolsWithoutTestReferences": 18,
     "explicitDebtMarkers": 10
   },
   "projectDependencyViolations": [],
@@ -4791,6 +4791,26 @@
       "name": "ExchangeAdminImpersonationCommandHandler",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "RevokeOtherSessionsCommandHandler",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommandHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "RevokeSessionCommandHandler",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeSession/RevokeSessionCommandHandler.cs",
       "line": 7,
       "testReferenceCount": 0,
       "testReferences": [],

@@ -20,4 +20,23 @@ public interface IRefreshTokenSessionWriteRepository {
         CancellationToken cancellationToken = default);
 
     Task RevokeAllAsync(UserId userId, DateTime revokedAtUtc, CancellationToken cancellationToken = default);
+
+    Task RevokeByIdAsync(
+        Guid id,
+        UserId userId,
+        DateTime revokedAtUtc,
+        CancellationToken cancellationToken = default);
+
+    Task RevokeOtherByIdAsync(
+        Guid id,
+        UserId userId,
+        Guid currentSessionId,
+        DateTime revokedAtUtc,
+        CancellationToken cancellationToken = default);
+
+    Task RevokeAllOtherAsync(
+        UserId userId,
+        Guid currentSessionId,
+        DateTime revokedAtUtc,
+        CancellationToken cancellationToken = default);
 }

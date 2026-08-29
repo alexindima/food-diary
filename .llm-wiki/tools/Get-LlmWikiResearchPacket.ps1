@@ -165,6 +165,10 @@ $foodDiaryIntentAliases = @(
     [pscustomobject]@{ source = (ConvertFrom-UnicodeEscape '\u043f\u0438\u0441\u044c\u043c'); target = 'email' }
     [pscustomobject]@{ source = (ConvertFrom-UnicodeEscape '\u0441\u0441\u044b\u043b\u043a'); target = 'link url route' }
     [pscustomobject]@{ source = (ConvertFrom-UnicodeEscape '\u0430\u0432\u0442\u043e\u0440\u0438\u0437'); target = 'auth authentication login' }
+    [pscustomobject]@{ source = (ConvertFrom-UnicodeEscape '\u0441\u0435\u0441\u0441\u0438'); target = 'authentication active session refresh token revoke logout device profile security' }
+    [pscustomobject]@{ source = (ConvertFrom-UnicodeEscape '\u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432'); target = 'device active session profile security' }
+    [pscustomobject]@{ source = (ConvertFrom-UnicodeEscape '\u043e\u0442\u0437\u044b\u0432'); target = 'revoke refresh session logout' }
+    [pscustomobject]@{ source = (ConvertFrom-UnicodeEscape '\u0432\u044b\u0445\u043e\u0434'); target = 'logout revoke refresh session' }
     [pscustomobject]@{ source = (ConvertFrom-UnicodeEscape '\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442'); target = 'user account' }
     [pscustomobject]@{ source = (ConvertFrom-UnicodeEscape '\u0435\u0434\u0430'); target = 'food meal' }
     [pscustomobject]@{ source = (ConvertFrom-UnicodeEscape '\u0444\u043e\u0442\u043e'); target = 'photo image' }

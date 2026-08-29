@@ -226,6 +226,22 @@ public sealed class SwaggerOperationFilterTests {
     }
 
     [Fact]
+    public void PresentationTransportFilter_RemovesCurrentRefreshSessionParameter() {
+        var filter = new PresentationTransportOperationFilter();
+        var operation = new OpenApiOperation {
+            Parameters = [
+                new OpenApiParameter { Name = "currentSessionId", In = ParameterLocation.Query },
+                new OpenApiParameter { Name = "page", In = ParameterLocation.Query },
+            ],
+        };
+
+        filter.Apply(operation, CreateContext(nameof(TestController.CurrentRefreshSessionBound)));
+
+        OpenApiParameter parameter = Assert.IsType<OpenApiParameter>(Assert.Single(operation.Parameters!));
+        Assert.Equal("page", parameter.Name);
+    }
+
+    [Fact]
     public void PresentationTransportFilter_ForNonControllerAction_DoesNothing() {
         var filter = new PresentationTransportOperationFilter();
         var operation = new OpenApiOperation();
@@ -490,6 +506,10 @@ public sealed class SwaggerOperationFilterTests {
         public OkResult Unclassified() => Ok();
 
         public IActionResult CurrentUserBound([FromCurrentUser] Guid userId, int page) => Ok(new { userId, page });
+
+        public IActionResult CurrentRefreshSessionBound(
+            [FromCurrentRefreshSession] Guid currentSessionId,
+            int page) => Ok(new { currentSessionId, page });
 
         [EnableIdempotency]
         public OkResult OptionalIdempotency() => Ok();

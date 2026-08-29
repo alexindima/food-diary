@@ -34,6 +34,26 @@ if ($RepositoryWide -and $scopePaths.Count -gt 0) {
 }
 $scopeMode = if ($RepositoryWide) { 'repository' } elseif ($scopePaths.Count -gt 0) { 'explicit' } else { 'none' }
 $normalizedQuery = ([string]$Query).ToLowerInvariant()
+$sessionSecurityQuery = $normalizedQuery -match '\b(refresh[- ]?tokens?|active\s+sessions?|session\s+management|logout|revoke)\b|\u0441\u0435\u0441\u0441\u0438|\u0440\u0435\u0444\u0440\u0435\u0448|\u0432\u044b\u0445\u043e\u0434|\u043e\u0442\u0437\u044b\u0432'
+$handlingGuidance = if ($sessionSecurityQuery) {
+    [pscustomobject][ordered]@{
+        persistedEvidence = @(
+            'Refresh-token hashes, IP addresses, and raw User-Agent values may exist in persistence and require lifecycle, retention, and access review.'
+        )
+        permissibleResponseMetadata = @(
+            'Opaque session identifier'
+            'Current-session flag'
+            'Parsed browser, operating-system, and device labels'
+            'Authentication provider and session timestamps'
+        )
+        prohibitedResponseOrTelemetry = @(
+            'Refresh token'
+            'Current or previous refresh-token hash'
+            'Raw IP address'
+            'Raw User-Agent value'
+        )
+    }
+} else { $null }
 $privacyAssessmentDimensionCount = @(
     [regex]::Matches($normalizedQuery, '\b(privacy|security|vulnerability|vulnerabilities|credential|identity|health|financial|logging|provider|project|repository|system-wide)\b|приватност|конфиденциальност|безопасност|уязвимост|уч[её]тн|идентичност|здоров|финанс|логир|провайдер|проект|репозитор') |
         ForEach-Object Value | Sort-Object -Unique
@@ -177,6 +197,7 @@ if ($Format -eq 'Json') {
         scope = [pscustomobject]@{ mode = $scopeMode; paths = $scopePaths }
         selection = [pscustomobject]@{ status = $selectionStatus; conclusive = $items.Count -gt 0; candidateRecords = [int]$diagnostics.candidateRecords; returnedRecords = $items.Count }
         guidance = $guidance
+        handlingGuidance = $handlingGuidance
         summary = $summary
         items = $items
     }
@@ -191,4 +212,10 @@ if ($scopeMode -eq 'none' -and [string]::IsNullOrWhiteSpace($Query) -and $Catego
 }
 if ($IncludeDiagnostics) { Write-Host "Source: $($diagnostics.source), returned=$($diagnostics.returnedRecords)/$($diagnostics.candidateRecords), round-trip=$($diagnostics.roundTripDurationMs)ms." }
 foreach ($message in $guidance) { Write-Host " - $message" }
+if ($null -ne $handlingGuidance) {
+    Write-Host ' Session handling guidance:'
+    foreach ($message in $handlingGuidance.persistedEvidence) { Write-Host "  - Persisted evidence: $message" }
+    foreach ($message in $handlingGuidance.permissibleResponseMetadata) { Write-Host "  - Permissible response metadata: $message" }
+    foreach ($message in $handlingGuidance.prohibitedResponseOrTelemetry) { Write-Host "  - Prohibited response or telemetry: $message" }
+}
 foreach ($item in $items) { Write-Host " - $(($item | ConvertTo-Json -Compress))" }

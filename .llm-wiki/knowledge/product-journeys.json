@@ -5,10 +5,10 @@
     {
       "id": "FD-AUTH",
       "title": "Registration, sign-in, and external account linking",
-      "aliases": ["auth", "authentication", "login", "register", "google", "account linking", "credential"],
+      "aliases": ["auth", "authentication", "login", "register", "google", "account linking", "credential", "active session", "device session", "refresh token", "revoke session", "logout", "сессия", "сессии", "сессиями", "активные сессии", "устройство", "устройства", "устройствами", "отзыв сессии", "выход"],
       "pathPatterns": ["Authentication", "Authorization", "ExternalLogin", "Google", "Login", "Register", "profile"],
       "risk": "critical",
-      "scenarios": ["new-user-registration", "password-sign-in", "external-login", "existing-email-account-link", "invalid-or-owned-provider-id"],
+      "scenarios": ["new-user-registration", "password-sign-in", "external-login", "existing-email-account-link", "invalid-or-owned-provider-id", "refresh-token-rotation", "list-active-sessions", "revoke-other-session", "revoke-all-other-sessions", "logout-revokes-current-session", "concurrent-refresh-and-revoke", "legacy-access-token-refresh-retry"],
       "requiredReviewAreas": ["security", "privacy", "api-compatibility"],
       "evidenceHints": ["application tests", "presentation tests", "frontend state tests", "API contract snapshot"]
     },

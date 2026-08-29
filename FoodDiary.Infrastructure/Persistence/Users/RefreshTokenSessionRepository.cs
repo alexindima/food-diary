@@ -79,4 +79,117 @@ public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : 
             session.Revoke(revokedAtUtc);
         }
     }
+
+    public async Task RevokeByIdAsync(
+        Guid id,
+        UserId userId,
+        DateTime revokedAtUtc,
+        CancellationToken cancellationToken = default) {
+        if (!context.Database.IsRelational()) {
+            UserRefreshTokenSession? session = await context.UserRefreshTokenSessions
+                .FirstOrDefaultAsync(candidate => candidate.Id == id && candidate.UserId == userId, cancellationToken)
+                .ConfigureAwait(false);
+            session?.Revoke(revokedAtUtc);
+            return;
+        }
+
+        await context.UserRefreshTokenSessions
+            .Where(session =>
+                session.Id == id &&
+                session.UserId == userId &&
+                session.RevokedAtUtc == null)
+            .ExecuteUpdateAsync(
+                setters => setters
+                    .SetProperty(session => session.RevokedAtUtc, revokedAtUtc)
+                    .SetProperty(session => session.PreviousRefreshTokenHash, (string?)null)
+                    .SetProperty(session => session.PreviousRefreshTokenValidUntilUtc, (DateTime?)null),
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task RevokeOtherByIdAsync(
+        Guid id,
+        UserId userId,
+        Guid currentSessionId,
+        DateTime revokedAtUtc,
+        CancellationToken cancellationToken = default) {
+        if (!context.Database.IsRelational()) {
+            bool currentSessionIsActive = await context.UserRefreshTokenSessions.AnyAsync(
+                session => session.Id == currentSessionId && session.UserId == userId && session.RevokedAtUtc == null,
+                cancellationToken).ConfigureAwait(false);
+            if (!currentSessionIsActive) {
+                return;
+            }
+
+            UserRefreshTokenSession? targetSession = await context.UserRefreshTokenSessions
+                .FirstOrDefaultAsync(
+                    session => session.Id == id && session.Id != currentSessionId && session.UserId == userId,
+                    cancellationToken)
+                .ConfigureAwait(false);
+            targetSession?.Revoke(revokedAtUtc);
+            return;
+        }
+
+        await context.UserRefreshTokenSessions
+            .Where(session =>
+                session.Id == id &&
+                session.Id != currentSessionId &&
+                session.UserId == userId &&
+                session.RevokedAtUtc == null &&
+                context.UserRefreshTokenSessions.Any(currentSession =>
+                    currentSession.Id == currentSessionId &&
+                    currentSession.UserId == userId &&
+                    currentSession.RevokedAtUtc == null))
+            .ExecuteUpdateAsync(
+                setters => setters
+                    .SetProperty(session => session.RevokedAtUtc, revokedAtUtc)
+                    .SetProperty(session => session.PreviousRefreshTokenHash, (string?)null)
+                    .SetProperty(session => session.PreviousRefreshTokenValidUntilUtc, (DateTime?)null),
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task RevokeAllOtherAsync(
+        UserId userId,
+        Guid currentSessionId,
+        DateTime revokedAtUtc,
+        CancellationToken cancellationToken = default) {
+        if (!context.Database.IsRelational()) {
+            bool currentSessionIsActive = await context.UserRefreshTokenSessions.AnyAsync(
+                session => session.Id == currentSessionId && session.UserId == userId && session.RevokedAtUtc == null,
+                cancellationToken).ConfigureAwait(false);
+            if (!currentSessionIsActive) {
+                return;
+            }
+
+            List<UserRefreshTokenSession> otherSessions = await context.UserRefreshTokenSessions
+                .Where(session =>
+                    session.UserId == userId &&
+                    session.Id != currentSessionId &&
+                    session.RevokedAtUtc == null)
+                .ToListAsync(cancellationToken)
+                .ConfigureAwait(false);
+            foreach (UserRefreshTokenSession session in otherSessions) {
+                session.Revoke(revokedAtUtc);
+            }
+            return;
+        }
+
+        await context.UserRefreshTokenSessions
+            .Where(session =>
+                session.UserId == userId &&
+                session.Id != currentSessionId &&
+                session.RevokedAtUtc == null &&
+                context.UserRefreshTokenSessions.Any(currentSession =>
+                    currentSession.Id == currentSessionId &&
+                    currentSession.UserId == userId &&
+                    currentSession.RevokedAtUtc == null))
+            .ExecuteUpdateAsync(
+                setters => setters
+                    .SetProperty(session => session.RevokedAtUtc, revokedAtUtc)
+                    .SetProperty(session => session.PreviousRefreshTokenHash, (string?)null)
+                    .SetProperty(session => session.PreviousRefreshTokenValidUntilUtc, (DateTime?)null),
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
 }

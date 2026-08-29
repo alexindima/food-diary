@@ -161,18 +161,22 @@
       "pageSha256": "5b35dfc2deefb9f97e68732d4d4253f9dae73fbf2be012a58aa3974a57257f6d",
       "sources": [
         {
+          "path": ".llm-wiki/knowledge/product-journeys.json",
+          "sha256": "282076c4049179700dcbc0bf5df3bb91875efd4d3c8597e9d1e826fd619a8a0b"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "33a20ac79a683565c4f2a0d3c9ae1bc21529e27173e930e2b72d57eac32a0a88"
+          "sha256": "8f1d56fb22a3195493245ea2f35229fc0b0c3ca3dc3f063c7f4616b99c8d07f1"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "df33e20141a0457834d3826f19c4fc0d66113cf3de26c85ca1dc3b94b725e9e2"
+          "sha256": "04127ee7498994e5dbea3f2f18805caf690559470e30d5e28ac16d11daee8b98"
         }
       ],
-      "reason": "Reviewed adaptive research classification, database test-plan routing, JSON-safe output, and affected smoke against the new regression tests.",
+      "reason": "Reviewed adaptive research, task brief, code graph, index pipeline and test-plan behavior; the identity-session regression selects FD-AUTH, Identity/Users cross-layer paths and 11 focused tests without fasting/meal leakage, and the precision suite passes.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:28:47.7792106Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:36.5221505Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -181,28 +185,28 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "39242a1c5b3841de8c16145e14f118c731b47a5bd2961aee5780100b4f538901"
+          "sha256": "6700b679132aed05ecc94908f87dd515b9c562f49aa0803135cf5ae823b9b5f2"
         }
       ],
-      "reason": "Auth refresh request became optional and logout was added; the focused, auth-admin, and full OpenAPI snapshot tests pass with the refreshed contract.",
+      "reason": "Reviewed the generated backend/OpenAPI contract after adding session lifecycle routes; 15 SwaggerJson integration tests pass and current user/session binder parameters are absent from the public contract.",
       "baseRef": "HEAD",
-      "gitHead": "e757f3e07c6418b4e0ed3943896e18b17e1aa682",
-      "reviewedAtUtc": "2026-08-27T18:10:02.0947347Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:37.2941907Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
       "pagePath": ".llm-wiki/workflows/architecture-health-review.md",
-      "pageSha256": "b08e69984e4f15ff507b957caac290284e41e016dc2f5801c526e9fb89db9ad8",
+      "pageSha256": "b7914894ce3f6dda55057a93baf55364c9aa9c5e4c127a3fc9bddaa89743e4aa",
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "9dd04bd442796fb9c985c323391e3f5a7a9e7b7c8219c3e4cdafb8011ffcc6a3"
+          "sha256": "afdcdfd5eb9d42d1f6dc5ef48337cc75f3bb18d79a2a56418b308df0c87e6f4b"
         }
       ],
-      "reason": "Reviewed affected development and quality workflows: command help, cold-checkout fallback, broad-audit routing, ranked research evidence, topology abstention, and test-gap evidence remain aligned with the documented adaptive workflow and have focused regression coverage.",
+      "reason": "Reviewed adaptive research, task brief, code graph, index pipeline and test-plan behavior; the identity-session regression selects FD-AUTH, Identity/Users cross-layer paths and 11 focused tests without fasting/meal leakage, and the precision suite passes.",
       "baseRef": "HEAD",
-      "gitHead": "ed5f4241acf5f36e70bf06ffcacfe664aa82c399",
-      "reviewedAtUtc": "2026-08-28T15:54:25.9311233Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:37.9126014Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -211,13 +215,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "145ff79fc4df8b30d52766cd5e6cc711620b4f4a373fd91be68f2b14a8c68c26"
+          "sha256": "1576d2b12b62973f4091bd7e3f9125c390098e64b8d054eb1f3d9855e1de4601"
         }
       ],
-      "reason": "Backend contract index was regenerated and no HTTP route, payload, status code, or public API contract changed.",
+      "reason": "Reviewed the generated backend/OpenAPI contract after adding session lifecycle routes; 15 SwaggerJson integration tests pass and current user/session binder parameters are absent from the public contract.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:28:48.3799622Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:38.8196129Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -226,13 +230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "df33e20141a0457834d3826f19c4fc0d66113cf3de26c85ca1dc3b94b725e9e2"
+          "sha256": "04127ee7498994e5dbea3f2f18805caf690559470e30d5e28ac16d11daee8b98"
         }
       ],
-      "reason": "Generated domain, runtime, module, and quality pages were regenerated from current source and their source links remain accurate.",
+      "reason": "Reviewed the affected workflow navigation against the updated generators and session journey; existing workflow guidance remains accurate and generated module/workflow pages passed lint and source generator validation.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:28:48.6743317Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:39.3532390Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -241,13 +245,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "df33e20141a0457834d3826f19c4fc0d66113cf3de26c85ca1dc3b94b725e9e2"
+          "sha256": "04127ee7498994e5dbea3f2f18805caf690559470e30d5e28ac16d11daee8b98"
         }
       ],
-      "reason": "Generated domain, runtime, module, and quality pages were regenerated from current source and their source links remain accurate.",
+      "reason": "Reviewed the affected workflow navigation against the updated generators and session journey; existing workflow guidance remains accurate and generated module/workflow pages passed lint and source generator validation.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:28:48.9220327Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:39.9043583Z"
     },
     {
       "pageId": "workflow-code-graph",
@@ -256,13 +260,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "df33e20141a0457834d3826f19c4fc0d66113cf3de26c85ca1dc3b94b725e9e2"
+          "sha256": "04127ee7498994e5dbea3f2f18805caf690559470e30d5e28ac16d11daee8b98"
         }
       ],
-      "reason": "Reviewed adaptive research classification, database test-plan routing, JSON-safe output, and affected smoke against the new regression tests.",
+      "reason": "Reviewed adaptive research, task brief, code graph, index pipeline and test-plan behavior; the identity-session regression selects FD-AUTH, Identity/Users cross-layer paths and 11 focused tests without fasting/meal leakage, and the precision suite passes.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:28:49.1695287Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:40.5480941Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -459,13 +463,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "33a20ac79a683565c4f2a0d3c9ae1bc21529e27173e930e2b72d57eac32a0a88"
+          "sha256": "8f1d56fb22a3195493245ea2f35229fc0b0c3ca3dc3f063c7f4616b99c8d07f1"
         }
       ],
-      "reason": "Reviewed adaptive research classification, database test-plan routing, JSON-safe output, and affected smoke against the new regression tests.",
+      "reason": "Reviewed adaptive research, task brief, code graph, index pipeline and test-plan behavior; the identity-session regression selects FD-AUTH, Identity/Users cross-layer paths and 11 focused tests without fasting/meal leakage, and the precision suite passes.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:28:49.4457222Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:41.2108264Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -564,13 +568,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "df33e20141a0457834d3826f19c4fc0d66113cf3de26c85ca1dc3b94b725e9e2"
+          "sha256": "04127ee7498994e5dbea3f2f18805caf690559470e30d5e28ac16d11daee8b98"
         }
       ],
-      "reason": "Generated domain, runtime, module, and quality pages were regenerated from current source and their source links remain accurate.",
+      "reason": "Reviewed the affected workflow navigation against the updated generators and session journey; existing workflow guidance remains accurate and generated module/workflow pages passed lint and source generator validation.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:28:49.9746090Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:42.5274147Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -579,13 +583,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "df33e20141a0457834d3826f19c4fc0d66113cf3de26c85ca1dc3b94b725e9e2"
+          "sha256": "04127ee7498994e5dbea3f2f18805caf690559470e30d5e28ac16d11daee8b98"
         }
       ],
-      "reason": "Reviewed adaptive research classification, database test-plan routing, JSON-safe output, and affected smoke against the new regression tests.",
+      "reason": "Reviewed adaptive research, task brief, code graph, index pipeline and test-plan behavior; the identity-session regression selects FD-AUTH, Identity/Users cross-layer paths and 11 focused tests without fasting/meal leakage, and the precision suite passes.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:28:50.2724767Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:43.0016657Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -613,13 +617,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "39fc421004d382eb54165e869ccc33d3215c1d612168cc8e4de86032e72a8cc3"
+          "sha256": "35f67a38f0f0071a423abb479c3725f6818a491a16864bf1c4f7186994a0e8bc"
         }
       ],
-      "reason": "Reviewed adaptive research classification, database test-plan routing, JSON-safe output, and affected smoke against the new regression tests.",
+      "reason": "Reviewed adaptive research, task brief, code graph, index pipeline and test-plan behavior; the identity-session regression selects FD-AUTH, Identity/Users cross-layer paths and 11 focused tests without fasting/meal leakage, and the precision suite passes.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:28:50.5957948Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:43.5771412Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -643,17 +647,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "33a20ac79a683565c4f2a0d3c9ae1bc21529e27173e930e2b72d57eac32a0a88"
+          "sha256": "8f1d56fb22a3195493245ea2f35229fc0b0c3ca3dc3f063c7f4616b99c8d07f1"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "df33e20141a0457834d3826f19c4fc0d66113cf3de26c85ca1dc3b94b725e9e2"
+          "sha256": "04127ee7498994e5dbea3f2f18805caf690559470e30d5e28ac16d11daee8b98"
         }
       ],
-      "reason": "Generated domain, runtime, module, and quality pages were regenerated from current source and their source links remain accurate.",
+      "reason": "Reviewed the affected workflow navigation against the updated generators and session journey; existing workflow guidance remains accurate and generated module/workflow pages passed lint and source generator validation.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:28:50.8986939Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:44.1612505Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -756,17 +760,21 @@
     {
       "pageId": "workflow-privacy-review",
       "pagePath": ".llm-wiki/workflows/privacy-review.md",
-      "pageSha256": "fdb0f4d3895ff8cf31310bbd750c55f3ddc126de804c9665105650868a86fb6e",
+      "pageSha256": "e01ff59cf70144c17231e65657507cbf611981c565cc6c4e6c0504ac567e6a77",
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d1c8cb00f0b9a6906146abb9c21ab1d135354215554d943c5ed1f287fc7f1eed"
+          "sha256": "bec92b9babc3cf9e3f517c558f8db65674d853589965143ae555f8fd9cc18926"
+        },
+        {
+          "path": ".llm-wiki/tools/Find-LlmWikiSensitiveData.ps1",
+          "sha256": "9de78c734adf89eeaa0f25939554706c8b5eb90bef7e5b065abe3a3b31a6a319"
         }
       ],
-      "reason": "Reviewed privacy and security guidance against regenerated topology, quality, and sensitive-data indexes; SQL text constants are now excluded as false positives and no credential, identity, health-data, or provider-sharing boundary changed.",
+      "reason": "Reviewed active-session response and Wiki privacy boundaries: responses expose only opaque id, current flag, parsed device labels, provider and timestamps; refresh tokens, hashes, raw IP and raw User-Agent remain prohibited, with focused security and PostgreSQL tests passing.",
       "baseRef": "HEAD",
-      "gitHead": "ed5f4241acf5f36e70bf06ffcacfe664aa82c399",
-      "reviewedAtUtc": "2026-08-28T15:54:29.2479993Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:44.7702161Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -775,13 +783,13 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/product-journeys.json",
-          "sha256": "a15735aadbd1be3ae09543499af1f6289f99be55be0546de439089099a5ef93f"
+          "sha256": "282076c4049179700dcbc0bf5df3bb91875efd4d3c8597e9d1e826fd619a8a0b"
         }
       ],
-      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
+      "reason": "Reviewed the affected workflow navigation against the updated generators and session journey; existing workflow guidance remains accurate and generated module/workflow pages passed lint and source generator validation.",
       "baseRef": "HEAD",
-      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
-      "reviewedAtUtc": "2026-08-28T20:48:28.6346354Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:45.3338514Z"
     },
     {
       "pageId": "workflow-proof-of-change",
@@ -809,13 +817,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a018cbefc9ec27106d7ea2afc88d49c1147acbfb9825f8ddf7045c2ac4ec1a1a"
+          "sha256": "118983a646ce005a533e8b7178a20c1b349cf154618a0cefda39cc81e6990c9d"
         }
       ],
-      "reason": "Regenerated quality and runtime evidence after the final access-resolver compliance change; Dashboard and architecture tests pass.",
+      "reason": "Reviewed the formatter-only frontend source change and regenerated quality index; no behavior or coverage expectations changed, and the full frontend verification remains applicable.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:37:46.8428801Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T04:25:08.0440610Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -888,13 +896,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3f953fc648db27c8635a36ee0e2e3b4e3b59c93e800d45b3414beb973e8f482f"
+          "sha256": "a45049f1c900ecb2e4a7cbc6fa0769ec8dda747ab7fe2f4579cbd205bf6b6ac9"
         }
       ],
-      "reason": "Runtime topology was regenerated after the final Dashboard handler change and the runtime-impact references remain accurate.",
+      "reason": "Reviewed the affected workflow navigation against the updated generators and session journey; existing workflow guidance remains accurate and generated module/workflow pages passed lint and source generator validation.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:37:56.2334074Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:47.1029913Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -903,17 +911,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a018cbefc9ec27106d7ea2afc88d49c1147acbfb9825f8ddf7045c2ac4ec1a1a"
+          "sha256": "118983a646ce005a533e8b7178a20c1b349cf154618a0cefda39cc81e6990c9d"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3f953fc648db27c8635a36ee0e2e3b4e3b59c93e800d45b3414beb973e8f482f"
+          "sha256": "a45049f1c900ecb2e4a7cbc6fa0769ec8dda747ab7fe2f4579cbd205bf6b6ac9"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "bec92b9babc3cf9e3f517c558f8db65674d853589965143ae555f8fd9cc18926"
         }
       ],
-      "reason": "Regenerated sensitive-data, quality, and runtime indexes after the final handler change; no sensitive-data boundary changed.",
+      "reason": "Reviewed the formatter-only frontend source change and regenerated security evidence; session revocation boundaries and sensitive-data exclusions are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:37:56.7077539Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T04:25:08.9542506Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -937,13 +949,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "df33e20141a0457834d3826f19c4fc0d66113cf3de26c85ca1dc3b94b725e9e2"
+          "sha256": "04127ee7498994e5dbea3f2f18805caf690559470e30d5e28ac16d11daee8b98"
         }
       ],
-      "reason": "Reviewed adaptive research classification, database test-plan routing, JSON-safe output, and affected smoke against the new regression tests.",
+      "reason": "Reviewed adaptive research, task brief, code graph, index pipeline and test-plan behavior; the identity-session regression selects FD-AUTH, Identity/Users cross-layer paths and 11 focused tests without fasting/meal leakage, and the precision suite passes.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:28:52.4731286Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:48.2698797Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -1027,13 +1039,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "39fc421004d382eb54165e869ccc33d3215c1d612168cc8e4de86032e72a8cc3"
+          "sha256": "35f67a38f0f0071a423abb479c3725f6818a491a16864bf1c4f7186994a0e8bc"
         }
       ],
-      "reason": "Reviewed adaptive research classification, database test-plan routing, JSON-safe output, and affected smoke against the new regression tests.",
+      "reason": "Reviewed adaptive research, task brief, code graph, index pipeline and test-plan behavior; the identity-session regression selects FD-AUTH, Identity/Users cross-layer paths and 11 focused tests without fasting/meal leakage, and the precision suite passes.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:28:52.7321656Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:48.7731240Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1042,17 +1054,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "bbb7aea797dd193cabe0238df6a58f1f0b19fc9bbbb664ca005828623eb21b5e"
+          "sha256": "dae7de23fd9830821c335c964ad1b59e379e3fc5d80aa1667f1e7689de572b18"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "be7b0529e7cf2e96b4f7bb5abd7a3a91c1baf04cfd6cfab3129d25a7ea207f9f"
+          "sha256": "8d2ed183069b8f3d5658b92d7894369e5db0bdc0f4888441de09c399af4cbde7"
         }
       ],
-      "reason": "Module and frontend documentation was checked against the platform-service refactor, fd-tour architecture entry, generated frontend/runtime indexes, and current source layout; existing navigation and ownership guidance remains accurate.",
+      "reason": "Reviewed the regenerated frontend trace indexes from security-card UI through facade, HTTP service, controller, application handlers, and repository mutations; current trace guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "59dae42662bdbd9701dd6fdad61dbdc4e72ae5e4",
-      "reviewedAtUtc": "2026-08-28T10:38:12.8623747Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T04:18:43.1480157Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1136,17 +1148,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "bbb7aea797dd193cabe0238df6a58f1f0b19fc9bbbb664ca005828623eb21b5e"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiFrontendContract.ps1",
-          "sha256": "de5d3523852953c29d81df6b32f12164cf6ed642f40e83eb75fe0f504a38131e"
+          "sha256": "dae7de23fd9830821c335c964ad1b59e379e3fc5d80aa1667f1e7689de572b18"
         }
       ],
-      "reason": "Backend contract and API-facing Wiki pages were checked against the regenerated contract projection, safe collision classification, SQLite query route, and unchanged HTTP surface; their guidance remains accurate.",
+      "reason": "Reviewed the regenerated frontend contract index against the active-sessions service, facade, security-card template, translations, and passing frontend verification; the workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "59dae42662bdbd9701dd6fdad61dbdc4e72ae5e4",
-      "reviewedAtUtc": "2026-08-28T10:38:08.8262794Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T04:18:40.2003462Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1154,14 +1162,18 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "7868c0a1b5376b297dba1612d6611888bcb158792c0bb87032e669a9121ce32d"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "df33e20141a0457834d3826f19c4fc0d66113cf3de26c85ca1dc3b94b725e9e2"
+          "sha256": "04127ee7498994e5dbea3f2f18805caf690559470e30d5e28ac16d11daee8b98"
         }
       ],
-      "reason": "Generated domain, runtime, module, and quality pages were regenerated from current source and their source links remain accurate.",
+      "reason": "Reviewed the affected workflow navigation against the updated generators and session journey; existing workflow guidance remains accurate and generated module/workflow pages passed lint and source generator validation.",
       "baseRef": "HEAD",
-      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
-      "reviewedAtUtc": "2026-08-29T02:28:51.6054145Z"
+      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
+      "reviewedAtUtc": "2026-08-29T03:56:46.6018150Z"
     },
     {
       "pageId": "workflow.review-diff",

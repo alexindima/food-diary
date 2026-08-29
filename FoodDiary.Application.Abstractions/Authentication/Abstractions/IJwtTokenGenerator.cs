@@ -18,6 +18,14 @@ public interface IJwtTokenGenerator {
         UserId userId,
         string email,
         IReadOnlyCollection<string> roles,
+        DateTime? expiresAtUtc,
+        long securityVersion,
+        Guid refreshSessionId) =>
+        GenerateAccessToken(userId, email, roles, expiresAtUtc, securityVersion);
+    string GenerateAccessToken(
+        UserId userId,
+        string email,
+        IReadOnlyCollection<string> roles,
         JwtImpersonationContext impersonation,
         long securityVersion = 0);
     string GenerateRefreshToken(
