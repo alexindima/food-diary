@@ -713,6 +713,26 @@ public partial class BillingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
+    private sealed class DuplicatePaymentBillingTransactionRunner : IBillingTransactionRunner {
+        public int CompletionTransactionCount { get; private set; }
+
+        public async Task ExecuteAsync(
+            Func<CancellationToken, Task> operation,
+            CancellationToken cancellationToken = default) {
+            CompletionTransactionCount++;
+            await operation(cancellationToken);
+        }
+
+        public Task ExecuteSerializedAsync(
+            string serializationKey,
+            Func<CancellationToken, Task> operation,
+            CancellationToken cancellationToken = default) =>
+            Task.FromException(new BillingPaymentAlreadyExistsException(
+                BillingProviderNames.Paddle,
+                "pay_queued_duplicate_payment"));
+    }
+
+    [ExcludeFromCodeCoverage]
     private sealed class NoOpMarketingConversionRecorder : IBillingMarketingConversionRecorder {
         public Task RecordPremiumStartedAsync(Guid userId, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;

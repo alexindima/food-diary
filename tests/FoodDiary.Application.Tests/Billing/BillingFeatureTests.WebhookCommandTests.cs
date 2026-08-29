@@ -210,6 +210,63 @@ public partial class BillingFeatureTests {
     }
 
     [Fact]
+    public async Task ProcessQueuedBillingWebhook_WhenConcurrentPaymentAlreadyExists_PersistsInboxCompletion() {
+        var webhookEventRepository = new RecordingBillingWebhookEventRepository();
+        BillingWebhookEventModel webhookModel = new(
+            "evt_queued_duplicate_payment",
+            "payment.succeeded",
+            "customer_queued_duplicate_payment",
+            ExternalSubscriptionId: null,
+            ExternalPaymentMethodId: null,
+            ExternalPriceId: null,
+            Plan: null,
+            Status: "active",
+            CurrentPeriodStartUtc: null,
+            CurrentPeriodEndUtc: null,
+            CancelAtPeriodEnd: false,
+            CanceledAtUtc: null,
+            TrialStartUtc: null,
+            TrialEndUtc: null,
+            Amount: 7.99m,
+            Currency: "USD",
+            ProviderMetadataJson: null,
+            UserId: null,
+            ExternalPaymentId: "pay_queued_duplicate_payment",
+            UpdatesSubscription: false);
+        var inboxEvent = BillingWebhookEvent.CreateReceived(
+            BillingProviderNames.Paddle,
+            webhookModel.EventId,
+            webhookModel.EventType,
+            webhookModel.ExternalPaymentId,
+            Now,
+            "{}",
+            JsonSerializer.Serialize(webhookModel));
+        await webhookEventRepository.AddAsync(inboxEvent);
+        var transactionRunner = new DuplicatePaymentBillingTransactionRunner();
+        var processor = new BillingWebhookEventProcessor(
+            webhookEventRepository,
+            transactionRunner,
+            billingWebhookContextResolver: null!,
+            billingWebhookSubscriptionWriter: null!,
+            billingWebhookPaymentRecorder: null!,
+            billingWebhookPremiumRoleSyncer: null!,
+            new FixedDateTimeProvider(Now));
+
+        Result result = await processor.ProcessAsync(
+            BillingProviderNames.Paddle,
+            "{}",
+            webhookModel,
+            inboxEvent,
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(BillingWebhookEvent.ProcessedStatus, inboxEvent.Status),
+            () => Assert.Equal(Now, inboxEvent.ProcessedAtUtc),
+            () => Assert.Equal(1, transactionRunner.CompletionTransactionCount));
+    }
+
+    [Fact]
     public async Task ProcessQueuedBillingWebhook_WhenStoredEventIsInvalid_SchedulesRetry() {
         var webhookEventRepository = new RecordingBillingWebhookEventRepository();
         var inboxEvent = BillingWebhookEvent.CreateReceived(

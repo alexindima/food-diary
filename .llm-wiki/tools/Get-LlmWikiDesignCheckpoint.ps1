@@ -9,6 +9,8 @@ param(
     [Alias('PlannedPath')]
     [string[]]$ProposedPath,
     [string[]]$Decision,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 30)]
@@ -27,13 +29,13 @@ function Get-CollectionPropertyValues([object[]]$InputObject, [string]$PropertyN
     )
 }
 
-$common = @{ Objective = $Objective; BaseRef = $BaseRef; Format = 'Json'; Limit = $Limit }
+$common = @{ Objective = $Objective; BaseRef = $BaseRef; CompiledIndexSource = $CompiledIndexSource; Format = 'Json'; Limit = $Limit }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
 if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $ChangedPath }
 if ($PSBoundParameters.ContainsKey('ProposedPath')) { $common.ProposedPath = $ProposedPath }
 $research = & (Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1') @common | ConvertFrom-Json
 
-$planArguments = @{ BaseRef = $BaseRef; Objective = $Objective; Format = 'Json'; Limit = $Limit }
+$planArguments = @{ BaseRef = $BaseRef; Objective = $Objective; CompiledIndexSource = $CompiledIndexSource; Format = 'Json'; Limit = $Limit }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $planArguments.HeadRef = $HeadRef }
 $planPaths = @($ProposedPath + $ChangedPath + $research.discovery.groundedPaths | Where-Object { $_ } | Sort-Object -Unique)
 if ($planPaths.Count -gt 0) { $planArguments.ChangedPath = $planPaths }

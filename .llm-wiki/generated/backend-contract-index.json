@@ -22514,7 +22514,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs",
       "isTest": true,
-      "referenceCount": 17
+      "referenceCount": 19
     },
     {
       "contract": "BillingWebhookEvent",
@@ -22618,7 +22618,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 5
     },
     {
       "contract": "BleedingEntryHttpResponse",
@@ -48046,7 +48046,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IBillingTransactionRunner",

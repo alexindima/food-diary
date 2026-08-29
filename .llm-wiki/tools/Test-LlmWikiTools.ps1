@@ -221,6 +221,13 @@ Assert-Wiki (@($diff.warnings | Where-Object { $_ -match 'snapshot' }).Count -gt
 Assert-Wiki (@($diff.warnings | Where-Object { $_ -match 'locale' }).Count -gt 0) 'Localization warning is missing.'
 Assert-Wiki (@($diff.warnings | Where-Object { $_ -match 'migration' }).Count -gt 0) 'Migration warning is missing.'
 
+$persistenceOnlyDiff = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') `
+    -ChangedPath 'FoodDiary.Infrastructure/Persistence/Billing/EfBillingTransactionRunner.cs' `
+    -CompiledIndexSource Json `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($persistenceOnlyDiff.scopes) -contains 'Database') 'Persistence-only diff did not retain database scope.'
+Assert-Wiki (@($persistenceOnlyDiff.warnings | Where-Object { $_ -match 'migration' }).Count -eq 0) 'Persistence-only diff emitted a false migration-pair warning.'
+
 $usersPacketJson = & (Join-Path $toolsRoot 'Get-LlmWikiChangePacket.ps1') `
     -ChangedPath @('FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs') `
     -Objective 'Smoke-test a Users application change.' `

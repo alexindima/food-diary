@@ -137,11 +137,14 @@ Missing or stale projections stop the route explicitly; JSON is available only
 when a caller requests the diagnostic baseline.
 
 On a cold checkout without the TypeScript package under `node_modules`, the
-`start`, `brief`, `develop`, and `research` facades automatically select the
-committed read-only JSON baseline unless the caller explicitly requires SQLite.
-This fallback keeps first-run classification usable without building the code
-graph; the cold-checkout regression replaces the graph entrypoint with a failing
-stub to prove that none of these four routes invoke it.
+`start`, `brief`, `develop`, `research`, `diff`, `journeys`, `design`,
+`test-plan`, `topology`, `privacy`, and `security` facades automatically select
+the committed read-only JSON baseline unless the caller explicitly requires
+SQLite. The source selection is propagated through nested research, brief,
+diff, test-plan, and implementation-plan calls. This keeps first-run backend
+planning usable without building the code graph; the cold-checkout regression
+replaces the graph entrypoint with a failing stub and exercises the composed
+planning facades.
 
 The Development MCP keeps an additional bounded in-memory cache for successful
 read-only Wiki results. Planned paths and trace candidates define a scoped

@@ -263,6 +263,14 @@ Assert-Adaptive (@(Get-AdaptiveIds $journeys.journeys) -contains 'FD-DIET') 'Jou
 Assert-Adaptive (@(Get-AdaptiveIds $journeys.journeys) -contains 'FD-MAIL') 'Journey impact omitted transactional email.'
 Assert-Adaptive (@(Get-AdaptiveIds $journeys.journeys) -notcontains 'FD-MEAL') 'Journey impact produced a broad meal-tracking false positive.'
 
+$billingWebhookJourney = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') `
+    -Query 'Investigate webhook idempotency after a duplicate payment.' `
+    -Format Json | ConvertFrom-Json
+Assert-Adaptive (@(Get-AdaptiveIds $billingWebhookJourney.journeys) -contains 'FD-BILLING') 'Webhook idempotency intent did not route to the billing journey.'
+Assert-Adaptive (@($billingWebhookJourney.journeys | Where-Object {
+    $_.id -eq 'FD-BILLING' -and @($_.evidenceHints | Where-Object { $_ -match 'EfBillingTransactionRunner' }).Count -gt 0
+}).Count -eq 1) 'Billing webhook journey omitted transaction-runner evidence guidance.'
+
 $ungrounded = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Fix quasar zephyr nimbus anomaly.' `
     -Format Json | ConvertFrom-Json

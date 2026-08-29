@@ -465,13 +465,17 @@ if ($matchedModules.Count -gt 0 -or
 }
 
 $warnings = [System.Collections.Generic.List[string]]::new()
+$migrationPathsChanged = @($changedPaths | Where-Object {
+    $_ -match '(?i)(?:^|/)Migrations?/.*\.cs$' -or
+    $_ -match '(?i)(?:^|/)[^/]*ModelSnapshot\.cs$'
+}).Count -gt 0
 if ($scopes.Contracts) {
     $warnings.Add('Swagger-visible route, payload, or status changes may require API contract snapshot updates.')
 }
 if ($scopes.Localization) {
     $warnings.Add('Keep English and Russian locale files aligned and verify Cyrillic rendering.')
 }
-if ($scopes.Database) {
+if ($migrationPathsChanged) {
     $warnings.Add('Commit migration and Designer files together; format generated migration code.')
 }
 if ($scopes.Configuration) {

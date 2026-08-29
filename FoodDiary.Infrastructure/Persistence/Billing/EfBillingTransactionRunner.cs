@@ -42,6 +42,7 @@ public sealed class EfBillingTransactionRunner(FoodDiaryDbContext context) : IBi
                 throw;
             }
 
+            context.ChangeTracker.Clear();
             throw new BillingPaymentAlreadyExistsException(payment.Provider, payment.ExternalPaymentId);
         } catch (DbUpdateException ex) when (IsDuplicateWebhookEvent(ex)) {
             BillingWebhookEvent? webhookEvent = DetachAddedWebhookEvent();
@@ -49,6 +50,7 @@ public sealed class EfBillingTransactionRunner(FoodDiaryDbContext context) : IBi
                 throw;
             }
 
+            context.ChangeTracker.Clear();
             throw new BillingWebhookEventAlreadyProcessedException(webhookEvent.Provider, webhookEvent.EventId);
         }
     }

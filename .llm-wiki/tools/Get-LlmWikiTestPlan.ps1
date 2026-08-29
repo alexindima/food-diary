@@ -8,6 +8,8 @@ param(
     [string]$Intent,
     [object]$DiffInput,
     [object]$PolicyInput,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [switch]$Compact,
@@ -35,6 +37,7 @@ if ($cacheEligible) {
         BaseRef = $BaseRef; HeadRef = $HeadRef; ChangedPath = @($ChangedPath)
         ProposedPath = @($ProposedPath); Intent = $Intent; Compact = [bool]$Compact; Limit = $Limit
         VerificationReceipts = $validReceiptFingerprint; ExecutedCheck = @($ExecutedCheck); NoBaseline = [bool]$NoBaseline
+        CompiledIndexSource = $CompiledIndexSource
     }
     $cachedTestPlan = Read-LlmWikiQueryCache -Entry $queryCacheEntry
     if ($null -ne $cachedTestPlan) { Write-Output $cachedTestPlan; exit 0 }
@@ -67,6 +70,7 @@ if ($effectivePaths.Count -gt 0) {
 
 $diffArguments = @{} + $common
 $diffArguments.Limit = [Math]::Min($Limit, 20)
+$diffArguments.CompiledIndexSource = $CompiledIndexSource
 $diff = if ($null -ne $DiffInput) { $DiffInput } else {
     & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') @diffArguments | ConvertFrom-Json
 }

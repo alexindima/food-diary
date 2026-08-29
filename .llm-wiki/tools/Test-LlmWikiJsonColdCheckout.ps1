@@ -74,6 +74,28 @@ try {
     Assert-ColdCheckout (@($research.discovery.groundedPaths).Count -gt 0) 'Cold-checkout research did not ground any current-source path.'
     Assert-ColdCheckout ([string]$research.discovery.runtimeFlow.status -eq 'not-requested-json-baseline') 'Cold-checkout research attempted graph expansion in JSON mode.'
 
+    $backendPath = 'FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs'
+    $diff = Invoke-JsonFacade -Facade $facade -FacadeCommand diff -FacadeParameters @{
+        ChangedPath = @($backendPath); Format = 'Json'; Limit = 3
+    }
+    Assert-ColdCheckout (@($diff.modules.name) -contains 'Billing') 'Cold-checkout diff did not use the automatic JSON fallback for a backend-only path.'
+
+    $journeys = Invoke-JsonFacade -Facade $facade -FacadeCommand journeys -FacadeParameters @{
+        Objective = 'Review billing webhook idempotency'; ProposedPath = @($backendPath); Format = 'Json'; Limit = 3
+    }
+    Assert-ColdCheckout (@($journeys.journeys.id) -contains 'FD-BILLING') 'Cold-checkout journeys did not complete without code-graph preparation.'
+
+    $testPlan = Invoke-JsonFacade -Facade $facade -FacadeCommand test-plan -FacadeParameters @{
+        Objective = 'Review billing webhook idempotency'; ProposedPath = @($backendPath); Format = 'Json'; Limit = 3
+    }
+    Assert-ColdCheckout (@($testPlan.scenarios).Count -gt 0) 'Cold-checkout test-plan did not propagate the automatic JSON fallback.'
+
+    $design = Invoke-JsonFacade -Facade $facade -FacadeCommand design -FacadeParameters @{
+        Objective = 'Fix queued billing webhook idempotency'; ProposedPath = @($backendPath)
+        Decision = @('Preserve provider success semantics and persist inbox completion separately.'); Format = 'Json'; Limit = 3
+    }
+    Assert-ColdCheckout ([bool]$design.ready) 'Cold-checkout design did not propagate the automatic JSON fallback through research and planning.'
+
     $trace = Invoke-JsonTool -ToolPath (Join-Path $checkoutWikiRoot 'tools/Find-LlmWikiTraceCandidates.ps1') -ToolParameters @{
         Query = 'Trace primary user scenario end to end for wearable synchronization.'; CompiledIndexSource = 'Json'; Format = 'Json'; Limit = 3
     }
@@ -105,7 +127,7 @@ try {
     $healthGroups = @($health.PSObject.Properties.Name)
     Assert-ColdCheckout ($healthGroups.Count -eq 10) "Cold-checkout health all returned $($healthGroups.Count) groups instead of 10."
 
-    Write-Host 'LLM Wiki JSON cold-checkout start/brief/develop/research facades passed without node_modules or code-graph preparation.'
+    Write-Host 'LLM Wiki JSON cold-checkout planning facades passed without node_modules or code-graph preparation.'
 } finally {
     if (Test-Path -LiteralPath $sandboxRoot) {
         Remove-Item -LiteralPath $sandboxRoot -Recurse -Force

@@ -31,7 +31,7 @@ $diff = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') @diffArguments -Co
 $diffArguments.Remove('IncludeFrontendFeatures')
 $policy = & (Join-Path $toolsRoot 'Test-LlmWikiChangePolicy.ps1') @common | ConvertFrom-Json
 $ownership = & (Join-Path $toolsRoot 'Get-LlmWikiOwnershipImpact.ps1') @common -DiffInput $diff | ConvertFrom-Json
-$testPlan = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') @diffArguments -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json
+$testPlan = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') @diffArguments -DiffInput $diff -PolicyInput $policy -CompiledIndexSource $CompiledIndexSource | ConvertFrom-Json
 $rollout = & (Join-Path $toolsRoot 'Get-LlmWikiRolloutPlan.ps1') @common -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json
 $decision = & (Join-Path $toolsRoot 'Get-LlmWikiDecisionContext.ps1') @common -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json
 $brief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') @diffArguments `
@@ -45,6 +45,7 @@ $brief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') @diffArguments `
     -CompiledIndexSource $CompiledIndexSource | ConvertFrom-Json
 $implementationPlan = & (Join-Path $toolsRoot 'Get-LlmWikiImplementationPlan.ps1') @diffArguments `
     -Objective $Objective `
+    -CompiledIndexSource $CompiledIndexSource `
     -BriefInput $brief | ConvertFrom-Json
 
 $head = git rev-parse HEAD

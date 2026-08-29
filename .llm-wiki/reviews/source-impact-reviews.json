@@ -147,32 +147,40 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "40fcdcbffff1fa67b03416d7efaa2e7049c4bc07b3d802a2805833285eddd430"
+          "sha256": "e376094eb6b3a27464d6c3d72ec59c254d02de2332afc029a860845a278b881b"
         }
       ],
-      "reason": "Reviewed adaptive research, context ranking, read-only isolation, and verification orchestration against current tools; documented authority and workflow semantics remain accurate, and cold-checkout plus critical-tool contracts pass.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "90fc049c639fd068808dfef895a54c95b64b7e5e",
-      "reviewedAtUtc": "2026-08-28T14:31:52.8019361Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:24.9489641Z"
     },
     {
       "pageId": "workflow-adaptive-development",
       "pagePath": ".llm-wiki/workflows/adaptive-development.md",
-      "pageSha256": "6f8228462ed3f2c01895eccb72a9539e8fe90e102e32bb3e8b2b3927a5937f40",
+      "pageSha256": "5b35dfc2deefb9f97e68732d4d4253f9dae73fbf2be012a58aa3974a57257f6d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "55a49d759b0dccce477c0273c79c242901bcc55291e814f14bcc41f775a275c2"
+          "path": ".llm-wiki/knowledge/product-journeys.json",
+          "sha256": "a15735aadbd1be3ae09543499af1f6289f99be55be0546de439089099a5ef93f"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1",
+          "sha256": "cee494f00aec8beef4222b87e71985b73a081353863b1b3be8ffa4b362eab669"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "1a888c388b5404f831805a3f1793e8741f6d716449fe0c479c6c8cff4ab22693"
+          "sha256": "8836f7b0085c3c400fb9c7d1e000184b4ab3ba465b6ff7e1c78e9eca7a75ba09"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
+          "sha256": "2a1f2ec246f222b0b395e410a6abc1b286a437df93146eb9f56772a0b35b1e19"
         }
       ],
-      "reason": "Reviewed affected development and quality workflows: command help, cold-checkout fallback, broad-audit routing, ranked research evidence, topology abstention, and test-gap evidence remain aligned with the documented adaptive workflow and have focused regression coverage.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "ed5f4241acf5f36e70bf06ffcacfe664aa82c399",
-      "reviewedAtUtc": "2026-08-28T15:54:25.7125220Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:25.1986386Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -211,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "9908fc1be84f6a2c8b91a741d2ae9459ad5355bb7075d48aeed4367cde7acfbf"
+          "sha256": "3f753599b5ec97373fa9ae40932b943f8141a6882433b69bbddfd0b9fbfb11b5"
         }
       ],
-      "reason": "Reviewed affected API and backend-contract guidance: the internal idempotency store lease protocol changed, while routes, request payloads, successful responses, replay semantics, and Swagger-visible endpoint shapes remain unchanged.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "ed5f4241acf5f36e70bf06ffcacfe664aa82c399",
-      "reviewedAtUtc": "2026-08-28T15:54:26.4620891Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:25.7115207Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -225,14 +233,18 @@
       "pageSha256": "e2967f35c4924a0eef44b5f281529a2636278600f77e2fec29ca9b7dfb410823",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+          "sha256": "86a2326524b511174be5e32126d2bc42b8ae11c0be370814a5f4358e8df384ae"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b9ed0314acbf106294ab22463a8f9b7ca08e17d7f4af5e655747477df3943d73"
+          "sha256": "8836f7b0085c3c400fb9c7d1e000184b4ab3ba465b6ff7e1c78e9eca7a75ba09"
         }
       ],
-      "reason": "Reviewed impacted workflow and system pages against the current tool contracts; updated broad assessment, dependency inventory, privacy/security expansion, localized topology signals, routed Angular components, test prerequisites, research fast paths, and cold JSON fallback guidance; remaining consumers use additive fields and remain accurate.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "82f5a7b7e898e22cd24d5e718cbf762a92a7da9c",
-      "reviewedAtUtc": "2026-08-28T19:39:55.4997663Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:25.9741114Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -240,14 +252,26 @@
       "pageSha256": "ade9cba84ee4d80106e27801da37606734ef5646dcd2f5615df367eae91ad881",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+          "sha256": "e376094eb6b3a27464d6c3d72ec59c254d02de2332afc029a860845a278b881b"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "9ce6a919d527cc77fa2889d813498e6c28a3d8ee3f1afeab6e1a13ed0783ce0c"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+          "sha256": "86a2326524b511174be5e32126d2bc42b8ae11c0be370814a5f4358e8df384ae"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b9ed0314acbf106294ab22463a8f9b7ca08e17d7f4af5e655747477df3943d73"
+          "sha256": "8836f7b0085c3c400fb9c7d1e000184b4ab3ba465b6ff7e1c78e9eca7a75ba09"
         }
       ],
-      "reason": "Reviewed impacted workflow and system pages against the current tool contracts; updated broad assessment, dependency inventory, privacy/security expansion, localized topology signals, routed Angular components, test prerequisites, research fast paths, and cold JSON fallback guidance; remaining consumers use additive fields and remain accurate.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "82f5a7b7e898e22cd24d5e718cbf762a92a7da9c",
-      "reviewedAtUtc": "2026-08-28T19:39:55.7151505Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:26.2067658Z"
     },
     {
       "pageId": "workflow-code-graph",
@@ -255,18 +279,26 @@
       "pageSha256": "4e6f774f1817d334504316d5d64c5a4bf62bc3a1234600d3293d028f8cbb731a",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+          "sha256": "e376094eb6b3a27464d6c3d72ec59c254d02de2332afc029a860845a278b881b"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "9ce6a919d527cc77fa2889d813498e6c28a3d8ee3f1afeab6e1a13ed0783ce0c"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b9ed0314acbf106294ab22463a8f9b7ca08e17d7f4af5e655747477df3943d73"
+          "sha256": "8836f7b0085c3c400fb9c7d1e000184b4ab3ba465b6ff7e1c78e9eca7a75ba09"
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "5b660f5ad82624f495554bc7ac4f9f2b0a26e5683fa25223e5aec684223a9013"
+          "sha256": "dd70db1a9c53850cc0d4e884bc5d7c2e5b16da98e54bd017bc5b58169c2bfe94"
         }
       ],
-      "reason": "Reviewed impacted workflow and system pages against the current tool contracts; updated broad assessment, dependency inventory, privacy/security expansion, localized topology signals, routed Angular components, test prerequisites, research fast paths, and cold JSON fallback guidance; remaining consumers use additive fields and remain accurate.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "82f5a7b7e898e22cd24d5e718cbf762a92a7da9c",
-      "reviewedAtUtc": "2026-08-28T19:39:55.9458456Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:26.4745631Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -304,14 +336,14 @@
       "pageSha256": "2adbebf7ac1a14cca9d9ab6aa9a8bdd9502bef62346c9960e3c3d5901ba7545e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "f311cb28c17b26dd272d30a8aa9c5f3bedbff1a121110bc6c915a99367c2d82f"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "9ce6a919d527cc77fa2889d813498e6c28a3d8ee3f1afeab6e1a13ed0783ce0c"
         }
       ],
-      "reason": "Reviewed remaining workflow pages against the current source delta; changes are compiled-index selection or generated-fingerprint effects, while architecture-health documentation was explicitly updated for the expanded all view.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "90fc049c639fd068808dfef895a54c95b64b7e5e",
-      "reviewedAtUtc": "2026-08-28T14:31:54.3077869Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:26.7285449Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -575,14 +607,22 @@
       "pageSha256": "995df7b3f6ad527c4094a25bf33831f1c30fae3ebff5aa469fa92f71f02bab43",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+          "sha256": "e376094eb6b3a27464d6c3d72ec59c254d02de2332afc029a860845a278b881b"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "9ce6a919d527cc77fa2889d813498e6c28a3d8ee3f1afeab6e1a13ed0783ce0c"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b9ed0314acbf106294ab22463a8f9b7ca08e17d7f4af5e655747477df3943d73"
+          "sha256": "8836f7b0085c3c400fb9c7d1e000184b4ab3ba465b6ff7e1c78e9eca7a75ba09"
         }
       ],
-      "reason": "Reviewed impacted workflow and system pages against the current tool contracts; updated broad assessment, dependency inventory, privacy/security expansion, localized topology signals, routed Angular components, test prerequisites, research fast paths, and cold JSON fallback guidance; remaining consumers use additive fields and remain accurate.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "82f5a7b7e898e22cd24d5e718cbf762a92a7da9c",
-      "reviewedAtUtc": "2026-08-28T19:39:56.2627960Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:27.3485335Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -590,14 +630,18 @@
       "pageSha256": "2d14755cf1714049bfdbd8ce1c1ed6e3fb250c1e2f8a34d27863f86e278e86d7",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+          "sha256": "86a2326524b511174be5e32126d2bc42b8ae11c0be370814a5f4358e8df384ae"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b9ed0314acbf106294ab22463a8f9b7ca08e17d7f4af5e655747477df3943d73"
+          "sha256": "8836f7b0085c3c400fb9c7d1e000184b4ab3ba465b6ff7e1c78e9eca7a75ba09"
         }
       ],
-      "reason": "Reviewed impacted workflow and system pages against the current tool contracts; updated broad assessment, dependency inventory, privacy/security expansion, localized topology signals, routed Angular components, test prerequisites, research fast paths, and cold JSON fallback guidance; remaining consumers use additive fields and remain accurate.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "82f5a7b7e898e22cd24d5e718cbf762a92a7da9c",
-      "reviewedAtUtc": "2026-08-28T19:39:56.6806522Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:27.6721702Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -625,17 +669,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "7fc39817cc003929c478f6b84176c4de162dc07b3790d6f083febca7d1b689f2"
+          "sha256": "e3d2a6a038ea86683d216b6ab9fa782f293ef62bf4cd21ab2af5f6c4a13ace80"
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "5b660f5ad82624f495554bc7ac4f9f2b0a26e5683fa25223e5aec684223a9013"
+          "sha256": "dd70db1a9c53850cc0d4e884bc5d7c2e5b16da98e54bd017bc5b58169c2bfe94"
         }
       ],
-      "reason": "Reviewed impacted workflow and system pages against the current tool contracts; updated broad assessment, dependency inventory, privacy/security expansion, localized topology signals, routed Angular components, test prerequisites, research fast paths, and cold JSON fallback guidance; remaining consumers use additive fields and remain accurate.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "82f5a7b7e898e22cd24d5e718cbf762a92a7da9c",
-      "reviewedAtUtc": "2026-08-28T19:39:57.0282718Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:27.9607189Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -658,18 +702,14 @@
       "pageSha256": "a952661d5073668178342e7b7131b00a3ea21d502dae2ea219a05a41d7094cdb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "4675d244f5ea32d9d8faef0e387ebd22433ddc231a2aa50be8eaf29d2ba4f595"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b9ed0314acbf106294ab22463a8f9b7ca08e17d7f4af5e655747477df3943d73"
+          "sha256": "8836f7b0085c3c400fb9c7d1e000184b4ab3ba465b6ff7e1c78e9eca7a75ba09"
         }
       ],
-      "reason": "Reviewed impacted workflow and system pages against the current tool contracts; updated broad assessment, dependency inventory, privacy/security expansion, localized topology signals, routed Angular components, test prerequisites, research fast paths, and cold JSON fallback guidance; remaining consumers use additive fields and remain accurate.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "82f5a7b7e898e22cd24d5e718cbf762a92a7da9c",
-      "reviewedAtUtc": "2026-08-28T19:39:57.3265609Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:28.3232307Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -790,14 +830,14 @@
       "pageSha256": "a9831185cd84a2852b0d427375c97e941a27016fe0769f11665bfb0f5fee8146",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-          "sha256": "fbadfc281a08c477205bdb84e4d5e37a4fc01ad266b7be644821899b7dbe3bc7"
+          "path": ".llm-wiki/knowledge/product-journeys.json",
+          "sha256": "a15735aadbd1be3ae09543499af1f6289f99be55be0546de439089099a5ef93f"
         }
       ],
-      "reason": "Ported native git invocations across the tool suite from the PowerShell & call operator to Diagnostics.Process (stderr captured via .NET), since Set-StrictMode/ErrorActionPreference=Stop can promote a harmless git stderr warning (e.g. core.autocrlf CRLF notices) into a terminating error that survives even a local 2>$null redirect in some hosts; also fixed two BOM-less non-ASCII source files that parsed differently under Windows PowerShell 5.1's default (non-UTF8) script-loading encoding, a String.Contains(string, StringComparison) call that is .NET 5+ only, and an over-eager session-reconciliation heuristic that could reap a still-in-use session. Documented workflow/index-pipeline/task-lifecycle behavior and output shapes are unchanged; this is exclusively a portability and process-invocation-safety change.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "9d9639b7eee4740b00dc9739e91ce43ae7b3ee25",
-      "reviewedAtUtc": "2026-08-23T01:47:16.3795644Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:28.6346354Z"
     },
     {
       "pageId": "workflow-proof-of-change",
@@ -825,17 +865,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5a8396be10d9a7dcbd2e63ab705383eaf07b4cb8acafb27f7d5f2b27025c7a0d"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1",
-          "sha256": "70e3d983e5f1b77df62ff3c2479481f8c78fab754b165363faaac236bfb1c4db"
+          "sha256": "9c0433d7c181d0500d53489921df687d803ddf31b29a52c07ab369ff72c55cd6"
         }
       ],
-      "reason": "Reviewed impacted workflow and system pages against the current tool contracts; updated broad assessment, dependency inventory, privacy/security expansion, localized topology signals, routed Angular components, test prerequisites, research fast paths, and cold JSON fallback guidance; remaining consumers use additive fields and remain accurate.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "82f5a7b7e898e22cd24d5e718cbf762a92a7da9c",
-      "reviewedAtUtc": "2026-08-28T19:39:57.7611681Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:29.0426282Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -844,13 +880,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "40fcdcbffff1fa67b03416d7efaa2e7049c4bc07b3d802a2805833285eddd430"
+          "sha256": "e376094eb6b3a27464d6c3d72ec59c254d02de2332afc029a860845a278b881b"
         }
       ],
-      "reason": "Reviewed adaptive research, context ranking, read-only isolation, and verification orchestration against current tools; documented authority and workflow semantics remain accurate, and cold-checkout plus critical-tool contracts pass.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "90fc049c639fd068808dfef895a54c95b64b7e5e",
-      "reviewedAtUtc": "2026-08-28T14:31:56.8515793Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:29.7663418Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -878,13 +914,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "40fcdcbffff1fa67b03416d7efaa2e7049c4bc07b3d802a2805833285eddd430"
+          "sha256": "e376094eb6b3a27464d6c3d72ec59c254d02de2332afc029a860845a278b881b"
         }
       ],
-      "reason": "Reviewed adaptive research, context ranking, read-only isolation, and verification orchestration against current tools; documented authority and workflow semantics remain accurate, and cold-checkout plus critical-tool contracts pass.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "90fc049c639fd068808dfef895a54c95b64b7e5e",
-      "reviewedAtUtc": "2026-08-28T14:31:57.4442420Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:30.4041702Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -923,25 +959,21 @@
     {
       "pageId": "workflow-security-review",
       "pagePath": ".llm-wiki/workflows/security-review.md",
-      "pageSha256": "1ced048a0b4e3cf273e527e0c34fb0b59e493d68c49694495c125cc0d0aec28e",
+      "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ee6845c692a1b9a67284b85d58e43d73d1d4310930a4adb2f8b7b247b94b8f79"
+          "sha256": "9c0433d7c181d0500d53489921df687d803ddf31b29a52c07ab369ff72c55cd6"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a25c798b6cb29a2bd6c4c3b1d86f2e7954662d1599dbcc7ae7c83c22ec3e997e"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d1c8cb00f0b9a6906146abb9c21ab1d135354215554d943c5ed1f287fc7f1eed"
+          "sha256": "d864a0fa7a20868c5fbc97251847dd4d793fa07b473f8be4e2f8aab9d375e657"
         }
       ],
-      "reason": "Reviewed privacy and security guidance against regenerated topology, quality, and sensitive-data indexes; SQL text constants are now excluded as false positives and no credential, identity, health-data, or provider-sharing boundary changed.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "ed5f4241acf5f36e70bf06ffcacfe664aa82c399",
-      "reviewedAtUtc": "2026-08-28T15:54:30.8937775Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:30.8045955Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -949,33 +981,33 @@
       "pageSha256": "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
+          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+          "sha256": "86a2326524b511174be5e32126d2bc42b8ae11c0be370814a5f4358e8df384ae"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:06.2841837Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:31.0325162Z"
     },
     {
       "pageId": "workflow-task-brief",
       "pagePath": ".llm-wiki/workflows/task-brief.md",
-      "pageSha256": "d8c95ab1f9596a905d26c19d1f95d2356bfdb5e96ab739c217eb446219a8ea37",
+      "pageSha256": "65f4d9ae72ac28fb74987f36e590addfb2bc44bac79e07844eaa04a52661e307",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "9ce6a919d527cc77fa2889d813498e6c28a3d8ee3f1afeab6e1a13ed0783ce0c"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "1a888c388b5404f831805a3f1793e8741f6d716449fe0c479c6c8cff4ab22693"
+          "sha256": "8836f7b0085c3c400fb9c7d1e000184b4ab3ba465b6ff7e1c78e9eca7a75ba09"
         }
       ],
-      "reason": "Reviewed affected development and quality workflows: command help, cold-checkout fallback, broad-audit routing, ranked research evidence, topology abstention, and test-gap evidence remain aligned with the documented adaptive workflow and have focused regression coverage.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "ed5f4241acf5f36e70bf06ffcacfe664aa82c399",
-      "reviewedAtUtc": "2026-08-28T15:54:31.1871526Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:31.2548327Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -1014,13 +1046,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "5b660f5ad82624f495554bc7ac4f9f2b0a26e5683fa25223e5aec684223a9013"
+          "sha256": "dd70db1a9c53850cc0d4e884bc5d7c2e5b16da98e54bd017bc5b58169c2bfe94"
         }
       ],
-      "reason": "Reviewed impacted workflow and system pages against the current tool contracts; updated broad assessment, dependency inventory, privacy/security expansion, localized topology signals, routed Angular components, test prerequisites, research fast paths, and cold JSON fallback guidance; remaining consumers use additive fields and remain accurate.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "82f5a7b7e898e22cd24d5e718cbf762a92a7da9c",
-      "reviewedAtUtc": "2026-08-28T19:39:58.6922067Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:31.5323807Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1044,13 +1076,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "40fcdcbffff1fa67b03416d7efaa2e7049c4bc07b3d802a2805833285eddd430"
+          "sha256": "e376094eb6b3a27464d6c3d72ec59c254d02de2332afc029a860845a278b881b"
         }
       ],
-      "reason": "Reviewed adaptive research, context ranking, read-only isolation, and verification orchestration against current tools; documented authority and workflow semantics remain accurate, and cold-checkout plus critical-tool contracts pass.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "90fc049c639fd068808dfef895a54c95b64b7e5e",
-      "reviewedAtUtc": "2026-08-28T14:31:58.7003049Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:31.7783419Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1134,17 +1166,17 @@
     {
       "pageId": "workflow.evals",
       "pagePath": ".llm-wiki/workflows/evals.md",
-      "pageSha256": "6ada105b75a86980fdb517297eb70f3dd62690bf8920afad9ff3d08740f2e241",
+      "pageSha256": "50ed04637edde217df4523303843af0ba9259b09af6ed1903b66160fc32b97b8",
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "67ef83f498b51f42722b13179e710725308c946a599d9bf88605c07b21843480"
+          "sha256": "9ce6a919d527cc77fa2889d813498e6c28a3d8ee3f1afeab6e1a13ed0783ce0c"
         }
       ],
-      "reason": "Diff classification defaults and eval inputs are unchanged; the optional frontend catalog is enabled only by change packets, while diff SQL parity passed 6 of 6 cases.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "c9e2f667ef95a5ecbe4eab25eb0d77a36dbaa6d8",
-      "reviewedAtUtc": "2026-08-24T21:03:42.758224Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:27.0019608Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1186,14 +1218,18 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "9ce6a919d527cc77fa2889d813498e6c28a3d8ee3f1afeab6e1a13ed0783ce0c"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b9ed0314acbf106294ab22463a8f9b7ca08e17d7f4af5e655747477df3943d73"
+          "sha256": "8836f7b0085c3c400fb9c7d1e000184b4ab3ba465b6ff7e1c78e9eca7a75ba09"
         }
       ],
-      "reason": "Reviewed impacted workflow and system pages against the current tool contracts; updated broad assessment, dependency inventory, privacy/security expansion, localized topology signals, routed Angular components, test prerequisites, research fast paths, and cold JSON fallback guidance; remaining consumers use additive fields and remain accurate.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "82f5a7b7e898e22cd24d5e718cbf762a92a7da9c",
-      "reviewedAtUtc": "2026-08-28T19:39:58.0228453Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:29.4074795Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1201,14 +1237,18 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "9ce6a919d527cc77fa2889d813498e6c28a3d8ee3f1afeab6e1a13ed0783ce0c"
+        },
+        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "5b660f5ad82624f495554bc7ac4f9f2b0a26e5683fa25223e5aec684223a9013"
+          "sha256": "dd70db1a9c53850cc0d4e884bc5d7c2e5b16da98e54bd017bc5b58169c2bfe94"
         }
       ],
-      "reason": "Reviewed impacted workflow and system pages against the current tool contracts; updated broad assessment, dependency inventory, privacy/security expansion, localized topology signals, routed Angular components, test prerequisites, research fast paths, and cold JSON fallback guidance; remaining consumers use additive fields and remain accurate.",
+      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "82f5a7b7e898e22cd24d5e718cbf762a92a7da9c",
-      "reviewedAtUtc": "2026-08-28T19:39:58.3676028Z"
+      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
+      "reviewedAtUtc": "2026-08-28T20:48:30.0833402Z"
     }
   ]
 }

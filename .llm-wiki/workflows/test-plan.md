@@ -34,6 +34,10 @@ directory, assembly filters, and integration-test guidance.
 
 When invoked through a task brief or change packet, the test planner reuses the
 already classified diff and policy result instead of rescanning the same paths.
+The selected `CompiledIndexSource` is propagated through nested diff, brief, and
+implementation-plan calls; a cold backend-only checkout therefore remains on
+the JSON baseline instead of unexpectedly requiring SQLite midway through the
+plan.
 
 ```powershell
 ./.llm-wiki/wiki.ps1 test-plan

@@ -5,6 +5,8 @@ param(
     [string[]]$ChangedPath,
     [object]$BriefInput,
     [string]$Objective,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 50)]
@@ -14,7 +16,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
 . (Join-Path $toolsRoot 'LlmWikiImplementationBrief.ps1')
-$common = @{ BaseRef = $BaseRef; Format = 'Json' }
+$common = @{ BaseRef = $BaseRef; Format = 'Json'; CompiledIndexSource = $CompiledIndexSource }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
 if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $ChangedPath }
 

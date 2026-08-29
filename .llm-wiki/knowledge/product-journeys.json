@@ -75,12 +75,12 @@
     {
       "id": "FD-BILLING",
       "title": "Subscription, billing, and payment lifecycle",
-      "aliases": ["billing", "subscription", "payment", "stripe", "plan", "checkout"],
+      "aliases": ["billing", "subscription", "payment", "stripe", "plan", "checkout", "billing webhook", "webhook idempotency", "duplicate payment", "provider replay"],
       "pathPatterns": ["Billing", "Subscription", "Payment", "Stripe", "Checkout"],
       "risk": "critical",
       "scenarios": ["start-checkout", "payment-callback", "activate-subscription", "renewal", "cancellation", "failed-payment", "idempotent-webhook"],
       "requiredReviewAreas": ["security", "financial-data", "webhook", "rollout"],
-      "evidenceHints": ["billing application tests", "integration tests", "webhook tests", "provider contract review"]
+      "evidenceHints": ["BillingWebhookController -> BillingWebhookInboxService -> BillingWebhookEventProcessor", "RecurringJobIds.BillingWebhookInbox and its job implementation", "EfBillingTransactionRunner and provider-event/external-payment unique constraints", "billing application concurrency tests", "PostgreSQL transaction-runner integration tests", "provider contract review"]
     },
     {
       "id": "FD-MAIL",

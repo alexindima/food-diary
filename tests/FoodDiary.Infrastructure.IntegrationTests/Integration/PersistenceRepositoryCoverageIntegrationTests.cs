@@ -1499,6 +1499,17 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await paymentRepository.AddAsync(payment);
         await context.SaveChangesAsync();
         Assert.NotNull(await paymentRepository.GetByExternalPaymentIdAsync(BillingProviderNames.Stripe, "pay_test"));
+        var webhookRepository = new BillingWebhookEventRepository(context);
+        var inboxEvent = BillingWebhookEvent.CreateReceived(
+            BillingProviderNames.Stripe,
+            "evt_pay_duplicate_inbox",
+            "invoice.paid",
+            "invoice_duplicate",
+            now,
+            "{}",
+            "{}");
+        await webhookRepository.AddAsync(inboxEvent);
+        await context.SaveChangesAsync();
         var billingTransactionRunner = new EfBillingTransactionRunner(context);
 
         await Assert.ThrowsAsync<BillingPaymentAlreadyExistsException>(
@@ -1506,6 +1517,21 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
                 ct => paymentRepository.AddAsync(
                     CreateBillingPayment(userId, subscriptionId, "pay_test", "evt_pay_duplicate", now),
                     ct)));
+
+        Assert.Empty(context.ChangeTracker.Entries());
+
+        inboxEvent.MarkProcessed(now);
+        await billingTransactionRunner.ExecuteAsync(
+            ct => webhookRepository.UpdateAsync(inboxEvent, ct));
+        context.ChangeTracker.Clear();
+
+        BillingWebhookEvent? persistedInboxEvent = await webhookRepository.GetByIdAsync(inboxEvent.Id);
+        Assert.NotNull(persistedInboxEvent);
+        Assert.NotNull(persistedInboxEvent.ProcessedAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(BillingWebhookEvent.ProcessedStatus, persistedInboxEvent.Status),
+            () => Assert.Equal(now, persistedInboxEvent.ProcessedAtUtc.Value, TimeSpan.FromMilliseconds(1)));
+        context.ChangeTracker.Clear();
     }
 
     private static async Task CoverBillingWebhookEventRepositoryAsync(FoodDiaryDbContext context, DateTime now) {
@@ -1533,6 +1559,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
                         now,
                         "{}"),
                     ct)));
+
+        Assert.Empty(context.ChangeTracker.Entries());
     }
 
     private static async Task CoverRecommendationRepositoryAsync(

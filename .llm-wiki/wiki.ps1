@@ -379,7 +379,10 @@ $compiledIndexReadOnlyCommands = @(
     'rollout', 'topology', 'privacy', 'security', 'ui', 'contracts', 'diff',
     'ownership', 'api-compat'
 )
-$automaticJsonFallbackCommands = @('start', 'brief', 'develop', 'research')
+$automaticJsonFallbackCommands = @(
+    'start', 'brief', 'develop', 'research', 'diff', 'journeys', 'design', 'test-plan',
+    'topology', 'privacy', 'security'
+)
 $compiledIndexSourceWasExplicit = $PSBoundParameters.ContainsKey('CompiledIndexSource')
 if (-not $compiledIndexSourceWasExplicit -and
     $CompiledIndexSource -eq 'Sqlite' -and

@@ -314,6 +314,7 @@ $ownership = if ($null -ne $OwnershipInput) { $OwnershipInput } else {
 }
 $testPlanArguments = @{} + $common
 $testPlanArguments.Limit = $Limit
+$testPlanArguments.CompiledIndexSource = $CompiledIndexSource
 if (-not [string]::IsNullOrWhiteSpace($Intent)) { $testPlanArguments.Intent = $Intent }
 $testPlan = if ($null -ne $TestPlanInput) { $TestPlanInput } elseif ($SkipTestPlan) {
     [pscustomobject]@{ focusedTestFiles = @(); scenarios = @() }
