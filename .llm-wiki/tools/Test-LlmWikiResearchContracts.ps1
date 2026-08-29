@@ -48,4 +48,12 @@ Assert-ResearchContract ($nextQuestion.found -and $nextQuestion.question.id -eq 
 Assert-ResearchContract ($nextQuestion.question.anchorStatus -eq 'line' -and $nextQuestion.question.anchor.line -eq 10) 'Next-question routing lost the grounded source anchor.'
 Assert-ResearchContract ($nextQuestion.remainingQuestionCount -eq 1) 'Next-question routing did not defer the remaining question.'
 
+$fixAfterAudit = & (Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1') `
+    -Objective 'Исправить все проблемы после аудита индексов базы данных' `
+    -ProposedPath $plannedPaths `
+    -Compact `
+    -SkipHistory `
+    -Format Json | ConvertFrom-Json
+Assert-ResearchContract ($fixAfterAudit.workflow.purpose -eq 'Implementation') 'A fix request mentioning an audit was misclassified as assessment-only work.'
+
 Write-Host 'LLM Wiki research contracts passed.'

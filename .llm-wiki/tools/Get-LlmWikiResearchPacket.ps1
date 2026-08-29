@@ -74,7 +74,8 @@ if ($PSBoundParameters.ContainsKey('ProposedPath')) { $common.ProposedPath = $Pr
 $workflow = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') @common | ConvertFrom-Json
 $classificationDurationMs = [Math]::Round($researchStopwatch.Elapsed.TotalMilliseconds, 2)
 $assessmentIntent = $Objective -match '(?i)\b(assess|assessment|audit|evaluate|evaluation|review|remaining blockers?|readiness|status)\b|\u043e\u0446\u0435\u043d|\u0430\u0443\u0434\u0438\u0442|\u0433\u043e\u0442\u043e\u0432\u043d|\u043e\u0441\u0442\u0430\u0432\u0448'
-$effectivePurpose = if ($Purpose -eq 'Auto') { $(if ($assessmentIntent) { 'Assessment' } else { 'Implementation' }) } else { $Purpose }
+$implementationIntent = $Objective -match '(?i)\b(fix|implement|change|update|improve|add|remove|replace|refactor|optimize)\b|\u0438\u0441\u043f\u0440\u0430\u0432|\u0440\u0435\u0430\u043b\u0438\u0437|\u0434\u043e\u0431\u0430\u0432|\u0438\u0437\u043c\u0435\u043d|\u043e\u0431\u043d\u043e\u0432|\u0443\u043b\u0443\u0447\u0448|\u0443\u0434\u0430\u043b|\u0437\u0430\u043c\u0435\u043d|\u043e\u043f\u0442\u0438\u043c\u0438\u0437'
+$effectivePurpose = if ($Purpose -eq 'Auto') { $(if ($assessmentIntent -and -not $implementationIntent) { 'Assessment' } else { 'Implementation' }) } else { $Purpose }
 
 $scopePaths = @($workflow.inferred.paths)
 function New-ResearchPlan([object[]]$Lanes) {
@@ -584,7 +585,7 @@ $result | Add-Member -NotePropertyName outputContract -NotePropertyValue ([pscus
     maxCharacters = $(if ($Compact) { 30000 } else { $null })
     truncated = $false
 })
-$resultJson = $result | ConvertTo-Json -Depth 12
+$resultJson = ConvertTo-LlmWikiJsonSafeObject $result | ConvertTo-Json -Depth 12
 if ($Compact -and $resultJson.Length -gt 30000) {
     $result.outputContract.truncated = $true
     $compactLimit = [Math]::Min(3, $Limit)
@@ -603,7 +604,7 @@ if ($Compact -and $resultJson.Length -gt 30000) {
     foreach ($group in $result.researchPlan.groups) { $group.readPaths = @($group.readPaths | Select-Object -First $compactLimit) }
     $result.boundaries.runtime = @($result.boundaries.runtime | Select-Object -First $compactLimit)
     $result.extractionDelta = $null
-    $resultJson = $result | ConvertTo-Json -Depth 12
+    $resultJson = ConvertTo-LlmWikiJsonSafeObject $result | ConvertTo-Json -Depth 12
 }
 if ($Compact -and $resultJson.Length -gt 30000) {
     $result.discovery.runtimeFlow.downstreamConsumers = @($result.discovery.runtimeFlow.downstreamConsumers | Select-Object -First 1)
@@ -611,7 +612,7 @@ if ($Compact -and $resultJson.Length -gt 30000) {
     $result.precedents = @()
     $result.knownFailures = @()
     $result.boundaries.runtime = @()
-    $resultJson = $result | ConvertTo-Json -Depth 12
+    $resultJson = ConvertTo-LlmWikiJsonSafeObject $result | ConvertTo-Json -Depth 12
 }
 if ($Compact -and $resultJson.Length -gt 30000) { throw "Compact research exceeded its 30000-character output contract: $($resultJson.Length)." }
 Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $resultJson

@@ -52,6 +52,8 @@ $effectivePaths = @(
         Sort-Object -Unique
 )
 $normalizedIntent = ([string]$Intent).ToLowerInvariant()
+$databaseIntent = $normalizedIntent -match '\b(database|migration|index|indexes|indices|postgres|postgresql|sql|schema|query plan)\b|\u0431\u0430\u0437(?:\u0430|\u044b|\u0435|\u0443|\u043e\u0439)\s+\u0434\u0430\u043d\u043d|\u043c\u0438\u0433\u0440\u0430\u0446|\u0438\u043d\u0434\u0435\u043a\u0441|\u0441\u0445\u0435\u043c(?:\u0430|\u044b)|\u043f\u043b\u0430\u043d\s+\u0437\u0430\u043f\u0440\u043e\u0441'
+$dashboardIntent = $normalizedIntent -match '\bdashboard\b|\u0434\u0430\u0448\u0431\u043e\u0440\u0434'
 $assessmentDimensionCount = @(
     [regex]::Matches($normalizedIntent, '\b(correctness|reliability|concurrency|architecture|privacy|security|ci|operations|operational|project|repository|cross-layer|system-wide)\b|корректност|над[её]жност|конкурент|архитектур|приватност|конфиденциальност|безопасност|уязвимост|операц|проект|репозитор') |
         ForEach-Object Value |
@@ -96,6 +98,14 @@ $changedTestFiles = @(
         Where-Object { $_ -match '\.cs$' -and $_ -match '(^|/)tests/' -or $_ -match '\.(spec|test)\.ts$' } |
         Sort-Object -Unique
 )
+if ($databaseIntent) {
+    $null = $behavioralIntentTests.Add('tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs')
+    $null = $behavioralIntentTests.Add('tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs')
+    if ($dashboardIntent) {
+        $null = $behavioralIntentTests.Add('tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs')
+        $null = $behavioralIntentTests.Add('tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardBodyReadServiceTests.cs')
+    }
+}
 
 foreach ($proposedDirectory in @($ProposedPath)) {
     $normalizedDirectory = ([string]$proposedDirectory).Replace('\', '/').TrimEnd('/')
@@ -438,6 +448,11 @@ if ('architecture-drift' -in $ruleIds) {
     Add-Scenario 'architecture-dependency-drift' 'Verify every project reference is explicitly allowed, new production projects are governed, and module dependencies remain acyclic.' 'Architecture health index and architecture tests'
     Add-Scenario 'architecture-dependency-necessity' 'Confirm new references are necessary, point in the intended layer direction, and do not bypass client or abstraction boundaries.' 'Dependency and ADR review'
 }
+if ($databaseIntent) {
+    Add-Scenario 'database-model-snapshot-sync' 'Verify the EF model, migration implementation, designer, and model snapshot describe the same indexes and filters.' 'EF pending-model check plus migration source review'
+    Add-Scenario 'database-query-plan' 'Validate leading columns, ordering, partial predicates, and actual PostgreSQL index selection at realistic cardinality.' 'QueryPlanIntegrationTests with EXPLAIN ANALYZE'
+    Add-Scenario 'database-production-consumer' 'Trace every proposed index back to a live production query and reject candidates supported only by unused or legacy repository abstractions.' 'Current-source consumer search plus production statistics when available'
+}
 if ($repositoryAssessment) {
     Add-Scenario 'assessment-architecture' 'Check dependency rules, module cycles, composition roots, and executable-host boundaries.' 'Architecture tests plus source validation'
     Add-Scenario 'assessment-security-privacy' 'Check authentication, authorization, abuse controls, secret handling, sensitive-data boundaries, and provider sharing.' 'Critical API tests plus privacy/security source review'
@@ -466,6 +481,16 @@ $commands = @(@(
         reason = 'broad-change-context'
     } })
 ) | Sort-Object command -Unique)
+if ($databaseIntent) {
+    $commands += [pscustomobject]@{
+        id = 'database-model-sync'; command = 'dotnet ef migrations has-pending-model-changes --project FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj --startup-project FoodDiary.Web.Api/FoodDiary.Web.Api.csproj'
+        source = 'database-intent'; priority = 'required'; reason = 'ef-model-migration-snapshot-sync'; commandEvidence = 'FoodDiaryDbContextModelSnapshot.cs'
+    }
+    $commands += [pscustomobject]@{
+        id = 'database-provider-tests'; command = 'dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj --filter "FullyQualifiedName~MigrationSafetyIntegrationTests|FullyQualifiedName~QueryPlanIntegrationTests"'
+        source = 'database-intent'; priority = 'required'; reason = 'postgresql-migration-and-query-plan'; commandEvidence = 'MigrationSafetyIntegrationTests.cs; QueryPlanIntegrationTests.cs'
+    }
+}
 if ($repositoryAssessment) {
     $commands += [pscustomobject]@{
         id = 'assessment-architecture'; command = 'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj'

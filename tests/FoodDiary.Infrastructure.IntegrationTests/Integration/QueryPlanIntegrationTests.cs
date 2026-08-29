@@ -1,8 +1,10 @@
 using System.Globalization;
 using System.Text.Json;
+using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
@@ -221,6 +223,112 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
             $"Expected meal paging plan to use IX_Meals_UserId_Date_CreatedOnUtc, but got:{Environment.NewLine}{FormatPlan(plan)}");
     }
 
+    [RequiresDockerFact]
+    public async Task AiUsageSummaryRangeQuery_UsesCreatedOnUtcIndex() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"ai-usage-plan-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        var startDate = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        AiUsage[] usages = [.. Enumerable.Range(0, SeedCount)
+            .Select(_ => AiUsage.Create(user.Id, "nutrition", "plan-model", 10, 5, 15))];
+        context.AiUsages.AddRange(usages);
+        for (int index = 0; index < usages.Length; index++) {
+            context.Entry(usages[index]).Property(nameof(AiUsage.CreatedOnUtc)).CurrentValue = startDate.AddMinutes(index);
+        }
+
+        await context.SaveChangesAsync();
+        await AnalyzeTableAsync(context, QueryPlanTable.AiUsages);
+
+        JsonDocument plan = await ExplainAnalyzeAsync(
+            context,
+            """
+            SELECT a."Id", a."TotalTokens"
+            FROM "AiUsages" AS a
+            WHERE a."CreatedOnUtc" >= @fromUtc
+              AND a."CreatedOnUtc" < @toUtc
+            """,
+            disableSequentialScan: true,
+            new NpgsqlParameter<DateTime>("fromUtc", startDate.AddMinutes(700)),
+            new NpgsqlParameter<DateTime>("toUtc", startDate.AddMinutes(710)));
+
+        Assert.True(
+            ContainsIndexName(plan, "IX_AiUsages_CreatedOnUtc"),
+            $"Expected AI usage range plan to use IX_AiUsages_CreatedOnUtc, but got:{Environment.NewLine}{FormatPlan(plan)}");
+    }
+
+    [RequiresDockerFact]
+    public async Task FastingHistoryQuery_UsesUserStartedAtUtcIndex() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        (User user, DateTime startDate) = await SeedFastingOccurrencesAsync(context);
+        await AnalyzeTableAsync(context, QueryPlanTable.FastingOccurrences);
+
+        JsonDocument plan = await ExplainAnalyzeAsync(
+            context,
+            """
+            SELECT f."Id", f."StartedAtUtc"
+            FROM "FastingOccurrences" AS f
+            WHERE f."UserId" = @userId
+              AND f."StartedAtUtc" >= @fromUtc
+              AND f."StartedAtUtc" < @toUtc
+            ORDER BY f."StartedAtUtc" DESC
+            LIMIT 25
+            """,
+            disableSequentialScan: true,
+            new NpgsqlParameter<Guid>("userId", user.Id.Value),
+            new NpgsqlParameter<DateTime>("fromUtc", startDate.AddHours(700)),
+            new NpgsqlParameter<DateTime>("toUtc", startDate.AddHours(725)));
+
+        Assert.True(
+            ContainsIndexName(plan, "IX_FastingOccurrences_UserId_StartedAtUtc"),
+            $"Expected fasting history plan to use IX_FastingOccurrences_UserId_StartedAtUtc, but got:{Environment.NewLine}{FormatPlan(plan)}");
+    }
+
+    [RequiresDockerFact]
+    public async Task ActiveFastingScan_UsesPartialStartedAtUtcIndex() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await SeedFastingOccurrencesAsync(context);
+        await AnalyzeTableAsync(context, QueryPlanTable.FastingOccurrences);
+
+        JsonDocument plan = await ExplainAnalyzeAsync(
+            context,
+            """
+            SELECT f."Id", f."StartedAtUtc"
+            FROM "FastingOccurrences" AS f
+            WHERE f."Status" = 'Active'
+            ORDER BY f."StartedAtUtc"
+            """,
+            disableSequentialScan: true);
+
+        Assert.True(
+            ContainsIndexName(plan, "IX_FastingOccurrences_StartedAtUtc_Active"),
+            $"Expected active fasting scan to use IX_FastingOccurrences_StartedAtUtc_Active, but got:{Environment.NewLine}{FormatPlan(plan)}");
+    }
+
+    private static async Task<(User User, DateTime StartDate)> SeedFastingOccurrencesAsync(FoodDiaryDbContext context) {
+        var user = User.Create($"fasting-plan-{Guid.NewGuid():N}@example.com", "hash");
+        var startDate = new DateTime(2021, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var fastingPlan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, startDate);
+        FastingOccurrence[] occurrences = [.. Enumerable.Range(0, SeedCount)
+            .Select(index => FastingOccurrence.Create(
+                fastingPlan.Id,
+                user.Id,
+                FastingOccurrenceKind.FastingWindow,
+                startDate.AddHours(index),
+                sequenceNumber: index + 1,
+                targetHours: 16))];
+        foreach (FastingOccurrence occurrence in occurrences.Take(SeedCount - 10)) {
+            occurrence.Complete(occurrence.StartedAtUtc.AddHours(1));
+        }
+
+        context.Users.Add(user);
+        context.FastingPlans.Add(fastingPlan);
+        context.FastingOccurrences.AddRange(occurrences);
+        await context.SaveChangesAsync();
+        return (user, startDate);
+    }
+
     private static async Task<JsonDocument> ExplainAnalyzeAsync(
         FoodDiaryDbContext context,
         string sql,
@@ -258,6 +366,8 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
             QueryPlanTable.Products => "ANALYZE \"Products\"",
             QueryPlanTable.Recipes => "ANALYZE \"Recipes\"",
             QueryPlanTable.Meals => "ANALYZE \"Meals\"",
+            QueryPlanTable.AiUsages => "ANALYZE \"AiUsages\"",
+            QueryPlanTable.FastingOccurrences => "ANALYZE \"FastingOccurrences\"",
             _ => throw new ArgumentOutOfRangeException(nameof(table), table, "Unsupported table for query-plan analysis."),
         };
 
@@ -304,5 +414,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         Products = 0,
         Recipes = 1,
         Meals = 2,
+        AiUsages = 3,
+        FastingOccurrences = 4,
     }
 }

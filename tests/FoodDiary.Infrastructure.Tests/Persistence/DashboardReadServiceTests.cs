@@ -10,7 +10,7 @@ namespace FoodDiary.Infrastructure.Tests.Persistence;
 [ExcludeFromCodeCoverage]
 public sealed class DashboardReadServiceTests {
     [Fact]
-    public async Task GetSnapshotDataAsync_WhenDailyStatisticsFails_ReturnsFailure() {
+    public async Task GetSnapshotDataAsync_WhenStatisticsFails_ReturnsFailure() {
         Error error = Errors.Validation.Invalid("statistics", "Statistics failed.");
         IDashboardStatisticsReadService statisticsReadService = Substitute.For<IDashboardStatisticsReadService>();
         statisticsReadService
@@ -46,15 +46,64 @@ public sealed class DashboardReadServiceTests {
         Result<DashboardReadModel> result = await service.GetSnapshotDataAsync(
             UserId.New(),
             DateTime.UtcNow.Date,
+            DateTime.UtcNow.Date.AddDays(1),
             DateTime.UtcNow.Date,
-            DateTime.UtcNow.Date,
-            periodDays: 1,
+            periodDays: 2,
             page: 1,
             pageSize: 10,
             Sections(includeStatistics: true),
             CancellationToken.None);
 
         Assert.Equal(error, result.Error);
+    }
+
+    [Fact]
+    public async Task GetSnapshotDataAsync_ForSingleDay_ReusesWeeklyStatisticsQuery() {
+        var userId = UserId.New();
+        var dayStart = new DateTime(2026, 8, 29, 0, 0, 0, DateTimeKind.Utc);
+        DateTime dayEnd = dayStart.AddDays(1).AddTicks(-1);
+        DateTime weeklyFrom = dayStart.AddDays(-6);
+        var previousBucket = new DashboardStatisticsBucketReadModel(
+            weeklyFrom,
+            weeklyFrom.AddDays(1).AddTicks(-1),
+            TotalCalories: 1200,
+            AverageProteins: 80,
+            AverageFats: 50,
+            AverageCarbs: 140,
+            AverageFiber: 20);
+        var currentBucket = new DashboardStatisticsBucketReadModel(
+            dayStart,
+            dayEnd,
+            TotalCalories: 1800,
+            AverageProteins: 100,
+            AverageFats: 60,
+            AverageCarbs: 200,
+            AverageFiber: 25);
+        IDashboardStatisticsReadService statisticsReadService = Substitute.For<IDashboardStatisticsReadService>();
+        statisticsReadService
+            .GetStatisticsAsync(userId, weeklyFrom, dayEnd, 1, CancellationToken.None)
+            .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([
+                previousBucket,
+                currentBucket,
+            ])));
+        DashboardReadService service = CreateService(statisticsReadService);
+
+        Result<DashboardReadModel> result = await service.GetSnapshotDataAsync(
+            userId,
+            dayStart,
+            dayEnd,
+            weeklyFrom,
+            periodDays: 1,
+            page: 1,
+            pageSize: 10,
+            Sections(includeStatistics: true),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        DashboardReadModel model = result.Value;
+        Assert.Same(currentBucket, Assert.Single(model.Statistics));
+        Assert.Equal([previousBucket, currentBucket], model.WeeklyStatistics);
+        Assert.Single(statisticsReadService.ReceivedCalls());
     }
 
     [Fact]

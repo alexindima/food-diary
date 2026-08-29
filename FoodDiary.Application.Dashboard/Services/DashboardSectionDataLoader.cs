@@ -82,9 +82,23 @@ internal sealed class DashboardSectionDataLoader(
         }
 
         UserId userId = userIdResult.Value;
-        Result<DashboardUserContextModel> userResult = await dashboardUserContextService.GetAccessibleDashboardUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (userResult.IsFailure) {
-            return Result.Failure<DashboardBuildContext>(userResult.Error);
+        DashboardUserContextModel currentUser;
+        if (request.UserContext is not null) {
+            if (request.UserContext.Id != userId.Value) {
+                return Result.Failure<DashboardBuildContext>(
+                    Errors.Validation.Invalid(nameof(request.UserContext), "Dashboard user context must match the requested user."));
+            }
+
+            currentUser = request.UserContext;
+        } else {
+            Result<DashboardUserContextModel> userResult = await dashboardUserContextService
+                .GetAccessibleDashboardUserAsync(userId, cancellationToken)
+                .ConfigureAwait(false);
+            if (userResult.IsFailure) {
+                return Result.Failure<DashboardBuildContext>(userResult.Error);
+            }
+
+            currentUser = userResult.Value;
         }
 
         return Result.Success(new DashboardBuildContext(
@@ -99,7 +113,7 @@ internal sealed class DashboardSectionDataLoader(
             trendDays,
             trendStart,
             request.Sections ?? DashboardSnapshotSections.All,
-            userResult.Value));
+            currentUser));
     }
 
     public Task<Result<DashboardReadModel>> LoadDashboardDataAsync(

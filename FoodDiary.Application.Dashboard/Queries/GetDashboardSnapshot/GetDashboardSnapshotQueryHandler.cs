@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Services;
-using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
@@ -21,6 +21,13 @@ public sealed class GetDashboardSnapshotQueryHandler(
             return CurrentUserAccessResolver.ToFailure<DashboardSnapshotModel>(userIdResult);
         }
 
+        Result<DashboardUserContextModel> userResult = await dashboardUserContextService
+            .GetAccessibleDashboardUserAsync(userIdResult.Value, cancellationToken)
+            .ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure<DashboardSnapshotModel>(userResult.Error);
+        }
+
         return await snapshotBuilder.BuildAsync(
             new DashboardSnapshotRequest(
                 userIdResult.Value.Value,
@@ -30,7 +37,8 @@ public sealed class GetDashboardSnapshotQueryHandler(
                 query.TrendDays,
                 query.Page,
                 query.PageSize,
-                TimeZoneOffsetMinutes: query.TimeZoneOffsetMinutes),
+                TimeZoneOffsetMinutes: query.TimeZoneOffsetMinutes,
+                UserContext: userResult.Value),
             cancellationToken).ConfigureAwait(false);
     }
 }

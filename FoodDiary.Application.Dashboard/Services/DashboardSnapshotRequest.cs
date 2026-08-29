@@ -1,3 +1,5 @@
+using FoodDiary.Application.Dashboard.Models;
+
 namespace FoodDiary.Application.Dashboard.Services;
 
 public sealed record DashboardSnapshotRequest(
@@ -9,4 +11,5 @@ public sealed record DashboardSnapshotRequest(
     int Page,
     int PageSize,
     DashboardSnapshotSections? Sections = null,
-    int? TimeZoneOffsetMinutes = null);
+    int? TimeZoneOffsetMinutes = null,
+    DashboardUserContextModel? UserContext = null);

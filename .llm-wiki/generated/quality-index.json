@@ -32,11 +32,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-      "nonBlankLines": 748,
-      "decisionPoints": 151,
+      "nonBlankLines": 773,
+      "decisionPoints": 155,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 243.46
+      "structuralRiskScore": 249.96
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
@@ -55,6 +55,14 @@
       "structuralRiskScore": 228.86
     },
     {
+      "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+      "nonBlankLines": 848,
+      "decisionPoints": 129,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 212.46
+    },
+    {
       "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
       "nonBlankLines": 607,
       "decisionPoints": 132,
@@ -63,20 +71,12 @@
       "structuralRiskScore": 212.14
     },
     {
-      "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-      "nonBlankLines": 838,
-      "decisionPoints": 128,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 210.76
-    },
-    {
       "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-      "nonBlankLines": 641,
+      "nonBlankLines": 642,
       "decisionPoints": 123,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 199.32
+      "structuralRiskScore": 199.34
     },
     {
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
@@ -1338,11 +1338,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-      "nonBlankLines": 641,
+      "nonBlankLines": 642,
       "decisionPoints": 123,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 199.32
+      "structuralRiskScore": 199.34
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
@@ -1386,11 +1386,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-      "nonBlankLines": 838,
-      "decisionPoints": 128,
+      "nonBlankLines": 848,
+      "decisionPoints": 129,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 210.76
+      "structuralRiskScore": 212.46
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskGraph.ps1",
@@ -1426,11 +1426,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-      "nonBlankLines": 748,
-      "decisionPoints": 151,
+      "nonBlankLines": 773,
+      "decisionPoints": 155,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 243.46
+      "structuralRiskScore": 249.96
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiToolingContext.ps1",
@@ -1754,11 +1754,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiResearchPrimitives.ps1",
-      "nonBlankLines": 44,
-      "decisionPoints": 4,
+      "nonBlankLines": 70,
+      "decisionPoints": 11,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 13.88
+      "structuralRiskScore": 24.9
     },
     {
       "path": ".llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1",
@@ -10122,11 +10122,11 @@
     },
     {
       "path": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
-      "nonBlankLines": 33,
-      "decisionPoints": 1,
+      "nonBlankLines": 40,
+      "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.16
+      "structuralRiskScore": 5.8
     },
     {
       "path": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryValidator.cs",
@@ -10194,11 +10194,11 @@
     },
     {
       "path": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
-      "nonBlankLines": 153,
-      "decisionPoints": 13,
+      "nonBlankLines": 165,
+      "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.56
+      "structuralRiskScore": 25.8
     },
     {
       "path": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
@@ -10210,11 +10210,11 @@
     },
     {
       "path": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.26
     },
     {
       "path": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotSections.cs",
@@ -20698,11 +20698,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Ai/AiUsageConfiguration.cs",
-      "nonBlankLines": 27,
+      "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.54
+      "structuralRiskScore": 0.56
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Audit/AuditEntryConfiguration.cs",
@@ -21210,11 +21210,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Tracking/FastingOccurrenceConfiguration.cs",
-      "nonBlankLines": 37,
+      "nonBlankLines": 41,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.74
+      "structuralRiskScore": 0.82
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Tracking/FastingPlanConfiguration.cs",
@@ -21354,11 +21354,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
-      "nonBlankLines": 149,
+      "nonBlankLines": 161,
       "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.98
+      "structuralRiskScore": 18.22
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardFavoriteMealProjection.cs",
@@ -21426,11 +21426,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
-      "nonBlankLines": 57,
-      "decisionPoints": 5,
+      "nonBlankLines": 74,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.64
+      "structuralRiskScore": 14.98
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",

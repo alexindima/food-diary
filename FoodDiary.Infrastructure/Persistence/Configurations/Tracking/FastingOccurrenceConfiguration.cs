@@ -38,6 +38,10 @@ internal sealed class FastingOccurrenceConfiguration : IEntityTypeConfiguration<
         builder.HasIndex(occurrence => occurrence.PlanId);
         builder.HasIndex(occurrence => occurrence.UserId);
         builder.HasIndex(occurrence => new { occurrence.UserId, occurrence.Status });
+        builder.HasIndex(occurrence => new { occurrence.UserId, occurrence.StartedAtUtc });
+        builder.HasIndex(occurrence => occurrence.StartedAtUtc)
+            .HasDatabaseName("IX_FastingOccurrences_StartedAtUtc_Active")
+            .HasFilter("\"Status\" = 'Active'");
         builder.HasIndex(occurrence => new { occurrence.PlanId, occurrence.SequenceNumber })
             .IsUnique();
 

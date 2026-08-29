@@ -345,12 +345,14 @@ public class DashboardFeatureTests {
 
     [Fact]
     public async Task GetDashboardSnapshotQueryHandler_ForwardsRequestToBuilder() {
-        var userId = UserId.New();
+        var dashboardUser = User.Create("dashboard-forward@example.com", "hash");
+        UserId userId = dashboardUser.Id;
         var date = new DateTime(2026, 5, 6, 0, 0, 0, DateTimeKind.Utc);
         IDashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
             out Func<DashboardSnapshotRequest?> getLastRequest,
             out Func<CancellationToken> getLastCancellationToken);
-        GetDashboardSnapshotQueryHandler handler = new(builder, CreateUserRepository(User.Create("dashboard-forward@example.com", "hash")));
+        IDashboardUserContextService userContextService = CreateUserRepository(dashboardUser);
+        GetDashboardSnapshotQueryHandler handler = new(builder, userContextService);
         using var cts = new CancellationTokenSource();
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
@@ -365,7 +367,10 @@ public class DashboardFeatureTests {
         Assert.Equal(14, request.TrendDays);
         Assert.Equal(2, request.Page);
         Assert.Equal(25, request.PageSize);
+        Assert.Equal(userId.Value, Assert.IsType<DashboardUserContextModel>(request.UserContext).Id);
         Assert.Equal(cts.Token, getLastCancellationToken());
+        await userContextService.Received(1).GetAccessibleDashboardUserAsync(userId, cts.Token);
+        await userContextService.Received(1).EnsureCanAccessAsync(userId, cts.Token);
     }
 
     [Theory]

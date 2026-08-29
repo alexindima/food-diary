@@ -25,18 +25,16 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
         DateTime normalizedDayEndStart = NormalizeUtcDate(dayEndStart);
         DateTime normalizedTrendStart = NormalizeUtcDate(trendStart);
 
-        IReadOnlyList<DashboardWeightPointReadModel> latestWeightEntries = includeWeight
-            ? await GetLatestWeightEntriesAsync(userId, normalizedDayEndStart, cancellationToken).ConfigureAwait(false)
-            : [];
-        IReadOnlyList<DashboardWaistPointReadModel> latestWaistEntries = includeWaist
-            ? await GetLatestWaistEntriesAsync(userId, normalizedDayEndStart, cancellationToken).ConfigureAwait(false)
-            : [];
-        IReadOnlyList<DashboardWeightPointReadModel> weightTrendEntries = includeWeight
-            ? await GetWeightTrendEntriesAsync(userId, normalizedTrendStart, normalizedDayStart, cancellationToken).ConfigureAwait(false)
-            : [];
-        IReadOnlyList<DashboardWaistPointReadModel> waistTrendEntries = includeWaist
-            ? await GetWaistTrendEntriesAsync(userId, normalizedTrendStart, normalizedDayStart, cancellationToken).ConfigureAwait(false)
-            : [];
+        (IReadOnlyList<DashboardWeightPointReadModel> latestWeightEntries, IReadOnlyList<DashboardWeightPointReadModel> weightTrendEntries) =
+            includeWeight
+                ? await GetWeightDataAsync(userId, normalizedDayEndStart, normalizedTrendStart, normalizedDayStart, cancellationToken)
+                    .ConfigureAwait(false)
+                : ([], []);
+        (IReadOnlyList<DashboardWaistPointReadModel> latestWaistEntries, IReadOnlyList<DashboardWaistPointReadModel> waistTrendEntries) =
+            includeWaist
+                ? await GetWaistDataAsync(userId, normalizedDayEndStart, normalizedTrendStart, normalizedDayStart, cancellationToken)
+                    .ConfigureAwait(false)
+                : ([], []);
         int hydrationTotalMl = includeHydration
             ? await GetHydrationTotalAsync(userId, dayStart, dayEndStart, cancellationToken).ConfigureAwait(false)
             : 0;
@@ -49,60 +47,74 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
             hydrationTotalMl);
     }
 
-    private async Task<IReadOnlyList<DashboardWeightPointReadModel>> GetLatestWeightEntriesAsync(
+    private async Task<(IReadOnlyList<DashboardWeightPointReadModel> Latest, IReadOnlyList<DashboardWeightPointReadModel> Trend)> GetWeightDataAsync(
         UserId userId,
         DateTime dayEndStart,
+        DateTime trendStart,
+        DateTime dayStart,
         CancellationToken cancellationToken) {
-        return await context.WeightEntries
+        var latestQuery = context.WeightEntries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId && entry.Date <= dayEndStart)
             .OrderByDescending(entry => entry.Date)
             .ThenByDescending(entry => entry.CreatedOnUtc)
             .Take(2)
-            .Select(entry => new DashboardWeightPointReadModel(entry.Date, entry.WeightKg))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Select(entry => new { entry.Date, entry.CreatedOnUtc, entry.WeightKg, IsLatest = true });
+        var trendQuery = context.WeightEntries
+            .AsNoTracking()
+            .Where(entry => entry.UserId == userId && entry.Date >= trendStart && entry.Date <= dayStart)
+            .Select(entry => new { entry.Date, entry.CreatedOnUtc, entry.WeightKg, IsLatest = false });
+
+        var entries = await latestQuery
+            .Concat(trendQuery)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+        return (
+            [.. entries
+                .Where(static entry => entry.IsLatest)
+                .OrderByDescending(static entry => entry.Date)
+                .ThenByDescending(static entry => entry.CreatedOnUtc)
+                .Select(static entry => new DashboardWeightPointReadModel(entry.Date, entry.WeightKg))],
+            [.. entries
+                .Where(static entry => !entry.IsLatest)
+                .OrderBy(static entry => entry.Date)
+                .ThenBy(static entry => entry.CreatedOnUtc)
+                .Select(static entry => new DashboardWeightPointReadModel(entry.Date, entry.WeightKg))]);
     }
 
-    private async Task<IReadOnlyList<DashboardWaistPointReadModel>> GetLatestWaistEntriesAsync(
+    private async Task<(IReadOnlyList<DashboardWaistPointReadModel> Latest, IReadOnlyList<DashboardWaistPointReadModel> Trend)> GetWaistDataAsync(
         UserId userId,
         DateTime dayEndStart,
+        DateTime trendStart,
+        DateTime dayStart,
         CancellationToken cancellationToken) {
-        return await context.WaistEntries
+        var latestQuery = context.WaistEntries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId && entry.Date <= dayEndStart)
             .OrderByDescending(entry => entry.Date)
             .ThenByDescending(entry => entry.CreatedOnUtc)
             .Take(2)
-            .Select(entry => new DashboardWaistPointReadModel(entry.Date, entry.CircumferenceCm))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-    }
-
-    private async Task<IReadOnlyList<DashboardWeightPointReadModel>> GetWeightTrendEntriesAsync(
-        UserId userId,
-        DateTime trendStart,
-        DateTime dayStart,
-        CancellationToken cancellationToken) {
-        return await context.WeightEntries
+            .Select(entry => new { entry.Date, entry.CreatedOnUtc, entry.CircumferenceCm, IsLatest = true });
+        var trendQuery = context.WaistEntries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId && entry.Date >= trendStart && entry.Date <= dayStart)
-            .OrderBy(entry => entry.Date)
-            .ThenBy(entry => entry.CreatedOnUtc)
-            .Select(entry => new DashboardWeightPointReadModel(entry.Date, entry.WeightKg))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-    }
+            .Select(entry => new { entry.Date, entry.CreatedOnUtc, entry.CircumferenceCm, IsLatest = false });
 
-    private async Task<IReadOnlyList<DashboardWaistPointReadModel>> GetWaistTrendEntriesAsync(
-        UserId userId,
-        DateTime trendStart,
-        DateTime dayStart,
-        CancellationToken cancellationToken) {
-        return await context.WaistEntries
-            .AsNoTracking()
-            .Where(entry => entry.UserId == userId && entry.Date >= trendStart && entry.Date <= dayStart)
-            .OrderBy(entry => entry.Date)
-            .ThenBy(entry => entry.CreatedOnUtc)
-            .Select(entry => new DashboardWaistPointReadModel(entry.Date, entry.CircumferenceCm))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+        var entries = await latestQuery
+            .Concat(trendQuery)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+        return (
+            [.. entries
+                .Where(static entry => entry.IsLatest)
+                .OrderByDescending(static entry => entry.Date)
+                .ThenByDescending(static entry => entry.CreatedOnUtc)
+                .Select(static entry => new DashboardWaistPointReadModel(entry.Date, entry.CircumferenceCm))],
+            [.. entries
+                .Where(static entry => !entry.IsLatest)
+                .OrderBy(static entry => entry.Date)
+                .ThenBy(static entry => entry.CreatedOnUtc)
+                .Select(static entry => new DashboardWaistPointReadModel(entry.Date, entry.CircumferenceCm))]);
     }
 
     private async Task<int> GetHydrationTotalAsync(
@@ -160,4 +172,5 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
             : value.Date;
         return DateTime.SpecifyKind(date, DateTimeKind.Utc);
     }
+
 }

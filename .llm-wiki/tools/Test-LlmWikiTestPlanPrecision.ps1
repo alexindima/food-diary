@@ -92,3 +92,19 @@ if (@($assessmentPlan.focusedTestFiles | Where-Object { $_ -match 'RedisIdempote
 if (@($assessmentPlan.commands | Where-Object source -eq 'repository-assessment').Count -lt 3) {
     throw 'Repository audit test plan omitted repository-wide verification commands.'
 }
+
+$databasePlan = & $tool `
+    -Intent 'Исправить индексы PostgreSQL и ускорить первый запрос дашборда' `
+    -NoBaseline `
+    -Format Json | ConvertFrom-Json
+if (@($databasePlan.focusedTestFiles).Count -eq 0 -or
+    @($databasePlan.focusedTestFiles) -notcontains 'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs') {
+    throw 'Database/index intent produced an empty or non-provider-backed focused test plan.'
+}
+if (@($databasePlan.scenarios.id) -notcontains 'database-production-consumer' -or
+    @($databasePlan.scenarios.id) -notcontains 'database-query-plan') {
+    throw 'Database/index intent omitted production-consumer or query-plan validation.'
+}
+if (@($databasePlan.commands | Where-Object source -eq 'database-intent').Count -lt 2) {
+    throw 'Database/index intent omitted EF model-sync or provider-backed verification commands.'
+}

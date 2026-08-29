@@ -25,6 +25,33 @@ function ConvertFrom-UnicodeEscape([string]$Value) {
     ('"' + $Value + '"') | ConvertFrom-Json
 }
 
+function ConvertTo-LlmWikiJsonSafeObject([object]$InputObject) {
+    if ($null -eq $InputObject -or $InputObject -is [string] -or $InputObject -is [ValueType]) {
+        return $InputObject
+    }
+    if ($InputObject -is [Collections.IDictionary]) {
+        $safeDictionary = [ordered]@{}
+        foreach ($key in $InputObject.Keys) {
+            $safeDictionary[[string]$key] = ConvertTo-LlmWikiJsonSafeObject $InputObject[$key]
+        }
+        return [pscustomobject]$safeDictionary
+    }
+    if ($InputObject -is [Collections.IEnumerable]) {
+        $safeItems = @($InputObject | ForEach-Object { ConvertTo-LlmWikiJsonSafeObject $_ })
+        Write-Output -NoEnumerate $safeItems
+        return
+    }
+    if ($InputObject -is [psobject]) {
+        $safeObject = [ordered]@{}
+        foreach ($property in $InputObject.PSObject.Properties) {
+            if (-not $property.IsGettable) { continue }
+            $safeObject[$property.Name] = ConvertTo-LlmWikiJsonSafeObject $property.Value
+        }
+        return [pscustomobject]$safeObject
+    }
+    return $InputObject
+}
+
 function New-GroundedQuestion(
     [string]$Id,
     [bool]$Blocking,

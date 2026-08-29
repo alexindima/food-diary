@@ -87,6 +87,7 @@ $inferredPaths = @()
 $intentCompiledResult = $null
 $intentIndexDiagnostics = $null
 $normalizedIntent = ([string]$Intent).ToLowerInvariant()
+$databaseIntent = $normalizedIntent -match '\b(database|migration|index|indexes|indices|postgres|postgresql|sql|schema|query plan)\b|\u0431\u0430\u0437(?:\u0430|\u044b|\u0435|\u0443|\u043e\u0439)\s+\u0434\u0430\u043d\u043d|\u043c\u0438\u0433\u0440\u0430\u0446|\u0438\u043d\u0434\u0435\u043a\u0441|\u0441\u0445\u0435\u043c(?:\u0430|\u044b)|\u043f\u043b\u0430\u043d\s+\u0437\u0430\u043f\u0440\u043e\u0441'
 $broadAssessmentDimensionCount = @(
     [regex]::Matches(
         $normalizedIntent,
@@ -121,7 +122,7 @@ if ($effectivePaths.Count -eq 0 -and -not $broadAssessmentIntent -and -not [stri
             Sort-Object -Unique
     )
     $frontendIntent = $normalizedIntent -match '\b(frontend|component|template|html|css|scss|svg|style|styling|visual|layout|responsive|viewport|icon|colour|color|animation|button|disabled|corner|radius|border)\b'
-    $backendIntent = $normalizedIntent -match '\b(backend|handler|command|query|controller|endpoint|database|migration|repository|service|domain|api)\b'
+    $backendIntent = $normalizedIntent -match '\b(backend|handler|command|query|controller|endpoint|database|migration|repository|service|domain|api)\b|\u0431\u044d\u043a\u0435\u043d\u0434|\u043e\u0431\u0440\u0430\u0431\u043e\u0442\u0447\u0438\u043a|\u043a\u043e\u043c\u0430\u043d\u0434|\u0437\u0430\u043f\u0440\u043e\u0441|\u043a\u043e\u043d\u0442\u0440\u043e\u043b\u043b\u0435\u0440|\u0440\u0435\u043f\u043e\u0437\u0438\u0442\u043e\u0440|\u0441\u0435\u0440\u0432\u0438\u0441|\u0434\u043e\u043c\u0435\u043d|\u0430\u043f\u0438'
     $candidates = [System.Collections.Generic.List[object]]::new()
     $symbolIndex = $null
     $frontendIntentIndex = $null
@@ -213,6 +214,15 @@ if ($effectivePaths.Count -eq 0 -and -not $broadAssessmentIntent -and -not [stri
             Select-Object -First 8
     )
     $effectivePaths = $inferredPaths
+}
+if ($databaseIntent) {
+    $databaseGroundingPaths = @(
+        'FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs'
+        'FoodDiary.Infrastructure/Migrations/FoodDiaryDbContextModelSnapshot.cs'
+        'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs'
+        'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs'
+    ) | Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) }
+    $effectivePaths = @($effectivePaths + $databaseGroundingPaths | Sort-Object -Unique)
 }
 if ($effectivePaths.Count -gt 0) {
     $common.ChangedPath = $effectivePaths

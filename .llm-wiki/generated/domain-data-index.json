@@ -6,7 +6,7 @@
     "valueObjects": 115,
     "invariants": 487,
     "persistenceMappings": 86,
-    "indexes": 152,
+    "indexes": 155,
     "relationships": 100
   },
   "domainTypes": [
@@ -5348,6 +5348,7 @@
       "entity": "AiUsage",
       "table": null,
       "indexes": [
+        "e => e.CreatedOnUtc)",
         "e => e.UserId)",
         "e => new { e.UserId, e.CreatedOnUtc })"
       ],
@@ -5692,8 +5693,10 @@
       "table": "FastingOccurrences",
       "indexes": [
         "occurrence => new { occurrence.PlanId, occurrence.SequenceNumber })",
+        "occurrence => new { occurrence.UserId, occurrence.StartedAtUtc })",
         "occurrence => new { occurrence.UserId, occurrence.Status })",
         "occurrence => occurrence.PlanId)",
+        "occurrence => occurrence.StartedAtUtc)",
         "occurrence => occurrence.UserId)"
       ],
       "relationships": [

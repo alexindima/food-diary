@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1065,
     "ambiguousContracts": 0,
-    "consumerEdges": 7502,
+    "consumerEdges": 7504,
     "productionConsumerEdges": 4535,
-    "testConsumerEdges": 2967,
+    "testConsumerEdges": 2969,
     "consumedContracts": 1065,
     "unconsumedContracts": 0
   },
@@ -28468,7 +28468,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
-      "referenceCount": 13
+      "referenceCount": 14
     },
     {
       "contract": "DashboardSnapshotRequest",
@@ -56897,6 +56897,19 @@
         "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -57328,7 +57341,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 11
     },
     {
       "contract": "IDashboardUserContextService",
@@ -57419,7 +57432,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "IDashboardUserContextService",
@@ -57432,7 +57445,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 5
     },
     {
       "contract": "IDiaryPdfGenerator",
@@ -61551,6 +61564,19 @@
         "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IExerciseEntryReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Exercises/ExercisesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -62905,7 +62931,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "IFastingSessionReadRepository",
@@ -86057,7 +86083,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 7
     },
     {
       "contract": "ISender",

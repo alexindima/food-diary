@@ -1,9 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Exercises.Services;
+using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Hydration.Services;
 using FoodDiary.Application.BodyMetrics.WaistEntries.Services;
 using FoodDiary.Application.BodyMetrics.WeightEntries.Services;
@@ -37,6 +39,28 @@ namespace FoodDiary.Application.Tests.Dashboard;
 
 [ExcludeFromCodeCoverage]
 public sealed class DashboardSnapshotBuilderTests {
+    [Fact]
+    public async Task CreateBuildContextAsync_WithPreloadedUser_DoesNotReloadProfile() {
+        var user = User.Create("dashboard-preloaded@example.com", "hash");
+        DashboardUserContextModel userContext = CreateDashboardUserContext(user);
+        IDashboardUserContextService userContextService = Substitute.For<IDashboardUserContextService>();
+        var loader = new DashboardSectionDataLoader(
+            Substitute.For<ISender>(),
+            userContextService,
+            Substitute.For<IFastingReadService>(),
+            Substitute.For<IExerciseEntryReadService>(),
+            Substitute.For<IDashboardReadService>());
+        DashboardSnapshotRequest request = CreateRequest(user.Id.Value, Sections()) with {
+            UserContext = userContext,
+        };
+
+        Result<DashboardBuildContext> result = await loader.CreateBuildContextAsync(request, CancellationToken.None);
+
+        DashboardBuildContext context = ResultAssert.Success(result);
+        Assert.Same(userContext, context.CurrentUser);
+        await userContextService.DidNotReceive().GetAccessibleDashboardUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>());
+    }
+
     [Fact]
     public async Task BuildAsync_WithEmptyUserId_ReturnsValidationFailure() {
         DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(

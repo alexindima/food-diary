@@ -21,21 +21,40 @@ internal sealed class DashboardReadService(
         int pageSize,
         DashboardReadSections sections,
         CancellationToken cancellationToken = default) {
-        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> statistics = sections.IncludeStatistics
-            ? await statisticsReadService.GetStatisticsAsync(userId, dayStart, dayEnd, periodDays, cancellationToken).ConfigureAwait(false)
-            : Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([]);
-        if (statistics.IsFailure) {
-            return Result.Failure<DashboardReadModel>(statistics.Error);
-        }
-
         DateTime weeklyFrom = dayStart;
         if (periodDays == 1 && !TemporalRangePolicy.TryAddDays(dayStart, -6, out weeklyFrom)) {
             return Result.Failure<DashboardReadModel>(
                 Errors.Validation.Invalid(nameof(dayStart), "Dashboard weekly range is outside the supported date range."));
         }
-        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> weeklyStatistics = sections.IncludeStatistics
-            ? await statisticsReadService.GetStatisticsAsync(userId, weeklyFrom, dayEnd, 1, cancellationToken).ConfigureAwait(false)
-            : Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([]);
+
+        var statistics =
+            Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([]);
+        var weeklyStatistics =
+            Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([]);
+        if (sections.IncludeStatistics) {
+            if (periodDays == 1) {
+                weeklyStatistics = await statisticsReadService
+                    .GetStatisticsAsync(userId, weeklyFrom, dayEnd, 1, cancellationToken)
+                    .ConfigureAwait(false);
+                if (weeklyStatistics.IsSuccess) {
+                    statistics = Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([
+                        .. weeklyStatistics.Value.Where(bucket => bucket.DateFrom >= dayStart && bucket.DateFrom <= dayEnd),
+                    ]);
+                }
+            } else {
+                statistics = await statisticsReadService
+                    .GetStatisticsAsync(userId, dayStart, dayEnd, periodDays, cancellationToken)
+                    .ConfigureAwait(false);
+                if (statistics.IsFailure) {
+                    return Result.Failure<DashboardReadModel>(statistics.Error);
+                }
+
+                weeklyStatistics = await statisticsReadService
+                    .GetStatisticsAsync(userId, weeklyFrom, dayEnd, 1, cancellationToken)
+                    .ConfigureAwait(false);
+            }
+        }
+
         if (weeklyStatistics.IsFailure) {
             return Result.Failure<DashboardReadModel>(weeklyStatistics.Error);
         }

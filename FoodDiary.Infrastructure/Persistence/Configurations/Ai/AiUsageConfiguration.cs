@@ -29,6 +29,7 @@ internal sealed class AiUsageConfiguration : IEntityTypeConfiguration<AiUsage> {
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(e => e.UserId);
+        builder.HasIndex(e => e.CreatedOnUtc);
         builder.HasIndex(e => new { e.UserId, e.CreatedOnUtc });
     }
 }

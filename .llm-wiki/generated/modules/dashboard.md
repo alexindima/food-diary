@@ -83,6 +83,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dashboard/DashboardValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/DashboardModuleExtractionTests.cs`
+- [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/DashboardBodyReadServiceIntegrationTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardBodyReadServiceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardMealsReadServiceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs`
