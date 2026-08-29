@@ -7,6 +7,7 @@ Rules for `Modules/Fasting/`.
 ## Role
 
 - Own fasting plans, occurrences, check-ins, insights, telemetry, and notification scheduling use cases.
+- The application assembly is the real project `Application/FoodDiary.Modules.Fasting.Application.csproj`; do not recreate a root module project.
 - Keep aggregates and value objects under `Domain/`, use cases under `Application/`, stable cross-module surfaces under `Contracts/`, and persistence implementations under `Infrastructure/`.
 - Depend on other business areas only through approved contracts.
 
@@ -20,4 +21,4 @@ Rules for `Modules/Fasting/`.
 - Consumers outside composition roots must reference `FoodDiary.Modules.Fasting.Contracts`, not implementation services.
 - Repository ports and internal persistence read models belong in `Application/Abstractions`; repository implementations belong in `Infrastructure/Persistence`; EF mappings belong in `Infrastructure/Model`.
 - Preserve existing Fasting domain CLR namespaces until a separately planned EF migration changes snapshot identity safely.
-- The application project's legacy assembly name `FoodDiary.Application.Fasting` is a temporary binary-compatibility detail; use `Fasting` as the module identity and `FoodDiary.Modules.Fasting.*` for new implementation namespaces.
+- The application project's legacy assembly name `FoodDiary.Application.Fasting` is a temporary binary-compatibility detail; its semantic MSBuild project name is `FoodDiary.Modules.Fasting.Application`. Use `Fasting` as the module identity and `FoodDiary.Modules.Fasting.*` for new implementation namespaces.

@@ -12,6 +12,11 @@ public sealed class FastingModuleExtractionTests {
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
             "Modules",
             "Fasting",
+            "Application",
+            "FoodDiary.Modules.Fasting.Application.csproj")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
+            "Modules",
+            "Fasting",
             "FoodDiary.Modules.Fasting.csproj")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
             "Modules",
@@ -41,7 +46,7 @@ public sealed class FastingModuleExtractionTests {
     [Fact]
     public void ExtractedFastingAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "Modules/Fasting/FoodDiary.Modules.Fasting.csproj");
+            "Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj");
         string[] expectedReferences = [
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Domain",

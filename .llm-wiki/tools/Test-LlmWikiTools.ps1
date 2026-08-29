@@ -339,7 +339,7 @@ Assert-Wiki ($criticalBrief.risk.level -eq 'high') 'Task brief did not elevate a
 Assert-Wiki (@($criticalBrief.testScenarios.id) -contains 'security-abuse') 'Task brief did not include security abuse scenarios.'
 Assert-Wiki (@($criticalBrief.testScenarios.id) -contains 'privacy-lifecycle') 'Task brief did not include privacy lifecycle scenarios.'
 
-$explicitDatabasePath = 'Modules/Fasting/FoodDiary.Modules.Fasting.csproj'
+$explicitDatabasePath = 'Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj'
 $explicitDatabaseBrief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
     -ChangedPath $explicitDatabasePath `
     -Intent 'Preserve the database schema while moving the Fasting project.' `

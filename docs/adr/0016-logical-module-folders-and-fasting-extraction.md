@@ -32,13 +32,13 @@ Adopt option 3.
 
 - `Fasting` is the canonical logical module identifier.
 - Its new root is `Modules/Fasting`.
-- `Modules/Fasting/FoodDiary.Modules.Fasting.csproj` owns application implementation under `Application/`.
+- `Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj` owns the application implementation and appears as the semantic Application project in solution tooling.
 - `Modules/Fasting/Application/Abstractions` owns repository ports and internal persistence projections.
 - `Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj` owns stable read DTOs/read services and operational job contracts.
 - `Modules/Fasting/Domain` owns Fasting aggregates, enums, and identifiers. Existing CLR namespaces remain stable in this tranche so EF model identity does not change.
 - `Modules/Fasting/Infrastructure/Model` owns EF configurations and exposes the model-builder registration seam used by the shared context.
 - `Modules/Fasting/Infrastructure` owns repositories and the complete `AddFastingModule` composition facade.
-- The application project temporarily retains the legacy assembly name `FoodDiary.Application.Fasting`; the assembly name is a compatibility detail, not the module identity.
+- The application project temporarily retains the legacy assembly name `FoodDiary.Application.Fasting`; the assembly name is a compatibility detail, while its MSBuild project identity is `FoodDiary.Modules.Fasting.Application`.
 - Implementation namespaces use `FoodDiary.Modules.Fasting.Application.*`; contract namespaces use `FoodDiary.Modules.Fasting.Contracts.*`.
 - The shared `FoodDiaryDbContext`, migration history, and model snapshot remain in `FoodDiary.Infrastructure`; HTTP transport remains in `FoodDiary.Presentation.Api`.
 - Central Infrastructure references only Fasting Domain and persistence-model projects. Fasting Infrastructure references central Infrastructure for the shared context; central Infrastructure never references Fasting Infrastructure, so no project cycle is introduced.

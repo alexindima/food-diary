@@ -15,7 +15,7 @@ WeeklyGoals application behavior, ports, repositories, EF mapping, API consumers
 ## Decision
 
 - `Modules/WeeklyGoals` is the canonical logical root.
-- `FoodDiary.Modules.WeeklyGoals.csproj` owns application behavior under `Application/` and retains assembly name `FoodDiary.Application.WeeklyGoals` plus legacy application namespaces.
+- `Application/FoodDiary.Modules.WeeklyGoals.Application.csproj` owns application behavior as a semantic Application project and retains assembly name `FoodDiary.Application.WeeklyGoals` plus legacy application namespaces.
 - `Application/Abstractions` owns repository and serialized-transaction ports while preserving their legacy namespaces.
 - `Contracts` owns the weekly-goal read model and read-service contract while preserving their legacy namespaces.
 - `Infrastructure` owns repository implementations, the advisory-lock transaction runner, and the complete `AddWeeklyGoalsModule` facade.

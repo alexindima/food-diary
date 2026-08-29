@@ -42,7 +42,7 @@
     <Project Path="FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj" />
   </Folder>
   <Folder Name="/Modules/Fasting/">
-    <Project Path="Modules/Fasting/FoodDiary.Modules.Fasting.csproj" />
+    <Project Path="Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj" />
     <Project Path="Modules/Fasting/Application/Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj" />
     <Project Path="Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj" />
     <Project Path="Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj" />
@@ -50,14 +50,14 @@
     <Project Path="Modules/Fasting/Infrastructure/Model/FoodDiary.Modules.Fasting.PersistenceModel.csproj" />
   </Folder>
   <Folder Name="/Modules/Hydration/">
-    <Project Path="Modules/Hydration/FoodDiary.Modules.Hydration.csproj" />
+    <Project Path="Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj" />
     <Project Path="Modules/Hydration/Application/Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj" />
     <Project Path="Modules/Hydration/Contracts/FoodDiary.Modules.Hydration.Contracts.csproj" />
     <Project Path="Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj" />
     <Project Path="Modules/Hydration/Infrastructure/Model/FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
   </Folder>
   <Folder Name="/Modules/WeeklyGoals/">
-    <Project Path="Modules/WeeklyGoals/FoodDiary.Modules.WeeklyGoals.csproj" />
+    <Project Path="Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj" />
     <Project Path="Modules/WeeklyGoals/Application/Abstractions/FoodDiary.Modules.WeeklyGoals.Application.Abstractions.csproj" />
     <Project Path="Modules/WeeklyGoals/Contracts/FoodDiary.Modules.WeeklyGoals.Contracts.csproj" />
     <Project Path="Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj" />

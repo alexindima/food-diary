@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `Modules/WeeklyGoals/FoodDiary.Modules.WeeklyGoals.csproj`
+- Extracted project: `Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Notifications, Users
 - Business-module consumers: none observed

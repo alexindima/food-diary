@@ -13,7 +13,7 @@ public sealed class WeeklyGoalsModuleExtractionTests {
     [Fact]
     public void ExtractedWeeklyGoalsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "Modules/WeeklyGoals/FoodDiary.Modules.WeeklyGoals.csproj");
+            "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Application.Meals",

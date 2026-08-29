@@ -38,6 +38,17 @@ foreach ($extractedModule in @($catalog.extractedApplicationModules)) {
         throw "Extracted module '$module' is not represented as an isolated source project."
     }
 }
+$expectedExtractedProjects = @{
+    Fasting = 'Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj'
+    Hydration = 'Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj'
+    WeeklyGoals = 'Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj'
+}
+foreach ($expectedExtractedProject in $expectedExtractedProjects.GetEnumerator()) {
+    $catalogModule = @($catalog.extractedApplicationModules | Where-Object name -eq $expectedExtractedProject.Key)
+    if ($catalogModule.Count -ne 1 -or [string]$catalogModule[0].project -ne $expectedExtractedProject.Value) {
+        throw "Extracted Application project '$($expectedExtractedProject.Key)' is not discovered at '$($expectedExtractedProject.Value)'."
+    }
+}
 if ('Meals' -notin @($manifest.modules.Meals.sourceMappings.domainAreas) -or
     'Meals' -notin @($manifest.modules.Meals.sourceMappings.persistenceAreas)) {
     throw 'Meals does not map its Meals domain/persistence vocabulary explicitly.'

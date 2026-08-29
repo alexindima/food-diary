@@ -29,7 +29,7 @@
     <ProjectReference Include="..\..\FoodDiary.Presentation.Api\FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Dietologist\FoodDiary.Application.Dietologist.csproj" />
     <ProjectReference Include="..\..\Modules\Fasting\Contracts\FoodDiary.Modules.Fasting.Contracts.csproj" />
-    <ProjectReference Include="..\..\Modules\Fasting\FoodDiary.Modules.Fasting.csproj" />
+    <ProjectReference Include="..\..\Modules\Fasting\Application\FoodDiary.Modules.Fasting.Application.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Favorites\FoodDiary.Application.Favorites.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Identity\FoodDiary.Application.Identity.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.MealPlanning\FoodDiary.Application.MealPlanning.csproj" />
@@ -39,7 +39,7 @@
     <ProjectReference Include="..\..\FoodDiary.Application.BodyMetrics\FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Cycles\FoodDiary.Application.Cycles.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Dashboard\FoodDiary.Application.Dashboard.csproj" />
-    <ProjectReference Include="..\..\Modules\Hydration\FoodDiary.Modules.Hydration.csproj" />
+    <ProjectReference Include="..\..\Modules\Hydration\Application\FoodDiary.Modules.Hydration.Application.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Exercises\FoodDiary.Application.Exercises.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Tdee\FoodDiary.Application.Tdee.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.OpenFoodFacts\FoodDiary.Application.OpenFoodFacts.csproj" />
@@ -48,7 +48,7 @@
     <ProjectReference Include="..\..\FoodDiary.Application.Lessons\FoodDiary.Application.Lessons.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Statistics\FoodDiary.Application.Statistics.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
-    <ProjectReference Include="..\..\Modules\WeeklyGoals\FoodDiary.Modules.WeeklyGoals.csproj" />
+    <ProjectReference Include="..\..\Modules\WeeklyGoals\Application\FoodDiary.Modules.WeeklyGoals.Application.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Usda\FoodDiary.Application.Usda.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.WeeklyCheckIn\FoodDiary.Application.WeeklyCheckIn.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.DailyAdvices\FoodDiary.Application.DailyAdvices.csproj" />

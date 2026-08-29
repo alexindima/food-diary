@@ -65,21 +65,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "26c81adb5acaac59fa0ea32b3f89aa9d5684a11b52bf9ba490ce273edf98dd34"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "2700f0a86de59c8d3dfdbd846c2dfc90a0fbfbf331d75e956d389b6ce15b7d8a"
-        },
-        {
-          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "8dee15c6676f956276019680d6b1dc919c96417e62836622bf3ce0aafff5246a"
+          "sha256": "4f415866f12d2e913139e6332bbe0f42f66c12182ad05068a206a377d896fcf5"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "Reviewed extracted module ownership: only Application project paths and semantic project identities changed; runtime and layer boundaries remain unchanged",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:06.7546797Z"
+      "gitHead": "0bcb6666c448b93af5dfb9559657e5e5e7fd1c89",
+      "reviewedAtUtc": "2026-08-29T21:11:38.1529892Z"
     },
     {
       "pageId": "system.architecture",
@@ -87,26 +79,22 @@
       "pageSha256": "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "688f81edad938267754d2514abfffa46c5b65092fc7857f138be7c4808603ffc"
-        },
-        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "26c81adb5acaac59fa0ea32b3f89aa9d5684a11b52bf9ba490ce273edf98dd34"
+          "sha256": "4f415866f12d2e913139e6332bbe0f42f66c12182ad05068a206a377d896fcf5"
         },
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "2700f0a86de59c8d3dfdbd846c2dfc90a0fbfbf331d75e956d389b6ce15b7d8a"
+          "path": "tests/FoodDiary.ArchitectureTests/BackendModuleManifestTests.cs",
+          "sha256": "87999527fdc946b1a3efb32d1381ed9717bc69ff2e0a0cb071e180938b2c3c2d"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "f31bccde896b6d5ddcac1eb0aaea838260b6b9d03fe5427fc466e39c818b800c"
+          "sha256": "4413010163f7ea402b026da9b7d153390cc1bc889c4d81041f3e57b42199708e"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "Reviewed project graph and architecture guardrails: three Application project nodes moved under Application with legacy assemblies and dependency directions preserved",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:07.0254394Z"
+      "gitHead": "0bcb6666c448b93af5dfb9559657e5e5e7fd1c89",
+      "reviewedAtUtc": "2026-08-29T21:11:38.4038306Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -163,14 +151,18 @@
       "pageSha256": "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+          "sha256": "da1f1d3ebb86b94cf7d63a9c0dc86c02b64cfa0db047b6efb2bbd19b16669059"
+        },
+        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "26c81adb5acaac59fa0ea32b3f89aa9d5684a11b52bf9ba490ce273edf98dd34"
+          "sha256": "4f415866f12d2e913139e6332bbe0f42f66c12182ad05068a206a377d896fcf5"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "Reviewed catalog generator fix and regenerated inventory; extracted Fasting, Hydration and WeeklyGoals now resolve to semantic Application project paths.",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:07.5256720Z"
+      "gitHead": "0bcb6666c448b93af5dfb9559657e5e5e7fd1c89",
+      "reviewedAtUtc": "2026-08-29T21:20:06.1900612Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -227,22 +219,18 @@
       "pageSha256": "b7914894ce3f6dda55057a93baf55364c9aa9c5e4c127a3fc9bddaa89743e4aa",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "c800b3b62e5917fa84701434d0ee4ce0be7802ca981c50b9418f1df5349ee74f"
-        },
-        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "26c81adb5acaac59fa0ea32b3f89aa9d5684a11b52bf9ba490ce273edf98dd34"
+          "sha256": "4f415866f12d2e913139e6332bbe0f42f66c12182ad05068a206a377d896fcf5"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "f31bccde896b6d5ddcac1eb0aaea838260b6b9d03fe5427fc466e39c818b800c"
+          "sha256": "4413010163f7ea402b026da9b7d153390cc1bc889c4d81041f3e57b42199708e"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "Reviewed dependency matrix rename and new anti-regression project-location guardrail; no dependency direction changed",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:08.0568544Z"
+      "gitHead": "0bcb6666c448b93af5dfb9559657e5e5e7fd1c89",
+      "reviewedAtUtc": "2026-08-29T21:11:38.9395133Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -857,13 +845,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "354ff0f859420794fe8e5b6409912d04a6aea13151a7625a729008fba74b97ad"
+          "sha256": "d34492bb1a2e4c85514e0b71ba01ea7a17715cd478145019851660608889e76a"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "Reviewed regenerated quality index; only Wiki generator/test structural metrics changed and no production quality risk was introduced.",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:10.2273324Z"
+      "gitHead": "0bcb6666c448b93af5dfb9559657e5e5e7fd1c89",
+      "reviewedAtUtc": "2026-08-29T21:20:06.6876580Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -947,17 +935,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "354ff0f859420794fe8e5b6409912d04a6aea13151a7625a729008fba74b97ad"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3bfbd1dd3b979c44d220e8f8d60d1e04b77b849f72607d941be9ca4021616485"
+          "sha256": "d34492bb1a2e4c85514e0b71ba01ea7a17715cd478145019851660608889e76a"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "Reviewed regenerated quality-derived security input; no security-sensitive production source, trust boundary or package version changed.",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:11.7015778Z"
+      "gitHead": "0bcb6666c448b93af5dfb9559657e5e5e7fd1c89",
+      "reviewedAtUtc": "2026-08-29T21:20:07.6564911Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1195,17 +1179,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "29be8afab678172d1f75c886cdf3ad65fd44c9287f559fd3895463417921d945"
+          "sha256": "cb867b70cb2773fbf9599fc340695102838f6cb42eec0674a7366b5e7c36415a"
         },
         {
-          "path": "AGENTS.md",
-          "sha256": "2d5cca73fa7af986b7925f3f9f15de11afd18197954dc1af7880db10fe914736"
+          "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+          "sha256": "da1f1d3ebb86b94cf7d63a9c0dc86c02b64cfa0db047b6efb2bbd19b16669059"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "Reviewed query-context inputs after catalog fix; module retrieval now retains extracted-project origin and exact Application csproj paths.",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:10.5551756Z"
+      "gitHead": "0bcb6666c448b93af5dfb9559657e5e5e7fd1c89",
+      "reviewedAtUtc": "2026-08-29T21:20:07.0721779Z"
     },
     {
       "pageId": "workflow.review-diff",

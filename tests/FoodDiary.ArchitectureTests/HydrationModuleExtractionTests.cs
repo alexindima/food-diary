@@ -13,7 +13,7 @@ public sealed class HydrationModuleExtractionTests {
     [Fact]
     public void ExtractedHydrationAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "Modules/Hydration/FoodDiary.Modules.Hydration.csproj");
+            "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Domain",

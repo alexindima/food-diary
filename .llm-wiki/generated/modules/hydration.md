@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `Modules/Hydration/FoodDiary.Modules.Hydration.csproj`
+- Extracted project: `Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed

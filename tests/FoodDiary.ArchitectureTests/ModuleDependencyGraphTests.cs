@@ -61,8 +61,11 @@ public sealed class ModuleDependencyGraphTests {
             })
             .Concat(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules"))
                 ? Directory.GetDirectories(ArchitectureTestPaths.FromRoot("Modules"), "*", SearchOption.TopDirectoryOnly)
-                    .Where(directory => Directory.GetFiles(directory, "FoodDiary.Modules.*.csproj", SearchOption.TopDirectoryOnly).Length == 1)
-                    .Select(directory => new { Name = Path.GetFileName(directory), Root = directory })
+                    .Where(directory => Directory.GetFiles(
+                        Path.Combine(directory, "Application"),
+                        "FoodDiary.Modules.*.Application.csproj",
+                        SearchOption.TopDirectoryOnly).Length == 1)
+                    .Select(directory => new { Name = Path.GetFileName(directory), Root = Path.Combine(directory, "Application") })
                 : [])
             .Where(module => declaredModules.Contains(module.Name))
             .OrderBy(module => module.Name, StringComparer.Ordinal)

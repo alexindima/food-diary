@@ -843,10 +843,10 @@
     {
       "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
       "nonBlankLines": 294,
-      "decisionPoints": 27,
+      "decisionPoints": 28,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 48.38
+      "structuralRiskScore": 49.88
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiConfigurationIndex.ps1",

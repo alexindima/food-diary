@@ -22,10 +22,10 @@
     <ProjectReference Include="..\FoodDiary.Application.Exercises\FoodDiary.Application.Exercises.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Export\FoodDiary.Application.Export.csproj" />
     <ProjectReference Include="..\Modules\Fasting\Contracts\FoodDiary.Modules.Fasting.Contracts.csproj" />
-    <ProjectReference Include="..\Modules\Fasting\FoodDiary.Modules.Fasting.csproj" />
+    <ProjectReference Include="..\Modules\Fasting\Application\FoodDiary.Modules.Fasting.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Favorites\FoodDiary.Application.Favorites.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Gamification\FoodDiary.Application.Gamification.csproj" />
-    <ProjectReference Include="..\Modules\Hydration\FoodDiary.Modules.Hydration.csproj" />
+    <ProjectReference Include="..\Modules\Hydration\Application\FoodDiary.Modules.Hydration.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Identity\FoodDiary.Application.Identity.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Images\FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Lessons\FoodDiary.Application.Lessons.csproj" />
@@ -43,7 +43,7 @@
     <ProjectReference Include="..\FoodDiary.Application.Users\FoodDiary.Application.Users.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Wearables\FoodDiary.Application.Wearables.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.WeeklyCheckIn\FoodDiary.Application.WeeklyCheckIn.csproj" />
-    <ProjectReference Include="..\Modules\WeeklyGoals\FoodDiary.Modules.WeeklyGoals.csproj" />
+    <ProjectReference Include="..\Modules\WeeklyGoals\Application\FoodDiary.Modules.WeeklyGoals.Application.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Results\FoodDiary.Results.csproj" />
   </ItemGroup>

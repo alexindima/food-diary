@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `Modules/Fasting/FoodDiary.Modules.Fasting.csproj`
+- Extracted project: `Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Notifications, Users
 - Business-module consumers: none observed

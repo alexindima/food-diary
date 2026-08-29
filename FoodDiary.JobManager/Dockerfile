@@ -16,7 +16,7 @@ COPY FoodDiary.Application.Billing/*.csproj FoodDiary.Application.Billing/
 COPY FoodDiary.Application.Marketing/*.csproj FoodDiary.Application.Marketing/
 COPY FoodDiary.Application.Users/*.csproj FoodDiary.Application.Users/
 COPY FoodDiary.Application.Dietologist/*.csproj FoodDiary.Application.Dietologist/
-COPY Modules/Fasting/*.csproj Modules/Fasting/
+COPY Modules/Fasting/Application/*.csproj Modules/Fasting/Application/
 COPY Modules/Fasting/Application/Abstractions/*.csproj Modules/Fasting/Application/Abstractions/
 COPY Modules/Fasting/Contracts/*.csproj Modules/Fasting/Contracts/
 COPY Modules/Fasting/Domain/*.csproj Modules/Fasting/Domain/
@@ -43,7 +43,7 @@ COPY FoodDiary.Application.Ai/*.csproj FoodDiary.Application.Ai/
 COPY FoodDiary.Application.Lessons/*.csproj FoodDiary.Application.Lessons/
 COPY FoodDiary.Application.Statistics/*.csproj FoodDiary.Application.Statistics/
 COPY FoodDiary.Application.Meals/*.csproj FoodDiary.Application.Meals/
-COPY Modules/WeeklyGoals/*.csproj Modules/WeeklyGoals/
+COPY Modules/WeeklyGoals/Application/*.csproj Modules/WeeklyGoals/Application/
 COPY Modules/WeeklyGoals/Application/Abstractions/*.csproj Modules/WeeklyGoals/Application/Abstractions/
 COPY Modules/WeeklyGoals/Contracts/*.csproj Modules/WeeklyGoals/Contracts/
 COPY Modules/WeeklyGoals/Infrastructure/*.csproj Modules/WeeklyGoals/Infrastructure/
@@ -76,6 +76,7 @@ COPY FoodDiary.Application.Marketing/ FoodDiary.Application.Marketing/
 COPY FoodDiary.Application.Users/ FoodDiary.Application.Users/
 COPY FoodDiary.Application.Dietologist/ FoodDiary.Application.Dietologist/
 COPY Modules/Fasting/ Modules/Fasting/
+COPY Modules/Fasting/Application/ Modules/Fasting/Application/
 COPY Modules/Fasting/Application/Abstractions/ Modules/Fasting/Application/Abstractions/
 COPY Modules/Fasting/Contracts/ Modules/Fasting/Contracts/
 COPY Modules/Fasting/Domain/ Modules/Fasting/Domain/
@@ -103,6 +104,7 @@ COPY FoodDiary.Application.Lessons/ FoodDiary.Application.Lessons/
 COPY FoodDiary.Application.Statistics/ FoodDiary.Application.Statistics/
 COPY FoodDiary.Application.Meals/ FoodDiary.Application.Meals/
 COPY Modules/WeeklyGoals/ Modules/WeeklyGoals/
+COPY Modules/WeeklyGoals/Application/ Modules/WeeklyGoals/Application/
 COPY Modules/WeeklyGoals/Application/Abstractions/ Modules/WeeklyGoals/Application/Abstractions/
 COPY Modules/WeeklyGoals/Contracts/ Modules/WeeklyGoals/Contracts/
 COPY Modules/WeeklyGoals/Infrastructure/ Modules/WeeklyGoals/Infrastructure/

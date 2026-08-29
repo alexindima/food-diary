@@ -235,12 +235,12 @@ $extractedApplicationModules = @(
         Where-Object {
             -not $_.isTestProject -and
             ($_.name -match '^FoodDiary\.Application\.(?!(?:Abstractions|Runtime)$)(?<module>[^.]+)$' -or
-             $_.name -match '^FoodDiary\.Modules\.(?<module>[^.]+)$')
+             $_.name -match '^FoodDiary\.Modules\.(?<module>[^.]+)\.Application$')
         } |
         ForEach-Object {
-            $null = $_.name -match '^FoodDiary\.(?:Application|Modules)\.(?<module>[^.]+)$'
+            $null = $_.name -match '^FoodDiary\.(?:Application\.(?<legacyModule>[^.]+)|Modules\.(?<extractedModule>[^.]+)\.Application)$'
             [ordered]@{
-                name = $Matches['module']
+                name = if ($Matches['legacyModule']) { $Matches['legacyModule'] } else { $Matches['extractedModule'] }
                 project = $_.path
             }
         } |

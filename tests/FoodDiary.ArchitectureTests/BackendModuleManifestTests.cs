@@ -20,7 +20,10 @@ public sealed class BackendModuleManifestTests {
         string modulesRoot = ArchitectureTestPaths.FromRoot("Modules");
         string[] logicalFolderModules = Directory.Exists(modulesRoot)
             ? [.. Directory.GetDirectories(modulesRoot, "*", SearchOption.TopDirectoryOnly)
-                .Where(directory => Directory.GetFiles(directory, "FoodDiary.Modules.*.csproj", SearchOption.TopDirectoryOnly).Length == 1)
+                .Where(directory => Directory.GetFiles(
+                    Path.Combine(directory, "Application"),
+                    "FoodDiary.Modules.*.Application.csproj",
+                    SearchOption.TopDirectoryOnly).Length == 1)
                 .Select(directory => Path.GetFileName(directory))
                 .Order(StringComparer.Ordinal)]
             : [];
