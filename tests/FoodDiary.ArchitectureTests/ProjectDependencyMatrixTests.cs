@@ -172,11 +172,15 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Mediator",
                 "FoodDiary.Modules.WeeklyGoals.Application.Abstractions",
                 "FoodDiary.Modules.WeeklyGoals.Contracts",
+                "FoodDiary.Modules.WeeklyGoals.Domain",
             ],
             ["FoodDiary.Modules.WeeklyGoals.Application.Abstractions"] = [
-                "FoodDiary.Domain",
+                "FoodDiary.Modules.WeeklyGoals.Domain",
             ],
             ["FoodDiary.Modules.WeeklyGoals.Contracts"] = [
+                "FoodDiary.Domain",
+            ],
+            ["FoodDiary.Modules.WeeklyGoals.Domain"] = [
                 "FoodDiary.Domain",
             ],
             ["FoodDiary.Modules.WeeklyGoals.Infrastructure"] = [
@@ -185,7 +189,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.WeeklyGoals.PersistenceModel",
             ],
             ["FoodDiary.Modules.WeeklyGoals.PersistenceModel"] = [
-                "FoodDiary.Domain",
+                "FoodDiary.Modules.WeeklyGoals.Domain",
             ],
             ["FoodDiary.Application.Usda"] = [
                 "FoodDiary.Application.Abstractions",
@@ -270,6 +274,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Fasting.Domain",
                 "FoodDiary.Modules.Fasting.PersistenceModel",
                 "FoodDiary.Modules.Hydration.PersistenceModel",
+                "FoodDiary.Modules.WeeklyGoals.Domain",
                 "FoodDiary.Modules.WeeklyGoals.PersistenceModel",
             ],
             ["FoodDiary.Initializer"] = [
@@ -571,6 +576,9 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Modules.WeeklyGoals.Application.Tests"] = [
                 "FoodDiary.Application.Users",
                 "FoodDiary.Modules.WeeklyGoals.Application",
+            ],
+            ["FoodDiary.Modules.WeeklyGoals.Domain.Tests"] = [
+                "FoodDiary.Modules.WeeklyGoals.Domain",
             ],
             ["FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests"] = [
                 "FoodDiary.Initializer",

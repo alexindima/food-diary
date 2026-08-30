@@ -65,9 +65,11 @@
     <Project Path="Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj" />
     <Project Path="Modules/WeeklyGoals/Application/Abstractions/FoodDiary.Modules.WeeklyGoals.Application.Abstractions.csproj" />
     <Project Path="Modules/WeeklyGoals/Contracts/FoodDiary.Modules.WeeklyGoals.Contracts.csproj" />
+    <Project Path="Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj" />
     <Project Path="Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj" />
     <Project Path="Modules/WeeklyGoals/Infrastructure/Model/FoodDiary.Modules.WeeklyGoals.PersistenceModel.csproj" />
     <Project Path="Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/FoodDiary.Modules.WeeklyGoals.Application.Tests.csproj" />
+    <Project Path="Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests.csproj" />
     <Project Path="Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.csproj" />
   </Folder>
   <Folder Name="/Platform/">

@@ -63,10 +63,22 @@ function Get-ExplicitModuleOwners([string]$Intent) {
 
     $inventory = Get-Content -LiteralPath $inventoryPath -Raw | ConvertFrom-Json
     $normalizedIntent = ($Intent -replace '[^\p{L}\p{Nd}]+', ' ').Trim().ToLowerInvariant()
-    $matches = @($inventory.modules.PSObject.Properties | Where-Object {
+    $normalizedPathIntent = $Intent.Replace('\', '/').ToLowerInvariant()
+    $pathMatches = @($inventory.modules.PSObject.Properties | Where-Object {
+        $mapping = $_.Value.sourceMappings
+        $logicalRoot = ([string](Get-OptionalPropertyValue $mapping 'logicalRoot' '')).Replace('\', '/').ToLowerInvariant()
+        $applicationProjects = @(Get-OptionalPropertyValue $mapping 'applicationProjects' @())
+        (-not [string]::IsNullOrWhiteSpace($logicalRoot) -and $normalizedPathIntent.Contains($logicalRoot)) -or
+            @($applicationProjects | Where-Object {
+                $candidate = ([string]$_).Replace('\', '/').ToLowerInvariant()
+                -not [string]::IsNullOrWhiteSpace($candidate) -and $normalizedPathIntent.Contains($candidate)
+            }).Count -gt 0
+    })
+    $tokenMatches = @($inventory.modules.PSObject.Properties | Where-Object {
         $moduleName = $_.Name.ToLowerInvariant()
         $normalizedIntent -eq $moduleName -or $normalizedIntent -match "(^| )$([regex]::Escape($moduleName))( |$)"
     })
+    $matches = @(if ($pathMatches.Count -eq 1) { $pathMatches } else { $tokenMatches })
     if ($matches.Count -ne 1) { return @() }
 
     $moduleName = [string]$matches[0].Name
@@ -91,7 +103,7 @@ function Get-ExplicitModuleOwners([string]$Intent) {
         module = $moduleName
         score = 1000.0
         confidence = 'high'
-        reasons = @('exact backend business-module inventory match')
+        reasons = @($(if ($pathMatches.Count -eq 1) { 'exact backend business-module logical-root path match' } else { 'exact backend business-module inventory match' }))
     })
 }
 

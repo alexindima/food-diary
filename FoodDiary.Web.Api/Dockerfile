@@ -44,6 +44,7 @@ COPY FoodDiary.Application.Meals/*.csproj FoodDiary.Application.Meals/
 COPY Modules/WeeklyGoals/Application/*.csproj Modules/WeeklyGoals/Application/
 COPY Modules/WeeklyGoals/Application/Abstractions/*.csproj Modules/WeeklyGoals/Application/Abstractions/
 COPY Modules/WeeklyGoals/Contracts/*.csproj Modules/WeeklyGoals/Contracts/
+COPY Modules/WeeklyGoals/Domain/*.csproj Modules/WeeklyGoals/Domain/
 COPY Modules/WeeklyGoals/Infrastructure/*.csproj Modules/WeeklyGoals/Infrastructure/
 COPY Modules/WeeklyGoals/Infrastructure/Model/*.csproj Modules/WeeklyGoals/Infrastructure/Model/
 COPY FoodDiary.Application.Usda/*.csproj FoodDiary.Application.Usda/
@@ -109,6 +110,7 @@ COPY Modules/WeeklyGoals/ Modules/WeeklyGoals/
 COPY Modules/WeeklyGoals/Application/ Modules/WeeklyGoals/Application/
 COPY Modules/WeeklyGoals/Application/Abstractions/ Modules/WeeklyGoals/Application/Abstractions/
 COPY Modules/WeeklyGoals/Contracts/ Modules/WeeklyGoals/Contracts/
+COPY Modules/WeeklyGoals/Domain/ Modules/WeeklyGoals/Domain/
 COPY Modules/WeeklyGoals/Infrastructure/ Modules/WeeklyGoals/Infrastructure/
 COPY Modules/WeeklyGoals/Infrastructure/Model/ Modules/WeeklyGoals/Infrastructure/Model/
 COPY FoodDiary.Application.Usda/ FoodDiary.Application.Usda/

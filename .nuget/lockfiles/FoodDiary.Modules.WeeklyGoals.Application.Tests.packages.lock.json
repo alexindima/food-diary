@@ -181,6 +181,7 @@
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.WeeklyGoals.Domain": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
@@ -202,10 +203,16 @@
       "fooddiary.modules.weeklygoals.application.abstractions": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )"
+          "FoodDiary.Modules.WeeklyGoals.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.weeklygoals.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.weeklygoals.domain": {
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )"

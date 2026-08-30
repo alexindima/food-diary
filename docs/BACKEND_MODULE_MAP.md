@@ -23,7 +23,7 @@ Use this file when deciding where backend code belongs.
 | Hydration persistence model | `Modules/Hydration/Infrastructure/Model` | Hydration EF configuration and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
 | Hydration infrastructure | `Modules/Hydration/Infrastructure` | Hydration repository implementation and complete module registration | HTTP transport and central migrations |
 | WeeklyGoals contracts | `Modules/WeeklyGoals/Contracts` | Stable weekly-goal read model and read-service contract | Repositories, handlers, EF, HTTP transport |
-| WeeklyGoals domain compatibility seam | `FoodDiary.Domain/Entities/WeeklyGoals`, `FoodDiary.Domain/Enums/WeeklyGoalType.cs`, `FoodDiary.Domain/ValueObjects/Ids/WeeklyGoalId.cs` | Weekly-goal aggregate, enum, identifier, invariants, and stable CLR/EF identity | Application orchestration, EF mappings, transport |
+| WeeklyGoals domain | `Modules/WeeklyGoals/Domain` | Weekly-goal aggregate, enum, identifier, invariants, and stable CLR namespace/EF identity | Application orchestration, EF mappings, transport, shared `User` ownership |
 | WeeklyGoals application ports | `Modules/WeeklyGoals/Application/Abstractions` | Weekly-goal repository and serialized-transaction ports | EF implementations and host concerns |
 | WeeklyGoals use cases | `Modules/WeeklyGoals/Application` | Weekly-goal commands, queries, handlers, validation, progress calculation, reminder processing, and application registration | Persistence implementations and HTTP transport |
 | WeeklyGoals persistence model | `Modules/WeeklyGoals/Infrastructure/Model` | WeeklyGoals EF configuration and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |

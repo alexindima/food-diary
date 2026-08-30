@@ -70,7 +70,15 @@ try {
     Assert-Ownership ($exact.selectionSource -eq 'backend-module-inventory') 'Exact module inventory ownership did not report its selection source.'
     Assert-Ownership (@($exact.ownershipGuides | Where-Object guide -eq 'Modules/Fasting/AGENTS.md').Count -eq 1) 'Exact Fasting intent did not resolve its logical-module guide.'
 
-    Write-Host 'LLM Wiki intent ownership regression passed: optional record fields and logical module paths are normalized.'
+    $explicitPath = & $tool `
+        -Query 'Extract Modules/Fasting/Domain while preserving Identity compatibility' `
+        -Format Json `
+        -SearchFixturePath $unknownFixture | ConvertFrom-Json
+    Assert-Ownership $explicitPath.conclusive 'An explicit logical-module path should remain conclusive when generic text also names another module.'
+    Assert-Ownership (@($explicitPath.directModules).Count -eq 1 -and $explicitPath.directModules[0] -eq 'Fasting') 'An explicit logical-module path did not outrank an incidental module-name token.'
+    Assert-Ownership (@($explicitPath.ownershipGuides | Where-Object guide -eq 'Modules/Fasting/AGENTS.md').Count -eq 1) 'Explicit logical-module path ownership resolved the wrong guide.'
+
+    Write-Host 'LLM Wiki intent ownership regression passed: optional record fields, exact module names, and explicit logical-root paths are normalized.'
 } finally {
     if (Test-Path -LiteralPath $fixtureRoot) { Remove-Item -LiteralPath $fixtureRoot -Recurse -Force }
 }

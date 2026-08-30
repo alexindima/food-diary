@@ -13,16 +13,16 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 114,
-    "testProjects": 37,
+    "dotnetProjects": 116,
+    "testProjects": 38,
     "frontendProjects": 4,
     "applicationModules": 0,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 33,
     "controllers": 89,
     "endpoints": 285,
-    "agentGuides": 89,
-    "documentationPages": 54
+    "agentGuides": 90,
+    "documentationPages": 55
   },
   "dotnet": {
     "projects": [
@@ -1071,6 +1071,7 @@
           "Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj",
           "Modules/Fasting/Infrastructure/Model/FoodDiary.Modules.Fasting.PersistenceModel.csproj",
           "Modules/Hydration/Infrastructure/Model/FoodDiary.Modules.Hydration.PersistenceModel.csproj",
+          "Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj",
           "Modules/WeeklyGoals/Infrastructure/Model/FoodDiary.Modules.WeeklyGoals.PersistenceModel.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
@@ -2941,7 +2942,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj"
+          "Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj"
         ],
         "packageReferences": []
       },
@@ -2961,6 +2962,7 @@
           "FoodDiary.Domain/FoodDiary.Domain.csproj",
           "Modules/WeeklyGoals/Application/Abstractions/FoodDiary.Modules.WeeklyGoals.Application.Abstractions.csproj",
           "Modules/WeeklyGoals/Contracts/FoodDiary.Modules.WeeklyGoals.Contracts.csproj",
+          "Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
         "packageReferences": [
@@ -2982,6 +2984,21 @@
         "name": "FoodDiary.Modules.WeeklyGoals.Contracts",
         "assemblyName": "FoodDiary.Modules.WeeklyGoals.Contracts",
         "path": "Modules/WeeklyGoals/Contracts/FoodDiary.Modules.WeeklyGoals.Contracts.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Domain/FoodDiary.Domain.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.Modules.WeeklyGoals.Domain",
+        "assemblyName": "FoodDiary.Modules.WeeklyGoals.Domain",
+        "path": "Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -3034,7 +3051,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj"
+          "Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj"
         ],
         "packageReferences": [
           {
@@ -3072,6 +3089,38 @@
           },
           {
             "name": "NSubstitute",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.WeeklyGoals.Domain.Tests",
+        "assemblyName": "FoodDiary.Modules.WeeklyGoals.Domain.Tests",
+        "path": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
             "version": null
           },
           {
@@ -3982,6 +4031,7 @@
       "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/FoodDiary.Modules.Hydration.Application.Tests.csproj",
       "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/FoodDiary.Modules.Hydration.Infrastructure.Tests.csproj",
       "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/FoodDiary.Modules.WeeklyGoals.Application.Tests.csproj",
+      "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests.csproj",
       "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.csproj",
       "tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj",
       "tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj",
@@ -6323,6 +6373,7 @@
       "Modules/WeeklyGoals/AGENTS.md",
       "Modules/WeeklyGoals/Application/Abstractions/AGENTS.md",
       "Modules/WeeklyGoals/Contracts/AGENTS.md",
+      "Modules/WeeklyGoals/Domain/AGENTS.md",
       "Modules/WeeklyGoals/Infrastructure/AGENTS.md",
       "Modules/WeeklyGoals/Infrastructure/Model/AGENTS.md",
       "Shared/FoodDiary.Domain.Primitives/AGENTS.md",
@@ -6355,6 +6406,7 @@
       "docs/adr/0016-logical-module-folders-and-fasting-extraction.md",
       "docs/adr/0017-hydration-logical-module-extraction.md",
       "docs/adr/0018-weekly-goals-logical-module-extraction.md",
+      "docs/adr/0019-weekly-goals-domain-extraction.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/CODE_REVIEW.md",

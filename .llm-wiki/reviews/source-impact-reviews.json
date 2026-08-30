@@ -8,21 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "2d5cca73fa7af986b7925f3f9f15de11afd18197954dc1af7880db10fe914736"
+          "sha256": "75702e33ecfb9bad66289c610f4b855f462948dc15bc4748e687baba45783ccf"
         },
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "688f81edad938267754d2514abfffa46c5b65092fc7857f138be7c4808603ffc"
+          "sha256": "1ba910c42d4d3213f2702fae2cd204ba8a37428637fa6cd007a9a88d5410e03e"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "2700f0a86de59c8d3dfdbd846c2dfc90a0fbfbf331d75e956d389b6ce15b7d8a"
+          "sha256": "cd296c88374072373d5ef5facb708418323389d1b87601cfbc203232a1a05823"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:06.2082185Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:51:44.8243888Z"
     },
     {
       "pageId": "module.frontend",
@@ -46,17 +46,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "688f81edad938267754d2514abfffa46c5b65092fc7857f138be7c4808603ffc"
+          "sha256": "1ba910c42d4d3213f2702fae2cd204ba8a37428637fa6cd007a9a88d5410e03e"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "2700f0a86de59c8d3dfdbd846c2dfc90a0fbfbf331d75e956d389b6ce15b7d8a"
+          "sha256": "cd296c88374072373d5ef5facb708418323389d1b87601cfbc203232a1a05823"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:06.4913380Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:51:45.5968899Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -65,13 +65,25 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "4f415866f12d2e913139e6332bbe0f42f66c12182ad05068a206a377d896fcf5"
+          "sha256": "cff11a06de5dd2c86cbb79a0d9d4636869e13bc5add8503b6f3c9aac5d52f6f2"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "cd296c88374072373d5ef5facb708418323389d1b87601cfbc203232a1a05823"
+        },
+        {
+          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+          "sha256": "0690e66b2d9e138c3460e4c23db335f7eae0668c4f5eb7647206eab86ad29a28"
+        },
+        {
+          "path": "FoodDiary.Domain/AGENTS.md",
+          "sha256": "50b291e043efef0cc906b24ca2e5806a7ef50c01fda4c291e82b848f54289d8f"
         }
       ],
-      "reason": "Reviewed extracted module ownership: only Application project paths and semantic project identities changed; runtime and layer boundaries remain unchanged",
+      "reason": "HTTP routes, DTOs, status codes, and contract namespaces are unchanged; the regenerated backend-contract index confirms only project/source ownership movement.",
       "baseRef": "HEAD",
-      "gitHead": "0bcb6666c448b93af5dfb9559657e5e5e7fd1c89",
-      "reviewedAtUtc": "2026-08-29T21:11:38.1529892Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:51:46.3121607Z"
     },
     {
       "pageId": "system.architecture",
@@ -79,14 +91,26 @@
       "pageSha256": "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "1ba910c42d4d3213f2702fae2cd204ba8a37428637fa6cd007a9a88d5410e03e"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "cff11a06de5dd2c86cbb79a0d9d4636869e13bc5add8503b6f3c9aac5d52f6f2"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "cd296c88374072373d5ef5facb708418323389d1b87601cfbc203232a1a05823"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "3fc961934132c9cd2ba71821a56d1ba89b01785dc9b4f2d22adb94db7962cc99"
+          "sha256": "9cbe213361e59042dec29536de1f0497c2529b66f1fa1dd3fd9ec090e3e0dfca"
         }
       ],
-      "reason": "Generated indexes were refreshed after test project ownership and dependency-matrix changes; durable workflow semantics remain unchanged.",
+      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
       "baseRef": "HEAD",
-      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
-      "reviewedAtUtc": "2026-08-29T22:09:19.6002799Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:51:47.1632191Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -125,17 +149,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "2d5cca73fa7af986b7925f3f9f15de11afd18197954dc1af7880db10fe914736"
+          "sha256": "75702e33ecfb9bad66289c610f4b855f462948dc15bc4748e687baba45783ccf"
         },
         {
           "path": "docs/adr/README.md",
-          "sha256": "34fba23be4983aa5773a09189d6c0d7fb770e9ea0ca3fcb72eb1bbc8cc82eee3"
+          "sha256": "8dc0d549db3588ed96c18cf9b8a6fe793111ad38f5e688d4ec5eedc7da127684"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:07.2722121Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:51:47.9868159Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -143,18 +167,14 @@
       "pageSha256": "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
-          "sha256": "da1f1d3ebb86b94cf7d63a9c0dc86c02b64cfa0db047b6efb2bbd19b16669059"
-        },
-        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "4f415866f12d2e913139e6332bbe0f42f66c12182ad05068a206a377d896fcf5"
+          "sha256": "cff11a06de5dd2c86cbb79a0d9d4636869e13bc5add8503b6f3c9aac5d52f6f2"
         }
       ],
-      "reason": "Reviewed catalog generator fix and regenerated inventory; extracted Fasting, Hydration and WeeklyGoals now resolve to semantic Application project paths.",
+      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
       "baseRef": "HEAD",
-      "gitHead": "0bcb6666c448b93af5dfb9559657e5e5e7fd1c89",
-      "reviewedAtUtc": "2026-08-29T21:20:06.1900612Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:51:48.8221853Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -211,14 +231,22 @@
       "pageSha256": "b7914894ce3f6dda55057a93baf55364c9aa9c5e4c127a3fc9bddaa89743e4aa",
       "sources": [
         {
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "3d0c1b1330205223d3d502e0deb51dfc32a0a99c1e4609dd7518c3a5008c69cd"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "cff11a06de5dd2c86cbb79a0d9d4636869e13bc5add8503b6f3c9aac5d52f6f2"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "3fc961934132c9cd2ba71821a56d1ba89b01785dc9b4f2d22adb94db7962cc99"
+          "sha256": "9cbe213361e59042dec29536de1f0497c2529b66f1fa1dd3fd9ec090e3e0dfca"
         }
       ],
-      "reason": "Generated indexes were refreshed after test project ownership and dependency-matrix changes; durable workflow semantics remain unchanged.",
+      "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
       "baseRef": "HEAD",
-      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
-      "reviewedAtUtc": "2026-08-29T22:09:19.8900865Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:51:49.6853149Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -227,13 +255,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "29d31428a1f28cfb6ba091cc0d74d5f7510ef6dffc442085bfc474b4f25f18b3"
+          "sha256": "8281fd3de375a928cc39b11ed096ad4e5b39952286e8fef0d40580cc7845a7b7"
         }
       ],
-      "reason": "Generated indexes were refreshed after test project ownership and dependency-matrix changes; durable workflow semantics remain unchanged.",
+      "reason": "HTTP routes, DTOs, status codes, and contract namespaces are unchanged; the regenerated backend-contract index confirms only project/source ownership movement.",
       "baseRef": "HEAD",
-      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
-      "reviewedAtUtc": "2026-08-29T22:09:20.5405174Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:51:50.9516413Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -271,22 +299,14 @@
       "pageSha256": "4e6f774f1817d334504316d5d64c5a4bf62bc3a1234600d3293d028f8cbb731a",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-probe.json",
-          "sha256": "df1f90a54f9493228ef12d655efbeca247a7a14353d62a26918d4b701d2023c0"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "786c62ef00a67b35cdba2ef0c870ba3427d94628c23509ddab377aaf56c2dff0"
-        },
-        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "52cfcc385680dd4f2049422cb9656b2d424399dbd6904312f836cef199dca3fa"
+          "sha256": "f4aa4f17666c4397274be37e15a87d0371fc7538100dcc4f66907891ea6e7faf"
         }
       ],
-      "reason": "Reviewed Hydration vertical extraction against current projects, architecture tests, ADR 0017, generated indexes, API compatibility, EF model, and Wiki tooling regressions.",
+      "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T17:43:29.6034912Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:51:52.6160009Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -452,14 +472,18 @@
       "pageSha256": "8b4cb2d28a12dabbacea071dc05d656bf06ccbaec42ac12f5b35408b708a161a",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiDecisionContext.ps1",
+          "sha256": "4b4ff477406d81846c8b82a6a1499fcccdf43622efea49fdd0c883d6780cc0d2"
+        },
+        {
           "path": "docs/adr/README.md",
-          "sha256": "34fba23be4983aa5773a09189d6c0d7fb770e9ea0ca3fcb72eb1bbc8cc82eee3"
+          "sha256": "8dc0d549db3588ed96c18cf9b8a6fe793111ad38f5e688d4ec5eedc7da127684"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:09.3198343Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:51:53.4989514Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -483,13 +507,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "52cfcc385680dd4f2049422cb9656b2d424399dbd6904312f836cef199dca3fa"
+          "sha256": "f4aa4f17666c4397274be37e15a87d0371fc7538100dcc4f66907891ea6e7faf"
         }
       ],
-      "reason": "Reviewed Hydration vertical extraction against current projects, architecture tests, ADR 0017, generated indexes, API compatibility, EF model, and Wiki tooling regressions.",
+      "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T17:43:31.4399636Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:51:54.4440324Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -498,13 +522,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "d22f83ab0db5642d0ef3bb8ef064d24ec614edc2fb3e587eb5fd7d4ebb76fb54"
+          "sha256": "84b2583cd637717c807840d985084927731a1a651c41528a303644fc0ee9d242"
+        },
+        {
+          "path": "FoodDiary.Domain/AGENTS.md",
+          "sha256": "50b291e043efef0cc906b24ca2e5806a7ef50c01fda4c291e82b848f54289d8f"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:09.6698541Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:51:55.3744733Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -603,17 +631,17 @@
     {
       "pageId": "workflow-implementation-plan",
       "pagePath": ".llm-wiki/workflows/implementation-plan.md",
-      "pageSha256": "2d14755cf1714049bfdbd8ce1c1ed6e3fb250c1e2f8a34d27863f86e278e86d7",
+      "pageSha256": "d45851e16e3d49ceca62d5cb5f1eb187c9b829e6a19c634ecd85a6238241dfe8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "04127ee7498994e5dbea3f2f18805caf690559470e30d5e28ac16d11daee8b98"
+          "path": ".llm-wiki/tools/Get-LlmWikiDecisionContext.ps1",
+          "sha256": "4b4ff477406d81846c8b82a6a1499fcccdf43622efea49fdd0c883d6780cc0d2"
         }
       ],
-      "reason": "Reviewed adaptive research, task brief, code graph, index pipeline and test-plan behavior; the identity-session regression selects FD-AUTH, Identity/Users cross-layer paths and 11 focused tests without fasting/meal leakage, and the precision suite passes.",
+      "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
       "baseRef": "HEAD",
-      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
-      "reviewedAtUtc": "2026-08-29T03:56:43.0016657Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:51:56.4181700Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -640,14 +668,14 @@
       "pageSha256": "ca4122ad45c7918953e4e7acf1974a72586f53a72a9d3f06fe574edb9a5f8533",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "6b7f7befc613665b22f9628cc94a3a56f357fafaf4b2f7b6789becb3d84a2cf3"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "f4aa4f17666c4397274be37e15a87d0371fc7538100dcc4f66907891ea6e7faf"
         }
       ],
-      "reason": "Reviewed planned backend test-directory discovery, exact module-owned csproj command selection, bin/obj exclusion, and passing test-plan precision regression against the current pipeline documentation.",
+      "reason": "Reviewed the combined test-plan fix, facade compiled-index forwarding, modular Domain indexing, regenerated module pages, and passing focused Wiki regressions; the staged pipeline documentation remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-30T00:02:58.3888166Z"
+      "gitHead": "0c1b61756c45000bae4543a3f01a4cdc963b1592",
+      "reviewedAtUtc": "2026-08-30T00:18:11.7930783Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -829,13 +857,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "30e2061135e45a2932d0170e5fc231b45e5e7b1e0a386120f434b8095d9025c0"
+          "sha256": "4aaa94dad50a5d9eac4b6f7269908dc89580c956c5d602adae539546cec92308"
         }
       ],
-      "reason": "Reviewed the regenerated quality index delta: only Get-LlmWikiTestPlan structural metrics changed after adding planned test-project discovery; hotspot and test-gap interpretation remains accurate.",
+      "reason": "Reviewed the combined quality-index delta from planned test-project discovery, the extracted WeeklyGoals Domain/tests, and regenerated module pages; hotspot and direct-reference guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-30T00:03:03.1107620Z"
+      "gitHead": "0c1b61756c45000bae4543a3f01a4cdc963b1592",
+      "reviewedAtUtc": "2026-08-30T00:18:16.1937132Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -912,13 +940,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dc47c3ac0fa43717fc1d85937d33f1197840951a74e8ef8b7db6f774e02af8ef"
+          "sha256": "f47b4bee22968edc651b4a08b7165aab500784ba5c2d099661d5595ffa091e46"
         }
       ],
-      "reason": "Generated indexes were refreshed after test project ownership and dependency-matrix changes; durable workflow semantics remain unchanged.",
+      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
       "baseRef": "HEAD",
-      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
-      "reviewedAtUtc": "2026-08-29T22:09:21.8212799Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:52:02.0313574Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -927,13 +955,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "30e2061135e45a2932d0170e5fc231b45e5e7b1e0a386120f434b8095d9025c0"
+          "sha256": "4aaa94dad50a5d9eac4b6f7269908dc89580c956c5d602adae539546cec92308"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "f47b4bee22968edc651b4a08b7165aab500784ba5c2d099661d5595ffa091e46"
         }
       ],
-      "reason": "Reviewed the regenerated quality index delta: the test-plan implementation complexity changed, but security evidence selection and the page warning against treating navigation evidence as findings remain accurate.",
+      "reason": "Reviewed the WeeklyGoals assembly-only extraction and combined generated quality/runtime deltas; no authorization, sensitive-data, credential, logging, provider-sharing, HTTP, or persistence security boundary changed.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-30T00:03:07.7554704Z"
+      "gitHead": "0c1b61756c45000bae4543a3f01a4cdc963b1592",
+      "reviewedAtUtc": "2026-08-30T00:18:20.8871225Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1002,13 +1034,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "52cfcc385680dd4f2049422cb9656b2d424399dbd6904312f836cef199dca3fa"
+          "sha256": "f4aa4f17666c4397274be37e15a87d0371fc7538100dcc4f66907891ea6e7faf"
         }
       ],
-      "reason": "Reviewed Hydration vertical extraction against current projects, architecture tests, ADR 0017, generated indexes, API compatibility, EF model, and Wiki tooling regressions.",
+      "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T17:43:37.5809327Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:52:04.0361473Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1111,13 +1143,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "2d5cca73fa7af986b7925f3f9f15de11afd18197954dc1af7880db10fe914736"
+          "sha256": "75702e33ecfb9bad66289c610f4b855f462948dc15bc4748e687baba45783ccf"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:08.9894950Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:51:51.8228123Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1171,13 +1203,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "9d49b42dcf8317aa57d2ce2bb38a1753d20b86268b78077213a3cc47a4f43d3d"
+          "sha256": "b237f24b4cd6822b0474dac8fd3b90ae4ec99e1a4804504582d388347d6e660d"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "75702e33ecfb9bad66289c610f4b855f462948dc15bc4748e687baba45783ccf"
         }
       ],
-      "reason": "Generated indexes were refreshed after test project ownership and dependency-matrix changes; durable workflow semantics remain unchanged.",
+      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
       "baseRef": "HEAD",
-      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
-      "reviewedAtUtc": "2026-08-29T22:09:21.4661722Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:52:00.3461832Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1185,14 +1221,18 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "f4aa4f17666c4397274be37e15a87d0371fc7538100dcc4f66907891ea6e7faf"
+        },
+        {
           "path": "AGENTS.md",
-          "sha256": "2d5cca73fa7af986b7925f3f9f15de11afd18197954dc1af7880db10fe914736"
+          "sha256": "75702e33ecfb9bad66289c610f4b855f462948dc15bc4748e687baba45783ccf"
         }
       ],
-      "reason": "Reviewed all impacted architecture, module, workflow, contract, quality, runtime, and repository pages against the WeeklyGoals module sources, host composition, dependency matrix, ADR 0018, and passing generated-index/architecture tests; no stale prose remains.",
+      "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
       "baseRef": "HEAD",
-      "gitHead": "f2c2ec76803beae51f8d4382c9efcae5184039d3",
-      "reviewedAtUtc": "2026-08-29T20:12:10.8873690Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-29T23:52:01.2069436Z"
     }
   ]
 }

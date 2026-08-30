@@ -99,6 +99,12 @@
       "fooddiary.domain.primitives": {
         "type": "Project"
       },
+      "fooddiary.modules.weeklygoals.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
       "Microsoft.Extensions.DependencyInjection": {
         "type": "CentralTransitive",
         "requested": "[10.0.11, )",

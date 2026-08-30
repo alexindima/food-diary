@@ -626,9 +626,7 @@
           "Modules/WeeklyGoals/Contracts"
         ],
         "domainAreas": [
-          "FoodDiary.Domain/Entities/WeeklyGoals",
-          "FoodDiary.Domain/Enums/WeeklyGoalType.cs",
-          "FoodDiary.Domain/ValueObjects/Ids/WeeklyGoalId.cs"
+          "Modules/WeeklyGoals/Domain"
         ],
         "persistenceAreas": [
           "Modules/WeeklyGoals/Infrastructure"

@@ -17,10 +17,21 @@ function Get-Area([string]$Path) {
     return 'FoodDiary'
 }
 
+$moduleDomainRoots = @(
+    Get-ChildItem -LiteralPath (Join-Path $repositoryRoot 'Modules') -Directory |
+        ForEach-Object {
+            $domainRoot = Join-Path $_.FullName 'Domain'
+            if (Test-Path -LiteralPath $domainRoot -PathType Container) {
+                ConvertTo-RepositoryPath $domainRoot
+            }
+        } |
+        Sort-Object
+)
 $domainRoots = @(
-    'FoodDiary.Domain',
-    'MailInbox/FoodDiary.MailInbox.Domain',
-    'MailRelay/FoodDiary.MailRelay.Domain',
+    'FoodDiary.Domain'
+    $moduleDomainRoots
+    'MailInbox/FoodDiary.MailInbox.Domain'
+    'MailRelay/FoodDiary.MailRelay.Domain'
     'Shared/FoodDiary.Domain.Primitives'
 )
 $domainTypes = [System.Collections.Generic.List[object]]::new()

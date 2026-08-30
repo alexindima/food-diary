@@ -12,6 +12,7 @@ Rules for `FoodDiary.Domain/`.
 - No infrastructure concerns (EF, HTTP, external services).
 - No UI/API contracts.
 - Only shared domain primitives belong as a project reference.
+- Shared `User` and `UserId` remain central compatibility types; extracted module Domain projects may depend on them one-way without moving module aggregates back into this project.
 
 ## Design Rules
 - Prefer factory/static creation methods when invariants are non-trivial.

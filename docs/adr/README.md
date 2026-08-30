@@ -32,7 +32,8 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 | [0015](0015-application-module-root-folder-structure.md) | Application module root folder structure | Accepted | 2026-08-28 |
 | [0016](0016-logical-module-folders-and-fasting-extraction.md) | Logical module folders and incremental Fasting extraction | Accepted | 2026-08-29 |
 | [0017](0017-hydration-logical-module-extraction.md) | Reproduce the logical-module extraction for Hydration | Accepted | 2026-08-29 |
-| [0018](0018-weekly-goals-logical-module-extraction.md) | Extract WeeklyGoals while preserving CLR, EF, HTTP, and reminder compatibility | Accepted | 2026-08-29 |
+| [0018](0018-weekly-goals-logical-module-extraction.md) | Extract WeeklyGoals while preserving CLR, EF, HTTP, and reminder compatibility | Superseded | 2026-08-29 |
+| [0019](0019-weekly-goals-domain-extraction.md) | Extract the WeeklyGoals Domain project | Accepted | 2026-08-30 |
 
 ## Creating A Record
 

@@ -21,15 +21,25 @@ public sealed class WeeklyGoalsModuleExtractionTests {
             "FoodDiary.Mediator",
             "FoodDiary.Modules.WeeklyGoals.Application.Abstractions",
             "FoodDiary.Modules.WeeklyGoals.Contracts",
+            "FoodDiary.Modules.WeeklyGoals.Domain",
         ], references);
     }
 
     [Fact]
-    public void WeeklyGoalsDomainCompatibilitySeam_RemainsCentral() {
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "WeeklyGoals", "WeeklyGoal.cs")));
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "ValueObjects", "Ids", "WeeklyGoalId.cs")));
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", "WeeklyGoalType.cs")));
-        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "WeeklyGoals", "Domain", "FoodDiary.Modules.WeeklyGoals.Domain.csproj")));
+    public void WeeklyGoalsDomainSource_LivesOnlyInExtractedAssembly() {
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "WeeklyGoals", "WeeklyGoal.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "ValueObjects", "Ids", "WeeklyGoalId.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", "WeeklyGoalType.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "WeeklyGoals", "Domain", "Entities", "WeeklyGoals", "WeeklyGoal.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "WeeklyGoals", "Domain", "ValueObjects", "Ids", "WeeklyGoalId.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "WeeklyGoals", "Domain", "Enums", "WeeklyGoalType.cs")));
+    }
+
+    [Fact]
+    public void ExtractedWeeklyGoalsDomain_HasOnlyApprovedProjectReferences() {
+        string[] references = ProjectReferenceReader.ReadProjectReferences(
+            "Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj");
+        Assert.Equal(["FoodDiary.Domain"], references);
     }
 
     [Fact]

@@ -22,12 +22,6 @@
       },
       "fooddiary.domain.primitives": {
         "type": "Project"
-      },
-      "fooddiary.modules.weeklygoals.domain": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )"
-        }
       }
     }
   }

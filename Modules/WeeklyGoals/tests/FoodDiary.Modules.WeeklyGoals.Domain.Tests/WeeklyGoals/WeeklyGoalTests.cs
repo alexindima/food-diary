@@ -22,7 +22,8 @@ public sealed class WeeklyGoalTests {
     public void Create_WithNonMondayWeekStart_Throws() => Assert.Throws<ArgumentOutOfRangeException>(() => Create(weekStart: Monday.AddDays(1)));
 
     [Fact]
-    public void Create_WithUnsupportedType_Throws() => Assert.Throws<ArgumentOutOfRangeException>(() => Create(type: (WeeklyGoalType)int.MaxValue));
+    public void Create_WithUnsupportedType_Throws() =>
+        Assert.Throws<ArgumentOutOfRangeException>(() => Create(type: (WeeklyGoalType)int.MaxValue));
 
     private static WeeklyGoal Create(
         UserId? userId = null,

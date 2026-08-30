@@ -1407,7 +1407,13 @@ switch ($Command) {
             Invoke-WikiTool 'Get-LlmWikiGraphTestPlan.ps1' $graphTestArguments
             break
         }
-        $testPlanArguments = @{ BaseRef = $BaseRef; Format = $Format; Limit = [Math]::Min($Limit, 30); NoBaseline = $NoBaseline }
+        $testPlanArguments = @{
+            BaseRef = $BaseRef
+            Format = $Format
+            Limit = [Math]::Min($Limit, 30)
+            NoBaseline = $NoBaseline
+            CompiledIndexSource = $CompiledIndexSource
+        }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $testPlanArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $testPlanArguments.ChangedPath = $ChangedPath }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $testPlanArguments.ProposedPath = $ProposedPath }
@@ -1436,7 +1442,11 @@ switch ($Command) {
         Invoke-WikiTool 'Manage-LlmWikiVerificationReceipts.ps1' $receiptArguments
     }
     'decision' {
-        $decisionArguments = @{ BaseRef = $BaseRef; Format = $Format }
+        $decisionArguments = @{
+            BaseRef = $BaseRef
+            Format = $Format
+            CompiledIndexSource = $CompiledIndexSource
+        }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $decisionArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $decisionArguments.ChangedPath = $ChangedPath }
         Invoke-WikiTool 'Get-LlmWikiDecisionContext.ps1' $decisionArguments
@@ -2612,7 +2622,12 @@ switch ($Command) {
     }
     'ownership' {
         if (-not [string]::IsNullOrWhiteSpace($Query) -and -not $explicitChangedPathInput) {
-            Invoke-WikiTool 'Find-LlmWikiIntentOwnership.ps1' @{ Query = $Query; Format = $Format; Limit = $Limit }
+            Invoke-WikiTool 'Find-LlmWikiIntentOwnership.ps1' @{
+                Query = $Query
+                Format = $Format
+                Limit = $Limit
+                CompiledIndexSource = $CompiledIndexSource
+            }
             break
         }
         $ownershipArguments = @{ BaseRef = $BaseRef; Format = $Format }

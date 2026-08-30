@@ -13,18 +13,20 @@ Rules for `Modules/WeeklyGoals/`.
 - Read meal activity only through `IMealActivityReadService`; do not load Meal aggregates.
 - Keep notification delivery and the shared unit of work behind central application contracts.
 - Keep the shared `FoodDiaryDbContext`, historical migrations, and model snapshot in central Infrastructure.
-- Keep `WeeklyGoal`, `WeeklyGoalId`, and `WeeklyGoalType` in central Domain as a CLR and EF compatibility seam.
+- Keep `WeeklyGoal`, `WeeklyGoalId`, and `WeeklyGoalType` in `Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj` while preserving their existing `FoodDiary.Domain.*` CLR namespaces.
+- Keep the module Domain dependency on central Domain one-way while shared `UserId` remains centralized; do not add a WeeklyGoals navigation to the `User` aggregate.
 - Preserve legacy `FoodDiary.Application.WeeklyGoals.*`, `FoodDiary.Application.Abstractions.WeeklyGoals.*`, and WeeklyGoals persistence CLR namespaces during this extraction.
 - Preserve reminder job ID, cron/options binding, batching, retry, cancellation, and notification behavior.
 
 ## Verification
 
 - Build: `dotnet build Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj`
+- Focused domain tests: `dotnet test Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests.csproj`
 - Focused application tests: `dotnet test Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/FoodDiary.Modules.WeeklyGoals.Application.Tests.csproj`
 - Focused infrastructure tests: `dotnet test Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.csproj`
 - Architecture: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 ## Tests
 
-- Do not create a WeeklyGoals Domain test project while its domain types remain centrally owned.
+- Keep WeeklyGoals aggregate, identifier, enum, and invariant tests in `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests`.
 - Keep shared DbContext, migration, HTTP, host, JobManager, architecture, and cross-module scenarios in their central test projects.

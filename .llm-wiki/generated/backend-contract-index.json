@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7541,
+    "consumerEdges": 7542,
     "productionConsumerEdges": 4559,
-    "testConsumerEdges": 2982,
+    "testConsumerEdges": 2983,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -61454,19 +61454,6 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/WeeklyGoalId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/WeightEntryId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61573,6 +61560,32 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Domain/ValueObjects/Ids/FastingTelemetryEventId.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/Domain/ValueObjects/Ids/WeeklyGoalId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/Domain/WeeklyGoalIdInvariantTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {

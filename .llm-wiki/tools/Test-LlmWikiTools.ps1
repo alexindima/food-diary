@@ -991,6 +991,7 @@ Assert-Wiki (@($uiBrief.generatedActions) -contains './.llm-wiki/tools/Build-Llm
 
 $domainData = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/domain-data-index.json') -Raw | ConvertFrom-Json
 Assert-Wiki ($domainData.summary.domainTypes -gt 0) 'Domain/data index did not discover domain types.'
+Assert-Wiki (@($domainData.domainTypes | Where-Object path -match '^Modules/[^/]+/Domain/').Count -gt 0) 'Domain/data index did not discover modular domain types.'
 Assert-Wiki ($domainData.summary.invariants -gt 0) 'Domain/data index did not discover guarded invariants.'
 Assert-Wiki ($domainData.summary.persistenceMappings -gt 0) 'Domain/data index did not discover EF mappings.'
 $domainJson = & (Join-Path $toolsRoot 'Find-LlmWikiDomainData.ps1') -View invariants -Query weight -Format Json

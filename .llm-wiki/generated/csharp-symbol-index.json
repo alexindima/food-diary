@@ -13243,13 +13243,6 @@
       "line": 8
     },
     {
-      "name": "WeeklyGoal",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
-      "line": 7
-    },
-    {
       "name": "AchievementMetric",
       "kind": "enum",
       "role": "Other",
@@ -13499,13 +13492,6 @@
       "kind": "enum",
       "role": "Other",
       "path": "FoodDiary.Domain/Enums/WearableProvider.cs",
-      "line": 2
-    },
-    {
-      "name": "WeeklyGoalType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/WeeklyGoalType.cs",
       "line": 2
     },
     {
@@ -14045,13 +14031,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/WebPushSubscriptionId.cs",
-      "line": 4
-    },
-    {
-      "name": "WeeklyGoalId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WeeklyGoalId.cs",
       "line": 4
     },
     {
@@ -24287,6 +24266,27 @@
       "role": "Other",
       "path": "Modules/WeeklyGoals/Contracts/Models/WeeklyGoalModel.cs",
       "line": 2
+    },
+    {
+      "name": "WeeklyGoal",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/WeeklyGoals/Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
+      "line": 6
+    },
+    {
+      "name": "WeeklyGoalType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/WeeklyGoals/Domain/Enums/WeeklyGoalType.cs",
+      "line": 2
+    },
+    {
+      "name": "WeeklyGoalId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/WeeklyGoals/Domain/ValueObjects/Ids/WeeklyGoalId.cs",
+      "line": 4
     },
     {
       "name": "WeeklyGoalConfiguration",

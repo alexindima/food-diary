@@ -16,11 +16,11 @@
   "hotspots": [
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 2860,
+      "nonBlankLines": 2875,
       "decisionPoints": 369,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 612.7
+      "structuralRiskScore": 613
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
@@ -858,11 +858,11 @@
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1",
-      "nonBlankLines": 119,
-      "decisionPoints": 16,
+      "nonBlankLines": 130,
+      "decisionPoints": 17,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 28.38
+      "structuralRiskScore": 30.1
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
@@ -1034,11 +1034,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiIntentOwnership.ps1",
-      "nonBlankLines": 151,
-      "decisionPoints": 33,
+      "nonBlankLines": 163,
+      "decisionPoints": 35,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 54.52
+      "structuralRiskScore": 57.76
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiProductJourney.ps1",
@@ -1186,11 +1186,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiDecisionContext.ps1",
-      "nonBlankLines": 74,
+      "nonBlankLines": 77,
       "decisionPoints": 20,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 33.48
+      "structuralRiskScore": 33.54
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1",
@@ -2418,11 +2418,11 @@
     },
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 2860,
+      "nonBlankLines": 2875,
       "decisionPoints": 369,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 612.7
+      "structuralRiskScore": 613
     },
     {
       "path": "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
@@ -17521,14 +17521,6 @@
       "structuralRiskScore": 4.1
     },
     {
-      "path": "FoodDiary.Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
-      "nonBlankLines": 144,
-      "decisionPoints": 19,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 31.38
-    },
-    {
       "path": "FoodDiary.Domain/Enums/AchievementMetric.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -17815,14 +17807,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Domain/Enums/WeeklyGoalType.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
     },
     {
       "path": "FoodDiary.Domain/Enums/WeightGoalStatus.cs",
@@ -18434,14 +18418,6 @@
     },
     {
       "path": "FoodDiary.Domain/ValueObjects/Ids/WebPushSubscriptionId.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WeeklyGoalId.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -38239,6 +38215,30 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/WeeklyGoals/Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
+      "nonBlankLines": 148,
+      "decisionPoints": 19,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 31.46
+    },
+    {
+      "path": "Modules/WeeklyGoals/Domain/Enums/WeeklyGoalType.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/WeeklyGoals/Domain/ValueObjects/Ids/WeeklyGoalId.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/Model/Configurations/WeeklyGoalConfiguration.cs",

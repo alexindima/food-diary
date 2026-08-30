@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -59,7 +58,7 @@ public sealed class WeeklyGoal : Entity<WeeklyGoalId> {
         DateTime modifiedAtUtc) {
         ValidateTargetDays(targetDays);
         ValidateReminder(reminderEnabled, reminderTimeMinutes, timeZoneOffsetMinutes);
-        DateTime normalizedModifiedAtUtc = DomainGuard.RequiredUtc(modifiedAtUtc, nameof(modifiedAtUtc));
+        DateTime normalizedModifiedAtUtc = RequiredUtc(modifiedAtUtc, nameof(modifiedAtUtc));
 
         int? normalizedReminderTimeMinutes = reminderEnabled ? reminderTimeMinutes : null;
         int? normalizedTimeZoneOffsetMinutes = reminderEnabled ? timeZoneOffsetMinutes : null;
@@ -87,7 +86,7 @@ public sealed class WeeklyGoal : Entity<WeeklyGoalId> {
             throw new InvalidOperationException("A reminder cannot be marked for a goal with reminders disabled.");
         }
 
-        DateTime normalizedModifiedAtUtc = DomainGuard.RequiredUtc(modifiedAtUtc, nameof(modifiedAtUtc));
+        DateTime normalizedModifiedAtUtc = RequiredUtc(modifiedAtUtc, nameof(modifiedAtUtc));
         ValidateReminderLocalDate(localDate, normalizedModifiedAtUtc);
         if (LastReminderLocalDate == localDate) {
             return;
@@ -139,6 +138,12 @@ public sealed class WeeklyGoal : Entity<WeeklyGoalId> {
         }
 
         return utc;
+    }
+
+    private static DateTime RequiredUtc(DateTime value, string paramName) {
+        return value.Kind == DateTimeKind.Unspecified
+            ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.")
+            : value.ToUniversalTime();
     }
 
     private static void ValidateType(WeeklyGoalType type) {

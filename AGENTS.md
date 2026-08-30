@@ -58,6 +58,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Weekly goals logical module: `Modules/WeeklyGoals/AGENTS.md`
 - Weekly goals application abstractions: `Modules/WeeklyGoals/Application/Abstractions/AGENTS.md`
 - Weekly goals contracts: `Modules/WeeklyGoals/Contracts/AGENTS.md`
+- Weekly goals domain: `Modules/WeeklyGoals/Domain/AGENTS.md`
 - Weekly goals infrastructure: `Modules/WeeklyGoals/Infrastructure/AGENTS.md`
 - Weekly goals persistence model: `Modules/WeeklyGoals/Infrastructure/Model/AGENTS.md`
 - USDA application module: `FoodDiary.Application.Usda/AGENTS.md`

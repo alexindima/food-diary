@@ -1,10 +1,10 @@
 # ADR 0018: WeeklyGoals Logical Module Extraction
 
-- Status: Accepted
+- Status: Superseded
 - Date: 2026-08-29
 - Owners: Backend architecture
 - Related: ADR 0015, ADR 0016, ADR 0017
-- Supersedes: None
+- Superseded by: ADR 0019
 
 ## Context
 
