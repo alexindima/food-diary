@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 285,
     "agentGuides": 123,
-    "documentationPages": 73
+    "documentationPages": 74
   },
   "dotnet": {
     "projects": [
@@ -2772,6 +2772,10 @@
             "version": null
           },
           {
+            "name": "Microsoft.EntityFrameworkCore.InMemory",
+            "version": null
+          },
+          {
             "name": "Microsoft.NET.Test.Sdk",
             "version": null
           },
@@ -4959,6 +4963,10 @@
             "version": null
           },
           {
+            "name": "Microsoft.EntityFrameworkCore.InMemory",
+            "version": null
+          },
+          {
             "name": "Microsoft.NET.Test.Sdk",
             "version": null
           },
@@ -5366,6 +5374,10 @@
           },
           {
             "name": "Microsoft.AspNetCore.DataProtection",
+            "version": null
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.InMemory",
             "version": null
           },
           {
@@ -9064,7 +9076,8 @@
       "docs/reports/cycles-module-extraction-wiki-findings.md",
       "docs/reports/export-module-extraction-wiki-findings.md",
       "docs/reports/marketing-module-extraction-wiki-findings.md",
-      "docs/security/THREAT_MODEL.md"
+      "docs/security/THREAT_MODEL.md",
+      "docs/testing/coverage-115-module-mapping.md"
     ]
   }
 }

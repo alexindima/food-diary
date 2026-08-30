@@ -68,11 +68,14 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearableDateValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Domain.Tests/Domain/WearableIdConversionTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Domain.Tests/Domain/WearableInvariantTests.cs`
 - [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/PostgresDatabaseCollection.cs`
 - [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/PostgresDatabaseFixture.cs`
 - [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/WearableTransactionRunnerIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Authentication/WearableOAuthStateServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/LegacyTokenUpgradeTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/ModuleRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Services/WearableTokenProtectorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WearablesModuleBoundaryTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WearablesModuleExtractionTests.cs`

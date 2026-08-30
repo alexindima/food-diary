@@ -13,13 +13,19 @@ public sealed class ContentReportsInfrastructureTests {
     [Fact]
     public void AddContentReportsModule_RegistersOwnedAdapters() {
         var services = new ServiceCollection();
+        services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
 
         IServiceCollection returned = services.AddContentReportsModule();
 
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+        ContentReportRepository repository = scope.ServiceProvider.GetRequiredService<ContentReportRepository>();
+
         Assert.Same(services, returned);
-        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IContentReportReadModelRepository));
-        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IContentReportWriteRepository));
-        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IContentReportTargetReadService));
+        Assert.Multiple(
+            () => Assert.Same(repository, scope.ServiceProvider.GetRequiredService<IContentReportReadModelRepository>()),
+            () => Assert.Same(repository, scope.ServiceProvider.GetRequiredService<IContentReportWriteRepository>()),
+            () => Assert.Same(repository, scope.ServiceProvider.GetRequiredService<IContentReportTargetReadService>()));
     }
 
     [Fact]

@@ -95,6 +95,40 @@ public sealed class AchievementPersistenceTests {
     }
 
     [Fact]
+    public async Task AchievementEvaluationOutboxProcessor_WhenEvaluationIsRequestedDuringDispatch_ReleasesClaimWithoutMarkingProcessed() {
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
+            .Options;
+        await using var context = new FoodDiaryDbContext(options);
+        var message = AchievementEvaluationOutboxMessage.Create(UserId.New(), Now);
+        context.AchievementEvaluationOutbox.Add(message);
+        await context.SaveChangesAsync();
+        IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
+        handler.ReconcileAsync(message.UserId, message.CreatedOnUtc, Arg.Any<CancellationToken>())
+            .Returns(async _ => {
+                await using var writer = new FoodDiaryDbContext(options);
+                AchievementEvaluationOutboxMessage updated = await writer.AchievementEvaluationOutbox.SingleAsync();
+                updated.RequestEvaluation(Now.AddMinutes(1));
+                await writer.SaveChangesAsync();
+            });
+        var processor = new AchievementEvaluationOutboxProcessor(
+            context,
+            handler,
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            TimeProvider.System,
+            NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
+
+        int processed = await processor.ProcessDueAsync(batchSize: 1);
+        AchievementEvaluationOutboxMessage pending = await context.AchievementEvaluationOutbox.AsNoTracking().SingleAsync();
+
+        Assert.Multiple(
+            () => Assert.Equal(0, processed),
+            () => Assert.Equal(2, pending.Revision),
+            () => Assert.Null(pending.ProcessedOnUtc),
+            () => Assert.Null(pending.LockedBy));
+    }
+
+    [Fact]
     public async Task AchievementDefinitionStore_GetAllAsync_OrdersDefinitions() {
         await using FoodDiaryDbContext context = CreateContext();
         AchievementDefinition second = CreateDefinition("second", sortOrder: 2);

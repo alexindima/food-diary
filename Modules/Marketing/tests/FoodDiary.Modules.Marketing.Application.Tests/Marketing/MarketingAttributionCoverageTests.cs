@@ -147,6 +147,38 @@ public sealed class MarketingAttributionCoverageTests {
         Assert.Equal("trusted", repository.Record?.UtmSource);
     }
 
+    [Fact]
+    public async Task Handle_WithAlreadyRecordedSignup_IsIdempotentWithoutLandingLookup() {
+        var repository = new RecordingRepository { SignupExists = true };
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
+        RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
+            EventType = MarketingAttributionEventTypes.SignupCompleted,
+            UserId = Guid.NewGuid(),
+        };
+
+        Result result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Null(repository.Record);
+        Assert.Equal(0, repository.LandingLookupCount);
+    }
+
+    [Fact]
+    public async Task Handle_WithSignupWithoutTrustedLanding_IsSuccessfulNoOp() {
+        var repository = new RecordingRepository();
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
+        RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
+            EventType = MarketingAttributionEventTypes.SignupCompleted,
+            UserId = Guid.NewGuid(),
+        };
+
+        Result result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Null(repository.Record);
+        Assert.Equal(1, repository.LandingLookupCount);
+    }
+
     private static MarketingAttributionEventRecord CreateLandingRecord() =>
         new(
             EventType: MarketingAttributionEventTypes.PageLanding,
@@ -185,6 +217,8 @@ public sealed class MarketingAttributionCoverageTests {
     private sealed class RecordingRepository : IMarketingAttributionEventRepository {
         public MarketingAttributionEventRecord? Record { get; private set; }
         public MarketingAttributionEventRecord? Landing { get; init; }
+        public bool SignupExists { get; init; }
+        public int LandingLookupCount { get; private set; }
 
         public Task AddAsync(MarketingAttributionEventRecord record, CancellationToken cancellationToken = default) {
             Record = record;
@@ -197,14 +231,16 @@ public sealed class MarketingAttributionCoverageTests {
         public Task<MarketingAttributionSummaryRecord> GetSummaryAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<MarketingAttributionEventRecord?> GetLandingAsync(string anonymousId, string sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) =>
-            Task.FromResult(Landing);
+        public Task<MarketingAttributionEventRecord?> GetLandingAsync(string anonymousId, string sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) {
+            LandingLookupCount++;
+            return Task.FromResult(Landing);
+        }
 
         public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<MarketingAttributionEventRecord?>(null);
 
         public Task<bool> ExistsForUserAsync(Guid userId, string eventType, CancellationToken cancellationToken = default) =>
-            Task.FromResult(false);
+            Task.FromResult(SignupExists);
     }
 
     [ExcludeFromCodeCoverage]

@@ -23,6 +23,24 @@ public class WearableInvariantTests {
     }
 
     [Fact]
+    public void WearableConnection_Create_WithEmptyToken_ThrowsPersistenceGuard() {
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => WearableConnection.Create(
+            UserId.New(), WearableProvider.Fitbit, "ext", default, refreshToken: null, tokenExpiresAtUtc: null));
+
+        Assert.Equal("accessToken", exception.ParamName);
+    }
+
+    [Fact]
+    public void WearableConnection_Create_WithNonEmptyUnprotectedToken_ThrowsPersistenceGuard() {
+        var rawToken = ProtectedWearableToken.FromStoredValue("legacy-raw-token");
+
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => WearableConnection.Create(
+            UserId.New(), WearableProvider.Fitbit, "ext", rawToken, refreshToken: null, tokenExpiresAtUtc: null));
+
+        Assert.Equal("accessToken", exception.ParamName);
+    }
+
+    [Fact]
     public void ProtectedWearableToken_FromProtectedValue_WithBlankValue_Throws() {
         Assert.Throws<ArgumentException>(() =>
             ProtectedWearableToken.FromProtectedValue("   "));

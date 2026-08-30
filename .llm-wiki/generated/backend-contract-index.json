@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7591,
+    "consumerEdges": 7604,
     "productionConsumerEdges": 4559,
-    "testConsumerEdges": 3032,
+    "testConsumerEdges": 3045,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -23964,7 +23964,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/Images/ImagesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 12
+      "referenceCount": 13
     },
     {
       "contract": "ConfirmImageUploadHttpResponse",
@@ -43854,7 +43854,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/Persistence/AchievementPersistenceTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "IAchievementReconciliationHandler",
@@ -56059,6 +56059,19 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/LegacyTokenUpgradeTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -56620,7 +56633,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Infrastructure.Tests/CyclesModuleRegistrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "ICycleRepository",
@@ -66981,7 +66994,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/Images/ImagesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IImageObjectDeletionOutbox",
@@ -67176,7 +67189,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/Images/ImagesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 14
+      "referenceCount": 18
     },
     {
       "contract": "IImageStorageService",
@@ -74845,7 +74858,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/ModuleRegistrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IOpenFoodFactsProductCacheRepository",
@@ -89468,6 +89481,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/LegacyTokenUpgradeTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalReminderProcessorTests.cs",
       "isTest": true,
       "referenceCount": 8
@@ -96644,6 +96670,19 @@
         "Modules/Wearables/Application/Abstractions/Common/IWearableClient.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/LegacyTokenUpgradeTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWearableClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -96697,6 +96736,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWearableConnectionReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableConnectionReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/ModuleRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -96777,6 +96829,19 @@
       "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IWearableConnectionRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableConnectionRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IWearableConnectionRepository",
@@ -96880,6 +96945,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Wearables/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWearableConnectionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableConnectionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -97112,6 +97190,19 @@
         "Modules/Wearables/Application/Abstractions/Common/IWearableSyncReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWearableSyncReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableSyncReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -97153,6 +97244,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Wearables/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWearableSyncReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableSyncReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -97242,6 +97346,19 @@
         "Modules/Wearables/Application/Abstractions/Common/IWearableSyncRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IWearableSyncRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableSyncRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -97309,6 +97426,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Wearables/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWearableSyncWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableSyncWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -97403,6 +97533,19 @@
       "referenceCount": 2
     },
     {
+      "contract": "IWearableTokenProtector",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableTokenProtector.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/LegacyTokenUpgradeTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IWearableTransactionRunner",
       "roles": [
         "Other"
@@ -97464,6 +97607,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWearableTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/LegacyTokenUpgradeTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -105343,7 +105499,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/Marketing/MarketingAttributionCoverageTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 10
     },
     {
       "contract": "RecordMarketingAttributionCommand",
@@ -109829,6 +109985,19 @@
       "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 13
+    },
+    {
+      "contract": "SyncWearableDataCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/LegacyTokenUpgradeTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "SyncWearableDataCommand",

@@ -1,4 +1,6 @@
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
+using FoodDiary.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests;
@@ -8,11 +10,17 @@ public sealed class ModuleRegistrationTests {
     [Fact]
     public void AddOpenFoodFactsModule_RegistersCacheRepositoryPorts() {
         var services = new ServiceCollection();
+        services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
+        services.AddSingleton(TimeProvider.System);
 
         services.AddOpenFoodFactsModule();
 
-        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IOpenFoodFactsProductCacheRepository));
-        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IOpenFoodFactsProductCacheReadRepository));
-        Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IOpenFoodFactsProductCacheWriteRepository));
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+        IOpenFoodFactsProductCacheRepository repository = scope.ServiceProvider.GetRequiredService<IOpenFoodFactsProductCacheRepository>();
+
+        Assert.Multiple(
+            () => Assert.Same(repository, scope.ServiceProvider.GetRequiredService<IOpenFoodFactsProductCacheReadRepository>()),
+            () => Assert.Same(repository, scope.ServiceProvider.GetRequiredService<IOpenFoodFactsProductCacheWriteRepository>()));
     }
 }

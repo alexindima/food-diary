@@ -14,6 +14,21 @@ namespace FoodDiary.Application.Tests.Images;
 [ExcludeFromCodeCoverage]
 public class ImagesFeatureTests {
     [Fact]
+    public async Task ImageAbstraction_DefaultOverloads_ForwardSemanticDefaults() {
+        var storage = new DefaultMethodImageStorageService();
+        var outbox = new DefaultMethodImageDeletionOutbox();
+
+        ImageObjectValidationResult validation = await ((IImageStorageService)storage)
+            .ConfirmUploadedObjectAsync("images/object.jpg", CancellationToken.None);
+        await ((IImageObjectDeletionOutbox)outbox)
+            .EnqueueAsync("images/object.jpg", CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.True(validation.IsValid),
+            () => Assert.Equal("images/object.jpg", storage.ValidatedObjectKey),
+            () => Assert.Equal(("images/object.jpg", true), outbox.Enqueued));
+    }
+    [Fact]
     public async Task GetImageUploadUrlCommandHandler_WithEmptyUserId_ReturnsFailure() {
         var handler = new GetImageUploadUrlCommandHandler(
             CreateImageStorageService(),
@@ -138,6 +153,25 @@ public class ImagesFeatureTests {
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => handler.Handle(
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), source.Token));
+    }
+
+    [Fact]
+    public async Task ConfirmImageUploadCommandHandler_WhenStorageThrowsCancellationWithoutCallerCancellation_ReturnsStorageError() {
+        var repository = new FakeImageAssetRepository();
+        var owner = UserId.New();
+        var asset = ImageAsset.Create(owner, "images/storage-cancel.jpg", "https://cdn.example/storage-cancel.jpg");
+        await repository.AddAsync(asset, CancellationToken.None);
+        IImageStorageService storage = Substitute.For<IImageStorageService>();
+        storage.ConfirmUploadedObjectAsync(asset.ObjectKey, Arg.Any<CancellationToken>())
+            .Returns(Task.FromException<ImageObjectValidationResult>(new OperationCanceledException("Storage timeout.")));
+        var handler = new ConfirmImageUploadCommandHandler(
+            repository, storage, new FakeImageObjectDeletionOutbox(), CreateUnitOfWork());
+
+        Result<ConfirmImageUploadResult> result = await handler.Handle(
+            new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Image.StorageError", result.Error.Code);
     }
 
     [Fact]
@@ -586,6 +620,31 @@ public class ImagesFeatureTests {
             .CleanupOrphansAsync(Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(0));
         return service;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class DefaultMethodImageStorageService : IImageStorageService {
+        public string? ValidatedObjectKey { get; private set; }
+
+        public Task<PresignedUpload> CreatePresignedUploadAsync(UserId userId, string fileName, string contentType, long fileSizeBytes, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) => throw new NotSupportedException();
+
+        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(string objectKey, CancellationToken cancellationToken) {
+            ValidatedObjectKey = objectKey;
+            return Task.FromResult(new ImageObjectValidationResult(IsValid: true));
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class DefaultMethodImageDeletionOutbox : IImageObjectDeletionOutbox {
+        public (string ObjectKey, bool IsConfirmed) Enqueued { get; private set; }
+
+        public Task EnqueueAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken = default) {
+            Enqueued = (objectKey, isConfirmed);
+            return Task.CompletedTask;
+        }
     }
 
     private static IImageStorageService CreateImageStorageService(ImageObjectValidationResult? validationResult = null) {
