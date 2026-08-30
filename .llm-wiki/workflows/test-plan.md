@@ -47,7 +47,9 @@ Use `-ProposedPath <path>` before code exists; it may be repeated or supplied as
 an array. The planner combines proposed and changed paths and preserves the
 proposed paths in JSON output. When it resolves an existing Angular spec, its
 focused command uses the project's `test:ci:*` script with Angular's supported
-`--include` option.
+`--include` option. An existing backend test-project directory also contributes
+its C# tests and exact `.csproj`; that project is emitted as a required focused
+command even when it lives under a module-owned `Modules/<Module>/tests` tree.
 
 The plan combines focused existing test files, executable commands, and scenario
 prompts for backend, HTTP contracts, authorization, persistence, migrations,
@@ -65,8 +67,9 @@ client/CI/operations, webhook authenticity, migrations, deployment, and
 dependency inventory. Commands omit `--no-restore` where a cold checkout must be
 usable and publish detected .NET, npm, Docker, and provider-test prerequisites.
 
-Focused tests are ranked by evidence: explicitly changed tests first, then a
-changed production file's sibling spec, specs belonging to direct selector
+Focused tests are ranked by evidence: explicitly changed tests first, then tests
+inside an explicitly planned test directory, a changed production file's sibling
+spec, specs belonging to direct selector
 consumers, tests that directly reference changed declared types before common
 method names, behavior-
 specific tests selected from intent such as idempotency/retry/replay, neighboring

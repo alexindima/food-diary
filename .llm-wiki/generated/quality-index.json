@@ -32,11 +32,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-      "nonBlankLines": 840,
-      "decisionPoints": 165,
+      "nonBlankLines": 868,
+      "decisionPoints": 170,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 266.3
+      "structuralRiskScore": 274.36
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
@@ -1426,11 +1426,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-      "nonBlankLines": 840,
-      "decisionPoints": 165,
+      "nonBlankLines": 868,
+      "decisionPoints": 170,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 266.3
+      "structuralRiskScore": 274.36
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiToolingContext.ps1",

@@ -640,14 +640,14 @@
       "pageSha256": "ca4122ad45c7918953e4e7acf1974a72586f53a72a9d3f06fe574edb9a5f8533",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "52cfcc385680dd4f2049422cb9656b2d424399dbd6904312f836cef199dca3fa"
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "6b7f7befc613665b22f9628cc94a3a56f357fafaf4b2f7b6789becb3d84a2cf3"
         }
       ],
-      "reason": "Reviewed Hydration vertical extraction against current projects, architecture tests, ADR 0017, generated indexes, API compatibility, EF model, and Wiki tooling regressions.",
+      "reason": "Reviewed planned backend test-directory discovery, exact module-owned csproj command selection, bin/obj exclusion, and passing test-plan precision regression against the current pipeline documentation.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T17:43:32.6862597Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-30T00:02:58.3888166Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -829,13 +829,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "423d072b8e6a945028b1bfee4014b4d34606eda3478a5b1cbde107359b97564a"
+          "sha256": "30e2061135e45a2932d0170e5fc231b45e5e7b1e0a386120f434b8095d9025c0"
         }
       ],
-      "reason": "Reviewed the governed-workspace source propagation, generated quality delta, and downstream workflow contracts; the selected source is now documented and no additional release or quality semantics changed.",
+      "reason": "Reviewed the regenerated quality index delta: only Get-LlmWikiTestPlan structural metrics changed after adding planned test-project discovery; hotspot and test-gap interpretation remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
-      "reviewedAtUtc": "2026-08-29T22:35:37.6534463Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-30T00:03:03.1107620Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -927,17 +927,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "423d072b8e6a945028b1bfee4014b4d34606eda3478a5b1cbde107359b97564a"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dc47c3ac0fa43717fc1d85937d33f1197840951a74e8ef8b7db6f774e02af8ef"
+          "sha256": "30e2061135e45a2932d0170e5fc231b45e5e7b1e0a386120f434b8095d9025c0"
         }
       ],
-      "reason": "Reviewed the generated quality and runtime metadata changes; this test ownership and Wiki source-selection change does not alter security, privacy, credential, or data-sharing boundaries.",
+      "reason": "Reviewed the regenerated quality index delta: the test-plan implementation complexity changed, but security evidence selection and the page warning against treating navigation evidence as findings remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
-      "reviewedAtUtc": "2026-08-29T22:35:39.8015848Z"
+      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
+      "reviewedAtUtc": "2026-08-30T00:03:07.7554704Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

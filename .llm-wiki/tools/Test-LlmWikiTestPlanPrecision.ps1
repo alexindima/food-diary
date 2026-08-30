@@ -69,6 +69,30 @@ $declaredTypeTest = @($repositoryPlan.focusedTestDetails | Where-Object {
 if ($declaredTypeTest.Count -ne 1 -or $declaredTypeTest[0].reason -ne 'references-changed-declared-type') {
     throw 'A test referencing the changed repository type was displaced by common member-name matches.'
 }
+
+$moduleTestProject = 'Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FoodDiary.Modules.Fasting.Domain.Tests.csproj'
+$moduleTestPlan = & $tool `
+    -Intent 'Raise FoodDiary.Modules.Fasting.Domain statement coverage with module-owned contract tests' `
+    -ProposedPath 'Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests' `
+    -NoBaseline `
+    -CompiledIndexSource Json `
+    -Format Json | ConvertFrom-Json
+if (@($moduleTestPlan.plannedTestProjects) -notcontains $moduleTestProject) {
+    throw 'A planned module-owned test directory did not resolve its test project.'
+}
+$moduleTestCommand = @($moduleTestPlan.commands | Where-Object {
+    $_.command -eq "dotnet test $moduleTestProject --no-restore"
+})
+if ($moduleTestCommand.Count -ne 1 -or $moduleTestCommand[0].priority -ne 'required' -or
+    $moduleTestCommand[0].source -ne 'planned-test-project') {
+    throw 'A planned module-owned test project was not selected as a required focused command.'
+}
+if (@($moduleTestPlan.focusedTestFiles | Where-Object {
+    $_ -like 'Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/*.cs' -or
+    $_ -like 'Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/*/*.cs'
+}).Count -eq 0) {
+    throw 'A planned module-owned test directory did not expose its C# tests as focused files.'
+}
 Write-Host 'LLM Wiki test-plan semantic selection passed: planned symbols, idempotency tests, neighboring tests, and repeated antipatterns are visible.'
 
 $assessmentPlan = & $tool `

@@ -109,6 +109,7 @@ $consumerTests = [System.Collections.Generic.HashSet[string]]::new([System.Strin
 $behavioralIntentTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $neighborTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $repositoryAssessmentTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+$plannedTestProjects = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $repositoryAntipatterns = [System.Collections.Generic.List[object]]::new()
 $directConsumerProjects = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $changedTestFiles = @(
@@ -147,10 +148,27 @@ if ($identitySessionIntent) {
 foreach ($proposedDirectory in @($ProposedPath)) {
     $normalizedDirectory = ([string]$proposedDirectory).Replace('\', '/').TrimEnd('/')
     $absoluteDirectory = Join-Path $repositoryRoot $normalizedDirectory
+    if (Test-Path -LiteralPath $absoluteDirectory -PathType Leaf) {
+        if ($normalizedDirectory -match '(?i)\.csproj$' -and $normalizedDirectory -match '(?i)(^|/)(tests?|__tests__)(/|$)|Tests?\.csproj$') {
+            $null = $plannedTestProjects.Add($normalizedDirectory)
+        }
+        continue
+    }
     if (-not (Test-Path -LiteralPath $absoluteDirectory -PathType Container)) { continue }
+
+    $isBackendTestDirectory = $normalizedDirectory -match '(?i)(^|/)(tests?|__tests__)(/|$)|(^|/)[^/]*Tests?$'
+    if ($isBackendTestDirectory) {
+        foreach ($project in Get-ChildItem -LiteralPath $absoluteDirectory -Filter '*.csproj' -File -ErrorAction SilentlyContinue) {
+            $relativeProject = $project.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
+            $null = $plannedTestProjects.Add($relativeProject)
+        }
+    }
     $directoryTests = @(
         Get-ChildItem -LiteralPath $absoluteDirectory -Recurse -File -ErrorAction SilentlyContinue |
-            Where-Object { $_.Name -match '\.(?:spec|test)\.(?:ts|js)$' } |
+            Where-Object {
+                $_.FullName -notmatch '[\\/](?:bin|obj)[\\/]' -and
+                ($_.Name -match '\.(?:spec|test)\.(?:ts|js)$' -or ($isBackendTestDirectory -and $_.Extension -eq '.cs'))
+            } |
             Select-Object -First (($Limit * 2) + 1)
     )
     if ($directoryTests.Count -gt ($Limit * 2)) { continue }
@@ -349,7 +367,7 @@ function Add-RankedTests {
 }
 Add-RankedTests $changedTestFiles 100 'changed-test'
 Add-RankedTests @($declaredTypeTests | Sort-Object) 98 'references-changed-declared-type'
-Add-RankedTests @($plannedDirectoryTests | Sort-Object) 95 'planned-directory-spec'
+Add-RankedTests @($plannedDirectoryTests | Sort-Object) 95 'planned-directory-test'
 Add-RankedTests @($siblingTests | Sort-Object) 90 'direct-sibling-spec'
 Add-RankedTests @($consumerTests | Sort-Object) 80 'direct-component-consumer'
 $changedFrontendFeatureRoots = @($effectivePaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/(?:src/app|projects/[^/]+/src/app)/features/[^/]+' } | ForEach-Object {
@@ -584,6 +602,16 @@ if ($repositoryAssessment) {
         source = 'repository-assessment'; priority = 'required'; reason = 'repository-wide-dependency-inventory'; commandEvidence = 'tracked NuGet/npm manifests and lockfiles'
     }
 }
+foreach ($plannedTestProject in @($plannedTestProjects | Sort-Object)) {
+    $commands += [pscustomobject]@{
+        id = "planned-test-$([IO.Path]::GetFileNameWithoutExtension($plannedTestProject).ToLowerInvariant())"
+        command = "dotnet test $plannedTestProject --no-restore"
+        source = 'planned-test-project'
+        priority = 'required'
+        reason = 'explicit-planned-test-project'
+        commandEvidence = $plannedTestProject
+    }
+}
 
 $frontendFocusedTests = @(
     $selectedFocusedTests | ForEach-Object { if ($_.PSObject.Properties['path']) { $_.path } } |
@@ -781,6 +809,7 @@ $result = [pscustomobject]@{
     scopes = $scopes
     intent = $Intent
     proposedPaths = @($ProposedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
+    plannedTestProjects = @($plannedTestProjects | Sort-Object)
     modules = @($diff.modules | ForEach-Object { if ($_.PSObject.Properties['name']) { $_.name } } | Where-Object { $_ })
     focusedTestFiles = @($selectedFocusedTests | ForEach-Object { if ($_.PSObject.Properties['path']) { $_.path } } | Where-Object { $_ })
     focusedTestDetails = $selectedFocusedTests
