@@ -9,6 +9,33 @@ public sealed class LessonsDomainInvariantTests {
     private static readonly DateTime Now = new(2026, 8, 19, 12, 0, 0, DateTimeKind.Utc);
 
     [Fact]
+    public void LessonIds_PreserveGuidAcrossConversionsFormattingAndEmptySentinel() {
+        var value = Guid.Parse("678ba360-102f-4de3-885d-f31fe18e72ca");
+        var lessonId = (NutritionLessonId)value;
+        var progressId = (UserLessonProgressId)value;
+        Guid lessonGuid = lessonId;
+        Guid progressGuid = progressId;
+
+        Assert.Multiple(
+            () => Assert.Equal(value, lessonGuid),
+            () => Assert.Equal(value.ToString(), lessonId.ToString()),
+            () => Assert.Equal(value, progressGuid),
+            () => Assert.Equal(value.ToString(), progressId.ToString()),
+            () => Assert.Equal(Guid.Empty, UserLessonProgressId.Empty.Value));
+    }
+
+    [Fact]
+    public void NutritionLesson_Create_WithUndefinedEnums_Throws() {
+        Assert.Multiple(
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => NutritionLesson.Create(
+                title: "Title", content: "Content", summary: null, locale: "en",
+                category: (LessonCategory)int.MaxValue, difficulty: LessonDifficulty.Beginner, estimatedReadMinutes: 5)),
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => NutritionLesson.Create(
+                title: "Title", content: "Content", summary: null, locale: "en",
+                category: LessonCategory.Macronutrients, difficulty: (LessonDifficulty)int.MaxValue, estimatedReadMinutes: 5)));
+    }
+
+    [Fact]
     public void NutritionLesson_Create_WithBlankTitle_Throws() {
         Assert.Throws<ArgumentException>(() => NutritionLesson.Create("   ", "Content", summary: null, "en", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5));
     }

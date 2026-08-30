@@ -117,6 +117,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/Domain/FastingSessionInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/Domain/FastingTelemetryEventTests.cs`
 - [integration] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/FastingTelemetryEventRepositoryIntegrationTests.cs`
+- [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/PostgresDatabaseCollection.cs`
 - [behavioral-or-text-match] `Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/PostgresDatabaseFixture.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/FastingModuleExtractionTests.cs`
@@ -124,7 +125,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.JobManager.Tests/FastingTelemetryCleanupJobTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/FastingHttpMappingsTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/FastingReadControllerTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/FastingTelemetrySummaryServiceTests.cs`
 
 ## Working Rule
 

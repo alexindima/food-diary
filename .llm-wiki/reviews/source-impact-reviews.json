@@ -72,13 +72,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "1632dd5bd286bfc148a0e374a7025272e154d42f4b1f4cd615dde881d47ed991"
+          "sha256": "857d15ba28438c4e2c8d41e7db611bdcb6dd6d296f2911ca006ccf36cb59d940"
         }
       ],
-      "reason": "The combined Favorites, Gamification, and Cycles project graph and repository catalog were checked against current project references; ArchitectureTests pass 738/738 and EF reports no model delta.",
+      "reason": "Repository catalog and module pages now list the new module-owned test projects; architectural documentation remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
-      "reviewedAtUtc": "2026-08-30T16:03:26.7346052Z"
+      "gitHead": "7572ecc11a75304b3e39bd8ba9a141802e27ea35",
+      "reviewedAtUtc": "2026-08-30T17:18:08.1404521Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -196,13 +196,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "1632dd5bd286bfc148a0e374a7025272e154d42f4b1f4cd615dde881d47ed991"
+          "sha256": "857d15ba28438c4e2c8d41e7db611bdcb6dd6d296f2911ca006ccf36cb59d940"
         }
       ],
-      "reason": "The architecture-health workflow remains accurate after module extraction reconciliation; ArchitectureTests pass 738/738, Infrastructure.Tests pass 992/992, and JobManager.Tests pass 168/168.",
+      "reason": "Dependency matrix now allowlists the direct references of three new module-owned test projects; production dependencies are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
-      "reviewedAtUtc": "2026-08-30T16:03:27.2980023Z"
+      "gitHead": "7572ecc11a75304b3e39bd8ba9a141802e27ea35",
+      "reviewedAtUtc": "2026-08-30T17:18:08.7116696Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -211,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "b082c363e71c5a3396651a24b0d761a78b9491780e12e7bed5e41421b7da61ae"
+          "sha256": "cae2230ad079e0b863d133b16737e1a05c428da0e2299944ef77a8ea8d7313ba"
         }
       ],
-      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
+      "reason": "Generated contract index changed only because test consumers were added; production API contracts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
-      "reviewedAtUtc": "2026-08-30T14:28:22.9597467Z"
+      "gitHead": "7572ecc11a75304b3e39bd8ba9a141802e27ea35",
+      "reviewedAtUtc": "2026-08-30T17:18:09.6341766Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -809,13 +809,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "799b39cb8ff96ab2f6ac0322098ebf39fff57be7eb74bf212c47e409f5cd0562"
+          "sha256": "de5b80f310c6578ef88a3706cf593426775b68965e98340779abd91bd6ee2453"
         }
       ],
-      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
+      "reason": "Dependency matrix now allowlists the direct references of three new module-owned test projects; production dependencies are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
-      "reviewedAtUtc": "2026-08-30T14:28:24.1620559Z"
+      "gitHead": "7572ecc11a75304b3e39bd8ba9a141802e27ea35",
+      "reviewedAtUtc": "2026-08-30T17:18:10.5127333Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -892,13 +892,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ce8ccad97646fc1f30742709a32e8dce386516610d6b4b6aea570e811d47ff33"
+          "sha256": "43ad8b6f66c693300d7cd968bfc13bbb6fe5fb5c4284a09f8b460f80d7f13bc8"
         }
       ],
-      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
+      "reason": "Repository catalog and module pages now list the new module-owned test projects; architectural documentation remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
-      "reviewedAtUtc": "2026-08-30T14:28:25.3096785Z"
+      "gitHead": "7572ecc11a75304b3e39bd8ba9a141802e27ea35",
+      "reviewedAtUtc": "2026-08-30T17:18:11.8726509Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -907,17 +907,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "799b39cb8ff96ab2f6ac0322098ebf39fff57be7eb74bf212c47e409f5cd0562"
+          "sha256": "de5b80f310c6578ef88a3706cf593426775b68965e98340779abd91bd6ee2453"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ce8ccad97646fc1f30742709a32e8dce386516610d6b4b6aea570e811d47ff33"
+          "sha256": "43ad8b6f66c693300d7cd968bfc13bbb6fe5fb5c4284a09f8b460f80d7f13bc8"
         }
       ],
-      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
+      "reason": "Only tests and generated indexes changed; no runtime data flow, credential, privacy, or security boundary changed.",
       "baseRef": "HEAD",
-      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
-      "reviewedAtUtc": "2026-08-30T14:28:25.8521736Z"
+      "gitHead": "7572ecc11a75304b3e39bd8ba9a141802e27ea35",
+      "reviewedAtUtc": "2026-08-30T17:18:12.7728687Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1155,13 +1155,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "4927572c080f03d6aa3adeb905b2b7654889a2a9fda173a11e34f564a9eca815"
+          "sha256": "4a9ac69f8d0d215a2a0ae1803701a8db7f68464d892d3017a916ca89f7271ebe"
         }
       ],
-      "reason": "The combined Favorites, Gamification, and Cycles project graph and repository catalog were checked against current project references; ArchitectureTests pass 738/738 and EF reports no model delta.",
+      "reason": "Repository catalog and module pages now list the new module-owned test projects; architectural documentation remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
-      "reviewedAtUtc": "2026-08-30T16:03:28.0847359Z"
+      "gitHead": "7572ecc11a75304b3e39bd8ba9a141802e27ea35",
+      "reviewedAtUtc": "2026-08-30T17:18:11.1915955Z"
     },
     {
       "pageId": "workflow.review-diff",

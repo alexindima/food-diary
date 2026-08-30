@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7543,
+    "consumerEdges": 7588,
     "productionConsumerEdges": 4559,
-    "testConsumerEdges": 2984,
+    "testConsumerEdges": 3029,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -23964,7 +23964,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/Images/ImagesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 12
     },
     {
       "contract": "ConfirmImageUploadHttpResponse",
@@ -46140,6 +46140,19 @@
         "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IAttentionSignalMetricsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAttentionSignalMetricsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IAttentionSignalMetricsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -48857,6 +48870,19 @@
         "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IClientTaskReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IClientTaskReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IClientTaskReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -48912,6 +48938,19 @@
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/ClientTaskHandlerTests.cs",
       "isTest": true,
       "referenceCount": 17
+    },
+    {
+      "contract": "IClientTaskRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IClientTaskRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IClientTaskRepository",
@@ -49028,6 +49067,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IClientTaskWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IClientTaskWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -53030,6 +53082,19 @@
         "Modules/ContentReports/Application/Abstractions/Common/IContentReportReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests/ContentReportsInfrastructureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IContentReportReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/ContentReports/Application/Abstractions/Common/IContentReportReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -53139,6 +53204,19 @@
       "referenceCount": 4
     },
     {
+      "contract": "IContentReportTargetReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/ContentReports/Application/Abstractions/Common/IContentReportTargetReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests/ContentReportsInfrastructureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IContentReportWriteRepository",
       "roles": [
         "WriteRepository"
@@ -53202,6 +53280,19 @@
       "consumerPath": "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReports/ContentReportsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 7
+    },
+    {
+      "contract": "IContentReportWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/ContentReports/Application/Abstractions/Common/IContentReportWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests/ContentReportsInfrastructureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IContentReportWriteRepository",
@@ -58295,6 +58386,19 @@
         "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistInvitationReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDietologistInvitationReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistInvitationReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -58374,6 +58478,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistAccessPolicyTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDietologistInvitationReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistInvitationReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -58620,6 +58737,19 @@
         "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistInvitationRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDietologistInvitationRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistInvitationRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -58791,6 +58921,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDietologistInvitationWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistInvitationWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -62273,6 +62416,19 @@
         "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingCheckInReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -62314,6 +62470,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingCheckInReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -62390,6 +62559,19 @@
         "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingCheckInRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -62444,6 +62626,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingCheckInWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingCheckInWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -62585,6 +62780,19 @@
         "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingOccurrenceReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -62626,6 +62834,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingOccurrenceReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -62692,6 +62913,19 @@
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IFastingOccurrenceRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IFastingOccurrenceRepository",
@@ -62845,6 +63079,19 @@
         "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingOccurrenceWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -62873,6 +63120,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingPlanReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -62937,6 +63197,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingPlanRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -63081,6 +63354,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingPlanWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingPlanWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -63248,6 +63534,19 @@
         "Modules/Fasting/Application/Abstractions/Common/IFastingSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingSessionReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -63289,6 +63588,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Infrastructure/Persistence/FastingSessionRepository.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingSessionRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -63354,6 +63666,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingSessionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingSessionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -63482,6 +63807,19 @@
         "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingTelemetryEventReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -63536,6 +63874,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Infrastructure/Persistence/FastingTelemetryEventRepository.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFastingTelemetryEventRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -63667,6 +64018,19 @@
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingTelemetryCleanupServiceTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "IFastingTelemetryEventWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetryEventWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IFastingTelemetryEventWriteRepository",
@@ -66812,7 +67176,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/Images/ImagesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 14
     },
     {
       "contract": "IImageStorageService",
@@ -73478,6 +73842,19 @@
         "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INutritionLessonReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -73558,6 +73935,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Lessons/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INutritionLessonReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -73650,6 +74040,19 @@
       "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Lessons/LessonsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 21
+    },
+    {
+      "contract": "INutritionLessonRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "INutritionLessonRepository",
@@ -73753,6 +74156,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Lessons/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INutritionLessonWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -81889,6 +82305,19 @@
         "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationBulkDispatchLookupRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecommendationBulkDispatchLookupRepository",
+      "roles": [
+        "LookupRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationBulkDispatchLookupRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -81944,6 +82373,19 @@
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IRecommendationBulkDispatchRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationBulkDispatchRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IRecommendationBulkDispatchRepository",
@@ -82019,6 +82461,19 @@
         "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationBulkDispatchWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecommendationBulkDispatchWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationBulkDispatchWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -82060,6 +82515,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecommendationCommentReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationCommentReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -82136,6 +82604,19 @@
         "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationCommentRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecommendationCommentRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationCommentRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -82190,6 +82671,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecommendationCommentWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationCommentWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -82318,6 +82812,19 @@
         "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecommendationReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -82422,6 +82929,19 @@
         "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecommendationReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -82513,6 +83033,19 @@
         "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecommendationRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -82580,6 +83113,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecommendationTemplateReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationTemplateReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -82695,6 +83241,19 @@
         "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecommendationTemplateRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationTemplateRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -82786,6 +83345,19 @@
         "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationTemplateWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecommendationTemplateWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationTemplateWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -82865,6 +83437,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecommendationWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -88794,7 +89379,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/Images/ImagesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 10
     },
     {
       "contract": "IUnitOfWork",

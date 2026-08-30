@@ -13,8 +13,8 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 169,
-    "testProjects": 59,
+    "dotnetProjects": 172,
+    "testProjects": 62,
     "frontendProjects": 4,
     "applicationModules": 0,
     "extractedApplicationModules": 33,
@@ -2381,6 +2381,74 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.ContentReports.Domain.Tests",
+        "assemblyName": "FoodDiary.Modules.ContentReports.Domain.Tests",
+        "path": "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Domain.Tests/FoodDiary.Modules.ContentReports.Domain.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.ContentReports.Infrastructure.Tests",
+        "assemblyName": "FoodDiary.Modules.ContentReports.Infrastructure.Tests",
+        "path": "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/ContentReports/Infrastructure/FoodDiary.Modules.ContentReports.Infrastructure.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.InMemory",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Cycles.Application.Abstractions",
         "assemblyName": "FoodDiary.Modules.Cycles.Application.Abstractions",
         "path": "Modules/Cycles/Application/Abstractions/FoodDiary.Modules.Cycles.Application.Abstractions.csproj",
@@ -4257,6 +4325,38 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Lessons.Infrastructure.Tests",
+        "assemblyName": "FoodDiary.Modules.Lessons.Infrastructure.Tests",
+        "path": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Infrastructure.Tests/FoodDiary.Modules.Lessons.Infrastructure.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Tdee.Application",
         "assemblyName": "FoodDiary.Application.Tdee",
         "path": "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
@@ -5498,6 +5598,8 @@
       "MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj",
       "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/FoodDiary.MailRelay.Presentation.Tests.csproj",
       "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/FoodDiary.Modules.ContentReports.Application.Tests.csproj",
+      "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Domain.Tests/FoodDiary.Modules.ContentReports.Domain.Tests.csproj",
+      "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests.csproj",
       "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/FoodDiary.Modules.Cycles.Application.Tests.csproj",
       "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/FoodDiary.Modules.Cycles.Domain.Tests.csproj",
       "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests/FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests.csproj",
@@ -5521,6 +5623,7 @@
       "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/FoodDiary.Modules.Images.Application.Tests.csproj",
       "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/FoodDiary.Modules.Lessons.Application.Tests.csproj",
       "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Domain.Tests/FoodDiary.Modules.Lessons.Domain.Tests.csproj",
+      "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Infrastructure.Tests/FoodDiary.Modules.Lessons.Infrastructure.Tests.csproj",
       "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/FoodDiary.Modules.Tdee.Application.Tests.csproj",
       "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests.csproj",
       "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/FoodDiary.Modules.WeeklyGoals.Application.Tests.csproj",

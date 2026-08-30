@@ -32746,11 +32746,11 @@
     },
     {
       "path": "Modules/ContentReports/Infrastructure/AssemblyInfo.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.06
     },
     {
       "path": "Modules/ContentReports/Infrastructure/Model/Configurations/ContentReportConfiguration.cs",

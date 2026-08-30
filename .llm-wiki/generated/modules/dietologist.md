@@ -156,16 +156,16 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/Domain/ClientTaskInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/Domain/DietologistIdContractTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/Domain/DietologistInvitationInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/Domain/RecommendationBulkDispatchInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/Domain/RecommendationCommentInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/Domain/RecommendationInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/Domain/RecommendationTemplateInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/Persistence/AttentionSignalMetricsReadServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/Services/DietologistEmailSenderTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/DietologistModuleBoundaryTests.cs`
-- [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/DietologistPersistenceIntegrationTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/DietologistClientsControllerTests.cs`
 
 ## Working Rule
 

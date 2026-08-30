@@ -800,8 +800,17 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Modules.Lessons.Domain.Tests"] = [
                 "FoodDiary.Modules.Lessons.Domain",
             ],
+            ["FoodDiary.Modules.Lessons.Infrastructure.Tests"] = [
+                "FoodDiary.Modules.Lessons.Infrastructure",
+            ],
             ["FoodDiary.Modules.ContentReports.Application.Tests"] = [
                 "FoodDiary.Modules.ContentReports.Application",
+            ],
+            ["FoodDiary.Modules.ContentReports.Domain.Tests"] = [
+                "FoodDiary.Modules.ContentReports.Domain",
+            ],
+            ["FoodDiary.Modules.ContentReports.Infrastructure.Tests"] = [
+                "FoodDiary.Modules.ContentReports.Infrastructure",
             ],
             ["FoodDiary.Modules.Tdee.Application.Tests"] = [
                 "FoodDiary.Application.BodyMetrics",
