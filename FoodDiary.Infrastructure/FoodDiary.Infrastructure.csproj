@@ -14,6 +14,7 @@
     <ProjectReference Include="..\Modules\Lessons\Infrastructure\Model\FoodDiary.Modules.Lessons.PersistenceModel.csproj" />
     <ProjectReference Include="..\Modules\WeeklyGoals\Domain\FoodDiary.Modules.WeeklyGoals.Domain.csproj" />
     <ProjectReference Include="..\Modules\WeeklyGoals\Infrastructure\Model\FoodDiary.Modules.WeeklyGoals.PersistenceModel.csproj" />
+    <ProjectReference Include="..\Modules\Images\Infrastructure\Model\FoodDiary.Modules.Images.PersistenceModel.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
   </ItemGroup>
 

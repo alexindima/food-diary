@@ -5908,7 +5908,7 @@
           "expression": "e => e.User)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Images/ImageAssetConfiguration.cs"
+      "path": "Modules/Images/Infrastructure/Model/Configurations/ImageAssetConfiguration.cs"
     },
     {
       "area": "FoodDiary",

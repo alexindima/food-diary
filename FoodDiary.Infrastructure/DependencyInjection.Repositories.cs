@@ -9,7 +9,6 @@ public static partial class DependencyInjection {
         services.AddDashboardReadServices();
         services.AddShoppingListPersistence();
         services.AddTrackingPersistence();
-        services.AddImagePersistence();
         services.AddAiPersistence();
         services.AddDietologistPersistence();
         services.AddNotificationPersistence();

@@ -34,7 +34,6 @@
     <Project Path="FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj" />
     <Project Path="FoodDiary.Application.Export/FoodDiary.Application.Export.csproj" />
     <Project Path="FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj" />
-    <Project Path="FoodDiary.Application.Images/FoodDiary.Application.Images.csproj" />
     <Project Path="FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj" />
   </Folder>
   <Folder Name="/Modules/" />
@@ -46,6 +45,13 @@
     <Project Path="Modules/ContentReports/Infrastructure/FoodDiary.Modules.ContentReports.Infrastructure.csproj" />
     <Project Path="Modules/ContentReports/Infrastructure/Model/FoodDiary.Modules.ContentReports.PersistenceModel.csproj" />
     <Project Path="Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/FoodDiary.Modules.ContentReports.Application.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Images/">
+    <Project Path="Modules/Images/Application/FoodDiary.Application.Images.csproj" />
+    <Project Path="Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <Project Path="Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj" />
+    <Project Path="Modules/Images/Infrastructure/Model/FoodDiary.Modules.Images.PersistenceModel.csproj" />
+    <Project Path="Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/FoodDiary.Modules.Images.Application.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/DailyAdvices/">
     <Project Path="Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj" />

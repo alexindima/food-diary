@@ -50,7 +50,6 @@
     <ProjectReference Include="..\..\FoodDiary.Application.Marketing\FoodDiary.Application.Marketing.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Billing\FoodDiary.Application.Billing.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Application.Images\FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Ai\FoodDiary.Application.Ai.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Statistics\FoodDiary.Application.Statistics.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />

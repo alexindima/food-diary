@@ -22,7 +22,7 @@ public sealed class BackendModuleManifestTests {
             ? [.. Directory.GetDirectories(modulesRoot, "*", SearchOption.TopDirectoryOnly)
                 .Where(directory => Directory.GetFiles(
                     Path.Combine(directory, "Application"),
-                    "FoodDiary.Modules.*.Application.csproj",
+                    "*Application*.csproj",
                     SearchOption.TopDirectoryOnly).Length == 1)
                 .Select(directory => Path.GetFileName(directory))
                 .Order(StringComparer.Ordinal)]

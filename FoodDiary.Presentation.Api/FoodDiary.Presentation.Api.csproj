@@ -27,7 +27,7 @@
     <ProjectReference Include="..\FoodDiary.Application.Gamification\FoodDiary.Application.Gamification.csproj" />
     <ProjectReference Include="..\Modules\Hydration\Application\FoodDiary.Modules.Hydration.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Identity\FoodDiary.Application.Identity.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Images\FoodDiary.Application.Images.csproj" />
+    <ProjectReference Include="..\Modules\Images\Application\FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="..\Modules\Lessons\Application\FoodDiary.Modules.Lessons.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Marketing\FoodDiary.Application.Marketing.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.MealPlanning\FoodDiary.Application.MealPlanning.csproj" />

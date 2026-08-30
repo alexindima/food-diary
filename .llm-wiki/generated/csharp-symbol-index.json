@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3495,
-    "symbols": 3500,
+    "sourceFiles": 3497,
+    "symbols": 3501,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 234,
     "kinds": {
-      "class": 1827,
+      "class": 1828,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1352,
+      "Other": 1353,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -2398,90 +2398,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Hydration/Common/HydrationEntryErrors.cs",
       "line": 4
-    },
-    {
-      "name": "DeleteImageAssetResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Images/Common/DeleteImageAssetResult.cs",
-      "line": 2
-    },
-    {
-      "name": "IImageAssetAccessService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs",
-      "line": 6
-    },
-    {
-      "name": "IImageAssetCleanupService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs",
-      "line": 4
-    },
-    {
-      "name": "IImageAssetReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Images/Common/IImageAssetReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IImageAssetRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Images/Common/IImageAssetRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IImageAssetWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Images/Common/IImageAssetWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IImageObjectDeletionOutbox",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Images/Common/IImageObjectDeletionOutbox.cs",
-      "line": 2
-    },
-    {
-      "name": "IImageObjectDeletionOutboxProcessor",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Images/Common/IImageObjectDeletionOutboxProcessor.cs",
-      "line": 2
-    },
-    {
-      "name": "IImageStorageService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Images/Common/IImageStorageService.cs",
-      "line": 4
-    },
-    {
-      "name": "ImageErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Images/Common/ImageErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "ImageObjectValidationResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Images/Common/ImageObjectValidationResult.cs",
-      "line": 2
-    },
-    {
-      "name": "PresignedUpload",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Images/Common/PresignedUpload.cs",
-      "line": 2
     },
     {
       "name": "IMarketingAttributionEventReadRepository",
@@ -8546,104 +8462,6 @@
       "line": 6
     },
     {
-      "name": "ConfirmImageUploadCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "ConfirmImageUploadCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "ConfirmImageUploadResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadResult.cs",
-      "line": 2
-    },
-    {
-      "name": "DeleteImageAssetCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteImageAssetCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "GetImageUploadUrlCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "GetImageUploadUrlCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "GetImageUploadUrlResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlResult.cs",
-      "line": 2
-    },
-    {
-      "name": "ImageAssetIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Images/Common/ImageAssetIdParser.cs",
-      "line": 6
-    },
-    {
-      "name": "ImageAssetResolution",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Images/Common/ImageAssetResolution.cs",
-      "line": 5
-    },
-    {
-      "name": "ImageAssetResolver",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Images/Common/ImageAssetResolver.cs",
-      "line": 7
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Images/DependencyInjection.cs",
-      "line": 7
-    },
-    {
-      "name": "ImageAssetAccessService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Images/Services/ImageAssetAccessService.cs",
-      "line": 8
-    },
-    {
-      "name": "ImageAssetCleanupService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Images/Services/ImageAssetCleanupService.cs",
-      "line": 8
-    },
-    {
       "name": "RecordMarketingAttributionCommand",
       "kind": "record",
       "role": "Command",
@@ -13827,13 +13645,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Images.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Learning.cs",
       "line": 6
     },
@@ -14447,13 +14258,6 @@
       "line": 7
     },
     {
-      "name": "ImageAssetConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Images/ImageAssetConfiguration.cs",
-      "line": 7
-    },
-    {
       "name": "ImageObjectDeletionOutboxMessageConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -15042,32 +14846,11 @@
       "line": 6
     },
     {
-      "name": "ImageAssetRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Images/ImageAssetRepository.cs",
-      "line": 7
-    },
-    {
-      "name": "ImageObjectDeletionOutbox",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs",
-      "line": 4
-    },
-    {
       "name": "ImageObjectDeletionOutboxMessage",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Images/ImageObjectDeletionOutboxMessage.cs",
       "line": 4
-    },
-    {
-      "name": "ImageObjectDeletionOutboxProcessor",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
-      "line": 8
     },
     {
       "name": "CollaborationAuditInterceptor",
@@ -15648,7 +15431,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 397
+      "line": 399
     },
     {
       "name": "UsdaCsvReader",
@@ -16096,7 +15879,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 63
+      "line": 65
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -20240,7 +20023,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 53
+      "line": 54
     },
     {
       "name": "ApiTelemetry",
@@ -23750,6 +23533,230 @@
       "line": 10
     },
     {
+      "name": "DeleteImageAssetResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Application/Abstractions/Common/DeleteImageAssetResult.cs",
+      "line": 2
+    },
+    {
+      "name": "IImageAssetAccessService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetAccessService.cs",
+      "line": 6
+    },
+    {
+      "name": "IImageAssetCleanupService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupService.cs",
+      "line": 4
+    },
+    {
+      "name": "IImageAssetReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IImageAssetRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IImageAssetWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IImageObjectDeletionOutbox",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Images/Application/Abstractions/Common/IImageObjectDeletionOutbox.cs",
+      "line": 2
+    },
+    {
+      "name": "IImageObjectDeletionOutboxProcessor",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Images/Application/Abstractions/Common/IImageObjectDeletionOutboxProcessor.cs",
+      "line": 2
+    },
+    {
+      "name": "IImageStorageService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Images/Application/Abstractions/Common/IImageStorageService.cs",
+      "line": 4
+    },
+    {
+      "name": "ImageErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Application/Abstractions/Common/ImageErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "ImageObjectValidationResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Application/Abstractions/Common/ImageObjectValidationResult.cs",
+      "line": 2
+    },
+    {
+      "name": "PresignedUpload",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Application/Abstractions/Common/PresignedUpload.cs",
+      "line": 2
+    },
+    {
+      "name": "ConfirmImageUploadCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "ConfirmImageUploadCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "ConfirmImageUploadResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadResult.cs",
+      "line": 2
+    },
+    {
+      "name": "DeleteImageAssetCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Images/Application/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteImageAssetCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Images/Application/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "GetImageUploadUrlCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Images/Application/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "GetImageUploadUrlCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Images/Application/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "GetImageUploadUrlResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Application/Commands/GetUploadUrl/GetImageUploadUrlResult.cs",
+      "line": 2
+    },
+    {
+      "name": "ImageAssetIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Application/Common/ImageAssetIdParser.cs",
+      "line": 6
+    },
+    {
+      "name": "ImageAssetResolution",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Application/Common/ImageAssetResolution.cs",
+      "line": 5
+    },
+    {
+      "name": "ImageAssetResolver",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Application/Common/ImageAssetResolver.cs",
+      "line": 7
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Application/DependencyInjection.cs",
+      "line": 7
+    },
+    {
+      "name": "ImageAssetAccessService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Images/Application/Services/ImageAssetAccessService.cs",
+      "line": 8
+    },
+    {
+      "name": "ImageAssetCleanupService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Images/Application/Services/ImageAssetCleanupService.cs",
+      "line": 8
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
+      "line": 6
+    },
+    {
+      "name": "ImageAssetConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Images/Infrastructure/Model/Configurations/ImageAssetConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "ImagesPersistenceModelBuilderExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Infrastructure/Model/ImagesPersistenceModelBuilderExtensions.cs",
+      "line": 4
+    },
+    {
+      "name": "ImageAssetRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetRepository.cs",
+      "line": 7
+    },
+    {
+      "name": "ImageObjectDeletionOutbox",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs",
+      "line": 4
+    },
+    {
+      "name": "ImageObjectDeletionOutboxProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
+      "line": 8
+    },
+    {
       "name": "INutritionLessonReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
@@ -25307,37 +25314,37 @@
     },
     {
       "interface": "IImageAssetAccessService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs",
+      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetAccessService.cs",
       "implementation": "ImageAssetAccessService",
-      "implementationPath": "FoodDiary.Application.Images/Services/ImageAssetAccessService.cs",
+      "implementationPath": "Modules/Images/Application/Services/ImageAssetAccessService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IImageAssetCleanupService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs",
+      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupService.cs",
       "implementation": "ImageAssetCleanupService",
-      "implementationPath": "FoodDiary.Application.Images/Services/ImageAssetCleanupService.cs",
+      "implementationPath": "Modules/Images/Application/Services/ImageAssetCleanupService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IImageAssetRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Images/Common/IImageAssetRepository.cs",
+      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetRepository.cs",
       "implementation": "ImageAssetRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Images/ImageAssetRepository.cs",
+      "implementationPath": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IImageObjectDeletionOutbox",
-      "interfacePath": "FoodDiary.Application.Abstractions/Images/Common/IImageObjectDeletionOutbox.cs",
+      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageObjectDeletionOutbox.cs",
       "implementation": "ImageObjectDeletionOutbox",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs",
+      "implementationPath": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IImageObjectDeletionOutboxProcessor",
-      "interfacePath": "FoodDiary.Application.Abstractions/Images/Common/IImageObjectDeletionOutboxProcessor.cs",
+      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageObjectDeletionOutboxProcessor.cs",
       "implementation": "ImageObjectDeletionOutboxProcessor",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
+      "implementationPath": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26547,20 +26554,6 @@
       "line": 25
     },
     {
-      "service": "IImageAssetAccessService",
-      "implementation": "ImageAssetAccessService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Images/DependencyInjection.cs",
-      "line": 12
-    },
-    {
-      "service": "IImageAssetCleanupService",
-      "implementation": "ImageAssetCleanupService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Images/DependencyInjection.cs",
-      "line": 13
-    },
-    {
       "service": "IMarketingAttributionCleanupService",
       "implementation": "MarketingAttributionCleanupService",
       "lifetime": "Scoped",
@@ -27114,27 +27107,6 @@
       "line": 21
     },
     {
-      "service": "IImageAssetRepository",
-      "implementation": "ImageAssetRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Images.cs",
-      "line": 9
-    },
-    {
-      "service": "IImageObjectDeletionOutbox",
-      "implementation": "ImageObjectDeletionOutbox",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Images.cs",
-      "line": 12
-    },
-    {
-      "service": "IImageObjectDeletionOutboxProcessor",
-      "implementation": "ImageObjectDeletionOutboxProcessor",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Images.cs",
-      "line": 13
-    },
-    {
       "service": "IMealPlanRepository",
       "implementation": "MealPlanRepository",
       "lifetime": "Scoped",
@@ -27461,14 +27433,14 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 126
+      "line": 128
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 127
+      "line": 129
     },
     {
       "service": "IGoogleTokenValidator",
@@ -27545,7 +27517,7 @@
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 55
+      "line": 57
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -27622,28 +27594,28 @@
       "implementation": "WearableTokenProtector",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 63
+      "line": 64
     },
     {
       "service": "INotificationTextRenderer",
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 106
+      "line": 108
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 107
+      "line": 109
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 139
+      "line": 141
     },
     {
       "service": "IMailInboxReadinessChecker",
@@ -27770,6 +27742,41 @@
       "lifetime": "Scoped",
       "path": "Modules/Hydration/Application/DependencyInjection.cs",
       "line": 16
+    },
+    {
+      "service": "IImageAssetAccessService",
+      "implementation": "ImageAssetAccessService",
+      "lifetime": "Scoped",
+      "path": "Modules/Images/Application/DependencyInjection.cs",
+      "line": 12
+    },
+    {
+      "service": "IImageAssetCleanupService",
+      "implementation": "ImageAssetCleanupService",
+      "lifetime": "Scoped",
+      "path": "Modules/Images/Application/DependencyInjection.cs",
+      "line": 13
+    },
+    {
+      "service": "IImageAssetRepository",
+      "implementation": "ImageAssetRepository",
+      "lifetime": "Scoped",
+      "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
+      "line": 9
+    },
+    {
+      "service": "IImageObjectDeletionOutbox",
+      "implementation": "ImageObjectDeletionOutbox",
+      "lifetime": "Scoped",
+      "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
+      "line": 12
+    },
+    {
+      "service": "IImageObjectDeletionOutboxProcessor",
+      "implementation": "ImageObjectDeletionOutboxProcessor",
+      "lifetime": "Scoped",
+      "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
+      "line": 13
     },
     {
       "service": "ILessonReadService",

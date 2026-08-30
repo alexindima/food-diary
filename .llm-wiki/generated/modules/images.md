@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Images/FoodDiary.Application.Images.csproj`
+- Extracted project: `Modules/Images/Application/FoodDiary.Application.Images.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: none observed
 - Business-module consumers: none observed
@@ -24,11 +24,8 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Images`
 - `FoodDiary.Application.Images`
 - `FoodDiary.Domain/Entities/Assets`
-- `FoodDiary.Infrastructure/Persistence/Configurations/Images`
-- `FoodDiary.Infrastructure/Persistence/Images`
 - `FoodDiary.Presentation.Api/Features/Images`
 
 ## HTTP Surface
@@ -47,36 +44,25 @@ Source: `FoodDiary.Presentation.Api/Features/Images/ImagesController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ImageAsset, ImageObjectDeletionOutboxMessage
-- Public contract files: 12
+- Public contract files: 0
 - Observed external consumer groups: 8
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 12
-- Interfaces: 8
+- Public contract types: 0
+- Interfaces: 0
 - DTO/read-model/projection types: 0
 - Enums: 0
-- Exported repository-shaped contracts: 3
-- Contracts referencing domain entities: 3
-- `class ImageErrors`
-- `interface IImageAssetAccessService`
-- `interface IImageAssetCleanupService`
-- `interface IImageAssetReadRepository`
-- `interface IImageAssetRepository`
-- `interface IImageAssetWriteRepository`
-- `interface IImageObjectDeletionOutbox`
-- `interface IImageObjectDeletionOutboxProcessor`
-- `interface IImageStorageService`
-- `record DeleteImageAssetResult`
-- `record ImageObjectValidationResult`
-- `record PresignedUpload`
+- Exported repository-shaped contracts: 0
+- Contracts referencing domain entities: 0
+- No public declaration was found in the mapped abstraction areas.
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Images/ImagesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/Images/ImagesFeatureTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ImagesModuleExtractionTests.cs`
 
 ## Working Rule

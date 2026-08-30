@@ -47,7 +47,10 @@ COPY Modules/Tdee/Application/*.csproj Modules/Tdee/Application/
 COPY FoodDiary.Application.OpenFoodFacts/*.csproj FoodDiary.Application.OpenFoodFacts/
 COPY FoodDiary.Application.Products/*.csproj FoodDiary.Application.Products/
 COPY FoodDiary.Application.Recipes/*.csproj FoodDiary.Application.Recipes/
-COPY FoodDiary.Application.Images/*.csproj FoodDiary.Application.Images/
+COPY Modules/Images/Application/*.csproj Modules/Images/Application/
+COPY Modules/Images/Application/Abstractions/*.csproj Modules/Images/Application/Abstractions/
+COPY Modules/Images/Infrastructure/*.csproj Modules/Images/Infrastructure/
+COPY Modules/Images/Infrastructure/Model/*.csproj Modules/Images/Infrastructure/Model/
 COPY FoodDiary.Application.Ai/*.csproj FoodDiary.Application.Ai/
 COPY FoodDiary.Application.Statistics/*.csproj FoodDiary.Application.Statistics/
 COPY FoodDiary.Application.Meals/*.csproj FoodDiary.Application.Meals/
@@ -117,7 +120,10 @@ COPY Modules/Tdee/Application/ Modules/Tdee/Application/
 COPY FoodDiary.Application.OpenFoodFacts/ FoodDiary.Application.OpenFoodFacts/
 COPY FoodDiary.Application.Products/ FoodDiary.Application.Products/
 COPY FoodDiary.Application.Recipes/ FoodDiary.Application.Recipes/
-COPY FoodDiary.Application.Images/ FoodDiary.Application.Images/
+COPY Modules/Images/Application/ Modules/Images/Application/
+COPY Modules/Images/Application/Abstractions/ Modules/Images/Application/Abstractions/
+COPY Modules/Images/Infrastructure/ Modules/Images/Infrastructure/
+COPY Modules/Images/Infrastructure/Model/ Modules/Images/Infrastructure/Model/
 COPY FoodDiary.Application.Ai/ FoodDiary.Application.Ai/
 COPY FoodDiary.Application.Statistics/ FoodDiary.Application.Statistics/
 COPY FoodDiary.Application.Meals/ FoodDiary.Application.Meals/

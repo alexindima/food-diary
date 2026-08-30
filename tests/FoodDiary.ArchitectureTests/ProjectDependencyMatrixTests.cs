@@ -209,6 +209,19 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Domain",
                 "FoodDiary.Mediator",
+                "FoodDiary.Modules.Images.Application.Abstractions",
+            ],
+            ["FoodDiary.Modules.Images.Application.Abstractions"] = [
+                "FoodDiary.Domain",
+                "FoodDiary.Results",
+            ],
+            ["FoodDiary.Modules.Images.PersistenceModel"] = [
+                "FoodDiary.Domain",
+            ],
+            ["FoodDiary.Modules.Images.Infrastructure"] = [
+                "FoodDiary.Application.Images",
+                "FoodDiary.Infrastructure",
+                "FoodDiary.Modules.Images.PersistenceModel",
             ],
             ["FoodDiary.Application.MealPlanning"] = [
                 "FoodDiary.Application.Abstractions",
@@ -311,6 +324,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Domain",
                 "FoodDiary.Domain.Primitives",
                 "FoodDiary.Mediator",
+                "FoodDiary.Modules.Images.Application.Abstractions",
                 "FoodDiary.Results",
             ],
             ["FoodDiary.Domain"] = [
@@ -327,6 +341,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Fasting.Domain",
                 "FoodDiary.Modules.Fasting.PersistenceModel",
                 "FoodDiary.Modules.Hydration.PersistenceModel",
+                "FoodDiary.Modules.Images.PersistenceModel",
                 "FoodDiary.Modules.Lessons.Domain",
                 "FoodDiary.Modules.Lessons.PersistenceModel",
                 "FoodDiary.Modules.WeeklyGoals.Domain",
@@ -347,6 +362,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Fasting.Infrastructure",
                 "FoodDiary.Application.Favorites",
                 "FoodDiary.Modules.Hydration.Infrastructure",
+                "FoodDiary.Modules.Images.Infrastructure",
                 "FoodDiary.Application.Identity",
                 "FoodDiary.Application.Images",
                 "FoodDiary.Modules.Lessons.Infrastructure",
@@ -389,6 +405,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Gamification",
                 "FoodDiary.Modules.Fasting.Contracts",
                 "FoodDiary.Modules.Fasting.Infrastructure",
+                "FoodDiary.Modules.Images.Infrastructure",
                 "FoodDiary.Application.Favorites",
                 "FoodDiary.Application.Identity",
                 "FoodDiary.Application.Images",
@@ -523,6 +540,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Fasting.Infrastructure",
                 "FoodDiary.Application.Favorites",
                 "FoodDiary.Modules.Hydration.Infrastructure",
+                "FoodDiary.Modules.Images.Infrastructure",
                 "FoodDiary.Application.Identity",
                 "FoodDiary.Application.Images",
                 "FoodDiary.Modules.Lessons.Infrastructure",
@@ -576,7 +594,6 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Hydration.Application",
                 "FoodDiary.Modules.Hydration.Infrastructure",
                 "FoodDiary.Application.Identity",
-                "FoodDiary.Application.Images",
                 "FoodDiary.Modules.Lessons.Application",
                 "FoodDiary.Modules.Lessons.Application.Abstractions",
                 "FoodDiary.Modules.Lessons.Contracts",
@@ -635,6 +652,10 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Initializer",
                 "FoodDiary.Modules.Hydration.Infrastructure",
                 "FoodDiary.Testing",
+            ],
+            ["FoodDiary.Modules.Images.Application.Tests"] = [
+                "FoodDiary.Application.Images",
+                "FoodDiary.Application.Users",
             ],
             ["FoodDiary.Modules.Lessons.Application.Tests"] = [
                 "FoodDiary.Modules.Lessons.Application",

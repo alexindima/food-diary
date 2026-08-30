@@ -309,7 +309,9 @@ public sealed class SideEffectReliabilityGuardrailTests {
             "Services",
             "NotificationWriter.cs");
         string imageCleanupPath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application.Images",
+            "Modules",
+            "Images",
+            "Application",
             "Services",
             "ImageAssetCleanupService.cs");
         string userCleanupPath = ArchitectureTestPaths.FromRoot(

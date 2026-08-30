@@ -3,7 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Infrastructure.Persistence.Configurations.Images;
+namespace FoodDiary.Infrastructure.Persistence.Configurations;
 
 internal sealed class ImageAssetConfiguration : IEntityTypeConfiguration<ImageAsset> {
     public void Configure(EntityTypeBuilder<ImageAsset> builder) {

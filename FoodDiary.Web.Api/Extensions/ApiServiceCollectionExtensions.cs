@@ -30,6 +30,7 @@ using FoodDiary.Application.Usda;
 using FoodDiary.Application.WeeklyCheckIn;
 using FoodDiary.Modules.DailyAdvices.Infrastructure;
 using FoodDiary.Modules.ContentReports.Infrastructure;
+using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Application.Gamification;
 using FoodDiary.Application.Export;
 using FoodDiary.Application.Abstractions.Export.Common;
@@ -102,6 +103,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddBillingModule()
                 .AddMarketingModule()
                 .AddInfrastructure(configuration)
+                .AddImagesInfrastructure()
                 .AddIntegrations(configuration)
                 .AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>()
                 .AddSingleton<IDiaryPdfReportTextProvider, DiaryPdfReportResourceTextProvider>()

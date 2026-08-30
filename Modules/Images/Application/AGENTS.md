@@ -2,7 +2,7 @@
 
 ## Scope
 
-Rules for `FoodDiary.Application.Images/`.
+Rules for `Modules/Images/Application/`.
 
 ## Boundary
 
@@ -13,5 +13,5 @@ Rules for `FoodDiary.Application.Images/`.
 
 ## Commands
 
-- Build: `dotnet build FoodDiary.Application.Images/FoodDiary.Application.Images.csproj`
-- Tests: `dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --filter FullyQualifiedName~Images`
+- Build: `dotnet build Modules/Images/Application/FoodDiary.Application.Images.csproj`
+- Tests: `dotnet test Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/FoodDiary.Modules.Images.Application.Tests.csproj`

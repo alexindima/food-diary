@@ -561,7 +561,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 86
+      "line": 87
     },
     {
       "category": "credential",
@@ -7992,20 +7992,6 @@
     },
     {
       "category": "privateContent",
-      "name": "ImageAsset",
-      "type": "ImageAsset?",
-      "path": "FoodDiary.Application.Images/Common/ImageAssetResolution.cs",
-      "line": 6
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "ImageAssetId?",
-      "path": "FoodDiary.Application.Images/Common/ImageAssetResolution.cs",
-      "line": 6
-    },
-    {
-      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
@@ -9676,6 +9662,20 @@
       "type": "bool?",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
       "line": 34
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAsset",
+      "type": "ImageAsset?",
+      "path": "Modules/Images/Application/Common/ImageAssetResolution.cs",
+      "line": 6
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "ImageAssetId?",
+      "path": "Modules/Images/Application/Common/ImageAssetResolution.cs",
+      "line": 6
     }
   ],
   "boundaryFiles": [

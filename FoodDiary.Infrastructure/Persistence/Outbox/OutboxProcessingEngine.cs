@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Infrastructure.Persistence.Outbox;
 
-internal static class OutboxProcessingEngine {
+public static class OutboxProcessingEngine {
     public static async Task<int> ProcessDueAsync<TMessage>(
         FoodDiaryDbContext context,
         DbSet<TMessage> messages,

@@ -153,6 +153,7 @@
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
@@ -344,7 +345,8 @@
         "dependencies": {
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )"
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )"
         }
       },
       "FoodDiary.Application.Lessons": {
@@ -589,6 +591,13 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.images.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
         }
       },
       "fooddiary.modules.lessons.application.abstractions": {

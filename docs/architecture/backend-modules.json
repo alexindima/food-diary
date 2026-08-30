@@ -35,7 +35,6 @@
     "FavoriteProducts": "Favorites",
     "FavoriteRecipes": "Favorites",
     "Hydration": "Hydration",
-    "Images": "Images",
     "Marketing": "Marketing",
     "MealPlans": "MealPlanning",
     "Meals": "Meals",
@@ -371,15 +370,11 @@
         "applicationProjects": [
           "FoodDiary.Application.Images"
         ],
-        "abstractionAreas": [
-          "Images"
-        ],
+        "abstractionAreas": ["Modules/Images/Application/Abstractions"],
         "domainAreas": [
           "Assets"
         ],
-        "persistenceAreas": [
-          "Images"
-        ]
+        "persistenceAreas": ["Modules/Images/Infrastructure"]
       }
     },
     "Lessons": {

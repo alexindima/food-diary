@@ -642,12 +642,9 @@ public sealed class ApplicationGuardrailTests {
             "Abstractions",
             "Results",
             facadeFileName);
-        string featureErrorsPath = Path.Combine(
-            root,
-            "FoodDiary.Application.Abstractions",
-            featureDirectory,
-            featureCommonDirectory,
-            featureErrorsFileName);
+        string featureErrorsPath = string.Equals(featureDirectory, "Images", StringComparison.Ordinal)
+            ? Path.Combine(root, "Modules", "Images", "Application", "Abstractions", featureCommonDirectory, featureErrorsFileName)
+            : Path.Combine(root, "FoodDiary.Application.Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName);
 
         string facadeSource = File.ReadAllText(facadePath);
         string featureErrorsSource = File.ReadAllText(featureErrorsPath);
