@@ -4,7 +4,7 @@
     "domainTypes": 262,
     "entities": 78,
     "valueObjects": 115,
-    "invariants": 495,
+    "invariants": 496,
     "persistenceMappings": 86,
     "indexes": 155,
     "relationships": 100
@@ -105,7 +105,7 @@
       "area": "FoodDiary",
       "name": "AchievementDefinition",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
+      "path": "Modules/Gamification/Domain/Entities/Achievements/AchievementDefinition.cs",
       "line": 6
     },
     {
@@ -553,8 +553,8 @@
       "area": "FoodDiary",
       "name": "UserAchievement",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
-      "line": 7
+      "path": "Modules/Gamification/Domain/Entities/Achievements/UserAchievement.cs",
+      "line": 6
     },
     {
       "area": "FoodDiary",
@@ -651,7 +651,7 @@
       "area": "FoodDiary",
       "name": "AchievementMetric",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/AchievementMetric.cs",
+      "path": "Modules/Gamification/Domain/Enums/AchievementMetric.cs",
       "line": 2
     },
     {
@@ -952,7 +952,7 @@
       "area": "FoodDiary",
       "name": "AchievementDefinitionId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/AchievementDefinitionId.cs",
+      "path": "Modules/Gamification/Domain/ValueObjects/Ids/AchievementDefinitionId.cs",
       "line": 4
     },
     {
@@ -1540,7 +1540,7 @@
       "area": "FoodDiary",
       "name": "UserAchievementId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/UserAchievementId.cs",
+      "path": "Modules/Gamification/Domain/ValueObjects/Ids/UserAchievementId.cs",
       "line": 4
     },
     {
@@ -1943,76 +1943,6 @@
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\")",
       "path": "FoodDiary.Domain/Common/DomainGuard.cs",
       "line": 144
-    },
-    {
-      "area": "FoodDiary",
-      "type": "InvalidOperationException",
-      "message": "throw new InvalidOperationException(\"Achievement definition version limit has been reached.\")",
-      "path": "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
-      "line": 71
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(metric))",
-      "path": "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
-      "line": 87
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Only ASCII letters, digits, underscores and hyphens are allowed.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
-      "line": 116
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
-      "line": 121
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName)",
-      "path": "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
-      "line": 127
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
-      "line": 29
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentNullException.ThrowIfNull",
-      "message": "ArgumentNullException.ThrowIfNull(achievementKey)",
-      "path": "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
-      "line": 32
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(achievementKey), $\"Achievement key must contain between 1 and {AchievementKeyMaxLength} characters.\")",
-      "path": "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
-      "line": 36
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(earnedValue), \"Earned value cannot be negative.\")",
-      "path": "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
-      "line": 40
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(definitionVersion), \"Definition version must be positive.\")",
-      "path": "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
-      "line": 44
     },
     {
       "area": "FoodDiary",
@@ -5117,6 +5047,83 @@
     },
     {
       "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"Achievement definition version limit has been reached.\")",
+      "path": "Modules/Gamification/Domain/Entities/Achievements/AchievementDefinition.cs",
+      "line": 71
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(metric))",
+      "path": "Modules/Gamification/Domain/Entities/Achievements/AchievementDefinition.cs",
+      "line": 87
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Only ASCII letters, digits, underscores and hyphens are allowed.\", paramName)",
+      "path": "Modules/Gamification/Domain/Entities/Achievements/AchievementDefinition.cs",
+      "line": 116
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
+      "path": "Modules/Gamification/Domain/Entities/Achievements/AchievementDefinition.cs",
+      "line": 121
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName)",
+      "path": "Modules/Gamification/Domain/Entities/Achievements/AchievementDefinition.cs",
+      "line": 127
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
+      "path": "Modules/Gamification/Domain/Entities/Achievements/UserAchievement.cs",
+      "line": 28
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(achievementKey)",
+      "path": "Modules/Gamification/Domain/Entities/Achievements/UserAchievement.cs",
+      "line": 31
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(achievementKey), $\"Achievement key must contain between 1 and {AchievementKeyMaxLength} characters.\")",
+      "path": "Modules/Gamification/Domain/Entities/Achievements/UserAchievement.cs",
+      "line": 35
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(earnedValue), \"Earned value cannot be negative.\")",
+      "path": "Modules/Gamification/Domain/Entities/Achievements/UserAchievement.cs",
+      "line": 39
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(definitionVersion), \"Definition version must be positive.\")",
+      "path": "Modules/Gamification/Domain/Entities/Achievements/UserAchievement.cs",
+      "line": 43
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(earnedAtUtc), \"UTC timestamp kind must be specified.\")",
+      "path": "Modules/Gamification/Domain/Entities/Achievements/UserAchievement.cs",
+      "line": 47
+    },
+    {
+      "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName)",
       "path": "Modules/Lessons/Domain/Entities/Content/LessonsDomainGuard.cs",
@@ -5322,7 +5329,7 @@
         "item => new { item.IsActive, item.SortOrder })"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/AchievementDefinitionConfiguration.cs"
+      "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/AchievementDefinitionConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6560,7 +6567,7 @@
           "expression": "achievement => achievement.User)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/UserAchievementConfiguration.cs"
+      "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/UserAchievementConfiguration.cs"
     },
     {
       "area": "FoodDiary",

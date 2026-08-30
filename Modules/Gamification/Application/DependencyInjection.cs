@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Application.Gamification;
 
 public static class DependencyInjection {
-    public static IServiceCollection AddGamificationModule(this IServiceCollection services) {
+    public static IServiceCollection AddGamificationApplication(this IServiceCollection services) {
         services.AddFoodDiaryMediator(configuration =>
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);

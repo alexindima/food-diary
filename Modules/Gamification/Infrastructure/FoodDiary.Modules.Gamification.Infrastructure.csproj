@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Modules.Gamification.Infrastructure</AssemblyName>
+    <RootNamespace>FoodDiary.Modules.Gamification.Infrastructure</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Model/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Application\FoodDiary.Modules.Gamification.Application.csproj" />
+    <ProjectReference Include="..\Application\Abstractions\FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="Model\FoodDiary.Modules.Gamification.PersistenceModel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="FoodDiary.Infrastructure.Persistence" />
+    <Using Include="FoodDiary.Infrastructure.Persistence.Achievements" />
+  </ItemGroup>
+</Project>

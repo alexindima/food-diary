@@ -3,7 +3,7 @@ using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Achievements;
+namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 
 internal sealed class AchievementMetricReader(FoodDiaryDbContext context) : IAchievementMetricReader {
     public Task<int> GetCompletedAcademyArticleCountAsync(

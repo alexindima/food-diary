@@ -17,6 +17,7 @@ public sealed class LessonsModuleExtractionTests {
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.Gamification.Application.Abstractions",
             "FoodDiary.Modules.Lessons.Application.Abstractions",
             "FoodDiary.Modules.Lessons.Contracts",
             "FoodDiary.Modules.Lessons.Domain",

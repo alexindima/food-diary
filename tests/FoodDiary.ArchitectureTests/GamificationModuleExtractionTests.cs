@@ -5,7 +5,7 @@ public sealed class GamificationModuleExtractionTests {
     [Fact]
     public void GamificationApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Gamification");
-        string extractedRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Gamification");
+        string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "Gamification", "Application");
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
     }
@@ -13,11 +13,13 @@ public sealed class GamificationModuleExtractionTests {
     [Fact]
     public void ExtractedGamificationAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj");
+            "Modules/Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.Gamification.Application.Abstractions",
+            "FoodDiary.Modules.Gamification.Domain",
         ], references);
     }
 

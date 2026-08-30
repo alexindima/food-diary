@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 407,
+    "productionProjectEdges": 423,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -4995,11 +4995,6 @@
       "marker": "todo"
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
-      "line": 47,
-      "marker": "#pragma warning disable"
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
       "line": 94,
       "marker": "#pragma warning disable"
@@ -5022,6 +5017,11 @@
     {
       "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
       "line": 13,
+      "marker": "#pragma warning disable"
+    },
+    {
+      "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
+      "line": 47,
       "marker": "#pragma warning disable"
     }
   ]

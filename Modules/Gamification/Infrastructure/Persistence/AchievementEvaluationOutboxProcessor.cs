@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace FoodDiary.Infrastructure.Persistence.Achievements;
+namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 
 internal sealed class AchievementEvaluationOutboxProcessor(
     FoodDiaryDbContext context,

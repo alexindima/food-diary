@@ -15,7 +15,6 @@
     ]
   },
   "applicationAbstractionOwnership": {
-    "Achievements": "Gamification",
     "Admin": "Admin",
     "Ai": "Ai",
     "Audit": "Application.Runtime",
@@ -333,13 +332,14 @@
     },
     "Gamification": {
       "role": "read-composer",
-      "physicalIsolation": "project",
+      "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix",
       "ownedEntities": [],
       "sourceMappings": {
-        "applicationProjects": ["FoodDiary.Application.Gamification"],
-        "abstractionAreas": ["Achievements"],
-        "persistenceAreas": ["Achievements"]
+        "applicationProjects": ["Modules/Gamification/Application"],
+        "abstractionAreas": ["Modules/Gamification/Application/Abstractions"],
+        "domainAreas": ["Modules/Gamification/Domain"],
+        "persistenceAreas": ["Modules/Gamification/Infrastructure"]
       }
     },
     "Hydration": {

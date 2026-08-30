@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>FoodDiary.Application.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Application\FoodDiary.Modules.Gamification.Application.csproj" />
+    <ProjectReference Include="..\..\Application\Abstractions\FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
+    <ProjectReference Include="..\..\..\..\FoodDiary.Application.Admin\FoodDiary.Application.Admin.csproj" />
+    <ProjectReference Include="..\..\..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="NSubstitute" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+</Project>

@@ -3,7 +3,7 @@ using FoodDiary.Domain.Entities.Achievements;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Achievements;
+namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 
 public sealed class AchievementDefinitionStore(FoodDiaryDbContext context) : IAchievementDefinitionStore {
     public async Task<IReadOnlyList<AchievementDefinition>> GetAllAsync(CancellationToken cancellationToken = default) =>

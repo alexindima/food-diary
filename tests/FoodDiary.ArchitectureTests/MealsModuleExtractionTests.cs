@@ -19,6 +19,7 @@ public sealed class MealsModuleExtractionTests {
             "FoodDiary.Application.Images",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.Gamification.Application.Abstractions",
         ], references);
     }
 

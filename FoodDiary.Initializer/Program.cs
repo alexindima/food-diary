@@ -33,7 +33,7 @@ using FoodDiary.Application.WeeklyCheckIn;
 using FoodDiary.Modules.DailyAdvices.Infrastructure;
 using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
-using FoodDiary.Application.Gamification;
+using FoodDiary.Modules.Gamification.Infrastructure;
 using FoodDiary.Application.Export;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;

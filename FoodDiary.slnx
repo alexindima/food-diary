@@ -31,7 +31,6 @@
     <Project Path="FoodDiary.Application.Ai/FoodDiary.Application.Ai.csproj" />
     <Project Path="FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj" />
     <Project Path="FoodDiary.Application.Export/FoodDiary.Application.Export.csproj" />
-    <Project Path="FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj" />
     <Project Path="FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj" />
   </Folder>
   <Folder Name="/Modules/" />
@@ -89,6 +88,18 @@
     <Project Path="Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FoodDiary.Modules.Fasting.Application.Tests.csproj" />
     <Project Path="Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FoodDiary.Modules.Fasting.Domain.Tests.csproj" />
     <Project Path="Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/FoodDiary.Modules.Fasting.Infrastructure.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Gamification/">
+    <Project Path="Modules/Gamification/Application/Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
+    <Project Path="Modules/Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj" />
+    <Project Path="Modules/Gamification/Domain/FoodDiary.Modules.Gamification.Domain.csproj" />
+    <Project Path="Modules/Gamification/Infrastructure/FoodDiary.Modules.Gamification.Infrastructure.csproj" />
+    <Project Path="Modules/Gamification/Infrastructure/Model/FoodDiary.Modules.Gamification.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Gamification/tests/">
+    <Project Path="Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/FoodDiary.Modules.Gamification.Application.Tests.csproj" />
+    <Project Path="Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/FoodDiary.Modules.Gamification.Domain.Tests.csproj" />
+    <Project Path="Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/FoodDiary.Modules.Gamification.Infrastructure.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Hydration/">
     <Project Path="Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj" />

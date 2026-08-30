@@ -56,7 +56,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Users application module: `FoodDiary.Application.Users/AGENTS.md`
 - Content reports application module: `FoodDiary.Application.ContentReports/AGENTS.md`
 - Content reports logical module: `Modules/ContentReports/AGENTS.md`
-- Gamification application module: `FoodDiary.Application.Gamification/AGENTS.md`
+- Gamification logical module: `Modules/Gamification/AGENTS.md`
 - Export application module: `FoodDiary.Application.Export/AGENTS.md`
 - Weekly goals logical module: `Modules/WeeklyGoals/AGENTS.md`
 - Weekly goals application abstractions: `Modules/WeeklyGoals/Application/Abstractions/AGENTS.md`

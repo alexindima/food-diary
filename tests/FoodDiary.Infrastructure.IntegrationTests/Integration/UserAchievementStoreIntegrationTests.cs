@@ -5,6 +5,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Achievements;
+using FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.Abstractions.Achievements.Common;

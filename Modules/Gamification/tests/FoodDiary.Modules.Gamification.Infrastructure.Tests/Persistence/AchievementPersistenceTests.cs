@@ -1,10 +1,10 @@
 using FoodDiary.Domain.Entities.Achievements;
 using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Domain.Entities.WeeklyGoals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Achievements;
+using FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -106,15 +106,6 @@ public sealed class AchievementPersistenceTests {
         IReadOnlyList<AchievementDefinition> result = await new AchievementDefinitionStore(context).GetAllAsync();
 
         Assert.Equal(["a", "b", "second"], result.Select(static item => item.Key), StringComparer.Ordinal);
-    }
-
-    [Fact]
-    public void FoodDiaryDbContext_ExposesWeeklyGoalsSet() {
-        using FoodDiaryDbContext context = CreateContext();
-
-        DbSet<WeeklyGoal> goals = context.WeeklyGoals;
-
-        Assert.NotNull(goals);
     }
 
     private static AchievementDefinition CreateDefinition(string key, int sortOrder) => AchievementDefinition.Create(

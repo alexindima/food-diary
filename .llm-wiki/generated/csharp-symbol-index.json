@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3499,
-    "symbols": 3504,
+    "sourceFiles": 3503,
+    "symbols": 3505,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 224,
+    "dependencyInjectionRegistrations": 219,
     "kinds": {
-      "class": 1831,
+      "class": 1832,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1356,
+      "Other": 1357,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -95,62 +95,6 @@
       "role": "Other",
       "path": "FoodDiary.Analyzers/UseExtensionBlockAnalyzer.cs",
       "line": 10
-    },
-    {
-      "name": "AchievementDefinitionErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Achievements/Common/AchievementDefinitionErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "IAchievementDefinitionStore",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs",
-      "line": 5
-    },
-    {
-      "name": "IAchievementEvaluationOutbox",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs",
-      "line": 4
-    },
-    {
-      "name": "IAchievementEvaluationOutboxProcessor",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs",
-      "line": 2
-    },
-    {
-      "name": "IAchievementMetricReader",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs",
-      "line": 4
-    },
-    {
-      "name": "IAchievementReconciliationHandler",
-      "kind": "interface",
-      "role": "Handler",
-      "path": "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs",
-      "line": 4
-    },
-    {
-      "name": "IUserAchievementStore",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs",
-      "line": 6
-    },
-    {
-      "name": "AchievementGrantModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Achievements/Models/AchievementGrantModel.cs",
-      "line": 2
     },
     {
       "name": "AdminMailInboxErrors",
@@ -6481,146 +6425,6 @@
       "line": 8
     },
     {
-      "name": "IAchievementAwardService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Gamification/Common/IAchievementAwardService.cs",
-      "line": 5
-    },
-    {
-      "name": "IAchievementDefinitionAdministrationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Gamification/Common/IAchievementDefinitionAdministrationService.cs",
-      "line": 5
-    },
-    {
-      "name": "IGamificationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Gamification/Common/IGamificationReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IGamificationUserProfile",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Gamification/Common/IGamificationUserProfile.cs",
-      "line": 2
-    },
-    {
-      "name": "IGamificationUserProfileService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Gamification/Common/IGamificationUserProfileService.cs",
-      "line": 5
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Gamification/DependencyInjection.cs",
-      "line": 9
-    },
-    {
-      "name": "AchievementDefinitionAdminModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Gamification/Models/AchievementDefinitionAdminModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AchievementDefinitionCreateInput",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Gamification/Models/AchievementDefinitionCreateInput.cs",
-      "line": 2
-    },
-    {
-      "name": "AchievementDefinitionUpdateInput",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Gamification/Models/AchievementDefinitionUpdateInput.cs",
-      "line": 2
-    },
-    {
-      "name": "AchievementMetricSnapshot",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Gamification/Models/AchievementMetricSnapshot.cs",
-      "line": 2
-    },
-    {
-      "name": "BadgeModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Gamification/Models/BadgeModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GamificationModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Gamification/Models/GamificationModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetGamificationQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Gamification/Queries/GetGamification/GetGamificationQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetGamificationQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Gamification/Queries/GetGamification/GetGamificationQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "AchievementAwardService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Gamification/Services/AchievementAwardService.cs",
-      "line": 9
-    },
-    {
-      "name": "AchievementDefinitionAdministrationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Gamification/Services/AchievementDefinitionAdministrationService.cs",
-      "line": 11
-    },
-    {
-      "name": "AchievementReconciliationHandler",
-      "kind": "class",
-      "role": "Handler",
-      "path": "FoodDiary.Application.Gamification/Services/AchievementReconciliationHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GamificationCalculator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Gamification/Services/GamificationCalculator.cs",
-      "line": 6
-    },
-    {
-      "name": "GamificationReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Gamification/Services/GamificationReadService.cs",
-      "line": 11
-    },
-    {
-      "name": "GamificationUserProfileService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Gamification/Services/GamificationUserProfileService.cs",
-      "line": 9
-    },
-    {
       "name": "AdminSsoExchangeCommand",
       "kind": "record",
       "role": "Command",
@@ -10618,20 +10422,6 @@
       "line": 5
     },
     {
-      "name": "AchievementDefinition",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Achievements/AchievementDefinition.cs",
-      "line": 6
-    },
-    {
-      "name": "UserAchievement",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Achievements/UserAchievement.cs",
-      "line": 7
-    },
-    {
       "name": "AdminImpersonationSession",
       "kind": "class",
       "role": "Entity",
@@ -11094,13 +10884,6 @@
       "line": 8
     },
     {
-      "name": "AchievementMetric",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/AchievementMetric.cs",
-      "line": 2
-    },
-    {
       "name": "ActivityLevel",
       "kind": "enum",
       "role": "Other",
@@ -11444,13 +11227,6 @@
       "line": 7
     },
     {
-      "name": "AchievementDefinitionId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/AchievementDefinitionId.cs",
-      "line": 4
-    },
-    {
       "name": "AiPromptTemplateId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -11686,13 +11462,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/ShoppingListItemSourceId.cs",
-      "line": 4
-    },
-    {
-      "name": "UserAchievementId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/UserAchievementId.cs",
       "line": 4
     },
     {
@@ -12084,13 +11853,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
       "line": 6
     },
@@ -12305,46 +12067,11 @@
       "line": 2
     },
     {
-      "name": "AchievementDefinitionStore",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementDefinitionStore.cs",
-      "line": 7
-    },
-    {
-      "name": "AchievementEvaluationOutbox",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutbox.cs",
-      "line": 6
-    },
-    {
       "name": "AchievementEvaluationOutboxMessage",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxMessage.cs",
       "line": 5
-    },
-    {
-      "name": "AchievementEvaluationOutboxProcessor",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
-      "line": 9
-    },
-    {
-      "name": "AchievementMetricReader",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementMetricReader.cs",
-      "line": 7
-    },
-    {
-      "name": "UserAchievementStore",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Achievements/UserAchievementStore.cs",
-      "line": 8
     },
     {
       "name": "AdminBillingRepository",
@@ -12487,24 +12214,10 @@
       "line": 6
     },
     {
-      "name": "AchievementDefinitionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/AchievementDefinitionConfiguration.cs",
-      "line": 7
-    },
-    {
       "name": "AchievementEvaluationOutboxMessageConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/AchievementEvaluationOutboxMessageConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "UserAchievementConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/UserAchievementConfiguration.cs",
       "line": 7
     },
     {
@@ -23323,6 +23036,300 @@
       "line": 11
     },
     {
+      "name": "AchievementDefinitionErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/AchievementDefinitionErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "IAchievementDefinitionStore",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs",
+      "line": 5
+    },
+    {
+      "name": "IAchievementEvaluationOutbox",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs",
+      "line": 4
+    },
+    {
+      "name": "IAchievementEvaluationOutboxProcessor",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs",
+      "line": 2
+    },
+    {
+      "name": "IAchievementMetricReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementMetricReader.cs",
+      "line": 4
+    },
+    {
+      "name": "IAchievementReconciliationHandler",
+      "kind": "interface",
+      "role": "Handler",
+      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "IUserAchievementStore",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Abstractions/Achievements/Common/IUserAchievementStore.cs",
+      "line": 6
+    },
+    {
+      "name": "AchievementGrantModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Abstractions/Achievements/Models/AchievementGrantModel.cs",
+      "line": 2
+    },
+    {
+      "name": "IAchievementAwardService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Gamification/Application/Common/IAchievementAwardService.cs",
+      "line": 5
+    },
+    {
+      "name": "IAchievementDefinitionAdministrationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs",
+      "line": 5
+    },
+    {
+      "name": "IGamificationReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Gamification/Application/Common/IGamificationReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IGamificationUserProfile",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Common/IGamificationUserProfile.cs",
+      "line": 2
+    },
+    {
+      "name": "IGamificationUserProfileService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Gamification/Application/Common/IGamificationUserProfileService.cs",
+      "line": 5
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/DependencyInjection.cs",
+      "line": 9
+    },
+    {
+      "name": "AchievementDefinitionAdminModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Models/AchievementDefinitionAdminModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AchievementDefinitionCreateInput",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Models/AchievementDefinitionCreateInput.cs",
+      "line": 2
+    },
+    {
+      "name": "AchievementDefinitionUpdateInput",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Models/AchievementDefinitionUpdateInput.cs",
+      "line": 2
+    },
+    {
+      "name": "AchievementMetricSnapshot",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Models/AchievementMetricSnapshot.cs",
+      "line": 2
+    },
+    {
+      "name": "BadgeModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Models/BadgeModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GamificationModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Models/GamificationModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetGamificationQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetGamificationQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "AchievementAwardService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Gamification/Application/Services/AchievementAwardService.cs",
+      "line": 9
+    },
+    {
+      "name": "AchievementDefinitionAdministrationService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Gamification/Application/Services/AchievementDefinitionAdministrationService.cs",
+      "line": 11
+    },
+    {
+      "name": "AchievementReconciliationHandler",
+      "kind": "class",
+      "role": "Handler",
+      "path": "Modules/Gamification/Application/Services/AchievementReconciliationHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GamificationCalculator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Gamification/Application/Services/GamificationCalculator.cs",
+      "line": 6
+    },
+    {
+      "name": "GamificationReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Gamification/Application/Services/GamificationReadService.cs",
+      "line": 11
+    },
+    {
+      "name": "GamificationUserProfileService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Gamification/Application/Services/GamificationUserProfileService.cs",
+      "line": 9
+    },
+    {
+      "name": "AchievementDefinition",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Gamification/Domain/Entities/Achievements/AchievementDefinition.cs",
+      "line": 6
+    },
+    {
+      "name": "UserAchievement",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Gamification/Domain/Entities/Achievements/UserAchievement.cs",
+      "line": 6
+    },
+    {
+      "name": "AchievementMetric",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Gamification/Domain/Enums/AchievementMetric.cs",
+      "line": 2
+    },
+    {
+      "name": "AchievementDefinitionId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Gamification/Domain/ValueObjects/Ids/AchievementDefinitionId.cs",
+      "line": 4
+    },
+    {
+      "name": "UserAchievementId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Gamification/Domain/ValueObjects/Ids/UserAchievementId.cs",
+      "line": 4
+    },
+    {
+      "name": "AchievementDefinitionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/AchievementDefinitionConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "UserAchievementConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/UserAchievementConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "GamificationPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Gamification/Infrastructure/Model/GamificationPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
+      "line": 7
+    },
+    {
+      "name": "AchievementDefinitionStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Gamification/Infrastructure/Persistence/AchievementDefinitionStore.cs",
+      "line": 7
+    },
+    {
+      "name": "AchievementEvaluationOutbox",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs",
+      "line": 6
+    },
+    {
+      "name": "AchievementEvaluationOutboxProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
+      "line": 9
+    },
+    {
+      "name": "AchievementMetricReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Gamification/Infrastructure/Persistence/AchievementMetricReader.cs",
+      "line": 7
+    },
+    {
+      "name": "UserAchievementStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Gamification/Infrastructure/Persistence/UserAchievementStore.cs",
+      "line": 8
+    },
+    {
       "name": "IHydrationEntryReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
@@ -24579,51 +24586,51 @@
   "interfaceImplementations": [
     {
       "interface": "IAchievementAwardService",
-      "interfacePath": "FoodDiary.Application.Gamification/Common/IAchievementAwardService.cs",
+      "interfacePath": "Modules/Gamification/Application/Common/IAchievementAwardService.cs",
       "implementation": "AchievementAwardService",
-      "implementationPath": "FoodDiary.Application.Gamification/Services/AchievementAwardService.cs",
+      "implementationPath": "Modules/Gamification/Application/Services/AchievementAwardService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAchievementDefinitionAdministrationService",
-      "interfacePath": "FoodDiary.Application.Gamification/Common/IAchievementDefinitionAdministrationService.cs",
+      "interfacePath": "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs",
       "implementation": "AchievementDefinitionAdministrationService",
-      "implementationPath": "FoodDiary.Application.Gamification/Services/AchievementDefinitionAdministrationService.cs",
+      "implementationPath": "Modules/Gamification/Application/Services/AchievementDefinitionAdministrationService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAchievementDefinitionStore",
-      "interfacePath": "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs",
+      "interfacePath": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs",
       "implementation": "AchievementDefinitionStore",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementDefinitionStore.cs",
+      "implementationPath": "Modules/Gamification/Infrastructure/Persistence/AchievementDefinitionStore.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAchievementEvaluationOutbox",
-      "interfacePath": "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs",
+      "interfacePath": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs",
       "implementation": "AchievementEvaluationOutbox",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutbox.cs",
+      "implementationPath": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAchievementEvaluationOutboxProcessor",
-      "interfacePath": "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs",
+      "interfacePath": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs",
       "implementation": "AchievementEvaluationOutboxProcessor",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
+      "implementationPath": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAchievementMetricReader",
-      "interfacePath": "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs",
+      "interfacePath": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementMetricReader.cs",
       "implementation": "AchievementMetricReader",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementMetricReader.cs",
+      "implementationPath": "Modules/Gamification/Infrastructure/Persistence/AchievementMetricReader.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAchievementReconciliationHandler",
-      "interfacePath": "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs",
+      "interfacePath": "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs",
       "implementation": "AchievementReconciliationHandler",
-      "implementationPath": "FoodDiary.Application.Gamification/Services/AchievementReconciliationHandler.cs",
+      "implementationPath": "Modules/Gamification/Application/Services/AchievementReconciliationHandler.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25300,16 +25307,16 @@
     },
     {
       "interface": "IGamificationReadService",
-      "interfacePath": "FoodDiary.Application.Gamification/Common/IGamificationReadService.cs",
+      "interfacePath": "Modules/Gamification/Application/Common/IGamificationReadService.cs",
       "implementation": "GamificationReadService",
-      "implementationPath": "FoodDiary.Application.Gamification/Services/GamificationReadService.cs",
+      "implementationPath": "Modules/Gamification/Application/Services/GamificationReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IGamificationUserProfileService",
-      "interfacePath": "FoodDiary.Application.Gamification/Common/IGamificationUserProfileService.cs",
+      "interfacePath": "Modules/Gamification/Application/Common/IGamificationUserProfileService.cs",
       "implementation": "GamificationUserProfileService",
-      "implementationPath": "FoodDiary.Application.Gamification/Services/GamificationUserProfileService.cs",
+      "implementationPath": "Modules/Gamification/Application/Services/GamificationUserProfileService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25965,9 +25972,9 @@
     },
     {
       "interface": "IUserAchievementStore",
-      "interfacePath": "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs",
+      "interfacePath": "Modules/Gamification/Application/Abstractions/Achievements/Common/IUserAchievementStore.cs",
       "implementation": "UserAchievementStore",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Achievements/UserAchievementStore.cs",
+      "implementationPath": "Modules/Gamification/Infrastructure/Persistence/UserAchievementStore.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26407,41 +26414,6 @@
       "line": 14
     },
     {
-      "service": "IGamificationReadService",
-      "implementation": "GamificationReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Gamification/DependencyInjection.cs",
-      "line": 15
-    },
-    {
-      "service": "IGamificationUserProfileService",
-      "implementation": "GamificationUserProfileService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Gamification/DependencyInjection.cs",
-      "line": 16
-    },
-    {
-      "service": "IAchievementAwardService",
-      "implementation": "AchievementAwardService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Gamification/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IAchievementReconciliationHandler",
-      "implementation": "AchievementReconciliationHandler",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Gamification/DependencyInjection.cs",
-      "line": 18
-    },
-    {
-      "service": "IAchievementDefinitionAdministrationService",
-      "implementation": "AchievementDefinitionAdministrationService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Gamification/DependencyInjection.cs",
-      "line": 19
-    },
-    {
       "service": "IAuthenticationLoginEventCleanupService",
       "implementation": "AuthenticationLoginEventCleanupService",
       "lifetime": "Scoped",
@@ -26804,41 +26776,6 @@
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
       "line": 115
-    },
-    {
-      "service": "IAchievementDefinitionStore",
-      "implementation": "AchievementDefinitionStore",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
-      "line": 9
-    },
-    {
-      "service": "IUserAchievementStore",
-      "implementation": "UserAchievementStore",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
-      "line": 10
-    },
-    {
-      "service": "IAchievementEvaluationOutbox",
-      "implementation": "AchievementEvaluationOutbox",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
-      "line": 11
-    },
-    {
-      "service": "IAchievementMetricReader",
-      "implementation": "AchievementMetricReader",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
-      "line": 12
-    },
-    {
-      "service": "IAchievementEvaluationOutboxProcessor",
-      "implementation": "AchievementEvaluationOutboxProcessor",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
-      "line": 13
     },
     {
       "service": "IAiUsageRepository",
@@ -27679,6 +27616,41 @@
       "lifetime": "Scoped",
       "path": "Modules/Favorites/Application/DependencyInjection.cs",
       "line": 24
+    },
+    {
+      "service": "IGamificationReadService",
+      "implementation": "GamificationReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Gamification/Application/DependencyInjection.cs",
+      "line": 15
+    },
+    {
+      "service": "IGamificationUserProfileService",
+      "implementation": "GamificationUserProfileService",
+      "lifetime": "Scoped",
+      "path": "Modules/Gamification/Application/DependencyInjection.cs",
+      "line": 16
+    },
+    {
+      "service": "IAchievementAwardService",
+      "implementation": "AchievementAwardService",
+      "lifetime": "Scoped",
+      "path": "Modules/Gamification/Application/DependencyInjection.cs",
+      "line": 17
+    },
+    {
+      "service": "IAchievementReconciliationHandler",
+      "implementation": "AchievementReconciliationHandler",
+      "lifetime": "Scoped",
+      "path": "Modules/Gamification/Application/DependencyInjection.cs",
+      "line": 18
+    },
+    {
+      "service": "IAchievementDefinitionAdministrationService",
+      "implementation": "AchievementDefinitionAdministrationService",
+      "lifetime": "Scoped",
+      "path": "Modules/Gamification/Application/DependencyInjection.cs",
+      "line": 19
     },
     {
       "service": "IHydrationEntryReadService",

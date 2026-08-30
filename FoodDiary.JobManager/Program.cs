@@ -3,7 +3,7 @@ using FoodDiary.Application.Billing;
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Modules.Favorites.Infrastructure;
-using FoodDiary.Application.Gamification;
+using FoodDiary.Modules.Gamification.Infrastructure;
 using FoodDiary.Application.Identity;
 using FoodDiary.Application.Images;
 using FoodDiary.Application.Notifications;

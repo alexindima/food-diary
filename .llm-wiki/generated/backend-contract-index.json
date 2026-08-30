@@ -4952,7 +4952,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Queries/GetGamification/GetGamificationQuery.cs"
+        "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -6584,7 +6584,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IAchievementAwardService.cs"
+        "Modules/Gamification/Application/Common/IAchievementAwardService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -6601,7 +6601,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IAchievementDefinitionAdministrationService.cs"
+        "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -6618,7 +6618,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -6635,7 +6635,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -6652,7 +6652,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -6669,7 +6669,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementMetricReader.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -6686,7 +6686,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9457,7 +9457,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationReadService.cs"
+        "Modules/Gamification/Application/Common/IGamificationReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9474,7 +9474,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationUserProfile.cs"
+        "Modules/Gamification/Application/Common/IGamificationUserProfile.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9491,7 +9491,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationUserProfileService.cs"
+        "Modules/Gamification/Application/Common/IGamificationUserProfileService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -12827,7 +12827,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IUserAchievementStore.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -24521,7 +24521,7 @@
         "FoodDiary.Application.Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -24534,7 +24534,7 @@
         "FoodDiary.Application.Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -37011,20 +37011,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Queries/GetGamification/GetGamificationQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Queries/GetGamification/GetGamificationQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetGamificationQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Gamification/Queries/GetGamification/GetGamificationQuery.cs"
+        "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Gamification/Mappings/GamificationHttpMappings.cs",
@@ -37037,10 +37024,23 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Queries/GetGamification/GetGamificationQuery.cs"
+        "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
+      "consumerPath": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetGamificationQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/GamificationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -37050,7 +37050,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Queries/GetGamification/GetGamificationQuery.cs"
+        "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/GamificationHttpMappingsTests.cs",
@@ -37063,7 +37063,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Queries/GetGamification/GetGamificationQuery.cs"
+        "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
@@ -43316,10 +43316,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IAchievementAwardService.cs"
+        "Modules/Gamification/Application/Common/IAchievementAwardService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/DependencyInjection.cs",
+      "consumerPath": "Modules/Gamification/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43329,10 +43329,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IAchievementAwardService.cs"
+        "Modules/Gamification/Application/Common/IAchievementAwardService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/AchievementAwardService.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/AchievementAwardService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43342,10 +43342,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IAchievementAwardService.cs"
+        "Modules/Gamification/Application/Common/IAchievementAwardService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/AchievementReconciliationHandler.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/AchievementReconciliationHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43355,10 +43355,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IAchievementAwardService.cs"
+        "Modules/Gamification/Application/Common/IAchievementAwardService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/GamificationReadService.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/GamificationReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43368,10 +43368,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IAchievementAwardService.cs"
+        "Modules/Gamification/Application/Common/IAchievementAwardService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -43381,10 +43381,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IAchievementAwardService.cs"
+        "Modules/Gamification/Application/Common/IAchievementAwardService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/GamificationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
     },
@@ -43394,7 +43394,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IAchievementDefinitionAdministrationService.cs"
+        "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
@@ -43407,7 +43407,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IAchievementDefinitionAdministrationService.cs"
+        "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
@@ -43420,7 +43420,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IAchievementDefinitionAdministrationService.cs"
+        "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
@@ -43433,10 +43433,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IAchievementDefinitionAdministrationService.cs"
+        "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/DependencyInjection.cs",
+      "consumerPath": "Modules/Gamification/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43446,10 +43446,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IAchievementDefinitionAdministrationService.cs"
+        "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/AchievementDefinitionAdministrationService.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/AchievementDefinitionAdministrationService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43459,7 +43459,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IAchievementDefinitionAdministrationService.cs"
+        "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs",
@@ -43472,10 +43472,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/AchievementAwardService.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/AchievementAwardService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43485,10 +43485,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/AchievementDefinitionAdministrationService.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/AchievementDefinitionAdministrationService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43498,10 +43498,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+      "consumerPath": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43511,10 +43511,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementDefinitionStore.cs",
+      "consumerPath": "Modules/Gamification/Infrastructure/Persistence/AchievementDefinitionStore.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43524,10 +43524,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/AchievementAwardServiceTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementAwardServiceTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -43537,10 +43537,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementDefinitionStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs",
       "isTest": true,
       "referenceCount": 19
     },
@@ -43550,7 +43550,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommandHandler.cs",
@@ -43563,7 +43563,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Meals/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
@@ -43576,7 +43576,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Meals/Common/NullAchievementEvaluationOutbox.cs",
@@ -43589,10 +43589,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+      "consumerPath": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43602,10 +43602,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutbox.cs",
+      "consumerPath": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43615,7 +43615,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
@@ -43628,7 +43628,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Lessons/LessonsFeatureTests.cs",
@@ -43641,7 +43641,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Meals/MealsFeatureTests.CreateCommandTests.cs",
@@ -43654,7 +43654,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Meals/MealsFeatureTests.cs",
@@ -43667,7 +43667,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Meals/MealsFeatureTests.RepeatAndDeleteCommandTests.cs",
@@ -43680,33 +43680,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAchievementEvaluationOutboxProcessor",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAchievementEvaluationOutboxProcessor",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -43719,7 +43693,33 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAchievementEvaluationOutboxProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAchievementEvaluationOutboxProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
@@ -43732,10 +43732,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementMetricReader.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/AchievementReconciliationHandler.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/AchievementReconciliationHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43745,10 +43745,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementMetricReader.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/GamificationReadService.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/GamificationReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43758,10 +43758,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementMetricReader.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+      "consumerPath": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43771,10 +43771,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementMetricReader.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementMetricReader.cs",
+      "consumerPath": "Modules/Gamification/Infrastructure/Persistence/AchievementMetricReader.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43784,10 +43784,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementMetricReader.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -43797,10 +43797,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementMetricReader.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/GamificationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
     },
@@ -43810,10 +43810,10 @@
         "Handler"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/DependencyInjection.cs",
+      "consumerPath": "Modules/Gamification/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43823,10 +43823,10 @@
         "Handler"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/AchievementReconciliationHandler.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/AchievementReconciliationHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43836,10 +43836,10 @@
         "Handler"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
+      "consumerPath": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -43849,10 +43849,10 @@
         "Handler"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserAchievementStoreIntegrationTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/Persistence/AchievementPersistenceTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -43862,10 +43862,10 @@
         "Handler"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/AchievementPersistenceTests.cs",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserAchievementStoreIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -53784,19 +53784,6 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Queries/GetGamification/GetGamificationQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -55539,6 +55526,19 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -55851,6 +55851,19 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/GamificationFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -55958,19 +55971,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs",
       "isTest": true,
       "referenceCount": 4
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 3
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -57385,19 +57385,6 @@
         "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/GamificationReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -57463,6 +57450,19 @@
         "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Application/Services/GamificationReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -57479,6 +57479,19 @@
       "consumerPath": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/GamificationFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 6
     },
     {
       "contract": "IDashboardStatisticsReadService",
@@ -57531,19 +57544,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 6
     },
     {
       "contract": "IDashboardStatisticsReadService",
@@ -60739,19 +60739,6 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/AchievementDefinitionId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/AiPromptTemplateId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61194,19 +61181,6 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/UserAchievementId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/UserId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61533,6 +61507,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Domain/ValueObjects/Ids/FavoriteRecipeId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Domain/ValueObjects/Ids/AchievementDefinitionId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Domain/ValueObjects/Ids/UserAchievementId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -64974,10 +64974,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationReadService.cs"
+        "Modules/Gamification/Application/Common/IGamificationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/DependencyInjection.cs",
+      "consumerPath": "Modules/Gamification/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -64987,10 +64987,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationReadService.cs"
+        "Modules/Gamification/Application/Common/IGamificationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Queries/GetGamification/GetGamificationQueryHandler.cs",
+      "consumerPath": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65000,10 +65000,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationReadService.cs"
+        "Modules/Gamification/Application/Common/IGamificationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/GamificationReadService.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/GamificationReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65013,10 +65013,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationReadService.cs"
+        "Modules/Gamification/Application/Common/IGamificationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/GamificationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -65026,10 +65026,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationUserProfile.cs"
+        "Modules/Gamification/Application/Common/IGamificationUserProfile.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Common/IGamificationUserProfileService.cs",
+      "consumerPath": "Modules/Gamification/Application/Common/IGamificationUserProfileService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65039,10 +65039,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationUserProfile.cs"
+        "Modules/Gamification/Application/Common/IGamificationUserProfile.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/GamificationReadService.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/GamificationReadService.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -65052,10 +65052,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationUserProfile.cs"
+        "Modules/Gamification/Application/Common/IGamificationUserProfile.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/GamificationUserProfileService.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/GamificationUserProfileService.cs",
       "isTest": false,
       "referenceCount": 4
     },
@@ -65065,10 +65065,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationUserProfile.cs"
+        "Modules/Gamification/Application/Common/IGamificationUserProfile.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/GamificationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 7
     },
@@ -65078,10 +65078,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationUserProfileService.cs"
+        "Modules/Gamification/Application/Common/IGamificationUserProfileService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/DependencyInjection.cs",
+      "consumerPath": "Modules/Gamification/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65091,10 +65091,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationUserProfileService.cs"
+        "Modules/Gamification/Application/Common/IGamificationUserProfileService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/GamificationReadService.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/GamificationReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65104,10 +65104,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationUserProfileService.cs"
+        "Modules/Gamification/Application/Common/IGamificationUserProfileService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/GamificationUserProfileService.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/GamificationUserProfileService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65117,10 +65117,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Gamification/Common/IGamificationUserProfileService.cs"
+        "Modules/Gamification/Application/Common/IGamificationUserProfileService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/GamificationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 6
     },
@@ -68929,7 +68929,7 @@
         "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/GamificationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -68981,32 +68981,6 @@
         "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/AchievementReconciliationHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IMealActivityReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/GamificationReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IMealActivityReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Meals/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
@@ -69021,6 +68995,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Meals/Services/MealActivityReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMealActivityReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Application/Services/AchievementReconciliationHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMealActivityReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Application/Services/GamificationReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -69059,6 +69059,19 @@
         "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IMealActivityReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
       "isTest": true,
       "referenceCount": 5
@@ -69075,19 +69088,6 @@
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
       "isTest": true,
       "referenceCount": 13
-    },
-    {
-      "contract": "IMealActivityReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "IMealExportReadService",
@@ -70125,9 +70125,9 @@
         "FoodDiary.Application.Abstractions/Meals/Common/IMealRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/GamificationFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 4
     },
     {
       "contract": "IMealRepository",
@@ -70138,9 +70138,9 @@
         "FoodDiary.Application.Abstractions/Meals/Common/IMealRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "IMealRepository",
@@ -77209,19 +77209,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Queries/GetGamification/GetGamificationQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Identity/Authentication/Queries/GetActiveSessions/GetActiveSessionsQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -78119,6 +78106,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Application/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -78679,19 +78679,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Queries/GetGamification/GetGamificationQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -79589,6 +79576,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -89569,10 +89569,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IUserAchievementStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/AchievementAwardService.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/AchievementAwardService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -89582,10 +89582,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IUserAchievementStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Achievements.cs",
+      "consumerPath": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -89595,10 +89595,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IUserAchievementStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Achievements/UserAchievementStore.cs",
+      "consumerPath": "Modules/Gamification/Infrastructure/Persistence/UserAchievementStore.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -89608,10 +89608,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IUserAchievementStore.cs"
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IUserAchievementStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/AchievementAwardServiceTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementAwardServiceTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -91132,19 +91132,6 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserGamificationProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Services/GamificationUserProfileService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserGamificationProfileReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/IUserGamificationProfileReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Users/Common/UserContextService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -91171,7 +91158,20 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserGamificationProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
+      "consumerPath": "Modules/Gamification/Application/Services/GamificationUserProfileService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserGamificationProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserGamificationProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/GamificationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 5
     },
@@ -92823,19 +92823,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Gamification/Queries/GetGamification/GetGamificationQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -94591,6 +94578,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -109995,7 +109995,7 @@
         "FoodDiary.Application.Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -110008,7 +110008,7 @@
         "FoodDiary.Application.Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/AchievementDefinitionAdministrationServiceTests.cs",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

@@ -72,7 +72,11 @@ COPY Modules/DailyAdvices/Application/*.csproj Modules/DailyAdvices/Application/
 COPY Modules/DailyAdvices/Application/Abstractions/*.csproj Modules/DailyAdvices/Application/Abstractions/
 COPY Modules/DailyAdvices/Domain/*.csproj Modules/DailyAdvices/Domain/
 COPY Modules/DailyAdvices/Infrastructure/Model/*.csproj Modules/DailyAdvices/Infrastructure/Model/
-COPY FoodDiary.Application.Gamification/*.csproj FoodDiary.Application.Gamification/
+COPY Modules/Gamification/Application/*.csproj Modules/Gamification/Application/
+COPY Modules/Gamification/Application/Abstractions/*.csproj Modules/Gamification/Application/Abstractions/
+COPY Modules/Gamification/Domain/*.csproj Modules/Gamification/Domain/
+COPY Modules/Gamification/Infrastructure/*.csproj Modules/Gamification/Infrastructure/
+COPY Modules/Gamification/Infrastructure/Model/*.csproj Modules/Gamification/Infrastructure/Model/
 COPY FoodDiary.Application.Export/*.csproj FoodDiary.Application.Export/
 COPY MailInbox/FoodDiary.MailInbox.Client/*.csproj MailInbox/FoodDiary.MailInbox.Client/
 COPY MailRelay/FoodDiary.MailRelay.Client/*.csproj MailRelay/FoodDiary.MailRelay.Client/
@@ -154,7 +158,12 @@ COPY Modules/DailyAdvices/Application/ Modules/DailyAdvices/Application/
 COPY Modules/DailyAdvices/Application/Abstractions/ Modules/DailyAdvices/Application/Abstractions/
 COPY Modules/DailyAdvices/Domain/ Modules/DailyAdvices/Domain/
 COPY Modules/DailyAdvices/Infrastructure/Model/ Modules/DailyAdvices/Infrastructure/Model/
-COPY FoodDiary.Application.Gamification/ FoodDiary.Application.Gamification/
+COPY Modules/Gamification/ Modules/Gamification/
+COPY Modules/Gamification/Application/ Modules/Gamification/Application/
+COPY Modules/Gamification/Application/Abstractions/ Modules/Gamification/Application/Abstractions/
+COPY Modules/Gamification/Domain/ Modules/Gamification/Domain/
+COPY Modules/Gamification/Infrastructure/ Modules/Gamification/Infrastructure/
+COPY Modules/Gamification/Infrastructure/Model/ Modules/Gamification/Infrastructure/Model/
 COPY FoodDiary.Application.Export/ FoodDiary.Application.Export/
 COPY MailInbox/FoodDiary.MailInbox.Client/ MailInbox/FoodDiary.MailInbox.Client/
 COPY MailRelay/FoodDiary.MailRelay.Client/ MailRelay/FoodDiary.MailRelay.Client/

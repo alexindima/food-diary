@@ -13,10 +13,10 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Application.Admin"] = [
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Application.Ai",
-                "FoodDiary.Application.Gamification",
                 "FoodDiary.Domain",
                 "FoodDiary.Mediator",
                 "FoodDiary.Modules.ContentReports.Contracts",
+                "FoodDiary.Modules.Gamification.Application",
                 "FoodDiary.Modules.Lessons.Contracts",
             ],
             ["FoodDiary.Application.Billing"] = [
@@ -119,6 +119,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Modules.Lessons.Application"] = [
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Mediator",
+                "FoodDiary.Modules.Gamification.Application.Abstractions",
                 "FoodDiary.Modules.Lessons.Application.Abstractions",
                 "FoodDiary.Modules.Lessons.Contracts",
                 "FoodDiary.Modules.Lessons.Domain",
@@ -220,10 +221,29 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Modules.Favorites.PersistenceModel"] = [
                 "FoodDiary.Modules.Favorites.Domain",
             ],
-            ["FoodDiary.Application.Gamification"] = [
+            ["FoodDiary.Modules.Gamification.Application"] = [
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Domain",
                 "FoodDiary.Mediator",
+                "FoodDiary.Modules.Gamification.Application.Abstractions",
+                "FoodDiary.Modules.Gamification.Domain",
+            ],
+            ["FoodDiary.Modules.Gamification.Application.Abstractions"] = [
+                "FoodDiary.Domain",
+                "FoodDiary.Modules.Gamification.Domain",
+                "FoodDiary.Results",
+            ],
+            ["FoodDiary.Modules.Gamification.Domain"] = [
+                "FoodDiary.Domain",
+            ],
+            ["FoodDiary.Modules.Gamification.PersistenceModel"] = [
+                "FoodDiary.Modules.Gamification.Domain",
+            ],
+            ["FoodDiary.Modules.Gamification.Infrastructure"] = [
+                "FoodDiary.Modules.Gamification.Application",
+                "FoodDiary.Infrastructure",
+                "FoodDiary.Modules.Gamification.Application.Abstractions",
+                "FoodDiary.Modules.Gamification.PersistenceModel",
             ],
             ["FoodDiary.Application.Wearables"] = [
                 "FoodDiary.Application.Abstractions",
@@ -263,6 +283,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Images",
                 "FoodDiary.Domain",
                 "FoodDiary.Mediator",
+                "FoodDiary.Modules.Gamification.Application.Abstractions",
             ],
             ["FoodDiary.Modules.WeeklyGoals.Application"] = [
                 "FoodDiary.Application.Abstractions",
@@ -377,6 +398,9 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Favorites.PersistenceModel",
                 "FoodDiary.Modules.Hydration.PersistenceModel",
                 "FoodDiary.Modules.Images.PersistenceModel",
+                "FoodDiary.Modules.Gamification.Application.Abstractions",
+                "FoodDiary.Modules.Gamification.Domain",
+                "FoodDiary.Modules.Gamification.PersistenceModel",
                 "FoodDiary.Modules.Lessons.Domain",
                 "FoodDiary.Modules.Lessons.PersistenceModel",
                 "FoodDiary.Modules.WeeklyGoals.Domain",
@@ -393,7 +417,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Dietologist.Infrastructure",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Application.Export",
-                "FoodDiary.Application.Gamification",
+                "FoodDiary.Modules.Gamification.Infrastructure",
                 "FoodDiary.Modules.Fasting.Infrastructure",
                 "FoodDiary.Modules.Favorites.Infrastructure",
                 "FoodDiary.Modules.Hydration.Infrastructure",
@@ -437,7 +461,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Dietologist.Infrastructure",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Application.Export",
-                "FoodDiary.Application.Gamification",
+                "FoodDiary.Modules.Gamification.Infrastructure",
                 "FoodDiary.Modules.Fasting.Contracts",
                 "FoodDiary.Modules.Fasting.Infrastructure",
                 "FoodDiary.Modules.Images.Infrastructure",
@@ -526,7 +550,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Dietologist.Application",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Application.Export",
-                "FoodDiary.Application.Gamification",
+                "FoodDiary.Modules.Gamification.Application",
                 "FoodDiary.Modules.Fasting.Application",
                 "FoodDiary.Modules.Fasting.Contracts",
                 "FoodDiary.Application.Favorites",
@@ -571,7 +595,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Dietologist.Infrastructure",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Application.Export",
-                "FoodDiary.Application.Gamification",
+                "FoodDiary.Modules.Gamification.Infrastructure",
                 "FoodDiary.Modules.Fasting.Infrastructure",
                 "FoodDiary.Modules.Favorites.Infrastructure",
                 "FoodDiary.Modules.Hydration.Infrastructure",
@@ -623,7 +647,6 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Dietologist.Application",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Application.Export",
-                "FoodDiary.Application.Gamification",
                 "FoodDiary.Modules.Fasting.Contracts",
                 "FoodDiary.Application.Favorites",
                 "FoodDiary.Modules.Hydration.Application",
@@ -659,6 +682,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Dietologist.Domain",
                 "FoodDiary.Modules.Fasting.Domain",
                 "FoodDiary.Modules.Favorites.Domain",
+                "FoodDiary.Modules.Gamification.Domain",
             ],
             ["FoodDiary.Modules.Favorites.Application.Tests"] = [
                 "FoodDiary.Application.Favorites",
@@ -667,9 +691,35 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Modules.Favorites.Domain.Tests"] = [
                 "FoodDiary.Modules.Favorites.Domain",
             ],
+            ["FoodDiary.Modules.Gamification.Application.Tests"] = [
+                "FoodDiary.Application.Admin",
+                "FoodDiary.Application.Meals",
+                "FoodDiary.Domain",
+                "FoodDiary.Modules.Gamification.Application",
+                "FoodDiary.Modules.Gamification.Application.Abstractions",
+            ],
+            ["FoodDiary.Modules.Gamification.Domain.Tests"] = [
+                "FoodDiary.Modules.Gamification.Domain",
+            ],
+            ["FoodDiary.Modules.Gamification.Infrastructure.Tests"] = [
+                "FoodDiary.Modules.Gamification.Infrastructure",
+            ],
             ["FoodDiary.Modules.DailyAdvices.Application.Tests"] = [
                 "FoodDiary.Application.Users",
                 "FoodDiary.Modules.DailyAdvices.Application",
+            ],
+            ["FoodDiary.Modules.Gamification.Application.Tests"] = [
+                "FoodDiary.Application.Admin",
+                "FoodDiary.Application.Meals",
+                "FoodDiary.Domain",
+                "FoodDiary.Modules.Gamification.Application",
+                "FoodDiary.Modules.Gamification.Application.Abstractions",
+            ],
+            ["FoodDiary.Modules.Gamification.Domain.Tests"] = [
+                "FoodDiary.Modules.Gamification.Domain",
+            ],
+            ["FoodDiary.Modules.Gamification.Infrastructure.Tests"] = [
+                "FoodDiary.Modules.Gamification.Infrastructure",
             ],
             ["FoodDiary.Modules.Dietologist.Application.Tests"] = [
                 "FoodDiary.Application.Dashboard",
@@ -753,6 +803,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Dietologist.Infrastructure",
                 "FoodDiary.Modules.Fasting.Infrastructure",
                 "FoodDiary.Modules.Favorites.Infrastructure",
+                "FoodDiary.Modules.Gamification.Infrastructure",
                 "FoodDiary.Modules.Hydration.Infrastructure",
                 "FoodDiary.Modules.Lessons.Application.Abstractions",
                 "FoodDiary.Modules.Lessons.Contracts",
@@ -873,7 +924,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Dietologist.Application",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Application.Export",
-                "FoodDiary.Application.Gamification",
+                "FoodDiary.Modules.Gamification.Application",
                 "FoodDiary.Modules.Fasting.Application",
                 "FoodDiary.Modules.Fasting.Contracts",
                 "FoodDiary.Application.Favorites",

@@ -1,0 +1,9 @@
+# Gamification extraction: Wiki evaluation
+
+The Wiki-first workflow correctly identified Gamification's application project, HTTP consumers, executable composition roots, achievement persistence, and the recurring achievement-evaluation outbox job. `topology` was therefore relevant: the extraction preserves the job ID, options, scheduling, retry behavior, and application port while moving its implementation behind module registration.
+
+The compiled indexes were incomplete for extraction ownership. They treated `FoodDiary.Application.Gamification` mainly as a read-composer and did not establish that achievement aggregates, IDs, metric enum, persistence ports, EF configurations, and focused tests were module-owned. Source inspection also exposed a central seam the generated module page did not explain: `AchievementEvaluationOutboxMessage` participates in the shared dead-letter replay implementation and central `FoodDiaryDbContext`. Moving it would create a circular Infrastructure dependency, so the message, DbSet partial, historical migrations, snapshot, and dead-letter replay remain central.
+
+The adaptive commands fell back to the read-only JSON baseline because TypeScript prerequisites were unavailable, and `start` captured a baseline without retaining an active governed workspace. This reduced the value of `next`/delivery commands but did not block source-verified research. No generator was changed: these are module-specific discovery limits rather than a confirmed general generator defect.
+
+The final structure is evidence-driven: Application, Application Abstractions, Domain, Infrastructure, and PersistenceModel each own production behavior; no empty Contracts project was introduced. Module-owned unit tests moved under `Modules/Gamification/tests`, while HTTP, host, shared DbContext integration, architecture, and cross-module tests remain central.

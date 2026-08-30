@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Achievements;
+namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 
 internal sealed class AchievementEvaluationOutbox(
     FoodDiaryDbContext context,

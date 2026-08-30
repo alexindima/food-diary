@@ -4,7 +4,7 @@ using FoodDiary.Domain.Entities.Achievements;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Achievements;
+namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 
 public sealed class UserAchievementStore(FoodDiaryDbContext context) : IUserAchievementStore {
     public async Task<IReadOnlyList<UserAchievement>> GetByUserIdAsync(
