@@ -24,10 +24,8 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Lessons`
 - `FoodDiary.Application.Lessons`
 - `FoodDiary.Domain/Entities/Content`
-- `FoodDiary.Infrastructure/Persistence/Configurations/Lessons`
 - `FoodDiary.Presentation.Api/Features/Lessons`
 
 ## HTTP Surface

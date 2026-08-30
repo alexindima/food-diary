@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Cycles.Common;
-using FoodDiary.Application.Abstractions.DailyAdvices.Common;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
@@ -18,7 +17,6 @@ public static partial class DependencyInjection {
         services.AddScoped<IWaistEntryReadRepository>(static provider => provider.GetRequiredService<IWaistEntryRepository>());
         services.AddScoped<IWaistEntryReadModelRepository>(static provider => provider.GetRequiredService<IWaistEntryRepository>());
         services.AddScoped<IWaistEntryWriteRepository>(static provider => provider.GetRequiredService<IWaistEntryRepository>());
-        services.AddScoped<IDailyAdviceReadModelRepository, DailyAdviceRepository>();
         services.AddScoped<ICycleRepository, CycleRepository>();
         services.AddScoped<ICycleReadRepository>(static provider => provider.GetRequiredService<ICycleRepository>());
         services.AddScoped<ICycleReadModelRepository>(static provider => provider.GetRequiredService<ICycleRepository>());

@@ -15,7 +15,6 @@ using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Cycles.Common;
-using FoodDiary.Application.Abstractions.DailyAdvices.Common;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
@@ -535,7 +534,6 @@ public sealed class DependencyInjectionTests {
         IWeightEntryRepository weightRepository = scope.ServiceProvider.GetRequiredService<IWeightEntryRepository>();
         IWaistEntryRepository waistRepository = scope.ServiceProvider.GetRequiredService<IWaistEntryRepository>();
         IHydrationEntryReadModelRepository hydrationRepository = scope.ServiceProvider.GetRequiredService<IHydrationEntryReadModelRepository>();
-        IDailyAdviceReadModelRepository dailyAdviceRepository = scope.ServiceProvider.GetRequiredService<IDailyAdviceReadModelRepository>();
         ICycleRepository cycleRepository = scope.ServiceProvider.GetRequiredService<ICycleRepository>();
         IExerciseEntryRepository exerciseRepository = scope.ServiceProvider.GetRequiredService<IExerciseEntryRepository>();
 
@@ -548,7 +546,6 @@ public sealed class DependencyInjectionTests {
             () => Assert.Same(waistRepository, scope.ServiceProvider.GetRequiredService<IWaistEntryWriteRepository>()),
             () => Assert.IsType<HydrationEntryRepository>(hydrationRepository),
             () => Assert.Same(hydrationRepository, scope.ServiceProvider.GetRequiredService<IHydrationEntryWriteRepository>()),
-            () => Assert.IsType<DailyAdviceRepository>(dailyAdviceRepository),
             () => Assert.IsType<CycleRepository>(cycleRepository),
             () => Assert.Same(cycleRepository, scope.ServiceProvider.GetRequiredService<ICycleReadRepository>()),
             () => Assert.Same(cycleRepository, scope.ServiceProvider.GetRequiredService<ICycleWriteRepository>()),

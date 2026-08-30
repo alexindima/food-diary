@@ -60,6 +60,15 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.dailyadvices.application.abstractions": {
+        "type": "Project"
+      },
+      "fooddiary.modules.dailyadvices.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
       "fooddiary.results": {
         "type": "Project"
       }

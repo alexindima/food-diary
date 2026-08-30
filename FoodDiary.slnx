@@ -32,7 +32,14 @@
     <Project Path="FoodDiary.Application.Admin/FoodDiary.Application.Admin.csproj" />
     <Project Path="FoodDiary.Application.Ai/FoodDiary.Application.Ai.csproj" />
     <Project Path="FoodDiary.Application.ContentReports/FoodDiary.Application.ContentReports.csproj" />
-    <Project Path="FoodDiary.Application.DailyAdvices/FoodDiary.Application.DailyAdvices.csproj" />
+    <Project Path="Modules/DailyAdvices/Application/Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj" />
+    <Project Path="Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj" />
+    <Project Path="Modules/DailyAdvices/Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj" />
+    <Project Path="Modules/DailyAdvices/Infrastructure/Model/FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj" />
+    <Project Path="Modules/DailyAdvices/Infrastructure/FoodDiary.Modules.DailyAdvices.Infrastructure.csproj" />
+    <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/FoodDiary.Modules.DailyAdvices.Application.Tests.csproj" />
+    <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Domain.Tests/FoodDiary.Modules.DailyAdvices.Domain.Tests.csproj" />
+    <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests.csproj" />
     <Project Path="FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj" />
     <Project Path="FoodDiary.Application.Export/FoodDiary.Application.Export.csproj" />
     <Project Path="FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj" />

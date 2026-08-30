@@ -381,7 +381,7 @@ $compiledIndexReadOnlyCommands = @(
 )
 $automaticJsonFallbackCommands = @(
     'start', 'brief', 'develop', 'research', 'diff', 'journeys', 'design', 'test-plan',
-    'topology', 'privacy', 'security', 'ownership'
+    'decision', 'ownership', 'rollout', 'topology', 'privacy', 'security'
 )
 $compiledIndexSourceWasExplicit = $PSBoundParameters.ContainsKey('CompiledIndexSource')
 if (-not $compiledIndexSourceWasExplicit -and
@@ -1455,7 +1455,7 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiDependencyChanges.ps1' @{ BaseRef = $BaseRef; RepositoryWide = $RepositoryWide; Format = $Format }
     }
     'rollout' {
-        $rolloutArguments = @{ BaseRef = $BaseRef; Format = $Format }
+        $rolloutArguments = @{ BaseRef = $BaseRef; Format = $Format; CompiledIndexSource = $CompiledIndexSource }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $rolloutArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $rolloutArguments.ChangedPath = $ChangedPath }
         Invoke-WikiTool 'Get-LlmWikiRolloutPlan.ps1' $rolloutArguments

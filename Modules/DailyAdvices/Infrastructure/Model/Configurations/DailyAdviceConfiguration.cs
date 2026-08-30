@@ -3,7 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Infrastructure.Persistence.Configurations.DailyAdvices;
+namespace FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence.Configurations;
 
 internal sealed class DailyAdviceConfiguration : IEntityTypeConfiguration<DailyAdvice> {
     public void Configure(EntityTypeBuilder<DailyAdvice> builder) {

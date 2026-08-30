@@ -63,7 +63,11 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Weekly goals persistence model: `Modules/WeeklyGoals/Infrastructure/Model/AGENTS.md`
 - USDA application module: `FoodDiary.Application.Usda/AGENTS.md`
 - Weekly check-in application module: `FoodDiary.Application.WeeklyCheckIn/AGENTS.md`
-- Daily advices application module: `FoodDiary.Application.DailyAdvices/AGENTS.md`
+- Daily advices logical module: `Modules/DailyAdvices/AGENTS.md`
+- Daily advices application abstractions: `Modules/DailyAdvices/Application/Abstractions/AGENTS.md`
+- Daily advices domain: `Modules/DailyAdvices/Domain/AGENTS.md`
+- Daily advices infrastructure: `Modules/DailyAdvices/Infrastructure/AGENTS.md`
+- Daily advices persistence model: `Modules/DailyAdvices/Infrastructure/Model/AGENTS.md`
 - Dashboard application module: `FoodDiary.Application.Dashboard/AGENTS.md`
 - Domain layer: `FoodDiary.Domain/AGENTS.md`
 - Infrastructure layer: `FoodDiary.Infrastructure/AGENTS.md`

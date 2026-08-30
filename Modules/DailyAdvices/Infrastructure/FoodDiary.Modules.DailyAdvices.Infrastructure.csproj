@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Modules.DailyAdvices.Infrastructure</AssemblyName>
+    <RootNamespace>FoodDiary.Modules.DailyAdvices.Infrastructure</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Model/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Application\FoodDiary.Modules.DailyAdvices.Application.csproj" />
+    <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="Model\FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+</Project>

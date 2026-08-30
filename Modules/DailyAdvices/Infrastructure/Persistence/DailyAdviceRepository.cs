@@ -1,8 +1,9 @@
 using FoodDiary.Application.Abstractions.DailyAdvices.Common;
 using FoodDiary.Application.Abstractions.DailyAdvices.Models;
+using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Tracking;
+namespace FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence;
 
 public sealed class DailyAdviceRepository(FoodDiaryDbContext context) : IDailyAdviceReadModelRepository {
     public async Task<IReadOnlyList<DailyAdviceReadModel>> GetByLocaleReadModelsAsync(

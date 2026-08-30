@@ -1951,13 +1951,6 @@
     },
     {
       "category": "health",
-      "name": "Weight",
-      "type": "int",
-      "path": "FoodDiary.Application.Abstractions/DailyAdvices/Models/DailyAdviceReadModel.cs",
-      "line": 3
-    },
-    {
-      "category": "health",
       "name": "LatestWeightEntries",
       "type": "IReadOnlyList<DashboardWeightPointReadModel>",
       "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardBodyReadModel.cs",
@@ -3288,13 +3281,6 @@
     },
     {
       "category": "health",
-      "name": "Weight",
-      "type": "int",
-      "path": "FoodDiary.Application.DailyAdvices/Models/DailyAdviceModel.cs",
-      "line": 8
-    },
-    {
-      "category": "health",
       "name": "Calories",
       "type": "double",
       "path": "FoodDiary.Application.Dashboard/Models/DailyCaloriesModel.cs",
@@ -4090,13 +4076,6 @@
       "type": "double",
       "path": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs",
       "line": 65
-    },
-    {
-      "category": "health",
-      "name": "Weight",
-      "type": "int",
-      "path": "FoodDiary.Domain/Entities/Content/DailyAdvice.cs",
-      "line": 15
     },
     {
       "category": "health",
@@ -6358,6 +6337,27 @@
       "type": "double?",
       "path": "FoodDiary.Presentation.Api/Features/WeightEntries/Responses/WeightHistoryPageSummaryHttpResponse.cs",
       "line": 8
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "int",
+      "path": "Modules/DailyAdvices/Application/Abstractions/Models/DailyAdviceReadModel.cs",
+      "line": 3
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "int",
+      "path": "Modules/DailyAdvices/Application/Models/DailyAdviceModel.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "int",
+      "path": "Modules/DailyAdvices/Domain/Entities/Content/DailyAdvice.cs",
+      "line": 15
     },
     {
       "category": "health",

@@ -5,7 +5,7 @@ public sealed class DailyAdvicesModuleExtractionTests {
     [Fact]
     public void DailyAdvicesApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "DailyAdvices");
-        string extractedRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.DailyAdvices");
+        string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "DailyAdvices", "Application");
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
     }
@@ -13,12 +13,29 @@ public sealed class DailyAdvicesModuleExtractionTests {
     [Fact]
     public void ExtractedDailyAdvicesAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.DailyAdvices/FoodDiary.Application.DailyAdvices.csproj");
+            "Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.DailyAdvices.Application.Abstractions",
+            "FoodDiary.Modules.DailyAdvices.Domain",
         ], references);
+    }
+
+    [Fact]
+    public void DailyAdvicesOwnedLayers_ArePhysicalModuleProjects() {
+        string[] projects = [
+            "Application/Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj",
+            "Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj",
+            "Infrastructure/Model/FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj",
+            "Infrastructure/FoodDiary.Modules.DailyAdvices.Infrastructure.csproj",
+        ];
+        Assert.All(projects, project => Assert.True(File.Exists(Path.Combine(
+            ArchitectureTestPaths.RepositoryRoot,
+            "Modules",
+            "DailyAdvices",
+            project.Replace('/', Path.DirectorySeparatorChar))), project));
     }
 
     [Theory]

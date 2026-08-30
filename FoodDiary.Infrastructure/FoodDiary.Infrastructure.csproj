@@ -6,6 +6,8 @@
     <ProjectReference Include="..\Modules\Fasting\Domain\FoodDiary.Modules.Fasting.Domain.csproj" />
     <ProjectReference Include="..\Modules\Fasting\Infrastructure\Model\FoodDiary.Modules.Fasting.PersistenceModel.csproj" />
     <ProjectReference Include="..\Modules\Hydration\Infrastructure\Model\FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
+    <ProjectReference Include="..\Modules\DailyAdvices\Domain\FoodDiary.Modules.DailyAdvices.Domain.csproj" />
+    <ProjectReference Include="..\Modules\DailyAdvices\Infrastructure\Model\FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj" />
     <ProjectReference Include="..\Modules\Lessons\Domain\FoodDiary.Modules.Lessons.Domain.csproj" />
     <ProjectReference Include="..\Modules\Lessons\Infrastructure\Model\FoodDiary.Modules.Lessons.PersistenceModel.csproj" />
     <ProjectReference Include="..\Modules\WeeklyGoals\Domain\FoodDiary.Modules.WeeklyGoals.Domain.csproj" />

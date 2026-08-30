@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 357,
+    "productionProjectEdges": 366,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -131,7 +131,7 @@
       "fanIn": 1,
       "fanOut": 0,
       "level": "informational",
-      "role": "read-composer"
+      "role": "aggregate-owner"
     },
     {
       "module": "Fasting",

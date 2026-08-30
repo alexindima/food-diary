@@ -42,7 +42,6 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Application.Dashboard"] = [
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Application.Cycles",
-                "FoodDiary.Application.DailyAdvices",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Modules.Hydration.Contracts",
                 "FoodDiary.Application.Meals",
@@ -50,6 +49,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Tdee.Application",
                 "FoodDiary.Domain",
                 "FoodDiary.Mediator",
+                "FoodDiary.Modules.DailyAdvices.Application",
                 "FoodDiary.Modules.Fasting.Contracts",
             ],
             ["FoodDiary.Application.ContentReports"] = [
@@ -57,10 +57,24 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Domain",
                 "FoodDiary.Mediator",
             ],
-            ["FoodDiary.Application.DailyAdvices"] = [
+            ["FoodDiary.Modules.DailyAdvices.Application"] = [
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Domain",
                 "FoodDiary.Mediator",
+                "FoodDiary.Modules.DailyAdvices.Application.Abstractions",
+                "FoodDiary.Modules.DailyAdvices.Domain",
+            ],
+            ["FoodDiary.Modules.DailyAdvices.Application.Abstractions"] = [],
+            ["FoodDiary.Modules.DailyAdvices.Domain"] = [
+                "FoodDiary.Domain",
+            ],
+            ["FoodDiary.Modules.DailyAdvices.Infrastructure"] = [
+                "FoodDiary.Infrastructure",
+                "FoodDiary.Modules.DailyAdvices.Application",
+                "FoodDiary.Modules.DailyAdvices.PersistenceModel",
+            ],
+            ["FoodDiary.Modules.DailyAdvices.PersistenceModel"] = [
+                "FoodDiary.Modules.DailyAdvices.Domain",
             ],
             ["FoodDiary.Modules.Hydration.Application"] = [
                 "FoodDiary.Application.Abstractions",
@@ -292,6 +306,8 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Domain",
                 "FoodDiary.Mediator",
+                "FoodDiary.Modules.DailyAdvices.Domain",
+                "FoodDiary.Modules.DailyAdvices.PersistenceModel",
                 "FoodDiary.Modules.Fasting.Domain",
                 "FoodDiary.Modules.Fasting.PersistenceModel",
                 "FoodDiary.Modules.Hydration.PersistenceModel",
@@ -309,7 +325,6 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.ContentReports",
                 "FoodDiary.Application.Cycles",
                 "FoodDiary.Application.Dashboard",
-                "FoodDiary.Application.DailyAdvices",
                 "FoodDiary.Application.Dietologist",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Application.Export",
@@ -336,6 +351,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Users",
                 "FoodDiary.Application.Wearables",
                 "FoodDiary.Infrastructure",
+                "FoodDiary.Modules.DailyAdvices.Infrastructure",
             ],
             ["FoodDiary.Integrations"] = [
                 "FoodDiary.Application.Abstractions",
@@ -352,7 +368,6 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.ContentReports",
                 "FoodDiary.Application.Cycles",
                 "FoodDiary.Application.Dashboard",
-                "FoodDiary.Application.DailyAdvices",
                 "FoodDiary.Application.Dietologist",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Application.Export",
@@ -380,6 +395,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Wearables",
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Integrations",
+                "FoodDiary.Modules.DailyAdvices.Application",
                 "FoodDiary.Resources",
             ],
             ["FoodDiary.MailInbox.Application"] = [
@@ -441,7 +457,6 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.ContentReports",
                 "FoodDiary.Application.Cycles",
                 "FoodDiary.Application.Dashboard",
-                "FoodDiary.Application.DailyAdvices",
                 "FoodDiary.Application.Dietologist",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Application.Export",
@@ -470,6 +485,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Wearables",
                 "FoodDiary.Mediator",
                 "FoodDiary.Results",
+                "FoodDiary.Modules.DailyAdvices.Application",
             ],
             ["FoodDiary.Domain.Primitives"] = [],
             ["FoodDiary.Resources"] = [
@@ -486,7 +502,6 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.ContentReports",
                 "FoodDiary.Application.Cycles",
                 "FoodDiary.Application.Dashboard",
-                "FoodDiary.Application.DailyAdvices",
                 "FoodDiary.Application.Dietologist",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Application.Export",
@@ -516,6 +531,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Integrations",
                 "FoodDiary.Presentation.Api",
                 "FoodDiary.Resources",
+                "FoodDiary.Modules.DailyAdvices.Infrastructure",
             ],
         };
 
@@ -536,7 +552,6 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.ContentReports",
                 "FoodDiary.Application.Cycles",
                 "FoodDiary.Application.Dashboard",
-                "FoodDiary.Application.DailyAdvices",
                 "FoodDiary.Application.Dietologist",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Application.Export",
@@ -575,6 +590,16 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Domain.Tests"] = [
                 "FoodDiary.Domain",
                 "FoodDiary.Modules.Fasting.Domain",
+            ],
+            ["FoodDiary.Modules.DailyAdvices.Application.Tests"] = [
+                "FoodDiary.Application.Users",
+                "FoodDiary.Modules.DailyAdvices.Application",
+            ],
+            ["FoodDiary.Modules.DailyAdvices.Domain.Tests"] = [
+                "FoodDiary.Modules.DailyAdvices.Domain",
+            ],
+            ["FoodDiary.Modules.DailyAdvices.Infrastructure.Tests"] = [
+                "FoodDiary.Modules.DailyAdvices.Infrastructure",
             ],
             ["FoodDiary.Modules.Fasting.Application.Tests"] = [
                 "FoodDiary.Application.Notifications",
@@ -622,6 +647,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Initializer",
                 "FoodDiary.Integrations",
+                "FoodDiary.Modules.DailyAdvices.Infrastructure",
                 "FoodDiary.Modules.Fasting.Infrastructure",
                 "FoodDiary.Modules.Hydration.Infrastructure",
                 "FoodDiary.Modules.Lessons.Application.Abstractions",
@@ -739,7 +765,6 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.ContentReports",
                 "FoodDiary.Application.Cycles",
                 "FoodDiary.Application.Dashboard",
-                "FoodDiary.Application.DailyAdvices",
                 "FoodDiary.Application.Dietologist",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Application.Export",
@@ -763,6 +788,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Tdee.Application",
                 "FoodDiary.Application.Wearables",
                 "FoodDiary.Domain",
+                "FoodDiary.Modules.DailyAdvices.Application",
                 "FoodDiary.Presentation.Api",
             ],
             ["FoodDiary.Resources.Tests"] = [

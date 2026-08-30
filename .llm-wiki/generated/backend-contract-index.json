@@ -4646,7 +4646,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8029,7 +8029,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/DailyAdvices/Common/IDailyAdviceReadModelRepository.cs"
+        "Modules/DailyAdvices/Application/Abstractions/Common/IDailyAdviceReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8046,7 +8046,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.DailyAdvices/Common/IDailyAdviceReadService.cs"
+        "Modules/DailyAdvices/Application/Common/IDailyAdviceReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -35724,33 +35724,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetDailyAdviceQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQueryValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetDailyAdviceQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
@@ -35763,7 +35737,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Dashboard/Mappings/DashboardHttpQueryMappings.cs",
@@ -35776,10 +35750,36 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs",
+      "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetDailyAdviceQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetDailyAdviceQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 9
     },
@@ -35789,7 +35789,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardValidatorTests.cs",
@@ -35802,7 +35802,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/DashboardControllerTests.cs",
@@ -35815,7 +35815,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/DashboardHttpMappingsTests.cs",
@@ -53680,19 +53680,6 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -55396,6 +55383,19 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -55708,6 +55708,19 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -55815,19 +55828,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 5
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 4
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -56745,10 +56745,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/DailyAdvices/Common/IDailyAdviceReadModelRepository.cs"
+        "Modules/DailyAdvices/Application/Abstractions/Common/IDailyAdviceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.DailyAdvices/Services/DailyAdviceReadService.cs",
+      "consumerPath": "Modules/DailyAdvices/Application/Services/DailyAdviceReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -56758,10 +56758,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/DailyAdvices/Common/IDailyAdviceReadModelRepository.cs"
+        "Modules/DailyAdvices/Application/Abstractions/Common/IDailyAdviceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
+      "consumerPath": "Modules/DailyAdvices/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -56771,10 +56771,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/DailyAdvices/Common/IDailyAdviceReadModelRepository.cs"
+        "Modules/DailyAdvices/Application/Abstractions/Common/IDailyAdviceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Tracking/DailyAdviceRepository.cs",
+      "consumerPath": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -56784,10 +56784,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/DailyAdvices/Common/IDailyAdviceReadModelRepository.cs"
+        "Modules/DailyAdvices/Application/Abstractions/Common/IDailyAdviceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs",
+      "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 10
     },
@@ -56797,10 +56797,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/DailyAdvices/Common/IDailyAdviceReadModelRepository.cs"
+        "Modules/DailyAdvices/Application/Abstractions/Common/IDailyAdviceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
+      "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests/ModuleRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -56810,12 +56810,12 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/DailyAdvices/Common/IDailyAdviceReadModelRepository.cs"
+        "Modules/DailyAdvices/Application/Abstractions/Common/IDailyAdviceReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "IDailyAdviceReadService",
@@ -56823,10 +56823,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.DailyAdvices/Common/IDailyAdviceReadService.cs"
+        "Modules/DailyAdvices/Application/Common/IDailyAdviceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.DailyAdvices/DependencyInjection.cs",
+      "consumerPath": "Modules/DailyAdvices/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -56836,10 +56836,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.DailyAdvices/Common/IDailyAdviceReadService.cs"
+        "Modules/DailyAdvices/Application/Common/IDailyAdviceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
+      "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -56849,10 +56849,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.DailyAdvices/Common/IDailyAdviceReadService.cs"
+        "Modules/DailyAdvices/Application/Common/IDailyAdviceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.DailyAdvices/Services/DailyAdviceReadService.cs",
+      "consumerPath": "Modules/DailyAdvices/Application/Services/DailyAdviceReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -56862,10 +56862,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.DailyAdvices/Common/IDailyAdviceReadService.cs"
+        "Modules/DailyAdvices/Application/Common/IDailyAdviceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs",
+      "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -60895,19 +60895,6 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/DailyAdviceId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/DietologistInvitationId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61468,6 +61455,19 @@
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Domain/ValueObjects/Ids/DailyAdviceId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -77157,19 +77157,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -78067,6 +78054,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -78627,19 +78627,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -79537,6 +79524,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -92757,19 +92757,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -94487,6 +94474,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },

@@ -217,7 +217,7 @@
       "area": "FoodDiary",
       "name": "DailyAdvice",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Content/DailyAdvice.cs",
+      "path": "Modules/DailyAdvices/Domain/Entities/Content/DailyAdvice.cs",
       "line": 7
     },
     {
@@ -1036,7 +1036,7 @@
       "area": "FoodDiary",
       "name": "DailyAdviceId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/DailyAdviceId.cs",
+      "path": "Modules/DailyAdvices/Domain/ValueObjects/Ids/DailyAdviceId.cs",
       "line": 4
     },
     {
@@ -2286,48 +2286,6 @@
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Transition timestamp cannot be earlier than the previous webhook event timestamp.\")",
       "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
       "line": 161
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(message, paramName)",
-      "path": "FoodDiary.Domain/Entities/Content/DailyAdvice.cs",
-      "line": 91
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Content/DailyAdvice.cs",
-      "line": 96
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Locale must be one of the supported language codes.\")",
-      "path": "FoodDiary.Domain/Entities/Content/DailyAdvice.cs",
-      "line": 111
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Content/DailyAdvice.cs",
-      "line": 122
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Weight must be greater than zero.\")",
-      "path": "FoodDiary.Domain/Entities/Content/DailyAdvice.cs",
-      "line": 128
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
-      "path": "FoodDiary.Domain/Entities/Content/DailyAdvice.cs",
-      "line": 135
     },
     {
       "area": "FoodDiary",
@@ -4705,6 +4663,48 @@
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
+      "message": "throw new ArgumentException(message, paramName)",
+      "path": "Modules/DailyAdvices/Domain/Entities/Content/DailyAdvice.cs",
+      "line": 91
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/DailyAdvices/Domain/Entities/Content/DailyAdvice.cs",
+      "line": 96
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Locale must be one of the supported language codes.\")",
+      "path": "Modules/DailyAdvices/Domain/Entities/Content/DailyAdvice.cs",
+      "line": 111
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/DailyAdvices/Domain/Entities/Content/DailyAdvice.cs",
+      "line": 122
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Weight must be greater than zero.\")",
+      "path": "Modules/DailyAdvices/Domain/Entities/Content/DailyAdvice.cs",
+      "line": 128
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
+      "path": "Modules/DailyAdvices/Domain/Entities/Content/DailyAdvice.cs",
+      "line": 135
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
       "message": "throw new ArgumentException(\"OccurrenceId is required.\", nameof(occurrenceId))",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingCheckIn.cs",
       "line": 60
@@ -5629,7 +5629,7 @@
         "e => new { e.Locale, e.Tag })"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/DailyAdvices/DailyAdviceConfiguration.cs"
+      "path": "Modules/DailyAdvices/Infrastructure/Model/Configurations/DailyAdviceConfiguration.cs"
     },
     {
       "area": "FoodDiary",

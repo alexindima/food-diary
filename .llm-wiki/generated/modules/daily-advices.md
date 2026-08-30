@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.DailyAdvices/FoodDiary.Application.DailyAdvices.csproj`
+- Extracted project: `Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
@@ -24,40 +24,39 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/DailyAdvices`
-- `FoodDiary.Application.DailyAdvices`
-- `FoodDiary.Infrastructure/Persistence/Configurations/DailyAdvices`
+- `Modules/DailyAdvices/Application`
 
 ## HTTP Surface
 
 No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
-- Role: read-composer
+- Role: aggregate-owner
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
-- Declared owned entities: not yet enumerated
-- Public contract files: 3
+- Declared owned entities: DailyAdvice
+- Public contract files: 0
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 3
-- Interfaces: 1
-- DTO/read-model/projection types: 1
+- Public contract types: 0
+- Interfaces: 0
+- DTO/read-model/projection types: 0
 - Enums: 0
-- Exported repository-shaped contracts: 1
+- Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
-- `class DailyAdviceErrors`
-- `interface IDailyAdviceReadModelRepository`
-- `record DailyAdviceReadModel`
+- No public declaration was found in the mapped abstraction areas.
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Domain.Tests/Domain/DailyAdviceInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests/ModuleRegistrationTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/DailyAdvicesModuleExtractionTests.cs`
 
 ## Working Rule

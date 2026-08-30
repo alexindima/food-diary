@@ -3,6 +3,8 @@ param(
     [string]$BaseRef = 'HEAD',
     [string]$HeadRef,
     [string[]]$ChangedPath,
+    [ValidateSet('Sqlite', 'Json')]
+    [string]$CompiledIndexSource = 'Sqlite',
     [object]$DiffInput,
     [object]$PolicyInput,
     [ValidateSet('Text', 'Json')]
@@ -16,6 +18,7 @@ if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
 if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $ChangedPath }
 $diffArguments = @{} + $common
 $diffArguments.Limit = 20
+$diffArguments.CompiledIndexSource = $CompiledIndexSource
 $diff = if ($null -ne $DiffInput) { $DiffInput } else {
     & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') @diffArguments | ConvertFrom-Json
 }

@@ -220,15 +220,16 @@
       }
     },
     "DailyAdvices": {
-      "role": "read-composer",
+      "role": "aggregate-owner",
       "physicalIsolation": "project",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": [],
+      "ownedEntities": ["DailyAdvice"],
       "sourceMappings": {
-        "applicationProjects": ["FoodDiary.Application.DailyAdvices"],
-        "abstractionAreas": ["DailyAdvices"],
-        "domainAreas": ["DailyAdvices"],
-        "persistenceAreas": ["DailyAdvices"]
+        "logicalRoot": "Modules/DailyAdvices",
+        "applicationProjects": ["Modules/DailyAdvices/Application"],
+        "abstractionAreas": ["Modules/DailyAdvices/Application/Abstractions"],
+        "domainAreas": ["Modules/DailyAdvices/Domain"],
+        "persistenceAreas": ["Modules/DailyAdvices/Infrastructure"]
       }
     },
     "Dietologist": {

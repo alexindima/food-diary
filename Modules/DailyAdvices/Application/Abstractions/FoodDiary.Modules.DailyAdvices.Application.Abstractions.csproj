@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Modules.DailyAdvices.Application.Abstractions</AssemblyName>
+    <RootNamespace>FoodDiary.Application.Abstractions.DailyAdvices</RootNamespace>
+  </PropertyGroup>
+</Project>

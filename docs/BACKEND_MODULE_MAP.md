@@ -35,6 +35,11 @@ Use this file when deciding where backend code belongs.
 | Lessons use cases | `Modules/Lessons/Application` | Lesson commands, queries, handlers, validators, services, mappings, and application registration | Persistence implementations and HTTP transport |
 | Lessons persistence model | `Modules/Lessons/Infrastructure/Model` | Lesson EF configurations and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
 | Lessons infrastructure | `Modules/Lessons/Infrastructure` | Lesson repository implementation and complete module registration | HTTP transport and central migrations |
+| Daily Advices domain | `Modules/DailyAdvices/Domain` | Aggregate, identifier, invariants, stable CLR/EF identity | Application orchestration, EF mappings, transport |
+| Daily Advices application ports | `Modules/DailyAdvices/Application/Abstractions` | Repository port and persistence projection | EF implementation or cross-module aggregate exposure |
+| Daily Advices use cases | `Modules/DailyAdvices/Application` | Query, model, selection, application registration | Persistence implementation and HTTP transport |
+| Daily Advices persistence model | `Modules/DailyAdvices/Infrastructure/Model` | EF configuration and model-builder seam | Shared `DbContext`, migrations, repository behavior |
+| Daily Advices infrastructure | `Modules/DailyAdvices/Infrastructure` | Repository and complete module registration | HTTP transport and central migrations |
 | Billing use cases | `FoodDiary.Application.Billing` | Billing commands, queries, validators, renewal and webhook orchestration | Core Application dependencies, persistence, HTTP DTOs |
 | Marketing use cases | `FoodDiary.Application.Marketing` | Attribution commands, queries and conversion recording | Core Application dependencies, persistence, HTTP DTOs |
 | Notification use cases | `FoodDiary.Application.Notifications` | Notification feed, preferences, web-push subscription and delivery orchestration | Core Application dependencies, persistence implementations, HTTP DTOs |

@@ -96,6 +96,16 @@ try {
     }
     Assert-ColdCheckout ([bool]$design.ready) 'Cold-checkout design did not propagate the automatic JSON fallback through research and planning.'
 
+    $decision = Invoke-JsonFacade -Facade $facade -FacadeCommand decision -FacadeParameters @{
+        ChangedPath = @($backendPath); Format = 'Json'; Limit = 3
+    }
+    Assert-ColdCheckout ($null -ne $decision.reviewRequired) 'Cold-checkout decision did not use the automatic JSON fallback.'
+
+    $rollout = Invoke-JsonFacade -Facade $facade -FacadeCommand rollout -FacadeParameters @{
+        ChangedPath = @($backendPath); Format = 'Json'; Limit = 3
+    }
+    Assert-ColdCheckout ($null -ne $rollout.rollback) 'Cold-checkout rollout did not use the automatic JSON fallback.'
+
     $trace = Invoke-JsonTool -ToolPath (Join-Path $checkoutWikiRoot 'tools/Find-LlmWikiTraceCandidates.ps1') -ToolParameters @{
         Query = 'Trace primary user scenario end to end for wearable synchronization.'; CompiledIndexSource = 'Json'; Format = 'Json'; Limit = 3
     }

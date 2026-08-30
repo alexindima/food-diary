@@ -309,7 +309,7 @@ Operational cleanup remains owned by the corresponding application module. JobMa
 
 Lessons owns both `NutritionLesson` and `UserLessonProgress`. Admin does not acquire the Lessons write repository: create, update, delete and bulk import flow through `ILessonAdministrationService`, which keeps aggregate construction, tracking loads and persistence inside Lessons. Admin may consume the dedicated lesson read-model projection for management screens. Lesson and progress configurations live in `Configurations/Lessons`.
 
-Daily Advice is a read-oriented content module that owns `DailyAdvice` storage and selection behavior. Dashboard composes it by sending the Daily Advice query; it does not acquire the repository. Its configuration lives in `Configurations/DailyAdvices`.
+Daily Advice is a read-oriented content module that owns `DailyAdvice`, `DailyAdviceId`, storage, selection behavior, its repository port/adapter, and EF configuration under `Modules/DailyAdvices`. Dashboard composes it by sending the Daily Advice query through the module Application surface; it does not acquire the repository, Domain, or Infrastructure. Legacy CLR namespaces and EF model identity remain stable, while the shared `FoodDiaryDbContext`, migrations, and model snapshot remain central.
 
 ## Persistence configuration ownership
 

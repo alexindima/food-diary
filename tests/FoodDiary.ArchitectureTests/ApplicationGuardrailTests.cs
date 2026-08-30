@@ -1476,7 +1476,7 @@ public sealed class ApplicationGuardrailTests {
     public void ContentPromptAndCycleReadContracts_DoNotFallbackToAggregateDefaultReadModels() {
         string root = GetRepositoryRoot();
         string[] contractFiles = [
-            Path.Combine(root, "FoodDiary.Application.Abstractions", "DailyAdvices", "Common", "IDailyAdviceReadModelRepository.cs"),
+            Path.Combine(root, "Modules", "DailyAdvices", "Application", "Abstractions", "Common", "IDailyAdviceReadModelRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Cycles", "Common", "ICycleReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Ai", "Common", "IAiPromptTemplateReadRepository.cs"),
         ];
@@ -2433,7 +2433,7 @@ public sealed class ApplicationGuardrailTests {
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] contentQueryFiles = [
             .. SourceScanner.SourceFiles(Path.Combine(root, "Modules", "Lessons", "Application", "Queries")),
-            .. SourceScanner.SourceFiles(Path.Combine(root, "FoodDiary.Application.DailyAdvices", "Queries")),
+            .. SourceScanner.SourceFiles(Path.Combine(root, "Modules", "DailyAdvices", "Application", "Queries")),
             .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminLessons")),
             .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminEmailTemplates")),
             .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminAiPrompts")),
@@ -2459,7 +2459,9 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.DailyAdvices",
+            "Modules",
+            "DailyAdvices",
+            "Application",
             "Services",
             "DailyAdviceReadService.cs");
         string[] serviceFiles = [servicePath];

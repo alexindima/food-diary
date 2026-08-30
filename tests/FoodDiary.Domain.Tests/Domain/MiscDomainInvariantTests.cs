@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Entities.Assets;
-using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -123,66 +122,4 @@ public class MiscDomainInvariantTests {
         Assert.Throws<ArgumentOutOfRangeException>(() => recentItem.Touch(unspecifiedTimestamp));
     }
 
-    [Fact]
-    public void DailyAdvice_Update_NormalizesFields() {
-        var advice = DailyAdvice.Create(" Hydrate ", " EN ", weight: 1, tag: "  water ");
-
-        advice.Update(value: "  Sleep  ", locale: " RU ", weight: 2, tag: "   ");
-
-        Assert.Multiple(
-            () => Assert.Equal("Sleep", advice.Value),
-            () => Assert.Equal("ru", advice.Locale),
-            () => Assert.Equal(2, advice.Weight),
-            () => Assert.Null(advice.Tag));
-    }
-
-    [Fact]
-    public void DailyAdvice_Create_WithLocaleVariant_NormalizesToPrimaryLanguage() {
-        var advice = DailyAdvice.Create("Hydrate", "en-US");
-
-        Assert.Equal("en", advice.Locale);
-    }
-
-    [Fact]
-    public void DailyAdvice_Create_WithUnsupportedLocale_Throws() {
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-            DailyAdvice.Create("Hydrate", "de"));
-    }
-
-    [Fact]
-    public void DailyAdvice_Update_WithSameNormalizedValues_DoesNotSetModifiedOnUtc() {
-        var advice = DailyAdvice.Create("Hydrate", "en", weight: 1, tag: "water");
-
-        advice.Update(value: "  Hydrate  ", locale: " EN ", weight: 1, tag: "  water  ");
-
-        Assert.Null(advice.ModifiedOnUtc);
-    }
-
-    [Fact]
-    public void DailyAdvice_Update_WithClearTag_ClearsTag() {
-        var advice = DailyAdvice.Create("Hydrate", "en", weight: 1, tag: "water");
-
-        advice.Update(clearTag: true);
-
-        Assert.Null(advice.Tag);
-    }
-
-    [Fact]
-    public void DailyAdvice_Update_WithClearTagAndValue_Throws() {
-        var advice = DailyAdvice.Create("Hydrate", "en", weight: 1, tag: "water");
-
-        Assert.Throws<ArgumentException>(() => advice.Update(tag: "sleep", clearTag: true));
-    }
-
-    [Fact]
-    public void DailyAdvice_Create_WithTooLongValue_Throws() {
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-            DailyAdvice.Create(new string('a', 513), "en"));
-    }
-
-    [Fact]
-    public void DailyAdvice_Create_WithTooLongTag_Throws() {
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-            DailyAdvice.Create("Hydrate", "en", tag: new string('t', 65)));
-    }
 }

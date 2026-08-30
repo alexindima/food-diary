@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3490,
-    "symbols": 3497,
+    "sourceFiles": 3492,
+    "symbols": 3499,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 235,
+    "dependencyInjectionRegistrations": 234,
     "kinds": {
-      "class": 1824,
+      "class": 1826,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1350,
+      "Other": 1352,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -1761,20 +1761,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/DailyAdvices/Common/DailyAdviceErrors.cs",
       "line": 4
-    },
-    {
-      "name": "IDailyAdviceReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/DailyAdvices/Common/IDailyAdviceReadModelRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "DailyAdviceReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/DailyAdvices/Models/DailyAdviceReadModel.cs",
-      "line": 2
     },
     {
       "name": "IDashboardBodyReadService",
@@ -6430,62 +6416,6 @@
       "role": "Service",
       "path": "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
       "line": 13
-    },
-    {
-      "name": "IDailyAdviceReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.DailyAdvices/Common/IDailyAdviceReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.DailyAdvices/DependencyInjection.cs",
-      "line": 8
-    },
-    {
-      "name": "DailyAdviceModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.DailyAdvices/Models/DailyAdviceModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetDailyAdviceQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetDailyAdviceQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetDailyAdviceQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "DailyAdviceReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.DailyAdvices/Services/DailyAdviceReadService.cs",
-      "line": 9
-    },
-    {
-      "name": "DailyAdviceSelector",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.DailyAdvices/Services/DailyAdviceSelector.cs",
-      "line": 9
     },
     {
       "name": "SendDashboardTestEmailCommand",
@@ -12473,13 +12403,6 @@
       "line": 6
     },
     {
-      "name": "DailyAdvice",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Content/DailyAdvice.cs",
-      "line": 7
-    },
-    {
       "name": "EmailTemplate",
       "kind": "class",
       "role": "Entity",
@@ -13425,13 +13348,6 @@
       "line": 4
     },
     {
-      "name": "DailyAdviceId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/DailyAdviceId.cs",
-      "line": 4
-    },
-    {
       "name": "DietologistInvitationId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -14234,7 +14150,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "DependencyInjection",
@@ -14668,13 +14584,6 @@
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/MenstrualEpisodeConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "DailyAdviceConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/DailyAdvices/DailyAdviceConfiguration.cs",
       "line": 7
     },
     {
@@ -15305,7 +15214,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "FoodDiaryDbContext",
@@ -15656,13 +15565,6 @@
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Tracking/CycleRepository.cs",
       "line": 9
-    },
-    {
-      "name": "DailyAdviceRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Tracking/DailyAdviceRepository.cs",
-      "line": 6
     },
     {
       "name": "ExerciseEntryRepository",
@@ -22630,6 +22532,118 @@
       "line": 28
     },
     {
+      "name": "IDailyAdviceReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/DailyAdvices/Application/Abstractions/Common/IDailyAdviceReadModelRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "DailyAdviceReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/DailyAdvices/Application/Abstractions/Models/DailyAdviceReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "IDailyAdviceReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/DailyAdvices/Application/Common/IDailyAdviceReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/DailyAdvices/Application/DependencyInjection.cs",
+      "line": 8
+    },
+    {
+      "name": "DailyAdviceModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/DailyAdvices/Application/Models/DailyAdviceModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetDailyAdviceQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetDailyAdviceQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetDailyAdviceQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "DailyAdviceReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/DailyAdvices/Application/Services/DailyAdviceReadService.cs",
+      "line": 9
+    },
+    {
+      "name": "DailyAdviceSelector",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/DailyAdvices/Application/Services/DailyAdviceSelector.cs",
+      "line": 9
+    },
+    {
+      "name": "DailyAdvice",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/DailyAdvices/Domain/Entities/Content/DailyAdvice.cs",
+      "line": 7
+    },
+    {
+      "name": "DailyAdviceId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/DailyAdvices/Domain/ValueObjects/Ids/DailyAdviceId.cs",
+      "line": 4
+    },
+    {
+      "name": "DailyAdviceConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/DailyAdvices/Infrastructure/Model/Configurations/DailyAdviceConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "DailyAdvicesPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/DailyAdvices/Infrastructure/Model/DailyAdvicesPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/DailyAdvices/Infrastructure/ModuleRegistration.cs",
+      "line": 7
+    },
+    {
+      "name": "DailyAdviceRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs",
+      "line": 7
+    },
+    {
       "name": "FastingTelemetryEventRecord",
       "kind": "record",
       "role": "Other",
@@ -24838,9 +24852,9 @@
     },
     {
       "interface": "IDailyAdviceReadService",
-      "interfacePath": "FoodDiary.Application.DailyAdvices/Common/IDailyAdviceReadService.cs",
+      "interfacePath": "Modules/DailyAdvices/Application/Common/IDailyAdviceReadService.cs",
       "implementation": "DailyAdviceReadService",
-      "implementationPath": "FoodDiary.Application.DailyAdvices/Services/DailyAdviceReadService.cs",
+      "implementationPath": "Modules/DailyAdvices/Application/Services/DailyAdviceReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26316,13 +26330,6 @@
       "line": 14
     },
     {
-      "service": "IDailyAdviceReadService",
-      "implementation": "DailyAdviceReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.DailyAdvices/DependencyInjection.cs",
-      "line": 14
-    },
-    {
       "service": "IDashboardStatisticsReadService",
       "implementation": "MediatorDashboardStatisticsReadService",
       "lifetime": "Scoped",
@@ -27342,35 +27349,28 @@
       "implementation": "WeightEntryRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 13
+      "line": 12
     },
     {
       "service": "IWaistEntryRepository",
       "implementation": "WaistEntryRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 17
-    },
-    {
-      "service": "IDailyAdviceReadModelRepository",
-      "implementation": "DailyAdviceRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 21
+      "line": 16
     },
     {
       "service": "ICycleRepository",
       "implementation": "CycleRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 22
+      "line": 20
     },
     {
       "service": "IExerciseEntryRepository",
       "implementation": "ExerciseEntryRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 26
+      "line": 24
     },
     {
       "service": "IUsdaFoodRepository",
@@ -27721,6 +27721,13 @@
       "lifetime": "Singleton",
       "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
       "line": 76
+    },
+    {
+      "service": "IDailyAdviceReadService",
+      "implementation": "DailyAdviceReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/DailyAdvices/Application/DependencyInjection.cs",
+      "line": 14
     },
     {
       "service": "IFastingAnalyticsService",

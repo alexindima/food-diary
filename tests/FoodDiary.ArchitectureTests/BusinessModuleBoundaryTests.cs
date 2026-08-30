@@ -1056,27 +1056,19 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Theory]
-    [InlineData("DailyAdviceConfiguration.cs", "Configurations/DailyAdvices")]
-    public void ContentConfigurations_StayInOwnedFolders(
-        string fileName,
-        string expectedRelativeDirectory) {
-        string expectedPath = Path.Combine(
-            ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Infrastructure",
-            "Persistence",
-            expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar),
-            fileName);
-
-        Assert.True(File.Exists(expectedPath), $"{fileName} should stay in {expectedRelativeDirectory}.");
-    }
-
-    [Theory]
     [InlineData("NutritionLessonConfiguration.cs")]
     [InlineData("UserLessonProgressConfiguration.cs")]
     public void LessonConfigurations_StayInLessonsPersistenceModel(string fileName) {
         string expectedPath = ArchitectureTestPaths.FromRoot(
             "Modules", "Lessons", "Infrastructure", "Model", "Configurations", fileName);
         Assert.True(File.Exists(expectedPath), $"{fileName} should stay in the Lessons persistence model.");
+    }
+
+    [Fact]
+    public void DailyAdviceConfiguration_LivesInOwnedPersistenceModel() {
+        string path = ArchitectureTestPaths.FromRoot(
+            "Modules", "DailyAdvices", "Infrastructure", "Model", "Configurations", "DailyAdviceConfiguration.cs");
+        Assert.True(File.Exists(path));
     }
 
     [Fact]
