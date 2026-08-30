@@ -1,4 +1,4 @@
-# ADR 0021: Images logical module extraction
+# ADR 0022: Images logical module extraction
 
 ## Status
 

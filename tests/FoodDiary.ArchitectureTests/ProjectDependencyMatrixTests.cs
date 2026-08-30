@@ -757,7 +757,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Billing",
                 "FoodDiary.Application.BodyMetrics",
                 "FoodDiary.Application.Cycles",
-                "FoodDiary.Modules.Dietologist.Application",
+                "FoodDiary.Modules.Dietologist.Infrastructure",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Modules.Fasting.Application",
                 "FoodDiary.Modules.Fasting.Contracts",

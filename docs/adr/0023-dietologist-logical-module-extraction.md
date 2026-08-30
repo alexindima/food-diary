@@ -1,4 +1,4 @@
-# ADR 0021: Extract Dietologist into a vertical logical module
+# ADR 0023: Extract Dietologist into a vertical logical module
 
 - Status: Accepted
 - Date: 2026-08-30

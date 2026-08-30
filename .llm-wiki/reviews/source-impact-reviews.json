@@ -57,17 +57,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "525a28ded1d27df969545f36d287ce8631f2ac429bcbe10d6679a77f5156e003"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "84f5a54bcbe1ac48f57ba4596d9540c8bd14456d02ff421877065c257cfc2e8b"
+          "sha256": "291ff3776df095b0a89c365641af5db061029321ad7865a322b46c68cf3669c6"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Integrated ContentReports, Images, and Dietologist module ownership was verified against the final solution project graph, module-local abstractions, central compatibility seams, passing ArchitectureTests, and unchanged EF model.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:46.4847569Z"
+      "gitHead": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
+      "reviewedAtUtc": "2026-08-30T04:02:21.9934123Z"
     },
     {
       "pageId": "system.architecture",
@@ -76,21 +72,17 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "525a28ded1d27df969545f36d287ce8631f2ac429bcbe10d6679a77f5156e003"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "84f5a54bcbe1ac48f57ba4596d9540c8bd14456d02ff421877065c257cfc2e8b"
+          "sha256": "291ff3776df095b0a89c365641af5db061029321ad7865a322b46c68cf3669c6"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "2215e78e0d4e139f07ddc33ea99180d8037c01a976ef4e1ac225005b301800e5"
+          "sha256": "32e766a5066cb42abdd1d51d5d22c0b8da011d65e546f9b2279604ce1fe02941"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Integrated ContentReports, Images, and Dietologist module ownership was verified against the final solution project graph, module-local abstractions, central compatibility seams, passing ArchitectureTests, and unchanged EF model.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:46.9850350Z"
+      "gitHead": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
+      "reviewedAtUtc": "2026-08-30T04:02:22.4429106Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -144,13 +136,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "525a28ded1d27df969545f36d287ce8631f2ac429bcbe10d6679a77f5156e003"
+          "sha256": "291ff3776df095b0a89c365641af5db061029321ad7865a322b46c68cf3669c6"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Integrated ContentReports, Images, and Dietologist module ownership was verified against the final solution project graph, module-local abstractions, central compatibility seams, passing ArchitectureTests, and unchanged EF model.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:48.4908986Z"
+      "gitHead": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
+      "reviewedAtUtc": "2026-08-30T04:02:22.9207571Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -207,22 +199,18 @@
       "pageSha256": "b7914894ce3f6dda55057a93baf55364c9aa9c5e4c127a3fc9bddaa89743e4aa",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "fa0de800e3c4a6e3f30917b91a7a029b5729e5702995a8fd099563f6e06b58d1"
-        },
-        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "525a28ded1d27df969545f36d287ce8631f2ac429bcbe10d6679a77f5156e003"
+          "sha256": "291ff3776df095b0a89c365641af5db061029321ad7865a322b46c68cf3669c6"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "2215e78e0d4e139f07ddc33ea99180d8037c01a976ef4e1ac225005b301800e5"
+          "sha256": "32e766a5066cb42abdd1d51d5d22c0b8da011d65e546f9b2279604ce1fe02941"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Integrated ContentReports, Images, and Dietologist module ownership was verified against the final solution project graph, module-local abstractions, central compatibility seams, passing ArchitectureTests, and unchanged EF model.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:49.4272711Z"
+      "gitHead": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
+      "reviewedAtUtc": "2026-08-30T04:02:23.5164346Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
