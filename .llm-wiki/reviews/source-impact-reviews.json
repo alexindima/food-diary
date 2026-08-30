@@ -56,14 +56,14 @@
       "pageSha256": "ebc1bbcb6c7df9755cfe613efcf8d31e9904b961c9081fb9aa2b808c32d2f944",
       "sources": [
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "8e169ce9c25e23544df9aae70446b6116756808c8edd4ff7da707f48bf49b362"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "007bb207a8d54ceff3481682e075bdbd95b94811eb59af4b2965e186ec218a33"
         }
       ],
-      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
+      "reason": "Reviewed primary backend ownership mappings against unchanged HTTP routes and payloads, module contracts, presentation references, and passing module and architecture tests; only project ownership moved.",
       "baseRef": "HEAD",
-      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
-      "reviewedAtUtc": "2026-08-30T14:28:21.4813836Z"
+      "gitHead": "ca33cd054e90da8b769bd807b80f6150efcff24a",
+      "reviewedAtUtc": "2026-08-30T17:59:40.5690017Z"
     },
     {
       "pageId": "system.architecture",
@@ -71,14 +71,14 @@
       "pageSha256": "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
       "sources": [
         {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "857d15ba28438c4e2c8d41e7db611bdcb6dd6d296f2911ca006ccf36cb59d940"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "007bb207a8d54ceff3481682e075bdbd95b94811eb59af4b2965e186ec218a33"
         }
       ],
-      "reason": "Repository catalog and module pages now list the new module-owned test projects; architectural documentation remains accurate.",
+      "reason": "Reviewed the combined OpenFoodFacts, Marketing, and Wearables ownership manifest against module projects, solution membership, central DbContext registrations, and passing architecture tests; removed stale central abstraction mappings after extraction.",
       "baseRef": "HEAD",
-      "gitHead": "7572ecc11a75304b3e39bd8ba9a141802e27ea35",
-      "reviewedAtUtc": "2026-08-30T17:18:08.1404521Z"
+      "gitHead": "ca33cd054e90da8b769bd807b80f6150efcff24a",
+      "reviewedAtUtc": "2026-08-30T17:59:41.2173739Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -132,13 +132,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "291ff3776df095b0a89c365641af5db061029321ad7865a322b46c68cf3669c6"
+          "sha256": "007bb207a8d54ceff3481682e075bdbd95b94811eb59af4b2965e186ec218a33"
         }
       ],
-      "reason": "Integrated ContentReports, Images, and Dietologist module ownership was verified against the final solution project graph, module-local abstractions, central compatibility seams, passing ArchitectureTests, and unchanged EF model.",
+      "reason": "Reviewed the combined OpenFoodFacts, Marketing, and Wearables ownership manifest against module projects, solution membership, central DbContext registrations, and passing architecture tests; removed stale central abstraction mappings after extraction.",
       "baseRef": "HEAD",
-      "gitHead": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
-      "reviewedAtUtc": "2026-08-30T04:02:22.9207571Z"
+      "gitHead": "ca33cd054e90da8b769bd807b80f6150efcff24a",
+      "reviewedAtUtc": "2026-08-30T17:59:41.8683024Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -195,14 +195,14 @@
       "pageSha256": "b7914894ce3f6dda55057a93baf55364c9aa9c5e4c127a3fc9bddaa89743e4aa",
       "sources": [
         {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "857d15ba28438c4e2c8d41e7db611bdcb6dd6d296f2911ca006ccf36cb59d940"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "007bb207a8d54ceff3481682e075bdbd95b94811eb59af4b2965e186ec218a33"
         }
       ],
-      "reason": "Dependency matrix now allowlists the direct references of three new module-owned test projects; production dependencies are unchanged.",
+      "reason": "Reviewed architecture-health implications against the regenerated dependency matrix and passing 738-test architecture suite; the final module graph contains the intended module-owned abstractions and no duplicate donor projects.",
       "baseRef": "HEAD",
-      "gitHead": "7572ecc11a75304b3e39bd8ba9a141802e27ea35",
-      "reviewedAtUtc": "2026-08-30T17:18:08.7116696Z"
+      "gitHead": "ca33cd054e90da8b769bd807b80f6150efcff24a",
+      "reviewedAtUtc": "2026-08-30T17:59:42.5018417Z"
     },
     {
       "pageId": "workflow-backend-contract-review",

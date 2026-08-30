@@ -24,7 +24,6 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Marketing`
 - `FoodDiary.Presentation.Api/Features/Marketing`
 
 ## HTTP Surface

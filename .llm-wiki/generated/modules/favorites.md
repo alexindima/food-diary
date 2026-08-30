@@ -27,7 +27,6 @@ sources:
 - `FoodDiary.Application.Abstractions/FavoriteMeals`
 - `FoodDiary.Application.Abstractions/FavoriteProducts`
 - `FoodDiary.Application.Abstractions/FavoriteRecipes`
-- `FoodDiary.Application.Favorites`
 
 ## HTTP Surface
 
