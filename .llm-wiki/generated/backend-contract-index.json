@@ -5173,7 +5173,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs"
+        "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -5207,7 +5207,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQuery.cs"
+        "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9831,7 +9831,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonAdministrationReadService.cs"
+        "Modules/Lessons/Contracts/Common/ILessonAdministrationReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9848,7 +9848,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonAdministrationService.cs"
+        "Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9865,7 +9865,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonReadService.cs"
+        "Modules/Lessons/Application/Common/ILessonReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -10991,7 +10991,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadModelRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11008,7 +11008,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11025,7 +11025,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11042,7 +11042,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonWriteRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14647,7 +14647,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommand.cs"
+        "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -37947,20 +37947,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetLessonByIdQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs"
+        "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Lessons/Mappings/LessonHttpMappings.cs",
@@ -37973,10 +37960,23 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs"
+        "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Lessons/LessonsFeatureTests.cs",
+      "consumerPath": "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetLessonByIdQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Lessons/LessonsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -37986,7 +37986,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs"
+        "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/LessonHttpMappingsTests.cs",
@@ -37999,7 +37999,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs"
+        "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
@@ -38077,33 +38077,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetLessonsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetLessonsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQuery.cs"
+        "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Lessons/Mappings/LessonHttpMappings.cs",
@@ -38116,10 +38090,36 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQuery.cs"
+        "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Lessons/LessonsFeatureTests.cs",
+      "consumerPath": "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetLessonsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetLessonsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Lessons/LessonsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -38129,10 +38129,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQuery.cs"
+        "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Lessons/LessonsValidatorTests.cs",
+      "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Lessons/LessonsValidatorTests.cs",
       "isTest": true,
       "referenceCount": 6
     },
@@ -38142,7 +38142,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQuery.cs"
+        "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/LessonHttpMappingsTests.cs",
@@ -38155,7 +38155,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQuery.cs"
+        "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
@@ -43553,19 +43553,6 @@
         "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAchievementEvaluationOutbox",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -43631,7 +43618,20 @@
         "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Lessons/LessonsFeatureTests.cs",
+      "consumerPath": "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAchievementEvaluationOutbox",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Lessons/LessonsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 7
     },
@@ -50235,19 +50235,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -50938,6 +50925,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -52159,19 +52159,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommandHandler",
-      "roles": [
-        "CommandHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -52862,6 +52849,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -54382,45 +54382,6 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -55669,6 +55630,45 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -55750,6 +55750,19 @@
       "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Lessons/LessonsFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 7
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -55945,19 +55958,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Lessons/LessonsFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 7
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -61142,19 +61142,6 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/NutritionLessonId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/ProductId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61376,19 +61363,6 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/UserLessonProgressId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/WaistEntryId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61559,6 +61533,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Domain/ValueObjects/Ids/FastingTelemetryEventId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Domain/ValueObjects/Ids/NutritionLessonId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Domain/ValueObjects/Ids/UserLessonProgressId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -67353,7 +67353,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonAdministrationReadService.cs"
+        "Modules/Lessons/Contracts/Common/ILessonAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Services/AdminContentReadService.cs",
@@ -67366,10 +67366,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonAdministrationReadService.cs"
+        "Modules/Lessons/Contracts/Common/ILessonAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/DependencyInjection.cs",
+      "consumerPath": "Modules/Lessons/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -67379,10 +67379,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonAdministrationReadService.cs"
+        "Modules/Lessons/Contracts/Common/ILessonAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Services/LessonAdministrationReadService.cs",
+      "consumerPath": "Modules/Lessons/Application/Services/LessonAdministrationReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -67392,7 +67392,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonAdministrationService.cs"
+        "Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Commands/CreateAdminLesson/CreateAdminLessonCommandHandler.cs",
@@ -67405,7 +67405,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonAdministrationService.cs"
+        "Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Commands/DeleteAdminLesson/DeleteAdminLessonCommandHandler.cs",
@@ -67418,7 +67418,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonAdministrationService.cs"
+        "Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Commands/ImportAdminLessons/ImportAdminLessonsCommandHandler.cs",
@@ -67431,7 +67431,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonAdministrationService.cs"
+        "Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Commands/UpdateAdminLesson/UpdateAdminLessonCommandHandler.cs",
@@ -67444,10 +67444,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonAdministrationService.cs"
+        "Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/DependencyInjection.cs",
+      "consumerPath": "Modules/Lessons/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -67457,10 +67457,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonAdministrationService.cs"
+        "Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Services/LessonAdministrationService.cs",
+      "consumerPath": "Modules/Lessons/Application/Services/LessonAdministrationService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -67470,10 +67470,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonReadService.cs"
+        "Modules/Lessons/Application/Common/ILessonReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/DependencyInjection.cs",
+      "consumerPath": "Modules/Lessons/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -67483,10 +67483,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonReadService.cs"
+        "Modules/Lessons/Application/Common/ILessonReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
+      "consumerPath": "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -67496,10 +67496,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonReadService.cs"
+        "Modules/Lessons/Application/Common/ILessonReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryHandler.cs",
+      "consumerPath": "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -67509,10 +67509,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonReadService.cs"
+        "Modules/Lessons/Application/Common/ILessonReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Services/LessonReadService.cs",
+      "consumerPath": "Modules/Lessons/Application/Services/LessonReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -67522,10 +67522,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Common/ILessonReadService.cs"
+        "Modules/Lessons/Application/Common/ILessonReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Lessons/LessonsFeatureTests.cs",
+      "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Lessons/LessonsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -73410,10 +73410,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadModelRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs",
+      "consumerPath": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -73423,10 +73423,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadModelRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Services/LessonAdministrationReadService.cs",
+      "consumerPath": "Modules/Lessons/Application/Services/LessonAdministrationReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -73436,10 +73436,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadModelRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Services/LessonReadService.cs",
+      "consumerPath": "Modules/Lessons/Application/Services/LessonReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -73449,10 +73449,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadModelRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Learning.cs",
+      "consumerPath": "Modules/Lessons/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -73462,7 +73462,20 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadModelRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Lessons/LessonsFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "INutritionLessonReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -73475,7 +73488,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadModelRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs",
@@ -73488,20 +73501,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadModelRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Lessons/LessonsFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "INutritionLessonReadModelRepository",
-      "roles": [
-        "ReadModelRepository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadModelRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -73514,7 +73514,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadModelRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -73527,10 +73527,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs",
+      "consumerPath": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -73540,10 +73540,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
+      "consumerPath": "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -73553,10 +73553,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Learning.cs",
+      "consumerPath": "Modules/Lessons/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -73566,7 +73566,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -73579,7 +73579,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -73592,7 +73592,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -73605,10 +73605,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Services/LessonAdministrationService.cs",
+      "consumerPath": "Modules/Lessons/Application/Services/LessonAdministrationService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -73618,10 +73618,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Learning.cs",
+      "consumerPath": "Modules/Lessons/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 4
     },
@@ -73631,10 +73631,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Content/NutritionLessonRepository.cs",
+      "consumerPath": "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -73644,7 +73644,20 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Lessons/LessonsFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 21
+    },
+    {
+      "contract": "INutritionLessonRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.LessonCommandTests.cs",
@@ -73657,7 +73670,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs",
@@ -73670,20 +73683,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Lessons/LessonsFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 21
-    },
-    {
-      "contract": "INutritionLessonRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -73696,7 +73696,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -73709,7 +73709,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -73722,10 +73722,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonWriteRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs",
+      "consumerPath": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -73735,10 +73735,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonWriteRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
+      "consumerPath": "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -73748,10 +73748,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonWriteRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Learning.cs",
+      "consumerPath": "Modules/Lessons/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -73761,7 +73761,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonWriteRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -73774,7 +73774,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonWriteRepository.cs"
+        "Modules/Lessons/Application/Abstractions/Common/INutritionLessonWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -77508,32 +77508,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -78185,6 +78159,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -78990,32 +78990,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -79667,6 +79641,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -93472,45 +93472,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -94721,6 +94682,45 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -100645,20 +100645,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "MarkLessonReadCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommand.cs"
+        "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Lessons/Mappings/LessonHttpMappings.cs",
@@ -100671,10 +100658,23 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommand.cs"
+        "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Lessons/LessonsFeatureTests.cs",
+      "consumerPath": "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "MarkLessonReadCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Lessons/LessonsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 5
     },
@@ -100684,7 +100684,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommand.cs"
+        "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/LessonHttpMappingsTests.cs",
@@ -100697,7 +100697,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommand.cs"
+        "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",

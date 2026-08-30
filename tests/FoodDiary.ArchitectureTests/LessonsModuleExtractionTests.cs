@@ -5,7 +5,7 @@ public sealed class LessonsModuleExtractionTests {
     [Fact]
     public void LessonsApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Lessons");
-        string extractedRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Lessons");
+        string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "Lessons", "Application");
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
     }
@@ -13,11 +13,13 @@ public sealed class LessonsModuleExtractionTests {
     [Fact]
     public void ExtractedLessonsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Lessons/FoodDiary.Application.Lessons.csproj");
+            "Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
-            "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.Lessons.Application.Abstractions",
+            "FoodDiary.Modules.Lessons.Contracts",
+            "FoodDiary.Modules.Lessons.Domain",
         ], references);
     }
 

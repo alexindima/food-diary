@@ -14,6 +14,7 @@ using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Application.Abstractions.Lessons.Models;
+using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

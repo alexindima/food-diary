@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Modules.Lessons.Application.Abstractions</AssemblyName>
+    <RootNamespace>FoodDiary.Application.Abstractions.Lessons</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\FoodDiary.Modules.Lessons.Domain.csproj" />
+    <ProjectReference Include="..\..\Contracts\FoodDiary.Modules.Lessons.Contracts.csproj" />
+  </ItemGroup>
+</Project>

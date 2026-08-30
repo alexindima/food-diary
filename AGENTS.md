@@ -29,7 +29,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Hydration persistence model: `Modules/Hydration/Infrastructure/Model/AGENTS.md`
 - Identity application module: `FoodDiary.Application.Identity/AGENTS.md`
 - Images application module: `FoodDiary.Application.Images/AGENTS.md`
-- Lessons application module: `FoodDiary.Application.Lessons/AGENTS.md`
+- Lessons logical module: `Modules/Lessons/AGENTS.md`
 - Meal planning application module: `FoodDiary.Application.MealPlanning/AGENTS.md`
 - Meals application module: `FoodDiary.Application.Meals/AGENTS.md`
 - Open Food Facts application module: `FoodDiary.Application.OpenFoodFacts/AGENTS.md`

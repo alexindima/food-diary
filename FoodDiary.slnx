@@ -37,7 +37,6 @@
     <Project Path="FoodDiary.Application.Export/FoodDiary.Application.Export.csproj" />
     <Project Path="FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj" />
     <Project Path="FoodDiary.Application.Images/FoodDiary.Application.Images.csproj" />
-    <Project Path="FoodDiary.Application.Lessons/FoodDiary.Application.Lessons.csproj" />
     <Project Path="FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj" />
   </Folder>
   <Folder Name="/Modules/Fasting/">
@@ -59,6 +58,16 @@
     <Project Path="Modules/Hydration/Infrastructure/Model/FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
     <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/FoodDiary.Modules.Hydration.Application.Tests.csproj" />
     <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/FoodDiary.Modules.Hydration.Infrastructure.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Lessons/">
+    <Project Path="Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj" />
+    <Project Path="Modules/Lessons/Application/Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
+    <Project Path="Modules/Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj" />
+    <Project Path="Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj" />
+    <Project Path="Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj" />
+    <Project Path="Modules/Lessons/Infrastructure/Model/FoodDiary.Modules.Lessons.PersistenceModel.csproj" />
+    <Project Path="Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/FoodDiary.Modules.Lessons.Application.Tests.csproj" />
+    <Project Path="Modules/Lessons/tests/FoodDiary.Modules.Lessons.Domain.Tests/FoodDiary.Modules.Lessons.Domain.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Tdee/">
     <Project Path="Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj" />

@@ -617,7 +617,6 @@ public sealed class ApplicationGuardrailTests {
     [InlineData("Errors.DailyAdvice.cs", "DailyAdvices", "Common", "DailyAdviceErrors.cs", "DailyAdviceErrors.", "DailyAdvice.")]
     [InlineData("Errors.Cycle.cs", "Cycles", "Common", "CycleErrors.cs", "CycleErrors.", "Cycle.")]
     [InlineData("Errors.CycleDay.cs", "Cycles", "Common", "CycleDayErrors.cs", "CycleDayErrors.", "CycleDay.")]
-    [InlineData("Errors.Lesson.cs", "Lessons", "Common", "LessonErrors.cs", "LessonErrors.", "Lesson.")]
     [InlineData("Errors.Image.cs", "Images", "Common", "ImageErrors.cs", "ImageErrors.", "Image.")]
     [InlineData("Errors.Fasting.cs", "Fasting", "Common", "FastingErrors.cs", "FastingErrors.", "Fasting.")]
     [InlineData("Errors.Wearable.cs", "Wearables", "Common", "WearableErrors.cs", "WearableErrors.", "Wearable.")]
@@ -1116,9 +1115,9 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries", "GetMyRecommendations", "GetMyRecommendationsQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries", "GetRecommendationsForClient", "GetRecommendationsForClientQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Exercises", "Queries", "GetExerciseEntries", "GetExerciseEntriesQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Lessons", "Commands", "MarkLessonRead", "MarkLessonReadCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Lessons", "Queries", "GetLessonById", "GetLessonByIdQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Lessons", "Queries", "GetLessons", "GetLessonsQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Lessons", "Application", "Commands", "MarkLessonRead", "MarkLessonReadCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Lessons", "Application", "Queries", "GetLessonById", "GetLessonByIdQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Lessons", "Application", "Queries", "GetLessons", "GetLessonsQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Notifications", "Commands", "UpdateNotificationPreferences", "UpdateNotificationPreferencesCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Notifications", "Queries", "GetNotificationPreferences", "GetNotificationPreferencesQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Notifications", "Queries", "GetNotifications", "GetNotificationsQueryHandler.cs"),
@@ -1404,7 +1403,7 @@ public sealed class ApplicationGuardrailTests {
     public void AdminContentReadContracts_DoNotFallbackToAggregateDefaultReadModels() {
         string root = GetRepositoryRoot();
         string[] contractFiles = [
-            Path.Combine(root, "FoodDiary.Application.Abstractions", "Lessons", "Common", "INutritionLessonReadRepository.cs"),
+            Path.Combine(root, "Modules", "Lessons", "Application", "Abstractions", "Common", "INutritionLessonReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Admin", "Common", "IEmailTemplateReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "ContentReports", "Common", "IContentReportReadModelRepository.cs"),
         ];
@@ -2433,7 +2432,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] contentQueryFiles = [
-            .. SourceScanner.SourceFiles(Path.Combine(root, "FoodDiary.Application.Lessons", "Queries")),
+            .. SourceScanner.SourceFiles(Path.Combine(root, "Modules", "Lessons", "Application", "Queries")),
             .. SourceScanner.SourceFiles(Path.Combine(root, "FoodDiary.Application.DailyAdvices", "Queries")),
             .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminLessons")),
             .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminEmailTemplates")),
@@ -2478,7 +2477,9 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.Lessons",
+            "Modules",
+            "Lessons",
+            "Application",
             "Services",
             "LessonReadService.cs");
         string[] serviceFiles = [servicePath];

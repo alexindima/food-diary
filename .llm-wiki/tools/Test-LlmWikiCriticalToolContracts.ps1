@@ -52,6 +52,12 @@ Assert-CriticalTool (
 Assert-CriticalTool (
     $facadeSource -match '\$automaticJsonFallbackCommands\s*=\s*@\([^)]*''start''[^)]*''brief''[^)]*''research''') `
     'Cold-checkout start must select the JSON baseline alongside brief and research.'
+$jsonFallbackCommands = [regex]::Match(
+    $facadeSource,
+    '(?s)\$automaticJsonFallbackCommands\s*=\s*@\((?<commands>.*?)\)')
+Assert-CriticalTool (
+    $jsonFallbackCommands.Success -and $jsonFallbackCommands.Groups['commands'].Value -match "'ownership'") `
+    'Cold-checkout ownership analysis must fall back to the read-only JSON baseline.'
 
 $helpOutput = @(& (Join-Path $PSScriptRoot 'Show-LlmWikiHelp.ps1') -Tier core 6>&1 | ForEach-Object { [string]$_ })
 Assert-CriticalTool ($helpOutput -contains 'Command stability tiers: core, governed, experimental.') 'Registry-backed compact help omitted stability tiers.'

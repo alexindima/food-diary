@@ -4,7 +4,7 @@
     "domainTypes": 262,
     "entities": 78,
     "valueObjects": 115,
-    "invariants": 491,
+    "invariants": 493,
     "persistenceMappings": 86,
     "indexes": 155,
     "relationships": 100
@@ -406,8 +406,8 @@
       "area": "FoodDiary",
       "name": "NutritionLesson",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Content/NutritionLesson.cs",
-      "line": 8
+      "path": "Modules/Lessons/Domain/Entities/Content/NutritionLesson.cs",
+      "line": 7
     },
     {
       "area": "FoodDiary",
@@ -560,8 +560,8 @@
       "area": "FoodDiary",
       "name": "UserLessonProgress",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Content/UserLessonProgress.cs",
-      "line": 7
+      "path": "Modules/Lessons/Domain/Entities/Content/UserLessonProgress.cs",
+      "line": 6
     },
     {
       "area": "FoodDiary",
@@ -805,14 +805,14 @@
       "area": "FoodDiary",
       "name": "LessonCategory",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/LessonCategory.cs",
+      "path": "Modules/Lessons/Domain/Enums/LessonCategory.cs",
       "line": 2
     },
     {
       "area": "FoodDiary",
       "name": "LessonDifficulty",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/LessonDifficulty.cs",
+      "path": "Modules/Lessons/Domain/Enums/LessonDifficulty.cs",
       "line": 2
     },
     {
@@ -1309,7 +1309,7 @@
       "area": "FoodDiary",
       "name": "NutritionLessonId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/NutritionLessonId.cs",
+      "path": "Modules/Lessons/Domain/ValueObjects/Ids/NutritionLessonId.cs",
       "line": 4
     },
     {
@@ -1624,7 +1624,7 @@
       "area": "FoodDiary",
       "name": "UserLessonProgressId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/UserLessonProgressId.cs",
+      "path": "Modules/Lessons/Domain/ValueObjects/Ids/UserLessonProgressId.cs",
       "line": 4
     },
     {
@@ -2349,41 +2349,6 @@
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength.Value} characters.\"))",
       "path": "FoodDiary.Domain/Entities/Content/EmailTemplate.cs",
       "line": 89
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException($\"{paramName} is required.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Content/NutritionLesson.cs",
-      "line": 99
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Content/NutritionLesson.cs",
-      "line": 104
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $\"Must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Content/NutritionLesson.cs",
-      "line": 115
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Content/UserLessonProgress.cs",
-      "line": 21
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"LessonId is required.\", nameof(lessonId))",
-      "path": "FoodDiary.Domain/Entities/Content/UserLessonProgress.cs",
-      "line": 25
     },
     {
       "area": "FoodDiary",
@@ -5138,6 +5103,55 @@
     },
     {
       "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName)",
+      "path": "Modules/Lessons/Domain/Entities/Content/LessonsDomainGuard.cs",
+      "line": 6
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\")",
+      "path": "Modules/Lessons/Domain/Entities/Content/LessonsDomainGuard.cs",
+      "line": 12
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException($\"{paramName} is required.\", paramName)",
+      "path": "Modules/Lessons/Domain/Entities/Content/NutritionLesson.cs",
+      "line": 98
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Must be at most {maxLength} characters.\"))",
+      "path": "Modules/Lessons/Domain/Entities/Content/NutritionLesson.cs",
+      "line": 103
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $\"Must be at most {maxLength} characters.\"))",
+      "path": "Modules/Lessons/Domain/Entities/Content/NutritionLesson.cs",
+      "line": 114
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
+      "path": "Modules/Lessons/Domain/Entities/Content/UserLessonProgress.cs",
+      "line": 20
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"LessonId is required.\", nameof(lessonId))",
+      "path": "Modules/Lessons/Domain/Entities/Content/UserLessonProgress.cs",
+      "line": 24
+    },
+    {
+      "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"A reminder cannot be marked for a goal with reminders disabled.\")",
       "path": "Modules/WeeklyGoals/Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
@@ -6088,7 +6102,7 @@
         "e => new { e.Locale, e.Category })"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Lessons/NutritionLessonConfiguration.cs"
+      "path": "Modules/Lessons/Infrastructure/Model/Configurations/NutritionLessonConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6553,7 +6567,7 @@
           "expression": "e => e.Lesson)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Lessons/UserLessonProgressConfiguration.cs"
+      "path": "Modules/Lessons/Infrastructure/Model/Configurations/UserLessonProgressConfiguration.cs"
     },
     {
       "area": "FoodDiary",

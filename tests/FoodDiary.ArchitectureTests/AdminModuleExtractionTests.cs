@@ -19,9 +19,9 @@ public sealed class AdminModuleExtractionTests {
             "FoodDiary.Application.Ai",
             "FoodDiary.Application.ContentReports",
             "FoodDiary.Application.Gamification",
-            "FoodDiary.Application.Lessons",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.Lessons.Contracts",
         ], references);
     }
 

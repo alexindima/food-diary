@@ -4,7 +4,7 @@
     <ProjectReference Include="..\FoodDiary.Application.Ai\FoodDiary.Application.Ai.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.ContentReports\FoodDiary.Application.ContentReports.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Gamification\FoodDiary.Application.Gamification.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Lessons\FoodDiary.Application.Lessons.csproj" />
+    <ProjectReference Include="..\Modules\Lessons\Contracts\FoodDiary.Modules.Lessons.Contracts.csproj" />
     <ProjectReference Include="..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
   </ItemGroup>

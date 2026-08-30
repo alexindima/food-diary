@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.ContentReports.Models;
-using FoodDiary.Application.Abstractions.Lessons.Models;
+using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
@@ -9,7 +9,7 @@ using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.ContentReports.Common;
 using FoodDiary.Application.Abstractions.Admin.Common;
-using FoodDiary.Application.Lessons.Common;
+using FoodDiary.Modules.Lessons.Contracts.Common;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Admin.Services;

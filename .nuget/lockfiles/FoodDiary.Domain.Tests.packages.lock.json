@@ -119,6 +119,12 @@
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )"
         }
+      },
+      "fooddiary.modules.lessons.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
       }
     }
   }

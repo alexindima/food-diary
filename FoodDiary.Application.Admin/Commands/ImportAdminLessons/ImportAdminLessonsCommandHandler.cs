@@ -4,7 +4,7 @@ using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Lessons.Common;
+using FoodDiary.Modules.Lessons.Contracts.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Entities.Content;
 

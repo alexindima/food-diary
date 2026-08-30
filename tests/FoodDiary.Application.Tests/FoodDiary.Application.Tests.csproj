@@ -8,6 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Lessons\Application\FoodDiary.Modules.Lessons.Application.csproj" />
+    <ProjectReference Include="..\..\Modules\Lessons\Application\Abstractions\FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Modules\Lessons\Contracts\FoodDiary.Modules.Lessons.Contracts.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Admin\FoodDiary.Application.Admin.csproj" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -47,7 +50,6 @@
     <ProjectReference Include="..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Images\FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Ai\FoodDiary.Application.Ai.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Application.Lessons\FoodDiary.Application.Lessons.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Statistics\FoodDiary.Application.Statistics.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Usda\FoodDiary.Application.Usda.csproj" />

@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Lessons\Application\Abstractions\FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Modules\Lessons\Contracts\FoodDiary.Modules.Lessons.Contracts.csproj" />
+    <ProjectReference Include="..\..\Modules\Lessons\Infrastructure\FoodDiary.Modules.Lessons.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Hydration\Infrastructure\FoodDiary.Modules.Hydration.Infrastructure.csproj" />
     <PackageReference Include="SSH.NET" />
     <PackageReference Include="coverlet.collector" />

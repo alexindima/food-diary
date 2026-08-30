@@ -23,7 +23,6 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Application.Gamification",
             "FoodDiary.Application.Identity",
             "FoodDiary.Application.Images",
-            "FoodDiary.Application.Lessons",
             "FoodDiary.Application.Marketing",
             "FoodDiary.Application.MealPlanning",
             "FoodDiary.Application.Meals",
@@ -41,6 +40,7 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Infrastructure",
             "FoodDiary.Modules.Fasting.Infrastructure",
             "FoodDiary.Modules.Hydration.Infrastructure",
+            "FoodDiary.Modules.Lessons.Infrastructure",
             "FoodDiary.Modules.Tdee.Application",
             "FoodDiary.Modules.WeeklyGoals.Infrastructure",
         ];

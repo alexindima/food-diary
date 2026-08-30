@@ -1056,8 +1056,6 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Theory]
-    [InlineData("NutritionLessonConfiguration.cs", "Configurations/Lessons")]
-    [InlineData("UserLessonProgressConfiguration.cs", "Configurations/Lessons")]
     [InlineData("DailyAdviceConfiguration.cs", "Configurations/DailyAdvices")]
     public void ContentConfigurations_StayInOwnedFolders(
         string fileName,
@@ -1070,6 +1068,15 @@ public sealed class BusinessModuleBoundaryTests {
             fileName);
 
         Assert.True(File.Exists(expectedPath), $"{fileName} should stay in {expectedRelativeDirectory}.");
+    }
+
+    [Theory]
+    [InlineData("NutritionLessonConfiguration.cs")]
+    [InlineData("UserLessonProgressConfiguration.cs")]
+    public void LessonConfigurations_StayInLessonsPersistenceModel(string fileName) {
+        string expectedPath = ArchitectureTestPaths.FromRoot(
+            "Modules", "Lessons", "Infrastructure", "Model", "Configurations", fileName);
+        Assert.True(File.Exists(expectedPath), $"{fileName} should stay in the Lessons persistence model.");
     }
 
     [Fact]

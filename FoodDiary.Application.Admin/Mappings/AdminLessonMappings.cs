@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Lessons.Models;
+using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Domain.Entities.Content;
 

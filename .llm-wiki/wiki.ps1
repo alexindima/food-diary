@@ -381,7 +381,7 @@ $compiledIndexReadOnlyCommands = @(
 )
 $automaticJsonFallbackCommands = @(
     'start', 'brief', 'develop', 'research', 'diff', 'journeys', 'design', 'test-plan',
-    'topology', 'privacy', 'security'
+    'topology', 'privacy', 'security', 'ownership'
 )
 $compiledIndexSourceWasExplicit = $PSBoundParameters.ContainsKey('CompiledIndexSource')
 if (-not $compiledIndexSourceWasExplicit -and

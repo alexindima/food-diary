@@ -14,7 +14,7 @@ using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Application.Favorites;
 using FoodDiary.Application.Identity;
 using FoodDiary.Application.Images;
-using FoodDiary.Application.Lessons;
+using FoodDiary.Modules.Lessons.Infrastructure;
 using FoodDiary.Application.Statistics;
 using FoodDiary.Application.Meals;
 using FoodDiary.Application.MealPlanning;

@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Lessons.Common;
+using FoodDiary.Modules.Lessons.Contracts.Common;
 using FoodDiary.Application.Admin.Internal.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 

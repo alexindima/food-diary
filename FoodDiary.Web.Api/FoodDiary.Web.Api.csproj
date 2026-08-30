@@ -58,7 +58,7 @@
     <ProjectReference Include="..\FoodDiary.Resources\FoodDiary.Resources.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Images\FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Ai\FoodDiary.Application.Ai.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Lessons\FoodDiary.Application.Lessons.csproj" />
+    <ProjectReference Include="..\Modules\Lessons\Infrastructure\FoodDiary.Modules.Lessons.Infrastructure.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Statistics\FoodDiary.Application.Statistics.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
     <ProjectReference Include="..\Modules\WeeklyGoals\Infrastructure\FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj" />

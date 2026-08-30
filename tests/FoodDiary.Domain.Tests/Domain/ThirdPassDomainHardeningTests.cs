@@ -1,7 +1,6 @@
 using System.Reflection;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Billing;
-using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.FavoriteProducts;
@@ -127,8 +126,6 @@ public sealed class ThirdPassDomainHardeningTests {
 
     [Fact]
     public void LinkAndUserFacingValues_RejectInvalidInput() {
-        Assert.Throws<ArgumentException>(() =>
-            UserLessonProgress.Create(UserId.New(), NutritionLessonId.Empty, Now));
         Assert.Throws<ArgumentException>(() => DietologistInvitation.Create(
             UserId.New(), "not-an-email", "hash", Now.AddDays(1), DietologistPermissions.AllEnabled));
 

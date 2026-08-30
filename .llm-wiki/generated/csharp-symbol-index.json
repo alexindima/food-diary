@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3488,
-    "symbols": 3495,
+    "sourceFiles": 3490,
+    "symbols": 3497,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 236,
+    "dependencyInjectionRegistrations": 235,
     "kinds": {
-      "class": 1822,
+      "class": 1824,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -24,7 +24,7 @@
       "CommandHandler": 159,
       "Configuration": 90,
       "Controller": 92,
-      "Entity": 85,
+      "Entity": 86,
       "Event": 19,
       "Factory": 11,
       "Handler": 9,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1349,
+      "Other": 1350,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -1382,14 +1382,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Lesson.cs",
-      "line": 6
+      "line": 4
     },
     {
       "name": "Lesson",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Lesson.cs",
-      "line": 8
+      "line": 6
     },
     {
       "name": "Errors",
@@ -2544,76 +2544,6 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Images/Common/PresignedUpload.cs",
-      "line": 2
-    },
-    {
-      "name": "INutritionLessonReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadModelRepository.cs",
-      "line": 6
-    },
-    {
-      "name": "INutritionLessonReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonReadRepository.cs",
-      "line": 6
-    },
-    {
-      "name": "INutritionLessonRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "INutritionLessonWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "LessonErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Lessons/Common/LessonErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "LessonAdminReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Lessons/Models/LessonAdminReadModel.cs",
-      "line": 6
-    },
-    {
-      "name": "LessonDetailReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Lessons/Models/LessonDetailReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "LessonSortOption",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Lessons/Models/LessonSortOption.cs",
-      "line": 2
-    },
-    {
-      "name": "LessonSummaryPageReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Lessons/Models/LessonSummaryPageReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "LessonSummaryReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Lessons/Models/LessonSummaryReadModel.cs",
       "line": 2
     },
     {
@@ -8896,139 +8826,6 @@
       "line": 8
     },
     {
-      "name": "MarkLessonReadCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "MarkLessonReadCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "ILessonAdministrationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Lessons/Common/ILessonAdministrationReadService.cs",
-      "line": 4
-    },
-    {
-      "name": "ILessonAdministrationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Lessons/Common/ILessonAdministrationService.cs",
-      "line": 7
-    },
-    {
-      "name": "ILessonReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Lessons/Common/ILessonReadService.cs",
-      "line": 7
-    },
-    {
-      "name": "LessonAdministrationItem",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Lessons/Common/LessonAdministrationItem.cs",
-      "line": 4
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Lessons/DependencyInjection.cs",
-      "line": 8
-    },
-    {
-      "name": "LessonMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Lessons/Mappings/LessonMappings.cs",
-      "line": 7
-    },
-    {
-      "name": "LessonDetailModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Lessons/Models/LessonDetailModel.cs",
-      "line": 2
-    },
-    {
-      "name": "LessonPageModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Lessons/Models/LessonPageModel.cs",
-      "line": 2
-    },
-    {
-      "name": "LessonSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Lessons/Models/LessonSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetLessonByIdQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetLessonByIdQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "GetLessonsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetLessonsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "GetLessonsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "LessonAdministrationReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Lessons/Services/LessonAdministrationReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "LessonAdministrationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Lessons/Services/LessonAdministrationService.cs",
-      "line": 11
-    },
-    {
-      "name": "LessonReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Lessons/Services/LessonReadService.cs",
-      "line": 10
-    },
-    {
       "name": "RecordMarketingAttributionCommand",
       "kind": "record",
       "role": "Command",
@@ -12690,20 +12487,6 @@
       "line": 6
     },
     {
-      "name": "NutritionLesson",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Content/NutritionLesson.cs",
-      "line": 8
-    },
-    {
-      "name": "UserLessonProgress",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Content/UserLessonProgress.cs",
-      "line": 7
-    },
-    {
       "name": "ClientTask",
       "kind": "class",
       "role": "Entity",
@@ -13278,20 +13061,6 @@
       "line": 2
     },
     {
-      "name": "LessonCategory",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/LessonCategory.cs",
-      "line": 2
-    },
-    {
-      "name": "LessonDifficulty",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/LessonDifficulty.cs",
-      "line": 2
-    },
-    {
       "name": "MealAiItemResolution",
       "kind": "enum",
       "role": "Other",
@@ -13789,13 +13558,6 @@
       "line": 4
     },
     {
-      "name": "NutritionLessonId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/NutritionLessonId.cs",
-      "line": 4
-    },
-    {
       "name": "ProductId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -13912,13 +13674,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/UserId.cs",
-      "line": 4
-    },
-    {
-      "name": "UserLessonProgressId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/UserLessonProgressId.cs",
       "line": 4
     },
     {
@@ -14381,7 +14136,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Learning.cs",
-      "line": 8
+      "line": 6
     },
     {
       "name": "DependencyInjection",
@@ -15021,20 +14776,6 @@
       "line": 6
     },
     {
-      "name": "NutritionLessonConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Lessons/NutritionLessonConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "UserLessonProgressConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Lessons/UserLessonProgressConfiguration.cs",
-      "line": 7
-    },
-    {
       "name": "MarketingAttributionEventConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -15271,13 +15012,6 @@
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Wearables/WearableSyncEntryConfiguration.cs",
       "line": 7
-    },
-    {
-      "name": "NutritionLessonRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Content/NutritionLessonRepository.cs",
-      "line": 9
     },
     {
       "name": "ContentReportRepository",
@@ -15571,7 +15305,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "FoodDiaryDbContext",
@@ -24079,6 +23813,286 @@
       "line": 10
     },
     {
+      "name": "INutritionLessonReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs",
+      "line": 7
+    },
+    {
+      "name": "INutritionLessonReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadRepository.cs",
+      "line": 6
+    },
+    {
+      "name": "INutritionLessonRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "INutritionLessonWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "LessonDetailReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Lessons/Application/Abstractions/Models/LessonDetailReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "LessonSortOption",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Lessons/Application/Abstractions/Models/LessonSortOption.cs",
+      "line": 2
+    },
+    {
+      "name": "LessonSummaryPageReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Lessons/Application/Abstractions/Models/LessonSummaryPageReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "LessonSummaryReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Lessons/Application/Abstractions/Models/LessonSummaryReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MarkLessonReadCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "MarkLessonReadCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Lessons/Application/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "ILessonReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Lessons/Application/Common/ILessonReadService.cs",
+      "line": 7
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Lessons/Application/DependencyInjection.cs",
+      "line": 9
+    },
+    {
+      "name": "LessonMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Lessons/Application/Mappings/LessonMappings.cs",
+      "line": 7
+    },
+    {
+      "name": "LessonDetailModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Lessons/Application/Models/LessonDetailModel.cs",
+      "line": 2
+    },
+    {
+      "name": "LessonPageModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Lessons/Application/Models/LessonPageModel.cs",
+      "line": 2
+    },
+    {
+      "name": "LessonSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Lessons/Application/Models/LessonSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetLessonByIdQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetLessonByIdQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "GetLessonsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetLessonsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQueryHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "GetLessonsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "LessonAdministrationReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Lessons/Application/Services/LessonAdministrationReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "LessonAdministrationService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Lessons/Application/Services/LessonAdministrationService.cs",
+      "line": 11
+    },
+    {
+      "name": "LessonReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Lessons/Application/Services/LessonReadService.cs",
+      "line": 10
+    },
+    {
+      "name": "ILessonAdministrationReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Lessons/Contracts/Common/ILessonAdministrationReadService.cs",
+      "line": 4
+    },
+    {
+      "name": "ILessonAdministrationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs",
+      "line": 7
+    },
+    {
+      "name": "LessonAdministrationItem",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Lessons/Contracts/Common/LessonAdministrationItem.cs",
+      "line": 4
+    },
+    {
+      "name": "LessonAdminReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Lessons/Contracts/Models/LessonAdminReadModel.cs",
+      "line": 6
+    },
+    {
+      "name": "LessonsDomainGuard",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Lessons/Domain/Entities/Content/LessonsDomainGuard.cs",
+      "line": 2
+    },
+    {
+      "name": "NutritionLesson",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Lessons/Domain/Entities/Content/NutritionLesson.cs",
+      "line": 7
+    },
+    {
+      "name": "UserLessonProgress",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Lessons/Domain/Entities/Content/UserLessonProgress.cs",
+      "line": 6
+    },
+    {
+      "name": "LessonCategory",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Lessons/Domain/Enums/LessonCategory.cs",
+      "line": 2
+    },
+    {
+      "name": "LessonDifficulty",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Lessons/Domain/Enums/LessonDifficulty.cs",
+      "line": 2
+    },
+    {
+      "name": "NutritionLessonId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Lessons/Domain/ValueObjects/Ids/NutritionLessonId.cs",
+      "line": 4
+    },
+    {
+      "name": "UserLessonProgressId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Lessons/Domain/ValueObjects/Ids/UserLessonProgressId.cs",
+      "line": 4
+    },
+    {
+      "name": "NutritionLessonConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Lessons/Infrastructure/Model/Configurations/NutritionLessonConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "UserLessonProgressConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Lessons/Infrastructure/Model/Configurations/UserLessonProgressConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "LessonsPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Lessons/Infrastructure/Model/LessonsPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Lessons/Infrastructure/ModuleRegistration.cs",
+      "line": 7
+    },
+    {
+      "name": "NutritionLessonRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs",
+      "line": 11
+    },
+    {
       "name": "ITdeeUserProfileService",
       "kind": "interface",
       "role": "Service",
@@ -25328,23 +25342,23 @@
     },
     {
       "interface": "ILessonAdministrationReadService",
-      "interfacePath": "FoodDiary.Application.Lessons/Common/ILessonAdministrationReadService.cs",
+      "interfacePath": "Modules/Lessons/Contracts/Common/ILessonAdministrationReadService.cs",
       "implementation": "LessonAdministrationReadService",
-      "implementationPath": "FoodDiary.Application.Lessons/Services/LessonAdministrationReadService.cs",
+      "implementationPath": "Modules/Lessons/Application/Services/LessonAdministrationReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "ILessonAdministrationService",
-      "interfacePath": "FoodDiary.Application.Lessons/Common/ILessonAdministrationService.cs",
+      "interfacePath": "Modules/Lessons/Contracts/Common/ILessonAdministrationService.cs",
       "implementation": "LessonAdministrationService",
-      "implementationPath": "FoodDiary.Application.Lessons/Services/LessonAdministrationService.cs",
+      "implementationPath": "Modules/Lessons/Application/Services/LessonAdministrationService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "ILessonReadService",
-      "interfacePath": "FoodDiary.Application.Lessons/Common/ILessonReadService.cs",
+      "interfacePath": "Modules/Lessons/Application/Common/ILessonReadService.cs",
       "implementation": "LessonReadService",
-      "implementationPath": "FoodDiary.Application.Lessons/Services/LessonReadService.cs",
+      "implementationPath": "Modules/Lessons/Application/Services/LessonReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25580,9 +25594,9 @@
     },
     {
       "interface": "INutritionLessonRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Lessons/Common/INutritionLessonRepository.cs",
+      "interfacePath": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonRepository.cs",
       "implementation": "NutritionLessonRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Content/NutritionLessonRepository.cs",
+      "implementationPath": "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26547,27 +26561,6 @@
       "line": 13
     },
     {
-      "service": "ILessonReadService",
-      "implementation": "LessonReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Lessons/DependencyInjection.cs",
-      "line": 14
-    },
-    {
-      "service": "ILessonAdministrationService",
-      "implementation": "LessonAdministrationService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Lessons/DependencyInjection.cs",
-      "line": 15
-    },
-    {
-      "service": "ILessonAdministrationReadService",
-      "implementation": "LessonAdministrationReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Lessons/DependencyInjection.cs",
-      "line": 16
-    },
-    {
       "service": "IMarketingAttributionCleanupService",
       "implementation": "MarketingAttributionCleanupService",
       "lifetime": "Scoped",
@@ -27156,18 +27149,11 @@
       "line": 13
     },
     {
-      "service": "INutritionLessonRepository",
-      "implementation": "NutritionLessonRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Learning.cs",
-      "line": 11
-    },
-    {
       "service": "IMealPlanRepository",
       "implementation": "MealPlanRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Learning.cs",
-      "line": 15
+      "line": 9
     },
     {
       "service": "IMarketingAttributionEventRepository",
@@ -27784,6 +27770,27 @@
       "lifetime": "Scoped",
       "path": "Modules/Hydration/Application/DependencyInjection.cs",
       "line": 16
+    },
+    {
+      "service": "ILessonReadService",
+      "implementation": "LessonReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Lessons/Application/DependencyInjection.cs",
+      "line": 15
+    },
+    {
+      "service": "ILessonAdministrationService",
+      "implementation": "LessonAdministrationService",
+      "lifetime": "Scoped",
+      "path": "Modules/Lessons/Application/DependencyInjection.cs",
+      "line": 16
+    },
+    {
+      "service": "ILessonAdministrationReadService",
+      "implementation": "LessonAdministrationReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Lessons/Application/DependencyInjection.cs",
+      "line": 17
     },
     {
       "service": "ITdeeUserProfileService",

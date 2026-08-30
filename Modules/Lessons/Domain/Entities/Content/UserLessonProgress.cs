@@ -1,0 +1,36 @@
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Domain.Entities.Content;
+
+public sealed class UserLessonProgress : Entity<UserLessonProgressId> {
+    public UserId UserId { get; private set; }
+    public NutritionLessonId LessonId { get; private set; }
+    public DateTime ReadAtUtc { get; private set; }
+
+    public User User { get; } = null!;
+    public NutritionLesson Lesson { get; } = null!;
+
+    private UserLessonProgress() {
+    }
+
+    public static UserLessonProgress Create(UserId userId, NutritionLessonId lessonId, DateTime readAtUtc) {
+        if (userId == UserId.Empty) {
+            throw new ArgumentException("UserId is required.", nameof(userId));
+        }
+
+        if (lessonId == NutritionLessonId.Empty) {
+            throw new ArgumentException("LessonId is required.", nameof(lessonId));
+        }
+
+        var progress = new UserLessonProgress {
+            Id = UserLessonProgressId.New(),
+            UserId = userId,
+            LessonId = lessonId,
+            ReadAtUtc = LessonsDomainGuard.RequiredUtc(readAtUtc, nameof(readAtUtc)),
+        };
+        progress.SetCreated();
+        return progress;
+    }
+}

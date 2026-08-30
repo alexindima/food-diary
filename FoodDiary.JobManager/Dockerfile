@@ -24,6 +24,12 @@ COPY Modules/Fasting/Infrastructure/*.csproj Modules/Fasting/Infrastructure/
 COPY Modules/Fasting/Infrastructure/Model/*.csproj Modules/Fasting/Infrastructure/Model/
 COPY Modules/Hydration/Contracts/*.csproj Modules/Hydration/Contracts/
 COPY Modules/Hydration/Infrastructure/Model/*.csproj Modules/Hydration/Infrastructure/Model/
+COPY Modules/Lessons/Domain/*.csproj Modules/Lessons/Domain/
+COPY Modules/Lessons/Contracts/*.csproj Modules/Lessons/Contracts/
+COPY Modules/Lessons/Application/Abstractions/*.csproj Modules/Lessons/Application/Abstractions/
+COPY Modules/Lessons/Application/*.csproj Modules/Lessons/Application/
+COPY Modules/Lessons/Infrastructure/*.csproj Modules/Lessons/Infrastructure/
+COPY Modules/Lessons/Infrastructure/Model/*.csproj Modules/Lessons/Infrastructure/Model/
 COPY FoodDiary.Application.Favorites/*.csproj FoodDiary.Application.Favorites/
 COPY FoodDiary.Application.Identity/*.csproj FoodDiary.Application.Identity/
 COPY FoodDiary.Application.MealPlanning/*.csproj FoodDiary.Application.MealPlanning/
@@ -40,7 +46,6 @@ COPY FoodDiary.Application.Products/*.csproj FoodDiary.Application.Products/
 COPY FoodDiary.Application.Recipes/*.csproj FoodDiary.Application.Recipes/
 COPY FoodDiary.Application.Images/*.csproj FoodDiary.Application.Images/
 COPY FoodDiary.Application.Ai/*.csproj FoodDiary.Application.Ai/
-COPY FoodDiary.Application.Lessons/*.csproj FoodDiary.Application.Lessons/
 COPY FoodDiary.Application.Statistics/*.csproj FoodDiary.Application.Statistics/
 COPY FoodDiary.Application.Meals/*.csproj FoodDiary.Application.Meals/
 COPY Modules/WeeklyGoals/Application/*.csproj Modules/WeeklyGoals/Application/
@@ -85,6 +90,12 @@ COPY Modules/Fasting/Infrastructure/ Modules/Fasting/Infrastructure/
 COPY Modules/Fasting/Infrastructure/Model/ Modules/Fasting/Infrastructure/Model/
 COPY Modules/Hydration/Contracts/ Modules/Hydration/Contracts/
 COPY Modules/Hydration/Infrastructure/Model/ Modules/Hydration/Infrastructure/Model/
+COPY Modules/Lessons/Domain/ Modules/Lessons/Domain/
+COPY Modules/Lessons/Contracts/ Modules/Lessons/Contracts/
+COPY Modules/Lessons/Application/Abstractions/ Modules/Lessons/Application/Abstractions/
+COPY Modules/Lessons/Application/ Modules/Lessons/Application/
+COPY Modules/Lessons/Infrastructure/ Modules/Lessons/Infrastructure/
+COPY Modules/Lessons/Infrastructure/Model/ Modules/Lessons/Infrastructure/Model/
 COPY FoodDiary.Application.Favorites/ FoodDiary.Application.Favorites/
 COPY FoodDiary.Application.Identity/ FoodDiary.Application.Identity/
 COPY FoodDiary.Application.MealPlanning/ FoodDiary.Application.MealPlanning/
@@ -101,7 +112,6 @@ COPY FoodDiary.Application.Products/ FoodDiary.Application.Products/
 COPY FoodDiary.Application.Recipes/ FoodDiary.Application.Recipes/
 COPY FoodDiary.Application.Images/ FoodDiary.Application.Images/
 COPY FoodDiary.Application.Ai/ FoodDiary.Application.Ai/
-COPY FoodDiary.Application.Lessons/ FoodDiary.Application.Lessons/
 COPY FoodDiary.Application.Statistics/ FoodDiary.Application.Statistics/
 COPY FoodDiary.Application.Meals/ FoodDiary.Application.Meals/
 COPY Modules/WeeklyGoals/ Modules/WeeklyGoals/

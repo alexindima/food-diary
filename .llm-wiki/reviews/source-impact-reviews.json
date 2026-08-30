@@ -8,17 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "1f2d16da9326d0ddd385cd05da123f2e57744b78657dc95ded9c9051cb0b9d24"
+          "sha256": "8086ac6f2f15614e239b419f17b302d0f49c3d3d12471c5bd847d4e9f4926f54"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "92fe320501a88581bae93c7cf7f7fc1fb5474232bbc90eab30642f33338a0549"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "316009520ef962e0dd1e28c5b8580a8763411a9fcecb3525cd1a6691f90440dd"
+          "sha256": "d7bc230fcd25655ab3cea465e11ffec6f5346f5315ea6d661e04e450d6c2ffb9"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:05.2199815Z"
+      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
+      "reviewedAtUtc": "2026-08-30T01:50:29.1553212Z"
     },
     {
       "pageId": "module.frontend",
@@ -41,14 +45,18 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "92fe320501a88581bae93c7cf7f7fc1fb5474232bbc90eab30642f33338a0549"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "316009520ef962e0dd1e28c5b8580a8763411a9fcecb3525cd1a6691f90440dd"
+          "sha256": "d7bc230fcd25655ab3cea465e11ffec6f5346f5315ea6d661e04e450d6c2ffb9"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:05.9124490Z"
+      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
+      "reviewedAtUtc": "2026-08-30T01:50:29.4812477Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -56,22 +64,14 @@
       "pageSha256": "ebc1bbcb6c7df9755cfe613efcf8d31e9904b961c9081fb9aa2b808c32d2f944",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "7929e128e1159eba5ba3b680c5db54c0183b90ab13ea4cd5953fae0a3c9d91ff"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "316009520ef962e0dd1e28c5b8580a8763411a9fcecb3525cd1a6691f90440dd"
-        },
-        {
-          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "45ac6fdf42f132ac100f482585b2a1e2898eefca05cc224384f80fbd80a1c8c4"
+          "sha256": "d7bc230fcd25655ab3cea465e11ffec6f5346f5315ea6d661e04e450d6c2ffb9"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:06.7882498Z"
+      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
+      "reviewedAtUtc": "2026-08-30T01:50:29.7492593Z"
     },
     {
       "pageId": "system.architecture",
@@ -79,22 +79,14 @@
       "pageSha256": "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "7929e128e1159eba5ba3b680c5db54c0183b90ab13ea4cd5953fae0a3c9d91ff"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "316009520ef962e0dd1e28c5b8580a8763411a9fcecb3525cd1a6691f90440dd"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "86d90749ae8f3396204dc6abba443566933d13c9b9153d81b5bd5db1aef6cec2"
+          "sha256": "aff6a99bfe06304d81e8909019c9d8c7a2104e262cd154964219b0eaa060bed7"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Lessons domain-test ownership now matches the extracted module boundary and dependency matrix.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:07.5329471Z"
+      "gitHead": "ef5e9a63bfa1f034a99886757d2c366732a41022",
+      "reviewedAtUtc": "2026-08-30T02:10:16.3126577Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -133,13 +125,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "1f2d16da9326d0ddd385cd05da123f2e57744b78657dc95ded9c9051cb0b9d24"
+          "sha256": "8086ac6f2f15614e239b419f17b302d0f49c3d3d12471c5bd847d4e9f4926f54"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:08.1866270Z"
+      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
+      "reviewedAtUtc": "2026-08-30T01:50:30.3514019Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -211,18 +203,18 @@
       "pageSha256": "b7914894ce3f6dda55057a93baf55364c9aa9c5e4c127a3fc9bddaa89743e4aa",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "7929e128e1159eba5ba3b680c5db54c0183b90ab13ea4cd5953fae0a3c9d91ff"
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "e31a3ed38ccc003f54231503e5d77119a7f6ca2b4121a161156a16af3075dcaa"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "86d90749ae8f3396204dc6abba443566933d13c9b9153d81b5bd5db1aef6cec2"
+          "sha256": "aff6a99bfe06304d81e8909019c9d8c7a2104e262cd154964219b0eaa060bed7"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Lessons domain-test ownership now matches the extracted module boundary and dependency matrix.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:09.4753775Z"
+      "gitHead": "ef5e9a63bfa1f034a99886757d2c366732a41022",
+      "reviewedAtUtc": "2026-08-30T02:10:16.8914877Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -231,13 +223,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "0929eff8634eea5ec0b6cca1151efc858a2577b9769f838e36ea23ca13e04890"
+          "sha256": "efc51ad5365371bc3a9a77c43291b22e8b9f20ff98727ad0d68ab6ee6f057a2d"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:10.5012900Z"
+      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
+      "reviewedAtUtc": "2026-08-30T01:50:31.3992579Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -275,26 +267,14 @@
       "pageSha256": "4e6f774f1817d334504316d5d64c5a4bf62bc3a1234600d3293d028f8cbb731a",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout.json",
-          "sha256": "439fd17df40ae6d0be47b65c2fa146ba1f42511cfb553be9ac4de11bc181eaaa"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe-4.json",
-          "sha256": "2405b1fe40e97ca57d3f28f9a29c68e7a2a032d32b41371bf365a79c233ef30f"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe-6.json",
-          "sha256": "dfa62bbf42379f3068a2d144917f88af5ddf220589fe2d40dc040435d089ee14"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "a024811f1fab23dd8b5bd110f4867bf94f69a91f851fa126d159e98c13fcc7de"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "c42d1ff50c3e1f2e5c15c5b515c58e87907cc94246f8eef8cf4de9d86c0d2526"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:11.7842876Z"
+      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
+      "reviewedAtUtc": "2026-08-30T01:50:32.0438180Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -495,13 +475,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "f4aa4f17666c4397274be37e15a87d0371fc7538100dcc4f66907891ea6e7faf"
+          "sha256": "c42d1ff50c3e1f2e5c15c5b515c58e87907cc94246f8eef8cf4de9d86c0d2526"
         }
       ],
-      "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
+      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:54.4440324Z"
+      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
+      "reviewedAtUtc": "2026-08-30T01:50:32.3880191Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -510,17 +490,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "84b2583cd637717c807840d985084927731a1a651c41528a303644fc0ee9d242"
-        },
-        {
-          "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "50b291e043efef0cc906b24ca2e5806a7ef50c01fda4c291e82b848f54289d8f"
+          "sha256": "cd01f0a4ef6f05c113b549689fc876d61e25fb64330f50dea7025f1ad8023e28"
         }
       ],
-      "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
+      "reason": "Lessons domain-test ownership now matches the extracted module boundary and dependency matrix.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:55.3744733Z"
+      "gitHead": "ef5e9a63bfa1f034a99886757d2c366732a41022",
+      "reviewedAtUtc": "2026-08-30T02:10:17.4911501Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -657,13 +633,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "f4aa4f17666c4397274be37e15a87d0371fc7538100dcc4f66907891ea6e7faf"
+          "sha256": "c42d1ff50c3e1f2e5c15c5b515c58e87907cc94246f8eef8cf4de9d86c0d2526"
         }
       ],
-      "reason": "Reviewed the combined test-plan fix, facade compiled-index forwarding, modular Domain indexing, regenerated module pages, and passing focused Wiki regressions; the staged pipeline documentation remains accurate.",
+      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "0c1b61756c45000bae4543a3f01a4cdc963b1592",
-      "reviewedAtUtc": "2026-08-30T00:18:11.7930783Z"
+      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
+      "reviewedAtUtc": "2026-08-30T01:50:33.1099783Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -845,13 +821,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "77828026233aad3c6489ecd255801b3dddb4321f73a7496925ffc62f8d6e898a"
+          "sha256": "6051086c0fc8fb82c17882bb478277c1455b55daae4305475c423067738e6c60"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Lessons domain-test ownership now matches the extracted module boundary and dependency matrix.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:13.4155527Z"
+      "gitHead": "ef5e9a63bfa1f034a99886757d2c366732a41022",
+      "reviewedAtUtc": "2026-08-30T02:10:18.4327808Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -928,13 +904,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "cc76ade4bafac8a8e1a4a52f05a3ed55cf64ce0e32c1e32496186fbebf98f26f"
+          "sha256": "56c02bce1a7e7ad262c7b39792878cdf684db4a54aec4d58a92e887ddda7d1ff"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Lessons domain-test ownership now matches the extracted module boundary and dependency matrix.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:15.6258675Z"
+      "gitHead": "ef5e9a63bfa1f034a99886757d2c366732a41022",
+      "reviewedAtUtc": "2026-08-30T02:10:19.7296561Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -943,21 +919,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "77828026233aad3c6489ecd255801b3dddb4321f73a7496925ffc62f8d6e898a"
+          "sha256": "6051086c0fc8fb82c17882bb478277c1455b55daae4305475c423067738e6c60"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "cc76ade4bafac8a8e1a4a52f05a3ed55cf64ce0e32c1e32496186fbebf98f26f"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "878bde1af631dcb8678bdafda6a800501a8a78c08a5f25e9931eff4caf931be1"
+          "sha256": "56c02bce1a7e7ad262c7b39792878cdf684db4a54aec4d58a92e887ddda7d1ff"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Lessons domain-test ownership now matches the extracted module boundary and dependency matrix.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:16.6362812Z"
+      "gitHead": "ef5e9a63bfa1f034a99886757d2c366732a41022",
+      "reviewedAtUtc": "2026-08-30T02:10:20.4664762Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1026,13 +998,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "f4aa4f17666c4397274be37e15a87d0371fc7538100dcc4f66907891ea6e7faf"
+          "sha256": "c42d1ff50c3e1f2e5c15c5b515c58e87907cc94246f8eef8cf4de9d86c0d2526"
         }
       ],
-      "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
+      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:52:04.0361473Z"
+      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
+      "reviewedAtUtc": "2026-08-30T01:50:35.6501349Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1135,13 +1107,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "1f2d16da9326d0ddd385cd05da123f2e57744b78657dc95ded9c9051cb0b9d24"
+          "sha256": "8086ac6f2f15614e239b419f17b302d0f49c3d3d12471c5bd847d4e9f4926f54"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:11.1604888Z"
+      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
+      "reviewedAtUtc": "2026-08-30T01:50:31.7301432Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1195,17 +1167,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "a8f1106c9d121bcb68830305184bef55f2dfdb22ef0cae8b97d735ee8c4425eb"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "1f2d16da9326d0ddd385cd05da123f2e57744b78657dc95ded9c9051cb0b9d24"
+          "sha256": "e3af97ce4d196d84ff871378b05000b790977ddcbbcb3acc3b43d79188c67486"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Lessons domain-test ownership now matches the extracted module boundary and dependency matrix.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:14.1387523Z"
+      "gitHead": "ef5e9a63bfa1f034a99886757d2c366732a41022",
+      "reviewedAtUtc": "2026-08-30T02:10:19.1259848Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1213,14 +1181,18 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "c42d1ff50c3e1f2e5c15c5b515c58e87907cc94246f8eef8cf4de9d86c0d2526"
+        },
+        {
           "path": "AGENTS.md",
-          "sha256": "1f2d16da9326d0ddd385cd05da123f2e57744b78657dc95ded9c9051cb0b9d24"
+          "sha256": "8086ac6f2f15614e239b419f17b302d0f49c3d3d12471c5bd847d4e9f4926f54"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:14.8242905Z"
+      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
+      "reviewedAtUtc": "2026-08-30T01:50:34.4393091Z"
     }
   ]
 }

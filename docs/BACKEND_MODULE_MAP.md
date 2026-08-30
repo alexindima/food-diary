@@ -29,6 +29,12 @@ Use this file when deciding where backend code belongs.
 | WeeklyGoals persistence model | `Modules/WeeklyGoals/Infrastructure/Model` | WeeklyGoals EF configuration and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
 | WeeklyGoals infrastructure | `Modules/WeeklyGoals/Infrastructure` | WeeklyGoals repository, advisory-lock transaction runner, and complete module registration | HTTP transport, scheduler plumbing, and central migrations |
 | TDEE use cases | `Modules/Tdee/Application` | TDEE calculation, insight query/model, user-profile composition, validation, and module registration | Domain entities, persistence, provider adapters, HTTP transport, or empty wrapper layers |
+| Lessons contracts | `Modules/Lessons/Contracts` | Stable lesson administration capabilities and projection models consumed by Admin | Repository ports, aggregates, EF, HTTP transport |
+| Lessons domain | `Modules/Lessons/Domain` | `NutritionLesson`, `UserLessonProgress`, identifiers, enums, and invariants with preserved CLR identity | Application orchestration, EF mapping, transport |
+| Lessons application ports | `Modules/Lessons/Application/Abstractions` | Lesson repository ports and internal persistence projections | Stable cross-module contracts and EF implementations |
+| Lessons use cases | `Modules/Lessons/Application` | Lesson commands, queries, handlers, validators, services, mappings, and application registration | Persistence implementations and HTTP transport |
+| Lessons persistence model | `Modules/Lessons/Infrastructure/Model` | Lesson EF configurations and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
+| Lessons infrastructure | `Modules/Lessons/Infrastructure` | Lesson repository implementation and complete module registration | HTTP transport and central migrations |
 | Billing use cases | `FoodDiary.Application.Billing` | Billing commands, queries, validators, renewal and webhook orchestration | Core Application dependencies, persistence, HTTP DTOs |
 | Marketing use cases | `FoodDiary.Application.Marketing` | Attribution commands, queries and conversion recording | Core Application dependencies, persistence, HTTP DTOs |
 | Notification use cases | `FoodDiary.Application.Notifications` | Notification feed, preferences, web-push subscription and delivery orchestration | Core Application dependencies, persistence implementations, HTTP DTOs |
