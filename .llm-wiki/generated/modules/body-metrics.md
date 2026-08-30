@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.BodyMetrics/FoodDiary.Application.BodyMetrics.csproj`
+- Extracted project: `Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users, WaistEntries, WeightEntries
 - Business-module consumers: none observed
@@ -24,10 +24,8 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/WaistEntries`
-- `FoodDiary.Application.Abstractions/WeightEntries`
-- `FoodDiary.Application.BodyMetrics`
-- `FoodDiary.Infrastructure/Persistence/Configurations/BodyMetrics`
+- `Modules/BodyMetrics/Application`
+- `Modules/BodyMetrics/Application/Abstractions`
 
 ## HTTP Surface
 
@@ -35,8 +33,8 @@ No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: project
-- Architecture guardrails: project-reference-matrix
+- Physical isolation: logical-module
+- Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: WaistEntry, WeightEntry
 - Public contract files: 18
 - Observed external consumer groups: 4
@@ -73,6 +71,11 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/BodyMetricsModuleExtractionTests.cs`
 
 ## Working Rule

@@ -27,6 +27,7 @@ sources:
 - `FoodDiary.Integrations/Wearables`
 - `FoodDiary.Presentation.Api/Features/Wearables`
 - `Modules/Wearables/Application`
+- `Modules/Wearables/Application/Abstractions`
 
 ## HTTP Surface
 
@@ -47,19 +48,36 @@ Source: `FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs`
 - Physical isolation: project
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: WearableConnection, WearableSyncEntry
-- Public contract files: 0
+- Public contract files: 18
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
-- DTO/read-model/projection types: 0
+- Public contract types: 18
+- Interfaces: 11
+- DTO/read-model/projection types: 3
 - Enums: 0
-- Exported repository-shaped contracts: 0
-- Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- Exported repository-shaped contracts: 7
+- Contracts referencing domain entities: 4
+- `class WearableErrors`
+- `class WearableInputLimits`
+- `interface IWearableClient`
+- `interface IWearableConnectionReadRepository`
+- `interface IWearableConnectionRepository`
+- `interface IWearableConnectionWriteRepository`
+- `interface IWearableOAuthStateService`
+- `interface IWearableSyncReadModelRepository`
+- `interface IWearableSyncReadRepository`
+- `interface IWearableSyncRepository`
+- `interface IWearableSyncWriteRepository`
+- `interface IWearableTokenProtector`
+- `interface IWearableTransactionRunner`
+- `record WearableConnectionModel`
+- `record WearableDailySummaryModel`
+- `record WearableDataPoint`
+- `record WearableSyncEntryReadModel`
+- `record WearableTokenResult`
 
 ## Focused Tests
 

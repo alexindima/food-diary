@@ -26,6 +26,7 @@ sources:
 
 - `FoodDiary.Presentation.Api/Features/WeeklyGoals`
 - `Modules/WeeklyGoals/Application`
+- `Modules/WeeklyGoals/Application/Abstractions`
 
 ## HTTP Surface
 
@@ -42,19 +43,20 @@ Source: `FoodDiary.Presentation.Api/Features/WeeklyGoals/WeeklyGoalsController.c
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: WeeklyGoal
-- Public contract files: 0
+- Public contract files: 2
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
+- Public contract types: 2
+- Interfaces: 2
 - DTO/read-model/projection types: 0
 - Enums: 0
-- Exported repository-shaped contracts: 0
-- Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- Exported repository-shaped contracts: 1
+- Contracts referencing domain entities: 1
+- `interface IWeeklyGoalRepository`
+- `interface IWeeklyGoalTransactionRunner`
 
 ## Focused Tests
 

@@ -2,10 +2,29 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class NotificationsModuleExtractionTests {
+    [Theory]
+    [InlineData("FoodDiary.Application.Notifications")]
+    [InlineData("FoodDiary.Application.Abstractions/Notifications")]
+    [InlineData("FoodDiary.Domain/Entities/Notifications")]
+    [InlineData("FoodDiary.Infrastructure/Persistence/Notifications")]
+    [InlineData("FoodDiary.Infrastructure/Persistence/Configurations/Notifications")]
+    public void DonorDirectories_DoNotRetainNotificationOwnedCode(string relativePath) {
+        string path = ArchitectureTestPaths.FromRoot(relativePath.Split('/'));
+        Assert.Empty(Directory.Exists(path) ? SourceScanner.SourceFiles(path) : []);
+    }
+
+    [Fact]
+    public void SharedContext_ExplicitlyRegistersModulePersistenceModel() {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "FoodDiaryDbContext.cs"));
+        Assert.Contains("ApplyNotificationsPersistenceModel()", source, StringComparison.Ordinal);
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Notifications", "Infrastructure", "Model", "NotificationWebPushOutboxMessage.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Notifications", "Infrastructure", "Services", "WebPushNotificationSender.cs")));
+    }
+
     [Fact]
     public void NotificationsApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Notifications");
-        string extractedRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Notifications");
+        string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "Notifications", "Application");
 
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
@@ -23,11 +42,13 @@ public sealed class NotificationsModuleExtractionTests {
     [Fact]
     public void ExtractedNotificationsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj");
+            "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj");
         string[] expectedReferences = [
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.Notifications.Application.Abstractions",
+            "FoodDiary.Modules.Notifications.Domain",
         ];
 
         Assert.Equal(expectedReferences, references);

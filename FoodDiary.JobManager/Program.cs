@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Application.Runtime;
 using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;
@@ -29,7 +30,7 @@ builder.Services.AddGamificationModule();
 builder.Services.AddIdentityModule();
 builder.Services.AddImagesModule();
 builder.Services.AddWeeklyGoalsModule();
-builder.Services.AddNotificationsModule();
+builder.Services.AddNotificationsModule().AddNotificationsInfrastructure(builder.Configuration);
 builder.Services.AddUsersModule();
 builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();

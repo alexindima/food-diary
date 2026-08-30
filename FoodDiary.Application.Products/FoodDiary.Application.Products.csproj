@@ -3,7 +3,8 @@
     <ProjectReference Include="..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Modules\Images\Application\FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="..\Modules\OpenFoodFacts\Contracts\FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Usda\FoodDiary.Application.Usda.csproj" />
+    <ProjectReference Include="..\Modules\Usda\Application\FoodDiary.Application.Usda.csproj" />
+    <ProjectReference Include="..\Modules\Usda\Contracts\FoodDiary.Modules.Usda.Contracts.csproj" />
     <ProjectReference Include="..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
   </ItemGroup>

@@ -26,6 +26,7 @@ sources:
 
 - `FoodDiary.Presentation.Api/Features/Cycles`
 - `Modules/Cycles/Application`
+- `Modules/Cycles/Application/Abstractions`
 
 ## HTTP Surface
 
@@ -62,19 +63,32 @@ Source: `FoodDiary.Presentation.Api/Features/Cycles/MenstrualEpisodesController.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: CycleProfile, CycleFactor, CycleConsent, CycleSymptomEntry, CyclePredictionRevision, BleedingEntry, FertilitySignal
-- Public contract files: 0
+- Public contract files: 14
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
-- DTO/read-model/projection types: 0
+- Public contract types: 14
+- Interfaces: 4
+- DTO/read-model/projection types: 8
 - Enums: 0
-- Exported repository-shaped contracts: 0
-- Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- Exported repository-shaped contracts: 4
+- Contracts referencing domain entities: 2
+- `class CycleDayErrors`
+- `class CycleErrors`
+- `interface ICycleReadModelRepository`
+- `interface ICycleReadRepository`
+- `interface ICycleRepository`
+- `interface ICycleWriteRepository`
+- `record BleedingEntryReadModel`
+- `record CycleConsentReadModel`
+- `record CycleFactorReadModel`
+- `record CyclePredictionRevisionReadModel`
+- `record CycleProfileReadModel`
+- `record CycleSymptomEntryReadModel`
+- `record FertilitySignalReadModel`
+- `record MenstrualEpisodeReadModel`
 
 ## Focused Tests
 

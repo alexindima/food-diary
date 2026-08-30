@@ -14,6 +14,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Application\FoodDiary.Modules.Fasting.Application.csproj" />
-    <ProjectReference Include="..\..\..\..\FoodDiary.Application.Notifications\FoodDiary.Application.Notifications.csproj" />
+    <ProjectReference Include="..\..\..\..\Modules\Notifications\Application\FoodDiary.Application.Notifications.csproj" />
   </ItemGroup>
 </Project>

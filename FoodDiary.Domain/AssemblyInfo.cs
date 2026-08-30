@@ -9,3 +9,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Cycles.Domain")]
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Wearables.Domain")]
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Billing.Domain")]
+[assembly: InternalsVisibleTo("FoodDiary.Modules.Notifications.Domain")]

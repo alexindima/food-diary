@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Application.Usda</AssemblyName>
+    <RootNamespace>FoodDiary.Application.Usda</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Abstractions/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Abstractions\FoodDiary.Modules.Usda.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\Contracts\FoodDiary.Modules.Usda.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
+    <ProjectReference Include="..\..\..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+</Project>

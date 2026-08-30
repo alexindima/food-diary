@@ -1,3 +1,8 @@
+using FoodDiary.Modules.Notifications.Infrastructure;
+using FoodDiary.Modules.Billing.Infrastructure;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
+using FoodDiary.Modules.Usda.Infrastructure;
+using FoodDiary.Modules.Wearables.Infrastructure;
 using Amazon.S3;
 using System.Net;
 using System.Net.Sockets;
@@ -29,6 +34,8 @@ using FoodDiary.Infrastructure.Persistence.Dashboard;
 using FoodDiary.Infrastructure.Persistence.Dietologist;
 using FoodDiary.Infrastructure.Persistence.Tracking;
 using FoodDiary.Modules.Hydration.Infrastructure;
+using FoodDiary.Modules.BodyMetrics.Infrastructure;
+using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Services;
 using FoodDiary.Modules.Fasting.Infrastructure;
@@ -116,7 +123,7 @@ public sealed class DependencyInjectionTests {
             ["MailRelayClient:BaseUrl"] = "not-a-url",
         });
 
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddNotificationsProvider(configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<MailRelayClientOptions>>().Value);
@@ -137,7 +144,7 @@ public sealed class DependencyInjectionTests {
             ["S3:ServiceUrl"] = "invalid-url",
         });
 
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddNotificationsProvider(configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<FoodDiary.Integrations.Options.S3Options>>().Value);
@@ -150,7 +157,7 @@ public sealed class DependencyInjectionTests {
         services.AddLogging();
         IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal));
 
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddNotificationsProvider(configuration);
         await using ServiceProvider provider = services.BuildServiceProvider();
         await using AsyncServiceScope scope = provider.CreateAsyncScope();
 
@@ -182,7 +189,7 @@ public sealed class DependencyInjectionTests {
             ["TelegramAuth:AuthTtlSeconds"] = "0",
         });
 
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddNotificationsProvider(configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() =>
@@ -197,7 +204,7 @@ public sealed class DependencyInjectionTests {
         services.AddSingleton(TimeProvider.System);
         IConfiguration configuration = CreateValidIntegrationsConfiguration();
 
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddNotificationsProvider(configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
 
@@ -253,7 +260,7 @@ public sealed class DependencyInjectionTests {
                 .Where(static pair => !pair.Key.StartsWith("MailInboxClient:", StringComparison.OrdinalIgnoreCase)))
             .Build();
 
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddNotificationsProvider(configuration);
 
         Assert.DoesNotContain(services, static descriptor => descriptor.ServiceType == typeof(IMailInboxClient));
         Assert.DoesNotContain(services, static descriptor => descriptor.ServiceType == typeof(IAdminMailInboxReader));
@@ -268,7 +275,7 @@ public sealed class DependencyInjectionTests {
             })
             .Build();
 
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddNotificationsProvider(configuration);
 
         Assert.DoesNotContain(services, static descriptor => descriptor.ServiceType == typeof(IMailInboxClient));
         Assert.DoesNotContain(services, static descriptor => descriptor.ServiceType == typeof(IAdminMailInboxReader));
@@ -283,7 +290,7 @@ public sealed class DependencyInjectionTests {
             })
             .Build();
 
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddNotificationsProvider(configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
 
         Assert.Throws<OptionsValidationException>(() =>
@@ -297,7 +304,7 @@ public sealed class DependencyInjectionTests {
         services.AddSingleton(TimeProvider.System);
         IConfiguration configuration = CreateValidIntegrationsConfiguration();
 
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddNotificationsProvider(configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
         IHttpClientFactory factory = provider.GetRequiredService<IHttpClientFactory>();
 
@@ -325,7 +332,7 @@ public sealed class DependencyInjectionTests {
             .SetMinimumLevel(LogLevel.Trace)
             .AddProvider(loggerProvider));
         services.AddSingleton(TimeProvider.System);
-        services.AddIntegrations(CreateValidIntegrationsConfiguration());
+        services.AddIntegrations(CreateValidIntegrationsConfiguration()).AddNotificationsProvider(CreateValidIntegrationsConfiguration());
         services.AddHttpClient(clientName)
             .ConfigurePrimaryHttpMessageHandler(static () => new SuccessfulHttpMessageHandler());
         await using ServiceProvider provider = services.BuildServiceProvider();
@@ -349,7 +356,7 @@ public sealed class DependencyInjectionTests {
             ["Billing:Provider"] = "unsupported",
         });
 
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddNotificationsProvider(configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<BillingOptions>>().Value);
@@ -369,7 +376,7 @@ public sealed class DependencyInjectionTests {
             ["Stripe:PortalReturnUrl"] = "https://example.com/portal",
         });
 
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddNotificationsProvider(configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<StripeOptions>>().Value);
@@ -383,7 +390,7 @@ public sealed class DependencyInjectionTests {
             ["Stripe:PublishableKey"] = "pk_legacy",
         });
 
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddNotificationsProvider(configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
 
         StripeOptions options = provider.GetRequiredService<IOptions<StripeOptions>>().Value;
@@ -400,7 +407,7 @@ public sealed class DependencyInjectionTests {
             ["WebPush:PrivateKey"] = "private",
         });
 
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddNotificationsProvider(configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<WebPushOptions>>().Value);
@@ -417,7 +424,7 @@ public sealed class DependencyInjectionTests {
             ["OpenAi:VisionFallbackModel"] = "vision-fallback",
         });
 
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddNotificationsProvider(configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<OpenAiOptions>>().Value);
@@ -530,7 +537,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
 
-        services.AddInfrastructure(configuration).AddHydrationModule();
+        services.AddInfrastructure(configuration).AddHydrationModule().AddBodyMetricsModule();
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
 
@@ -570,6 +577,12 @@ public sealed class DependencyInjectionTests {
 
         services
             .AddInfrastructure(configuration)
+            .AddBillingModule()
+            .AddBodyMetricsModule()
+            .AddNotificationsPersistence()
+            .AddOpenFoodFactsModule()
+            .AddUsdaModule()
+            .AddWearablesModule()
             .AddContentReportsModule()
             .AddDietologistModule()
             .AddFastingModule()

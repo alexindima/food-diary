@@ -33,7 +33,6 @@
     "Hydration": "Hydration",
     "MealPlans": "MealPlanning",
     "Meals": "Meals",
-    "Notifications": "Notifications",
     "Nutrition": "Shared",
     "Products": "Products",
     "RecentItems": "Shared",
@@ -41,10 +40,7 @@
     "RecipeLikes": "RecipeCommunity",
     "Recipes": "Recipes",
     "ShoppingLists": "MealPlanning",
-    "Usda": "Usda",
-    "Users": "Users",
-    "WaistEntries": "BodyMetrics",
-    "WeightEntries": "BodyMetrics"
+    "Users": "Users"
   },
   "modules": {
     "Admin": {
@@ -121,25 +117,27 @@
     },
     "BodyMetrics": {
       "role": "aggregate-owner",
-      "physicalIsolation": "project",
-      "enforcement": "project-reference-matrix",
+      "physicalIsolation": "logical-module",
+      "enforcement": "project-reference-matrix-and-module-boundary-tests",
       "ownedEntities": [
         "WaistEntry",
         "WeightEntry"
       ],
       "sourceMappings": {
+        "logicalRoot": "Modules/BodyMetrics",
         "applicationProjects": [
-          "FoodDiary.Application.BodyMetrics"
+          "Modules/BodyMetrics/Application"
         ],
         "abstractionAreas": [
-          "WaistEntries",
-          "WeightEntries"
+          "Modules/BodyMetrics/Application/Abstractions"
         ],
         "domainAreas": [
-          "BodyMetrics"
+          "FoodDiary.Domain/Entities/Tracking",
+          "FoodDiary.Domain/ValueObjects/Ids",
+          "FoodDiary.Domain/Entities/Users"
         ],
         "persistenceAreas": [
-          "BodyMetrics"
+          "Modules/BodyMetrics/Infrastructure"
         ]
       }
     },
@@ -452,14 +450,21 @@
     },
     "Notifications": {
       "role": "aggregate-owner",
-      "physicalIsolation": "project",
+      "physicalIsolation": "logical-module",
       "enforcement": "project-reference-matrix",
       "ownedEntities": [
         "Notification",
         "WebPushSubscription",
         "NotificationWebPushOutboxMessage"
       ],
-      "sourceMappings": {}
+      "sourceMappings": {
+        "logicalRoot": "Modules/Notifications",
+        "applicationProjects": ["Modules/Notifications/Application"],
+        "applicationAbstractionProjects": ["Modules/Notifications/Application/Abstractions"],
+        "domainProjects": ["Modules/Notifications/Domain"],
+        "infrastructureProjects": ["Modules/Notifications/Infrastructure"],
+        "persistenceModelProjects": ["Modules/Notifications/Infrastructure/Model"]
+      }
     },
     "OpenFoodFacts": {
       "role": "aggregate-owner",
@@ -560,13 +565,14 @@
     },
     "Usda": {
       "role": "adapter",
-      "physicalIsolation": "project",
-      "enforcement": "project-reference-matrix",
+      "physicalIsolation": "logical-module",
+      "enforcement": "project-reference-matrix-and-module-boundary-tests",
       "ownedEntities": [],
       "sourceMappings": {
-        "applicationProjects": ["FoodDiary.Application.Usda"],
-        "abstractionAreas": ["Usda"],
-        "persistenceAreas": ["Usda"]
+        "applicationProjects": ["Modules/Usda/Application"],
+        "applicationAbstractionProjects": ["Modules/Usda/Application/Abstractions"],
+        "contractProjects": ["Modules/Usda/Contracts"],
+        "persistenceAreas": ["Modules/Usda/Infrastructure"]
       }
     },
     "Users": {

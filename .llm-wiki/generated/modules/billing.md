@@ -26,6 +26,7 @@ sources:
 
 - `FoodDiary.Integrations/Billing`
 - `FoodDiary.Presentation.Api/Features/Billing`
+- `Modules/Billing/Application/Abstractions`
 
 ## HTTP Surface
 
@@ -50,19 +51,46 @@ Source: `FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs
 - Physical isolation: logical-module
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: BillingSubscription, BillingPayment, BillingWebhookEvent
-- Public contract files: 0
+- Public contract files: 28
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
-- DTO/read-model/projection types: 0
+- Public contract types: 28
+- Interfaces: 16
+- DTO/read-model/projection types: 9
 - Enums: 0
-- Exported repository-shaped contracts: 0
-- Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- Exported repository-shaped contracts: 10
+- Contracts referencing domain entities: 5
+- `class BillingInputLimits`
+- `class BillingPaymentAlreadyExistsException`
+- `class BillingWebhookEventAlreadyProcessedException`
+- `interface IBillingCheckoutLock`
+- `interface IBillingPaymentReadRepository`
+- `interface IBillingPaymentRepository`
+- `interface IBillingPaymentWriteRepository`
+- `interface IBillingProviderGateway`
+- `interface IBillingProviderGatewayAccessor`
+- `interface IBillingPublicConfigProvider`
+- `interface IBillingRecurringProviderGateway`
+- `interface IBillingSubscriptionReadModelRepository`
+- `interface IBillingSubscriptionReadRepository`
+- `interface IBillingSubscriptionRepository`
+- `interface IBillingSubscriptionWriteRepository`
+- `interface IBillingTransactionRunner`
+- `interface IBillingWebhookEventReadRepository`
+- `interface IBillingWebhookEventRepository`
+- `interface IBillingWebhookEventWriteRepository`
+- `record BillingCheckoutSessionModel`
+- `record BillingCheckoutSessionRequestModel`
+- `record BillingPortalSessionModel`
+- `record BillingPortalSessionRequestModel`
+- `record BillingPublicConfigModel`
+- `record BillingRecurringPaymentModel`
+- `record BillingRecurringPaymentRequestModel`
+- `record BillingSubscriptionOverviewReadModel`
+- `record BillingWebhookEventModel`
 
 ## Focused Tests
 

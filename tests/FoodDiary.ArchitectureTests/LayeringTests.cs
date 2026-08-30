@@ -96,7 +96,6 @@ public class LayeringTests {
             "SkiaSharp.NativeAssets.Linux.NoDependencies",
             "Stripe.net",
             "System.IdentityModel.Tokens.Jwt",
-            "WebPush",
         ];
 
         string[] packages = ProjectReferenceReader.ReadPackageReferences("FoodDiary.Integrations/FoodDiary.Integrations.csproj");
@@ -216,7 +215,6 @@ public class LayeringTests {
             "services.AddMailIntegrations(configuration);",
             "services.AddAuthenticationIntegrations();",
             "services.AddBillingIntegrations();",
-            "services.AddNotificationIntegrations();",
             "services.AddAiIntegrations();",
             "services.AddFoodDataIntegrations(configuration);",
             "services.AddWearableIntegrations(configuration);",
@@ -359,11 +357,10 @@ public class LayeringTests {
             "services.AddShoppingListPersistence();",
             "services.AddTrackingPersistence();",
             "services.AddAiPersistence();",
-            "services.AddNotificationPersistence();",
+            "services.AddEmailPersistence();",
             "services.AddLearningPersistence();",
             "services.AddRecipeInteractionPersistence();",
             "services.AddModerationPersistence();",
-            "services.AddUsdaPersistence();",
         ];
 
         string[] actualRegistrations = [.. File.ReadLines(dependencyInjectionPath)

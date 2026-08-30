@@ -75,8 +75,7 @@ public sealed class CycleInternalOperationsTests {
     private static void InvokeInstance(object instance, string methodName, params object?[] arguments) => _ = Invoke<object?>(instance.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic)!, instance, arguments);
     private static T InvokeInstance<T>(object instance, string methodName, params object?[] arguments) => Invoke<T>(instance.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic)!, instance, arguments);
     private static T Invoke<T>(MethodInfo method, object? instance, object?[] arguments) {
-        try { return (T)method.Invoke(instance, arguments)!; }
-        catch (TargetInvocationException exception) when (exception.InnerException is not null) {
+        try { return (T)method.Invoke(instance, arguments)!; } catch (TargetInvocationException exception) when (exception.InnerException is not null) {
             ExceptionDispatchInfo.Capture(exception.InnerException).Throw();
             throw;
         }

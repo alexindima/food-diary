@@ -399,7 +399,7 @@
       "area": "FoodDiary",
       "name": "Notification",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Notifications/Notification.cs",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/Notification.cs",
       "line": 8
     },
     {
@@ -623,7 +623,7 @@
       "area": "FoodDiary",
       "name": "WebPushSubscription",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
       "line": 7
     },
     {
@@ -1302,7 +1302,7 @@
       "area": "FoodDiary",
       "name": "NotificationId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/NotificationId.cs",
+      "path": "Modules/Notifications/Domain/ValueObjects/Ids/NotificationId.cs",
       "line": 4
     },
     {
@@ -1729,7 +1729,7 @@
       "area": "FoodDiary",
       "name": "WebPushSubscriptionId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WebPushSubscriptionId.cs",
+      "path": "Modules/Notifications/Domain/ValueObjects/Ids/WebPushSubscriptionId.cs",
       "line": 4
     },
     {
@@ -2377,69 +2377,6 @@
       "message": "throw new ArgumentException(\"RecipeId is required.\", nameof(recipeId))",
       "path": "FoodDiary.Domain/Entities/Meals/MealItem.cs",
       "line": 304
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Notification type is required.\", nameof(type))",
-      "path": "FoodDiary.Domain/Entities/Notifications/Notification.cs",
-      "line": 34
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(type), $\"Type must be at most {TypeMaxLength} characters.\")",
-      "path": "FoodDiary.Domain/Entities/Notifications/Notification.cs",
-      "line": 45
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Notifications/Notification.cs",
-      "line": 67
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Notifications/Notification.cs",
-      "line": 77
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 74
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 80
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 85
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 95
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\")",
-      "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 105
     },
     {
       "area": "FoodDiary",
@@ -5139,6 +5076,69 @@
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Notification type is required.\", nameof(type))",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/Notification.cs",
+      "line": 34
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(type), $\"Type must be at most {TypeMaxLength} characters.\")",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/Notification.cs",
+      "line": 45
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/Notification.cs",
+      "line": 67
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/Notification.cs",
+      "line": 77
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
+      "line": 74
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
+      "line": 80
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
+      "line": 85
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
+      "line": 95
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\")",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
+      "line": 105
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Value is required.\", paramName)",
       "path": "Modules/OpenFoodFacts/Domain/OpenFoodFactsDomainGuard.cs",
       "line": 8
@@ -6131,7 +6131,7 @@
           "expression": "e => e.User)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Notifications/NotificationConfiguration.cs"
+      "path": "Modules/Notifications/Infrastructure/Model/NotificationConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6148,7 +6148,7 @@
           "expression": "message => message.Notification)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Notifications/NotificationWebPushOutboxMessageConfiguration.cs"
+      "path": "Modules/Notifications/Infrastructure/Model/NotificationWebPushOutboxMessageConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6496,7 +6496,7 @@
         "e => e.FoodCategoryId)"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Usda/UsdaFoodConfiguration.cs"
+      "path": "Modules/Usda/Infrastructure/Model/Configurations/Usda/UsdaFoodConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6518,7 +6518,7 @@
           "expression": "e => e.Nutrient)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Usda/UsdaFoodNutrientConfiguration.cs"
+      "path": "Modules/Usda/Infrastructure/Model/Configurations/Usda/UsdaFoodNutrientConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6534,7 +6534,7 @@
           "expression": "e => e.Food)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Usda/UsdaFoodPortionConfiguration.cs"
+      "path": "Modules/Usda/Infrastructure/Model/Configurations/Usda/UsdaFoodPortionConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6542,7 +6542,7 @@
       "table": "UsdaNutrients",
       "indexes": [],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Usda/UsdaNutrientConfiguration.cs"
+      "path": "Modules/Usda/Infrastructure/Model/Configurations/Usda/UsdaNutrientConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6723,7 +6723,7 @@
           "expression": "e => e.User)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/BodyMetrics/WaistEntryConfiguration.cs"
+      "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WaistEntryConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6783,7 +6783,7 @@
           "expression": "e => e.User)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Notifications/WebPushSubscriptionConfiguration.cs"
+      "path": "Modules/Notifications/Infrastructure/Model/WebPushSubscriptionConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6816,7 +6816,7 @@
           "expression": "e => e.User)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/BodyMetrics/WeightEntryConfiguration.cs"
+      "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WeightEntryConfiguration.cs"
     },
     {
       "area": "FoodDiary",

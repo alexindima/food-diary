@@ -21,6 +21,7 @@ public sealed class ProductsModuleExtractionTests {
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
             "FoodDiary.Modules.OpenFoodFacts.Contracts",
+            "FoodDiary.Modules.Usda.Contracts",
         ], references);
     }
 

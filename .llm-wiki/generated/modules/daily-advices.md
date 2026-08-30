@@ -25,6 +25,7 @@ sources:
 ## Source Areas
 
 - `Modules/DailyAdvices/Application`
+- `Modules/DailyAdvices/Application/Abstractions`
 
 ## HTTP Surface
 
@@ -35,19 +36,20 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: DailyAdvice
-- Public contract files: 0
+- Public contract files: 2
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
-- DTO/read-model/projection types: 0
+- Public contract types: 2
+- Interfaces: 1
+- DTO/read-model/projection types: 1
 - Enums: 0
-- Exported repository-shaped contracts: 0
+- Exported repository-shaped contracts: 1
 - Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- `interface IDailyAdviceReadModelRepository`
+- `record DailyAdviceReadModel`
 
 ## Focused Tests
 

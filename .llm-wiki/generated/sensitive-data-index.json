@@ -12,7 +12,7 @@
     "health": 660,
     "financial": 120,
     "privateContent": 301,
-    "boundaryFiles": 172,
+    "boundaryFiles": 171,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -264,13 +264,6 @@
     },
     {
       "category": "credential",
-      "name": "HasPassword",
-      "type": "bool",
-      "path": "FoodDiary.Application.Notifications/Common/NotificationUserContext.cs",
-      "line": 5
-    },
-    {
-      "category": "credential",
       "name": "CurrentPassword",
       "type": "string",
       "path": "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommand.cs",
@@ -484,7 +477,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 87
+      "line": 88
     },
     {
       "category": "credential",
@@ -1013,6 +1006,13 @@
     },
     {
       "category": "credential",
+      "name": "HasPassword",
+      "type": "bool",
+      "path": "Modules/Notifications/Application/Common/NotificationUserContext.cs",
+      "line": 5
+    },
+    {
+      "category": "credential",
       "name": "AccessToken",
       "type": "string",
       "path": "Modules/Wearables/Application/Abstractions/Models/WearableTokenResult.cs",
@@ -1332,13 +1332,6 @@
       "type": "string",
       "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
       "line": 11
-    },
-    {
-      "category": "financial",
-      "name": "InvalidSubscriptions",
-      "type": "List<WebPushDeliverySubscription>",
-      "path": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
-      "line": 71
     },
     {
       "category": "financial",
@@ -1880,6 +1873,13 @@
       "line": 11
     },
     {
+      "category": "financial",
+      "name": "InvalidSubscriptions",
+      "type": "List<WebPushDeliverySubscription>",
+      "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
+      "line": 71
+    },
+    {
       "category": "health",
       "name": "Calories",
       "type": "decimal",
@@ -2214,13 +2214,6 @@
       "type": "double?",
       "path": "FoodDiary.Application.Abstractions/Recipes/Models/RecipeOverviewReadItem.cs",
       "line": 25
-    },
-    {
-      "category": "health",
-      "name": "GramWeight",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/UsdaFoodPortionModel.cs",
-      "line": 7
     },
     {
       "category": "health",
@@ -2686,27 +2679,6 @@
     },
     {
       "category": "health",
-      "name": "WeightKg",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntryModel.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
-      "line": 3
-    },
-    {
-      "category": "health",
-      "name": "AverageWeightKg",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntrySummaryModel.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
       "name": "BirthDate",
       "type": "DateTime?",
       "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
@@ -2830,62 +2802,6 @@
       "type": "int",
       "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
       "line": 46
-    },
-    {
-      "category": "health",
-      "name": "WaistEntryId",
-      "type": "Guid",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommand.cs",
-      "line": 8
-    },
-    {
-      "category": "health",
-      "name": "WaistEntryId",
-      "type": "Guid",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommand.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "HeightCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Models/WaistHistoryPageSummaryModel.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommand.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "WeightEntryId",
-      "type": "Guid",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommand.cs",
-      "line": 8
-    },
-    {
-      "category": "health",
-      "name": "WeightEntryId",
-      "type": "Guid",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs",
-      "line": 11
-    },
-    {
-      "category": "health",
-      "name": "HeightCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Models/WeightHistoryPageSummaryModel.cs",
-      "line": 10
     },
     {
       "category": "health",
@@ -3229,48 +3145,6 @@
       "type": "double",
       "path": "FoodDiary.Application.Meals/Services/MealNutritionSummary.cs",
       "line": 4
-    },
-    {
-      "category": "health",
-      "name": "FastingPushNotificationsEnabled",
-      "type": "bool?",
-      "path": "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInReminderHours",
-      "type": "int?",
-      "path": "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
-      "line": 12
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInFollowUpReminderHours",
-      "type": "int?",
-      "path": "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
-      "line": 13
-    },
-    {
-      "category": "health",
-      "name": "FastingPushNotificationsEnabled",
-      "type": "bool",
-      "path": "FoodDiary.Application.Notifications/Models/NotificationPreferencesModel.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInReminderHours",
-      "type": "int",
-      "path": "FoodDiary.Application.Notifications/Models/NotificationPreferencesModel.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInFollowUpReminderHours",
-      "type": "int",
-      "path": "FoodDiary.Application.Notifications/Models/NotificationPreferencesModel.cs",
-      "line": 8
     },
     {
       "category": "health",
@@ -5584,6 +5458,83 @@
     },
     {
       "category": "health",
+      "name": "WeightKg",
+      "type": "double",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntryModel.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
+      "line": 3
+    },
+    {
+      "category": "health",
+      "name": "AverageWeightKg",
+      "type": "double",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntrySummaryModel.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "WaistEntryId",
+      "type": "Guid",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommand.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "WaistEntryId",
+      "type": "Guid",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommand.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Models/WaistHistoryPageSummaryModel.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommand.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "WeightEntryId",
+      "type": "Guid",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommand.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "WeightEntryId",
+      "type": "Guid",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Models/WeightHistoryPageSummaryModel.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
       "path": "Modules/Cycles/Application/Abstractions/Models/BleedingEntryReadModel.cs",
@@ -6298,6 +6249,48 @@
     },
     {
       "category": "health",
+      "name": "FastingPushNotificationsEnabled",
+      "type": "bool?",
+      "path": "Modules/Notifications/Application/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInReminderHours",
+      "type": "int?",
+      "path": "Modules/Notifications/Application/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "int?",
+      "path": "Modules/Notifications/Application/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "FastingPushNotificationsEnabled",
+      "type": "bool",
+      "path": "Modules/Notifications/Application/Models/NotificationPreferencesModel.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInReminderHours",
+      "type": "int",
+      "path": "Modules/Notifications/Application/Models/NotificationPreferencesModel.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "int",
+      "path": "Modules/Notifications/Application/Models/NotificationPreferencesModel.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
       "name": "CaloriesPer100G",
       "type": "double?",
       "path": "Modules/OpenFoodFacts/Contracts/Abstractions/OpenFoodFacts/Models/OpenFoodFactsProductModel.cs",
@@ -6407,6 +6400,13 @@
       "type": "double",
       "path": "Modules/Tdee/Application/Services/TdeeCalculator.cs",
       "line": 174
+    },
+    {
+      "category": "health",
+      "name": "GramWeight",
+      "type": "double",
+      "path": "Modules/Usda/Contracts/Models/UsdaFoodPortionModel.cs",
+      "line": 7
     },
     {
       "category": "health",
@@ -6624,20 +6624,6 @@
       "type": "string?",
       "path": "FoodDiary.Application.Abstractions/Authentication/Models/UserLoginEventReadModel.cs",
       "line": 9
-    },
-    {
-      "category": "identity",
-      "name": "UserAgent",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/WebPushSubscriptionData.cs",
-      "line": 9
-    },
-    {
-      "category": "identity",
-      "name": "UserAgent",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Models/WebPushSubscriptionReadModel.cs",
-      "line": 7
     },
     {
       "category": "identity",
@@ -6935,20 +6921,6 @@
     },
     {
       "category": "identity",
-      "name": "UserAgent",
-      "type": "string?",
-      "path": "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommand.cs",
-      "line": 13
-    },
-    {
-      "category": "identity",
-      "name": "UserAgent",
-      "type": "string?",
-      "path": "FoodDiary.Application.Notifications/Models/WebPushSubscriptionModel.cs",
-      "line": 8
-    },
-    {
-      "category": "identity",
       "name": "ActorIpAddress",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs",
@@ -6960,27 +6932,6 @@
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs",
       "line": 11
-    },
-    {
-      "category": "identity",
-      "name": "UserAgent",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 20
-    },
-    {
-      "category": "identity",
-      "name": "UserAgentMaxLength",
-      "type": "userAgent,",
-      "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 45
-    },
-    {
-      "category": "identity",
-      "name": "UserAgentMaxLength",
-      "type": "userAgent,",
-      "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 62
     },
     {
       "category": "identity",
@@ -7569,6 +7520,55 @@
       "type": "string",
       "path": "Modules/Dietologist/Domain/Events/DietologistInvitationDeclinedDomainEvent.cs",
       "line": 20
+    },
+    {
+      "category": "identity",
+      "name": "UserAgent",
+      "type": "string?",
+      "path": "Modules/Notifications/Application/Abstractions/Common/WebPushSubscriptionData.cs",
+      "line": 9
+    },
+    {
+      "category": "identity",
+      "name": "UserAgent",
+      "type": "string?",
+      "path": "Modules/Notifications/Application/Abstractions/Models/WebPushSubscriptionReadModel.cs",
+      "line": 7
+    },
+    {
+      "category": "identity",
+      "name": "UserAgent",
+      "type": "string?",
+      "path": "Modules/Notifications/Application/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommand.cs",
+      "line": 13
+    },
+    {
+      "category": "identity",
+      "name": "UserAgent",
+      "type": "string?",
+      "path": "Modules/Notifications/Application/Models/WebPushSubscriptionModel.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
+      "name": "UserAgent",
+      "type": "string?",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
+      "line": 20
+    },
+    {
+      "category": "identity",
+      "name": "UserAgentMaxLength",
+      "type": "userAgent,",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
+      "line": 45
+    },
+    {
+      "category": "identity",
+      "name": "UserAgentMaxLength",
+      "type": "userAgent,",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
+      "line": 62
     },
     {
       "category": "privateContent",
@@ -9782,13 +9782,6 @@
       "fieldCount": 1
     },
     {
-      "path": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 1
-    },
-    {
       "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
       "categories": [
         "credential"
@@ -10927,7 +10920,7 @@
   ],
   "potentialLogging": [
     {
-      "path": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
+      "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
       "line": 51,
       "fieldNames": [
         "InvalidSubscriptions"

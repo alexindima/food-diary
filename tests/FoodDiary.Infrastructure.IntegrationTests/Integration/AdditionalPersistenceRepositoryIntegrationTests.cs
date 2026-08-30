@@ -23,7 +23,7 @@ using FoodDiary.Infrastructure.Persistence.MealPlans;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.RecipeComments;
 using FoodDiary.Infrastructure.Persistence.RecipeLikes;
-using FoodDiary.Infrastructure.Persistence.Usda;
+using FoodDiary.Modules.Usda.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Wearables;
 using Microsoft.EntityFrameworkCore;
 

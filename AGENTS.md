@@ -11,7 +11,11 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Application abstractions: `FoodDiary.Application.Abstractions/AGENTS.md`
 - Admin application module: `FoodDiary.Application.Admin/AGENTS.md`
 - AI application module: `FoodDiary.Application.Ai/AGENTS.md`
-- Body metrics application module: `FoodDiary.Application.BodyMetrics/AGENTS.md`
+- BodyMetrics logical module: `Modules/BodyMetrics/AGENTS.md`
+- BodyMetrics application: `Modules/BodyMetrics/Application/AGENTS.md`
+- BodyMetrics application abstractions: `Modules/BodyMetrics/Application/Abstractions/AGENTS.md`
+- BodyMetrics infrastructure: `Modules/BodyMetrics/Infrastructure/AGENTS.md`
+- BodyMetrics persistence model: `Modules/BodyMetrics/Infrastructure/Model/AGENTS.md`
 - Cycles logical module: `Modules/Cycles/AGENTS.md`
 - Cycles application: `Modules/Cycles/Application/AGENTS.md`
 - Cycles application abstractions: `Modules/Cycles/Application/Abstractions/AGENTS.md`
@@ -75,7 +79,13 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Billing persistence model: `Modules/Billing/Infrastructure/Model/AGENTS.md`
 - Marketing logical module: `Modules/Marketing/AGENTS.md`
 - Marketing application: `Modules/Marketing/Application/AGENTS.md`
-- Notifications application module: `FoodDiary.Application.Notifications/AGENTS.md`
+- Notifications logical module: `Modules/Notifications/AGENTS.md`
+- Notifications application: `Modules/Notifications/Application/AGENTS.md`
+- Notifications application abstractions: `Modules/Notifications/Application/Abstractions/AGENTS.md`
+- Notifications domain: `Modules/Notifications/Domain/AGENTS.md`
+- Notifications infrastructure: `Modules/Notifications/Infrastructure/AGENTS.md`
+- Notifications persistence model: `Modules/Notifications/Infrastructure/Model/AGENTS.md`
+- Shared outbox record contract: `Shared/FoodDiary.Outbox.Abstractions/AGENTS.md`
 - Users application module: `FoodDiary.Application.Users/AGENTS.md`
 - Content reports application module: `FoodDiary.Application.ContentReports/AGENTS.md`
 - Content reports logical module: `Modules/ContentReports/AGENTS.md`
@@ -89,7 +99,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Weekly goals domain: `Modules/WeeklyGoals/Domain/AGENTS.md`
 - Weekly goals infrastructure: `Modules/WeeklyGoals/Infrastructure/AGENTS.md`
 - Weekly goals persistence model: `Modules/WeeklyGoals/Infrastructure/Model/AGENTS.md`
-- USDA application module: `FoodDiary.Application.Usda/AGENTS.md`
+- USDA logical module: `Modules/Usda/AGENTS.md`
+- USDA application: `Modules/Usda/Application/AGENTS.md`
+- USDA application abstractions: `Modules/Usda/Application/Abstractions/AGENTS.md`
+- USDA contracts: `Modules/Usda/Contracts/AGENTS.md`
+- USDA infrastructure: `Modules/Usda/Infrastructure/AGENTS.md`
+- USDA persistence model: `Modules/Usda/Infrastructure/Model/AGENTS.md`
 - Weekly check-in logical module: `Modules/WeeklyCheckIn/AGENTS.md`
 - Weekly check-in application tests: `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/AGENTS.md`
 - Daily advices logical module: `Modules/DailyAdvices/AGENTS.md`

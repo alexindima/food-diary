@@ -1,10 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\Notifications\Domain\FoodDiary.Modules.Notifications.Domain.csproj" />
+    <ProjectReference Include="..\Modules\Notifications\Infrastructure\Model\FoodDiary.Modules.Notifications.PersistenceModel.csproj" />
+    <ProjectReference Include="..\Shared\FoodDiary.Outbox.Abstractions\FoodDiary.Outbox.Abstractions.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Modules\BodyMetrics\Infrastructure\Model\FoodDiary.Modules.BodyMetrics.PersistenceModel.csproj" />
     <ProjectReference Include="..\Modules\Billing\Domain\FoodDiary.Modules.Billing.Domain.csproj" />
     <ProjectReference Include="..\Modules\Billing\Infrastructure\Model\FoodDiary.Modules.Billing.PersistenceModel.csproj" />
     <ProjectReference Include="..\Modules\OpenFoodFacts\Domain\FoodDiary.Modules.OpenFoodFacts.Domain.csproj" />
     <ProjectReference Include="..\Modules\OpenFoodFacts\Infrastructure\Model\FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj" />
+    <ProjectReference Include="..\Modules\Usda\Infrastructure\Model\FoodDiary.Modules.Usda.PersistenceModel.csproj" />
     <ProjectReference Include="..\Modules\Marketing\Domain\FoodDiary.Modules.Marketing.Domain.csproj" />
     <ProjectReference Include="..\Modules\Marketing\Infrastructure\Model\FoodDiary.Modules.Marketing.PersistenceModel.csproj" />
     <ProjectReference Include="..\Modules\Favorites\Domain\FoodDiary.Modules.Favorites.Domain.csproj" />

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "700943c15229e58512b4d14aa8377d80733f0f85ac2868f01442ddc2d3307f5d",
-    "sourceFileCount": 3514
+    "sourceFingerprint": "ee81d301c07a96028cf40a45e06c41378fe4d31ec37b670bc93b45bc5db82e2d",
+    "sourceFileCount": 3521
   },
   "summary": {
     "composeServices": 17,
@@ -660,7 +660,7 @@
     {
       "contract": "IWebPushClientAdapter",
       "implementation": "WebPushClientAdapter",
-      "registrationPath": "FoodDiary.Integrations/DependencyInjection.Notifications.cs",
+      "registrationPath": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
       "behaviorSignals": [
         "timeout-or-delay"
       ],
@@ -1449,7 +1449,7 @@
     },
     {
       "name": "WebPushClientAdapter",
-      "path": "FoodDiary.Integrations/Services/WebPushClientAdapter.cs",
+      "path": "Modules/Notifications/Infrastructure/Services/WebPushClientAdapter.cs",
       "securitySignals": [
         "ip-address-policy"
       ],
@@ -1465,7 +1465,7 @@
     },
     {
       "name": "WebPushEndpointValidationHandler",
-      "path": "FoodDiary.Integrations/Services/WebPushEndpointValidationHandler.cs",
+      "path": "Modules/Notifications/Infrastructure/Services/WebPushEndpointValidationHandler.cs",
       "securitySignals": [
         "ip-address-policy",
         "uri-policy"
@@ -1482,7 +1482,7 @@
     },
     {
       "name": "WebPushNotificationSender",
-      "path": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
+      "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
       "securitySignals": [
         "ip-address-policy",
         "uri-policy"
@@ -1501,7 +1501,7 @@
     },
     {
       "name": "WebPushSocketsHttpHandlerFactory",
-      "path": "FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs",
+      "path": "Modules/Notifications/Infrastructure/Services/WebPushSocketsHttpHandlerFactory.cs",
       "securitySignals": [
         "connect-time-address-control",
         "dns-resolution",

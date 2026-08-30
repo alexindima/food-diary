@@ -129,7 +129,7 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 
 ## Extraction Readiness
 
-- Abstraction-owned profile-read consumers: 12 across 3 group(s)
+- Abstraction-owned profile-read consumers: 12 across 2 group(s)
 - Implementation-owned IUserContextService consumers: 12 across 1 group(s)
 - Consumers receiving the User aggregate: 0
 - Consumers with aggregate mutation access: 10

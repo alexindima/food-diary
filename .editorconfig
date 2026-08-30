@@ -165,6 +165,10 @@ dotnet_diagnostic.RCS1170.severity = none
 [Modules/Fasting/Domain/Entities/**/*.cs]
 dotnet_diagnostic.RCS1170.severity = none
 
+# EF navigation setters retain their legacy mapping contract after Notifications extraction.
+[Modules/Notifications/Domain/Entities/**/*.cs]
+dotnet_diagnostic.RCS1170.severity = none
+
 [FoodDiary.Domain/Common/Entity.cs]
 dotnet_diagnostic.IDE0032.severity = none
 
@@ -386,6 +390,9 @@ dotnet_naming_style.underscore_camel_case.capitalization = camel_case
 dotnet_naming_style.pascal_case.capitalization = pascal_case
 
 # Extracted modules deliberately keep legacy CLR namespaces during physical migration.
+[Modules/Notifications/**/*.cs]
+dotnet_diagnostic.IDE0130.severity = none
+
 [Modules/{Hydration,WeeklyGoals}/**/*.cs]
 dotnet_diagnostic.IDE0130.severity = none
 dotnet_diagnostic.RCS1170.severity = none

@@ -30,6 +30,7 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 | Business use cases | Owning `FoodDiary.Application.<Feature>` project |
 | Extracted billing use cases | `FoodDiary.Application.Billing` |
 | Extracted marketing use cases | `FoodDiary.Application.Marketing` |
+| Body measurements | `Modules/BodyMetrics` application, ports, repositories and mappings; central Domain identity seam |
 | EF Core and technical implementations | `FoodDiary.Infrastructure` |
 | External providers and service clients | `FoodDiary.Integrations` |
 | HTTP and SignalR transport | `FoodDiary.Presentation.Api` |

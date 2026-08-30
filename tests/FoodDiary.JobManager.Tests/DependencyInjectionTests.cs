@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Application.Runtime;
 using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;
@@ -124,7 +125,7 @@ public sealed class DependencyInjectionTests {
         services.AddImagesInfrastructure();
         services.AddMarketingModule();
         services.AddMealsModule();
-        services.AddNotificationsModule();
+        services.AddNotificationsModule().AddNotificationsInfrastructure(configuration);
         services.AddWeeklyGoalsModule();
         services.AddInfrastructure(configuration);
         services.AddIntegrations(configuration);

@@ -1,8 +1,9 @@
+using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Application.Runtime;
 using FoodDiary.Application.Admin;
 using FoodDiary.Application.Ai;
 using FoodDiary.Modules.Billing.Infrastructure;
-using FoodDiary.Application.BodyMetrics;
+using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.Cycles.Infrastructure;
 using FoodDiary.Application.Dashboard;
 using FoodDiary.Modules.Hydration.Infrastructure;
@@ -26,7 +27,7 @@ using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Application.Users;
 using FoodDiary.Modules.Wearables.Infrastructure;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
-using FoodDiary.Application.Usda;
+using FoodDiary.Modules.Usda.Infrastructure;
 using FoodDiary.Application.WeeklyCheckIn;
 using FoodDiary.Modules.DailyAdvices.Infrastructure;
 using FoodDiary.Modules.ContentReports.Infrastructure;
@@ -92,7 +93,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddContentReportsModule()
                 .AddGamificationModule()
                 .AddExportModule()
-                .AddNotificationsModule()
+                .AddNotificationsModule().AddNotificationsInfrastructure(configuration)
                 .AddOpenFoodFactsModule()
                 .AddProductsModule()
                 .AddRecipesModule()

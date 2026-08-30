@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Infrastructure.Persistence.Outbox</RootNamespace>
+  </PropertyGroup>
+</Project>

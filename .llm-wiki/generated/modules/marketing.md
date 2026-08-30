@@ -25,6 +25,7 @@ sources:
 ## Source Areas
 
 - `FoodDiary.Presentation.Api/Features/Marketing`
+- `Modules/Marketing/Application/Abstractions`
 
 ## HTTP Surface
 
@@ -41,19 +42,24 @@ Source: `FoodDiary.Presentation.Api/Features/Marketing/MarketingAttributionContr
 - Physical isolation: logical-module
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: MarketingAttributionEvent
-- Public contract files: 0
+- Public contract files: 6
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
+- Public contract types: 6
+- Interfaces: 3
 - DTO/read-model/projection types: 0
 - Enums: 0
-- Exported repository-shaped contracts: 0
+- Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- `interface IMarketingAttributionEventReadRepository`
+- `interface IMarketingAttributionEventRepository`
+- `interface IMarketingAttributionEventWriteRepository`
+- `record MarketingAttributionBreakdownRecord`
+- `record MarketingAttributionEventRecord`
+- `record MarketingAttributionSummaryRecord`
 
 ## Focused Tests
 

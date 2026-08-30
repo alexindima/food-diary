@@ -1,0 +1,34 @@
+using FoodDiary.Domain.Entities.Usda;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace FoodDiary.Modules.Usda.Infrastructure.Model.Configurations.Usda;
+
+internal sealed class UsdaFoodNutrientConfiguration : IEntityTypeConfiguration<UsdaFoodNutrient> {
+    public void Configure(EntityTypeBuilder<UsdaFoodNutrient> builder) {
+        builder.ToTable("UsdaFoodNutrients");
+        builder.HasKey(e => e.Id);
+        builder.Property(e => e.Id)
+            .ValueGeneratedNever()
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
+        builder.Property(e => e.FdcId)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
+        builder.Property(e => e.NutrientId)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
+        builder.Property(e => e.Amount)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
+
+        builder.HasIndex(e => new { e.FdcId, e.NutrientId }).IsUnique();
+        builder.HasIndex(e => e.NutrientId);
+
+        builder.HasOne(e => e.Food)
+            .WithMany(f => f.FoodNutrients)
+            .HasForeignKey(e => e.FdcId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(e => e.Nutrient)
+            .WithMany()
+            .HasForeignKey(e => e.NutrientId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+}

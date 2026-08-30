@@ -16,7 +16,8 @@ Rules for `FoodDiary.Infrastructure/`.
 - Do not move domain rules from aggregates into persistence code.
 - Keep dependency direction inward (Infrastructure depends on Application/Domain, not vice versa).
 - `FoodDiary.Infrastructure` may reference `FoodDiary.Application.Abstractions`, `FoodDiary.Domain`, and `Shared/FoodDiary.Mediator`; do not reference `FoodDiary.Application`, presentation projects, host projects, or resources.
-- Keep external provider adapters that are not persistence concerns in `FoodDiary.Integrations`.
+- Keep shared external provider adapters that are not persistence concerns in `FoodDiary.Integrations`; Notifications-owned web-push adapters live in `Modules/Notifications/Infrastructure`.
+- Notifications configurations are registered explicitly from its PersistenceModel assembly; generic outbox processing/claiming/replay remain central and use the shared Outbox.Abstractions contract.
 - Keep repository-owned `SaveChangesAsync` and manual transactions inside the architecture-test allowlist. `AiQuotaRepository` is an explicit exception: its short PostgreSQL transactions atomically reserve or reconcile quota independently of the request transaction, and must never contain an external provider call.
 - `EfWeeklyGoalTransactionRunner` is an explicit exception: it uses a short advisory-lock transaction to serialize creation for one `(UserId, WeekStartUtc)` key and prevent unique-constraint races; keep notification delivery and other external calls outside that transaction.
 - `EfProductMutationTransactionRunner` is an explicit exception: it shares the Recipe-composition advisory lock and keeps the Product row lock, usage check, and mutation in one short transaction.

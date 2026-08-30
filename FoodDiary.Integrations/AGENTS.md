@@ -7,6 +7,7 @@ Rules for `FoodDiary.Integrations/`.
 - External provider adapters and SDK/HTTP clients used by the primary FoodDiary app.
 - Implement abstractions declared in application-facing layers.
 - Keep provider options and transport-specific registration here.
+- Exception for extracted ownership: the Notifications-only web-push provider/options live in `Modules/Notifications/Infrastructure`, preserving legacy CLR namespaces. Hosts register that module explicitly.
 
 ## Rules
 - Do not add EF Core persistence or migrations here.

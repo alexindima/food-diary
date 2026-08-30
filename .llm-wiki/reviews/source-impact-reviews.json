@@ -8,17 +8,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "2803df7e37c152a1ea9e4a96a2b45bbef5789779ed7827ba99e0aa2319adb16e"
+          "sha256": "ce8247911ba242e8d77cb926aab85c322a144f2fe4a9fbe567473a296ca4b48c"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "9ff8e79172b6bca73a2ad45a75ecc5cf906bf65f309da8db1f47c161b50a9045"
+          "sha256": "d542898316751d6bf72e2cc86e404e37a1deec335bc24018343f18c47e832b7f"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Reviewed module ownership guides, solution and Docker paths against the combined sources. Central Domain and persistence seams remain documented; generated indexes rebuilt from the combined graph. Integration evidence and known Wiki planning limitations are in docs/ai/module-integration-20260831.md.",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:25.9544631Z"
+      "gitHead": "c421af4f3eca13de3c36fe80170219176aaaf8f6",
+      "reviewedAtUtc": "2026-08-30T21:36:47.7914094Z"
     },
     {
       "pageId": "module.frontend",
@@ -42,13 +42,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "9ff8e79172b6bca73a2ad45a75ecc5cf906bf65f309da8db1f47c161b50a9045"
+          "sha256": "d542898316751d6bf72e2cc86e404e37a1deec335bc24018343f18c47e832b7f"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Reviewed module ownership guides, solution and Docker paths against the combined sources. Central Domain and persistence seams remain documented; generated indexes rebuilt from the combined graph. Integration evidence and known Wiki planning limitations are in docs/ai/module-integration-20260831.md.",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:26.3831437Z"
+      "gitHead": "c421af4f3eca13de3c36fe80170219176aaaf8f6",
+      "reviewedAtUtc": "2026-08-30T21:36:48.1109012Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -57,21 +57,29 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b7b71ae49d631fe2850e2a934b6fbd639f6c67879247bf5680961d9bd413a080"
+          "sha256": "606bb3e468a70aef123a9e09bcf0f876da8b4c748bac9fd361c028d05cd7cfd0"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "9ff8e79172b6bca73a2ad45a75ecc5cf906bf65f309da8db1f47c161b50a9045"
+          "sha256": "f128dc8ec1f5e58edc84d45340f29fcfd18a58240ab4693432b6021310bb49d7"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "13f400cfbd857ca613890741ec51e930ec54a97043749a893a6c5bfc52ca2429"
+          "sha256": "6e127a89096ceb433de45d112146e53450d4d3e6a6dc2088324cbbcfeed5ba49"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "b848543d4219959aa56d00fb9c18ab32bbb9e6c1ce9626a7d22358597d761371"
+        },
+        {
+          "path": "FoodDiary.Integrations/AGENTS.md",
+          "sha256": "51f1a79241375e4165de38d25f3a85e10b304ae810abedf11ec4581ff1cf2a77"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Notifications CLR namespaces and legacy Application assembly retained; EF pending-model check clean and HTTP plus Swagger payload tests pass",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:27.1343759Z"
+      "gitHead": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+      "reviewedAtUtc": "2026-08-30T20:45:44.7554381Z"
     },
     {
       "pageId": "system.architecture",
@@ -80,21 +88,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b7b71ae49d631fe2850e2a934b6fbd639f6c67879247bf5680961d9bd413a080"
+          "sha256": "606bb3e468a70aef123a9e09bcf0f876da8b4c748bac9fd361c028d05cd7cfd0"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "9ff8e79172b6bca73a2ad45a75ecc5cf906bf65f309da8db1f47c161b50a9045"
+          "sha256": "f128dc8ec1f5e58edc84d45340f29fcfd18a58240ab4693432b6021310bb49d7"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "798cafba5bd23009bfa1d07f8e06d21c96c7191b5a89be84bca9c13dbe11e8ad"
+          "sha256": "5ae75ef0f26e443ca3750f0c277335951e24860753f1491dbd5862cdf1831ec5"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Module map guides and source indexes now describe owned domain ports persistence provider layers and evidence-backed central composition seams",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:27.7995559Z"
+      "gitHead": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+      "reviewedAtUtc": "2026-08-30T20:45:45.6059492Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -133,13 +141,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "2803df7e37c152a1ea9e4a96a2b45bbef5789779ed7827ba99e0aa2319adb16e"
+          "sha256": "ce8247911ba242e8d77cb926aab85c322a144f2fe4a9fbe567473a296ca4b48c"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Reviewed module ownership guides, solution and Docker paths against the combined sources. Central Domain and persistence seams remain documented; generated indexes rebuilt from the combined graph. Integration evidence and known Wiki planning limitations are in docs/ai/module-integration-20260831.md.",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:28.3653800Z"
+      "gitHead": "c421af4f3eca13de3c36fe80170219176aaaf8f6",
+      "reviewedAtUtc": "2026-08-30T21:36:48.4507120Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -148,13 +156,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b7b71ae49d631fe2850e2a934b6fbd639f6c67879247bf5680961d9bd413a080"
+          "sha256": "606bb3e468a70aef123a9e09bcf0f876da8b4c748bac9fd361c028d05cd7cfd0"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Module map guides and source indexes now describe owned domain ports persistence provider layers and evidence-backed central composition seams",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:28.7278093Z"
+      "gitHead": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+      "reviewedAtUtc": "2026-08-30T20:45:47.3411100Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -212,21 +220,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "0966b7a34fc3d209ecb3a1be3e55e8c49eda214befa7785ed86f871ec40f9c9b"
+          "sha256": "00f22431700347e9af69f1b8a1e5f64c5e2b064d12d51ea3dd9b90494cd4c123"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b7b71ae49d631fe2850e2a934b6fbd639f6c67879247bf5680961d9bd413a080"
+          "sha256": "606bb3e468a70aef123a9e09bcf0f876da8b4c748bac9fd361c028d05cd7cfd0"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "798cafba5bd23009bfa1d07f8e06d21c96c7191b5a89be84bca9c13dbe11e8ad"
+          "sha256": "5ae75ef0f26e443ca3750f0c277335951e24860753f1491dbd5862cdf1831ec5"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Full ownership inventory and independent module suites verified; 748 architecture tests pass and six final DI errors exactly match original baseline TRX",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:29.0719358Z"
+      "gitHead": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+      "reviewedAtUtc": "2026-08-30T20:45:48.3912042Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -235,13 +243,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "e63e22a4340d1bfb146ae1bb2174d2e8cc127b641b00e53e0bbac2fa841becd8"
+          "sha256": "d7a9f1b1e2dc5e705910f5b31f9ccd2a523eedfcf9b317f11bdb68e3c64aaaa0"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Reviewed the combined USDA BodyMetrics Notifications relocations, project/host registrations and unchanged controller/snapshot surface. Presentation 825 and scoped HTTP 37 passed; EF no pending changes. Details: docs/ai/module-integration-20260831.md.",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:29.7077315Z"
+      "gitHead": "c421af4f3eca13de3c36fe80170219176aaaf8f6",
+      "reviewedAtUtc": "2026-08-30T21:36:49.1322361Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -471,14 +479,14 @@
       "pageSha256": "b8326a8fc44d9de804aa9a021771d97014a2ead8b3db08959f38add670525ba4",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1",
-          "sha256": "446b6e92731d53fc2d26c717e322c5311358f15651f72710e3da255771aa8e11"
+          "path": ".llm-wiki/generated/configuration-index.json",
+          "sha256": "d0295a1b4e56429fa3c44dffbf3c4b7a4ea7476be5a1ddbbc238de072bcad602"
         }
       ],
-      "reason": "Reviewed Hydration vertical extraction against current projects, architecture tests, ADR 0017, generated indexes, API compatibility, EF model, and Wiki tooling regressions.",
+      "reason": "Module map guides and source indexes now describe owned domain ports persistence provider layers and evidence-backed central composition seams",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T17:43:30.8203182Z"
+      "gitHead": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+      "reviewedAtUtc": "2026-08-30T20:45:51.2973126Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -502,13 +510,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "05017b6b69c26d80898e9250dc9a99dd9c92036d22e268cd72e8c2eca9add55c"
+          "sha256": "9d1c51a741c62d7cceccf5b75f0d792ee690db71302c191b3376bf2254623e45"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "b848543d4219959aa56d00fb9c18ab32bbb9e6c1ce9626a7d22358597d761371"
         }
       ],
-      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
+      "reason": "Reviewed merged module/central test references and preserved baseline115 tests. All 5541 reported ordinary tests executed; DI six baseline failures fixed. Public-surface generator path regression passes under StrictMode; no collectors or blanket governance approval claimed.",
       "baseRef": "HEAD",
-      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
-      "reviewedAtUtc": "2026-08-30T14:28:23.5513203Z"
+      "gitHead": "c421af4f3eca13de3c36fe80170219176aaaf8f6",
+      "reviewedAtUtc": "2026-08-30T21:36:49.8833629Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -788,13 +800,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "29475e2dc5c179405dc69e1c85475744b1954e16d9685c877dc8ad012d84f43c"
+          "sha256": "d891b991646ebc2335cabd51469a3b6f20d5271ebceb29fb83275af036e7e5c4"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Reviewed preserved User-scoped measurements and USDA navigation, web-push options and validation, unchanged generic outbox claim/replay and contract move. Notifications provider tests 76 and PostgreSQL focused tests 8 passed; no new data collection or provider policy.",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:30.5432045Z"
+      "gitHead": "c421af4f3eca13de3c36fe80170219176aaaf8f6",
+      "reviewedAtUtc": "2026-08-30T21:36:50.4981468Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -833,13 +845,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f4cbac7ca6251462f2ead44d1b98abbfa61f5f9f3b0a4fae13cc2378e0250f2a"
+          "sha256": "86f70defeaea5bf40044df3560314786cf16950fde32252f01c1971f79503296"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Reviewed merged module/central test references and preserved baseline115 tests. All 5541 reported ordinary tests executed; DI six baseline failures fixed. Public-surface generator path regression passes under StrictMode; no collectors or blanket governance approval claimed.",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:31.4422643Z"
+      "gitHead": "c421af4f3eca13de3c36fe80170219176aaaf8f6",
+      "reviewedAtUtc": "2026-08-30T21:36:51.4176747Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -916,13 +928,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3687d52fd98f91022912fdb126055b7bcb7f742d9f0633b8410d306e418f14f3"
+          "sha256": "74f1ed106cc608e3fb51e7975c663ef407fdf4b8ba5aff68a545b534dd033485"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Reviewed module ownership guides, solution and Docker paths against the combined sources. Central Domain and persistence seams remain documented; generated indexes rebuilt from the combined graph. Integration evidence and known Wiki planning limitations are in docs/ai/module-integration-20260831.md.",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:33.0698660Z"
+      "gitHead": "c421af4f3eca13de3c36fe80170219176aaaf8f6",
+      "reviewedAtUtc": "2026-08-30T21:36:52.8090448Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -931,21 +943,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f4cbac7ca6251462f2ead44d1b98abbfa61f5f9f3b0a4fae13cc2378e0250f2a"
+          "sha256": "86f70defeaea5bf40044df3560314786cf16950fde32252f01c1971f79503296"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3687d52fd98f91022912fdb126055b7bcb7f742d9f0633b8410d306e418f14f3"
+          "sha256": "74f1ed106cc608e3fb51e7975c663ef407fdf4b8ba5aff68a545b534dd033485"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "29475e2dc5c179405dc69e1c85475744b1954e16d9685c877dc8ad012d84f43c"
+          "sha256": "d891b991646ebc2335cabd51469a3b6f20d5271ebceb29fb83275af036e7e5c4"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Reviewed preserved User-scoped measurements and USDA navigation, web-push options and validation, unchanged generic outbox claim/replay and contract move. Notifications provider tests 76 and PostgreSQL focused tests 8 passed; no new data collection or provider policy.",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:34.2333335Z"
+      "gitHead": "c421af4f3eca13de3c36fe80170219176aaaf8f6",
+      "reviewedAtUtc": "2026-08-30T21:36:53.4624336Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1055,17 +1067,17 @@
     {
       "pageId": "workflow-test-plan",
       "pagePath": ".llm-wiki/workflows/test-plan.md",
-      "pageSha256": "c5a975867d6accfedfe5a3a7683004c18a0c66c808d9ed215de988bb1bfd13b7",
+      "pageSha256": "034a7fbc5f124bcf40175e3a37f52338dfec658615c7b91245322232f61f08d6",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "13465b985d7050bd59ecdf5157c312b7151ce10ff0cc3304090209480e4a2090"
+          "path": "docs/TESTING_STRATEGY.md",
+          "sha256": "8bd75833568217d727d3442ba1bddd58bed2b976fbb14eef4b5e5c8b77aaa575"
         }
       ],
-      "reason": "Reviewed workflow, policy, code-graph, eval, and verification pages against logical Modules paths; new ownership, routing, stale-path, and boundary cases are covered by passing regressions.",
+      "reason": "Reviewed merged module/central test references and preserved baseline115 tests. All 5541 reported ordinary tests executed; DI six baseline failures fixed. Public-surface generator path regression passes under StrictMode; no collectors or blanket governance approval claimed.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:18:36.8486255Z"
+      "gitHead": "c421af4f3eca13de3c36fe80170219176aaaf8f6",
+      "reviewedAtUtc": "2026-08-30T21:36:53.8845332Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1123,13 +1135,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "2803df7e37c152a1ea9e4a96a2b45bbef5789779ed7827ba99e0aa2319adb16e"
+          "sha256": "ce8247911ba242e8d77cb926aab85c322a144f2fe4a9fbe567473a296ca4b48c"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Reviewed module ownership guides, solution and Docker paths against the combined sources. Central Domain and persistence seams remain documented; generated indexes rebuilt from the combined graph. Integration evidence and known Wiki planning limitations are in docs/ai/module-integration-20260831.md.",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:30.0644013Z"
+      "gitHead": "c421af4f3eca13de3c36fe80170219176aaaf8f6",
+      "reviewedAtUtc": "2026-08-30T21:36:49.4511097Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1183,17 +1195,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "1f5a3c3ac37891b22cb5e20e4912de456525e57848f27f1c00f2ea39c57635b3"
+          "sha256": "0ea389e335c8778b0b5342a16e5d6d1bb0173f22ee358a5feab48d654bcc7272"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "2803df7e37c152a1ea9e4a96a2b45bbef5789779ed7827ba99e0aa2319adb16e"
+          "sha256": "ce8247911ba242e8d77cb926aab85c322a144f2fe4a9fbe567473a296ca4b48c"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Reviewed current module guides, solution ownership, Docker references and freshly generated combined indexes against sources and docs/ai/module-integration-20260831.md.",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:32.0498096Z"
+      "gitHead": "c421af4f3eca13de3c36fe80170219176aaaf8f6",
+      "reviewedAtUtc": "2026-08-30T21:39:48.1962897Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1202,13 +1214,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "2803df7e37c152a1ea9e4a96a2b45bbef5789779ed7827ba99e0aa2319adb16e"
+          "sha256": "ce8247911ba242e8d77cb926aab85c322a144f2fe4a9fbe567473a296ca4b48c"
         }
       ],
-      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
+      "reason": "Reviewed merged module/central test references and preserved baseline115 tests. All 5541 reported ordinary tests executed; DI six baseline failures fixed. Public-surface generator path regression passes under StrictMode; no collectors or blanket governance approval claimed.",
       "baseRef": "HEAD",
-      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
-      "reviewedAtUtc": "2026-08-30T18:48:32.4656223Z"
+      "gitHead": "c421af4f3eca13de3c36fe80170219176aaaf8f6",
+      "reviewedAtUtc": "2026-08-30T21:36:52.3897629Z"
     }
   ]
 }

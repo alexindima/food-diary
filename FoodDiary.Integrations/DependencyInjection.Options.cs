@@ -96,12 +96,6 @@ public static partial class DependencyInjection {
     private static void AddProviderIntegrationOptions(
         this IServiceCollection services,
         IConfiguration configuration) {
-        services.AddOptions<WebPushOptions>()
-            .Bind(configuration.GetSection(WebPushOptions.SectionName))
-            .Validate(WebPushOptions.HasValidConfiguration,
-                "WebPush configuration is invalid.")
-            .ValidateOnStart();
-
         services.AddOptions<UsdaApiOptions>()
             .Bind(configuration.GetSection(UsdaApiOptions.SectionName))
             .Validate(UsdaApiOptions.HasValidBaseUrl,

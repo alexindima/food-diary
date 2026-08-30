@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Dashboard, WaistEntries, WeightEntries
+- Abstraction-contract dependencies: Dashboard
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Application.Dashboard, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -25,8 +25,6 @@ sources:
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Dashboard`
-- `FoodDiary.Application.Abstractions/WaistEntries`
-- `FoodDiary.Application.Abstractions/WeightEntries`
 - `FoodDiary.Presentation.Api/Features/Statistics`
 
 ## HTTP Surface
@@ -44,34 +42,22 @@ Source: `FoodDiary.Presentation.Api/Features/Statistics/StatisticsController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 35
+- Public contract files: 17
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 35
-- Interfaces: 14
-- DTO/read-model/projection types: 18
+- Public contract types: 17
+- Interfaces: 4
+- DTO/read-model/projection types: 12
 - Enums: 0
-- Exported repository-shaped contracts: 8
-- Contracts referencing domain entities: 4
-- `class WaistEntryErrors`
-- `class WeightEntryErrors`
+- Exported repository-shaped contracts: 0
+- Contracts referencing domain entities: 0
 - `interface IDashboardBodyReadService`
 - `interface IDashboardMealsReadService`
 - `interface IDashboardReadService`
 - `interface IDashboardStatisticsReadService`
-- `interface IWaistEntryReadModelRepository`
-- `interface IWaistEntryReadRepository`
-- `interface IWaistEntryReadService`
-- `interface IWaistEntryRepository`
-- `interface IWaistEntryWriteRepository`
-- `interface IWeightEntryReadModelRepository`
-- `interface IWeightEntryReadRepository`
-- `interface IWeightEntryReadService`
-- `interface IWeightEntryRepository`
-- `interface IWeightEntryWriteRepository`
 - `record DashboardBodyReadModel`
 - `record DashboardMealAiItemReadModel`
 - `record DashboardMealAiSessionReadModel`
@@ -85,8 +71,6 @@ Source: `FoodDiary.Presentation.Api/Features/Statistics/StatisticsController.cs`
 - `record DashboardWaistSummaryReadModel`
 - `record DashboardWeightPointReadModel`
 - `record DashboardWeightSummaryReadModel`
-- `record WaistEntryModel`
-- ... 5 more type(s)
 
 ## Focused Tests
 

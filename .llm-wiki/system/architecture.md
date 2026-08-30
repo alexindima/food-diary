@@ -42,7 +42,7 @@ The executable project-reference allowlist is enforced by
 The folder-module API graph is stored in
 [`module-dependencies.json`](../../docs/architecture/module-dependencies.json).
 The unified inventory, ownership, cross-layer mappings, physical isolation and
-enforceability for all 39 folder modules plus Billing and Marketing live in
+enforceability for the current folder and extracted modules live in
 [`backend-modules.json`](../../docs/architecture/backend-modules.json). Generated
 module pages keep business API edges, abstraction contracts and host/composition
 consumers separate and explicitly label analysis limitations.

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules\BodyMetrics\Infrastructure\FoodDiary.Modules.BodyMetrics.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Billing\Infrastructure\FoodDiary.Modules.Billing.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Favorites\Infrastructure\FoodDiary.Modules.Favorites.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\ContentReports\Infrastructure\FoodDiary.Modules.ContentReports.Infrastructure.csproj" />
@@ -14,6 +15,7 @@
     <ProjectReference Include="..\..\Modules\Lessons\Infrastructure\FoodDiary.Modules.Lessons.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Hydration\Infrastructure\FoodDiary.Modules.Hydration.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\OpenFoodFacts\Infrastructure\FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Usda\Infrastructure\FoodDiary.Modules.Usda.Infrastructure.csproj" />
     <PackageReference Include="SSH.NET" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
@@ -43,6 +45,7 @@
     <ProjectReference Include="..\..\FoodDiary.Initializer\FoodDiary.Initializer.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Integrations\FoodDiary.Integrations.csproj" />
     <ProjectReference Include="..\FoodDiary.Testing\FoodDiary.Testing.csproj" />
+    <ProjectReference Include="..\..\Modules\Notifications\Infrastructure\FoodDiary.Modules.Notifications.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

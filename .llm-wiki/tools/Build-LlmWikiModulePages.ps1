@@ -187,7 +187,7 @@ function Get-SourceAreaPaths {
         $candidatePaths.Add([string]$projectName)
     }
     foreach ($area in @(Get-BoundaryMappingValues $Boundary 'abstractionAreas' @($ModuleName))) {
-        $candidatePaths.Add("FoodDiary.Application.Abstractions/$area")
+        $candidatePaths.Add((Resolve-AbstractionAreaPath ([string]$area)))
     }
     foreach ($area in @(Get-BoundaryMappingValues $Boundary 'domainAreas' @($ModuleName))) {
         $candidatePaths.Add("FoodDiary.Domain/Entities/$area")
@@ -204,6 +204,17 @@ function Get-SourceAreaPaths {
     return @($candidatePaths | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique | Where-Object {
         Test-Path -LiteralPath (Join-Path $repositoryRoot $_)
     })
+}
+
+function Resolve-AbstractionAreaPath {
+    param([string]$Area)
+
+    $normalizedArea = ($Area.Replace('\', '/') -replace '^\./', '').TrimEnd('/')
+    $rootDirectory = ($normalizedArea -split '/', 2)[0]
+    if (Test-Path -LiteralPath (Join-Path $repositoryRoot $rootDirectory) -PathType Container) {
+        return $normalizedArea
+    }
+    return "FoodDiary.Application.Abstractions/$normalizedArea"
 }
 
 function Get-ReferencedContractAreas {
@@ -297,7 +308,7 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
     $hostConsumers = @(Get-HostConsumers $moduleName $contractAreas ([string]$module.project))
     $publicContractFiles = @(
         foreach ($area in $contractAreas) {
-            $contractArea = "FoodDiary.Application.Abstractions/$area"
+            $contractArea = Resolve-AbstractionAreaPath ([string]$area)
             Get-SourceFilesUnder $contractArea | Where-Object {
                 $_.content -match '\bpublic\s+(?:(?:sealed|abstract|partial|readonly|static)\s+)*(?:interface|record|class|struct|enum)\b'
             }

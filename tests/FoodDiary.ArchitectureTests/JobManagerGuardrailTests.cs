@@ -91,6 +91,7 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Modules.Gamification.Infrastructure",
             "FoodDiary.Modules.Images.Infrastructure",
             "FoodDiary.Modules.Marketing.Infrastructure",
+            "FoodDiary.Modules.Notifications.Infrastructure",
             "FoodDiary.Modules.OpenFoodFacts.Application",
             "FoodDiary.Modules.Statistics.Application",
             "FoodDiary.Modules.Tdee.Application",

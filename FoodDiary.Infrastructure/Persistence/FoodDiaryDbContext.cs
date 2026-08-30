@@ -11,6 +11,9 @@ using FoodDiary.Modules.Cycles.Infrastructure.Persistence;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Model;
 using FoodDiary.Modules.Marketing.Infrastructure.Persistence;
 using FoodDiary.Modules.Billing.Infrastructure.Persistence;
+using FoodDiary.Modules.Usda.Infrastructure.Model;
+using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
+using FoodDiary.Modules.Notifications.Infrastructure.Model;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
@@ -35,5 +38,8 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
         modelBuilder.ApplyOpenFoodFactsPersistenceModel();
         modelBuilder.ApplyMarketingPersistenceModel();
         modelBuilder.ApplyBillingPersistenceModel();
+        modelBuilder.ApplyUsdaPersistenceModel();
+        modelBuilder.ApplyBodyMetricsPersistenceModel();
+        modelBuilder.ApplyNotificationsPersistenceModel();
     }
 }

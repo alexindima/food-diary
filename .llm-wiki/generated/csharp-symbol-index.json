@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3513,
-    "symbols": 3512,
+    "sourceFiles": 3520,
+    "symbols": 3517,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 206,
+    "dependencyInjectionRegistrations": 197,
     "kinds": {
-      "class": 1839,
+      "class": 1844,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1364,
+      "Other": 1368,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -41,7 +41,7 @@
       "Request": 135,
       "Response": 181,
       "Service": 279,
-      "Validator": 205,
+      "Validator": 206,
       "ValueObject": 129,
       "WriteRepository": 46
     }
@@ -1945,293 +1945,6 @@
       "line": 4
     },
     {
-      "name": "DietologistInvitationDecisionNotificationPayload",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/DietologistInvitationDecisionNotificationPayload.cs",
-      "line": 2
-    },
-    {
-      "name": "DietologistInvitationReceivedNotificationPayload",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/DietologistInvitationReceivedNotificationPayload.cs",
-      "line": 2
-    },
-    {
-      "name": "EmptyNotificationPayload",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/EmptyNotificationPayload.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingPhaseNotificationPayload",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/FastingPhaseNotificationPayload.cs",
-      "line": 2
-    },
-    {
-      "name": "INotificationCleanupService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationCleanupService.cs",
-      "line": 2
-    },
-    {
-      "name": "INotificationClientRefreshService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationClientRefreshService.cs",
-      "line": 4
-    },
-    {
-      "name": "INotificationDeduplicationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationDeduplicationService.cs",
-      "line": 4
-    },
-    {
-      "name": "INotificationLookupRepository",
-      "kind": "interface",
-      "role": "LookupRepository",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationLookupRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "INotificationPusher",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationPusher.cs",
-      "line": 2
-    },
-    {
-      "name": "INotificationReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "INotificationReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "INotificationRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "INotificationTestScheduler",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationTestScheduler.cs",
-      "line": 4
-    },
-    {
-      "name": "INotificationTextRenderer",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationTextRenderer.cs",
-      "line": 2
-    },
-    {
-      "name": "INotificationWebPushOutbox",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWebPushOutbox.cs",
-      "line": 4
-    },
-    {
-      "name": "INotificationWebPushOutboxProcessor",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWebPushOutboxProcessor.cs",
-      "line": 2
-    },
-    {
-      "name": "INotificationWriter",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs",
-      "line": 4
-    },
-    {
-      "name": "INotificationWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "ITestNotificationDeliveryDispatcher",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/ITestNotificationDeliveryDispatcher.cs",
-      "line": 2
-    },
-    {
-      "name": "IWebPushConfigurationProvider",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/IWebPushConfigurationProvider.cs",
-      "line": 2
-    },
-    {
-      "name": "IWebPushDeliveryAudienceService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/IWebPushDeliveryAudienceService.cs",
-      "line": 5
-    },
-    {
-      "name": "IWebPushNotificationSender",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/IWebPushNotificationSender.cs",
-      "line": 4
-    },
-    {
-      "name": "IWebPushSubscriptionReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/IWebPushSubscriptionReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IWebPushSubscriptionReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/IWebPushSubscriptionReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IWebPushSubscriptionRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/IWebPushSubscriptionRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IWebPushSubscriptionWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/IWebPushSubscriptionWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "NewRecommendationNotificationPayload",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/NewRecommendationNotificationPayload.cs",
-      "line": 2
-    },
-    {
-      "name": "NotificationCleanupPolicy",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/NotificationCleanupPolicy.cs",
-      "line": 2
-    },
-    {
-      "name": "NotificationErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/NotificationErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "NotificationPayloads",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/NotificationPayloads.cs",
-      "line": 2
-    },
-    {
-      "name": "NotificationPayloadSerializer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/NotificationPayloadSerializer.cs",
-      "line": 4
-    },
-    {
-      "name": "NotificationTargetUrlResolver",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/NotificationTargetUrlResolver.cs",
-      "line": 2
-    },
-    {
-      "name": "NotificationText",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/NotificationText.cs",
-      "line": 2
-    },
-    {
-      "name": "NotificationTypes",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/NotificationTypes.cs",
-      "line": 2
-    },
-    {
-      "name": "ScheduledNotificationData",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/ScheduledNotificationData.cs",
-      "line": 2
-    },
-    {
-      "name": "WebPushClientConfiguration",
-      "kind": "record",
-      "role": "Configuration",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/WebPushClientConfiguration.cs",
-      "line": 2
-    },
-    {
-      "name": "WebPushDeliveryLimits",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/WebPushDeliveryLimits.cs",
-      "line": 2
-    },
-    {
-      "name": "WebPushSubscriptionData",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Common/WebPushSubscriptionData.cs",
-      "line": 2
-    },
-    {
-      "name": "NotificationReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Models/NotificationReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WebPushDeliverySubscription",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Models/WebPushDeliverySubscription.cs",
-      "line": 2
-    },
-    {
-      "name": "WebPushSubscriptionReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Notifications/Models/WebPushSubscriptionReadModel.cs",
-      "line": 2
-    },
-    {
       "name": "ManualNutritionLimits",
       "kind": "class",
       "role": "Other",
@@ -2572,125 +2285,6 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/ShoppingLists/Models/ShoppingListSummaryReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "IUsdaDailyMicronutrientReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Usda/Common/IUsdaDailyMicronutrientReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IUsdaFoodReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodReadModelRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IUsdaFoodReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodReadRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IUsdaFoodRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IUsdaFoodSearchService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodSearchService.cs",
-      "line": 4
-    },
-    {
-      "name": "UsdaErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Usda/Common/UsdaErrors.cs",
-      "line": 5
-    },
-    {
-      "name": "DailyMicronutrientModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/DailyMicronutrientModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DailyMicronutrientSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/DailyMicronutrientSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "HealthAreaScoreModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/HealthAreaScoreModel.cs",
-      "line": 2
-    },
-    {
-      "name": "HealthAreaScoresModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/HealthAreaScoresModel.cs",
-      "line": 2
-    },
-    {
-      "name": "MicronutrientModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/MicronutrientModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UsdaDailyReferenceValueReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/UsdaDailyReferenceValueReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UsdaFoodDetailModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/UsdaFoodDetailModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UsdaFoodModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/UsdaFoodModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UsdaFoodPortionModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/UsdaFoodPortionModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UsdaFoodReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/UsdaFoodReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UsdaNutrientReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Usda/Models/UsdaNutrientReadModel.cs",
       "line": 2
     },
     {
@@ -3160,132 +2754,6 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Users/Models/WeightHistoryProfileModel.cs",
-      "line": 2
-    },
-    {
-      "name": "IWaistEntryReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IWaistEntryReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/WaistEntries/Common/IWaistEntryReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IWaistEntryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/WaistEntries/Common/IWaistEntryReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IWaistEntryRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/WaistEntries/Common/IWaistEntryRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IWaistEntryWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "WaistEntryErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/WaistEntries/Common/WaistEntryErrors.cs",
-      "line": 5
-    },
-    {
-      "name": "WaistEntryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/WaistEntries/Models/WaistEntryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WaistEntryReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/WaistEntries/Models/WaistEntryReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WaistEntrySummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/WaistEntries/Models/WaistEntrySummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "IWeightEntryReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IWeightEntryReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IWeightEntryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IWeightEntryRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IWeightEntryWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "WeightEntryErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/WeightEntries/Common/WeightEntryErrors.cs",
-      "line": 5
-    },
-    {
-      "name": "WeightEntryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WeightEntryReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WeightEntrySummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntrySummaryModel.cs",
       "line": 2
     },
     {
@@ -4392,349 +3860,6 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Application.Ai/Services/UserAiUsageSummaryReadService.cs",
-      "line": 8
-    },
-    {
-      "name": "RequiredIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.BodyMetrics/Common/RequiredIdParser.cs",
-      "line": 5
-    },
-    {
-      "name": "UtcDateNormalizer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.BodyMetrics/Common/UtcDateNormalizer.cs",
-      "line": 2
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.BodyMetrics/DependencyInjection.cs",
-      "line": 10
-    },
-    {
-      "name": "CreateWaistEntryCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "CreateWaistEntryCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "CreateWaistEntryCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandValidator.cs",
-      "line": 6
-    },
-    {
-      "name": "DeleteWaistEntryCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteWaistEntryCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "DeleteWaistEntryCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "UpdateWaistEntryCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateWaistEntryCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "UpdateWaistEntryCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandValidator.cs",
-      "line": 6
-    },
-    {
-      "name": "WaistEntryMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Mappings/WaistEntryMappings.cs",
-      "line": 5
-    },
-    {
-      "name": "WaistHistoryPageSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Models/WaistHistoryPageSummaryModel.cs",
-      "line": 6
-    },
-    {
-      "name": "GetLatestWaistEntryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetLatestWaistEntryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetLatestWaistEntryQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetWaistEntriesQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetWaistEntriesQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "GetWaistEntriesQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "GetWaistHistoryPageSummaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetWaistHistoryPageSummaryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "GetWaistSummariesQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetWaistSummariesQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "GetWaistSummariesQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "WaistEntryReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.BodyMetrics/WaistEntries/Services/WaistEntryReadService.cs",
-      "line": 8
-    },
-    {
-      "name": "CreateWeightEntryCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "CreateWeightEntryCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "CreateWeightEntryCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandValidator.cs",
-      "line": 6
-    },
-    {
-      "name": "DeleteWeightEntryCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteWeightEntryCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "DeleteWeightEntryCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "UpdateWeightEntryCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateWeightEntryCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "UpdateWeightEntryCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandValidator.cs",
-      "line": 6
-    },
-    {
-      "name": "WeightEntryMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Mappings/WeightEntryMappings.cs",
-      "line": 5
-    },
-    {
-      "name": "WeightHistoryPageSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Models/WeightHistoryPageSummaryModel.cs",
-      "line": 6
-    },
-    {
-      "name": "GetLatestWeightEntryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetLatestWeightEntryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetLatestWeightEntryQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetWeightEntriesQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetWeightEntriesQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "GetWeightEntriesQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "GetWeightHistoryPageSummaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetWeightHistoryPageSummaryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "GetWeightSummariesQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetWeightSummariesQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "GetWeightSummariesQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "WeightEntryReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs",
       "line": 8
     },
     {
@@ -6481,391 +5606,6 @@
       "line": 5
     },
     {
-      "name": "DeliverTestNotificationCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DeliverTestNotificationCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "MarkAllNotificationsReadCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "MarkAllNotificationsReadCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "MarkNotificationReadCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Notifications/Commands/MarkNotificationRead/MarkNotificationReadCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "MarkNotificationReadCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Notifications/Commands/MarkNotificationRead/MarkNotificationReadCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "RemoveWebPushSubscriptionCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Notifications/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "RemoveWebPushSubscriptionCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Notifications/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "ScheduleTestNotificationCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "ScheduleTestNotificationCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "ScheduleTestNotificationCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "UpdateNotificationPreferencesCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateNotificationPreferencesCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "UpdateNotificationPreferencesCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "UpsertWebPushSubscriptionCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "UpsertWebPushSubscriptionCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "UpsertWebPushSubscriptionCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "INotificationFeedReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Notifications/Common/INotificationFeedReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "INotificationPreferencesService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Notifications/Common/INotificationPreferencesService.cs",
-      "line": 7
-    },
-    {
-      "name": "INotificationUserContextService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Notifications/Common/INotificationUserContextService.cs",
-      "line": 5
-    },
-    {
-      "name": "IWebPushSubscriptionReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Notifications/Common/IWebPushSubscriptionReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "NotificationFactory",
-      "kind": "class",
-      "role": "Factory",
-      "path": "FoodDiary.Application.Notifications/Common/NotificationFactory.cs",
-      "line": 6
-    },
-    {
-      "name": "NotificationIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/Common/NotificationIdParser.cs",
-      "line": 5
-    },
-    {
-      "name": "NotificationPostCommitActions",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/Common/NotificationPostCommitActions.cs",
-      "line": 6
-    },
-    {
-      "name": "NotificationPreferencesUpdateResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/Common/NotificationPreferencesUpdateResult.cs",
-      "line": 5
-    },
-    {
-      "name": "NotificationUserContext",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/Common/NotificationUserContext.cs",
-      "line": 4
-    },
-    {
-      "name": "WebPushEndpointHost",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/Common/WebPushEndpointHost.cs",
-      "line": 2
-    },
-    {
-      "name": "WebPushEndpointPolicy",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/Common/WebPushEndpointPolicy.cs",
-      "line": 4
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/DependencyInjection.cs",
-      "line": 10
-    },
-    {
-      "name": "NotificationMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/Mappings/NotificationMappings.cs",
-      "line": 8
-    },
-    {
-      "name": "NotificationModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/Models/NotificationModel.cs",
-      "line": 2
-    },
-    {
-      "name": "NotificationPreferencesModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/Models/NotificationPreferencesModel.cs",
-      "line": 2
-    },
-    {
-      "name": "ScheduledNotificationModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/Models/ScheduledNotificationModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WebPushConfigurationModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/Models/WebPushConfigurationModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WebPushSubscriptionModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/Models/WebPushSubscriptionModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetNotificationPreferencesQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetNotificationPreferencesQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetNotificationPreferencesQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetNotificationsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Notifications/Queries/GetNotifications/GetNotificationsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetNotificationsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Notifications/Queries/GetNotifications/GetNotificationsQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetUnreadCountQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Notifications/Queries/GetUnreadCount/GetUnreadCountQuery.cs",
-      "line": 5
-    },
-    {
-      "name": "GetUnreadCountQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Notifications/Queries/GetUnreadCount/GetUnreadCountQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetWebPushConfigurationQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Notifications/Queries/GetWebPushConfiguration/GetWebPushConfigurationQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetWebPushConfigurationQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Notifications/Queries/GetWebPushConfiguration/GetWebPushConfigurationQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "GetWebPushSubscriptionsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetWebPushSubscriptionsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "NotificationCleanupService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Notifications/Services/NotificationCleanupService.cs",
-      "line": 5
-    },
-    {
-      "name": "NotificationClientRefreshService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Notifications/Services/NotificationClientRefreshService.cs",
-      "line": 5
-    },
-    {
-      "name": "NotificationFeedReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Notifications/Services/NotificationFeedReadService.cs",
-      "line": 9
-    },
-    {
-      "name": "NotificationPreferencesService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Notifications/Services/NotificationPreferencesService.cs",
-      "line": 10
-    },
-    {
-      "name": "NotificationUserContextService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Notifications/Services/NotificationUserContextService.cs",
-      "line": 8
-    },
-    {
-      "name": "NotificationWriter",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/Services/NotificationWriter.cs",
-      "line": 5
-    },
-    {
-      "name": "TestNotificationDeliveryDispatcher",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Notifications/Services/TestNotificationDeliveryDispatcher.cs",
-      "line": 6
-    },
-    {
-      "name": "WebPushDeliveryAudienceService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Notifications/Services/WebPushDeliveryAudienceService.cs",
-      "line": 10
-    },
-    {
-      "name": "WebPushSubscriptionReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Notifications/Services/WebPushSubscriptionReadService.cs",
-      "line": 11
-    },
-    {
       "name": "CreateProductCommand",
       "kind": "record",
       "role": "Command",
@@ -7804,139 +6544,6 @@
       "line": 8
     },
     {
-      "name": "LinkProductToUsdaFoodCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "LinkProductToUsdaFoodCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "UnlinkProductFromUsdaFoodCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "UnlinkProductFromUsdaFoodCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "IUsdaFoodReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Usda/Common/IUsdaFoodReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IUsdaProductSuggestionReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Usda/Common/IUsdaProductSuggestionReadService.cs",
-      "line": 4
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Usda/DependencyInjection.cs",
-      "line": 9
-    },
-    {
-      "name": "HealthAreaScoreMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Usda/Mappings/HealthAreaScoreMappings.cs",
-      "line": 5
-    },
-    {
-      "name": "GetDailyMicronutrientsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetDailyMicronutrientsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetMicronutrientsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetMicronutrientsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "GetMicronutrientsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "SearchUsdaFoodsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "SearchUsdaFoodsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "SearchUsdaFoodsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "UsdaDailyMicronutrientReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Usda/Services/UsdaDailyMicronutrientReadService.cs",
-      "line": 12
-    },
-    {
-      "name": "UsdaFoodReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Usda/Services/UsdaFoodReadService.cs",
-      "line": 10
-    },
-    {
-      "name": "UsdaProductSuggestionReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Usda/Services/UsdaProductSuggestionReadService.cs",
-      "line": 6
-    },
-    {
       "name": "AcceptAiConsentCommand",
       "kind": "record",
       "role": "Command",
@@ -8819,20 +7426,6 @@
       "line": 10
     },
     {
-      "name": "Notification",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Notifications/Notification.cs",
-      "line": 8
-    },
-    {
-      "name": "WebPushSubscription",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 7
-    },
-    {
       "name": "Product",
       "kind": "class",
       "role": "Entity",
@@ -9428,13 +8021,6 @@
       "line": 4
     },
     {
-      "name": "NotificationId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/NotificationId.cs",
-      "line": 4
-    },
-    {
       "name": "ProductId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -9530,13 +8116,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/WaistGoalId.cs",
-      "line": 4
-    },
-    {
-      "name": "WebPushSubscriptionId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WebPushSubscriptionId.cs",
       "line": 4
     },
     {
@@ -9907,6 +8486,13 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Email.cs",
+      "line": 6
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
       "line": 8
     },
@@ -9937,13 +8523,6 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Moderation.cs",
       "line": 4
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Notifications.cs",
-      "line": 8
     },
     {
       "name": "DependencyInjection",
@@ -10006,13 +8585,6 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 8
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Usda.cs",
       "line": 6
     },
     {
@@ -10240,24 +8812,10 @@
       "line": 7
     },
     {
-      "name": "WaistEntryConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/BodyMetrics/WaistEntryConfiguration.cs",
-      "line": 7
-    },
-    {
       "name": "WaistGoalConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/BodyMetrics/WaistGoalConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "WeightEntryConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/BodyMetrics/WeightEntryConfiguration.cs",
       "line": 7
     },
     {
@@ -10345,27 +8903,6 @@
       "line": 8
     },
     {
-      "name": "NotificationConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Notifications/NotificationConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "NotificationWebPushOutboxMessageConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Notifications/NotificationWebPushOutboxMessageConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "WebPushSubscriptionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Notifications/WebPushSubscriptionConfiguration.cs",
-      "line": 7
-    },
-    {
       "name": "DailyReferenceValueConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -10448,34 +8985,6 @@
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/ShoppingLists/ShoppingListItemSourceConfiguration.cs",
       "line": 7
-    },
-    {
-      "name": "UsdaFoodConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Usda/UsdaFoodConfiguration.cs",
-      "line": 6
-    },
-    {
-      "name": "UsdaFoodNutrientConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Usda/UsdaFoodNutrientConfiguration.cs",
-      "line": 6
-    },
-    {
-      "name": "UsdaFoodPortionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Usda/UsdaFoodPortionConfiguration.cs",
-      "line": 6
-    },
-    {
-      "name": "UsdaNutrientConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Usda/UsdaNutrientConfiguration.cs",
-      "line": 6
     },
     {
       "name": "RoleConfiguration",
@@ -10755,7 +9264,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 16
+      "line": 19
     },
     {
       "name": "FoodDiaryDbContext",
@@ -10861,48 +9370,6 @@
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Meals/MealRepository.cs",
       "line": 9
-    },
-    {
-      "name": "NotificationRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Notifications/NotificationRepository.cs",
-      "line": 8
-    },
-    {
-      "name": "NotificationWebPushOutbox",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Notifications/NotificationWebPushOutbox.cs",
-      "line": 5
-    },
-    {
-      "name": "NotificationWebPushOutboxMessage",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Notifications/NotificationWebPushOutboxMessage.cs",
-      "line": 6
-    },
-    {
-      "name": "NotificationWebPushOutboxProcessor",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Notifications/NotificationWebPushOutboxProcessor.cs",
-      "line": 9
-    },
-    {
-      "name": "WebPushSubscriptionRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Notifications/WebPushSubscriptionRepository.cs",
-      "line": 8
-    },
-    {
-      "name": "IOutboxMessage",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxMessage.cs",
-      "line": 2
     },
     {
       "name": "OutboxClaimBatch",
@@ -11043,27 +9510,6 @@
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Tracking/ExerciseEntryRepository.cs",
       "line": 8
-    },
-    {
-      "name": "WaistEntryRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Tracking/WaistEntryRepository.cs",
-      "line": 8
-    },
-    {
-      "name": "WeightEntryRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Tracking/WeightEntryRepository.cs",
-      "line": 8
-    },
-    {
-      "name": "UsdaFoodRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Usda/UsdaFoodRepository.cs",
-      "line": 7
     },
     {
       "name": "RefreshTokenSessionRepository",
@@ -11315,7 +9761,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 399
+      "line": 400
     },
     {
       "name": "UsdaCsvReader",
@@ -11489,13 +9935,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Integrations/DependencyInjection.Notifications.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Integrations/DependencyInjection.Options.cs",
       "line": 7
     },
@@ -11598,13 +10037,6 @@
       "line": 2
     },
     {
-      "name": "WebPushOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Integrations/Options/WebPushOptions.cs",
-      "line": 6
-    },
-    {
       "name": "YooKassaOptions",
       "kind": "class",
       "role": "Options",
@@ -11624,13 +10056,6 @@
       "role": "Other",
       "path": "FoodDiary.Integrations/Services/IObjectStorageClient.cs",
       "line": 2
-    },
-    {
-      "name": "IWebPushClientAdapter",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Services/IWebPushClientAdapter.cs",
-      "line": 4
     },
     {
       "name": "MailInboxClientAdminMailInboxReader",
@@ -11724,34 +10149,6 @@
       "line": 13
     },
     {
-      "name": "WebPushClientAdapter",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Services/WebPushClientAdapter.cs",
-      "line": 6
-    },
-    {
-      "name": "WebPushEndpointValidationHandler",
-      "kind": "class",
-      "role": "Handler",
-      "path": "FoodDiary.Integrations/Services/WebPushEndpointValidationHandler.cs",
-      "line": 4
-    },
-    {
-      "name": "WebPushNotificationSender",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
-      "line": 12
-    },
-    {
-      "name": "WebPushSocketsHttpHandlerFactory",
-      "kind": "class",
-      "role": "Factory",
-      "path": "FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs",
-      "line": 5
-    },
-    {
       "name": "FitbitClient",
       "kind": "class",
       "role": "Other",
@@ -11763,7 +10160,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 65
+      "line": 66
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -15907,7 +14304,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 52
+      "line": 53
     },
     {
       "name": "ApiTelemetry",
@@ -18519,6 +16916,517 @@
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs",
       "line": 7
+    },
+    {
+      "name": "IWaistEntryReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IWaistEntryReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IWaistEntryReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IWaistEntryRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IWaistEntryWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "WaistEntryErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/WaistEntryErrors.cs",
+      "line": 5
+    },
+    {
+      "name": "WaistEntryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Models/WaistEntryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WaistEntryReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Models/WaistEntryReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WaistEntrySummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Models/WaistEntrySummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "IWeightEntryReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IWeightEntryReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IWeightEntryReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IWeightEntryRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IWeightEntryWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "WeightEntryErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/WeightEntryErrors.cs",
+      "line": 5
+    },
+    {
+      "name": "WeightEntryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WeightEntryReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WeightEntrySummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntrySummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "RequiredIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/Common/RequiredIdParser.cs",
+      "line": 5
+    },
+    {
+      "name": "UtcDateNormalizer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/Common/UtcDateNormalizer.cs",
+      "line": 2
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/DependencyInjection.cs",
+      "line": 10
+    },
+    {
+      "name": "CreateWaistEntryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateWaistEntryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "CreateWaistEntryCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandValidator.cs",
+      "line": 6
+    },
+    {
+      "name": "DeleteWaistEntryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteWaistEntryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "DeleteWaistEntryCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "UpdateWaistEntryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateWaistEntryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "UpdateWaistEntryCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandValidator.cs",
+      "line": 6
+    },
+    {
+      "name": "WaistEntryMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Mappings/WaistEntryMappings.cs",
+      "line": 5
+    },
+    {
+      "name": "WaistHistoryPageSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Models/WaistHistoryPageSummaryModel.cs",
+      "line": 6
+    },
+    {
+      "name": "GetLatestWaistEntryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetLatestWaistEntryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetLatestWaistEntryQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetWaistEntriesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWaistEntriesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "GetWaistEntriesQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "GetWaistHistoryPageSummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWaistHistoryPageSummaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "GetWaistSummariesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWaistSummariesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "GetWaistSummariesQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "WaistEntryReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs",
+      "line": 8
+    },
+    {
+      "name": "CreateWeightEntryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateWeightEntryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "CreateWeightEntryCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandValidator.cs",
+      "line": 6
+    },
+    {
+      "name": "DeleteWeightEntryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteWeightEntryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "DeleteWeightEntryCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "UpdateWeightEntryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateWeightEntryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "UpdateWeightEntryCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandValidator.cs",
+      "line": 6
+    },
+    {
+      "name": "WeightEntryMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Mappings/WeightEntryMappings.cs",
+      "line": 5
+    },
+    {
+      "name": "WeightHistoryPageSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Models/WeightHistoryPageSummaryModel.cs",
+      "line": 6
+    },
+    {
+      "name": "GetLatestWeightEntryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetLatestWeightEntryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetLatestWeightEntryQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetWeightEntriesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWeightEntriesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "GetWeightEntriesQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "GetWeightHistoryPageSummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWeightHistoryPageSummaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "GetWeightSummariesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWeightSummariesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "GetWeightSummariesQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "WeightEntryReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
+      "line": 8
+    },
+    {
+      "name": "BodyMetricsPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Infrastructure/Model/BodyMetricsPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "WaistEntryConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WaistEntryConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "WeightEntryConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WeightEntryConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
+      "line": 8
+    },
+    {
+      "name": "WaistEntryRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs",
+      "line": 9
+    },
+    {
+      "name": "WeightEntryRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/BodyMetrics/Infrastructure/Persistence/WeightEntryRepository.cs",
+      "line": 9
     },
     {
       "name": "ContentReportErrors",
@@ -23512,6 +22420,825 @@
       "line": 8
     },
     {
+      "name": "DietologistInvitationDecisionNotificationPayload",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/DietologistInvitationDecisionNotificationPayload.cs",
+      "line": 2
+    },
+    {
+      "name": "DietologistInvitationReceivedNotificationPayload",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/DietologistInvitationReceivedNotificationPayload.cs",
+      "line": 2
+    },
+    {
+      "name": "EmptyNotificationPayload",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/EmptyNotificationPayload.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingPhaseNotificationPayload",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/FastingPhaseNotificationPayload.cs",
+      "line": 2
+    },
+    {
+      "name": "INotificationCleanupService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationCleanupService.cs",
+      "line": 2
+    },
+    {
+      "name": "INotificationClientRefreshService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs",
+      "line": 4
+    },
+    {
+      "name": "INotificationDeduplicationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationDeduplicationService.cs",
+      "line": 4
+    },
+    {
+      "name": "INotificationLookupRepository",
+      "kind": "interface",
+      "role": "LookupRepository",
+      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationLookupRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "INotificationPusher",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationPusher.cs",
+      "line": 2
+    },
+    {
+      "name": "INotificationReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "INotificationReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "INotificationRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "INotificationTestScheduler",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationTestScheduler.cs",
+      "line": 4
+    },
+    {
+      "name": "INotificationTextRenderer",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationTextRenderer.cs",
+      "line": 2
+    },
+    {
+      "name": "INotificationWebPushOutbox",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationWebPushOutbox.cs",
+      "line": 4
+    },
+    {
+      "name": "INotificationWebPushOutboxProcessor",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationWebPushOutboxProcessor.cs",
+      "line": 2
+    },
+    {
+      "name": "INotificationWriter",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs",
+      "line": 4
+    },
+    {
+      "name": "INotificationWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Notifications/Application/Abstractions/Common/INotificationWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "ITestNotificationDeliveryDispatcher",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/ITestNotificationDeliveryDispatcher.cs",
+      "line": 2
+    },
+    {
+      "name": "IWebPushConfigurationProvider",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/IWebPushConfigurationProvider.cs",
+      "line": 2
+    },
+    {
+      "name": "IWebPushDeliveryAudienceService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Abstractions/Common/IWebPushDeliveryAudienceService.cs",
+      "line": 5
+    },
+    {
+      "name": "IWebPushNotificationSender",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/IWebPushNotificationSender.cs",
+      "line": 4
+    },
+    {
+      "name": "IWebPushSubscriptionReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Notifications/Application/Abstractions/Common/IWebPushSubscriptionReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IWebPushSubscriptionReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Notifications/Application/Abstractions/Common/IWebPushSubscriptionReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IWebPushSubscriptionRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Notifications/Application/Abstractions/Common/IWebPushSubscriptionRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IWebPushSubscriptionWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Notifications/Application/Abstractions/Common/IWebPushSubscriptionWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "NewRecommendationNotificationPayload",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/NewRecommendationNotificationPayload.cs",
+      "line": 2
+    },
+    {
+      "name": "NotificationCleanupPolicy",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationCleanupPolicy.cs",
+      "line": 2
+    },
+    {
+      "name": "NotificationErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "NotificationPayloads",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationPayloads.cs",
+      "line": 2
+    },
+    {
+      "name": "NotificationPayloadSerializer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationPayloadSerializer.cs",
+      "line": 4
+    },
+    {
+      "name": "NotificationTargetUrlResolver",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationTargetUrlResolver.cs",
+      "line": 2
+    },
+    {
+      "name": "NotificationText",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationText.cs",
+      "line": 2
+    },
+    {
+      "name": "NotificationTypes",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/NotificationTypes.cs",
+      "line": 2
+    },
+    {
+      "name": "ScheduledNotificationData",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/ScheduledNotificationData.cs",
+      "line": 2
+    },
+    {
+      "name": "WebPushClientConfiguration",
+      "kind": "record",
+      "role": "Configuration",
+      "path": "Modules/Notifications/Application/Abstractions/Common/WebPushClientConfiguration.cs",
+      "line": 2
+    },
+    {
+      "name": "WebPushDeliveryLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/WebPushDeliveryLimits.cs",
+      "line": 2
+    },
+    {
+      "name": "WebPushSubscriptionData",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Common/WebPushSubscriptionData.cs",
+      "line": 2
+    },
+    {
+      "name": "NotificationReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Models/NotificationReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WebPushDeliverySubscription",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Models/WebPushDeliverySubscription.cs",
+      "line": 2
+    },
+    {
+      "name": "WebPushSubscriptionReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Abstractions/Models/WebPushSubscriptionReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DeliverTestNotificationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Notifications/Application/Commands/DeliverTestNotification/DeliverTestNotificationCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeliverTestNotificationCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Notifications/Application/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "MarkAllNotificationsReadCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Notifications/Application/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "MarkAllNotificationsReadCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Notifications/Application/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "MarkNotificationReadCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Notifications/Application/Commands/MarkNotificationRead/MarkNotificationReadCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "MarkNotificationReadCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Notifications/Application/Commands/MarkNotificationRead/MarkNotificationReadCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "RemoveWebPushSubscriptionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Notifications/Application/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "RemoveWebPushSubscriptionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Notifications/Application/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "ScheduleTestNotificationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Notifications/Application/Commands/ScheduleTestNotification/ScheduleTestNotificationCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ScheduleTestNotificationCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Notifications/Application/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "ScheduleTestNotificationCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Notifications/Application/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "UpdateNotificationPreferencesCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Notifications/Application/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateNotificationPreferencesCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Notifications/Application/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "UpdateNotificationPreferencesCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Notifications/Application/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "UpsertWebPushSubscriptionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Notifications/Application/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "UpsertWebPushSubscriptionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Notifications/Application/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "UpsertWebPushSubscriptionCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Notifications/Application/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "INotificationFeedReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Common/INotificationFeedReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "INotificationPreferencesService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Common/INotificationPreferencesService.cs",
+      "line": 7
+    },
+    {
+      "name": "INotificationUserContextService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Common/INotificationUserContextService.cs",
+      "line": 5
+    },
+    {
+      "name": "IWebPushSubscriptionReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Common/IWebPushSubscriptionReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "NotificationFactory",
+      "kind": "class",
+      "role": "Factory",
+      "path": "Modules/Notifications/Application/Common/NotificationFactory.cs",
+      "line": 6
+    },
+    {
+      "name": "NotificationIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Common/NotificationIdParser.cs",
+      "line": 5
+    },
+    {
+      "name": "NotificationPostCommitActions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Common/NotificationPostCommitActions.cs",
+      "line": 6
+    },
+    {
+      "name": "NotificationPreferencesUpdateResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Common/NotificationPreferencesUpdateResult.cs",
+      "line": 5
+    },
+    {
+      "name": "NotificationUserContext",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Common/NotificationUserContext.cs",
+      "line": 4
+    },
+    {
+      "name": "WebPushEndpointHost",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Common/WebPushEndpointHost.cs",
+      "line": 2
+    },
+    {
+      "name": "WebPushEndpointPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Common/WebPushEndpointPolicy.cs",
+      "line": 4
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/DependencyInjection.cs",
+      "line": 10
+    },
+    {
+      "name": "NotificationMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Mappings/NotificationMappings.cs",
+      "line": 8
+    },
+    {
+      "name": "NotificationModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Models/NotificationModel.cs",
+      "line": 2
+    },
+    {
+      "name": "NotificationPreferencesModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Models/NotificationPreferencesModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ScheduledNotificationModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Models/ScheduledNotificationModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WebPushConfigurationModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Models/WebPushConfigurationModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WebPushSubscriptionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Models/WebPushSubscriptionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetNotificationPreferencesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Notifications/Application/Queries/GetNotificationPreferences/GetNotificationPreferencesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetNotificationPreferencesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Notifications/Application/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetNotificationPreferencesQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Notifications/Application/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetNotificationsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Notifications/Application/Queries/GetNotifications/GetNotificationsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetNotificationsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Notifications/Application/Queries/GetNotifications/GetNotificationsQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetUnreadCountQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Notifications/Application/Queries/GetUnreadCount/GetUnreadCountQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetUnreadCountQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Notifications/Application/Queries/GetUnreadCount/GetUnreadCountQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetWebPushConfigurationQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Notifications/Application/Queries/GetWebPushConfiguration/GetWebPushConfigurationQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWebPushConfigurationQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Notifications/Application/Queries/GetWebPushConfiguration/GetWebPushConfigurationQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetWebPushSubscriptionsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Notifications/Application/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWebPushSubscriptionsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Notifications/Application/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "NotificationCleanupService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Services/NotificationCleanupService.cs",
+      "line": 5
+    },
+    {
+      "name": "NotificationClientRefreshService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Services/NotificationClientRefreshService.cs",
+      "line": 5
+    },
+    {
+      "name": "NotificationFeedReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Services/NotificationFeedReadService.cs",
+      "line": 9
+    },
+    {
+      "name": "NotificationPreferencesService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Services/NotificationPreferencesService.cs",
+      "line": 10
+    },
+    {
+      "name": "NotificationUserContextService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Services/NotificationUserContextService.cs",
+      "line": 8
+    },
+    {
+      "name": "NotificationWriter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Services/NotificationWriter.cs",
+      "line": 5
+    },
+    {
+      "name": "TestNotificationDeliveryDispatcher",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Application/Services/TestNotificationDeliveryDispatcher.cs",
+      "line": 6
+    },
+    {
+      "name": "WebPushDeliveryAudienceService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Services/WebPushDeliveryAudienceService.cs",
+      "line": 10
+    },
+    {
+      "name": "WebPushSubscriptionReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Notifications/Application/Services/WebPushSubscriptionReadService.cs",
+      "line": 11
+    },
+    {
+      "name": "Notification",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/Notification.cs",
+      "line": 8
+    },
+    {
+      "name": "WebPushSubscription",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
+      "line": 7
+    },
+    {
+      "name": "NotificationId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Notifications/Domain/ValueObjects/Ids/NotificationId.cs",
+      "line": 4
+    },
+    {
+      "name": "WebPushSubscriptionId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Notifications/Domain/ValueObjects/Ids/WebPushSubscriptionId.cs",
+      "line": 4
+    },
+    {
+      "name": "NotificationConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Notifications/Infrastructure/Model/NotificationConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "NotificationsPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Infrastructure/Model/NotificationsPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "NotificationWebPushOutboxMessage",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Infrastructure/Model/NotificationWebPushOutboxMessage.cs",
+      "line": 6
+    },
+    {
+      "name": "NotificationWebPushOutboxMessageConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Notifications/Infrastructure/Model/NotificationWebPushOutboxMessageConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "WebPushSubscriptionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Notifications/Infrastructure/Model/WebPushSubscriptionConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
+      "line": 9
+    },
+    {
+      "name": "WebPushOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Notifications/Infrastructure/Options/WebPushOptions.cs",
+      "line": 6
+    },
+    {
+      "name": "WebPushUriValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Notifications/Infrastructure/Options/WebPushUriValidator.cs",
+      "line": 2
+    },
+    {
+      "name": "NotificationRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Notifications/Infrastructure/Persistence/NotificationRepository.cs",
+      "line": 8
+    },
+    {
+      "name": "NotificationWebPushOutbox",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutbox.cs",
+      "line": 5
+    },
+    {
+      "name": "NotificationWebPushOutboxProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutboxProcessor.cs",
+      "line": 9
+    },
+    {
+      "name": "WebPushSubscriptionRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Notifications/Infrastructure/Persistence/WebPushSubscriptionRepository.cs",
+      "line": 8
+    },
+    {
+      "name": "IWebPushClientAdapter",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Notifications/Infrastructure/Services/IWebPushClientAdapter.cs",
+      "line": 4
+    },
+    {
+      "name": "WebPushClientAdapter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Infrastructure/Services/WebPushClientAdapter.cs",
+      "line": 6
+    },
+    {
+      "name": "WebPushEndpointValidationHandler",
+      "kind": "class",
+      "role": "Handler",
+      "path": "Modules/Notifications/Infrastructure/Services/WebPushEndpointValidationHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "WebPushNotificationSender",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
+      "line": 12
+    },
+    {
+      "name": "WebPushSocketsHttpHandlerFactory",
+      "kind": "class",
+      "role": "Factory",
+      "path": "Modules/Notifications/Infrastructure/Services/WebPushSocketsHttpHandlerFactory.cs",
+      "line": 5
+    },
+    {
       "name": "IOpenFoodFactsProductCacheReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
@@ -23796,6 +23523,307 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Tdee/Application/Services/TdeeUserProfileService.cs",
+      "line": 8
+    },
+    {
+      "name": "IUsdaDailyMicronutrientReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Usda/Application/Abstractions/Common/IUsdaDailyMicronutrientReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IUsdaFoodReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Usda/Application/Abstractions/Common/IUsdaFoodReadModelRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IUsdaFoodReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Usda/Application/Abstractions/Common/IUsdaFoodReadRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IUsdaFoodRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Usda/Application/Abstractions/Common/IUsdaFoodRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IUsdaFoodSearchService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs",
+      "line": 4
+    },
+    {
+      "name": "UsdaErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Usda/Application/Abstractions/Common/UsdaErrors.cs",
+      "line": 5
+    },
+    {
+      "name": "LinkProductToUsdaFoodCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Usda/Application/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "LinkProductToUsdaFoodCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Usda/Application/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "UnlinkProductFromUsdaFoodCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Usda/Application/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "UnlinkProductFromUsdaFoodCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Usda/Application/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "IUsdaFoodReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Usda/Application/Common/IUsdaFoodReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IUsdaProductSuggestionReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Usda/Application/Common/IUsdaProductSuggestionReadService.cs",
+      "line": 4
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Usda/Application/DependencyInjection.cs",
+      "line": 9
+    },
+    {
+      "name": "HealthAreaScoreMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Usda/Application/Mappings/HealthAreaScoreMappings.cs",
+      "line": 5
+    },
+    {
+      "name": "GetDailyMicronutrientsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Usda/Application/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetDailyMicronutrientsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Usda/Application/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetMicronutrientsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Usda/Application/Queries/GetMicronutrients/GetMicronutrientsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetMicronutrientsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Usda/Application/Queries/GetMicronutrients/GetMicronutrientsQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetMicronutrientsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Usda/Application/Queries/GetMicronutrients/GetMicronutrientsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "SearchUsdaFoodsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Usda/Application/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "SearchUsdaFoodsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Usda/Application/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "SearchUsdaFoodsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Usda/Application/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "UsdaDailyMicronutrientReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Usda/Application/Services/UsdaDailyMicronutrientReadService.cs",
+      "line": 12
+    },
+    {
+      "name": "UsdaFoodReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Usda/Application/Services/UsdaFoodReadService.cs",
+      "line": 10
+    },
+    {
+      "name": "UsdaProductSuggestionReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Usda/Application/Services/UsdaProductSuggestionReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "DailyMicronutrientModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Contracts/Models/DailyMicronutrientModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DailyMicronutrientSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Contracts/Models/DailyMicronutrientSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "HealthAreaScoreModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Contracts/Models/HealthAreaScoreModel.cs",
+      "line": 2
+    },
+    {
+      "name": "HealthAreaScoresModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Contracts/Models/HealthAreaScoresModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MicronutrientModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Contracts/Models/MicronutrientModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UsdaDailyReferenceValueReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Contracts/Models/UsdaDailyReferenceValueReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UsdaFoodDetailModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Contracts/Models/UsdaFoodDetailModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UsdaFoodModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Contracts/Models/UsdaFoodModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UsdaFoodPortionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Contracts/Models/UsdaFoodPortionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UsdaFoodReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Contracts/Models/UsdaFoodReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UsdaNutrientReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Contracts/Models/UsdaNutrientReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UsdaFoodConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Usda/Infrastructure/Model/Configurations/Usda/UsdaFoodConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "UsdaFoodNutrientConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Usda/Infrastructure/Model/Configurations/Usda/UsdaFoodNutrientConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "UsdaFoodPortionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Usda/Infrastructure/Model/Configurations/Usda/UsdaFoodPortionConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "UsdaNutrientConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Usda/Infrastructure/Model/Configurations/Usda/UsdaNutrientConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "UsdaPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Usda/Infrastructure/Model/UsdaPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Usda/Infrastructure/ModuleRegistration.cs",
+      "line": 7
+    },
+    {
+      "name": "UsdaFoodRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Usda/Infrastructure/Persistence/UsdaFoodRepository.cs",
       "line": 8
     },
     {
@@ -24602,6 +24630,13 @@
       "role": "Other",
       "path": "Shared/FoodDiary.Mediator/Unit.cs",
       "line": 6
+    },
+    {
+      "name": "IOutboxMessage",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs",
+      "line": 2
     },
     {
       "name": "Error",
@@ -25617,84 +25652,84 @@
       "interface": "INotification",
       "interfacePath": "Shared/FoodDiary.Mediator/INotification.cs",
       "implementation": "Notification",
-      "implementationPath": "FoodDiary.Domain/Entities/Notifications/Notification.cs",
+      "implementationPath": "Modules/Notifications/Domain/Entities/Notifications/Notification.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "INotificationCleanupService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationCleanupService.cs",
+      "interfacePath": "Modules/Notifications/Application/Abstractions/Common/INotificationCleanupService.cs",
       "implementation": "NotificationCleanupService",
-      "implementationPath": "FoodDiary.Application.Notifications/Services/NotificationCleanupService.cs",
+      "implementationPath": "Modules/Notifications/Application/Services/NotificationCleanupService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "INotificationClientRefreshService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationClientRefreshService.cs",
+      "interfacePath": "Modules/Notifications/Application/Abstractions/Common/INotificationClientRefreshService.cs",
       "implementation": "NotificationClientRefreshService",
-      "implementationPath": "FoodDiary.Application.Notifications/Services/NotificationClientRefreshService.cs",
+      "implementationPath": "Modules/Notifications/Application/Services/NotificationClientRefreshService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "INotificationFeedReadService",
-      "interfacePath": "FoodDiary.Application.Notifications/Common/INotificationFeedReadService.cs",
+      "interfacePath": "Modules/Notifications/Application/Common/INotificationFeedReadService.cs",
       "implementation": "NotificationFeedReadService",
-      "implementationPath": "FoodDiary.Application.Notifications/Services/NotificationFeedReadService.cs",
+      "implementationPath": "Modules/Notifications/Application/Services/NotificationFeedReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "INotificationPreferencesService",
-      "interfacePath": "FoodDiary.Application.Notifications/Common/INotificationPreferencesService.cs",
+      "interfacePath": "Modules/Notifications/Application/Common/INotificationPreferencesService.cs",
       "implementation": "NotificationPreferencesService",
-      "implementationPath": "FoodDiary.Application.Notifications/Services/NotificationPreferencesService.cs",
+      "implementationPath": "Modules/Notifications/Application/Services/NotificationPreferencesService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "INotificationPusher",
-      "interfacePath": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationPusher.cs",
+      "interfacePath": "Modules/Notifications/Application/Abstractions/Common/INotificationPusher.cs",
       "implementation": "NotificationPusher",
       "implementationPath": "FoodDiary.Presentation.Api/Services/NotificationPusher.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "INotificationRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationRepository.cs",
+      "interfacePath": "Modules/Notifications/Application/Abstractions/Common/INotificationRepository.cs",
       "implementation": "NotificationRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Notifications/NotificationRepository.cs",
+      "implementationPath": "Modules/Notifications/Infrastructure/Persistence/NotificationRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "INotificationTestScheduler",
-      "interfacePath": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationTestScheduler.cs",
+      "interfacePath": "Modules/Notifications/Application/Abstractions/Common/INotificationTestScheduler.cs",
       "implementation": "NotificationTestScheduler",
       "implementationPath": "FoodDiary.Web.Api/Services/NotificationTestScheduler.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "INotificationUserContextService",
-      "interfacePath": "FoodDiary.Application.Notifications/Common/INotificationUserContextService.cs",
+      "interfacePath": "Modules/Notifications/Application/Common/INotificationUserContextService.cs",
       "implementation": "NotificationUserContextService",
-      "implementationPath": "FoodDiary.Application.Notifications/Services/NotificationUserContextService.cs",
+      "implementationPath": "Modules/Notifications/Application/Services/NotificationUserContextService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "INotificationWebPushOutbox",
-      "interfacePath": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWebPushOutbox.cs",
+      "interfacePath": "Modules/Notifications/Application/Abstractions/Common/INotificationWebPushOutbox.cs",
       "implementation": "NotificationWebPushOutbox",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Notifications/NotificationWebPushOutbox.cs",
+      "implementationPath": "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutbox.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "INotificationWebPushOutboxProcessor",
-      "interfacePath": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWebPushOutboxProcessor.cs",
+      "interfacePath": "Modules/Notifications/Application/Abstractions/Common/INotificationWebPushOutboxProcessor.cs",
       "implementation": "NotificationWebPushOutboxProcessor",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Notifications/NotificationWebPushOutboxProcessor.cs",
+      "implementationPath": "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutboxProcessor.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "INotificationWriter",
-      "interfacePath": "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs",
+      "interfacePath": "Modules/Notifications/Application/Abstractions/Common/INotificationWriter.cs",
       "implementation": "NotificationWriter",
-      "implementationPath": "FoodDiary.Application.Notifications/Services/NotificationWriter.cs",
+      "implementationPath": "Modules/Notifications/Application/Services/NotificationWriter.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25979,44 +26014,44 @@
     },
     {
       "interface": "ITestNotificationDeliveryDispatcher",
-      "interfacePath": "FoodDiary.Application.Abstractions/Notifications/Common/ITestNotificationDeliveryDispatcher.cs",
+      "interfacePath": "Modules/Notifications/Application/Abstractions/Common/ITestNotificationDeliveryDispatcher.cs",
       "implementation": "TestNotificationDeliveryDispatcher",
-      "implementationPath": "FoodDiary.Application.Notifications/Services/TestNotificationDeliveryDispatcher.cs",
+      "implementationPath": "Modules/Notifications/Application/Services/TestNotificationDeliveryDispatcher.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUsdaDailyMicronutrientReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Usda/Common/IUsdaDailyMicronutrientReadService.cs",
+      "interfacePath": "Modules/Usda/Application/Abstractions/Common/IUsdaDailyMicronutrientReadService.cs",
       "implementation": "UsdaDailyMicronutrientReadService",
-      "implementationPath": "FoodDiary.Application.Usda/Services/UsdaDailyMicronutrientReadService.cs",
+      "implementationPath": "Modules/Usda/Application/Services/UsdaDailyMicronutrientReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUsdaFoodReadService",
-      "interfacePath": "FoodDiary.Application.Usda/Common/IUsdaFoodReadService.cs",
+      "interfacePath": "Modules/Usda/Application/Common/IUsdaFoodReadService.cs",
       "implementation": "UsdaFoodReadService",
-      "implementationPath": "FoodDiary.Application.Usda/Services/UsdaFoodReadService.cs",
+      "implementationPath": "Modules/Usda/Application/Services/UsdaFoodReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUsdaFoodRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodRepository.cs",
+      "interfacePath": "Modules/Usda/Application/Abstractions/Common/IUsdaFoodRepository.cs",
       "implementation": "UsdaFoodRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Usda/UsdaFoodRepository.cs",
+      "implementationPath": "Modules/Usda/Infrastructure/Persistence/UsdaFoodRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUsdaFoodSearchService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodSearchService.cs",
+      "interfacePath": "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs",
       "implementation": "UsdaFoodSearchService",
       "implementationPath": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUsdaProductSuggestionReadService",
-      "interfacePath": "FoodDiary.Application.Usda/Common/IUsdaProductSuggestionReadService.cs",
+      "interfacePath": "Modules/Usda/Application/Common/IUsdaProductSuggestionReadService.cs",
       "implementation": "UsdaProductSuggestionReadService",
-      "implementationPath": "FoodDiary.Application.Usda/Services/UsdaProductSuggestionReadService.cs",
+      "implementationPath": "Modules/Usda/Application/Services/UsdaProductSuggestionReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26147,16 +26182,16 @@
     },
     {
       "interface": "IWaistEntryReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/WaistEntries/Common/IWaistEntryReadService.cs",
+      "interfacePath": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadService.cs",
       "implementation": "WaistEntryReadService",
-      "implementationPath": "FoodDiary.Application.BodyMetrics/WaistEntries/Services/WaistEntryReadService.cs",
+      "implementationPath": "Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IWaistEntryRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/WaistEntries/Common/IWaistEntryRepository.cs",
+      "interfacePath": "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs",
       "implementation": "WaistEntryRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Tracking/WaistEntryRepository.cs",
+      "implementationPath": "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26196,37 +26231,37 @@
     },
     {
       "interface": "IWebPushClientAdapter",
-      "interfacePath": "FoodDiary.Integrations/Services/IWebPushClientAdapter.cs",
+      "interfacePath": "Modules/Notifications/Infrastructure/Services/IWebPushClientAdapter.cs",
       "implementation": "WebPushClientAdapter",
-      "implementationPath": "FoodDiary.Integrations/Services/WebPushClientAdapter.cs",
+      "implementationPath": "Modules/Notifications/Infrastructure/Services/WebPushClientAdapter.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IWebPushDeliveryAudienceService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Notifications/Common/IWebPushDeliveryAudienceService.cs",
+      "interfacePath": "Modules/Notifications/Application/Abstractions/Common/IWebPushDeliveryAudienceService.cs",
       "implementation": "WebPushDeliveryAudienceService",
-      "implementationPath": "FoodDiary.Application.Notifications/Services/WebPushDeliveryAudienceService.cs",
+      "implementationPath": "Modules/Notifications/Application/Services/WebPushDeliveryAudienceService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IWebPushNotificationSender",
-      "interfacePath": "FoodDiary.Application.Abstractions/Notifications/Common/IWebPushNotificationSender.cs",
+      "interfacePath": "Modules/Notifications/Application/Abstractions/Common/IWebPushNotificationSender.cs",
       "implementation": "WebPushNotificationSender",
-      "implementationPath": "FoodDiary.Integrations/Services/WebPushNotificationSender.cs",
+      "implementationPath": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IWebPushSubscriptionReadService",
-      "interfacePath": "FoodDiary.Application.Notifications/Common/IWebPushSubscriptionReadService.cs",
+      "interfacePath": "Modules/Notifications/Application/Common/IWebPushSubscriptionReadService.cs",
       "implementation": "WebPushSubscriptionReadService",
-      "implementationPath": "FoodDiary.Application.Notifications/Services/WebPushSubscriptionReadService.cs",
+      "implementationPath": "Modules/Notifications/Application/Services/WebPushSubscriptionReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IWebPushSubscriptionRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Notifications/Common/IWebPushSubscriptionRepository.cs",
+      "interfacePath": "Modules/Notifications/Application/Abstractions/Common/IWebPushSubscriptionRepository.cs",
       "implementation": "WebPushSubscriptionRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Notifications/WebPushSubscriptionRepository.cs",
+      "implementationPath": "Modules/Notifications/Infrastructure/Persistence/WebPushSubscriptionRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26259,16 +26294,16 @@
     },
     {
       "interface": "IWeightEntryReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
+      "interfacePath": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
       "implementation": "WeightEntryReadService",
-      "implementationPath": "FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs",
+      "implementationPath": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IWeightEntryRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryRepository.cs",
+      "interfacePath": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs",
       "implementation": "WeightEntryRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Tracking/WeightEntryRepository.cs",
+      "implementationPath": "Modules/BodyMetrics/Infrastructure/Persistence/WeightEntryRepository.cs",
       "confidence": "naming-convention"
     }
   ],
@@ -26356,20 +26391,6 @@
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Ai/DependencyInjection.cs",
       "line": 19
-    },
-    {
-      "service": "IWeightEntryReadService",
-      "implementation": "WeightEntryReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.BodyMetrics/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IWaistEntryReadService",
-      "implementation": "WaistEntryReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.BodyMetrics/DependencyInjection.cs",
-      "line": 18
     },
     {
       "service": "IDashboardStatisticsReadService",
@@ -26526,69 +26547,6 @@
       "line": 23
     },
     {
-      "service": "INotificationCleanupService",
-      "implementation": "NotificationCleanupService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Notifications/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "INotificationClientRefreshService",
-      "implementation": "NotificationClientRefreshService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Notifications/DependencyInjection.cs",
-      "line": 18
-    },
-    {
-      "service": "INotificationPreferencesService",
-      "implementation": "NotificationPreferencesService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Notifications/DependencyInjection.cs",
-      "line": 21
-    },
-    {
-      "service": "INotificationFeedReadService",
-      "implementation": "NotificationFeedReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Notifications/DependencyInjection.cs",
-      "line": 22
-    },
-    {
-      "service": "IWebPushSubscriptionReadService",
-      "implementation": "WebPushSubscriptionReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Notifications/DependencyInjection.cs",
-      "line": 23
-    },
-    {
-      "service": "IWebPushDeliveryAudienceService",
-      "implementation": "WebPushDeliveryAudienceService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Notifications/DependencyInjection.cs",
-      "line": 26
-    },
-    {
-      "service": "INotificationUserContextService",
-      "implementation": "NotificationUserContextService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Notifications/DependencyInjection.cs",
-      "line": 27
-    },
-    {
-      "service": "INotificationWriter",
-      "implementation": "NotificationWriter",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Notifications/DependencyInjection.cs",
-      "line": 28
-    },
-    {
-      "service": "ITestNotificationDeliveryDispatcher",
-      "implementation": "TestNotificationDeliveryDispatcher",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Notifications/DependencyInjection.cs",
-      "line": 29
-    },
-    {
       "service": "IProductSearchSuggestionProvider",
       "implementation": "OpenFoodFactsProductSearchSuggestionProvider",
       "lifetime": "Scoped",
@@ -26642,27 +26600,6 @@
       "implementation": "PostCommitActionQueue",
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Runtime/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IUsdaDailyMicronutrientReadService",
-      "implementation": "UsdaDailyMicronutrientReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Usda/DependencyInjection.cs",
-      "line": 15
-    },
-    {
-      "service": "IUsdaFoodReadService",
-      "implementation": "UsdaFoodReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Usda/DependencyInjection.cs",
-      "line": 16
-    },
-    {
-      "service": "IUsdaProductSuggestionReadService",
-      "implementation": "UsdaProductSuggestionReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Usda/DependencyInjection.cs",
       "line": 17
     },
     {
@@ -26855,6 +26792,20 @@
       "line": 21
     },
     {
+      "service": "IEmailOutbox",
+      "implementation": "EmailOutbox",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Email.cs",
+      "line": 9
+    },
+    {
+      "service": "IEmailOutboxProcessor",
+      "implementation": "EmailOutboxProcessor",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Email.cs",
+      "line": 10
+    },
+    {
       "service": "IMealPlanRepository",
       "implementation": "MealPlanRepository",
       "lifetime": "Scoped",
@@ -26867,48 +26818,6 @@
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Meals.cs",
       "line": 9
-    },
-    {
-      "service": "INotificationRepository",
-      "implementation": "NotificationRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Notifications.cs",
-      "line": 11
-    },
-    {
-      "service": "IEmailOutbox",
-      "implementation": "EmailOutbox",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Notifications.cs",
-      "line": 16
-    },
-    {
-      "service": "IEmailOutboxProcessor",
-      "implementation": "EmailOutboxProcessor",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Notifications.cs",
-      "line": 17
-    },
-    {
-      "service": "INotificationWebPushOutbox",
-      "implementation": "NotificationWebPushOutbox",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Notifications.cs",
-      "line": 18
-    },
-    {
-      "service": "INotificationWebPushOutboxProcessor",
-      "implementation": "NotificationWebPushOutboxProcessor",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Notifications.cs",
-      "line": 19
-    },
-    {
-      "service": "IWebPushSubscriptionRepository",
-      "implementation": "WebPushSubscriptionRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Notifications.cs",
-      "line": 20
     },
     {
       "service": "IUnitOfWork",
@@ -27030,31 +26939,10 @@
       "line": 9
     },
     {
-      "service": "IWeightEntryRepository",
-      "implementation": "WeightEntryRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 11
-    },
-    {
-      "service": "IWaistEntryRepository",
-      "implementation": "WaistEntryRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 15
-    },
-    {
       "service": "IExerciseEntryRepository",
       "implementation": "ExerciseEntryRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 19
-    },
-    {
-      "service": "IUsdaFoodRepository",
-      "implementation": "UsdaFoodRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Usda.cs",
       "line": 9
     },
     {
@@ -27132,14 +27020,14 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 128
+      "line": 129
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 129
+      "line": 130
     },
     {
       "service": "IGoogleTokenValidator",
@@ -27191,20 +27079,6 @@
       "line": 42
     },
     {
-      "service": "IWebPushNotificationSender",
-      "implementation": "WebPushNotificationSender",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Integrations/DependencyInjection.Notifications.cs",
-      "line": 15
-    },
-    {
-      "service": "IWebPushConfigurationProvider",
-      "implementation": "WebPushNotificationSender",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Integrations/DependencyInjection.Notifications.cs",
-      "line": 16
-    },
-    {
       "service": "IObjectStorageClient",
       "implementation": "S3ObjectStorageClient",
       "lifetime": "Singleton",
@@ -27216,7 +27090,7 @@
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 57
+      "line": 58
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -27293,21 +27167,21 @@
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 105
+      "line": 106
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 106
+      "line": 107
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 138
+      "line": 139
     },
     {
       "service": "IMailInboxReadinessChecker",
@@ -27392,6 +27266,20 @@
       "lifetime": "Scoped",
       "path": "Modules/Billing/Application/DependencyInjection.cs",
       "line": 26
+    },
+    {
+      "service": "IWeightEntryReadService",
+      "implementation": "WeightEntryReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/BodyMetrics/Application/DependencyInjection.cs",
+      "line": 17
+    },
+    {
+      "service": "IWaistEntryReadService",
+      "implementation": "WaistEntryReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/BodyMetrics/Application/DependencyInjection.cs",
+      "line": 18
     },
     {
       "service": "IContentReportAdministrationService",
@@ -27667,6 +27555,69 @@
       "line": 19
     },
     {
+      "service": "INotificationCleanupService",
+      "implementation": "NotificationCleanupService",
+      "lifetime": "Scoped",
+      "path": "Modules/Notifications/Application/DependencyInjection.cs",
+      "line": 17
+    },
+    {
+      "service": "INotificationClientRefreshService",
+      "implementation": "NotificationClientRefreshService",
+      "lifetime": "Scoped",
+      "path": "Modules/Notifications/Application/DependencyInjection.cs",
+      "line": 18
+    },
+    {
+      "service": "INotificationPreferencesService",
+      "implementation": "NotificationPreferencesService",
+      "lifetime": "Scoped",
+      "path": "Modules/Notifications/Application/DependencyInjection.cs",
+      "line": 21
+    },
+    {
+      "service": "INotificationFeedReadService",
+      "implementation": "NotificationFeedReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Notifications/Application/DependencyInjection.cs",
+      "line": 22
+    },
+    {
+      "service": "IWebPushSubscriptionReadService",
+      "implementation": "WebPushSubscriptionReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Notifications/Application/DependencyInjection.cs",
+      "line": 23
+    },
+    {
+      "service": "IWebPushDeliveryAudienceService",
+      "implementation": "WebPushDeliveryAudienceService",
+      "lifetime": "Scoped",
+      "path": "Modules/Notifications/Application/DependencyInjection.cs",
+      "line": 26
+    },
+    {
+      "service": "INotificationUserContextService",
+      "implementation": "NotificationUserContextService",
+      "lifetime": "Scoped",
+      "path": "Modules/Notifications/Application/DependencyInjection.cs",
+      "line": 27
+    },
+    {
+      "service": "INotificationWriter",
+      "implementation": "NotificationWriter",
+      "lifetime": "Scoped",
+      "path": "Modules/Notifications/Application/DependencyInjection.cs",
+      "line": 28
+    },
+    {
+      "service": "ITestNotificationDeliveryDispatcher",
+      "implementation": "TestNotificationDeliveryDispatcher",
+      "lifetime": "Scoped",
+      "path": "Modules/Notifications/Application/DependencyInjection.cs",
+      "line": 29
+    },
+    {
       "service": "IOpenFoodFactsCachedProductSearch",
       "implementation": "OpenFoodFactsCachedProductSearch",
       "lifetime": "Scoped",
@@ -27679,6 +27630,27 @@
       "lifetime": "Scoped",
       "path": "Modules/Tdee/Application/DependencyInjection.cs",
       "line": 14
+    },
+    {
+      "service": "IUsdaDailyMicronutrientReadService",
+      "implementation": "UsdaDailyMicronutrientReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Usda/Application/DependencyInjection.cs",
+      "line": 15
+    },
+    {
+      "service": "IUsdaFoodReadService",
+      "implementation": "UsdaFoodReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Usda/Application/DependencyInjection.cs",
+      "line": 16
+    },
+    {
+      "service": "IUsdaProductSuggestionReadService",
+      "implementation": "UsdaProductSuggestionReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Usda/Application/DependencyInjection.cs",
+      "line": 17
     },
     {
       "service": "IWearableReadService",

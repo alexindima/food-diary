@@ -11,10 +11,9 @@ public static partial class DependencyInjection {
         services.AddShoppingListPersistence();
         services.AddTrackingPersistence();
         services.AddAiPersistence();
-        services.AddNotificationPersistence();
+        services.AddEmailPersistence();
         services.AddLearningPersistence();
         services.AddRecipeInteractionPersistence();
         services.AddModerationPersistence();
-        services.AddUsdaPersistence();
     }
 }

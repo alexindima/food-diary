@@ -48,7 +48,7 @@ This map covers the governed business owners and composed read modules in the pr
 | Favorites | user-to-product, user-to-recipe and user-to-meal favorites | favorite commands and read services grouped in `FoodDiary.Application.Favorites` | Products/Recipes lookup APIs, Meal Diary source-read API, Users access |
 | Dietologist Relationships | invitations, permissions and recommendations | relationship/recommendation commands and read services | Users directory/roles, Notifications writer/refresh, Email |
 | RecipeCommunity | recipe comments and likes | comment commands/read service and like toggle/status grouped in `FoodDiary.Application.RecipeCommunity` | Recipes access API, Users, Notifications writer |
-| Body Metrics | `WeightEntry` and `WaistEntry` measurements | measurement commands, `IWeightEntryReadService`, `IWaistEntryReadService` | Users access; Dashboard, Weekly Check-In and TDEE as read-only projection consumers |
+| Body Metrics | `WeightEntry` and `WaistEntry` measurements; entities/IDs/User navigations remain central as a CLR/EF compatibility seam | measurement commands and read capabilities under `Modules/BodyMetrics/Application`; repository ports in Application/Abstractions and persistence under Infrastructure | Users access; Dashboard, Statistics, Weekly Check-In and TDEE as read-only projection consumers; central Dashboard, Users and cleanup projections retain their approved seams |
 | Hydration | `HydrationEntry` and hydration totals; entity/id remain in central Domain as a documented `User.HydrationEntries` compatibility seam | hydration commands and goal capability in `Modules/Hydration/Application`; stable `IHydrationEntryReadService` in Contracts | Users access; Dashboard and Weekly Check-In as read-only projection consumers |
 | WeeklyGoals | `WeeklyGoal`, `WeeklyGoalId`, and `WeeklyGoalType` in `Modules/WeeklyGoals/Domain`; legacy CLR namespaces and EF identity remain stable, with a one-way dependency on central `UserId` | commands, queries, progress calculation, reminder processing, ports, contracts, domain, and persistence under `Modules/WeeklyGoals` | Meals through `IMealActivityReadService`; Notifications and shared unit of work through central application contracts; JobManager as scheduler adapter |
 | TDEE | adaptive energy-expenditure calculation and insight composition; no owned aggregate or persistence adapter | `GetTdeeInsightQuery`, insight models, calculation/profile services, validation, and registration under `Modules/Tdee/Application` | Users, Body Metrics, Exercises, and Dashboard statistics through read-only application contracts; Dashboard and Presentation consume the existing mediator query/model surface |
@@ -134,7 +134,9 @@ Admin reads and mutations use `IUserAdministrationReadService` and `IUserAdminis
 
 ## Notifications boundary
 
-Notifications is the second module protected by an executable vertical-boundary guardrail.
+Notifications is protected by an executable vertical-boundary guardrail and physically owns Application, Application/Abstractions, Domain, Infrastructure and Infrastructure/Model under `Modules/Notifications`. No separate Contracts project is needed: semantic capabilities and immutable payloads already form the application-facing contract. Legacy Application assembly identity and CLR namespaces remain stable.
+
+The shared context, migration history and snapshot remain central and explicitly apply the module model. Notification outbox records and processors are module-owned; the common lifecycle interface lives in `Shared/FoodDiary.Outbox.Abstractions` to avoid a context/model cycle, while multi-stream claim/processing/dead-letter replay remain central. User preference fields stay Users-owned, and HTTP/SignalR and JobManager remain adapters. See `docs/ai/notifications-ownership-inventory.md` for the verified inventory, privacy/reliability boundaries and compatibility rationale.
 
 ### Ownership
 
@@ -320,7 +322,7 @@ Direct acquisition of `FoodDiaryDbContext` is confined to `FoodDiary.Infrastruct
 
 Every EF entity configuration is grouped under an owning module folder. The `Persistence/Configurations` root must contain no loose configuration classes; an architecture test enforces this invariant. Shared use of `FoodDiaryDbContext` therefore remains a physical deployment choice rather than an implicit shared-ownership signal.
 
-Remaining central technical and catalog adapters use explicit folders such as `Admin`, `Ai`, `Email`, `Notifications`, `Nutrition` and `Usda`. Extracted OpenFoodFacts persistence lives under `Modules/OpenFoodFacts`; folder placement identifies lifecycle ownership without bypassing application dependency rules.
+Remaining central technical adapters use explicit folders such as `Admin`, `Ai`, `Email`, `Notifications` and `Nutrition`. Extracted USDA and OpenFoodFacts persistence lives under `Modules/Usda` and `Modules/OpenFoodFacts`; folder placement identifies lifecycle ownership without bypassing application dependency rules. USDA entities remain central because Product's EF navigation is a shared compatibility seam; provider HTTP and in-memory detail caching remain in Integrations.
 
 Executable hosts, Presentation, Initializer, JobManager and Integrations may not inject repository contracts. They invoke application capabilities or implement external ports. This is enforced across all primary backend adapter projects by a single architecture guardrail.
 

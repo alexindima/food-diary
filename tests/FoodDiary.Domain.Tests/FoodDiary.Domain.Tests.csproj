@@ -29,6 +29,7 @@
     <ProjectReference Include="..\..\Modules\Fasting\Domain\FoodDiary.Modules.Fasting.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Cycles\Domain\FoodDiary.Modules.Cycles.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\OpenFoodFacts\Domain\FoodDiary.Modules.OpenFoodFacts.Domain.csproj" />
+    <ProjectReference Include="..\..\Modules\Notifications\Domain\FoodDiary.Modules.Notifications.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -26,6 +26,7 @@ sources:
 
 - `FoodDiary.Presentation.Api/Features/ContentReports`
 - `Modules/ContentReports/Application`
+- `Modules/ContentReports/Application/Abstractions`
 
 ## HTTP Surface
 
@@ -41,19 +42,22 @@ Source: `FoodDiary.Presentation.Api/Features/ContentReports/ContentReportsContro
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ContentReport
-- Public contract files: 0
+- Public contract files: 4
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
+- Public contract types: 4
+- Interfaces: 3
 - DTO/read-model/projection types: 0
 - Enums: 0
-- Exported repository-shaped contracts: 0
-- Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- Exported repository-shaped contracts: 2
+- Contracts referencing domain entities: 1
+- `class ContentReportErrors`
+- `interface IContentReportReadModelRepository`
+- `interface IContentReportTargetReadService`
+- `interface IContentReportWriteRepository`
 
 ## Focused Tests
 

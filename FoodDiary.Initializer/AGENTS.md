@@ -12,6 +12,7 @@ Rules for `FoodDiary.Initializer/`.
 - Do not move business rules or domain behavior into this project.
 - Reuse `FoodDiary.Application` handlers/services and `FoodDiary.Infrastructure` implementations instead of duplicating logic.
 - Keep commands explicit, operational, and safe to run from CI/CD or server shells.
+- Register Notifications through `AddNotificationsPersistence`, without adding provider options validation to this operational host.
 
 ## Structure
 - Entrypoint: `Program.cs`

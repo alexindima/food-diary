@@ -8,7 +8,7 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void ExtractedModuleOwnedTests_DoNotReturnToHorizontalDonorProjects() {
-        string[] forbiddenApplicationDirectories = ["Fasting", "Hydration", "Tdee", "WeeklyGoals"];
+        string[] forbiddenApplicationDirectories = ["Fasting", "Hydration", "Tdee", "WeeklyGoals", "Notifications"];
         string applicationTestsRoot = ArchitectureTestPaths.FromRoot("tests", "FoodDiary.Application.Tests");
         string domainTestsRoot = ArchitectureTestPaths.FromRoot("tests", "FoodDiary.Domain.Tests");
         string[] infrastructureTestRoots = [
@@ -186,7 +186,7 @@ public sealed class BusinessModuleBoundaryTests {
 
     [Fact]
     public void NotificationsModule_DoesNotDependOnUsersAggregateAccess() {
-        string notificationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Notifications");
+        string notificationsRoot = ArchitectureTestPaths.FromRoot("Modules", "Notifications", "Application");
         string[] forbiddenReferences = [
             "FoodDiary.Domain.Entities.Users",
             "INotificationUserAccessService",
@@ -397,7 +397,7 @@ public sealed class BusinessModuleBoundaryTests {
     public void NotificationsApplication_DoesNotDependOnUnapprovedApplicationFeatures() {
         string moduleRoot = Path.Combine(
             ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Application.Notifications");
+            "Modules", "Notifications", "Application");
 
         string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
             .SelectMany(ReadApplicationNamespaceDependencies)
@@ -414,8 +414,7 @@ public sealed class BusinessModuleBoundaryTests {
     public void NotificationsApplicationAbstractions_DoNotDependOnOtherFeatureContracts() {
         string moduleRoot = Path.Combine(
             ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Application.Abstractions",
-            "Notifications");
+            "Modules", "Notifications", "Application", "Abstractions");
 
         string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
             .SelectMany(ReadApplicationAbstractionsNamespaceDependencies)
@@ -432,7 +431,7 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void OtherApplicationModules_DoNotAcquireNotificationPersistenceRepositories() {
         string applicationRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application");
-        string notificationsRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application.Notifications");
+        string notificationsRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Notifications", "Application");
         string compositionRoot = Path.Combine(applicationRoot, "DependencyInjection.cs");
         string[] forbiddenRepositoryContracts = [
             "INotificationRepository",
@@ -968,8 +967,8 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Theory]
-    [InlineData("WeightEntryConfiguration.cs", "Configurations/BodyMetrics")]
-    [InlineData("WaistEntryConfiguration.cs", "Configurations/BodyMetrics")]
+    [InlineData("WeightEntryConfiguration.cs", "Modules/BodyMetrics/Infrastructure/Model/Configurations")]
+    [InlineData("WaistEntryConfiguration.cs", "Modules/BodyMetrics/Infrastructure/Model/Configurations")]
     [InlineData("HydrationEntryConfiguration.cs", "Modules/Hydration/Infrastructure/Model/Configurations")]
     [InlineData("ExerciseEntryConfiguration.cs", "Configurations/Exercises")]
     [InlineData("CycleProfileConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]

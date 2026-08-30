@@ -15,20 +15,21 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj`
+- Extracted project: `Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: none observed
+- Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Notifications`
-- `FoodDiary.Domain/Entities/Notifications`
-- `FoodDiary.Infrastructure/Persistence/Configurations/Notifications`
-- `FoodDiary.Infrastructure/Persistence/Notifications`
 - `FoodDiary.Presentation.Api/Features/Notifications`
+- `Modules/Notifications/Application`
+- `Modules/Notifications/Application/Abstractions`
+- `Modules/Notifications/Domain`
+- `Modules/Notifications/Infrastructure`
+- `Modules/Notifications/Infrastructure/Model`
 
 ## HTTP Surface
 
@@ -56,67 +57,43 @@ Source: `FoodDiary.Presentation.Api/Features/Notifications/NotificationsControll
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: project
+- Physical isolation: logical-module
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Notification, WebPushSubscription, NotificationWebPushOutboxMessage
-- Public contract files: 41
-- Observed external consumer groups: 5
+- Public contract files: 0
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 41
-- Interfaces: 22
-- DTO/read-model/projection types: 2
+- Public contract types: 0
+- Interfaces: 0
+- DTO/read-model/projection types: 0
 - Enums: 0
-- Exported repository-shaped contracts: 9
-- Contracts referencing domain entities: 6
-- `class NotificationErrors`
-- `class NotificationPayloads`
-- `class NotificationPayloadSerializer`
-- `class NotificationTargetUrlResolver`
-- `class NotificationTypes`
-- `class WebPushDeliveryLimits`
-- `interface INotificationCleanupService`
-- `interface INotificationClientRefreshService`
-- `interface INotificationDeduplicationService`
-- `interface INotificationLookupRepository`
-- `interface INotificationPusher`
-- `interface INotificationReadModelRepository`
-- `interface INotificationReadRepository`
-- `interface INotificationRepository`
-- `interface INotificationTestScheduler`
-- `interface INotificationTextRenderer`
-- `interface INotificationWebPushOutbox`
-- `interface INotificationWebPushOutboxProcessor`
-- `interface INotificationWriter`
-- `interface INotificationWriteRepository`
-- `interface ITestNotificationDeliveryDispatcher`
-- `interface IWebPushConfigurationProvider`
-- `interface IWebPushDeliveryAudienceService`
-- `interface IWebPushNotificationSender`
-- `interface IWebPushSubscriptionReadModelRepository`
-- `interface IWebPushSubscriptionReadRepository`
-- `interface IWebPushSubscriptionRepository`
-- `interface IWebPushSubscriptionWriteRepository`
-- `record DietologistInvitationDecisionNotificationPayload`
-- `record DietologistInvitationReceivedNotificationPayload`
-- ... 11 more type(s)
+- Exported repository-shaped contracts: 0
+- Contracts referencing domain entities: 0
+- No public declaration was found in the mapped abstraction areas.
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationFactoryTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationReadServiceCoverageTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.MappingAndCleanup.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.Queries.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.ReadCommands.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.WebPush.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationFactoryTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationReadServiceCoverageTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.MappingAndCleanup.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.Queries.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.ReadCommands.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.WebPush.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Domain.Tests/Domain/NotificationInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Persistence/NotificationRepositoryTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Persistence/NotificationWebPushOutboxTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushClientAdapterTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/NotificationsModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/NotificationsControllerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Resources.Tests/Notifications/NotificationResourceRendererTests.cs`

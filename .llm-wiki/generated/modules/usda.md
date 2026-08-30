@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj`
+- Extracted project: `Modules/Usda/Application/FoodDiary.Application.Usda.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Meals, Products, Users
 - Business-module consumers: none observed
@@ -24,12 +24,11 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Usda`
-- `FoodDiary.Application.Usda`
 - `FoodDiary.Domain/Entities/Usda`
-- `FoodDiary.Infrastructure/Persistence/Configurations/Usda`
-- `FoodDiary.Infrastructure/Persistence/Usda`
 - `FoodDiary.Presentation.Api/Features/Usda`
+- `Modules/Usda/Application`
+- `Modules/Usda/Application/Abstractions`
+- `Modules/Usda/Contracts`
 
 ## HTTP Surface
 
@@ -46,27 +45,21 @@ Source: `FoodDiary.Presentation.Api/Features/Usda/UsdaController.cs`
 ## Boundary Health
 
 - Role: adapter
-- Physical isolation: project
-- Architecture guardrails: project-reference-matrix
+- Physical isolation: logical-module
+- Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: not yet enumerated
-- Public contract files: 17
+- Public contract files: 11
 - Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 17
-- Interfaces: 5
+- Public contract types: 11
+- Interfaces: 0
 - DTO/read-model/projection types: 11
 - Enums: 0
-- Exported repository-shaped contracts: 3
-- Contracts referencing domain entities: 1
-- `class UsdaErrors`
-- `interface IUsdaDailyMicronutrientReadService`
-- `interface IUsdaFoodReadModelRepository`
-- `interface IUsdaFoodReadRepository`
-- `interface IUsdaFoodRepository`
-- `interface IUsdaFoodSearchService`
+- Exported repository-shaped contracts: 0
+- Contracts referencing domain entities: 0
 - `record DailyMicronutrientModel`
 - `record DailyMicronutrientSummaryModel`
 - `record HealthAreaScoreModel`
@@ -83,9 +76,10 @@ Source: `FoodDiary.Presentation.Api/Features/Usda/UsdaController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Usda/UsdaFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Usda/UsdaValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Usda/UsdaFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Usda/UsdaQueryHandlerTests.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Usda/UsdaValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/UsdaModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/UsdaFoodSearchServiceTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsdaHttpMappingsTests.cs`

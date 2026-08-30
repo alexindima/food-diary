@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 484,
+    "productionProjectEdges": 528,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 96,
     "routedStandaloneComponents": 55,
     "componentsWithoutDirectSpecs": 128,
-    "criticalSymbolsWithoutTestReferences": 18,
+    "criticalSymbolsWithoutTestReferences": 19,
     "explicitDebtMarkers": 11
   },
   "projectDependencyViolations": [],
@@ -4870,7 +4870,7 @@
     {
       "name": "GetNotificationPreferencesQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
+      "path": "Modules/Notifications/Application/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -4922,6 +4922,16 @@
       "role": "Validator",
       "path": "Modules/Favorites/Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
       "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "WebPushUriValidator",
+      "role": "Validator",
+      "path": "Modules/Notifications/Infrastructure/Options/WebPushUriValidator.cs",
+      "line": 2,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

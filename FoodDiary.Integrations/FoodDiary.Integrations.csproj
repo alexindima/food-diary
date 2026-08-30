@@ -3,6 +3,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Modules\OpenFoodFacts\Application\Abstractions\FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Modules\OpenFoodFacts\Contracts\FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
+    <ProjectReference Include="..\Modules\Usda\Application\Abstractions\FoodDiary.Modules.Usda.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\Modules\Usda\Contracts\FoodDiary.Modules.Usda.Contracts.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
     <ProjectReference Include="..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
     <ProjectReference Include="..\Modules\Wearables\Application\Abstractions\FoodDiary.Modules.Wearables.Application.Abstractions.csproj" />
@@ -23,7 +25,6 @@
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" />
     <PackageReference Include="Stripe.net" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
-    <PackageReference Include="WebPush" />
   </ItemGroup>
 
 </Project>
