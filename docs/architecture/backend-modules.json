@@ -26,7 +26,6 @@
     "Dietologist": "Dietologist",
     "Email": "Application.Runtime",
     "Exercises": "Exercises",
-    "Export": "Export",
     "Fasting": "Fasting",
     "FavoriteMeals": "Favorites",
     "FavoriteProducts": "Favorites",
@@ -258,8 +257,8 @@
       "enforcement": "project-reference-matrix",
       "ownedEntities": [],
       "sourceMappings": {
-        "applicationProjects": ["FoodDiary.Application.Export"],
-        "abstractionAreas": ["Export"]
+        "applicationProjects": ["FoodDiary.Modules.Export.Application"],
+        "applicationAbstractionProjects": ["Modules/Export/Application/Abstractions"]
       }
     },
     "Fasting": {

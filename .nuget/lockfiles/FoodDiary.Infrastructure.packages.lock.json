@@ -587,6 +587,12 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.export.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Abstractions": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.fasting.domain": {
         "type": "Project",
         "dependencies": {

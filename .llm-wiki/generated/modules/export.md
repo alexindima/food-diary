@@ -15,18 +15,17 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Export/FoodDiary.Application.Export.csproj`
+- Extracted project: `Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Authentication, Meals, Users
+- Abstraction-contract dependencies: Meals
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Export`
-- `FoodDiary.Application.Export`
 - `FoodDiary.Presentation.Api/Features/Export`
+- `Modules/Export/Application/Abstractions`
 
 ## HTTP Surface
 
@@ -44,31 +43,27 @@ Source: `FoodDiary.Presentation.Api/Features/Export/ExportController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 6
+- Public contract files: 0
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 6
-- Interfaces: 3
-- DTO/read-model/projection types: 1
+- Public contract types: 0
+- Interfaces: 0
+- DTO/read-model/projection types: 0
 - Enums: 0
 - Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
-- `class ExportInputLimits`
-- `interface IDiaryPdfGenerator`
-- `interface IDiaryPdfReportTextProvider`
-- `interface IExportDiaryReadService`
-- `record DiaryPdfReportTexts`
-- `record ExportDiaryMealsReadModel`
+- No public declaration was found in the mapped abstraction areas.
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Export/ExportValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Export/ExportFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Export/ExportValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Support/ResultAssert.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ExportModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/ExportControllerTests.cs`
 

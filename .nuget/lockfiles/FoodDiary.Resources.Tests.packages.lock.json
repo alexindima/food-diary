@@ -147,6 +147,12 @@
           "FoodDiary.Domain": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.export.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Abstractions": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.favorites.domain": {
         "type": "Project",
         "dependencies": {
@@ -179,7 +185,8 @@
       "fooddiary.resources": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Application.Abstractions": "[1.0.0, )"
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Export.Application.Abstractions": "[1.0.0, )"
         }
       },
       "fooddiary.results": {

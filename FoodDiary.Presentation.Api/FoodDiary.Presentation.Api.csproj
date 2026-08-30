@@ -20,7 +20,7 @@
     <ProjectReference Include="..\FoodDiary.Application.Dashboard\FoodDiary.Application.Dashboard.csproj" />
     <ProjectReference Include="..\Modules\Dietologist\Application\FoodDiary.Modules.Dietologist.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Exercises\FoodDiary.Application.Exercises.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Export\FoodDiary.Application.Export.csproj" />
+    <ProjectReference Include="..\Modules\Export\Application\FoodDiary.Modules.Export.Application.csproj" />
     <ProjectReference Include="..\Modules\Fasting\Contracts\FoodDiary.Modules.Fasting.Contracts.csproj" />
     <ProjectReference Include="..\Modules\Fasting\Application\FoodDiary.Modules.Fasting.Application.csproj" />
     <ProjectReference Include="..\Modules\Favorites\Application\FoodDiary.Application.Favorites.csproj" />

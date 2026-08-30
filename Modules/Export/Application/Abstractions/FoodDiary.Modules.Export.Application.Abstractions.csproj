@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Application.Abstractions.Export</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
+  </ItemGroup>
+</Project>

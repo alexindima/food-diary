@@ -53,7 +53,7 @@
     <ProjectReference Include="..\FoodDiary.Application.Usda\FoodDiary.Application.Usda.csproj" />
     <ProjectReference Include="..\Modules\DailyAdvices\Application\FoodDiary.Modules.DailyAdvices.Application.csproj" />
     <ProjectReference Include="..\Modules\Gamification\Infrastructure\FoodDiary.Modules.Gamification.Infrastructure.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Export\FoodDiary.Application.Export.csproj" />
+    <ProjectReference Include="..\Modules\Export\Application\FoodDiary.Modules.Export.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1770,48 +1770,6 @@
       "line": 2
     },
     {
-      "name": "DiaryPdfReportTexts",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Export/Common/DiaryPdfReportTexts.cs",
-      "line": 2
-    },
-    {
-      "name": "ExportInputLimits",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Export/Common/ExportInputLimits.cs",
-      "line": 2
-    },
-    {
-      "name": "IDiaryPdfGenerator",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
-      "line": 4
-    },
-    {
-      "name": "IDiaryPdfReportTextProvider",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfReportTextProvider.cs",
-      "line": 2
-    },
-    {
-      "name": "IExportDiaryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Export/Common/IExportDiaryReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "ExportDiaryMealsReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Export/Models/ExportDiaryMealsReadModel.cs",
-      "line": 4
-    },
-    {
       "name": "FastingErrors",
       "kind": "class",
       "role": "Other",
@@ -5611,118 +5569,6 @@
       "role": "Service",
       "path": "FoodDiary.Application.Exercises/Services/ExerciseEntryReadService.cs",
       "line": 9
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Export/DependencyInjection.cs",
-      "line": 8
-    },
-    {
-      "name": "UtcDateNormalizer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Export/Internal/UtcDateNormalizer.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleExportScope",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Application.Export/Models/CycleExportScope.cs",
-      "line": 2
-    },
-    {
-      "name": "ExportFormat",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Application.Export/Models/ExportFormat.cs",
-      "line": 2
-    },
-    {
-      "name": "FileExportResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Export/Models/FileExportResult.cs",
-      "line": 2
-    },
-    {
-      "name": "ExportCycleQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "ExportCycleQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "ExportCycleQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
-      "line": 7
-    },
-    {
-      "name": "ExportDiaryDateRangePolicy",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryDateRangePolicy.cs",
-      "line": 4
-    },
-    {
-      "name": "ExportDiaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "ExportDiaryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "ExportDiaryQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "CsvFieldEscaper",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Export/Services/CsvFieldEscaper.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleCsvGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Export/Services/CycleCsvGenerator.cs",
-      "line": 7
-    },
-    {
-      "name": "DiaryCsvGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Export/Services/DiaryCsvGenerator.cs",
-      "line": 6
-    },
-    {
-      "name": "ExportDiaryReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Export/Services/ExportDiaryReadService.cs",
-      "line": 8
     },
     {
       "name": "AdminSsoExchangeCommand",
@@ -21041,6 +20887,160 @@
       "line": 8
     },
     {
+      "name": "DiaryPdfReportTexts",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
+      "line": 2
+    },
+    {
+      "name": "ExportInputLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Application/Abstractions/Common/ExportInputLimits.cs",
+      "line": 2
+    },
+    {
+      "name": "IDiaryPdfGenerator",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "line": 4
+    },
+    {
+      "name": "IDiaryPdfReportTextProvider",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Export/Application/Abstractions/Common/IDiaryPdfReportTextProvider.cs",
+      "line": 2
+    },
+    {
+      "name": "IExportDiaryReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Export/Application/Abstractions/Common/IExportDiaryReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "ExportDiaryMealsReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Export/Application/Abstractions/Models/ExportDiaryMealsReadModel.cs",
+      "line": 4
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Application/DependencyInjection.cs",
+      "line": 8
+    },
+    {
+      "name": "UtcDateNormalizer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Application/Internal/UtcDateNormalizer.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleExportScope",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Export/Application/Models/CycleExportScope.cs",
+      "line": 2
+    },
+    {
+      "name": "ExportFormat",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Export/Application/Models/ExportFormat.cs",
+      "line": 2
+    },
+    {
+      "name": "FileExportResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Export/Application/Models/FileExportResult.cs",
+      "line": 2
+    },
+    {
+      "name": "ExportCycleQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "ExportCycleQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQueryHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "ExportCycleQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQueryValidator.cs",
+      "line": 7
+    },
+    {
+      "name": "ExportDiaryDateRangePolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryDateRangePolicy.cs",
+      "line": 4
+    },
+    {
+      "name": "ExportDiaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "ExportDiaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "ExportDiaryQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "CsvFieldEscaper",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Application/Services/CsvFieldEscaper.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleCsvGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Application/Services/CycleCsvGenerator.cs",
+      "line": 7
+    },
+    {
+      "name": "DiaryCsvGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Application/Services/DiaryCsvGenerator.cs",
+      "line": 6
+    },
+    {
+      "name": "ExportDiaryReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Export/Application/Services/ExportDiaryReadService.cs",
+      "line": 8
+    },
+    {
       "name": "FastingTelemetryEventRecord",
       "kind": "record",
       "role": "Other",
@@ -24992,98 +24992,98 @@
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgGeometry.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgRenderer.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.DefaultReportTextProvider.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Formatting.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageLoader.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.LayoutComposer.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealsLayout.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ReportData.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Styles.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
       "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.SummaryLayout.cs",
       "confidence": "naming-convention"
@@ -25230,9 +25230,9 @@
     },
     {
       "interface": "IExportDiaryReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Export/Common/IExportDiaryReadService.cs",
+      "interfacePath": "Modules/Export/Application/Abstractions/Common/IExportDiaryReadService.cs",
       "implementation": "ExportDiaryReadService",
-      "implementationPath": "FoodDiary.Application.Export/Services/ExportDiaryReadService.cs",
+      "implementationPath": "Modules/Export/Application/Services/ExportDiaryReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26442,13 +26442,6 @@
       "line": 14
     },
     {
-      "service": "IExportDiaryReadService",
-      "implementation": "ExportDiaryReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Export/DependencyInjection.cs",
-      "line": 14
-    },
-    {
       "service": "IAuthenticationLoginEventCleanupService",
       "implementation": "AuthenticationLoginEventCleanupService",
       "lifetime": "Scoped",
@@ -27518,6 +27511,13 @@
       "lifetime": "Scoped",
       "path": "Modules/Dietologist/Application/DependencyInjection.cs",
       "line": 27
+    },
+    {
+      "service": "IExportDiaryReadService",
+      "implementation": "ExportDiaryReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Export/Application/DependencyInjection.cs",
+      "line": 14
     },
     {
       "service": "IFastingAnalyticsService",

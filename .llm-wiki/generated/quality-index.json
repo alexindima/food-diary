@@ -4169,54 +4169,6 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "FoodDiary.Application.Abstractions/Export/Common/DiaryPdfReportTexts.cs",
-      "nonBlankLines": 49,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.98
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Export/Common/ExportInputLimits.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfReportTextProvider.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Export/Common/IExportDiaryReadService.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Export/Models/ExportDiaryMealsReadModel.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
       "path": "FoodDiary.Application.Abstractions/Fasting/Common/FastingErrors.cs",
       "nonBlankLines": 20,
       "decisionPoints": 0,
@@ -8623,142 +8575,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.52
-    },
-    {
-      "path": "FoodDiary.Application.Export/AssemblyInfo.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.Export/DependencyInjection.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "FoodDiary.Application.Export/Internal/UtcDateNormalizer.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.68
-    },
-    {
-      "path": "FoodDiary.Application.Export/Models/CycleExportScope.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Export/Models/ExportFormat.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Export/Models/FileExportResult.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQuery.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
-    },
-    {
-      "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-      "nonBlankLines": 61,
-      "decisionPoints": 8,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.22
-    },
-    {
-      "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
-      "nonBlankLines": 39,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.28
-    },
-    {
-      "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryDateRangePolicy.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.58
-    },
-    {
-      "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
-      "nonBlankLines": 91,
-      "decisionPoints": 9,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.32
-    },
-    {
-      "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.76
-    },
-    {
-      "path": "FoodDiary.Application.Export/Services/CsvFieldEscaper.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.04
-    },
-    {
-      "path": "FoodDiary.Application.Export/Services/CycleCsvGenerator.cs",
-      "nonBlankLines": 152,
-      "decisionPoints": 17,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 28.54
-    },
-    {
-      "path": "FoodDiary.Application.Export/Services/DiaryCsvGenerator.cs",
-      "nonBlankLines": 55,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.6
-    },
-    {
-      "path": "FoodDiary.Application.Export/Services/ExportDiaryReadService.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.02
     },
     {
       "path": "FoodDiary.Application.Identity/AssemblyInfo.cs",
@@ -34457,6 +34273,190 @@
       "structuralRiskScore": 8.76
     },
     {
+      "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
+      "nonBlankLines": 49,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.98
+    },
+    {
+      "path": "Modules/Export/Application/Abstractions/Common/ExportInputLimits.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Export/Application/Abstractions/Common/IDiaryPdfReportTextProvider.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Export/Application/Abstractions/Common/IExportDiaryReadService.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Export/Application/Abstractions/Models/ExportDiaryMealsReadModel.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Export/Application/AssemblyInfo.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Export/Application/DependencyInjection.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/Export/Application/Internal/UtcDateNormalizer.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.68
+    },
+    {
+      "path": "Modules/Export/Application/Models/CycleExportScope.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Export/Application/Models/ExportFormat.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Export/Application/Models/FileExportResult.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQuery.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.46
+    },
+    {
+      "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQueryHandler.cs",
+      "nonBlankLines": 61,
+      "decisionPoints": 8,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.22
+    },
+    {
+      "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQueryValidator.cs",
+      "nonBlankLines": 39,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.28
+    },
+    {
+      "path": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryDateRangePolicy.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.58
+    },
+    {
+      "path": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryQuery.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
+      "nonBlankLines": 91,
+      "decisionPoints": 9,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 17.32
+    },
+    {
+      "path": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.76
+    },
+    {
+      "path": "Modules/Export/Application/Services/CsvFieldEscaper.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14.04
+    },
+    {
+      "path": "Modules/Export/Application/Services/CycleCsvGenerator.cs",
+      "nonBlankLines": 152,
+      "decisionPoints": 17,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 28.54
+    },
+    {
+      "path": "Modules/Export/Application/Services/DiaryCsvGenerator.cs",
+      "nonBlankLines": 55,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14.6
+    },
+    {
+      "path": "Modules/Export/Application/Services/ExportDiaryReadService.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.02
+    },
+    {
       "path": "Modules/Fasting/Application/Abstractions/Common/FastingTelemetryEventRecord.cs",
       "nonBlankLines": 20,
       "decisionPoints": 0,
@@ -41986,11 +41986,11 @@
     {
       "name": "ExportCycleQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
+      "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQueryHandler.cs",
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs"
+        "Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Export/ExportFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41998,11 +41998,11 @@
     {
       "name": "ExportDiaryQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
+      "path": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs"
+        "Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Export/ExportFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44190,12 +44190,12 @@
     {
       "name": "ExportCycleQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
+      "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQueryValidator.cs",
       "line": 7,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
-        "tests/FoodDiary.Application.Tests/Export/ExportValidatorTests.cs"
+        "Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Export/ExportValidatorTests.cs",
+        "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44203,11 +44203,11 @@
     {
       "name": "ExportDiaryQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
+      "path": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Export/ExportValidatorTests.cs"
+        "Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Export/ExportValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

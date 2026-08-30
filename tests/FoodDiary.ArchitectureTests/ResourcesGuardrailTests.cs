@@ -9,6 +9,7 @@ public sealed class ResourcesGuardrailTests {
         const string relativeProjectPath = "FoodDiary.Resources/FoodDiary.Resources.csproj";
         string[] expectedProjectReferences = [
             "FoodDiary.Application.Abstractions",
+            "FoodDiary.Modules.Export.Application.Abstractions",
         ];
 
         string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);

@@ -2042,27 +2042,6 @@
     },
     {
       "category": "health",
-      "name": "TotalCaloriesTitle",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Export/Common/DiaryPdfReportTexts.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "CaloriesByDayTitle",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Export/Common/DiaryPdfReportTexts.cs",
-      "line": 22
-    },
-    {
-      "category": "health",
-      "name": "SatietyColumn",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Export/Common/DiaryPdfReportTexts.cs",
-      "line": 35
-    },
-    {
-      "category": "health",
       "name": "TotalCalories",
       "type": "double",
       "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Models/FavoriteMealModel.cs",
@@ -6256,6 +6235,27 @@
     },
     {
       "category": "health",
+      "name": "TotalCaloriesTitle",
+      "type": "string",
+      "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "CaloriesByDayTitle",
+      "type": "string",
+      "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
+      "line": 22
+    },
+    {
+      "category": "health",
+      "name": "SatietyColumn",
+      "type": "string",
+      "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
+      "line": 35
+    },
+    {
+      "category": "health",
       "name": "FastingOccurrence",
       "type": "FastingPlan,",
       "path": "Modules/Fasting/Application/Commands/StartFasting/FastingStartFactory.cs",
@@ -7639,13 +7639,6 @@
       "type": "string?",
       "path": "FoodDiary.Application.Abstractions/Exercises/Models/ExerciseEntryReadModel.cs",
       "line": 10
-    },
-    {
-      "category": "privateContent",
-      "name": "CommentColumn",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Export/Common/DiaryPdfReportTexts.cs",
-      "line": 36
     },
     {
       "category": "privateContent",
@@ -9539,6 +9532,13 @@
     },
     {
       "category": "privateContent",
+      "name": "CommentColumn",
+      "type": "string",
+      "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
+      "line": 36
+    },
+    {
+      "category": "privateContent",
       "name": "HadNotes",
       "type": "bool?",
       "path": "Modules/Fasting/Application/Abstractions/Common/FastingTelemetryEventRecord.cs",
@@ -9679,14 +9679,6 @@
     }
   ],
   "boundaryFiles": [
-    {
-      "path": "FoodDiary.Application.Abstractions/Export/Common/DiaryPdfReportTexts.cs",
-      "categories": [
-        "health",
-        "privateContent"
-      ],
-      "fieldCount": 4
-    },
     {
       "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
       "categories": [
@@ -10923,6 +10915,14 @@
         "identity"
       ],
       "fieldCount": 1
+    },
+    {
+      "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 4
     }
   ],
   "potentialLogging": [

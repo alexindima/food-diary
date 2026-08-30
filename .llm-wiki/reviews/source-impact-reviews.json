@@ -8,17 +8,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f0715276b5263ede5b4cd6c1b1147c87bb1622b73ab36f13c4c922d385bee07d"
+          "sha256": "2803df7e37c152a1ea9e4a96a2b45bbef5789779ed7827ba99e0aa2319adb16e"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "8e169ce9c25e23544df9aae70446b6116756808c8edd4ff7da707f48bf49b362"
+          "sha256": "9ff8e79172b6bca73a2ad45a75ecc5cf906bf65f309da8db1f47c161b50a9045"
         }
       ],
-      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
-      "reviewedAtUtc": "2026-08-30T14:28:20.8848746Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:25.9544631Z"
     },
     {
       "pageId": "module.frontend",
@@ -42,13 +42,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "8e169ce9c25e23544df9aae70446b6116756808c8edd4ff7da707f48bf49b362"
+          "sha256": "9ff8e79172b6bca73a2ad45a75ecc5cf906bf65f309da8db1f47c161b50a9045"
         }
       ],
-      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
-      "reviewedAtUtc": "2026-08-30T14:28:21.2106981Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:26.3831437Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -57,13 +57,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "007bb207a8d54ceff3481682e075bdbd95b94811eb59af4b2965e186ec218a33"
+          "sha256": "b7b71ae49d631fe2850e2a934b6fbd639f6c67879247bf5680961d9bd413a080"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "9ff8e79172b6bca73a2ad45a75ecc5cf906bf65f309da8db1f47c161b50a9045"
+        },
+        {
+          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+          "sha256": "13f400cfbd857ca613890741ec51e930ec54a97043749a893a6c5bfc52ca2429"
         }
       ],
-      "reason": "Reviewed primary backend ownership mappings against unchanged HTTP routes and payloads, module contracts, presentation references, and passing module and architecture tests; only project ownership moved.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "ca33cd054e90da8b769bd807b80f6150efcff24a",
-      "reviewedAtUtc": "2026-08-30T17:59:40.5690017Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:27.1343759Z"
     },
     {
       "pageId": "system.architecture",
@@ -72,13 +80,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "007bb207a8d54ceff3481682e075bdbd95b94811eb59af4b2965e186ec218a33"
+          "sha256": "b7b71ae49d631fe2850e2a934b6fbd639f6c67879247bf5680961d9bd413a080"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "9ff8e79172b6bca73a2ad45a75ecc5cf906bf65f309da8db1f47c161b50a9045"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "798cafba5bd23009bfa1d07f8e06d21c96c7191b5a89be84bca9c13dbe11e8ad"
         }
       ],
-      "reason": "Reviewed the combined OpenFoodFacts, Marketing, and Wearables ownership manifest against module projects, solution membership, central DbContext registrations, and passing architecture tests; removed stale central abstraction mappings after extraction.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "ca33cd054e90da8b769bd807b80f6150efcff24a",
-      "reviewedAtUtc": "2026-08-30T17:59:41.2173739Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:27.7995559Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -117,13 +133,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f0715276b5263ede5b4cd6c1b1147c87bb1622b73ab36f13c4c922d385bee07d"
+          "sha256": "2803df7e37c152a1ea9e4a96a2b45bbef5789779ed7827ba99e0aa2319adb16e"
         }
       ],
-      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
-      "reviewedAtUtc": "2026-08-30T14:28:22.0518869Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:28.3653800Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -132,13 +148,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "007bb207a8d54ceff3481682e075bdbd95b94811eb59af4b2965e186ec218a33"
+          "sha256": "b7b71ae49d631fe2850e2a934b6fbd639f6c67879247bf5680961d9bd413a080"
         }
       ],
-      "reason": "Reviewed the combined OpenFoodFacts, Marketing, and Wearables ownership manifest against module projects, solution membership, central DbContext registrations, and passing architecture tests; removed stale central abstraction mappings after extraction.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "ca33cd054e90da8b769bd807b80f6150efcff24a",
-      "reviewedAtUtc": "2026-08-30T17:59:41.8683024Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:28.7278093Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -195,14 +211,22 @@
       "pageSha256": "b7914894ce3f6dda55057a93baf55364c9aa9c5e4c127a3fc9bddaa89743e4aa",
       "sources": [
         {
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "0966b7a34fc3d209ecb3a1be3e55e8c49eda214befa7785ed86f871ec40f9c9b"
+        },
+        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "007bb207a8d54ceff3481682e075bdbd95b94811eb59af4b2965e186ec218a33"
+          "sha256": "b7b71ae49d631fe2850e2a934b6fbd639f6c67879247bf5680961d9bd413a080"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "798cafba5bd23009bfa1d07f8e06d21c96c7191b5a89be84bca9c13dbe11e8ad"
         }
       ],
-      "reason": "Reviewed architecture-health implications against the regenerated dependency matrix and passing 738-test architecture suite; the final module graph contains the intended module-owned abstractions and no duplicate donor projects.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "ca33cd054e90da8b769bd807b80f6150efcff24a",
-      "reviewedAtUtc": "2026-08-30T17:59:42.5018417Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:29.0719358Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -211,13 +235,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "cae2230ad079e0b863d133b16737e1a05c428da0e2299944ef77a8ea8d7313ba"
+          "sha256": "e63e22a4340d1bfb146ae1bb2174d2e8cc127b641b00e53e0bbac2fa841becd8"
         }
       ],
-      "reason": "Generated contract index changed only because test consumers were added; production API contracts are unchanged.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "7572ecc11a75304b3e39bd8ba9a141802e27ea35",
-      "reviewedAtUtc": "2026-08-30T17:18:09.6341766Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:29.7077315Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -764,13 +788,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "878bde1af631dcb8678bdafda6a800501a8a78c08a5f25e9931eff4caf931be1"
+          "sha256": "29475e2dc5c179405dc69e1c85475744b1954e16d9685c877dc8ad012d84f43c"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:12.4754806Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:30.5432045Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -809,13 +833,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "de5b80f310c6578ef88a3706cf593426775b68965e98340779abd91bd6ee2453"
+          "sha256": "f4cbac7ca6251462f2ead44d1b98abbfa61f5f9f3b0a4fae13cc2378e0250f2a"
         }
       ],
-      "reason": "Dependency matrix now allowlists the direct references of three new module-owned test projects; production dependencies are unchanged.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "7572ecc11a75304b3e39bd8ba9a141802e27ea35",
-      "reviewedAtUtc": "2026-08-30T17:18:10.5127333Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:31.4422643Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -892,13 +916,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "43ad8b6f66c693300d7cd968bfc13bbb6fe5fb5c4284a09f8b460f80d7f13bc8"
+          "sha256": "3687d52fd98f91022912fdb126055b7bcb7f742d9f0633b8410d306e418f14f3"
         }
       ],
-      "reason": "Repository catalog and module pages now list the new module-owned test projects; architectural documentation remains accurate.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "7572ecc11a75304b3e39bd8ba9a141802e27ea35",
-      "reviewedAtUtc": "2026-08-30T17:18:11.8726509Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:33.0698660Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -907,17 +931,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "de5b80f310c6578ef88a3706cf593426775b68965e98340779abd91bd6ee2453"
+          "sha256": "f4cbac7ca6251462f2ead44d1b98abbfa61f5f9f3b0a4fae13cc2378e0250f2a"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "43ad8b6f66c693300d7cd968bfc13bbb6fe5fb5c4284a09f8b460f80d7f13bc8"
+          "sha256": "3687d52fd98f91022912fdb126055b7bcb7f742d9f0633b8410d306e418f14f3"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "29475e2dc5c179405dc69e1c85475744b1954e16d9685c877dc8ad012d84f43c"
         }
       ],
-      "reason": "Only tests and generated indexes changed; no runtime data flow, credential, privacy, or security boundary changed.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "7572ecc11a75304b3e39bd8ba9a141802e27ea35",
-      "reviewedAtUtc": "2026-08-30T17:18:12.7728687Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:34.2333335Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1095,13 +1123,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f0715276b5263ede5b4cd6c1b1147c87bb1622b73ab36f13c4c922d385bee07d"
+          "sha256": "2803df7e37c152a1ea9e4a96a2b45bbef5789779ed7827ba99e0aa2319adb16e"
         }
       ],
-      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
-      "reviewedAtUtc": "2026-08-30T14:28:23.2279666Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:30.0644013Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1155,13 +1183,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "4a9ac69f8d0d215a2a0ae1803701a8db7f68464d892d3017a916ca89f7271ebe"
+          "sha256": "1f5a3c3ac37891b22cb5e20e4912de456525e57848f27f1c00f2ea39c57635b3"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "2803df7e37c152a1ea9e4a96a2b45bbef5789779ed7827ba99e0aa2319adb16e"
         }
       ],
-      "reason": "Repository catalog and module pages now list the new module-owned test projects; architectural documentation remains accurate.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "7572ecc11a75304b3e39bd8ba9a141802e27ea35",
-      "reviewedAtUtc": "2026-08-30T17:18:11.1915955Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:32.0498096Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1170,13 +1202,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f0715276b5263ede5b4cd6c1b1147c87bb1622b73ab36f13c4c922d385bee07d"
+          "sha256": "2803df7e37c152a1ea9e4a96a2b45bbef5789779ed7827ba99e0aa2319adb16e"
         }
       ],
-      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
+      "reason": "Reviewed against the Export module extraction diff: module ownership, project graph, dependency matrix, runtime composition, privacy-sensitive export seams, and generated indexes were verified against current code and tests.",
       "baseRef": "HEAD",
-      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
-      "reviewedAtUtc": "2026-08-30T14:28:24.9380012Z"
+      "gitHead": "3f0928a6b2320b7e6e56af18ba04c67fc983de19",
+      "reviewedAtUtc": "2026-08-30T18:48:32.4656223Z"
     }
   ]
 }

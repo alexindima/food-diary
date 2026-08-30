@@ -116,6 +116,12 @@
           "FoodDiary.Domain": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.export.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Abstractions": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.favorites.domain": {
         "type": "Project",
         "dependencies": {

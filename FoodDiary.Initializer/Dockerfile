@@ -10,6 +10,7 @@ COPY Shared/FoodDiary.Mediator/*.csproj Shared/FoodDiary.Mediator/
 COPY Shared/FoodDiary.Results/*.csproj Shared/FoodDiary.Results/
 COPY FoodDiary.Domain/*.csproj FoodDiary.Domain/
 COPY FoodDiary.Application.Abstractions/*.csproj FoodDiary.Application.Abstractions/
+COPY Modules/Export/Application/Abstractions/*.csproj Modules/Export/Application/Abstractions/
 COPY FoodDiary.Application.Admin/*.csproj FoodDiary.Application.Admin/
 COPY FoodDiary.Application.Runtime/*.csproj FoodDiary.Application.Runtime/
 COPY FoodDiary.Application.Billing/*.csproj FoodDiary.Application.Billing/
@@ -97,7 +98,7 @@ COPY Modules/Gamification/Application/Abstractions/*.csproj Modules/Gamification
 COPY Modules/Gamification/Domain/*.csproj Modules/Gamification/Domain/
 COPY Modules/Gamification/Infrastructure/*.csproj Modules/Gamification/Infrastructure/
 COPY Modules/Gamification/Infrastructure/Model/*.csproj Modules/Gamification/Infrastructure/Model/
-COPY FoodDiary.Application.Export/*.csproj FoodDiary.Application.Export/
+COPY Modules/Export/Application/*.csproj Modules/Export/Application/
 COPY Modules/Hydration/Application/*.csproj Modules/Hydration/Application/
 COPY Modules/Hydration/Application/Abstractions/*.csproj Modules/Hydration/Application/Abstractions/
 COPY Modules/Hydration/Contracts/*.csproj Modules/Hydration/Contracts/
@@ -117,6 +118,7 @@ COPY Shared/FoodDiary.Mediator/ Shared/FoodDiary.Mediator/
 COPY Shared/FoodDiary.Results/ Shared/FoodDiary.Results/
 COPY FoodDiary.Domain/ FoodDiary.Domain/
 COPY FoodDiary.Application.Abstractions/ FoodDiary.Application.Abstractions/
+COPY Modules/Export/Application/Abstractions/ Modules/Export/Application/Abstractions/
 COPY FoodDiary.Application.Admin/ FoodDiary.Application.Admin/
 COPY FoodDiary.Application.Runtime/ FoodDiary.Application.Runtime/
 COPY FoodDiary.Application.Billing/ FoodDiary.Application.Billing/
@@ -211,7 +213,7 @@ COPY Modules/Gamification/Application/Abstractions/ Modules/Gamification/Applica
 COPY Modules/Gamification/Domain/ Modules/Gamification/Domain/
 COPY Modules/Gamification/Infrastructure/ Modules/Gamification/Infrastructure/
 COPY Modules/Gamification/Infrastructure/Model/ Modules/Gamification/Infrastructure/Model/
-COPY FoodDiary.Application.Export/ FoodDiary.Application.Export/
+COPY Modules/Export/Application/ Modules/Export/Application/
 COPY Modules/Hydration/ Modules/Hydration/
 COPY Modules/Hydration/Application/ Modules/Hydration/Application/
 COPY Modules/Hydration/Application/Abstractions/ Modules/Hydration/Application/Abstractions/

@@ -26,10 +26,14 @@
     <Project Path="FoodDiary.Application.Admin/FoodDiary.Application.Admin.csproj" />
     <Project Path="FoodDiary.Application.Ai/FoodDiary.Application.Ai.csproj" />
     <Project Path="FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj" />
-    <Project Path="FoodDiary.Application.Export/FoodDiary.Application.Export.csproj" />
     <Project Path="FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj" />
   </Folder>
   <Folder Name="/Modules/" />
+  <Folder Name="/Modules/Export/">
+    <Project Path="Modules/Export/Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj" />
+    <Project Path="Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj" />
+    <Project Path="Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/FoodDiary.Modules.Export.Application.Tests.csproj" />
+  </Folder>
   <Folder Name="/Modules/OpenFoodFacts/">
     <Project Path="Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj" />
     <Project Path="Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj" />
