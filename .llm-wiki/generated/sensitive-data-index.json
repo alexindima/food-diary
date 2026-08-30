@@ -3904,76 +3904,6 @@
     },
     {
       "category": "health",
-      "name": "EstimatedTdee",
-      "type": "double?",
-      "path": "FoodDiary.Application.Tdee/Common/TdeeUserProfile.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "Weight",
-      "type": "double?",
-      "path": "FoodDiary.Application.Tdee/Common/TdeeUserProfile.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "DesiredWeight",
-      "type": "double?",
-      "path": "FoodDiary.Application.Tdee/Common/TdeeUserProfile.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "EstimatedTdee",
-      "type": "double?",
-      "path": "FoodDiary.Application.Tdee/Models/TdeeInsightModel.cs",
-      "line": 4
-    },
-    {
-      "category": "health",
-      "name": "AdaptiveTdee",
-      "type": "double?",
-      "path": "FoodDiary.Application.Tdee/Models/TdeeInsightModel.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "WeightTrendPerWeek",
-      "type": "double?",
-      "path": "FoodDiary.Application.Tdee/Models/TdeeInsightModel.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "AdaptiveTdee",
-      "type": "double?",
-      "path": "FoodDiary.Application.Tdee/Services/AdaptiveTdeeResult.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "WeightTrendPerWeek",
-      "type": "double?",
-      "path": "FoodDiary.Application.Tdee/Services/AdaptiveTdeeResult.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double",
-      "path": "FoodDiary.Application.Tdee/Services/TdeeCalculator.cs",
-      "line": 172
-    },
-    {
-      "category": "health",
-      "name": "CaloriesBurned",
-      "type": "double",
-      "path": "FoodDiary.Application.Tdee/Services/TdeeCalculator.cs",
-      "line": 174
-    },
-    {
-      "category": "health",
       "name": "DesiredWaistCm",
       "type": "double?",
       "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
@@ -6498,6 +6428,76 @@
       "type": "Guid",
       "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
       "line": 9
+    },
+    {
+      "category": "health",
+      "name": "EstimatedTdee",
+      "type": "double?",
+      "path": "Modules/Tdee/Application/Common/TdeeUserProfile.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "double?",
+      "path": "Modules/Tdee/Application/Common/TdeeUserProfile.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeight",
+      "type": "double?",
+      "path": "Modules/Tdee/Application/Common/TdeeUserProfile.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "EstimatedTdee",
+      "type": "double?",
+      "path": "Modules/Tdee/Application/Models/TdeeInsightModel.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "AdaptiveTdee",
+      "type": "double?",
+      "path": "Modules/Tdee/Application/Models/TdeeInsightModel.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "WeightTrendPerWeek",
+      "type": "double?",
+      "path": "Modules/Tdee/Application/Models/TdeeInsightModel.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "AdaptiveTdee",
+      "type": "double?",
+      "path": "Modules/Tdee/Application/Services/AdaptiveTdeeResult.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "WeightTrendPerWeek",
+      "type": "double?",
+      "path": "Modules/Tdee/Application/Services/AdaptiveTdeeResult.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double",
+      "path": "Modules/Tdee/Application/Services/TdeeCalculator.cs",
+      "line": 172
+    },
+    {
+      "category": "health",
+      "name": "CaloriesBurned",
+      "type": "double",
+      "path": "Modules/Tdee/Application/Services/TdeeCalculator.cs",
+      "line": 174
     },
     {
       "category": "identity",

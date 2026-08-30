@@ -19,7 +19,7 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Application.Dashboard, FoodDiary.Application.Tdee, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Application.Dashboard, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Tdee.Application, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas

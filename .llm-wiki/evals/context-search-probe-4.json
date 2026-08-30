@@ -102,7 +102,7 @@
       "id": "tdee-calculator-probe-4",
       "query": "calculator computes total daily energy expenditure from a profile",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Tdee/Services/TdeeCalculator.cs"]
+      "expectedPaths": ["Modules/Tdee/Application/Services/TdeeCalculator.cs"]
     },
     {
       "id": "page-layout-directive-probe-4",

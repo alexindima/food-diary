@@ -13,8 +13,8 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 116,
-    "testProjects": 38,
+    "dotnetProjects": 117,
+    "testProjects": 39,
     "frontendProjects": 4,
     "applicationModules": 0,
     "extractedApplicationModules": 33,
@@ -293,10 +293,10 @@
           "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
           "FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj",
           "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
-          "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj",
           "FoodDiary.Domain/FoodDiary.Domain.csproj",
           "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj",
           "Modules/Hydration/Contracts/FoodDiary.Modules.Hydration.Contracts.csproj",
+          "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
         "packageReferences": [
@@ -861,37 +861,6 @@
         ]
       },
       {
-        "name": "FoodDiary.Application.Tdee",
-        "assemblyName": "FoodDiary.Application.Tdee",
-        "path": "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
-          "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
-          "FoodDiary.Domain/FoodDiary.Domain.csproj",
-          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "FluentValidation",
-            "version": null
-          },
-          {
-            "name": "FluentValidation.DependencyInjectionExtensions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          }
-        ]
-      },
-      {
         "name": "FoodDiary.Application.Usda",
         "assemblyName": "FoodDiary.Application.Usda",
         "path": "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
@@ -1183,7 +1152,6 @@
           "FoodDiary.Application.Recipes/FoodDiary.Application.Recipes.csproj",
           "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
-          "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj",
           "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
           "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
           "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
@@ -1191,6 +1159,7 @@
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj",
           "Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj",
+          "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
           "Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj"
         ],
         "packageReferences": [
@@ -1312,7 +1281,6 @@
           "FoodDiary.Application.Recipes/FoodDiary.Application.Recipes.csproj",
           "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
-          "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj",
           "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
           "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
           "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
@@ -1322,6 +1290,7 @@
           "FoodDiary.Resources/FoodDiary.Resources.csproj",
           "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj",
           "Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj",
+          "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
           "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj",
           "Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj"
         ],
@@ -1413,7 +1382,6 @@
           "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
           "FoodDiary.Application.Recipes/FoodDiary.Application.Recipes.csproj",
           "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
-          "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj",
           "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
           "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
           "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
@@ -1421,6 +1389,7 @@
           "Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj",
           "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj",
           "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj",
+          "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
           "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
@@ -1510,7 +1479,6 @@
           "FoodDiary.Application.Recipes/FoodDiary.Application.Recipes.csproj",
           "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
-          "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj",
           "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
           "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
           "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
@@ -1521,6 +1489,7 @@
           "FoodDiary.Resources/FoodDiary.Resources.csproj",
           "Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj",
           "Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj",
+          "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
           "Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj"
         ],
         "packageReferences": [
@@ -2932,6 +2901,74 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Tdee.Application",
+        "assemblyName": "FoodDiary.Application.Tdee",
+        "path": "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+          "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
+          "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "FluentValidation",
+            "version": null
+          },
+          {
+            "name": "FluentValidation.DependencyInjectionExtensions",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Tdee.Application.Tests",
+        "assemblyName": "FoodDiary.Application.Tests",
+        "path": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/FoodDiary.Modules.Tdee.Application.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "FoodDiary.Application.BodyMetrics/FoodDiary.Application.BodyMetrics.csproj",
+          "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "NSubstitute",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.WeeklyGoals.Application.Abstractions",
         "assemblyName": "FoodDiary.Modules.WeeklyGoals.Application.Abstractions",
         "path": "Modules/WeeklyGoals/Application/Abstractions/FoodDiary.Modules.WeeklyGoals.Application.Abstractions.csproj",
@@ -3292,7 +3329,6 @@
           "FoodDiary.Application.Recipes/FoodDiary.Application.Recipes.csproj",
           "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
-          "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj",
           "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
           "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
           "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
@@ -3557,12 +3593,12 @@
           "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
           "FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj",
           "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
-          "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj",
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
           "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
           "Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj",
-          "Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj"
+          "Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj",
+          "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj"
         ],
         "packageReferences": [
           {
@@ -3629,10 +3665,10 @@
           "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
           "FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj",
           "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
-          "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj",
           "FoodDiary.JobManager/FoodDiary.JobManager.csproj",
           "Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj",
           "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj",
+          "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
           "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj",
           "Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj"
         ],
@@ -3736,7 +3772,6 @@
           "FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj",
           "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
           "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
-          "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj",
           "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
           "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
           "FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj",
@@ -3745,6 +3780,7 @@
           "Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj",
           "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj",
           "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj",
+          "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
           "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj"
         ],
         "packageReferences": [
@@ -4030,6 +4066,7 @@
       "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/FoodDiary.Modules.Fasting.Infrastructure.Tests.csproj",
       "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/FoodDiary.Modules.Hydration.Application.Tests.csproj",
       "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/FoodDiary.Modules.Hydration.Infrastructure.Tests.csproj",
+      "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/FoodDiary.Modules.Tdee.Application.Tests.csproj",
       "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/FoodDiary.Modules.WeeklyGoals.Application.Tests.csproj",
       "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests.csproj",
       "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.csproj",
@@ -4213,7 +4250,7 @@
     },
     {
       "name": "Tdee",
-      "project": "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj"
+      "project": "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj"
     },
     {
       "name": "Usda",
@@ -6320,7 +6357,6 @@
       "FoodDiary.Application.Recipes/AGENTS.md",
       "FoodDiary.Application.Runtime/AGENTS.md",
       "FoodDiary.Application.Statistics/AGENTS.md",
-      "FoodDiary.Application.Tdee/AGENTS.md",
       "FoodDiary.Application.Usda/AGENTS.md",
       "FoodDiary.Application.Users/AGENTS.md",
       "FoodDiary.Application.Wearables/AGENTS.md",
@@ -6370,6 +6406,7 @@
       "Modules/Hydration/Contracts/AGENTS.md",
       "Modules/Hydration/Infrastructure/AGENTS.md",
       "Modules/Hydration/Infrastructure/Model/AGENTS.md",
+      "Modules/Tdee/AGENTS.md",
       "Modules/WeeklyGoals/AGENTS.md",
       "Modules/WeeklyGoals/Application/Abstractions/AGENTS.md",
       "Modules/WeeklyGoals/Contracts/AGENTS.md",

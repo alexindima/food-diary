@@ -8,7 +8,7 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void ExtractedModuleOwnedTests_DoNotReturnToHorizontalDonorProjects() {
-        string[] forbiddenApplicationDirectories = ["Fasting", "Hydration", "WeeklyGoals"];
+        string[] forbiddenApplicationDirectories = ["Fasting", "Hydration", "Tdee", "WeeklyGoals"];
         string applicationTestsRoot = ArchitectureTestPaths.FromRoot("tests", "FoodDiary.Application.Tests");
         string domainTestsRoot = ArchitectureTestPaths.FromRoot("tests", "FoodDiary.Domain.Tests");
         string[] infrastructureTestRoots = [

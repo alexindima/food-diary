@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj`
+- Extracted project: `Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Dashboard, Users, WeightEntries
 - Business-module consumers: none observed
@@ -24,8 +24,8 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Tdee`
 - `FoodDiary.Presentation.Api/Features/Tdee`
+- `Modules/Tdee/Application`
 
 ## HTTP Surface
 
@@ -59,9 +59,10 @@ Source: `FoodDiary.Presentation.Api/Features/Tdee/TdeeController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Tdee/TdeeCalculatorTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Tdee/TdeeFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Tdee/TdeeValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeCalculatorTests.cs`
+- [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/TdeeModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/TdeeControllerTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/TdeeHttpMappingsTests.cs`

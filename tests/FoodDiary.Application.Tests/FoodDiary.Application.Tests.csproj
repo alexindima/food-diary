@@ -40,7 +40,6 @@
     <ProjectReference Include="..\..\Modules\Hydration\Application\FoodDiary.Modules.Hydration.Application.csproj" />
     <ProjectReference Include="..\..\Modules\Hydration\Infrastructure\FoodDiary.Modules.Hydration.Infrastructure.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Exercises\FoodDiary.Application.Exercises.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Application.Tdee\FoodDiary.Application.Tdee.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.OpenFoodFacts\FoodDiary.Application.OpenFoodFacts.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Users\FoodDiary.Application.Users.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Marketing\FoodDiary.Application.Marketing.csproj" />

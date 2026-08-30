@@ -99,7 +99,7 @@
       "id": "weekly-goal-reminder",
       "query": "send weekly goal reminder when progress is behind",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs"]
+      "expectedPaths": ["Modules/WeeklyGoals/Application/Services/WeeklyGoalReminderProcessor.cs"]
     },
     {
       "id": "dashboard-snapshot",
@@ -195,7 +195,7 @@
       "id": "weekly-goal-repository",
       "query": "persist weekly goals in the database repository",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/WeeklyGoals/WeeklyGoalRepository.cs"]
+      "expectedPaths": ["Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs"]
     },
     {
       "id": "confirm-password-reset",

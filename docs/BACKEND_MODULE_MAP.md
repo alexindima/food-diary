@@ -28,6 +28,7 @@ Use this file when deciding where backend code belongs.
 | WeeklyGoals use cases | `Modules/WeeklyGoals/Application` | Weekly-goal commands, queries, handlers, validation, progress calculation, reminder processing, and application registration | Persistence implementations and HTTP transport |
 | WeeklyGoals persistence model | `Modules/WeeklyGoals/Infrastructure/Model` | WeeklyGoals EF configuration and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
 | WeeklyGoals infrastructure | `Modules/WeeklyGoals/Infrastructure` | WeeklyGoals repository, advisory-lock transaction runner, and complete module registration | HTTP transport, scheduler plumbing, and central migrations |
+| TDEE use cases | `Modules/Tdee/Application` | TDEE calculation, insight query/model, user-profile composition, validation, and module registration | Domain entities, persistence, provider adapters, HTTP transport, or empty wrapper layers |
 | Billing use cases | `FoodDiary.Application.Billing` | Billing commands, queries, validators, renewal and webhook orchestration | Core Application dependencies, persistence, HTTP DTOs |
 | Marketing use cases | `FoodDiary.Application.Marketing` | Attribution commands, queries and conversion recording | Core Application dependencies, persistence, HTTP DTOs |
 | Notification use cases | `FoodDiary.Application.Notifications` | Notification feed, preferences, web-push subscription and delivery orchestration | Core Application dependencies, persistence implementations, HTTP DTOs |

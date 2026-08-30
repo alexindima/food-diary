@@ -8,21 +8,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "75702e33ecfb9bad66289c610f4b855f462948dc15bc4748e687baba45783ccf"
-        },
-        {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "1ba910c42d4d3213f2702fae2cd204ba8a37428637fa6cd007a9a88d5410e03e"
+          "sha256": "1f2d16da9326d0ddd385cd05da123f2e57744b78657dc95ded9c9051cb0b9d24"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "cd296c88374072373d5ef5facb708418323389d1b87601cfbc203232a1a05823"
+          "sha256": "316009520ef962e0dd1e28c5b8580a8763411a9fcecb3525cd1a6691f90440dd"
         }
       ],
-      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:44.8243888Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:05.2199815Z"
     },
     {
       "pageId": "module.frontend",
@@ -45,18 +41,14 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "1ba910c42d4d3213f2702fae2cd204ba8a37428637fa6cd007a9a88d5410e03e"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "cd296c88374072373d5ef5facb708418323389d1b87601cfbc203232a1a05823"
+          "sha256": "316009520ef962e0dd1e28c5b8580a8763411a9fcecb3525cd1a6691f90440dd"
         }
       ],
-      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:45.5968899Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:05.9124490Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -65,25 +57,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "cff11a06de5dd2c86cbb79a0d9d4636869e13bc5add8503b6f3c9aac5d52f6f2"
+          "sha256": "7929e128e1159eba5ba3b680c5db54c0183b90ab13ea4cd5953fae0a3c9d91ff"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "cd296c88374072373d5ef5facb708418323389d1b87601cfbc203232a1a05823"
+          "sha256": "316009520ef962e0dd1e28c5b8580a8763411a9fcecb3525cd1a6691f90440dd"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "0690e66b2d9e138c3460e4c23db335f7eae0668c4f5eb7647206eab86ad29a28"
-        },
-        {
-          "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "50b291e043efef0cc906b24ca2e5806a7ef50c01fda4c291e82b848f54289d8f"
+          "sha256": "45ac6fdf42f132ac100f482585b2a1e2898eefca05cc224384f80fbd80a1c8c4"
         }
       ],
-      "reason": "HTTP routes, DTOs, status codes, and contract namespaces are unchanged; the regenerated backend-contract index confirms only project/source ownership movement.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:46.3121607Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:06.7882498Z"
     },
     {
       "pageId": "system.architecture",
@@ -91,26 +79,22 @@
       "pageSha256": "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "1ba910c42d4d3213f2702fae2cd204ba8a37428637fa6cd007a9a88d5410e03e"
-        },
-        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "cff11a06de5dd2c86cbb79a0d9d4636869e13bc5add8503b6f3c9aac5d52f6f2"
+          "sha256": "7929e128e1159eba5ba3b680c5db54c0183b90ab13ea4cd5953fae0a3c9d91ff"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "cd296c88374072373d5ef5facb708418323389d1b87601cfbc203232a1a05823"
+          "sha256": "316009520ef962e0dd1e28c5b8580a8763411a9fcecb3525cd1a6691f90440dd"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "9cbe213361e59042dec29536de1f0497c2529b66f1fa1dd3fd9ec090e3e0dfca"
+          "sha256": "86d90749ae8f3396204dc6abba443566933d13c9b9153d81b5bd5db1aef6cec2"
         }
       ],
-      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:47.1632191Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:07.5329471Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -149,17 +133,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "75702e33ecfb9bad66289c610f4b855f462948dc15bc4748e687baba45783ccf"
-        },
-        {
-          "path": "docs/adr/README.md",
-          "sha256": "8dc0d549db3588ed96c18cf9b8a6fe793111ad38f5e688d4ec5eedc7da127684"
+          "sha256": "1f2d16da9326d0ddd385cd05da123f2e57744b78657dc95ded9c9051cb0b9d24"
         }
       ],
-      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:47.9868159Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:08.1866270Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -168,13 +148,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "cff11a06de5dd2c86cbb79a0d9d4636869e13bc5add8503b6f3c9aac5d52f6f2"
+          "sha256": "7929e128e1159eba5ba3b680c5db54c0183b90ab13ea4cd5953fae0a3c9d91ff"
         }
       ],
-      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:48.8221853Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:08.8552506Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -231,22 +211,18 @@
       "pageSha256": "b7914894ce3f6dda55057a93baf55364c9aa9c5e4c127a3fc9bddaa89743e4aa",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "3d0c1b1330205223d3d502e0deb51dfc32a0a99c1e4609dd7518c3a5008c69cd"
-        },
-        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "cff11a06de5dd2c86cbb79a0d9d4636869e13bc5add8503b6f3c9aac5d52f6f2"
+          "sha256": "7929e128e1159eba5ba3b680c5db54c0183b90ab13ea4cd5953fae0a3c9d91ff"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "9cbe213361e59042dec29536de1f0497c2529b66f1fa1dd3fd9ec090e3e0dfca"
+          "sha256": "86d90749ae8f3396204dc6abba443566933d13c9b9153d81b5bd5db1aef6cec2"
         }
       ],
-      "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:49.6853149Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:09.4753775Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -255,13 +231,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "8281fd3de375a928cc39b11ed096ad4e5b39952286e8fef0d40580cc7845a7b7"
+          "sha256": "0929eff8634eea5ec0b6cca1151efc858a2577b9769f838e36ea23ca13e04890"
         }
       ],
-      "reason": "HTTP routes, DTOs, status codes, and contract namespaces are unchanged; the regenerated backend-contract index confirms only project/source ownership movement.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:50.9516413Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:10.5012900Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -299,14 +275,26 @@
       "pageSha256": "4e6f774f1817d334504316d5d64c5a4bf62bc3a1234600d3293d028f8cbb731a",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "f4aa4f17666c4397274be37e15a87d0371fc7538100dcc4f66907891ea6e7faf"
+          "path": ".llm-wiki/evals/context-search-holdout.json",
+          "sha256": "439fd17df40ae6d0be47b65c2fa146ba1f42511cfb553be9ac4de11bc181eaaa"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-probe-4.json",
+          "sha256": "2405b1fe40e97ca57d3f28f9a29c68e7a2a032d32b41371bf365a79c233ef30f"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-probe-6.json",
+          "sha256": "dfa62bbf42379f3068a2d144917f88af5ddf220589fe2d40dc040435d089ee14"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search.json",
+          "sha256": "a024811f1fab23dd8b5bd110f4867bf94f69a91f851fa126d159e98c13fcc7de"
         }
       ],
-      "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:52.6160009Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:11.7842876Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -812,13 +800,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "45221582e11b7a2cf94f40f547638f4ac78ff5ab0407ea0685f27762c35a86d6"
+          "sha256": "878bde1af631dcb8678bdafda6a800501a8a78c08a5f25e9931eff4caf931be1"
         }
       ],
-      "reason": "No authorization secret logging or data-sharing boundary changed; the existing user-scoped Hydration relationship is preserved.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "ea16933690500f00a8a920ea398ef90a03d27835",
-      "reviewedAtUtc": "2026-08-29T18:41:51.9912497Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:12.4754806Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -857,13 +845,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4aaa94dad50a5d9eac4b6f7269908dc89580c956c5d602adae539546cec92308"
+          "sha256": "77828026233aad3c6489ecd255801b3dddb4321f73a7496925ffc62f8d6e898a"
         }
       ],
-      "reason": "Reviewed the combined quality-index delta from planned test-project discovery, the extracted WeeklyGoals Domain/tests, and regenerated module pages; hotspot and direct-reference guidance remains accurate.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "0c1b61756c45000bae4543a3f01a4cdc963b1592",
-      "reviewedAtUtc": "2026-08-30T00:18:16.1937132Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:13.4155527Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -940,13 +928,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "f47b4bee22968edc651b4a08b7165aab500784ba5c2d099661d5595ffa091e46"
+          "sha256": "cc76ade4bafac8a8e1a4a52f05a3ed55cf64ce0e32c1e32496186fbebf98f26f"
         }
       ],
-      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:52:02.0313574Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:15.6258675Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -955,17 +943,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4aaa94dad50a5d9eac4b6f7269908dc89580c956c5d602adae539546cec92308"
+          "sha256": "77828026233aad3c6489ecd255801b3dddb4321f73a7496925ffc62f8d6e898a"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "f47b4bee22968edc651b4a08b7165aab500784ba5c2d099661d5595ffa091e46"
+          "sha256": "cc76ade4bafac8a8e1a4a52f05a3ed55cf64ce0e32c1e32496186fbebf98f26f"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "878bde1af631dcb8678bdafda6a800501a8a78c08a5f25e9931eff4caf931be1"
         }
       ],
-      "reason": "Reviewed the WeeklyGoals assembly-only extraction and combined generated quality/runtime deltas; no authorization, sensitive-data, credential, logging, provider-sharing, HTTP, or persistence security boundary changed.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "0c1b61756c45000bae4543a3f01a4cdc963b1592",
-      "reviewedAtUtc": "2026-08-30T00:18:20.8871225Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:16.6362812Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1143,13 +1135,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "75702e33ecfb9bad66289c610f4b855f462948dc15bc4748e687baba45783ccf"
+          "sha256": "1f2d16da9326d0ddd385cd05da123f2e57744b78657dc95ded9c9051cb0b9d24"
         }
       ],
-      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:51.8228123Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:11.1604888Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1203,17 +1195,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "b237f24b4cd6822b0474dac8fd3b90ae4ec99e1a4804504582d388347d6e660d"
+          "sha256": "a8f1106c9d121bcb68830305184bef55f2dfdb22ef0cae8b97d735ee8c4425eb"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "75702e33ecfb9bad66289c610f4b855f462948dc15bc4748e687baba45783ccf"
+          "sha256": "1f2d16da9326d0ddd385cd05da123f2e57744b78657dc95ded9c9051cb0b9d24"
         }
       ],
-      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:52:00.3461832Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:14.1387523Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1221,18 +1213,14 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "f4aa4f17666c4397274be37e15a87d0371fc7538100dcc4f66907891ea6e7faf"
-        },
-        {
           "path": "AGENTS.md",
-          "sha256": "75702e33ecfb9bad66289c610f4b855f462948dc15bc4748e687baba45783ccf"
+          "sha256": "1f2d16da9326d0ddd385cd05da123f2e57744b78657dc95ded9c9051cb0b9d24"
         }
       ],
-      "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
+      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:52:01.2069436Z"
+      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
+      "reviewedAtUtc": "2026-08-30T00:31:14.8242905Z"
     }
   ]
 }

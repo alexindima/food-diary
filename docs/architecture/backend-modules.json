@@ -544,8 +544,9 @@
       "enforcement": "project-reference-matrix",
       "ownedEntities": [],
       "sourceMappings": {
+        "logicalRoot": "Modules/Tdee",
         "applicationProjects": [
-          "FoodDiary.Application.Tdee"
+          "Modules/Tdee/Application"
         ]
       }
     },

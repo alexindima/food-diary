@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7542,
+    "consumerEdges": 7543,
     "productionConsumerEdges": 4559,
-    "testConsumerEdges": 2983,
+    "testConsumerEdges": 2984,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -5989,7 +5989,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -12572,7 +12572,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Tdee/Common/ITdeeUserProfileService.cs"
+        "Modules/Tdee/Application/Common/ITdeeUserProfileService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -41028,7 +41028,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
@@ -41041,33 +41041,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetTdeeInsightQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetTdeeInsightQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Tdee/Mappings/TdeeHttpMappings.cs",
@@ -41080,10 +41054,36 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Tdee/TdeeFeatureTests.cs",
+      "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetTdeeInsightQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetTdeeInsightQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
       "isTest": true,
       "referenceCount": 5
     },
@@ -41093,10 +41093,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Tdee/TdeeValidatorTests.cs",
+      "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeValidatorTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -41106,7 +41106,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/TdeeControllerTests.cs",
@@ -41119,7 +41119,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/TdeeHttpMappingsTests.cs",
@@ -55162,19 +55162,6 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -55682,6 +55669,19 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -55750,6 +55750,19 @@
       "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -56127,19 +56140,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs",
       "isTest": true,
       "referenceCount": 5
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Tdee/TdeeFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 4
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -57424,19 +57424,6 @@
         "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -57479,6 +57466,32 @@
       "consumerPath": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 7
     },
     {
       "contract": "IDashboardStatisticsReadService",
@@ -57544,19 +57557,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs",
       "isTest": true,
       "referenceCount": 9
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Tdee/TdeeFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 7
     },
     {
       "contract": "IDashboardStatisticsReadService",
@@ -61818,8 +61818,21 @@
         "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
+      "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IExerciseEntryReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -61847,19 +61860,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Exercises/ExercisesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
-    },
-    {
-      "contract": "IExerciseEntryReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Tdee/TdeeFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 1
     },
     {
       "contract": "IExerciseEntryRepository",
@@ -61896,6 +61896,19 @@
         "FoodDiary.Application.Abstractions/Exercises/Common/IExerciseEntryRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IExerciseEntryRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Exercises/Common/IExerciseEntryRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -61912,19 +61925,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Exercises/ExercisesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "IExerciseEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Exercises/Common/IExerciseEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Tdee/TdeeFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 4
     },
     {
       "contract": "IExerciseEntryRepository",
@@ -77911,19 +77911,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -78198,6 +78185,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -79393,19 +79393,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -79680,6 +79667,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Application/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -88087,10 +88087,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Tdee/Common/ITdeeUserProfileService.cs"
+        "Modules/Tdee/Application/Common/ITdeeUserProfileService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Tdee/DependencyInjection.cs",
+      "consumerPath": "Modules/Tdee/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -88100,10 +88100,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Tdee/Common/ITdeeUserProfileService.cs"
+        "Modules/Tdee/Application/Common/ITdeeUserProfileService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
+      "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -88113,10 +88113,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Tdee/Common/ITdeeUserProfileService.cs"
+        "Modules/Tdee/Application/Common/ITdeeUserProfileService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Tdee/Services/TdeeUserProfileService.cs",
+      "consumerPath": "Modules/Tdee/Application/Services/TdeeUserProfileService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -88126,10 +88126,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Tdee/Common/ITdeeUserProfileService.cs"
+        "Modules/Tdee/Application/Common/ITdeeUserProfileService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Tdee/TdeeFeatureTests.cs",
+      "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
       "isTest": true,
       "referenceCount": 7
     },
@@ -94187,19 +94187,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -94746,6 +94733,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -95032,19 +95032,6 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserTdeeProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Tdee/Services/TdeeUserProfileService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserTdeeProfileReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/IUserTdeeProfileReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Users/Common/UserContextService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -95071,9 +95058,35 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserTdeeProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Tdee/TdeeFeatureTests.cs",
+      "consumerPath": "Modules/Tdee/Application/Services/TdeeUserProfileService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserTdeeProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserTdeeProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IUserTdeeProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserTdeeProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/TdeeModuleExtractionTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IUserWeeklyCheckInProfileReadService",
@@ -98100,7 +98113,7 @@
         "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
+      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -98113,7 +98126,7 @@
         "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
+      "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -98191,6 +98204,19 @@
         "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IWeightEntryRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -98207,19 +98233,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 2
-    },
-    {
-      "contract": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Tdee/TdeeFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 3
     },
     {
       "contract": "IWeightEntryRepository",

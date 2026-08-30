@@ -34,7 +34,6 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Application.Recipes",
             "FoodDiary.Application.Runtime",
             "FoodDiary.Application.Statistics",
-            "FoodDiary.Application.Tdee",
             "FoodDiary.Application.Usda",
             "FoodDiary.Application.Users",
             "FoodDiary.Application.Wearables",
@@ -42,6 +41,7 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Infrastructure",
             "FoodDiary.Modules.Fasting.Infrastructure",
             "FoodDiary.Modules.Hydration.Infrastructure",
+            "FoodDiary.Modules.Tdee.Application",
             "FoodDiary.Modules.WeeklyGoals.Infrastructure",
         ];
         string[] expectedPackageReferences = [

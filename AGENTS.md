@@ -37,7 +37,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Recipe community application module: `FoodDiary.Application.RecipeCommunity/AGENTS.md`
 - Recipes application module: `FoodDiary.Application.Recipes/AGENTS.md`
 - Statistics application module: `FoodDiary.Application.Statistics/AGENTS.md`
-- TDEE application module: `FoodDiary.Application.Tdee/AGENTS.md`
+- TDEE logical module: `Modules/Tdee/AGENTS.md`
 - Wearables application module: `FoodDiary.Application.Wearables/AGENTS.md`
 - Frontend app: `FoodDiary.Web.Client/AGENTS.md`
 - Frontend application shell: `FoodDiary.Web.Client/src/app/AGENTS.md`

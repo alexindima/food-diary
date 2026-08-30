@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Application.Tests</AssemblyName>
+    <RootNamespace>FoodDiary.Application.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="NSubstitute" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\FoodDiary.Application.BodyMetrics\FoodDiary.Application.BodyMetrics.csproj" />
+    <ProjectReference Include="..\..\Application\FoodDiary.Modules.Tdee.Application.csproj" />
+  </ItemGroup>
+</Project>

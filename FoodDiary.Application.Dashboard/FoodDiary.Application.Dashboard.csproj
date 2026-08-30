@@ -8,7 +8,7 @@
     <ProjectReference Include="..\Modules\Hydration\Contracts\FoodDiary.Modules.Hydration.Contracts.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Statistics\FoodDiary.Application.Statistics.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Tdee\FoodDiary.Application.Tdee.csproj" />
+    <ProjectReference Include="..\Modules\Tdee\Application\FoodDiary.Modules.Tdee.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
   </ItemGroup>

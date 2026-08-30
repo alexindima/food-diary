@@ -30,7 +30,7 @@
       "id": "ru-weekly-goal-reminder",
       "query": "кто отправляет напоминание если недельная цель отстает",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs"]
+      "expectedPaths": ["Modules/WeeklyGoals/Application/Services/WeeklyGoalReminderProcessor.cs"]
     },
     {
       "id": "ru-billing-webhook-controller",

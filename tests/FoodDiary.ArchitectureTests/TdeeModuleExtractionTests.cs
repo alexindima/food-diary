@@ -3,23 +3,53 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class TdeeModuleExtractionTests {
     [Fact]
-    public void TdeeApplicationSource_LivesOnlyInExtractedAssembly() {
-        string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Tdee");
-        string extractedRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Tdee");
-        Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
-        Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
+    public void TdeeApplicationSource_LivesOnlyInLogicalModule() {
+        string originalLegacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Tdee");
+        string extractedLegacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Tdee");
+        string moduleApplicationRoot = ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Application");
+
+        Assert.Empty(Directory.Exists(originalLegacyRoot) ? SourceScanner.SourceFiles(originalLegacyRoot) : []);
+        Assert.Empty(Directory.Exists(extractedLegacyRoot) ? SourceScanner.SourceFiles(extractedLegacyRoot) : []);
+        Assert.NotEmpty(SourceScanner.SourceFiles(moduleApplicationRoot));
+        Assert.True(File.Exists(Path.Combine(moduleApplicationRoot, "FoodDiary.Modules.Tdee.Application.csproj")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "FoodDiary.Modules.Tdee.csproj")));
     }
 
     [Fact]
-    public void ExtractedTdeeAssembly_HasOnlyApprovedProjectReferences() {
+    public void TdeeLogicalModule_DoesNotCreateUnownedLayers() {
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Contracts")));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Domain")));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Infrastructure")));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Application", "Abstractions")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Users", "User.Tdee.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Application.Abstractions",
+            "Users",
+            "Common",
+            "IUserTdeeProfileReadService.cs")));
+    }
+
+    [Fact]
+    public void TdeeApplicationAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj");
+            "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Application.Exercises",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
         ], references);
+    }
+
+    [Fact]
+    public void TdeeApplicationAssembly_PreservesLegacyBinaryIdentity() {
+        string project = File.ReadAllText(ArchitectureTestPaths.FromRoot(
+            "Modules",
+            "Tdee",
+            "Application",
+            "FoodDiary.Modules.Tdee.Application.csproj"));
+
+        Assert.Contains("<AssemblyName>FoodDiary.Application.Tdee</AssemblyName>", project, StringComparison.Ordinal);
     }
 
     [Theory]

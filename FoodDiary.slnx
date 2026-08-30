@@ -18,7 +18,6 @@
     <Project Path="FoodDiary.Application.Cycles/FoodDiary.Application.Cycles.csproj" />
     <Project Path="FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj" />
     <Project Path="FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj" />
-    <Project Path="FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj" />
     <Project Path="FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj" />
     <Project Path="FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj" />
   </Folder>
@@ -60,6 +59,10 @@
     <Project Path="Modules/Hydration/Infrastructure/Model/FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
     <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/FoodDiary.Modules.Hydration.Application.Tests.csproj" />
     <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/FoodDiary.Modules.Hydration.Infrastructure.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Tdee/">
+    <Project Path="Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj" />
+    <Project Path="Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/FoodDiary.Modules.Tdee.Application.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/WeeklyGoals/">
     <Project Path="Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj" />

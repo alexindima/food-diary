@@ -34,7 +34,7 @@ COPY FoodDiary.Application.BodyMetrics/*.csproj FoodDiary.Application.BodyMetric
 COPY FoodDiary.Application.Cycles/*.csproj FoodDiary.Application.Cycles/
 COPY FoodDiary.Application.Dashboard/*.csproj FoodDiary.Application.Dashboard/
 COPY FoodDiary.Application.Exercises/*.csproj FoodDiary.Application.Exercises/
-COPY FoodDiary.Application.Tdee/*.csproj FoodDiary.Application.Tdee/
+COPY Modules/Tdee/Application/*.csproj Modules/Tdee/Application/
 COPY FoodDiary.Application.OpenFoodFacts/*.csproj FoodDiary.Application.OpenFoodFacts/
 COPY FoodDiary.Application.Products/*.csproj FoodDiary.Application.Products/
 COPY FoodDiary.Application.Recipes/*.csproj FoodDiary.Application.Recipes/
@@ -95,7 +95,7 @@ COPY FoodDiary.Application.BodyMetrics/ FoodDiary.Application.BodyMetrics/
 COPY FoodDiary.Application.Cycles/ FoodDiary.Application.Cycles/
 COPY FoodDiary.Application.Dashboard/ FoodDiary.Application.Dashboard/
 COPY FoodDiary.Application.Exercises/ FoodDiary.Application.Exercises/
-COPY FoodDiary.Application.Tdee/ FoodDiary.Application.Tdee/
+COPY Modules/Tdee/Application/ Modules/Tdee/Application/
 COPY FoodDiary.Application.OpenFoodFacts/ FoodDiary.Application.OpenFoodFacts/
 COPY FoodDiary.Application.Products/ FoodDiary.Application.Products/
 COPY FoodDiary.Application.Recipes/ FoodDiary.Application.Recipes/

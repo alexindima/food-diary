@@ -30,7 +30,7 @@
       "id": "weekly-goal-progress-reader-probe-6",
       "query": "посчитать прогресс недельной цели по уникальным дням с приемами пищи",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.WeeklyGoals/Common/WeeklyGoalProgressReader.cs"]
+      "expectedPaths": ["Modules/WeeklyGoals/Application/Common/WeeklyGoalProgressReader.cs"]
     },
     {
       "id": "weekly-check-in-read-service-probe-6",
