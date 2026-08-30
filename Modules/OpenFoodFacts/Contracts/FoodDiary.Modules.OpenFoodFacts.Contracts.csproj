@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Modules.OpenFoodFacts.Contracts</AssemblyName>
+    <RootNamespace>FoodDiary.Application</RootNamespace>
+  </PropertyGroup>
+</Project>

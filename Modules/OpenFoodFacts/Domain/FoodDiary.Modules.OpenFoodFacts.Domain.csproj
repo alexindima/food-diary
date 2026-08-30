@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Modules.OpenFoodFacts.Domain</AssemblyName>
+    <RootNamespace>FoodDiary.Domain</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
+  </ItemGroup>
+</Project>

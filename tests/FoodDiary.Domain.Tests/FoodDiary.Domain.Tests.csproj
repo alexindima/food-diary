@@ -26,6 +26,7 @@
     <ProjectReference Include="..\..\Modules\Dietologist\Domain\FoodDiary.Modules.Dietologist.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Fasting\Domain\FoodDiary.Modules.Fasting.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Cycles\Domain\FoodDiary.Modules.Cycles.Domain.csproj" />
+    <ProjectReference Include="..\..\Modules\OpenFoodFacts\Domain\FoodDiary.Modules.OpenFoodFacts.Domain.csproj" />
   </ItemGroup>
 
 </Project>

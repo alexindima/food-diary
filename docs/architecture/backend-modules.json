@@ -464,13 +464,22 @@
       "sourceMappings": {}
     },
     "OpenFoodFacts": {
-      "role": "adapter",
+      "role": "aggregate-owner",
       "physicalIsolation": "project",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": [],
+      "ownedEntities": [
+        "OpenFoodFactsProduct"
+      ],
       "sourceMappings": {
         "applicationProjects": [
-          "FoodDiary.Application.OpenFoodFacts"
+          "FoodDiary.Modules.OpenFoodFacts.Application"
+        ],
+        "domainProjects": [
+          "FoodDiary.Modules.OpenFoodFacts.Domain"
+        ],
+        "infrastructureProjects": [
+          "FoodDiary.Modules.OpenFoodFacts.Infrastructure",
+          "FoodDiary.Modules.OpenFoodFacts.PersistenceModel"
         ]
       }
     },

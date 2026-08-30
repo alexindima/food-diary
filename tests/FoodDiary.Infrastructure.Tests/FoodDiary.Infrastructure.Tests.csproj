@@ -31,7 +31,8 @@
     <ProjectReference Include="..\..\Modules\Hydration\Infrastructure\FoodDiary.Modules.Hydration.Infrastructure.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Exercises\FoodDiary.Application.Exercises.csproj" />
     <ProjectReference Include="..\..\Modules\Tdee\Application\FoodDiary.Modules.Tdee.Application.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Application.OpenFoodFacts\FoodDiary.Application.OpenFoodFacts.csproj" />
+    <ProjectReference Include="..\..\Modules\OpenFoodFacts\Application\Abstractions\FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Modules\OpenFoodFacts\Contracts\FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Fasting\Infrastructure\FoodDiary.Modules.Fasting.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Lessons\Infrastructure\FoodDiary.Modules.Lessons.Infrastructure.csproj" />

@@ -44,7 +44,12 @@ COPY Modules/Cycles/Infrastructure/Model/*.csproj Modules/Cycles/Infrastructure/
 COPY FoodDiary.Application.Dashboard/*.csproj FoodDiary.Application.Dashboard/
 COPY FoodDiary.Application.Exercises/*.csproj FoodDiary.Application.Exercises/
 COPY Modules/Tdee/Application/*.csproj Modules/Tdee/Application/
-COPY FoodDiary.Application.OpenFoodFacts/*.csproj FoodDiary.Application.OpenFoodFacts/
+COPY Modules/OpenFoodFacts/Application/*.csproj Modules/OpenFoodFacts/Application/
+COPY Modules/OpenFoodFacts/Application/Abstractions/*.csproj Modules/OpenFoodFacts/Application/Abstractions/
+COPY Modules/OpenFoodFacts/Contracts/*.csproj Modules/OpenFoodFacts/Contracts/
+COPY Modules/OpenFoodFacts/Domain/*.csproj Modules/OpenFoodFacts/Domain/
+COPY Modules/OpenFoodFacts/Infrastructure/*.csproj Modules/OpenFoodFacts/Infrastructure/
+COPY Modules/OpenFoodFacts/Infrastructure/Model/*.csproj Modules/OpenFoodFacts/Infrastructure/Model/
 COPY FoodDiary.Application.Products/*.csproj FoodDiary.Application.Products/
 COPY FoodDiary.Application.Recipes/*.csproj FoodDiary.Application.Recipes/
 COPY Modules/Images/Application/*.csproj Modules/Images/Application/
@@ -142,7 +147,12 @@ COPY Modules/Cycles/Infrastructure/Model/ Modules/Cycles/Infrastructure/Model/
 COPY FoodDiary.Application.Dashboard/ FoodDiary.Application.Dashboard/
 COPY FoodDiary.Application.Exercises/ FoodDiary.Application.Exercises/
 COPY Modules/Tdee/Application/ Modules/Tdee/Application/
-COPY FoodDiary.Application.OpenFoodFacts/ FoodDiary.Application.OpenFoodFacts/
+COPY Modules/OpenFoodFacts/Application/ Modules/OpenFoodFacts/Application/
+COPY Modules/OpenFoodFacts/Application/Abstractions/ Modules/OpenFoodFacts/Application/Abstractions/
+COPY Modules/OpenFoodFacts/Contracts/ Modules/OpenFoodFacts/Contracts/
+COPY Modules/OpenFoodFacts/Domain/ Modules/OpenFoodFacts/Domain/
+COPY Modules/OpenFoodFacts/Infrastructure/ Modules/OpenFoodFacts/Infrastructure/
+COPY Modules/OpenFoodFacts/Infrastructure/Model/ Modules/OpenFoodFacts/Infrastructure/Model/
 COPY FoodDiary.Application.Products/ FoodDiary.Application.Products/
 COPY FoodDiary.Application.Recipes/ FoodDiary.Application.Recipes/
 COPY Modules/Images/Application/ Modules/Images/Application/

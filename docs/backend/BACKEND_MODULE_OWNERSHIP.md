@@ -62,7 +62,7 @@ This map covers the governed business owners and composed read modules in the pr
 | Content Reports | user-submitted reports and moderation status | report creation command, `IContentReportAdministrationService`, moderation projections | Users access; Admin invokes owner moderation capability and read projections |
 | AI | AI usage, prompt templates and AI orchestration policy | isolated application capability in `FoodDiary.Application.Ai`, usage summaries, `IAiPromptAdministrationService` | Images access, Users access, provider adapters; Admin consumes projections |
 | USDA Catalog | imported USDA foods/nutrients and product-link relationships | USDA commands/read services and read-model search projection | Products may consume the suggestion projection; Meal nutrition is a read-only calculation input |
-| OpenFoodFacts Cache | cached external product documents and refresh lifecycle | cached product-search service in `FoodDiary.Application.OpenFoodFacts` | Products consumes the service; external provider remains an integration adapter |
+| OpenFoodFacts Cache | cached external product documents and refresh lifecycle | `Modules/OpenFoodFacts`: cached product-search contract, application orchestration, cache entity and persistence | Products consumes Contracts only; external provider remains an Integrations adapter; central Infrastructure retains DbContext/migrations/snapshot |
 | Dashboard | composed user-facing read model; owns no source aggregates | dashboard query/read services | Approved read models from contributing modules |
 
 ## Fasting pilot boundary
@@ -319,7 +319,7 @@ Direct acquisition of `FoodDiaryDbContext` is confined to `FoodDiary.Infrastruct
 
 Every EF entity configuration is grouped under an owning module folder. The `Persistence/Configurations` root must contain no loose configuration classes; an architecture test enforces this invariant. Shared use of `FoodDiaryDbContext` therefore remains a physical deployment choice rather than an implicit shared-ownership signal.
 
-Technical and catalog adapters use explicit folders as well: `Admin`, `Ai`, `ContentReports`, `Email`, `Notifications`, `Nutrition`, `OpenFoodFacts` and `Usda`. Folder placement identifies the lifecycle owner or adapter boundary; it does not allow those modules to bypass the application dependency rules.
+Remaining central technical and catalog adapters use explicit folders such as `Admin`, `Ai`, `Email`, `Notifications`, `Nutrition` and `Usda`. Extracted OpenFoodFacts persistence lives under `Modules/OpenFoodFacts`; folder placement identifies lifecycle ownership without bypassing application dependency rules.
 
 Executable hosts, Presentation, Initializer, JobManager and Integrations may not inject repository contracts. They invoke application capabilities or implement external ports. This is enforced across all primary backend adapter projects by a single architecture guardrail.
 

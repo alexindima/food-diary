@@ -73,17 +73,6 @@
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
         }
       },
-      "fooddiary.application.openfoodfacts": {
-        "type": "Project",
-        "dependencies": {
-          "FluentValidation": "[12.1.1, )",
-          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Domain": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
-        }
-      },
       "fooddiary.application.usda": {
         "type": "Project",
         "dependencies": {
@@ -150,6 +139,9 @@
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
+      },
+      "fooddiary.modules.openfoodfacts.contracts": {
+        "type": "Project"
       },
       "fooddiary.results": {
         "type": "Project"

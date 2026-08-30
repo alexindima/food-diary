@@ -15,20 +15,15 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj`
+- Extracted project: `Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: none observed
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Application.Products, FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/OpenFoodFacts`
-- `FoodDiary.Application.OpenFoodFacts`
-- `FoodDiary.Domain/Entities/OpenFoodFacts`
-- `FoodDiary.Infrastructure/Persistence/Configurations/OpenFoodFacts`
-- `FoodDiary.Infrastructure/Persistence/OpenFoodFacts`
 - `FoodDiary.Presentation.Api/Features/OpenFoodFacts`
 
 ## HTTP Surface
@@ -42,36 +37,34 @@ Source: `FoodDiary.Presentation.Api/Features/OpenFoodFacts/OpenFoodFactsControll
 
 ## Boundary Health
 
-- Role: adapter
+- Role: aggregate-owner
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
-- Declared owned entities: not yet enumerated
-- Public contract files: 5
-- Observed external consumer groups: 6
+- Declared owned entities: OpenFoodFactsProduct
+- Public contract files: 0
+- Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 5
-- Interfaces: 4
-- DTO/read-model/projection types: 1
+- Public contract types: 0
+- Interfaces: 0
+- DTO/read-model/projection types: 0
 - Enums: 0
-- Exported repository-shaped contracts: 3
+- Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
-- `interface IOpenFoodFactsProductCacheReadRepository`
-- `interface IOpenFoodFactsProductCacheRepository`
-- `interface IOpenFoodFactsProductCacheWriteRepository`
-- `interface IOpenFoodFactsService`
-- `record OpenFoodFactsProductModel`
+- No public declaration was found in the mapped abstraction areas.
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/OpenFoodFacts/OpenFoodFactsValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFacts/OpenFoodFactsValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Domain.Tests/Domain/OpenFoodFactsProductTests.cs`
+- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/ModuleRegistrationTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/OpenFoodFactsModuleExtractionTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/OpenFoodFactsProductTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/OpenFoodFactsServiceTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/OpenFoodFactsControllerTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/OpenFoodFactsHttpMappingsTests.cs`

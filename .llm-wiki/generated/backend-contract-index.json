@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7588,
+    "consumerEdges": 7591,
     "productionConsumerEdges": 4559,
-    "testConsumerEdges": 3029,
+    "testConsumerEdges": 3032,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -11161,7 +11161,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
+        "Modules/OpenFoodFacts/Contracts/OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11178,7 +11178,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheReadRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11195,7 +11195,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11212,7 +11212,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheWriteRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11229,7 +11229,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsService.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15990,7 +15990,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
+        "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -16007,7 +16007,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
+        "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -74645,46 +74645,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/DependencyInjection.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IOpenFoodFactsCachedProductSearch",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IOpenFoodFactsCachedProductSearch",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IOpenFoodFactsCachedProductSearch",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
+        "Modules/OpenFoodFacts/Contracts/OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Products/SearchSuggestions/OpenFoodFactsProductSearchSuggestionProvider.cs",
@@ -74697,10 +74658,49 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
+        "Modules/OpenFoodFacts/Contracts/OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs",
+      "consumerPath": "Modules/OpenFoodFacts/Application/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenFoodFactsCachedProductSearch",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Contracts/OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenFoodFactsCachedProductSearch",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Contracts/OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Services/OpenFoodFactsCachedProductSearch.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenFoodFactsCachedProductSearch",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Contracts/OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -74710,7 +74710,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
+        "Modules/OpenFoodFacts/Contracts/OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs",
@@ -74723,10 +74723,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheReadRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheRepository.cs",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -74736,10 +74736,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheReadRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Services/OpenFoodFactsCachedProductSearch.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -74749,10 +74749,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheReadRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.ProviderCaches.cs",
+      "consumerPath": "Modules/OpenFoodFacts/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -74762,7 +74762,20 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheReadRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenFoodFactsProductCacheReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -74775,7 +74788,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheReadRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -74788,10 +74801,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.ProviderCaches.cs",
+      "consumerPath": "Modules/OpenFoodFacts/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 3
     },
@@ -74801,10 +74814,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/OpenFoodFacts/OpenFoodFactsProductCacheRepository.cs",
+      "consumerPath": "Modules/OpenFoodFacts/Infrastructure/Persistence/OpenFoodFactsProductCacheRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -74814,10 +74827,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs",
+      "consumerPath": "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -74827,7 +74840,20 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenFoodFactsProductCacheRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs",
@@ -74840,7 +74866,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -74853,7 +74879,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -74866,7 +74892,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -74879,10 +74905,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheWriteRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheRepository.cs",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -74892,10 +74918,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheWriteRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Services/OpenFoodFactsCachedProductSearch.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -74905,10 +74931,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheWriteRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.ProviderCaches.cs",
+      "consumerPath": "Modules/OpenFoodFacts/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -74918,7 +74944,20 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheWriteRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenFoodFactsProductCacheWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -74931,7 +74970,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheWriteRepository.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -74944,33 +74983,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IOpenFoodFactsService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IOpenFoodFactsService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsService.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Integrations/DependencyInjection.FoodData.cs",
@@ -74983,7 +74996,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsService.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
@@ -74996,10 +75009,36 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsService.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenFoodFactsService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Services/OpenFoodFactsCachedProductSearch.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenFoodFactsService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 10
     },
@@ -75009,7 +75048,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsService.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs",
@@ -75022,7 +75061,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsService.cs"
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -77794,32 +77833,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Products/Queries/GetProductById/GetProductByIdQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -78600,6 +78613,32 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -79264,32 +79303,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80070,6 +80083,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Lessons/Application/Queries/GetLessons/GetLessonsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -89169,19 +89208,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUnitOfWork",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Runtime/Common/Behaviors/CommandTransactionBehavior.cs",
       "isTest": false,
       "referenceCount": 1
@@ -89312,6 +89338,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Services/OpenFoodFactsCachedProductSearch.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/Application/Services/WeeklyGoalReminderProcessor.cs",
       "isTest": false,
       "referenceCount": 1
@@ -89380,6 +89419,19 @@
       "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/Images/ImagesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 10
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "IUnitOfWork",
@@ -89484,19 +89536,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.MappingAndCleanup.cs",
       "isTest": true,
       "referenceCount": 2
-    },
-    {
-      "contract": "IUnitOfWork",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 5
     },
     {
       "contract": "IUnitOfWork",
@@ -107834,33 +107873,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "SearchByBarcodeQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "SearchByBarcodeQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
+        "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/OpenFoodFacts/Mappings/OpenFoodFactsHttpMappings.cs",
@@ -107873,10 +107886,36 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
+        "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "SearchByBarcodeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "SearchByBarcodeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -107886,10 +107925,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
+        "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/OpenFoodFacts/OpenFoodFactsValidatorTests.cs",
+      "consumerPath": "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFacts/OpenFoodFactsValidatorTests.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -107899,7 +107938,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
+        "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/OpenFoodFactsControllerTests.cs",
@@ -107912,7 +107951,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
+        "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/OpenFoodFactsHttpMappingsTests.cs",
@@ -107925,33 +107964,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "SearchOpenFoodFactsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQueryValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "SearchOpenFoodFactsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
+        "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/OpenFoodFacts/Mappings/OpenFoodFactsHttpMappings.cs",
@@ -107964,10 +107977,36 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
+        "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "SearchOpenFoodFactsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "SearchOpenFoodFactsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
     },
@@ -107977,10 +108016,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
+        "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/OpenFoodFacts/OpenFoodFactsValidatorTests.cs",
+      "consumerPath": "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFacts/OpenFoodFactsValidatorTests.cs",
       "isTest": true,
       "referenceCount": 10
     },
@@ -107990,7 +108029,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
+        "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/OpenFoodFactsControllerTests.cs",
@@ -108003,7 +108042,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
+        "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/OpenFoodFactsHttpMappingsTests.cs",

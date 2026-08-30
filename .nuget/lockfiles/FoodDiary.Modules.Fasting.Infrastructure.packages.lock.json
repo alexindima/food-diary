@@ -358,6 +358,8 @@
           "FoodDiary.Modules.Images.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Lessons.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Lessons.PersistenceModel": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Domain": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.PersistenceModel": "[1.0.0, )",
           "Microsoft.AspNetCore.DataProtection": "[10.0.11, )",
@@ -544,6 +546,21 @@
           "FoodDiary.Modules.Lessons.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.openfoodfacts.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.openfoodfacts.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.OpenFoodFacts.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
       "fooddiary.modules.weeklygoals.domain": {

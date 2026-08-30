@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><IsPackable>false</IsPackable></PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+  <ItemGroup><Using Include="FoodDiary.Modules.OpenFoodFacts.Application.Tests.Support" /><Using Include="NSubstitute" /><Using Include="Xunit" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Application\FoodDiary.Modules.OpenFoodFacts.Application.csproj" />
+    <ProjectReference Include="..\..\..\..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
+  </ItemGroup>
+</Project>

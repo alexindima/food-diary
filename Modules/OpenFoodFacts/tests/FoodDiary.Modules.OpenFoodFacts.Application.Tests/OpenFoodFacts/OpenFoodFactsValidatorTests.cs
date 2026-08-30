@@ -1,0 +1,76 @@
+using FluentValidation.TestHelper;
+using FoodDiary.Application.OpenFoodFacts.Queries.SearchByBarcode;
+using FoodDiary.Application.OpenFoodFacts.Queries.SearchProducts;
+
+namespace FoodDiary.Modules.OpenFoodFacts.Application.Tests.OpenFoodFacts;
+
+[ExcludeFromCodeCoverage]
+public class OpenFoodFactsValidatorTests {
+    private readonly SearchByBarcodeQueryValidator _barcodeValidator = new();
+    private readonly SearchOpenFoodFactsQueryValidator _searchValidator = new();
+
+    [Fact]
+    public async Task BarcodeValidator_WithEmptyBarcode_HasError() {
+        var query = new SearchByBarcodeQuery("");
+        TestValidationResult<SearchByBarcodeQuery> result = await _barcodeValidator.TestValidateAsync(query);
+        result.ShouldHaveValidationErrorFor(q => q.Barcode);
+    }
+
+    [Fact]
+    public async Task BarcodeValidator_WithTooLongBarcode_HasError() {
+        var query = new SearchByBarcodeQuery(new string('1', 129));
+        TestValidationResult<SearchByBarcodeQuery> result = await _barcodeValidator.TestValidateAsync(query);
+        result.ShouldHaveValidationErrorFor(q => q.Barcode);
+    }
+
+    [Fact]
+    public async Task BarcodeValidator_WithValidBarcode_NoErrors() {
+        var query = new SearchByBarcodeQuery("4600000000001");
+        TestValidationResult<SearchByBarcodeQuery> result = await _barcodeValidator.TestValidateAsync(query);
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task BarcodeValidator_WithMaxLengthBarcode_NoErrors() {
+        var query = new SearchByBarcodeQuery(new string('1', 128));
+        TestValidationResult<SearchByBarcodeQuery> result = await _barcodeValidator.TestValidateAsync(query);
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task SearchValidator_WithEmptySearch_HasError() {
+        var query = new SearchOpenFoodFactsQuery("");
+        TestValidationResult<SearchOpenFoodFactsQuery> result = await _searchValidator.TestValidateAsync(query);
+        result.ShouldHaveValidationErrorFor(q => q.Search);
+    }
+
+    [Fact]
+    public async Task SearchValidator_WithTooLongSearch_HasError() {
+        var query = new SearchOpenFoodFactsQuery(new string('x', SearchOpenFoodFactsQueryValidator.MaximumSearchLength + 1));
+
+        TestValidationResult<SearchOpenFoodFactsQuery> result = await _searchValidator.TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(q => q.Search);
+    }
+
+    [Fact]
+    public async Task SearchValidator_WithLimitTooLow_HasError() {
+        var query = new SearchOpenFoodFactsQuery("milk", Limit: 0);
+        TestValidationResult<SearchOpenFoodFactsQuery> result = await _searchValidator.TestValidateAsync(query);
+        result.ShouldHaveValidationErrorFor(q => q.Limit);
+    }
+
+    [Fact]
+    public async Task SearchValidator_WithLimitTooHigh_HasError() {
+        var query = new SearchOpenFoodFactsQuery("milk", Limit: 51);
+        TestValidationResult<SearchOpenFoodFactsQuery> result = await _searchValidator.TestValidateAsync(query);
+        result.ShouldHaveValidationErrorFor(q => q.Limit);
+    }
+
+    [Fact]
+    public async Task SearchValidator_WithValidQuery_NoErrors() {
+        var query = new SearchOpenFoodFactsQuery("milk", Limit: 10);
+        TestValidationResult<SearchOpenFoodFactsQuery> result = await _searchValidator.TestValidateAsync(query);
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+}

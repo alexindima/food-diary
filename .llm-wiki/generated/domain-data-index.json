@@ -4,7 +4,7 @@
     "domainTypes": 262,
     "entities": 78,
     "valueObjects": 115,
-    "invariants": 496,
+    "invariants": 501,
     "persistenceMappings": 86,
     "indexes": 155,
     "relationships": 100
@@ -413,8 +413,8 @@
       "area": "FoodDiary",
       "name": "OpenFoodFactsProduct",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
-      "line": 4
+      "path": "Modules/OpenFoodFacts/Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
+      "line": 2
     },
     {
       "area": "FoodDiary",
@@ -5173,6 +5173,41 @@
     },
     {
       "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
+      "path": "Modules/OpenFoodFacts/Domain/OpenFoodFactsDomainGuard.cs",
+      "line": 8
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/OpenFoodFacts/Domain/OpenFoodFactsDomainGuard.cs",
+      "line": 13
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/OpenFoodFacts/Domain/OpenFoodFactsDomainGuard.cs",
+      "line": 24
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be a finite non-negative number.\")",
+      "path": "Modules/OpenFoodFacts/Domain/OpenFoodFactsDomainGuard.cs",
+      "line": 34
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\")",
+      "path": "Modules/OpenFoodFacts/Domain/OpenFoodFactsDomainGuard.cs",
+      "line": 42
+    },
+    {
+      "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"A reminder cannot be marked for a goal with reminders disabled.\")",
       "path": "Modules/WeeklyGoals/Domain/Entities/WeeklyGoals/WeeklyGoal.cs",
@@ -6136,7 +6171,7 @@
         "e => e.Name)"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/OpenFoodFacts/OpenFoodFactsProductConfiguration.cs"
+      "path": "Modules/OpenFoodFacts/Infrastructure/Model/Configurations/OpenFoodFactsProductConfiguration.cs"
     },
     {
       "area": "FoodDiary",

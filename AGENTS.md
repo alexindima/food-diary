@@ -39,7 +39,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Lessons logical module: `Modules/Lessons/AGENTS.md`
 - Meal planning application module: `FoodDiary.Application.MealPlanning/AGENTS.md`
 - Meals application module: `FoodDiary.Application.Meals/AGENTS.md`
-- Open Food Facts application module: `FoodDiary.Application.OpenFoodFacts/AGENTS.md`
+- Open Food Facts logical module: `Modules/OpenFoodFacts/AGENTS.md`
+- Open Food Facts application abstractions: `Modules/OpenFoodFacts/Application/Abstractions/AGENTS.md`
+- Open Food Facts contracts: `Modules/OpenFoodFacts/Contracts/AGENTS.md`
+- Open Food Facts domain: `Modules/OpenFoodFacts/Domain/AGENTS.md`
+- Open Food Facts infrastructure: `Modules/OpenFoodFacts/Infrastructure/AGENTS.md`
+- Open Food Facts persistence model: `Modules/OpenFoodFacts/Infrastructure/Model/AGENTS.md`
 - Products application module: `FoodDiary.Application.Products/AGENTS.md`
 - Recipe community application module: `FoodDiary.Application.RecipeCommunity/AGENTS.md`
 - Recipes application module: `FoodDiary.Application.Recipes/AGENTS.md`

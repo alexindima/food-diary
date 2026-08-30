@@ -492,6 +492,15 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.openfoodfacts.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.openfoodfacts.contracts": {
+        "type": "Project"
+      },
       "fooddiary.results": {
         "type": "Project"
       },

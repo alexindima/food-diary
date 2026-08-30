@@ -799,14 +799,15 @@
           "FoodDiary.Mediator": "[1.0.0, )"
         }
       },
-      "fooddiary.application.openfoodfacts": {
+      "FoodDiary.Application.OpenFoodFacts": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Domain": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )"
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.application.products": {
@@ -816,10 +817,10 @@
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Application.Images": "[1.0.0, )",
-          "FoodDiary.Application.OpenFoodFacts": "[1.0.0, )",
           "FoodDiary.Application.Usda": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )"
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.application.recipecommunity": {
@@ -962,6 +963,8 @@
           "FoodDiary.Modules.Images.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Lessons.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Lessons.PersistenceModel": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Domain": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.PersistenceModel": "[1.0.0, )",
           "Microsoft.CodeAnalysis.CSharp.Workspaces": "[5.9.0, )",
@@ -983,6 +986,8 @@
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.MailInbox.Client": "[1.0.0, )",
           "FoodDiary.MailRelay.Client": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.Http.Resilience": "[10.9.0, )",
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "[8.22.0, )",
           "SkiaSharp": "[4.151.1, )",
@@ -1306,6 +1311,40 @@
           "FoodDiary.Modules.Lessons.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.openfoodfacts.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.openfoodfacts.contracts": {
+        "type": "Project"
+      },
+      "fooddiary.modules.openfoodfacts.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.openfoodfacts.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.OpenFoodFacts": "[1.0.0, )",
+          "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.PersistenceModel": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Npgsql": "[10.0.3, )"
+        }
+      },
+      "fooddiary.modules.openfoodfacts.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.OpenFoodFacts.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
       "fooddiary.modules.weeklygoals.application.abstractions": {

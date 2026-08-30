@@ -2196,13 +2196,6 @@
     },
     {
       "category": "health",
-      "name": "CaloriesPer100G",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/OpenFoodFacts/Models/OpenFoodFactsProductModel.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "FoodDiary.Application.Abstractions/Products/Models/ProductOverviewReadItem.cs",
@@ -3656,13 +3649,6 @@
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/Meals/MealItem.cs",
       "line": 30
-    },
-    {
-      "category": "health",
-      "name": "CaloriesPer100G",
-      "type": "double?",
-      "path": "FoodDiary.Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
-      "line": 17
     },
     {
       "category": "health",
@@ -6347,6 +6333,20 @@
     },
     {
       "category": "health",
+      "name": "CaloriesPer100G",
+      "type": "double?",
+      "path": "Modules/OpenFoodFacts/Contracts/Abstractions/OpenFoodFacts/Models/OpenFoodFactsProductModel.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "CaloriesPer100G",
+      "type": "double?",
+      "path": "Modules/OpenFoodFacts/Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
+      "line": 15
+    },
+    {
+      "category": "health",
       "name": "EstimatedTdee",
       "type": "double?",
       "path": "Modules/Tdee/Application/Common/TdeeUserProfile.cs",
@@ -7747,13 +7747,6 @@
     },
     {
       "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/OpenFoodFacts/Models/OpenFoodFactsProductModel.cs",
-      "line": 8
-    },
-    {
-      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.Application.Abstractions/Products/Models/ProductOverviewReadItem.cs",
@@ -8458,20 +8451,6 @@
       "type": "imageUrl,",
       "path": "FoodDiary.Domain/Entities/Meals/MealItem.cs",
       "line": 222
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
-      "line": 16
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrlMaxLength",
-      "type": "imageUrl,",
-      "path": "FoodDiary.Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
-      "line": 75
     },
     {
       "category": "privateContent",
@@ -9676,6 +9655,27 @@
       "type": "ImageAssetId?",
       "path": "Modules/Images/Application/Common/ImageAssetResolution.cs",
       "line": 6
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/OpenFoodFacts/Contracts/Abstractions/OpenFoodFacts/Models/OpenFoodFactsProductModel.cs",
+      "line": 8
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/OpenFoodFacts/Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
+      "line": 14
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrlMaxLength",
+      "type": "imageUrl,",
+      "path": "Modules/OpenFoodFacts/Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
+      "line": 73
     }
   ],
   "boundaryFiles": [

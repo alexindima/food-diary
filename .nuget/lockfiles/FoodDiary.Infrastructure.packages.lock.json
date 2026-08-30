@@ -671,6 +671,21 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.openfoodfacts.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.openfoodfacts.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.OpenFoodFacts.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
+        }
+      },
       "fooddiary.modules.weeklygoals.domain": {
         "type": "Project",
         "dependencies": {

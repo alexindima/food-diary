@@ -20,7 +20,7 @@ using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Admin;
 using FoodDiary.Infrastructure.Persistence.Billing;
 using FoodDiary.Infrastructure.Persistence.MealPlans;
-using FoodDiary.Infrastructure.Persistence.OpenFoodFacts;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.RecipeComments;
 using FoodDiary.Infrastructure.Persistence.RecipeLikes;
 using FoodDiary.Infrastructure.Persistence.Usda;

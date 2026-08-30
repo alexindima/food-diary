@@ -12,7 +12,6 @@ public static partial class DependencyInjection {
         services.AddTrackingPersistence();
         services.AddAiPersistence();
         services.AddNotificationPersistence();
-        services.AddProviderCachePersistence();
         services.AddMarketingPersistence();
         services.AddLearningPersistence();
         services.AddRecipeInteractionPersistence();

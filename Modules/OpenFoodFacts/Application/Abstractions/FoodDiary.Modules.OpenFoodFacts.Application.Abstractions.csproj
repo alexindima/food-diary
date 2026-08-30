@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Modules.OpenFoodFacts.Application.Abstractions</AssemblyName>
+    <RootNamespace>FoodDiary.Application.Abstractions.OpenFoodFacts</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Contracts\FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
+  </ItemGroup>
+</Project>

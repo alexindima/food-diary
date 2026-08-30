@@ -31,6 +31,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\FoodDiary.Application.Runtime\FoodDiary.Application.Runtime.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Products\FoodDiary.Application.Products.csproj" />
+    <ProjectReference Include="..\..\Modules\OpenFoodFacts\Application\FoodDiary.Modules.OpenFoodFacts.Application.csproj" />
+    <ProjectReference Include="..\..\Modules\OpenFoodFacts\Application\Abstractions\FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Recipes\FoodDiary.Application.Recipes.csproj" />
     <ProjectReference Include="..\..\Modules\Fasting\Contracts\FoodDiary.Modules.Fasting.Contracts.csproj" />
     <ProjectReference Include="..\..\Modules\Favorites\Application\FoodDiary.Application.Favorites.csproj" />
@@ -44,7 +46,6 @@
     <ProjectReference Include="..\..\Modules\Hydration\Application\FoodDiary.Modules.Hydration.Application.csproj" />
     <ProjectReference Include="..\..\Modules\Hydration\Infrastructure\FoodDiary.Modules.Hydration.Infrastructure.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Exercises\FoodDiary.Application.Exercises.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Application.OpenFoodFacts\FoodDiary.Application.OpenFoodFacts.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Users\FoodDiary.Application.Users.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Marketing\FoodDiary.Application.Marketing.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Billing\FoodDiary.Application.Billing.csproj" />

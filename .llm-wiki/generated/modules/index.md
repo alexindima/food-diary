@@ -40,7 +40,7 @@ are reported separately; `none observed` never means proven isolation.
 | [MealPlanning](meal-planning.md) | aggregate-owner | 0 | 4 | 0 | 4 | project-reference-matrix |
 | [Meals](meals.md) | aggregate-owner | 0 | 8 | 0 | 7 | project-reference-matrix |
 | [Notifications](notifications.md) | aggregate-owner | 0 | 0 | 0 | 5 | project-reference-matrix |
-| [OpenFoodFacts](open-food-facts.md) | adapter | 0 | 0 | 0 | 6 | project-reference-matrix |
+| [OpenFoodFacts](open-food-facts.md) | aggregate-owner | 0 | 0 | 0 | 5 | project-reference-matrix |
 | [Products](products.md) | aggregate-owner | 0 | 6 | 0 | 4 | project-reference-matrix |
 | [RecipeCommunity](recipe-community.md) | aggregate-owner | 0 | 5 | 0 | 4 | project-reference-matrix |
 | [Recipes](recipes.md) | aggregate-owner | 0 | 6 | 0 | 4 | project-reference-matrix |

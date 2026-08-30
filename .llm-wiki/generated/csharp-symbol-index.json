@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3505,
-    "symbols": 3507,
+    "sourceFiles": 3508,
+    "symbols": 3509,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 218,
+    "dependencyInjectionRegistrations": 217,
     "kinds": {
-      "class": 1834,
+      "class": 1836,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1359,
+      "Other": 1361,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -2516,41 +2516,6 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Nutrition/Common/ManualNutritionLimits.cs",
-      "line": 2
-    },
-    {
-      "name": "IOpenFoodFactsProductCacheReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheReadRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IOpenFoodFactsProductCacheRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IOpenFoodFactsProductCacheWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheWriteRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IOpenFoodFactsService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsService.cs",
-      "line": 4
-    },
-    {
-      "name": "OpenFoodFactsProductModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/OpenFoodFacts/Models/OpenFoodFactsProductModel.cs",
       "line": 2
     },
     {
@@ -7776,69 +7741,6 @@
       "line": 11
     },
     {
-      "name": "IOpenFoodFactsCachedProductSearch",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs",
-      "line": 4
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.OpenFoodFacts/DependencyInjection.cs",
-      "line": 8
-    },
-    {
-      "name": "SearchByBarcodeQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "SearchByBarcodeQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "SearchByBarcodeQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "SearchOpenFoodFactsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "SearchOpenFoodFactsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "SearchOpenFoodFactsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "OpenFoodFactsCachedProductSearch",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs",
-      "line": 7
-    },
-    {
       "name": "CreateProductCommand",
       "kind": "record",
       "role": "Command",
@@ -10065,13 +9967,6 @@
       "line": 7
     },
     {
-      "name": "OpenFoodFactsProduct",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
-      "line": 4
-    },
-    {
       "name": "Product",
       "kind": "class",
       "role": "Entity",
@@ -11293,13 +11188,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.ProviderCaches.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.RecentItems.cs",
       "line": 6
     },
@@ -11773,13 +11661,6 @@
       "line": 6
     },
     {
-      "name": "OpenFoodFactsProductConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/OpenFoodFacts/OpenFoodFactsProductConfiguration.cs",
-      "line": 6
-    },
-    {
       "name": "OutboxReplayAuditConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -12176,7 +12057,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "FoodDiaryDbContext",
@@ -12316,13 +12197,6 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Notifications/WebPushSubscriptionRepository.cs",
-      "line": 8
-    },
-    {
-      "name": "OpenFoodFactsProductCacheRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/OpenFoodFacts/OpenFoodFactsProductCacheRepository.cs",
       "line": 8
     },
     {
@@ -24079,6 +23953,146 @@
       "line": 11
     },
     {
+      "name": "IOpenFoodFactsProductCacheReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheReadRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IOpenFoodFactsProductCacheRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IOpenFoodFactsProductCacheWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheWriteRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IOpenFoodFactsService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs",
+      "line": 4
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/OpenFoodFacts/Application/DependencyInjection.cs",
+      "line": 8
+    },
+    {
+      "name": "SearchByBarcodeQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "SearchByBarcodeQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "SearchByBarcodeQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "SearchOpenFoodFactsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "SearchOpenFoodFactsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "SearchOpenFoodFactsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/OpenFoodFacts/Application/Queries/SearchProducts/SearchOpenFoodFactsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "OpenFoodFactsCachedProductSearch",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/OpenFoodFacts/Application/Services/OpenFoodFactsCachedProductSearch.cs",
+      "line": 7
+    },
+    {
+      "name": "OpenFoodFactsProductModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/OpenFoodFacts/Contracts/Abstractions/OpenFoodFacts/Models/OpenFoodFactsProductModel.cs",
+      "line": 2
+    },
+    {
+      "name": "IOpenFoodFactsCachedProductSearch",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/OpenFoodFacts/Contracts/OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs",
+      "line": 4
+    },
+    {
+      "name": "OpenFoodFactsProduct",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/OpenFoodFacts/Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
+      "line": 2
+    },
+    {
+      "name": "OpenFoodFactsDomainGuard",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/OpenFoodFacts/Domain/OpenFoodFactsDomainGuard.cs",
+      "line": 4
+    },
+    {
+      "name": "OpenFoodFactsProductConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/OpenFoodFacts/Infrastructure/Model/Configurations/OpenFoodFactsProductConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "OpenFoodFactsPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/OpenFoodFacts/Infrastructure/Model/OpenFoodFactsPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/OpenFoodFacts/Infrastructure/ModuleRegistration.cs",
+      "line": 7
+    },
+    {
+      "name": "OpenFoodFactsProductCacheRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/OpenFoodFacts/Infrastructure/Persistence/OpenFoodFactsProductCacheRepository.cs",
+      "line": 9
+    },
+    {
       "name": "ITdeeUserProfileService",
       "kind": "interface",
       "role": "Service",
@@ -25685,21 +25699,21 @@
     },
     {
       "interface": "IOpenFoodFactsCachedProductSearch",
-      "interfacePath": "FoodDiary.Application.OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs",
+      "interfacePath": "Modules/OpenFoodFacts/Contracts/OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs",
       "implementation": "OpenFoodFactsCachedProductSearch",
-      "implementationPath": "FoodDiary.Application.OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs",
+      "implementationPath": "Modules/OpenFoodFacts/Application/Services/OpenFoodFactsCachedProductSearch.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IOpenFoodFactsProductCacheRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsProductCacheRepository.cs",
+      "interfacePath": "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheRepository.cs",
       "implementation": "OpenFoodFactsProductCacheRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/OpenFoodFacts/OpenFoodFactsProductCacheRepository.cs",
+      "implementationPath": "Modules/OpenFoodFacts/Infrastructure/Persistence/OpenFoodFactsProductCacheRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IOpenFoodFactsService",
-      "interfacePath": "FoodDiary.Application.Abstractions/OpenFoodFacts/Common/IOpenFoodFactsService.cs",
+      "interfacePath": "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs",
       "implementation": "OpenFoodFactsService",
       "implementationPath": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
       "confidence": "naming-convention"
@@ -26603,13 +26617,6 @@
       "line": 29
     },
     {
-      "service": "IOpenFoodFactsCachedProductSearch",
-      "implementation": "OpenFoodFactsCachedProductSearch",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.OpenFoodFacts/DependencyInjection.cs",
-      "line": 14
-    },
-    {
       "service": "IProductSearchSuggestionProvider",
       "implementation": "OpenFoodFactsProductSearchSuggestionProvider",
       "lifetime": "Scoped",
@@ -27028,13 +27035,6 @@
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Products.cs",
       "line": 16
-    },
-    {
-      "service": "IOpenFoodFactsProductCacheRepository",
-      "implementation": "OpenFoodFactsProductCacheRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.ProviderCaches.cs",
-      "line": 9
     },
     {
       "service": "IRecentItemRepository",
@@ -27728,6 +27728,13 @@
       "lifetime": "Scoped",
       "path": "Modules/Lessons/Application/DependencyInjection.cs",
       "line": 17
+    },
+    {
+      "service": "IOpenFoodFactsCachedProductSearch",
+      "implementation": "OpenFoodFactsCachedProductSearch",
+      "lifetime": "Scoped",
+      "path": "Modules/OpenFoodFacts/Application/DependencyInjection.cs",
+      "line": 14
     },
     {
       "service": "ITdeeUserProfileService",

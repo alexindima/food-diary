@@ -46,6 +46,7 @@ Use this file when deciding where backend code belongs.
 | Daily Advices persistence model | `Modules/DailyAdvices/Infrastructure/Model` | EF configuration and model-builder seam | Shared `DbContext`, migrations, repository behavior |
 | Daily Advices infrastructure | `Modules/DailyAdvices/Infrastructure` | Repository and complete module registration | HTTP transport and central migrations |
 | Content Reports module | `Modules/ContentReports` | Creation, moderation contracts, aggregate, persistence model/adapter, and module tests | Central `DbContext`, migrations, HTTP transport, Admin orchestration |
+| OpenFoodFacts module | `Modules/OpenFoodFacts` | Public catalog queries, cached-search contract and lifecycle, provider/cache ports, durable cache entity, persistence adapter/model, and focused tests | Provider HTTP transport in Integrations; central `DbContext`, migrations, snapshot, and HTTP presentation |
 | Images application ports | `Modules/Images/Application/Abstractions` | Image access, storage, cleanup, repository and deletion-outbox ports | Provider SDKs, EF implementations, HTTP transport |
 | Images use cases | `Modules/Images/Application` | Presign, confirm, delete, resolution, cleanup and legacy application assembly identity | Storage providers, EF, HTTP transport |
 | Images persistence model | `Modules/Images/Infrastructure/Model` | `ImageAsset` EF configuration and model-builder seam | Shared DbContext, migrations, outbox engine |

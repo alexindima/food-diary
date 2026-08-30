@@ -17,10 +17,10 @@ public sealed class ProductsModuleExtractionTests {
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Application.Images",
-            "FoodDiary.Application.OpenFoodFacts",
             "FoodDiary.Application.Usda",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.OpenFoodFacts.Contracts",
         ], references);
     }
 

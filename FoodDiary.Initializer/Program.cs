@@ -21,7 +21,7 @@ using FoodDiary.Application.MealPlanning;
 using FoodDiary.Application.RecipeCommunity;
 using FoodDiary.Application.Tdee;
 using FoodDiary.Application.Notifications;
-using FoodDiary.Application.OpenFoodFacts;
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
 using FoodDiary.Application.Products;
 using FoodDiary.Application.Recipes;
 using FoodDiary.Application.Marketing;
