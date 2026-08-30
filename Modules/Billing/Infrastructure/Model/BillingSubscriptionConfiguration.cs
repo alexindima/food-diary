@@ -3,7 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Infrastructure.Persistence.Configurations.Billing;
+namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
 internal sealed class BillingSubscriptionConfiguration : IEntityTypeConfiguration<BillingSubscription> {
     public void Configure(EntityTypeBuilder<BillingSubscription> builder) {

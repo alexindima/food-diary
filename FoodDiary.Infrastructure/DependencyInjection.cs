@@ -13,7 +13,6 @@ public static partial class DependencyInjection {
         services.AddPersistence(configuration);
         services.AddFeatureRepositories();
         services.AddAuthenticationInfrastructure();
-        services.AddBillingInfrastructure();
         services.AddExportInfrastructure();
 
         return services;

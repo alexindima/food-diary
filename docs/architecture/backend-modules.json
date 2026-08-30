@@ -94,8 +94,8 @@
     },
     "Billing": {
       "role": "aggregate-owner",
-      "physicalIsolation": "assembly",
-      "enforcement": "assembly-isolated",
+      "physicalIsolation": "logical-module",
+      "enforcement": "project-reference-matrix-and-module-boundary-tests",
       "ownedEntities": [
         "BillingSubscription",
         "BillingPayment",
@@ -106,13 +106,13 @@
           "FoodDiary.Application.Billing"
         ],
         "abstractionAreas": [
-          "Billing"
+          "Modules/Billing/Application/Abstractions"
         ],
         "domainAreas": [
-          "Billing"
+          "Modules/Billing/Domain"
         ],
         "persistenceAreas": [
-          "Billing"
+          "Modules/Billing/Infrastructure"
         ],
         "adapterAreas": [
           "FoodDiary.Integrations/Billing"

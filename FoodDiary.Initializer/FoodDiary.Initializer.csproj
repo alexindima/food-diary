@@ -27,7 +27,7 @@
     <ProjectReference Include="..\Modules\OpenFoodFacts\Infrastructure\FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Users\FoodDiary.Application.Users.csproj" />
     <ProjectReference Include="..\Modules\Marketing\Infrastructure\FoodDiary.Modules.Marketing.Infrastructure.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Billing\FoodDiary.Application.Billing.csproj" />
+    <ProjectReference Include="..\Modules\Billing\Infrastructure\FoodDiary.Modules.Billing.Infrastructure.csproj" />
     <ProjectReference Include="..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Images\Application\FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="..\Modules\Images\Infrastructure\FoodDiary.Modules.Images.Infrastructure.csproj" />

@@ -20,7 +20,7 @@ are reported separately; `none observed` never means proven isolation.
 | --- | --- | ---: | ---: | ---: | ---: | --- |
 | [Admin](admin.md) | orchestrator | 0 | 6 | 0 | 5 | project-reference-matrix |
 | [Ai](ai.md) | orchestrator | 0 | 3 | 0 | 6 | project-reference-matrix |
-| [Billing](billing.md) | aggregate-owner | 0 | 1 | 0 | 5 | assembly-isolated |
+| [Billing](billing.md) | aggregate-owner | 0 | 0 | 0 | 5 | project-reference-matrix-and-module-boundary-tests |
 | [BodyMetrics](body-metrics.md) | aggregate-owner | 0 | 3 | 0 | 4 | project-reference-matrix |
 | [ContentReports](content-reports.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix |
 | [Cycles](cycles.md) | aggregate-owner | 0 | 2 | 0 | 5 | project-reference-matrix |

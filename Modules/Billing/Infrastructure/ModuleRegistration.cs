@@ -1,11 +1,13 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Infrastructure.Persistence.Billing;
+using FoodDiary.Application.Billing;
+using FoodDiary.Modules.Billing.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Billing.Infrastructure;
 
-public static partial class DependencyInjection {
-    private static void AddBillingInfrastructure(this IServiceCollection services) {
+public static class ModuleRegistration {
+    public static IServiceCollection AddBillingModule(this IServiceCollection services) {
+        services.AddBillingApplication();
         services.AddScoped<IBillingSubscriptionRepository, BillingSubscriptionRepository>();
         services.AddScoped<IBillingSubscriptionReadRepository>(static provider => provider.GetRequiredService<IBillingSubscriptionRepository>());
         services.AddScoped<IBillingSubscriptionReadModelRepository>(static provider => provider.GetRequiredService<IBillingSubscriptionRepository>());
@@ -18,6 +20,6 @@ public static partial class DependencyInjection {
         services.AddScoped<IBillingWebhookEventWriteRepository>(static provider => provider.GetRequiredService<IBillingWebhookEventRepository>());
         services.AddScoped<IBillingTransactionRunner, EfBillingTransactionRunner>();
         services.AddScoped<IBillingCheckoutLock, PostgresBillingCheckoutLock>();
-
+        return services;
     }
 }

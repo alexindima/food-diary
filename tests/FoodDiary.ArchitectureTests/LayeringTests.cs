@@ -315,7 +315,6 @@ public class LayeringTests {
             "services.AddPersistence(configuration);",
             "services.AddFeatureRepositories();",
             "services.AddAuthenticationInfrastructure();",
-            "services.AddBillingInfrastructure();",
             "services.AddExportInfrastructure();",
         ];
 

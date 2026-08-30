@@ -2,12 +2,12 @@
 
 ## Scope
 
-Rules for `FoodDiary.Application.Billing/`.
+Rules for `Modules/Billing/Application/`.
 
 ## Responsibilities
 
 - Own billing commands, queries, models, application services, and webhook orchestration.
-- Register handlers, validators, and services through `AddBillingModule`.
+- Register handlers, validators, and services through `AddBillingApplication`; Infrastructure exposes `AddBillingModule`.
 - Depend on application-facing ports rather than infrastructure or provider implementations.
 
 ## Rules
@@ -19,6 +19,6 @@ Rules for `FoodDiary.Application.Billing/`.
 
 ## Commands
 
-- Build: `dotnet build FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj`
-- Tests: `dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj`
+- Build: `dotnet build Modules/Billing/Application/FoodDiary.Application.Billing.csproj`
+- Tests: `dotnet test Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/FoodDiary.Modules.Billing.Application.Tests.csproj`
 - Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`

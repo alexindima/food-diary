@@ -15,20 +15,15 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj`
+- Extracted project: `Modules/Billing/Application/FoodDiary.Application.Billing.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Users
+- Abstraction-contract dependencies: none observed
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Billing`
-- `FoodDiary.Application.Billing`
-- `FoodDiary.Domain/Entities/Billing`
-- `FoodDiary.Infrastructure/Persistence/Billing`
-- `FoodDiary.Infrastructure/Persistence/Configurations/Billing`
 - `FoodDiary.Integrations/Billing`
 - `FoodDiary.Presentation.Api/Features/Billing`
 
@@ -52,68 +47,40 @@ Source: `FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: assembly
-- Architecture guardrails: assembly-isolated
+- Physical isolation: logical-module
+- Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: BillingSubscription, BillingPayment, BillingWebhookEvent
-- Public contract files: 29
+- Public contract files: 0
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 29
-- Interfaces: 17
-- DTO/read-model/projection types: 9
+- Public contract types: 0
+- Interfaces: 0
+- DTO/read-model/projection types: 0
 - Enums: 0
-- Exported repository-shaped contracts: 10
-- Contracts referencing domain entities: 5
-- `class BillingInputLimits`
-- `class BillingPaymentAlreadyExistsException`
-- `class BillingWebhookEventAlreadyProcessedException`
-- `interface IBillingCheckoutLock`
-- `interface IBillingMarketingConversionRecorder`
-- `interface IBillingPaymentReadRepository`
-- `interface IBillingPaymentRepository`
-- `interface IBillingPaymentWriteRepository`
-- `interface IBillingProviderGateway`
-- `interface IBillingProviderGatewayAccessor`
-- `interface IBillingPublicConfigProvider`
-- `interface IBillingRecurringProviderGateway`
-- `interface IBillingSubscriptionReadModelRepository`
-- `interface IBillingSubscriptionReadRepository`
-- `interface IBillingSubscriptionRepository`
-- `interface IBillingSubscriptionWriteRepository`
-- `interface IBillingTransactionRunner`
-- `interface IBillingWebhookEventReadRepository`
-- `interface IBillingWebhookEventRepository`
-- `interface IBillingWebhookEventWriteRepository`
-- `record BillingCheckoutSessionModel`
-- `record BillingCheckoutSessionRequestModel`
-- `record BillingPortalSessionModel`
-- `record BillingPortalSessionRequestModel`
-- `record BillingPublicConfigModel`
-- `record BillingRecurringPaymentModel`
-- `record BillingRecurringPaymentRequestModel`
-- `record BillingSubscriptionOverviewReadModel`
-- `record BillingWebhookEventModel`
+- Exported repository-shaped contracts: 0
+- Contracts referencing domain entities: 0
+- No public declaration was found in the mapped abstraction areas.
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.OverviewAndContextTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.PortalAndTrialCommandTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.RenewalAndAccessServiceTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Billing/NoopBillingCheckoutLock.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.OverviewAndContextTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.PortalAndTrialCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalAndAccessServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/NoopBillingCheckoutLock.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/Domain/BillingInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Integrations/BillingProviderGatewayAccessorTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Integrations/BillingPublicConfigProviderTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayResilienceTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/BillingModuleExtractionTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/BillingInvariantTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Integrations/BillingProviderGatewayAccessorTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Integrations/BillingPublicConfigProviderTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/BillingGatewayResilienceTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/BillingGatewayTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.JobManager.Tests/BillingRecoveryJobsTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/BillingControllerTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/BillingHttpMappingsTests.cs`

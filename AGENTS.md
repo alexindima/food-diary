@@ -67,7 +67,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Presentation adapter: `FoodDiary.Presentation.Api/AGENTS.md`
 - API host/presentation: `FoodDiary.Web.Api/AGENTS.md`
 - Application runtime: `FoodDiary.Application.Runtime/AGENTS.md`
-- Billing application module: `FoodDiary.Application.Billing/AGENTS.md`
+- Billing logical module: `Modules/Billing/AGENTS.md`
+- Billing application: `Modules/Billing/Application/AGENTS.md`
+- Billing application abstractions: `Modules/Billing/Application/Abstractions/AGENTS.md`
+- Billing domain: `Modules/Billing/Domain/AGENTS.md`
+- Billing infrastructure: `Modules/Billing/Infrastructure/AGENTS.md`
+- Billing persistence model: `Modules/Billing/Infrastructure/Model/AGENTS.md`
 - Marketing logical module: `Modules/Marketing/AGENTS.md`
 - Marketing application: `Modules/Marketing/Application/AGENTS.md`
 - Notifications application module: `FoodDiary.Application.Notifications/AGENTS.md`

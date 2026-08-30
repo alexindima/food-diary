@@ -33,7 +33,7 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Admin;
-using FoodDiary.Infrastructure.Persistence.Billing;
+using FoodDiary.Modules.Billing.Infrastructure.Persistence;
 using FoodDiary.Modules.Lessons.Infrastructure.Persistence;
 using FoodDiary.Modules.ContentReports.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Dietologist;

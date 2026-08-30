@@ -1,8 +1,9 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Billing;
+namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
 public sealed class BillingWebhookEventRepository(FoodDiaryDbContext context, TimeProvider? timeProvider = null) : IBillingWebhookEventRepository {
     private readonly TimeProvider _timeProvider = timeProvider ?? TimeProvider.System;

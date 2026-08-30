@@ -1,8 +1,9 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Billing;
+namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
 public sealed class BillingPaymentRepository(FoodDiaryDbContext context) : IBillingPaymentRepository {
     public Task<BillingPayment?> GetByExternalPaymentIdAsync(

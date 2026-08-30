@@ -133,21 +133,21 @@
       "area": "FoodDiary",
       "name": "BillingPayment",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
       "line": 7
     },
     {
       "area": "FoodDiary",
       "name": "BillingSubscription",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
       "line": 7
     },
     {
       "area": "FoodDiary",
       "name": "BillingWebhookEvent",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs",
       "line": 6
     },
     {
@@ -2051,174 +2051,6 @@
     },
     {
       "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 67
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Billing subscription id cannot be empty.\", nameof(billingSubscriptionId))",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 71
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Billing subscription id cannot be empty.\", nameof(billingSubscriptionId))",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 130
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Unsupported billing provider.\", nameof(provider))",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 196
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 212
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 215
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 226
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 231
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Start timestamp cannot be after end timestamp.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 242
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 46
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Unsupported billing provider.\", nameof(provider))",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 184
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 200
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 203
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 218
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\")",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 224
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Start timestamp cannot be after end timestamp.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 252
-    },
-    {
-      "area": "FoodDiary",
-      "type": "InvalidOperationException",
-      "message": "throw new InvalidOperationException(\"A processed webhook event cannot be marked as failed.\")",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 93
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Unsupported billing provider.\", nameof(provider))",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 112
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 128
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 131
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 142
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Value is required.\", nameof(errorMessage))",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 148
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 154
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Transition timestamp cannot be earlier than the previous webhook event timestamp.\")",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 161
-    },
-    {
-      "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Value must be at most {LocaleMaxLength} characters.\")",
       "path": "FoodDiary.Domain/Entities/Content/EmailTemplate.cs",
@@ -3880,6 +3712,174 @@
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
+      "line": 67
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Billing subscription id cannot be empty.\", nameof(billingSubscriptionId))",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
+      "line": 71
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Billing subscription id cannot be empty.\", nameof(billingSubscriptionId))",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
+      "line": 130
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Unsupported billing provider.\", nameof(provider))",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
+      "line": 196
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
+      "line": 212
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
+      "line": 215
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
+      "line": 226
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
+      "line": 231
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Start timestamp cannot be after end timestamp.\", paramName)",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
+      "line": 242
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
+      "line": 46
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Unsupported billing provider.\", nameof(provider))",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
+      "line": 184
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
+      "line": 200
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
+      "line": 203
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
+      "line": 218
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\")",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
+      "line": 224
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Start timestamp cannot be after end timestamp.\", paramName)",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
+      "line": 252
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"A processed webhook event cannot be marked as failed.\")",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs",
+      "line": 93
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Unsupported billing provider.\", nameof(provider))",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs",
+      "line": 112
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs",
+      "line": 128
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs",
+      "line": 131
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs",
+      "line": 142
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Value is required.\", nameof(errorMessage))",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs",
+      "line": 148
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs",
+      "line": 154
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Transition timestamp cannot be earlier than the previous webhook event timestamp.\")",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs",
+      "line": 161
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
       "line": 29
     },
@@ -5493,7 +5493,7 @@
           "expression": ")"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Billing/BillingPaymentConfiguration.cs"
+      "path": "Modules/Billing/Infrastructure/Model/BillingPaymentConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5512,7 +5512,7 @@
           "expression": ")"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Billing/BillingSubscriptionConfiguration.cs"
+      "path": "Modules/Billing/Infrastructure/Model/BillingSubscriptionConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5524,7 +5524,7 @@
         "e => new { e.Status, e.NextAttemptAtUtc, e.ReceivedAtUtc })"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Billing/BillingWebhookEventConfiguration.cs"
+      "path": "Modules/Billing/Infrastructure/Model/BillingWebhookEventConfiguration.cs"
     },
     {
       "area": "FoodDiary",

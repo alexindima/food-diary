@@ -2,7 +2,7 @@ using FoodDiary.Domain.Entities.Billing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Infrastructure.Persistence.Configurations.Billing;
+namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
 internal sealed class BillingWebhookEventConfiguration : IEntityTypeConfiguration<BillingWebhookEvent> {
     public void Configure(EntityTypeBuilder<BillingWebhookEvent> builder) {

@@ -3,7 +3,7 @@ using System.Globalization;
 using FoodDiary.Application.Runtime;
 using FoodDiary.Application.Admin;
 using FoodDiary.Application.Ai;
-using FoodDiary.Application.Billing;
+using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Application.BodyMetrics;
 using FoodDiary.Modules.Cycles.Infrastructure;
 using FoodDiary.Application.Dashboard;

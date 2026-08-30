@@ -163,7 +163,7 @@ Fasting and Dietologist client refreshes now use the semantic `INotificationClie
 
 ## Billing boundary
 
-Billing is the third module protected by executable vertical-boundary guardrails.
+Billing is physically owned under `Modules/Billing` and protected by executable vertical-boundary guardrails. The application project preserves the `FoodDiary.Application.Billing` assembly identity; the shared `FoodDiaryDbContext`, migration history and snapshot remain central.
 
 ### Ownership
 
@@ -174,7 +174,7 @@ Billing exclusively owns mutation of:
 - `BillingWebhookEvent`;
 - provider and external-payment identifiers associated with those aggregates.
 
-Other application modules must not acquire Billing repositories. Billing persistence implementations live under `Persistence/Billing`, EF configurations under `Persistence/Configurations/Billing`, and the shared `DbContext` exposes Billing sets through its dedicated partial.
+Other application modules must not acquire Billing repositories. Billing persistence implementations and EF configurations live under `Modules/Billing/Infrastructure`; the shared `DbContext` exposes Billing sets through its dedicated partial and applies the module persistence model explicitly.
 
 ### Public capabilities and adapters
 

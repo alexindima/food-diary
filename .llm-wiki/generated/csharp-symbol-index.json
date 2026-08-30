@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3512,
-    "symbols": 3511,
+    "sourceFiles": 3513,
+    "symbols": 3512,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 211,
+    "dependencyInjectionRegistrations": 206,
     "kinds": {
-      "class": 1838,
+      "class": 1839,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1363,
+      "Other": 1364,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -797,206 +797,10 @@
       "line": 2
     },
     {
-      "name": "BillingInputLimits",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/BillingInputLimits.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingPaymentAlreadyExistsException",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/BillingPaymentAlreadyExistsException.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingWebhookEventAlreadyProcessedException",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/BillingWebhookEventAlreadyProcessedException.cs",
-      "line": 2
-    },
-    {
-      "name": "IBillingCheckoutLock",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingCheckoutLock.cs",
-      "line": 2
-    },
-    {
       "name": "IBillingMarketingConversionRecorder",
       "kind": "interface",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingMarketingConversionRecorder.cs",
-      "line": 2
-    },
-    {
-      "name": "IBillingPaymentReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingPaymentReadRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IBillingPaymentRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingPaymentRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IBillingPaymentWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingPaymentWriteRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IBillingProviderGateway",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingProviderGateway.cs",
-      "line": 5
-    },
-    {
-      "name": "IBillingProviderGatewayAccessor",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingProviderGatewayAccessor.cs",
-      "line": 2
-    },
-    {
-      "name": "IBillingPublicConfigProvider",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingPublicConfigProvider.cs",
-      "line": 4
-    },
-    {
-      "name": "IBillingRecurringProviderGateway",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingRecurringProviderGateway.cs",
-      "line": 5
-    },
-    {
-      "name": "IBillingSubscriptionReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingSubscriptionReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IBillingSubscriptionReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingSubscriptionReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IBillingSubscriptionRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingSubscriptionRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IBillingSubscriptionWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingSubscriptionWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IBillingTransactionRunner",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingTransactionRunner.cs",
-      "line": 2
-    },
-    {
-      "name": "IBillingWebhookEventReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingWebhookEventReadRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IBillingWebhookEventRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingWebhookEventRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IBillingWebhookEventWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingWebhookEventWriteRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "BillingCheckoutSessionModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingCheckoutSessionModel.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingCheckoutSessionRequestModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingCheckoutSessionRequestModel.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingPortalSessionModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingPortalSessionModel.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingPortalSessionRequestModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingPortalSessionRequestModel.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingPublicConfigModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingPublicConfigModel.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingRecurringPaymentModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingRecurringPaymentModel.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingRecurringPaymentRequestModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingRecurringPaymentRequestModel.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingSubscriptionOverviewReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingSubscriptionOverviewReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingWebhookEventModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Models/BillingWebhookEventModel.cs",
       "line": 2
     },
     {
@@ -4589,258 +4393,6 @@
       "role": "Service",
       "path": "FoodDiary.Application.Ai/Services/UserAiUsageSummaryReadService.cs",
       "line": 8
-    },
-    {
-      "name": "CreateCheckoutSessionCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "CreateCheckoutSessionCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "line": 16
-    },
-    {
-      "name": "CreateCheckoutSessionCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "CreatePortalSessionCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Billing/Commands/CreatePortalSession/CreatePortalSessionCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "CreatePortalSessionCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Billing/Commands/CreatePortalSession/CreatePortalSessionCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "BillingWebhookContextResolver",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
-      "line": 11
-    },
-    {
-      "name": "BillingWebhookEventProcessor",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
-      "line": 7
-    },
-    {
-      "name": "BillingWebhookEventValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
-      "line": 6
-    },
-    {
-      "name": "BillingWebhookPaymentRecorder",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
-      "line": 7
-    },
-    {
-      "name": "BillingWebhookPremiumRoleSyncer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
-      "line": 8
-    },
-    {
-      "name": "BillingWebhookProcessingContext",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookProcessingContext.cs",
-      "line": 5
-    },
-    {
-      "name": "BillingWebhookSubscriptionWriter",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookSubscriptionWriter.cs",
-      "line": 7
-    },
-    {
-      "name": "ProcessBillingWebhookCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "ProcessBillingWebhookCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "ProcessBillingWebhookCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "ProcessQueuedBillingWebhookCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "ProcessQueuedBillingWebhookCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
-      "line": 6
-    },
-    {
-      "name": "StartPremiumTrialCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Billing/Commands/StartPremiumTrial/StartPremiumTrialCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "StartPremiumTrialCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Billing/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "BillingCurrentUserAccessResolver",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Billing/Common/BillingCurrentUserAccessResolver.cs",
-      "line": 7
-    },
-    {
-      "name": "IBillingOverviewReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Billing/Common/IBillingOverviewReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IBillingRenewalService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Billing/Common/IBillingRenewalService.cs",
-      "line": 4
-    },
-    {
-      "name": "IBillingUserContextService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Billing/Common/IBillingUserContextService.cs",
-      "line": 8
-    },
-    {
-      "name": "IBillingWebhookInboxService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Billing/Common/IBillingWebhookInboxService.cs",
-      "line": 5
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Billing/DependencyInjection.cs",
-      "line": 10
-    },
-    {
-      "name": "BillingOverviewModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Billing/Models/BillingOverviewModel.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingRenewalRunResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Billing/Models/BillingRenewalRunResult.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingUserProfileModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Billing/Models/BillingUserProfileModel.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingWebhookInboxRunResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Billing/Models/BillingWebhookInboxRunResult.cs",
-      "line": 2
-    },
-    {
-      "name": "GetBillingOverviewQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Billing/Queries/GetBillingOverview/GetBillingOverviewQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetBillingOverviewQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Billing/Queries/GetBillingOverview/GetBillingOverviewQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "BillingAccessService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Billing/Services/BillingAccessService.cs",
-      "line": 7
-    },
-    {
-      "name": "BillingOverviewReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Billing/Services/BillingOverviewReadService.cs",
-      "line": 9
-    },
-    {
-      "name": "BillingRenewalService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Billing/Services/BillingRenewalService.cs",
-      "line": 12
-    },
-    {
-      "name": "BillingUserContextService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Billing/Services/BillingUserContextService.cs",
-      "line": 9
-    },
-    {
-      "name": "BillingWebhookInboxService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
-      "line": 12
     },
     {
       "name": "RequiredIdParser",
@@ -9204,41 +8756,6 @@
       "line": 6
     },
     {
-      "name": "BillingPayment",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
-      "line": 7
-    },
-    {
-      "name": "BillingPaymentKinds",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingPaymentKinds.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingProviderNames",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingProviderNames.cs",
-      "line": 2
-    },
-    {
-      "name": "BillingSubscription",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 7
-    },
-    {
-      "name": "BillingWebhookEvent",
-      "kind": "class",
-      "role": "Event",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 6
-    },
-    {
       "name": "EmailTemplate",
       "kind": "class",
       "role": "Entity",
@@ -10376,13 +9893,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Billing.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.cs",
       "line": 6
     },
@@ -10660,41 +10170,6 @@
       "line": 7
     },
     {
-      "name": "BillingPaymentRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Billing/BillingPaymentRepository.cs",
-      "line": 6
-    },
-    {
-      "name": "BillingSubscriptionRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Billing/BillingSubscriptionRepository.cs",
-      "line": 8
-    },
-    {
-      "name": "BillingWebhookEventRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Billing/BillingWebhookEventRepository.cs",
-      "line": 6
-    },
-    {
-      "name": "EfBillingTransactionRunner",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Billing/EfBillingTransactionRunner.cs",
-      "line": 8
-    },
-    {
-      "name": "PostgresBillingCheckoutLock",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Billing/PostgresBillingCheckoutLock.cs",
-      "line": 6
-    },
-    {
       "name": "AchievementEvaluationOutboxMessageConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -10763,27 +10238,6 @@
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs",
       "line": 7
-    },
-    {
-      "name": "BillingPaymentConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Billing/BillingPaymentConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "BillingSubscriptionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Billing/BillingSubscriptionConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "BillingWebhookEventConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Billing/BillingWebhookEventConfiguration.cs",
-      "line": 6
     },
     {
       "name": "WaistEntryConfiguration",
@@ -11301,7 +10755,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "FoodDiaryDbContext",
@@ -18514,6 +17968,559 @@
       "line": 28
     },
     {
+      "name": "BillingInputLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Common/BillingInputLimits.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingPaymentAlreadyExistsException",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Common/BillingPaymentAlreadyExistsException.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingWebhookEventAlreadyProcessedException",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Common/BillingWebhookEventAlreadyProcessedException.cs",
+      "line": 2
+    },
+    {
+      "name": "IBillingCheckoutLock",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingCheckoutLock.cs",
+      "line": 2
+    },
+    {
+      "name": "IBillingPaymentReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingPaymentReadRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IBillingPaymentRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingPaymentRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IBillingPaymentWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingPaymentWriteRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IBillingProviderGateway",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingProviderGateway.cs",
+      "line": 5
+    },
+    {
+      "name": "IBillingProviderGatewayAccessor",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingProviderGatewayAccessor.cs",
+      "line": 2
+    },
+    {
+      "name": "IBillingPublicConfigProvider",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingPublicConfigProvider.cs",
+      "line": 4
+    },
+    {
+      "name": "IBillingRecurringProviderGateway",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingRecurringProviderGateway.cs",
+      "line": 5
+    },
+    {
+      "name": "IBillingSubscriptionReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IBillingSubscriptionReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IBillingSubscriptionRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IBillingSubscriptionWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IBillingTransactionRunner",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingTransactionRunner.cs",
+      "line": 2
+    },
+    {
+      "name": "IBillingWebhookEventReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventReadRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IBillingWebhookEventRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IBillingWebhookEventWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventWriteRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "BillingCheckoutSessionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Models/BillingCheckoutSessionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingCheckoutSessionRequestModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Models/BillingCheckoutSessionRequestModel.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingPortalSessionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Models/BillingPortalSessionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingPortalSessionRequestModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Models/BillingPortalSessionRequestModel.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingPublicConfigModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Models/BillingPublicConfigModel.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingRecurringPaymentModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Models/BillingRecurringPaymentModel.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingRecurringPaymentRequestModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Models/BillingRecurringPaymentRequestModel.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingSubscriptionOverviewReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Models/BillingSubscriptionOverviewReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingWebhookEventModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Models/BillingWebhookEventModel.cs",
+      "line": 2
+    },
+    {
+      "name": "CreateCheckoutSessionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "CreateCheckoutSessionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
+      "line": 16
+    },
+    {
+      "name": "CreateCheckoutSessionCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "CreatePortalSessionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Billing/Application/Commands/CreatePortalSession/CreatePortalSessionCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "CreatePortalSessionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/CreatePortalSession/CreatePortalSessionCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "BillingWebhookContextResolver",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
+      "line": 11
+    },
+    {
+      "name": "BillingWebhookEventProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
+      "line": 7
+    },
+    {
+      "name": "BillingWebhookEventValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
+      "line": 6
+    },
+    {
+      "name": "BillingWebhookPaymentRecorder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
+      "line": 7
+    },
+    {
+      "name": "BillingWebhookPremiumRoleSyncer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
+      "line": 8
+    },
+    {
+      "name": "BillingWebhookProcessingContext",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookProcessingContext.cs",
+      "line": 5
+    },
+    {
+      "name": "BillingWebhookSubscriptionWriter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookSubscriptionWriter.cs",
+      "line": 7
+    },
+    {
+      "name": "ProcessBillingWebhookCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ProcessBillingWebhookCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "ProcessBillingWebhookCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "ProcessQueuedBillingWebhookCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ProcessQueuedBillingWebhookCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
+      "line": 6
+    },
+    {
+      "name": "StartPremiumTrialCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "StartPremiumTrialCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "BillingCurrentUserAccessResolver",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Common/BillingCurrentUserAccessResolver.cs",
+      "line": 7
+    },
+    {
+      "name": "IBillingOverviewReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Billing/Application/Common/IBillingOverviewReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IBillingRenewalService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Billing/Application/Common/IBillingRenewalService.cs",
+      "line": 4
+    },
+    {
+      "name": "IBillingUserContextService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Billing/Application/Common/IBillingUserContextService.cs",
+      "line": 8
+    },
+    {
+      "name": "IBillingWebhookInboxService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Billing/Application/Common/IBillingWebhookInboxService.cs",
+      "line": 5
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/DependencyInjection.cs",
+      "line": 10
+    },
+    {
+      "name": "BillingOverviewModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Models/BillingOverviewModel.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingRenewalRunResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Models/BillingRenewalRunResult.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingUserProfileModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Models/BillingUserProfileModel.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingWebhookInboxRunResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Models/BillingWebhookInboxRunResult.cs",
+      "line": 2
+    },
+    {
+      "name": "GetBillingOverviewQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetBillingOverviewQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "BillingAccessService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Billing/Application/Services/BillingAccessService.cs",
+      "line": 7
+    },
+    {
+      "name": "BillingOverviewReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Billing/Application/Services/BillingOverviewReadService.cs",
+      "line": 9
+    },
+    {
+      "name": "BillingRenewalService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Billing/Application/Services/BillingRenewalService.cs",
+      "line": 12
+    },
+    {
+      "name": "BillingUserContextService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Billing/Application/Services/BillingUserContextService.cs",
+      "line": 9
+    },
+    {
+      "name": "BillingWebhookInboxService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
+      "line": 12
+    },
+    {
+      "name": "BillingPayment",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
+      "line": 7
+    },
+    {
+      "name": "BillingPaymentKinds",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingPaymentKinds.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingProviderNames",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingProviderNames.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingSubscription",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
+      "line": 7
+    },
+    {
+      "name": "BillingWebhookEvent",
+      "kind": "class",
+      "role": "Event",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs",
+      "line": 6
+    },
+    {
+      "name": "BillingPaymentConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Billing/Infrastructure/Model/BillingPaymentConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "BillingPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Model/BillingPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "BillingSubscriptionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Billing/Infrastructure/Model/BillingSubscriptionConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "BillingWebhookEventConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Billing/Infrastructure/Model/BillingWebhookEventConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
+      "line": 7
+    },
+    {
+      "name": "BillingPaymentRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs",
+      "line": 7
+    },
+    {
+      "name": "BillingSubscriptionRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs",
+      "line": 9
+    },
+    {
+      "name": "BillingWebhookEventRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs",
+      "line": 7
+    },
+    {
+      "name": "EfBillingTransactionRunner",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs",
+      "line": 9
+    },
+    {
+      "name": "PostgresBillingCheckoutLock",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs",
+      "line": 7
+    },
+    {
       "name": "ContentReportErrors",
       "kind": "class",
       "role": "Other",
@@ -24838,58 +24845,58 @@
     },
     {
       "interface": "IBillingOverviewReadService",
-      "interfacePath": "FoodDiary.Application.Billing/Common/IBillingOverviewReadService.cs",
+      "interfacePath": "Modules/Billing/Application/Common/IBillingOverviewReadService.cs",
       "implementation": "BillingOverviewReadService",
-      "implementationPath": "FoodDiary.Application.Billing/Services/BillingOverviewReadService.cs",
+      "implementationPath": "Modules/Billing/Application/Services/BillingOverviewReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IBillingPaymentRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Billing/Common/IBillingPaymentRepository.cs",
+      "interfacePath": "Modules/Billing/Application/Abstractions/Common/IBillingPaymentRepository.cs",
       "implementation": "BillingPaymentRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Billing/BillingPaymentRepository.cs",
+      "implementationPath": "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IBillingPublicConfigProvider",
-      "interfacePath": "FoodDiary.Application.Abstractions/Billing/Common/IBillingPublicConfigProvider.cs",
+      "interfacePath": "Modules/Billing/Application/Abstractions/Common/IBillingPublicConfigProvider.cs",
       "implementation": "BillingPublicConfigProvider",
       "implementationPath": "FoodDiary.Integrations/Billing/BillingPublicConfigProvider.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IBillingRenewalService",
-      "interfacePath": "FoodDiary.Application.Billing/Common/IBillingRenewalService.cs",
+      "interfacePath": "Modules/Billing/Application/Common/IBillingRenewalService.cs",
       "implementation": "BillingRenewalService",
-      "implementationPath": "FoodDiary.Application.Billing/Services/BillingRenewalService.cs",
+      "implementationPath": "Modules/Billing/Application/Services/BillingRenewalService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IBillingSubscriptionRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Billing/Common/IBillingSubscriptionRepository.cs",
+      "interfacePath": "Modules/Billing/Application/Abstractions/Common/IBillingSubscriptionRepository.cs",
       "implementation": "BillingSubscriptionRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Billing/BillingSubscriptionRepository.cs",
+      "implementationPath": "Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IBillingUserContextService",
-      "interfacePath": "FoodDiary.Application.Billing/Common/IBillingUserContextService.cs",
+      "interfacePath": "Modules/Billing/Application/Common/IBillingUserContextService.cs",
       "implementation": "BillingUserContextService",
-      "implementationPath": "FoodDiary.Application.Billing/Services/BillingUserContextService.cs",
+      "implementationPath": "Modules/Billing/Application/Services/BillingUserContextService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IBillingWebhookEventRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Billing/Common/IBillingWebhookEventRepository.cs",
+      "interfacePath": "Modules/Billing/Application/Abstractions/Common/IBillingWebhookEventRepository.cs",
       "implementation": "BillingWebhookEventRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Billing/BillingWebhookEventRepository.cs",
+      "implementationPath": "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IBillingWebhookInboxService",
-      "interfacePath": "FoodDiary.Application.Billing/Common/IBillingWebhookInboxService.cs",
+      "interfacePath": "Modules/Billing/Application/Common/IBillingWebhookInboxService.cs",
       "implementation": "BillingWebhookInboxService",
-      "implementationPath": "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
+      "implementationPath": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26351,34 +26358,6 @@
       "line": 19
     },
     {
-      "service": "IBillingOverviewReadService",
-      "implementation": "BillingOverviewReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Billing/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IBillingRenewalService",
-      "implementation": "BillingRenewalService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Billing/DependencyInjection.cs",
-      "line": 18
-    },
-    {
-      "service": "IBillingUserContextService",
-      "implementation": "BillingUserContextService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Billing/DependencyInjection.cs",
-      "line": 19
-    },
-    {
-      "service": "IBillingWebhookInboxService",
-      "implementation": "BillingWebhookInboxService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Billing/DependencyInjection.cs",
-      "line": 26
-    },
-    {
       "service": "IWeightEntryReadService",
       "implementation": "WeightEntryReadService",
       "lifetime": "Scoped",
@@ -26867,41 +26846,6 @@
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
       "line": 28
-    },
-    {
-      "service": "IBillingSubscriptionRepository",
-      "implementation": "BillingSubscriptionRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Billing.cs",
-      "line": 9
-    },
-    {
-      "service": "IBillingPaymentRepository",
-      "implementation": "BillingPaymentRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Billing.cs",
-      "line": 13
-    },
-    {
-      "service": "IBillingWebhookEventRepository",
-      "implementation": "BillingWebhookEventRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Billing.cs",
-      "line": 16
-    },
-    {
-      "service": "IBillingTransactionRunner",
-      "implementation": "EfBillingTransactionRunner",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Billing.cs",
-      "line": 19
-    },
-    {
-      "service": "IBillingCheckoutLock",
-      "implementation": "PostgresBillingCheckoutLock",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Billing.cs",
-      "line": 20
     },
     {
       "service": "IDashboardReadService",
@@ -27420,6 +27364,34 @@
       "lifetime": "Singleton",
       "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
       "line": 76
+    },
+    {
+      "service": "IBillingOverviewReadService",
+      "implementation": "BillingOverviewReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Billing/Application/DependencyInjection.cs",
+      "line": 17
+    },
+    {
+      "service": "IBillingRenewalService",
+      "implementation": "BillingRenewalService",
+      "lifetime": "Scoped",
+      "path": "Modules/Billing/Application/DependencyInjection.cs",
+      "line": 18
+    },
+    {
+      "service": "IBillingUserContextService",
+      "implementation": "BillingUserContextService",
+      "lifetime": "Scoped",
+      "path": "Modules/Billing/Application/DependencyInjection.cs",
+      "line": 19
+    },
+    {
+      "service": "IBillingWebhookInboxService",
+      "implementation": "BillingWebhookInboxService",
+      "lifetime": "Scoped",
+      "path": "Modules/Billing/Application/DependencyInjection.cs",
+      "line": 26
     },
     {
       "service": "IContentReportAdministrationService",

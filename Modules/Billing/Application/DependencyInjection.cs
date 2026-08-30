@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Application.Billing;
 
 public static class DependencyInjection {
-    public static IServiceCollection AddBillingModule(this IServiceCollection services) {
+    public static IServiceCollection AddBillingApplication(this IServiceCollection services) {
         Assembly assembly = typeof(DependencyInjection).Assembly;
         services.AddFoodDiaryMediator(configuration =>
             configuration.RegisterServicesFromAssembly(assembly));

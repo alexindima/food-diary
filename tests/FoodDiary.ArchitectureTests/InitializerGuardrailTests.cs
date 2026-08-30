@@ -10,7 +10,6 @@ public sealed class InitializerGuardrailTests {
         string[] expectedProjectReferences = [
             "FoodDiary.Application.Admin",
             "FoodDiary.Application.Ai",
-            "FoodDiary.Application.Billing",
             "FoodDiary.Application.BodyMetrics",
             "FoodDiary.Application.Dashboard",
             "FoodDiary.Application.Exercises",
@@ -26,6 +25,7 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Application.Usda",
             "FoodDiary.Application.Users",
             "FoodDiary.Infrastructure",
+            "FoodDiary.Modules.Billing.Infrastructure",
             "FoodDiary.Modules.ContentReports.Infrastructure",
             "FoodDiary.Modules.Cycles.Infrastructure",
             "FoodDiary.Modules.DailyAdvices.Infrastructure",

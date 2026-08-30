@@ -1,10 +1,11 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Billing;
+namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
 public sealed class BillingSubscriptionRepository(FoodDiaryDbContext context) : IBillingSubscriptionRepository {
     public Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default) {

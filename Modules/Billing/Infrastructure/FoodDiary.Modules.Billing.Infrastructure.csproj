@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Modules.Billing.Infrastructure</AssemblyName>
+    <RootNamespace>FoodDiary.Modules.Billing.Infrastructure</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Model/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Application\FoodDiary.Application.Billing.csproj" />
+    <ProjectReference Include="..\Application\Abstractions\FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\Domain\FoodDiary.Modules.Billing.Domain.csproj" />
+    <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="Model\FoodDiary.Modules.Billing.PersistenceModel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
+</Project>

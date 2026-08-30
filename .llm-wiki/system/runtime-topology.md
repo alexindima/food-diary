@@ -7,9 +7,9 @@ sources:
   - .llm-wiki/generated/runtime-topology.json
   - docker-compose.yml
   - FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs
-  - FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs
-  - FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs
-  - FoodDiary.Infrastructure/Persistence/Billing/EfBillingTransactionRunner.cs
+  - Modules/Billing/Application/Services/BillingWebhookInboxService.cs
+  - Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs
+  - Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs
   - FoodDiary.JobManager/Services/RecurringJobsHostedService.cs
   - tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs
 ---

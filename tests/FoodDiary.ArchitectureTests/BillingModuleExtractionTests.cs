@@ -5,7 +5,7 @@ public sealed class BillingModuleExtractionTests {
     [Fact]
     public void BillingApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Billing");
-        string extractedRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Billing");
+        string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "Billing", "Application");
 
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
@@ -23,10 +23,12 @@ public sealed class BillingModuleExtractionTests {
     [Fact]
     public void ExtractedBillingAssembly_DoesNotReferenceCoreApplication() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj");
+            "Modules/Billing/Application/FoodDiary.Application.Billing.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application", references, StringComparer.Ordinal);
         Assert.Contains("FoodDiary.Application.Abstractions", references, StringComparer.Ordinal);
+        Assert.Contains("FoodDiary.Modules.Billing.Application.Abstractions", references, StringComparer.Ordinal);
+        Assert.Contains("FoodDiary.Modules.Billing.Domain", references, StringComparer.Ordinal);
     }
 
     [Theory]

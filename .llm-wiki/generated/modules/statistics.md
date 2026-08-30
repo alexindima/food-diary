@@ -27,7 +27,6 @@ sources:
 - `FoodDiary.Application.Abstractions/Dashboard`
 - `FoodDiary.Application.Abstractions/WaistEntries`
 - `FoodDiary.Application.Abstractions/WeightEntries`
-- `FoodDiary.Application.Statistics`
 - `FoodDiary.Presentation.Api/Features/Statistics`
 
 ## HTTP Surface

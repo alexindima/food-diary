@@ -18,7 +18,7 @@ using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Admin;
-using FoodDiary.Infrastructure.Persistence.Billing;
+using FoodDiary.Modules.Billing.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.MealPlans;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.RecipeComments;

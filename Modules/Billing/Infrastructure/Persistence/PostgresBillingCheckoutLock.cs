@@ -1,8 +1,9 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Locking;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Billing;
+namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
 public sealed class PostgresBillingCheckoutLock(FoodDiaryDbContext context) : IBillingCheckoutLock {
     public async Task<IAsyncDisposable> AcquireAsync(Guid userId, CancellationToken cancellationToken = default) {

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "8c5ef1be00e52bf7b43431e714b080e3f5d7833d28d8c3805280807f2f6e2a02",
-    "sourceFileCount": 3513
+    "sourceFingerprint": "c7497154017ed1a12f907718b91c67204b0315e46a0b679c3af67c7605fde790",
+    "sourceFileCount": 3514
   },
   "summary": {
     "composeServices": 17,
@@ -697,7 +697,7 @@
     },
     {
       "name": "BillingWebhookContextResolver",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
       "securitySignals": [],
       "behaviorSignals": "cancellation-propagation-candidate",
       "behaviorSignalScope": "class-window",
@@ -715,7 +715,7 @@
     },
     {
       "name": "BillingWebhookEvent",
-      "path": "FoodDiary.Domain/Entities/Billing/BillingWebhookEvent.cs",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs",
       "securitySignals": [],
       "behaviorSignals": null,
       "behaviorSignalScope": "class-window",
@@ -723,7 +723,7 @@
     },
     {
       "name": "BillingWebhookEventAlreadyProcessedException",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/BillingWebhookEventAlreadyProcessedException.cs",
+      "path": "Modules/Billing/Application/Abstractions/Common/BillingWebhookEventAlreadyProcessedException.cs",
       "securitySignals": [
         "replay-or-duplicate-control"
       ],
@@ -736,7 +736,7 @@
     },
     {
       "name": "BillingWebhookEventConfiguration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Billing/BillingWebhookEventConfiguration.cs",
+      "path": "Modules/Billing/Infrastructure/Model/BillingWebhookEventConfiguration.cs",
       "securitySignals": [
         "freshness-validation",
         "replay-or-duplicate-control"
@@ -747,7 +747,7 @@
     },
     {
       "name": "BillingWebhookEventProcessor",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
       "securitySignals": [],
       "behaviorSignals": "cancellation-propagation-candidate",
       "behaviorSignalScope": "class-window",
@@ -755,7 +755,7 @@
     },
     {
       "name": "BillingWebhookEventRepository",
-      "path": "FoodDiary.Infrastructure/Persistence/Billing/BillingWebhookEventRepository.cs",
+      "path": "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs",
       "securitySignals": [],
       "behaviorSignals": "cancellation-propagation-candidate",
       "behaviorSignalScope": "class-window",
@@ -763,7 +763,7 @@
     },
     {
       "name": "BillingWebhookEventValidator",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
       "securitySignals": [],
       "behaviorSignals": null,
       "behaviorSignalScope": "class-window",
@@ -794,7 +794,7 @@
     },
     {
       "name": "BillingWebhookInboxService",
-      "path": "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
+      "path": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
       "securitySignals": [],
       "behaviorSignals": "cancellation-propagation-candidate",
       "behaviorSignalScope": "class-window",
@@ -802,7 +802,7 @@
     },
     {
       "name": "BillingWebhookPaymentRecorder",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
       "securitySignals": [],
       "behaviorSignals": "cancellation-propagation-candidate",
       "behaviorSignalScope": "class-window",
@@ -810,7 +810,7 @@
     },
     {
       "name": "BillingWebhookPremiumRoleSyncer",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
       "securitySignals": [],
       "behaviorSignals": "cancellation-propagation-candidate",
       "behaviorSignalScope": "class-window",
@@ -826,7 +826,7 @@
     },
     {
       "name": "BillingWebhookSubscriptionWriter",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookSubscriptionWriter.cs",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookSubscriptionWriter.cs",
       "securitySignals": [],
       "behaviorSignals": "cancellation-propagation-candidate",
       "behaviorSignalScope": "class-window",
@@ -850,7 +850,7 @@
     },
     {
       "name": "ProcessBillingWebhookCommandHandler",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
       "securitySignals": [
         "signature-validation"
       ],
@@ -860,7 +860,7 @@
     },
     {
       "name": "ProcessBillingWebhookCommandValidator",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandValidator.cs",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandValidator.cs",
       "securitySignals": [],
       "behaviorSignals": null,
       "behaviorSignalScope": "class-window",
@@ -868,7 +868,7 @@
     },
     {
       "name": "ProcessQueuedBillingWebhookCommandHandler",
-      "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
+      "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
       "securitySignals": [],
       "behaviorSignals": "cancellation-propagation-candidate",
       "behaviorSignalScope": "class-window",

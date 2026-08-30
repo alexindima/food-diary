@@ -13,7 +13,11 @@ COPY FoodDiary.Application.Abstractions/*.csproj FoodDiary.Application.Abstracti
 COPY Modules/Export/Application/Abstractions/*.csproj Modules/Export/Application/Abstractions/
 COPY FoodDiary.Application.Admin/*.csproj FoodDiary.Application.Admin/
 COPY FoodDiary.Application.Runtime/*.csproj FoodDiary.Application.Runtime/
-COPY FoodDiary.Application.Billing/*.csproj FoodDiary.Application.Billing/
+COPY Modules/Billing/Application/*.csproj Modules/Billing/Application/
+COPY Modules/Billing/Application/Abstractions/*.csproj Modules/Billing/Application/Abstractions/
+COPY Modules/Billing/Domain/*.csproj Modules/Billing/Domain/
+COPY Modules/Billing/Infrastructure/*.csproj Modules/Billing/Infrastructure/
+COPY Modules/Billing/Infrastructure/Model/*.csproj Modules/Billing/Infrastructure/Model/
 COPY Modules/Marketing/Application/*.csproj Modules/Marketing/Application/
 COPY Modules/Marketing/Application/Abstractions/*.csproj Modules/Marketing/Application/Abstractions/
 COPY Modules/Marketing/Domain/*.csproj Modules/Marketing/Domain/
@@ -123,7 +127,11 @@ COPY FoodDiary.Application.Abstractions/ FoodDiary.Application.Abstractions/
 COPY Modules/Export/Application/Abstractions/ Modules/Export/Application/Abstractions/
 COPY FoodDiary.Application.Admin/ FoodDiary.Application.Admin/
 COPY FoodDiary.Application.Runtime/ FoodDiary.Application.Runtime/
-COPY FoodDiary.Application.Billing/ FoodDiary.Application.Billing/
+COPY Modules/Billing/Application/ Modules/Billing/Application/
+COPY Modules/Billing/Application/Abstractions/ Modules/Billing/Application/Abstractions/
+COPY Modules/Billing/Domain/ Modules/Billing/Domain/
+COPY Modules/Billing/Infrastructure/ Modules/Billing/Infrastructure/
+COPY Modules/Billing/Infrastructure/Model/ Modules/Billing/Infrastructure/Model/
 COPY Modules/Marketing/ Modules/Marketing/
 COPY Modules/Marketing/Application/ Modules/Marketing/Application/
 COPY Modules/Marketing/Application/Abstractions/ Modules/Marketing/Application/Abstractions/

@@ -64,7 +64,11 @@ Use this file when deciding where backend code belongs.
 | Dietologist use cases | `Modules/Dietologist/Application` | Commands, queries, policies, models, services, and application registration | Persistence implementations and HTTP transport |
 | Dietologist persistence model | `Modules/Dietologist/Infrastructure/Model` | EF configurations and model-builder seam | Shared `DbContext`, migrations, repository behavior |
 | Dietologist infrastructure | `Modules/Dietologist/Infrastructure` | Repositories, attention projection, and complete module registration | HTTP transport and central migrations |
-| Billing use cases | `FoodDiary.Application.Billing` | Billing commands, queries, validators, renewal and webhook orchestration | Core Application dependencies, persistence, HTTP DTOs |
+| Billing domain | `Modules/Billing/Domain` | Subscriptions, payments, webhook inbox events, provider names and payment kinds with preserved CLR/EF identity | Application orchestration, EF mappings, provider SDKs, transport |
+| Billing application ports | `Modules/Billing/Application/Abstractions` | Repository, checkout lock, transaction runner, provider gateway and provider-facing models | Billing's Marketing conversion port, EF/provider implementations, HTTP transport |
+| Billing use cases | `Modules/Billing/Application` | Billing commands, queries, validators, entitlement, renewal and webhook orchestration with preserved `FoodDiary.Application.Billing` assembly identity | Persistence, provider adapters, HTTP DTOs |
+| Billing persistence model | `Modules/Billing/Infrastructure/Model` | Billing EF configurations and explicit model-builder registration | Shared `DbContext`, migrations, repository behavior |
+| Billing infrastructure | `Modules/Billing/Infrastructure` | Billing repositories, advisory checkout lock, transaction runner and complete module registration | Provider HTTP adapters, HTTP transport, central migrations |
 | Marketing application ports | `Modules/Marketing/Application/Abstractions` | Attribution repository ports and persistence projections | Billing's consumer-owned conversion port, EF implementations, HTTP transport |
 | Marketing domain | `Modules/Marketing/Domain` | Attribution event, identifier, normalization invariants, and stable CLR/EF identity | Application orchestration, EF mappings, transport |
 | Marketing use cases | `Modules/Marketing/Application` | Attribution commands, queries, conversion recording, cleanup and legacy application assembly identity | Persistence implementations, scheduler plumbing, HTTP DTOs |

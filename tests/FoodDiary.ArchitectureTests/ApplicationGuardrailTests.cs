@@ -1502,7 +1502,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Exercises", "Common", "IExerciseEntryReadRepository.cs"),
             Path.Combine(root, "Modules", "Fasting", "Application", "Abstractions", "Common", "IFastingOccurrenceReadRepository.cs"),
             Path.Combine(root, "Modules", "Fasting", "Application", "Abstractions", "Common", "IFastingCheckInReadRepository.cs"),
-            Path.Combine(root, "FoodDiary.Application.Abstractions", "Billing", "Common", "IBillingSubscriptionReadRepository.cs"),
+            Path.Combine(root, "Modules", "Billing", "Application", "Abstractions", "Common", "IBillingSubscriptionReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Users", "Common", "IUserAdminReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Notifications", "Common", "INotificationReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Notifications", "Common", "IWebPushSubscriptionReadRepository.cs"),
@@ -2505,7 +2505,9 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.Billing",
+            "Modules",
+            "Billing",
+            "Application",
             "Services",
             "BillingOverviewReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -2987,7 +2989,9 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.Billing",
+            "Modules",
+            "Billing",
+            "Application",
             "Services",
             "BillingUserContextService.cs");
         string source = File.ReadAllText(servicePath);

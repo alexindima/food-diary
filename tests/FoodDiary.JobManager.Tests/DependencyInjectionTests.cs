@@ -1,5 +1,5 @@
 using FoodDiary.Application.Runtime;
-using FoodDiary.Application.Billing;
+using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Modules.Favorites.Infrastructure;
