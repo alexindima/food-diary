@@ -71,18 +71,14 @@
       "pageSha256": "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
       "sources": [
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "8e169ce9c25e23544df9aae70446b6116756808c8edd4ff7da707f48bf49b362"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "abdfabbcc6b6398d367f47b8c0abefba62534336f0a306c9ac143410dbdb2bf0"
+          "sha256": "1632dd5bd286bfc148a0e374a7025272e154d42f4b1f4cd615dde881d47ed991"
         }
       ],
-      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
+      "reason": "The combined Favorites, Gamification, and Cycles project graph and repository catalog were checked against current project references; ArchitectureTests pass 738/738 and EF reports no model delta.",
       "baseRef": "HEAD",
-      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
-      "reviewedAtUtc": "2026-08-30T14:28:21.7427197Z"
+      "gitHead": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
+      "reviewedAtUtc": "2026-08-30T16:03:26.7346052Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -199,18 +195,14 @@
       "pageSha256": "b7914894ce3f6dda55057a93baf55364c9aa9c5e4c127a3fc9bddaa89743e4aa",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "9d5ecfe2e5bbdbddc2e59ad104f6eb0f78bdef169ee332583248f95b09ab0a41"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "abdfabbcc6b6398d367f47b8c0abefba62534336f0a306c9ac143410dbdb2bf0"
+          "sha256": "1632dd5bd286bfc148a0e374a7025272e154d42f4b1f4cd615dde881d47ed991"
         }
       ],
-      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
+      "reason": "The architecture-health workflow remains accurate after module extraction reconciliation; ArchitectureTests pass 738/738, Infrastructure.Tests pass 992/992, and JobManager.Tests pass 168/168.",
       "baseRef": "HEAD",
-      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
-      "reviewedAtUtc": "2026-08-30T14:28:22.3272933Z"
+      "gitHead": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
+      "reviewedAtUtc": "2026-08-30T16:03:27.2980023Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -1163,17 +1155,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "31fa4b382ceb55744f0074757d2ef7ec164760aa8941d4ecc379fa4bb9b5b423"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "f0715276b5263ede5b4cd6c1b1147c87bb1622b73ab36f13c4c922d385bee07d"
+          "sha256": "4927572c080f03d6aa3adeb905b2b7654889a2a9fda173a11e34f564a9eca815"
         }
       ],
-      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
+      "reason": "The combined Favorites, Gamification, and Cycles project graph and repository catalog were checked against current project references; ArchitectureTests pass 738/738 and EF reports no model delta.",
       "baseRef": "HEAD",
-      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
-      "reviewedAtUtc": "2026-08-30T14:28:24.6125494Z"
+      "gitHead": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
+      "reviewedAtUtc": "2026-08-30T16:03:28.0847359Z"
     },
     {
       "pageId": "workflow.review-diff",

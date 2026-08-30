@@ -842,6 +842,7 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.Infrastructure.Tests"] = [
                 "FoodDiary.Application.BodyMetrics",
+                "FoodDiary.Modules.ContentReports.Infrastructure",
                 "FoodDiary.Modules.Cycles.Infrastructure",
                 "FoodDiary.Modules.Dietologist.Infrastructure",
                 "FoodDiary.Application.Exercises",
@@ -856,6 +857,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Initializer",
                 "FoodDiary.Integrations",
                 "FoodDiary.Modules.Fasting.Infrastructure",
+                "FoodDiary.Modules.Lessons.Infrastructure",
             ],
             ["FoodDiary.JobManager.Tests"] = [
                 "FoodDiary.Application.Billing",

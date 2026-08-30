@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules\ContentReports\Infrastructure\FoodDiary.Modules.ContentReports.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Dietologist\Infrastructure\FoodDiary.Modules.Dietologist.Infrastructure.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Notifications\FoodDiary.Application.Notifications.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.BodyMetrics\FoodDiary.Application.BodyMetrics.csproj" />
@@ -33,6 +34,7 @@
     <ProjectReference Include="..\..\FoodDiary.Application.OpenFoodFacts\FoodDiary.Application.OpenFoodFacts.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Fasting\Infrastructure\FoodDiary.Modules.Fasting.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Lessons\Infrastructure\FoodDiary.Modules.Lessons.Infrastructure.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Initializer\FoodDiary.Initializer.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Integrations\FoodDiary.Integrations.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Identity\FoodDiary.Application.Identity.csproj" />

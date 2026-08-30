@@ -33,6 +33,9 @@ using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Services;
 using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Modules.Favorites.Infrastructure;
+using FoodDiary.Modules.ContentReports.Infrastructure;
+using FoodDiary.Modules.Dietologist.Infrastructure;
+using FoodDiary.Modules.Lessons.Infrastructure;
 using FoodDiary.Integrations;
 using FoodDiary.Integrations.Billing;
 using FoodDiary.Integrations.Options;
@@ -455,7 +458,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RefreshTokenExpirationDays"] = "7",
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
-        services.AddInfrastructure(configuration);
+        services.AddInfrastructure(configuration).AddDietologistModule();
 
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
@@ -565,7 +568,13 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
 
-        services.AddInfrastructure(configuration).AddFastingModule().AddFavoritesModule();
+        services
+            .AddInfrastructure(configuration)
+            .AddContentReportsModule()
+            .AddDietologistModule()
+            .AddFastingModule()
+            .AddFavoritesModule()
+            .AddLessonsModule();
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
 
